@@ -4,7 +4,7 @@ import re
 from hrepr import HTML
 
 from .researchers import Researchers
-from .utils import asciiify, print_field, join, download, T
+from .utils import T, asciiify, download, join, print_field
 
 H = HTML()
 
@@ -48,8 +48,9 @@ class Papers:
     ]
 
     def __init__(self, papers, researchers=None):
-        self.papers = {id: Paper(paper, researchers)
-                       for id, paper in papers.items()}
+        self.papers = {
+            id: Paper(paper, researchers) for id, paper in papers.items()
+        }
         self.researchers = researchers or Researchers({})
 
     def __iter__(self):
@@ -84,8 +85,9 @@ class Paper:
             else:
                 authors[aid] = Author(
                     data=auth_data,
-                    role=researchers and researchers.find(aid).status_at(self.data["D"]),
-                    researcher=researchers and researchers.find(aid)
+                    role=researchers
+                    and researchers.find(aid).status_at(self.data["D"]),
+                    researcher=researchers and researchers.find(aid),
                 )
 
         self.authors = list(authors.values())
@@ -154,7 +156,9 @@ class Paper:
             print_field("Conference", self.conference)
         elif self.journal:
             print_field("Journal", self.journal)
-        print_field("Keywords", ", ".join(k["FN"] for k in self.data.get("F", [])))
+        print_field(
+            "Keywords", ", ".join(k["FN"] for k in self.data.get("F", []))
+        )
         print_field("Sources", "")
         print_field("Citations", self.data["CC"])
         for link in self.links.sorted(link_sort_key):
@@ -251,9 +255,7 @@ class Paper:
         entries["number"] = self.data.get("I", None)
 
         entries = ",\n".join(
-            f"    {k} = {{{v}}}"
-            for k, v in entries.items()
-            if v is not None
+            f"    {k} = {{{v}}}" for k, v in entries.items() if v is not None
         )
         result = f"@{entry_type}{{{self.reference_string},\n{entries}\n}}"
         # bibtex doesn't like unicode
@@ -302,6 +304,7 @@ class Links:
 
         Links to conference/journal pages are favored.
         """
+
         def chk(t):
             if type is None:
                 return True

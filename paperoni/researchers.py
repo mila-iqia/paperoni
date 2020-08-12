@@ -49,8 +49,10 @@ class Researchers:
             return Researcher(None)
 
     def save(self):
-        data = {auth_name.lower(): auth.data
-                for auth_name, auth in self.data.items()}
+        data = {
+            auth_name.lower(): auth.data
+            for auth_name, auth in self.data.items()
+        }
         text = json.dumps(data, indent=4)
         with open(self.filename, "w") as file:
             file.write(text)

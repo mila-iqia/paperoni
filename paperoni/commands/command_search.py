@@ -4,12 +4,12 @@ from ..config import get_config
 from ..io import ResearchersFile
 from ..papers import Papers
 from ..query import QueryManager
-
 from .interactive import InteractiveCommands, default_commands
 from .searchutils import search
 
-
-search_commands = InteractiveCommands("Enter a command (h or ? for help):", default="s")
+search_commands = InteractiveCommands(
+    "Enter a command (h or ? for help):", default="s"
+)
 
 
 @search_commands.register("b")
@@ -24,8 +24,10 @@ def _p(self, paper):
     """Download the PDF"""
     if not paper.download_pdf():
         print("No PDF direct download link is available for this paper.")
-        print("Try to follow the paper's URLs (see the complete list"
-              " with the l command)")
+        print(
+            "Try to follow the paper's URLs (see the complete list"
+            " with the l command)"
+        )
     return None
 
 

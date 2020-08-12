@@ -1,12 +1,12 @@
-
 import re
 import sys
+
 from coleo import Argument as Arg, default, tooled
 
 from ..config import get_config
 from ..io import ResearchersFile
 from ..papers import Papers
-from ..query import QueryManager, QueryError
+from ..query import QueryError, QueryManager
 
 
 def _date(x, ending):
@@ -131,7 +131,8 @@ def search():
 
         papers.extend(
             qm.query(
-                q, attrs=",".join(Papers.fields),
+                q,
+                attrs=",".join(Papers.fields),
                 orderby=orderby,
                 count=limit,
                 offset=offset,

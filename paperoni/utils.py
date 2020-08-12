@@ -1,10 +1,9 @@
-import requests
 import unicodedata
 
+import requests
 from blessed import Terminal
 from hrepr import HTML
 from tqdm import tqdm
-
 
 H = HTML()
 T = Terminal()
@@ -45,7 +44,7 @@ def download(url, filename):
     """Download the given url into the given filename."""
     print(f"Downloading {url}")
     r = requests.get(url, stream=True)
-    total = int(r.headers.get('content-length') or "1024")
+    total = int(r.headers.get("content-length") or "1024")
     with open(filename, "wb") as f:
         with tqdm(total=total) as progress:
             for chunk in r.iter_content(chunk_size=total // 100):

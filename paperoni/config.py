@@ -1,7 +1,6 @@
 import json
 import os
 
-
 _config_dir_path = os.path.expanduser("~/.config/paperoni")
 _config_path = os.path.join(_config_dir_path, "config.json")
 

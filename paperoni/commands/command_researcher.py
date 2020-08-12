@@ -1,14 +1,13 @@
-
 import json
 import re
-
-from coleo import tooled, default, Argument as Arg
 from copy import deepcopy
+
+from coleo import Argument as Arg, default, tooled
 
 from ..config import get_config
 from ..io import ResearchersFile
-from ..query import QueryManager
 from ..papers import Papers
+from ..query import QueryManager
 from ..utils import T
 
 
@@ -51,10 +50,14 @@ def _find_ids(rsch):
         if not m:
             continue
         auth_name = m.groups()[0]
-        papers = qm.evaluate(q, ",".join(Papers.fields), orderby="D:desc", count=1000)
+        papers = qm.evaluate(
+            q, ",".join(Papers.fields), orderby="D:desc", count=1000
+        )
         papers = Papers({p["Id"]: p for p in papers}, None)
         for p in papers:
-            aid = [auth.aid for auth in p.authors if auth.data["AuN"] == auth_name]
+            aid = [
+                auth.aid for auth in p.authors if auth.data["AuN"] == auth_name
+            ]
             if not aid:
                 continue
             aid = aid[0]

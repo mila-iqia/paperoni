@@ -1,8 +1,8 @@
-
-import pkg_resources
 import sys
 
+import pkg_resources
 from coleo import auto_cli
+
 from .utils import PaperoniError
 
 

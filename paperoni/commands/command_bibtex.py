@@ -4,7 +4,6 @@ from ..config import get_config
 from ..io import ResearchersFile
 from ..papers import Papers
 from ..query import QueryManager
-
 from .searchutils import search
 
 

@@ -1,4 +1,4 @@
-from coleo import default, tooled, Argument as Arg
+from coleo import Argument as Arg, default, tooled
 
 from ..config import get_config, write_config
 from ..utils import T
@@ -17,7 +17,7 @@ def command_config():
             "You need a Microsoft Academic Search API key in order to use this program.",
             "Free tier API keys will afford you 5000 to 10000 queries",
             "per month which is more than enough for personal use.",
-            "You can get one by subscribing here:"
+            "You can get one by subscribing here:",
         )
         print()
         print(

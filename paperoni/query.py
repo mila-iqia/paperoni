@@ -1,7 +1,7 @@
 import http.client
 import json
-import urllib.parse
 import re
+import urllib.parse
 
 from .utils import PaperoniError
 
@@ -32,7 +32,9 @@ class QueryManager:
             # Request headers
             "Ocp-Apim-Subscription-Key": f"{key}",
         }
-        self.conn = http.client.HTTPSConnection("api.labs.cognitive.microsoft.com")
+        self.conn = http.client.HTTPSConnection(
+            "api.labs.cognitive.microsoft.com"
+        )
 
     def interpret(self, query, offset=0, count=10, **params):
         params = urllib.parse.urlencode(

@@ -1,6 +1,4 @@
-
 from blessed import Terminal
-
 
 T = Terminal()
 
@@ -15,6 +13,7 @@ class InteractiveCommands(dict):
     def register(self, key):
         def deco(fn):
             self[key] = fn
+
         return deco
 
     def process_paper(self, paper, **kwargs):
@@ -23,8 +22,12 @@ class InteractiveCommands(dict):
         paper.format_term()
         print("=" * 80)
 
-        opts = "/".join([(f"[{key}]" if key == self.default else key)
-                        for key in self.keys()])
+        opts = "/".join(
+            [
+                (f"[{key}]" if key == self.default else key)
+                for key in self.keys()
+            ]
+        )
         prompt = f"{self.prompt} {opts} "
 
         while True:
@@ -63,8 +66,9 @@ def _l(self, paper, **_):
 def _h(self, paper, **_):
     """display this help"""
     print("-" * 80)
-    for key, entry in sorted((key, fn.__doc__)
-                             for key, fn in self.items() if fn.__doc__):
+    for key, entry in sorted(
+        (key, fn.__doc__) for key, fn in self.items() if fn.__doc__
+    ):
         print(T.bold(key), entry)
     print("-" * 80)
     return None
