@@ -4,7 +4,7 @@ import sys
 from coleo import Argument as Arg, default, tooled
 
 from ..config import get_config
-from ..io import ResearchersFile
+from ..io import PapersFile, ResearchersFile
 from ..papers import Papers
 from ..query import QueryError, QueryManager
 
@@ -20,6 +20,10 @@ def _date(x, ending):
 
 @tooled
 def search():
+
+    # File containing the collection
+    # [alias: -c]
+    collection: Arg & PapersFile = default(None)
 
     # Microsoft Cognitive API key
     key: Arg & str = default(get_config("key"))
@@ -89,8 +93,6 @@ def search():
     # Search offset
     offset: Arg & int = default(0)
 
-    qm = QueryManager(key)
-
     if researchers:
         qs = []
         for researcher in researchers:
@@ -121,27 +123,36 @@ def search():
 
     papers = []
 
-    for q in qs:
-        if recent:
-            orderby = "D:desc"
-        elif cited:
-            orderby = "CC:desc"
-        else:
-            orderby = None
+    if collection is not None:
+        for q in qs:
+            papers.extend(collection.query(q))
+        papers = Papers(papers, researchers)
 
-        papers.extend(
-            qm.query(
-                q,
-                attrs=",".join(Papers.fields),
-                orderby=orderby,
-                count=limit,
-                offset=offset,
+    else:
+        qm = QueryManager(key)
+
+        for q in qs:
+            if recent:
+                orderby = "D:desc"
+            elif cited:
+                orderby = "CC:desc"
+            else:
+                orderby = None
+
+            papers.extend(
+                qm.query(
+                    q,
+                    attrs=",".join(Papers.fields),
+                    orderby=orderby,
+                    count=limit,
+                    offset=offset,
+                )
             )
-        )
-    papers = Papers({p["Id"]: p for p in papers}, researchers)
+
+        papers = Papers({p["Id"]: p for p in papers}, researchers)
 
     # We need to re-sort the papers if there was more than one query
-    if len(qs) > 1:
+    if collection is not None or len(qs) > 1:
         if recent:
             papers = papers.sorted("D", desc=True)
         elif cited:

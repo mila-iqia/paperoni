@@ -9,6 +9,13 @@ from .utils import T, asciiify, download, join, print_field
 H = HTML()
 
 
+def _norm(x):
+    if x is None:
+        return None
+    else:
+        return asciiify(x).lower()
+
+
 class Papers:
     """Collection of papers."""
 
@@ -47,14 +54,33 @@ class Papers:
         "VSN",
     ]
 
-    def __init__(self, papers, researchers=None):
-        self.papers = {
-            id: Paper(paper, researchers) for id, paper in papers.items()
-        }
+    def __init__(self, papers, researchers=None, filename=None):
+        if isinstance(papers, list):
+            self.papers = {paper.pid: paper for paper in papers}
+            self.excluded = {}
+        else:
+            self.papers = {
+                int(id): Paper(paper, researchers)
+                for id, paper in papers.items()
+                if paper
+            }
+            self.excluded = {
+                int(id) for id, paper in papers.items() if not paper
+            }
         self.researchers = researchers or Researchers({})
+        self.filename = filename
 
     def __iter__(self):
         return iter(self.papers.values())
+
+    def __contains__(self, paper):
+        return paper.pid in self.papers or paper.pid in self.excluded
+
+    def add(self, paper):
+        self.papers[paper.pid] = paper
+
+    def exclude(self, paper):
+        self.excluded.add(paper.pid)
 
     def sorted(self, field="D", desc=False):
         results = list(
@@ -63,6 +89,91 @@ class Papers:
         if desc:
             results.reverse()
         # return Papers(results, self.researchers)
+        return results
+
+    def save(self):
+        if self.filename is None:
+            raise Exception("No file to save the papers.")
+        data = {id: paper.data for id, paper in self.papers.items()}
+        data.update({id: False for id in self.excluded})
+        text = json.dumps(data, indent=4)
+        with open(self.filename, "w") as file:
+            file.write(text)
+
+    def _q_author(self, papers, author):
+        if isinstance(author, int):
+            return [
+                p
+                for p in papers
+                if any(auth.aid == author for auth in p.authors)
+            ]
+        else:
+            author = _norm(author)
+            return [
+                p
+                for p in papers
+                if any(author == _norm(auth.name) for auth in p.authors)
+            ]
+
+    def _q_title(self, papers, title):
+        query = _norm(title)
+        query = re.split(r"\W+", query)
+        return [p for p in papers if all(q in _norm(p.title) for q in query)]
+
+    def _q_words(self, papers, query):
+        query = _norm(query)
+        query = re.split(r"\W+", query)
+        return [
+            p
+            for p in papers
+            if all(q in _norm(p.title) for q in query)
+            or all(q in _norm(p.abstract) for q in query)
+        ]
+
+    def _q_institution(self, papers, inst):
+        inst = _norm(inst)
+        return [
+            p
+            for p in papers
+            if any(_norm(auth.affiliation) == inst for auth in p.authors)
+        ]
+
+    def _q_keywords(self, papers, query):
+        query = {_norm(kw) for kw in query}
+        return [p for p in papers if set(p.keywords) & query]
+
+    def _q_daterange(self, papers, r):
+        start, end = r
+        if start is None and end is None:
+            return papers
+        return [
+            p
+            for p in papers
+            if (start is None or p.date >= start)
+            and (end is None or p.date <= end)
+        ]
+
+    def query(self, q, **params):
+        """Run a query with the given parameters.
+
+        Arguments:
+            q: A query dictionary with any or all of these keys, which
+               are combined using the AND operator.
+                * author: Search for an author.
+                * title: Words in the title.
+                * words: Words in the title or abstract.
+                * institution: Search papers from an institution.
+                * keywords: List of paper keywords.
+                * daterange: A tuple of (startdate, enddate), either of
+                  which can be None.
+            params: Parameters for the query such as limit and offset.
+        """
+        results = list(self.papers.values())
+        for k, v in q.items():
+            if v is None:
+                continue
+            method_name = f"_q_{k}"
+            results = getattr(self, method_name)(results, v)
         return results
 
 
@@ -115,6 +226,10 @@ class Paper:
         else:
             return None
 
+    @property
+    def keywords(self):
+        return [k["FN"] for k in self.data.get("F", [])]
+
     def peer_review_status(self):
         """Returns a code representing peer review status.
 
@@ -160,9 +275,9 @@ class Paper:
             "Keywords", ", ".join(k["FN"] for k in self.data.get("F", []))
         )
         print_field("Sources", "")
-        print_field("Citations", self.data["CC"])
         for link in self.links.sorted(link_sort_key):
             print(f"  {T.bold_green(link.type)} {link.url}")
+        print_field("Citations", self.data["CC"])
 
     @property
     def reference_string(self):

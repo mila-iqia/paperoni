@@ -90,7 +90,6 @@ class QueryManager:
             raise QueryError(jdata["error"]["message"])
         if "InnerException" in jdata:
             raise QueryError(jdata["Message"])
-        print(jdata.keys())
         entities = jdata["entities"]
         return [self.clean(x) for x in entities]
 

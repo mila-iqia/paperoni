@@ -16,6 +16,9 @@ def ResearchersFile(filename):
 
 def PapersFile(filename):
     """Parse a file containing papers."""
-    with open(filename, "r") as file:
-        data = json.load(file)
+    try:
+        with open(filename, "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {}
     return Papers(data, filename=filename)
