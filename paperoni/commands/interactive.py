@@ -16,7 +16,7 @@ class InteractiveCommands(dict):
 
         return deco
 
-    def process_paper(self, paper, **kwargs):
+    def process_paper(self, paper, command=None, **kwargs):
         """Process a paper interactively."""
         print("=" * 80)
         paper.format_term()
@@ -32,7 +32,10 @@ class InteractiveCommands(dict):
 
         while True:
             try:
-                answer = input(prompt).strip()
+                if command is None:
+                    answer = input(prompt).strip()
+                else:
+                    answer = command
             except (KeyboardInterrupt, EOFError) as err:
                 return False
             if not answer:
@@ -40,7 +43,7 @@ class InteractiveCommands(dict):
             if answer not in self:
                 answer = "h"
             instruction = self[answer](self, paper, **kwargs)
-            if instruction is not None:
+            if command is not None or instruction is not None:
                 return instruction
 
 

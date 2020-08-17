@@ -43,13 +43,30 @@ def command_collect():
     # [alias: -c]
     collection: Arg & PapersFile
 
+    # Command to run on every paper
+    command: Arg = default(None)
+
+    # Include all papers from the collection
+    # [options: --yes]
+    yes_: Arg & bool = default(False)
+
+    if yes_:
+        command = "y"
+
+    # Exclude all papers from the collection
+    # [options: --no]
+    no_: Arg & bool = default(False)
+
+    if no_:
+        command = "n"
+
     papers = search()
 
     for paper in papers:
         if paper in collection:
             continue
         instruction = search_commands.process_paper(
-            paper, collection=collection
+            paper, collection=collection, command=command,
         )
         if instruction is False:
             break

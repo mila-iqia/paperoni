@@ -19,11 +19,7 @@ def _date(x, ending):
 
 
 @tooled
-def search():
-
-    # File containing the collection
-    # [alias: -c]
-    collection: Arg & PapersFile = default(None)
+def search(collection=None):
 
     # Microsoft Cognitive API key
     key: Arg & str = default(get_config("key"))
@@ -51,7 +47,8 @@ def search():
     # [alias: -k]
     # [nargs: *]
     # Search for keywords
-    keywords: Arg & str = default(None)
+    keywords: Arg & str = default([])
+    keywords = [k.replace("_", " ") for k in keywords]
 
     # [alias: -i]
     # [nargs: *]

@@ -1,7 +1,7 @@
 from coleo import Argument as Arg, default, tooled
 
 from ..config import get_config
-from ..io import ResearchersFile
+from ..io import PapersFile, ResearchersFile
 from ..papers import Papers
 from ..query import QueryManager
 from .interactive import InteractiveCommands, default_commands
@@ -44,9 +44,16 @@ search_commands.update(default_commands)
 def command_search():
     """Query the Microsoft Academic database."""
 
-    papers = search()
+    # File containing the collection
+    # [alias: -c]
+    collection: Arg & PapersFile = default(None)
+
+    # Command to run on every paper
+    command: Arg = default(None)
+
+    papers = search(collection)
 
     for paper in papers:
-        instruction = search_commands.process_paper(paper)
+        instruction = search_commands.process_paper(paper, command=command)
         if instruction is False:
             return instruction

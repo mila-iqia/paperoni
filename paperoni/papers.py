@@ -50,8 +50,6 @@ class Papers:
         "LP",
         "I",
         "V",
-        "VFN",
-        "VSN",
     ]
 
     def __init__(self, papers, researchers=None, filename=None):
@@ -203,7 +201,8 @@ class Paper:
 
         self.authors = list(authors.values())
         self.links = Links(self.data.get("S", []))
-        self.venue = data.get("VFN", None)
+        self.venue = data.get("BV", None)
+        self.venue_fullname = data.get("VFN", None)
         self.venue_abbr = data.get("VSN", self.venue)
         if self.conference:
             self.venue_abbr += f' {self.data["Y"]}'
@@ -250,9 +249,9 @@ class Paper:
         print_field("Authors", ", ".join(auth.name for auth in self.authors))
         print_field("Date", self.date)
         if self.conference:
-            print_field("Conference", self.conference)
+            print_field("Conference", self.venue)
         elif self.journal:
-            print_field("Journal", self.journal)
+            print_field("Journal", self.venue)
         print_field("URL", self.links.best())
 
     def format_term_long(self):
@@ -268,9 +267,9 @@ class Paper:
         print_field("Abstract", self.abstract)
         print_field("Date", self.date)
         if self.conference:
-            print_field("Conference", self.conference)
+            print_field("Conference", self.venue)
         elif self.journal:
-            print_field("Journal", self.journal)
+            print_field("Journal", self.venue)
         print_field(
             "Keywords", ", ".join(k["FN"] for k in self.data.get("F", []))
         )
