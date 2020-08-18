@@ -24,6 +24,10 @@ def search(collection=None):
     # Microsoft Cognitive API key
     key: Arg & str = default(get_config("key"))
 
+    # [alias: -v]
+    # Verbose output
+    verbose: Arg & bool = default(False)
+
     # [alias: -t]
     # [nargs: *]
     # Search words in the title
@@ -55,6 +59,9 @@ def search(collection=None):
     # Search papers from institution
     institution: Arg & str = default(None)
     institution = institution and " ".join(institution)
+
+    # Search papers from a venue
+    venue: Arg & str = default(None)
 
     # [alias: -r]
     # Researchers file (JSON)
@@ -102,6 +109,7 @@ def search(collection=None):
                             "words": words,
                             "keywords": keywords,
                             "institution": institution,
+                            "venue": venue,
                             "daterange": (role.begin, role.end),
                         }
                     )
@@ -114,6 +122,7 @@ def search(collection=None):
                 "words": words,
                 "keywords": keywords,
                 "institution": institution,
+                "venue": venue,
                 "daterange": (start, end),
             }
         ]
@@ -122,6 +131,8 @@ def search(collection=None):
 
     if collection is not None:
         for q in qs:
+            if verbose:
+                print(f"Querying: {q} ...")
             papers.extend(collection.query(q))
         papers = Papers(papers, researchers)
 
@@ -136,6 +147,8 @@ def search(collection=None):
             else:
                 orderby = None
 
+            if verbose:
+                print(f"Querying: {q} ...")
             papers.extend(
                 qm.query(
                     q,
@@ -143,8 +156,11 @@ def search(collection=None):
                     orderby=orderby,
                     count=limit,
                     offset=offset,
+                    verbose=verbose,
                 )
             )
+            if verbose:
+                print(f"Number of results: {len(papers)}")
 
         papers = Papers({p["Id"]: p for p in papers}, researchers)
 

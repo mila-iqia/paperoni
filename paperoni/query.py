@@ -134,6 +134,14 @@ class QueryManager:
     def _q_institution(self, inst):
         return f"Composite(AA.AfN='{inst}')"
 
+    def _q_venue(self, venue):
+        parts = [
+            f"Composite(C.CN='{venue}')",
+            f"Composite(J.JN='{venue}')",
+        ]
+        parts = ",".join(parts)
+        return f"OR({parts})"
+
     def _q_keywords(self, query):
         qs = [f"Composite(F.FN='{kw}')" for kw in query]
         return ",".join(qs)
@@ -147,7 +155,7 @@ class QueryManager:
             parts.append(f"D<='{end}'")
         return ",".join(parts)
 
-    def query(self, q, **params):
+    def query(self, q, verbose=False, **params):
         """Run a query with the given parameters.
 
         Arguments:
@@ -172,4 +180,6 @@ class QueryManager:
 
         expr = ",".join(p for p in parts if p)
         expr = f"And({expr})"
+        if verbose:
+            print(expr)
         return self.evaluate(expr, **params)

@@ -74,6 +74,9 @@ class Papers:
     def __contains__(self, paper):
         return paper.pid in self.papers
 
+    def __len__(self, paper):
+        return len(self.papers)
+
     def excludes(self, paper):
         return paper.pid in self.excluded
 
@@ -140,6 +143,15 @@ class Papers:
             p
             for p in papers
             if any(_norm(auth.affiliation) == inst for auth in p.authors)
+        ]
+
+    def _q_venue(self, papers, venue):
+        venue = _norm(venue)
+        return [
+            p
+            for p in papers
+            if (p.conference and _norm(p.conference).startswith(venue)) or
+               (p.journal and _norm(p.journal) == venue)
         ]
 
     def _q_keywords(self, papers, query):
