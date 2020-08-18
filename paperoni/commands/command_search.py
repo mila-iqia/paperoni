@@ -37,9 +37,6 @@ def _s(self, paper, **_):
     return True
 
 
-search_commands.update(default_commands)
-
-
 search_commands_with_coll = search_commands.copy()
 
 
@@ -49,6 +46,10 @@ def _r(self, paper, collection):
     collection.exclude(paper)
     print(f"Removed '{paper.title}' from collection")
     return True
+
+
+search_commands.update(default_commands)
+search_commands_with_coll.update(default_commands)
 
 
 @tooled

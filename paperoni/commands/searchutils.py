@@ -60,7 +60,7 @@ def search(collection=None):
     institution: Arg & str = default(None)
     institution = institution and " ".join(institution)
 
-    # Search papers from a venue
+    # Search papers from a specific conference or journal
     venue: Arg & str = default(None)
 
     # [alias: -r]
