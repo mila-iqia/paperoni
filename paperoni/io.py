@@ -14,11 +14,11 @@ def ResearchersFile(filename):
     return Researchers(data, filename=filename)
 
 
-def PapersFile(filename):
+def PapersFile(filename, researchers=None):
     """Parse a file containing papers."""
     try:
         with open(filename, "r") as file:
             data = json.load(file)
     except FileNotFoundError:
         data = {}
-    return Papers(data, filename=filename)
+    return Papers(data, filename=filename, researchers=researchers)

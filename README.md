@@ -161,3 +161,58 @@ Removed 'The paper title' from the collection.
 ```
 
 You can use `--command r` to do this non-interactively.
+
+
+## Plugins
+
+You can add new commands to paperoni by registering them in the `paperoni.command` entry point. Command line options must be defined using [coleo](https://github.com/breuleux/coleo). If you are using [poetry](https://python-poetry.org/):
+
+**pyproject.toml**
+
+```toml
+...
+[tool.poetry.plugins."paperoni.command"]
+showprop = "my_paperoni:showprop"
+...
+```
+
+**my_paperoni/\_\_init__.py**
+
+```python
+from coleo import Argument, default, tooled
+from paperoni.commands.searchutils import search
+
+
+@tooled
+def showprop():
+
+    # Name of the property to display
+    # [alias: -p]
+    prop: Argument & str = default("title")
+
+    # This will add all the search options
+    papers = search()
+
+    for paper in papers:
+        if prop == "title":
+            print(paper.title)
+        elif prop == "venue":
+            print(paper.venue)
+        ...
+```
+
+Install the plugin:
+
+```bash
+# If the plugin is accessible through pip
+pip install my_paperoni
+
+# If this is a local project:
+poetry install
+```
+
+Use the plugin:
+
+```bash
+paperoni showprop -p venue -a alan turing --limit 10
+```

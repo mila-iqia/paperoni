@@ -93,6 +93,7 @@ def _find_ids(rsch):
 
 @tooled
 def command_researcher():
+    """Register ids/statuses for a researcher."""
 
     # Researchers file (JSON)
     # [alias: -f -r]

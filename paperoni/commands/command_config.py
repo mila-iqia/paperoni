@@ -6,6 +6,7 @@ from ..utils import T
 
 @tooled
 def command_config():
+    """Configure paperoni."""
     cfg = get_config() or {}
     orig_cfg = dict(cfg)
 

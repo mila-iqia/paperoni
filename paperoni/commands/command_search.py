@@ -68,8 +68,9 @@ def command_search():
     sch = search_commands if collection is None else search_commands_with_coll
 
     for paper in papers:
-        instruction = sch.process_paper(paper, command=command,
-            collection=collection)
+        instruction = sch.process_paper(
+            paper, command=command, collection=collection
+        )
         if instruction is False:
             break
 

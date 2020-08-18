@@ -150,8 +150,8 @@ class Papers:
         return [
             p
             for p in papers
-            if (p.conference and _norm(p.conference).startswith(venue)) or
-               (p.journal and _norm(p.journal) == venue)
+            if (p.conference and _norm(p.conference).startswith(venue))
+            or (p.journal and _norm(p.journal) == venue)
         ]
 
     def _q_keywords(self, papers, query):
