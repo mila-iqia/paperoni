@@ -13,14 +13,14 @@ search_commands = InteractiveCommands(
 
 
 @search_commands.register("b")
-def _b(self, paper):
+def _b(self, paper, **_):
     """Generate bibtex"""
     print(paper.bibtex())
     return None
 
 
 @search_commands.register("p")
-def _p(self, paper):
+def _p(self, paper, **_):
     """Download the PDF"""
     if not paper.download_pdf():
         print("No PDF direct download link is available for this paper.")
@@ -32,12 +32,23 @@ def _p(self, paper):
 
 
 @search_commands.register("s")
-def _s(self, paper):
+def _s(self, paper, **_):
     """Skip and see the next paper"""
     return True
 
 
 search_commands.update(default_commands)
+
+
+search_commands_with_coll = search_commands.copy()
+
+
+@search_commands_with_coll.register("r")
+def _r(self, paper, collection):
+    """Remove the paper from the collection"""
+    collection.exclude(paper)
+    print(f"Removed '{paper.title}' from collection")
+    return True
 
 
 @tooled
@@ -53,7 +64,13 @@ def command_search():
 
     papers = search(collection)
 
+    sch = search_commands if collection is None else search_commands_with_coll
+
     for paper in papers:
-        instruction = search_commands.process_paper(paper, command=command)
+        instruction = sch.process_paper(paper, command=command,
+            collection=collection)
         if instruction is False:
-            return instruction
+            break
+
+    if collection is not None:
+        collection.save()

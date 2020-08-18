@@ -72,12 +72,18 @@ class Papers:
         return iter(self.papers.values())
 
     def __contains__(self, paper):
-        return paper.pid in self.papers or paper.pid in self.excluded
+        return paper.pid in self.papers
+
+    def excludes(self, paper):
+        return paper.pid in self.excluded
 
     def add(self, paper):
+        self.excluded.discard(paper.pid)
         self.papers[paper.pid] = paper
 
     def exclude(self, paper):
+        if paper.pid in self.papers:
+            del self.papers[paper.pid]
         self.excluded.add(paper.pid)
 
     def sorted(self, field="D", desc=False):
@@ -137,6 +143,8 @@ class Papers:
         ]
 
     def _q_keywords(self, papers, query):
+        if not query:
+            return papers
         query = {_norm(kw) for kw in query}
         return [p for p in papers if set(p.keywords) & query]
 

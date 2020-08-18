@@ -46,6 +46,9 @@ def command_collect():
     # Command to run on every paper
     command: Arg = default(None)
 
+    # Prompt for papers even if they were excluded from the collection
+    show_excluded: Arg & bool = default(False)
+
     # Include all papers from the collection
     # [options: --yes]
     yes_: Arg & bool = default(False)
@@ -64,6 +67,8 @@ def command_collect():
 
     for paper in papers:
         if paper in collection:
+            continue
+        if not show_excluded and collection.excludes(paper):
             continue
         instruction = search_commands.process_paper(
             paper, collection=collection, command=command,

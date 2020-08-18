@@ -10,6 +10,11 @@ class InteractiveCommands(dict):
         self.prompt = prompt
         self.default = default
 
+    def copy(self):
+        rval = InteractiveCommands(self.prompt, self.default)
+        rval.update(self)
+        return rval
+
     def register(self, key):
         def deco(fn):
             self[key] = fn
