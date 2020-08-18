@@ -1,5 +1,6 @@
 import json
 import re
+from collections import defaultdict
 
 from hrepr import HTML
 
@@ -22,6 +23,7 @@ class Papers:
     # Fields that we fetch when querying papers.
     fields = [
         "Id",
+        "FamId",
         "AA.AuN",
         "AA.DAuN",
         "AA.AuId",
@@ -74,7 +76,7 @@ class Papers:
     def __contains__(self, paper):
         return paper.pid in self.papers
 
-    def __len__(self, paper):
+    def __len__(self):
         return len(self.papers)
 
     def excludes(self, paper):
@@ -97,6 +99,26 @@ class Papers:
             results.reverse()
         # return Papers(results, self.researchers)
         return results
+
+    def group(self):
+        """Group versions of the same paper using family id."""
+        groups = defaultdict(list)
+        for paper in self:
+            groups[paper.fid].append(paper)
+        results = []
+        for fid, group in groups.items():
+            group.sort(key=lambda p: p.date, reverse=True)
+            group[0].latest = True
+
+            main = [p for p in group if p.pid == fid]
+            if not main:
+                main = group[:1]
+            (main,) = main
+
+            group.remove(main)
+            main.other_versions = group
+            results.append(main)
+        return Papers(results, researchers=self.researchers)
 
     def save(self):
         if self.filename is None:
@@ -201,6 +223,7 @@ class Paper:
     def __init__(self, data, researchers):
         self.data = data
         self.pid = data["Id"]
+        self.fid = data.get("FamId", self.pid)
         self.title = data["DN"]
         self.date = data["D"]
         self.year = data["Y"]

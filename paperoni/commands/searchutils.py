@@ -19,7 +19,7 @@ def _date(x, ending):
 
 
 @tooled
-def search(collection=None):
+def search(collection=None, researchers=None):
 
     # Microsoft Cognitive API key
     key: Arg & str = default(get_config("key"))
@@ -62,12 +62,6 @@ def search(collection=None):
 
     # Search papers from a specific conference or journal
     venue: Arg & str = default(None)
-
-    # [alias: -r]
-    # Researchers file (JSON)
-    researchers: Arg = default(None)
-    if researchers:
-        researchers = ResearchersFile(researchers)
 
     # [nargs: *]
     # Researcher status(es) to filter for

@@ -60,10 +60,14 @@ def command_search():
     # [alias: -c]
     collection: Arg & PapersFile = default(None)
 
+    # Researchers file (JSON)
+    # [alias: -r]
+    researchers: Arg & ResearchersFile = default(None)
+
     # Command to run on every paper
     command: Arg = default(None)
 
-    papers = search(collection)
+    papers = search(collection=collection, researchers=reesarchers)
 
     sch = search_commands if collection is None else search_commands_with_coll
 

@@ -43,6 +43,10 @@ def command_collect():
     # [alias: -c]
     collection: Arg & PapersFile
 
+    # Researchers file (JSON)
+    # [alias: -r]
+    researchers: Arg & ResearchersFile = default(None)
+
     # Command to run on every paper
     command: Arg = default(None)
 
@@ -63,7 +67,7 @@ def command_collect():
     if no_:
         command = "n"
 
-    papers = search()
+    papers = search(researchers=researchers)
 
     for paper in papers:
         if paper in collection:
