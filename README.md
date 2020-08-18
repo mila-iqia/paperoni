@@ -1,11 +1,16 @@
 
 # Paperoni
 
-`paperoni` is a command line program to search for scientific papers. It also allows you to download PDFs (when available) and generate BibTeX entries.
+* **Search** for scientific papers on the command line
+* **Download PDFs**
+* Generate **BibTeX** entries
+* Build **collections** of papers
+
+<img src="./media/screenshot.png">
 
 Paperoni uses the Microsoft Academic Knowledge API, which requires an API key:
 
-**[Get a Microsoft Academic Knowledge API key](https://msr-apis.portal.azure-api.net/products/project-academic-knowledge)** (free tier: 10,000 queries per month).
+**[Get a Microsoft Academic Knowledge API key](https://msr-apis.portal.azure-api.net/products/project-academic-knowledge)** (free tier: 10,000 queries per month, trust me, that's plenty)
 
 
 ## Install
@@ -93,6 +98,13 @@ optional arguments:
   --year NUM, -y NUM    Year
 ```
 
+The interface will list each result interactively, allowing you to perform actions:
+
+* `l` to show more information about the paper: abstract, affiliations, all links
+* `b` to print out a BibTeX entry for the paper (see also `paperoni bibtex`)
+* `p` to save the PDF in the current directory, if a PDF is available (and doesn't require authentication or captchas)
+
+
 ## Collections
 
 It is possible to save papers into collections using:
@@ -122,6 +134,9 @@ Paperoni uses [Microsoft Academic](https://academic.microsoft.com/home) to find 
 
 If it isn't, the most likely reason is that the paper is too recent and has not yet been indexed. It can sometimes take a few weeks before a paper is indexed.
 
+**The PDF download does not work.**
+
+Try the `l` command, which will list all links pertaining to the paper, organized by type. Try opening them in your browser, it might work better.
 
 **Can I manually enter a new paper into a collection?**
 
@@ -146,6 +161,3 @@ Removed 'The paper title' from the collection.
 ```
 
 You can use `--command r` to do this non-interactively.
-
-
-
