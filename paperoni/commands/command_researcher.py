@@ -26,6 +26,23 @@ def _add_role(researcher):
         )
 
 
+def _set_property(researcher):
+    properties = researcher.properties
+    prop = input(T.bold("Property: ")).strip()
+    value = input(T.bold("Value ('null' to erase): ")).strip()
+    if value.lower() == "true":
+        value = True
+    elif value.lower() == "false":
+        value = False
+    elif value.lower() == "null":
+        if prop in properties:
+            del properties[prop]
+        return
+    elif value.startswith('"'):
+        value = json.loads(value)
+    properties[prop] = value
+
+
 @tooled
 def _find_ids(rsch):
 
@@ -116,7 +133,8 @@ def command_researcher():
 
         print(T.bold("What do you want to do?"))
         print(T.bold_yellow("(1)"), "Find ids")
-        print(T.bold_yellow("(2)"), "Add a role")
+        print(T.bold_yellow("(2)"), "Set a property")
+        print(T.bold_yellow("(3)"), "Add a role")
         print(T.bold_yellow("(*)"), "Quit (any other key)")
         task = input(T.bold("> "))
 
@@ -125,6 +143,10 @@ def command_researcher():
             _find_ids(data)
 
         elif task == "2":
+            print()
+            _set_property(data)
+
+        elif task == "3":
             print()
             _add_role(data)
 

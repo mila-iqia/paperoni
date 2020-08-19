@@ -37,7 +37,7 @@ class Researchers:
         if key in self.data:
             return self.data[key]
         else:
-            r = Researcher({"name": name, "ids": [], "noids": [], "roles": []})
+            r = Researcher({"name": name, "ids": [], "noids": [], "properties": {}, "roles": []})
             self.data[key] = r
             return r
 
@@ -63,7 +63,7 @@ class Researcher:
     Attributes:
         ids: Set of matching ids in Microsoft Academic's database.
         noids: Set of ids that do *not* correspond to this person.
-        bio: Maps each language to a bio page for the researcher.
+        properties: Arbitrary properties
         roles: List of roles taken by that researcher.
     """
 
@@ -72,12 +72,12 @@ class Researcher:
         if data:
             self.ids = self.data["ids"]
             self.noids = self.data["noids"]
-            self.bio = data.get("bio", {})
+            self.properties = self.data["properties"]
             self.roles = [Role(**role) for role in self.data["roles"]]
         else:
             self.ids = []
             self.noids = []
-            self.bio = {}
+            self.properties = {}
             self.roles = []
 
     @property
