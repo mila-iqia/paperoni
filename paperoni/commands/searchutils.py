@@ -1,12 +1,11 @@
 import re
-import sys
 
 from coleo import Argument as Arg, default, tooled
 
 from ..config import get_config
 from ..io import PapersFile, ResearchersFile
 from ..papers import Papers
-from ..query import QueryError, QueryManager
+from ..query import QueryManager
 
 
 def _date(x, ending):
@@ -16,6 +15,20 @@ def _date(x, ending):
         return f"{x}-{ending}"
     else:
         return x
+
+
+@tooled
+def search_ext():
+
+    # File containing the collection
+    # [alias: -c]
+    collection: Arg & PapersFile = default(None)
+
+    # Researchers file (JSON)
+    # [alias: -r]
+    researchers: Arg & ResearchersFile = default(None)
+
+    return search(collection=collection, researchers=researchers)
 
 
 @tooled

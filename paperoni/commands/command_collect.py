@@ -1,9 +1,6 @@
 from coleo import Argument as Arg, default, tooled
 
-from ..config import get_config
 from ..io import PapersFile, ResearchersFile
-from ..papers import Papers
-from ..query import QueryManager
 from .interactive import InteractiveCommands, default_commands
 from .searchutils import search
 

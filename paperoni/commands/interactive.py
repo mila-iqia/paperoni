@@ -41,7 +41,7 @@ class InteractiveCommands(dict):
                     answer = input(prompt).strip()
                 else:
                     answer = command
-            except (KeyboardInterrupt, EOFError) as err:
+            except (KeyboardInterrupt, EOFError):
                 return False
             if not answer:
                 answer = self.default

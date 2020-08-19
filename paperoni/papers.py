@@ -447,9 +447,9 @@ class Links:
         return iter(self.links)
 
     def seek(self, prop):
-        for l in self.links:
-            if l.has(prop):
-                return l
+        for lnk in self.links:
+            if lnk.has(prop):
+                return lnk
         else:
             return None
 

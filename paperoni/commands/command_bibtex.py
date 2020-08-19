@@ -1,17 +1,12 @@
-from coleo import Argument as Arg, default, tooled
+from coleo import tooled
 
-from ..config import get_config
-from ..io import ResearchersFile
-from ..papers import Papers
-from ..query import QueryManager
-from .searchutils import search
+from .searchutils import search_ext
 
 
 @tooled
 def command_bibtex():
     """Generate bibtex entries for a search."""
-
-    papers = search()
+    papers = search_ext()
 
     for paper in papers:
         print(paper.bibtex())

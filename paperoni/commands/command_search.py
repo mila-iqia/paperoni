@@ -1,9 +1,6 @@
 from coleo import Argument as Arg, default, tooled
 
-from ..config import get_config
 from ..io import PapersFile, ResearchersFile
-from ..papers import Papers
-from ..query import QueryManager
 from .interactive import InteractiveCommands, default_commands
 from .searchutils import search
 
@@ -67,7 +64,7 @@ def command_search():
     # Command to run on every paper
     command: Arg = default(None)
 
-    papers = search(collection=collection, researchers=reesarchers)
+    papers = search(collection=collection, researchers=researchers)
 
     sch = search_commands if collection is None else search_commands_with_coll
 

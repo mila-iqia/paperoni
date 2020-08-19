@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime
 
 
 @dataclass
@@ -38,7 +37,7 @@ class Researchers:
         if key in self.data:
             return self.data[key]
         else:
-            r = Researcher({"name": name, "ids": [], "noids": [], "roles": [],})
+            r = Researcher({"name": name, "ids": [], "noids": [], "roles": []})
             self.data[key] = r
             return r
 
