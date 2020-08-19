@@ -1,6 +1,7 @@
 import json
 import re
 from collections import defaultdict
+from hashlib import md5
 
 from hrepr import HTML
 
@@ -345,8 +346,14 @@ class Paper:
             auth = "collab"
         else:
             auth = re.split(r"\W", self.authors[0].name)[-1].lower()
-        h = hash(json.dumps(self.data))
-        identifier = f"{auth}{self.year}-{w}{h % 100}"
+        h = md5(json.dumps([
+            self.data.get("Ti", None),
+            self.data.get("AA", None),
+            self.data.get("BV", None),
+            self.data.get("D", None),
+        ]).encode()).hexdigest()
+        h = int(h, base=16) % 100
+        identifier = f"{auth}{self.year}-{w}{h}"
         return asciiify(identifier)
 
     def download_pdf(self, filename=None):
