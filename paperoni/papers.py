@@ -287,6 +287,19 @@ class Paper:
             return 0
         return 1
 
+    def type(self):
+        bv = self.data.get("BV", "").lower()
+        if "workshop" in bv:
+            return ("workshop",)
+        elif "symposium" in bv:
+            return ("symposium",)
+        else:
+            if self.peer_review_status():
+                subtype = "published"
+            else:
+                subtype = "preprint"
+            return ("paper", subtype)
+
     def format_term(self):
         """Print the paper on the terminal."""
         print_field("Title", T.bold(self.title))

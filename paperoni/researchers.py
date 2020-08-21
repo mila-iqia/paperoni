@@ -70,11 +70,13 @@ class Researcher:
     def __init__(self, data):
         self.data = data
         if data:
+            self.name = self.data["name"]
             self.ids = self.data["ids"]
             self.noids = self.data["noids"]
             self.properties = self.data["properties"]
             self.roles = [Role(**role) for role in self.data["roles"]]
         else:
+            self.name = None
             self.ids = []
             self.noids = []
             self.properties = {}
