@@ -6,16 +6,9 @@ from hashlib import md5
 from hrepr import HTML
 
 from .researchers import Researchers
-from .utils import T, asciiify, download, join, print_field
+from .utils import T, asciiify, download, join, normalize as _norm, print_field
 
 H = HTML()
-
-
-def _norm(x):
-    if x is None:
-        return None
-    else:
-        return asciiify(x).lower()
 
 
 class Papers:

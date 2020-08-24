@@ -6,7 +6,7 @@ from hrepr import H
 
 from .searchutils import search
 from ..io import PapersFile, ResearchersFile
-from ..utils import join
+from ..utils import group_by, join, normalize
 
 try:
     import bs4
@@ -148,6 +148,10 @@ def command_html():
     if collection:
         collection = PapersFile(collection, researchers=researchers)
 
+    # "year", "month" or "none" to separate entries by year or
+    # month or to not separate them (default: year)
+    headers: Arg & normalize = default("year")
+
     # File#divid to inject the HTML
     inject: Arg & Template = default(None)
 
@@ -177,8 +181,26 @@ def command_html():
     papers = search(collection=collection)
 
     results = []
-    for paper in papers:
-        results.append(str(format_paper(paper)))
+
+    if headers == "none":
+        for paper in papers:
+            results.append(str(format_paper(paper)))
+    else:
+        if headers == "year":
+            sortkey = lambda p: p.year
+        elif headers == "month":
+            sortkey = lambda p: p.date[:7]
+        else:
+            sys.exit(f"Invalid headers: {headers}")
+
+        papers = group_by(papers, sortkey)
+        for key, papers in sorted(papers.items(), reverse=True):
+            grp = H.div["paper-group"](
+                H.h3(key),
+                [format_paper(paper) for paper in papers]
+            )
+            results.append(str(grp))
+
     results = "\n".join(results) + "\n"
 
     if output:

@@ -1,4 +1,5 @@
 import unicodedata
+from collections import defaultdict
 
 import requests
 from blessed import Terminal
@@ -62,3 +63,18 @@ def asciiify(s):
     norm = unicodedata.normalize("NFD", s)
     stripped = norm.encode("ASCII", "ignore")
     return stripped.decode("utf8")
+
+
+def group_by(papers, key):
+    """Group a sequence by the result of a key function."""
+    groups = defaultdict(list)
+    for p in papers:
+        groups[key(p)].append(p)
+    return groups
+
+
+def normalize(s):
+    if s is None:
+        return None
+    else:
+        return asciiify(s).lower()
