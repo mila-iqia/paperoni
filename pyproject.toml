@@ -27,6 +27,7 @@ search = "paperoni.commands.command_search:command_search"
 bibtex = "paperoni.commands.command_bibtex:command_bibtex"
 researcher = "paperoni.commands.command_researcher:command_researcher"
 collect = "paperoni.commands.command_collect:command_collect"
+html = "paperoni.commands.command_html:command_html"
 
 [tool.black]
 line-length = 80
