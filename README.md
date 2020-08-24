@@ -55,46 +55,53 @@ The `paperoni search` command allows you to search for papers:
 
 ```
 $ paperoni search -h
-usage: paperoni search [-h] [--author [VALUE [VALUE ...]]]
-                       [--cited | --no-cited] [--collection VALUE]
-                       [--command VALUE] [--end VALUE]
-                       [--institution [VALUE [VALUE ...]]] [--key VALUE]
-                       [--keywords [VALUE [VALUE ...]]] [--limit NUM]
-                       [--offset NUM] [--recent | --no-recent]
+usage: paperoni search [-h] [--author [VALUE [VALUE ...]]] [--cited]
+                       [--collection VALUE] [--command VALUE] [--end VALUE]
+                       [--group] [--institution [VALUE [VALUE ...]]]
+                       [--key VALUE] [--keywords [VALUE [VALUE ...]]]
+                       [--limit NUM] [--offset NUM] [--recent]
                        [--researchers VALUE] [--start VALUE]
-                       [--status [VALUE [VALUE ...]]]
-                       [--title [VALUE [VALUE ...]]] [--venue VALUE]
-                       [--verbose | --no-verbose]
-                       [--words [VALUE [VALUE ...]]] [--year NUM]
+                       [--status [VALUE [VALUE ...]]] [--symposium]
+                       [--no-symposium] [--title [VALUE [VALUE ...]]]
+                       [--venue VALUE] [--verbose]
+                       [--words [VALUE [VALUE ...]]] [--workshop]
+                       [--no-workshop] [--year NUM]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --author [VALUE [VALUE ...]], -a [VALUE [VALUE ...]]
-                        Search for an author
-  --cited               Sort by most cited
   --collection VALUE, -c VALUE
                         File containing the collection
   --command VALUE       Command to run on every paper
+  --group               Group multiple versions of the same paper
+  --key VALUE           Microsoft Cognitive API key
+  --researchers VALUE, -r VALUE
+                        Researchers file (JSON)
+  --verbose, -v         Verbose output
+
+search:
+  --author [VALUE [VALUE ...]], -a [VALUE [VALUE ...]]
+                        Search for an author
+  --cited               Sort by most cited
   --end VALUE           End date (yyyy-mm-dd or yyyy)
   --institution [VALUE [VALUE ...]], -i [VALUE [VALUE ...]]
                         Search papers from institution
-  --key VALUE           Microsoft Cognitive API key
   --keywords [VALUE [VALUE ...]], -k [VALUE [VALUE ...]]
                         Search for keywords
   --limit NUM           Number of papers to fetch (default: 100)
   --offset NUM          Search offset
   --recent              Sort by most recent
-  --researchers VALUE, -r VALUE
-                        Researchers file (JSON)
   --start VALUE         Start date (yyyy-mm-dd or yyyy)
   --status [VALUE [VALUE ...]]
                         Researcher status(es) to filter for
+  --symposium           List symposiums
+  --no-symposium        Do not list symposiums
   --title [VALUE [VALUE ...]], -t [VALUE [VALUE ...]]
                         Search words in the title
   --venue VALUE         Search papers from a specific conference or journal
-  --verbose, -v         Verbose output
   --words [VALUE [VALUE ...]], -w [VALUE [VALUE ...]]
                         Search words in the title or abstract
+  --workshop            List workshops
+  --no-workshop         Do not list workshops
   --year NUM, -y NUM    Year
 ```
 
