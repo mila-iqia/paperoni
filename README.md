@@ -4,6 +4,7 @@
 * **Search** for scientific papers on the command line
 * **Download PDFs**
 * Generate **BibTeX** entries
+* Generate **HTML** for your publications!
 * Build **collections** of papers
 
 <img src="./media/screenshot.png">
@@ -41,6 +42,9 @@ paperoni collect -c my-papers.json -a olivier breuleux -y 2018
 
 # Dump BibTeX for all papers in a collection
 paperoni bibtex -c my-papers.json >> papers.bib
+
+# Output a webpage
+paperoni html -c my-papers.json
 
 # Collect info about a researcher into a file (interactive)
 paperoni researcher -r researchers.json -a olivier breuleux
@@ -111,6 +115,23 @@ The interface will list each result interactively, allowing you to perform actio
 * `b` to print out a BibTeX entry for the paper (see also `paperoni bibtex`)
 * `p` to save the PDF in the current directory, if a PDF is available (and doesn't require authentication or captchas)
 
+## Generate BibTeX
+
+With `paperoni bibtex` you can generate bibtex entries from a search or a collection. Each entry will have a reference name generated from the first author, year, longest word in the title and a small hash number.
+
+## Generate HTML
+
+With `paperoni html` you can generate HTML from a search or a collection.
+
+* Use `--template my-template.html` to use the specified file as a template. The publications will be inserted in the element with id `paperoni-papers`, e.g. `<div id="paperoni-papers">PAPERS GO HERE</div>`. You can also specify a different id using the following syntax: `--template my-template.html#mypapers`.
+* Use `--template none` if you don't want to use a template at all an only want the raw HTML.
+* Use `--inject file.html` to insert the papers into the elemnet with id `paperoni-papers` *directly* into `file.html`. **This will modify the file.** Any previous contents of that div will be erased. For safety, `paperoni` will create a backup file, with a `.bk` extension, unless you pass `--no-backup`.
+
+`paperoni html` includes *the full search interface*. You don't need to pass a collection if you want to search directly on the web.
+
+If you have a researchers file, you can pass it with `-r` and paperoni can generate bio links for any researchers in the set.
+
+You can see all the options with `paperoni html -h`.
 
 ## Collections
 
@@ -129,7 +150,11 @@ The options are the same as `search`, but you can sort through the search result
 
 For more advanced uses you can create a researchers file that contains one or more people. You can make one for yourself, or for your organization. For example, you can add every researcher in your organization or laboratory along with their hiring dates in order to get all of your organization's publications.
 
-`paperoni researcher -r researchers.json -a author name` will guide you interactively. First you will be asked whether certain papers are from the author or not, to weed out homonyms. Then you can optionally assign one or more statuses. A "status" is some arbitrary tag with optional start and end dates that can be assigned to a researcher.
+`paperoni researcher -r researchers.json -a author name` will guide you interactively.
+
+1. **`Find ids`**: You will be asked whether certain papers are from the author or not, to weed out homonyms.
+2. **`Set a property`**: You can set arbitrary properties for the researcher. Note that `paperoni html` recognizes the `bio` property. Erase a property by entering `null`.
+3. **`Add a role`**: You can optionally assign one or more "roles". A "role" is some arbitrary tag with optional start and end dates that can be assigned to a researcher.
 
 Then you can write for example `paperoni collect -c org.json -r researchers.json --status xyz` to collect papers from researchers when they had a given status. The feature is also compatible with `paperoni search`, of course.
 
@@ -168,7 +193,6 @@ Removed 'The paper title' from the collection.
 ```
 
 You can use `--command r` to do this non-interactively.
-
 
 ## Plugins
 
