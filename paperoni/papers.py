@@ -121,6 +121,10 @@ class Papers:
             results.append(main)
         return Papers(results, researchers=self.researchers)
 
+    def filter(self, fn):
+        """Filter papers based on some condition."""
+        return Papers([p for p in self if fn(p)])
+
     def save(self):
         if self.filename is None:
             raise Exception("No file to save the papers.")
@@ -250,10 +254,6 @@ class Paper:
         self.venue_abbr = data.get("VSN", self.venue)
         if self.conference:
             self.venue_abbr += f' {self.data["Y"]}'
-
-    @property
-    def authhash(self):
-        return hash(frozenset(auth.aid for auth in self.authors))
 
     @property
     def journal(self):

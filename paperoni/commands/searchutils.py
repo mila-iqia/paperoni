@@ -98,6 +98,15 @@ def search(collection=None, researchers=None):
     # Sort by most cited
     cited: Arg & bool = default(False)
 
+    # Group multiple versions of the same paper
+    group: Arg & bool = default(False)
+
+    # List symposiums
+    symposium: Arg & bool = default(None)
+
+    # List workshops
+    workshop: Arg & bool = default(None)
+
     # Number of papers to fetch (default: 100)
     limit: Arg & int = default(100)
 
@@ -170,6 +179,19 @@ def search(collection=None, researchers=None):
                 print(f"Number of results: {len(papers)}")
 
         papers = Papers({p["Id"]: p for p in papers}, researchers)
+
+    if group:
+        papers = papers.group()
+
+    if workshop is True:
+        papers = papers.filter(lambda p: p.type()[0] == "workshop")
+    elif workshop is False:
+        papers = papers.filter(lambda p: p.type()[0] != "workshop")
+
+    if symposium is True:
+        papers = papers.filter(lambda p: p.type()[0] == "symposium")
+    elif symposium is False:
+        papers = papers.filter(lambda p: p.type()[0] != "symposium")
 
     # We need to re-sort the papers if there was more than one query
     if collection is not None or len(qs) > 1:
