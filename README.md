@@ -11,7 +11,7 @@
 
 Paperoni uses the Microsoft Academic Knowledge API, which requires an API key:
 
-**[Get a Microsoft Academic Knowledge API key](https://msr-apis.portal.azure-api.net/products/project-academic-knowledge)** (free tier: 10,000 queries per month, trust me, that's plenty)
+**[Get a Microsoft Academic Knowledge API key](https://msr-apis.portal.azure-api.net/products/project-academic-knowledge)** (free tier: 10,000 queries per month)
 
 
 ## Install
@@ -148,7 +148,9 @@ The options are the same as `search`, but you can sort through the search result
 
 ## Researchers database
 
-For more advanced uses you can create a researchers file that contains one or more people. You can make one for yourself, or for your organization. For example, you can add every researcher in your organization or laboratory along with their hiring dates in order to get all of your organization's publications.
+For more advanced uses you can create a researchers file that contains one or more people.
+
+The purpose of `paperoni researcher` is to properly identify authors, better than simply searching by name, because an individual may have several homonyms. Multiple authors can also be grouped so that you can search papers from all of them, so this can be useful to collect all of your organization's publications: simply register all of your researchers. You can even log their start/end dates, which will only collect publications from that time period.
 
 `paperoni researcher -r researchers.json -a author name` will guide you interactively.
 
@@ -156,7 +158,7 @@ For more advanced uses you can create a researchers file that contains one or mo
 2. **`Set a property`**: You can set arbitrary properties for the researcher. Note that `paperoni html` recognizes the `bio` property. Erase a property by entering `null`.
 3. **`Add a role`**: You can optionally assign one or more "roles". A "role" is some arbitrary tag with optional start and end dates that can be assigned to a researcher.
 
-Then you can write for example `paperoni collect -c org.json -r researchers.json --status xyz` to collect papers from researchers when they had a given status. The feature is also compatible with `paperoni search`, of course.
+Then you can write for example `paperoni collect -c org.json -r researchers.json --status xyz` to collect papers from researchers when they had a given status. The `-r` flag is also compatible with `paperoni search`.
 
 ## FAQ
 
