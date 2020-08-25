@@ -1,12 +1,13 @@
 import os
 import shutil
 import sys
+
 from coleo import Argument as Arg, default, tooled
 from hrepr import H
 
-from .searchutils import search
 from ..io import PapersFile, ResearchersFile
 from ..utils import group_by, join, normalize
+from .searchutils import search
 
 try:
     import bs4
@@ -15,7 +16,6 @@ except ImportError:
 
 
 class Template:
-    
     def __init__(self, filename):
         if bs4 is None:
             sys.exit(
@@ -30,8 +30,7 @@ class Template:
             self.divid = "paperoni-papers"
 
         self.contents = bs4.BeautifulSoup(
-            open(self.filename).read(),
-            features="html.parser"
+            open(self.filename).read(), features="html.parser"
         )
         self.elem = self.contents.find(id=self.divid)
         if self.elem is None:
@@ -86,8 +85,9 @@ def format_paper(paper):
             authname,
             [
                 H.sup["author-affiliation"](affiliations[aff])
-                for aff in auth.affiliations if aff in affiliations
-            ]
+                for aff in auth.affiliations
+                if aff in affiliations
+            ],
         )
 
     lnk = paper.links.best("~pdf") or ""
@@ -107,19 +107,20 @@ def format_paper(paper):
         H.div["title"](paper.title),
         H.div["authors"](
             join(
-                [_format_author(auth)
-                    for auth in paper.authors[:maxauth]],
-                lastsep=", " if more else " and "
+                [_format_author(auth) for auth in paper.authors[:maxauth]],
+                lastsep=", " if more else " and ",
             ),
-            f"... ({more} more)" if more else ""
+            f"... ({more} more)" if more else "",
         ),
         H.div["affiliations"](
             (H.sup["author-affiliation"](idx), H.span["affiliation"](aff), " ")
             for aff, idx in affiliations.items()
-        ) if show_affiliations else "",
-        H.div["keywords"](
-            join(x["FN"] for x in paper.data["F"])
-        ) if show_keywords else "",
+        )
+        if show_affiliations
+        else "",
+        H.div["keywords"](join(x["FN"] for x in paper.data["F"]))
+        if show_keywords
+        else "",
         H.div["extra"](
             H.span["venue"](paper.venue_abbr or "(venue unknown)"),
             " ",
@@ -127,10 +128,10 @@ def format_paper(paper):
             " ",
             lnk and H.a["link"](f"{_domain(lnk)}", href=lnk),
             " ",
-            pdf and H.a["link", "pdf-link"](f"PDF", href=pdf),
+            pdf and H.a["link", "pdf-link"]("PDF", href=pdf),
             " ",
-            [(_alsosee(p), " ") for p in getattr(paper, "other_versions", [])]
-        )
+            [(_alsosee(p), " ") for p in getattr(paper, "other_versions", [])],
+        ),
     )
 
 
@@ -187,17 +188,22 @@ def command_html():
             results.append(str(format_paper(paper)))
     else:
         if headers == "year":
-            sortkey = lambda p: p.year
+
+            def sortkey(p):
+                return p.year
+
         elif headers == "month":
-            sortkey = lambda p: p.date[:7]
+
+            def sortkey(p):
+                return p.date[:7]
+
         else:
             sys.exit(f"Invalid headers: {headers}")
 
         papers = group_by(papers, sortkey)
         for key, papers in sorted(papers.items(), reverse=True):
             grp = H.div["paper-group"](
-                H.h3(key),
-                [format_paper(paper) for paper in papers]
+                H.h3(key), [format_paper(paper) for paper in papers]
             )
             results.append(str(grp))
 

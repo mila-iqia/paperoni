@@ -37,7 +37,15 @@ class Researchers:
         if key in self.data:
             return self.data[key]
         else:
-            r = Researcher({"name": name, "ids": [], "noids": [], "properties": {}, "roles": []})
+            r = Researcher(
+                {
+                    "name": name,
+                    "ids": [],
+                    "noids": [],
+                    "properties": {},
+                    "roles": [],
+                }
+            )
             self.data[key] = r
             return r
 

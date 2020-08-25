@@ -91,7 +91,7 @@ description = "The nicest way to develop a command-line interface"
 name = "coleo"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "0.1.6"
+version = "0.1.7"
 
 [package.dependencies]
 ptera = ">=0.2.4,<0.3.0"
@@ -328,7 +328,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "99c24c0e88d3768ebdaa32c1bb19f979c652609953d2be59309c39c462ee8f02"
+content-hash = "40c6388fbd9e7f14ea558c98dec65f3226ed3058807b9ad9d4e9d56c3d13d260"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -365,8 +365,8 @@ click = [
     {file = "click-7.1.2.tar.gz", hash = "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a"},
 ]
 coleo = [
-    {file = "coleo-0.1.6-py3-none-any.whl", hash = "sha256:b9ce6e23dd21f86ee1078dc8c75789a45f510d85a00819d4a1d25545d74d042a"},
-    {file = "coleo-0.1.6.tar.gz", hash = "sha256:3ecfb23eab75c6e0df4fd8efadbb66f37220576c643f3bdded75daea02f95062"},
+    {file = "coleo-0.1.7-py3-none-any.whl", hash = "sha256:755367ff82238c7f593d6ca2e01170a8138acea499190742bfdd3c3f1ec6423c"},
+    {file = "coleo-0.1.7.tar.gz", hash = "sha256:77ae67dfd4bebf7252e41d4e624db1e0a4de5f5a3ee49d7a8ed4def838943b4b"},
 ]
 contextvars = [
     {file = "contextvars-2.4.tar.gz", hash = "sha256:f38c908aaa59c14335eeea12abea5f443646216c4e29380d7bf34d2018e2c39e"},
