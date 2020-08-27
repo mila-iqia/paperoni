@@ -3,6 +3,9 @@ name = "paperoni"
 version = "0.1.2"
 description = "Search for scientific papers"
 authors = ["Olivier Breuleux <breuleux@gmail.com>"]
+readme = "README.md"
+homepage = "https://github.com/mila-iqia/paperoni"
+repository = "https://github.com/mila-iqia/paperoni"
 license = "MIT"
 
 [tool.poetry.dependencies]
@@ -12,6 +15,7 @@ tqdm = "^4.48.2"
 requests = "^2.24.0"
 blessed = "^1.17.9"
 hrepr = "^0.2.4"
+beautifulsoup4 = "^4.9.1"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
