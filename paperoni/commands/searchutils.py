@@ -31,6 +31,13 @@ def search_ext():
     return search(collection=collection, researchers=researchers)
 
 
+def join(parts):
+    if parts is None or isinstance(parts, str):
+        return parts
+    else:
+        return " ".join(parts)
+
+
 @tooled
 def search(collection=None, researchers=None):
 
@@ -46,14 +53,14 @@ def search(collection=None, researchers=None):
     # [nargs: *]
     # Search words in the title
     title: Arg & str = default(None)
-    title = title and " ".join(title)
+    title = join(title)
 
     # [group: search]
     # [alias: -a]
     # [nargs: *]
     # Search for an author
     author: Arg & str = default(None)
-    author = author and " ".join(author)
+    author = join(author)
     if author and re.match(r"^[0-9]+$", author):
         author = int(author)
 
@@ -62,7 +69,7 @@ def search(collection=None, researchers=None):
     # [nargs: *]
     # Search words in the title or abstract
     words: Arg & str = default(None)
-    words = words and " ".join(words)
+    words = join(words)
 
     # [group: search]
     # [alias: -k]
@@ -76,7 +83,7 @@ def search(collection=None, researchers=None):
     # [nargs: *]
     # Search papers from institution
     institution: Arg & str = default(None)
-    institution = institution and " ".join(institution)
+    institution = join(institution)
 
     # [group: search]
     # Search papers from a specific conference or journal
