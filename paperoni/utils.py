@@ -1,3 +1,5 @@
+import shutil
+import textwrap
 import unicodedata
 from collections import defaultdict
 
@@ -8,6 +10,7 @@ from tqdm import tqdm
 
 H = HTML()
 T = Terminal()
+tw = shutil.get_terminal_size((80, 20)).columns
 
 
 class PaperoniError(Exception):
@@ -16,6 +19,9 @@ class PaperoniError(Exception):
 
 def print_field(title, contents, bold=False):
     """Prints a line that goes 'title: contents', nicely formatted."""
+    contents = "\n".join(textwrap.wrap(f"{title}: {contents}", width=tw))[
+        len(title) + 2 :
+    ]
     title = T.bold_cyan(f"{title}:")
     contents = T.bold(contents) if bold else contents
     print(title, contents)
