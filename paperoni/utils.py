@@ -19,9 +19,7 @@ class PaperoniError(Exception):
 
 def print_field(title, contents, bold=False):
     """Prints a line that goes 'title: contents', nicely formatted."""
-    contents = "\n".join(textwrap.wrap(f"{title}: {contents}", width=tw))[
-        len(title) + 2 :
-    ]
+    contents = textwrap.fill(f"{title}: {contents}", width=tw)[len(title) + 2 :]
     title = T.bold_cyan(f"{title}:")
     contents = T.bold(contents) if bold else contents
     print(title, contents)

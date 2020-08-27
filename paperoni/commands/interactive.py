@@ -1,5 +1,7 @@
 from blessed import Terminal
 
+from ..papers import Paper
+
 T = Terminal()
 
 
@@ -22,10 +24,12 @@ class InteractiveCommands(dict):
 
         return deco
 
-    def process_paper(self, paper, command=None, **kwargs):
+    def process_paper(
+        self, paper, command=None, formatter=Paper.format_term, **kwargs
+    ):
         """Process a paper interactively."""
         print("=" * 80)
-        paper.format_term()
+        formatter(paper)
         print("=" * 80)
 
         opts = " ".join(

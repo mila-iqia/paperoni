@@ -1,6 +1,7 @@
 from coleo import Argument as Arg, default, tooled
 
 from ..io import PapersFile, ResearchersFile
+from ..papers import Paper
 from .interactive import InteractiveCommands, default_commands
 from .searchutils import search
 
@@ -50,6 +51,9 @@ def command_collect():
     # Prompt for papers even if they were excluded from the collection
     show_excluded: Arg & bool = default(False)
 
+    # Display long form for each paper
+    long: Arg & bool = default(False)
+
     # Include all papers from the collection
     # [options: --yes]
     yes_: Arg & bool = default(False)
@@ -72,7 +76,10 @@ def command_collect():
         if not show_excluded and collection.excludes(paper):
             continue
         instruction = search_commands.process_paper(
-            paper, collection=collection, command=command,
+            paper,
+            collection=collection,
+            command=command,
+            formatter=Paper.format_term_long if long else Paper.format_term,
         )
         if instruction is False:
             break
