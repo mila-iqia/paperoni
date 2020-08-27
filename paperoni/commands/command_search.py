@@ -4,19 +4,17 @@ from ..io import PapersFile, ResearchersFile
 from .interactive import InteractiveCommands, default_commands
 from .searchutils import search
 
-search_commands = InteractiveCommands(
-    "Enter a command (h or ? for help):", default="s"
-)
+search_commands = InteractiveCommands("Enter a command", default="s")
 
 
-@search_commands.register("b")
+@search_commands.register("b", "[b]ibtex")
 def _b(self, paper, **_):
     """Generate bibtex"""
     print(paper.bibtex())
     return None
 
 
-@search_commands.register("p")
+@search_commands.register("p", "[p]df")
 def _p(self, paper, **_):
     """Download the PDF"""
     if not paper.download_pdf():
@@ -28,7 +26,7 @@ def _p(self, paper, **_):
     return None
 
 
-@search_commands.register("s")
+@search_commands.register("s", "[s]kip")
 def _s(self, paper, **_):
     """Skip and see the next paper"""
     return True
@@ -37,7 +35,7 @@ def _s(self, paper, **_):
 search_commands_with_coll = search_commands.copy()
 
 
-@search_commands_with_coll.register("r")
+@search_commands_with_coll.register("r", "[r]emove")
 def _r(self, paper, collection):
     """Remove the paper from the collection"""
     collection.exclude(paper)

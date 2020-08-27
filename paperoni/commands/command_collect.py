@@ -5,25 +5,25 @@ from .interactive import InteractiveCommands, default_commands
 from .searchutils import search
 
 search_commands = InteractiveCommands(
-    "Enter a command (h or ? for help):", default="y"
+    "Include this paper in the collection?", default="y"
 )
 
 
-@search_commands.register("y")
+@search_commands.register("y", "[y]es")
 def _y(self, paper, collection):
     """Include the paper in the collection"""
     collection.add(paper)
     return True
 
 
-@search_commands.register("n")
+@search_commands.register("n", "[n]o")
 def _n(self, paper, collection):
     """Exclude the paper from the collection"""
     collection.exclude(paper)
     return True
 
 
-@search_commands.register("s")
+@search_commands.register("s", "[s]kip")
 def _s(self, paper, collection):
     """Skip and see the next paper"""
     return True

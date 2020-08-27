@@ -15,8 +15,9 @@ class InteractiveCommands(dict):
         rval.update(self)
         return rval
 
-    def register(self, key):
+    def register(self, key, longkey):
         def deco(fn):
+            fn._longkey = longkey
             self[key] = fn
 
         return deco
@@ -27,13 +28,16 @@ class InteractiveCommands(dict):
         paper.format_term()
         print("=" * 80)
 
-        opts = "/".join(
+        opts = " ".join(
             [
-                (f"[{key}]" if key == self.default else key)
-                for key in self.keys()
+                f"{T.underline(fn._longkey):18}"
+                if key == self.default
+                else f"{fn._longkey:10}"
+                for key, fn in self.items()
             ]
         )
-        prompt = f"{self.prompt} {opts} "
+        print(opts)
+        prompt = f"{self.prompt} (default: {self.default}): "
 
         while True:
             try:
@@ -55,13 +59,13 @@ class InteractiveCommands(dict):
 default_commands = InteractiveCommands(None, None)
 
 
-@default_commands.register("q")
+@default_commands.register("q", "[q]uit")
 def _q(self, paper, **_):
     """Quit the program"""
     return False
 
 
-@default_commands.register("l")
+@default_commands.register("l", "[l]ong")
 def _l(self, paper, **_):
     """Display long form of the paper (all details)"""
     print("=" * 80)
@@ -70,7 +74,7 @@ def _l(self, paper, **_):
     return None
 
 
-@default_commands.register("h")
+@default_commands.register("h", "[h]elp")
 def _h(self, paper, **_):
     """display this help"""
     print("-" * 80)
