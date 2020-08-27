@@ -196,17 +196,61 @@ Removed 'The paper title' from the collection.
 
 You can use `--command r` to do this non-interactively.
 
+
+## Programmatic API
+
+**The API is very beta and unstable. It is liable to change arbitrarily.**
+
+If you want to perform some custom operations like generating HTML exactly the way you want it, write some reference format other than BibTeX, or whatever else, here's some code to get you started. The following will search for papers by Alan Turing and will print out the titles and abstracts:
+
+
+```python
+import coleo
+
+# You need these to wrap collection or researchers, if you want to provide
+# them outside of the command line.
+from paperoni.io import PapersFile, ResearchersFile
+
+# There is also search(), the difference is that search() does not define
+# CLI arguments for collection and researchers but takes them as inputs
+# instead
+from paperoni.commands.searchutils import search_ext
+
+def main():
+    papers = search_ext()
+    for paper in papers:
+        print(paper.title)
+        print(paper.abstract)
+        print("====")
+
+if __name__ == "__main__":
+    with coleo.setvars(
+        author="alan turing",
+        # collection=PapersFile("alan.json"),
+        # researchers=ResearchersFile("rsch.json"),
+    ):
+        coleo.auto_cli(main, print_result=False)
+```
+
+* `coleo.auto_cli` will expose all the search flags like `--title` and whatnot that are defined inside `search_ext`, so you actually get all that for free.
+* `coleo.setvars` lets you set any of the options programmatically, but some of them, like `collection` or `researchers`, you will need to wrap yourself (see the commented lines).
+* The API for the Paper object is kind of bad and in flux so I'm not going to document it right now, but if you dump `paper.data` you can see all the raw data and work from there.
+
+Check out [coleo](https://github.com/breuleux/coleo) if you want to define extra command line arguments in `main()`, it's quite easy.
+
+Future versions of `paperoni` might break the API, so make sure to pin the version you're using.
+
 ## Plugins
+
+**The API is very beta and unstable. It is liable to change arbitrarily.**
 
 You can add new commands to paperoni by registering them in the `paperoni.command` entry point. Command line options must be defined using [coleo](https://github.com/breuleux/coleo). If you are using [poetry](https://python-poetry.org/):
 
 **pyproject.toml**
 
 ```toml
-...
 [tool.poetry.plugins."paperoni.command"]
 showprop = "my_paperoni:showprop"
-...
 ```
 
 **my_paperoni/\_\_init__.py**
@@ -249,3 +293,5 @@ Use the plugin:
 ```bash
 paperoni showprop -p venue -a alan turing --limit 10
 ```
+
+Future versions of `paperoni` might break the API, so make sure to pin the version you're using.
