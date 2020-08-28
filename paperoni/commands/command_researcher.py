@@ -122,38 +122,46 @@ def command_researcher():
     author: Arg & str
     author = " ".join(author)
 
+    # Find IDs for the researcher
+    find_ids: Arg & bool = default(False)
+
     data = researchers.get(author)
 
     original = deepcopy(data.data)
 
-    while True:
-        print(T.bold("Current data about"), T.bold_cyan(author))
-        print(json.dumps(data.data, indent=2))
-        print()
+    if find_ids:
+        _find_ids(data)
+        researchers.save()
 
-        print(T.bold("What do you want to do?"))
-        print(T.bold_yellow("(1)"), "Find ids")
-        print(T.bold_yellow("(2)"), "Set a property")
-        print(T.bold_yellow("(3)"), "Add a role")
-        print(T.bold_yellow("(*)"), "Quit (any other key)")
-        task = input(T.bold("> "))
-
-        if task == "1":
+    else:
+        while True:
+            print(T.bold("Current data about"), T.bold_cyan(author))
+            print(json.dumps(data.data, indent=2))
             print()
-            _find_ids(data)
 
-        elif task == "2":
-            print()
-            _set_property(data)
+            print(T.bold("What do you want to do?"))
+            print(T.bold_yellow("(1)"), "Find ids")
+            print(T.bold_yellow("(2)"), "Set a property")
+            print(T.bold_yellow("(3)"), "Add a role")
+            print(T.bold_yellow("(*)"), "Quit (any other key)")
+            task = input(T.bold("> "))
 
-        elif task == "3":
-            print()
-            _add_role(data)
+            if task == "1":
+                print()
+                _find_ids(data)
 
-        else:
-            break
+            elif task == "2":
+                print()
+                _set_property(data)
 
-    if data.data != original:
-        save = input(T.bold("Save changes? [y]/n ")).strip()
-        if save == "y" or save == "":
-            researchers.save()
+            elif task == "3":
+                print()
+                _add_role(data)
+
+            else:
+                break
+
+        if data.data != original:
+            save = input(T.bold("Save changes? [y]/n ")).strip()
+            if save == "y" or save == "":
+                researchers.save()
