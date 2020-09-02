@@ -71,6 +71,7 @@ def _find_ids(rsch):
             q, ",".join(Papers.fields), orderby="D:desc", count=1000
         )
         papers = Papers({p["Id"]: p for p in papers}, None)
+        dunno = set()
         for p in papers:
             aid = [
                 auth.aid for auth in p.authors if auth.data["AuN"] == auth_name
@@ -78,7 +79,7 @@ def _find_ids(rsch):
             if not aid:
                 continue
             aid = aid[0]
-            if aid in noids or aid in ids:
+            if aid in noids or aid in ids or aid in dunno:
                 continue
             print("=" * 80)
             p.format_term()
@@ -86,7 +87,7 @@ def _find_ids(rsch):
             exit = False
             while True:
                 answer = input(
-                    f"Is this a paper by the author? (authid={aid}) [y]es/[n]o/[s]kip/[l]ong/[q]uit "
+                    f"Is this a paper by the author? (authid={aid}) [y]es/[n]o/[m]ore/[s]kip/[l]ong/[q]uit "
                 )
                 if answer == "y":
                     ids.append(aid)
@@ -94,7 +95,10 @@ def _find_ids(rsch):
                 elif answer == "n":
                     noids.append(aid)
                     break
+                elif answer == "m":
+                    break
                 elif answer == "s":
+                    dunno.add(aid)
                     break
                 elif answer == "l":
                     p.format_term_long()
