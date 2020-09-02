@@ -7,7 +7,9 @@
 * Generate **HTML** for your publications!
 * Build **collections** of papers
 
-<img src="./media/screenshot.png">
+<!-- <img src="./media/screenshot.png"> -->
+
+![Screenshot](https://github.com/mila-iqia/paperoni/raw/master/media/screenshot.png)
 
 Paperoni uses the Microsoft Academic Knowledge API, which requires an API key:
 
