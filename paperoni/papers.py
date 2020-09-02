@@ -525,7 +525,7 @@ class Link:
     """Represents a link to a resource."""
 
     def __init__(self, data):
-        self.type = _link_type_map[data.get("Ty", None)]
+        self.type = _link_type_map.get(data.get("Ty", None), "???")
         self.url = data["U"]
         self.properties = set()
         for expr, props in _link_properties.items():
