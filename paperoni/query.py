@@ -115,6 +115,9 @@ class QueryManager:
             author = author.lower()
             return f"Composite(AA.AuN='{author}')"
 
+    def _q_paper_id(self, paper_id):
+        return f"Id={paper_id}"
+
     def _q_title(self, title):
         title = title.lower()
         title = re.split(r"\W+", title)

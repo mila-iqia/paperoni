@@ -49,6 +49,10 @@ def search(collection=None, researchers=None):
     verbose: Arg & bool = default(False)
 
     # [group: search]
+    # Search using a specific paper ID
+    paper_id: Arg & int = default(None)
+
+    # [group: search]
     # [alias: -t]
     # [nargs: *]
     # Search words in the title
@@ -145,6 +149,7 @@ def search(collection=None, researchers=None):
                 for rid in researcher.ids:
                     qs.append(
                         {
+                            "paper_id": paper_id,
                             "title": title,
                             "author": rid,
                             "words": words,
@@ -158,6 +163,7 @@ def search(collection=None, researchers=None):
     else:
         qs = [
             {
+                "paper_id": paper_id,
                 "title": title,
                 "author": author,
                 "words": words,

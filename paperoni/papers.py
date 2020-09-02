@@ -142,6 +142,9 @@ class Papers:
                 if any(author == _norm(auth.name) for auth in p.authors)
             ]
 
+    def _q_paper_id(self, papers, paper_id):
+        return [p for p in papers if p.pid == paper_id]
+
     def _q_title(self, papers, title):
         query = _norm(title)
         query = re.split(r"\W+", query)
