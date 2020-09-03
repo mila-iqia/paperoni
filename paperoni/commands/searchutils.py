@@ -136,7 +136,7 @@ def search(collection=None, researchers=None):
 
     # [group: search]
     # Number of papers to fetch (default: 100)
-    limit: Arg & int = default(100)
+    limit: Arg & int = default(None)
 
     # [group: search]
     # Search offset
@@ -201,7 +201,7 @@ def search(collection=None, researchers=None):
                     q,
                     attrs=",".join(Papers.fields),
                     orderby=orderby,
-                    count=limit,
+                    count=limit or 100,
                     offset=offset,
                     verbose=verbose,
                 )
@@ -230,5 +230,11 @@ def search(collection=None, researchers=None):
             papers = papers.sorted("date", desc=True)
         elif cited:
             papers = papers.sorted("citations", desc=True)
+
+    if collection is not None:
+        if offset:
+            papers = papers[offset:]
+        if limit:
+            papers = papers[:limit]
 
     return papers
