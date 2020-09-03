@@ -227,8 +227,8 @@ def search(collection=None, researchers=None):
     # We need to re-sort the papers if there was more than one query
     if collection is not None or len(qs) > 1:
         if recent:
-            papers = papers.sorted("D", desc=True)
+            papers = papers.sorted("date", desc=True)
         elif cited:
-            papers = papers.sorted("CC", desc=True)
+            papers = papers.sorted("citations", desc=True)
 
     return papers

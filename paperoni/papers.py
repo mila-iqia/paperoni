@@ -85,9 +85,9 @@ class Papers:
             del self.papers[paper.pid]
         self.excluded.add(paper.pid)
 
-    def sorted(self, field="D", desc=False):
+    def sorted(self, field="date", desc=False):
         results = list(
-            sorted(self.papers.values(), key=lambda paper: paper.data[field])
+            sorted(self.papers.values(), key=lambda paper: getattr(paper, field))
         )
         if desc:
             results.reverse()
@@ -269,6 +269,13 @@ class Paper:
     def keywords(self):
         return [k["FN"] for k in self.data.get("F", [])]
 
+    @property
+    def citations(self):
+        cit = self.data["CC"]
+        for p in getattr(self, "other_versions", []):
+            cit += p.data["CC"]
+        return cit
+
     def peer_review_status(self):
         """Returns a code representing peer review status.
 
@@ -329,7 +336,7 @@ class Paper:
         print_field("Sources", "")
         for link in self.links.sorted(link_sort_key):
             print(f"  {T.bold_green(link.type)} {link.url}")
-        print_field("Citations", self.data["CC"])
+        print_field("Citations", self.citations)
 
     @property
     def reference_string(self):

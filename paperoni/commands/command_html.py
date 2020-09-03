@@ -56,6 +56,9 @@ def format_paper(paper):
     # Show keywords
     show_keywords: Arg & bool = default(False)
 
+    # Show the citation count
+    show_citation_count: Arg & bool = default(False)
+
     # Property in the researchers file to use as the author's bio
     biofield: Arg & str = default("bio")
 
@@ -131,6 +134,9 @@ def format_paper(paper):
             pdf and H.a["link", "pdf-link"]("PDF", href=pdf),
             " ",
             [(_alsosee(p), " ") for p in getattr(paper, "other_versions", [])],
+            ("[Citations: ", paper.citations , "]")
+            if show_citation_count
+            else "",
         ),
     )
 
