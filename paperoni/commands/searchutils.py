@@ -145,20 +145,21 @@ def search(collection=None, researchers=None):
     if researchers:
         qs = []
         for researcher in researchers:
+            if not researcher.ids:
+                continue
             for role in researcher.with_status(*status):
-                for rid in researcher.ids:
-                    qs.append(
-                        {
-                            "paper_id": paper_id,
-                            "title": title,
-                            "author": rid,
-                            "words": words,
-                            "keywords": keywords,
-                            "institution": institution,
-                            "venue": venue,
-                            "daterange": (role.begin, role.end),
-                        }
-                    )
+                qs.append(
+                    {
+                        "paper_id": paper_id,
+                        "title": title,
+                        "author": researcher.ids,
+                        "words": words,
+                        "keywords": keywords,
+                        "institution": institution,
+                        "venue": venue,
+                        "daterange": (role.begin, role.end),
+                    }
+                )
 
     else:
         qs = [
@@ -179,7 +180,8 @@ def search(collection=None, researchers=None):
     if collection is not None:
         for q in qs:
             if verbose:
-                print(f"Querying: {q} ...")
+                vq = {k: v for k, v in q.items() if v is not None}
+                print(f"Querying: {vq} ...")
             papers.extend(collection.query(q))
         papers = Papers(papers, researchers)
 
@@ -195,7 +197,8 @@ def search(collection=None, researchers=None):
                 orderby = None
 
             if verbose:
-                print(f"Querying: {q} ...")
+                vq = {k: v for k, v in q.items() if v is not None}
+                print(f"Querying: {vq} ...")
             papers.extend(
                 qm.query(
                     q,

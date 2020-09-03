@@ -109,7 +109,13 @@ class QueryManager:
         return entity
 
     def _q_author(self, author):
-        if isinstance(author, int):
+        if isinstance(author, list):
+            if len(author) == 1:
+                return self._q_author(author[0])
+            else:
+                results = ",".join(self._q_author(a) for a in author)
+                return f"Or({results})"
+        elif isinstance(author, int):
             return f"Composite(AA.AuId={author})"
         else:
             author = author.lower()
