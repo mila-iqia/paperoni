@@ -54,6 +54,9 @@ def command_collect():
     # Display long form for each paper
     long: Arg & bool = default(False)
 
+    # Update existing papers with new information
+    update: Arg & bool = default(False)
+
     # Include all papers from the collection
     # [options: --yes]
     yes_: Arg & bool = default(False)
@@ -72,6 +75,8 @@ def command_collect():
 
     for paper in papers:
         if paper in collection:
+            if update:
+                collection.add(paper)
             continue
         if not show_excluded and collection.excludes(paper):
             continue
