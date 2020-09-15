@@ -2,7 +2,7 @@ import os
 import shutil
 import sys
 
-from coleo import Argument as Arg, default, tooled
+from coleo import Option, default, tooled
 from hrepr import H
 
 from ..io import PapersFile, ResearchersFile
@@ -51,19 +51,19 @@ class Template:
 @tooled
 def format_paper(paper):
     # Show author affiliations
-    show_affiliations: Arg & bool = default(False)
+    show_affiliations: Option & bool = default(False)
 
     # Show keywords
-    show_keywords: Arg & bool = default(False)
+    show_keywords: Option & bool = default(False)
 
     # Show the citation count
-    show_citation_count: Arg & bool = default(False)
+    show_citation_count: Option & bool = default(False)
 
     # Property in the researchers file to use as the author's bio
-    biofield: Arg & str = default("bio")
+    biofield: Option & str = default("bio")
 
     # Maximum number of authors to display on a paper (default: 10)
-    maxauth: Arg & int = default(10)
+    maxauth: Option & int = default(10)
 
     affiliations = {}
     if show_affiliations:
@@ -147,26 +147,26 @@ def command_html():
 
     # Researchers file (JSON)
     # [alias: -r]
-    researchers: Arg & ResearchersFile = default(None)
+    researchers: Option & ResearchersFile = default(None)
 
     # Collection file (JSON)
     # [alias: -c]
-    collection: Arg = default(None)
+    collection: Option = default(None)
     if collection:
         collection = PapersFile(collection, researchers=researchers)
 
     # "year", "month" or "none" to separate entries by year or
     # month or to not separate them (default: year)
-    headers: Arg & normalize = default("year")
+    headers: Option & normalize = default("year")
 
     # File#divid to inject the HTML
-    inject: Arg & Template = default(None)
+    inject: Option & Template = default(None)
 
     # HTML template
-    template: Arg & Template = default(None)
+    template: Option & Template = default(None)
 
     # Print the raw HTML, no template
-    no_template: Arg & bool = default(False)
+    no_template: Option & bool = default(False)
 
     if not no_template and template is None:
         template = Template(
@@ -175,10 +175,10 @@ def command_html():
 
     # Output file
     # [alias: -o]
-    output: Arg = default(None)
+    output: Option = default(None)
 
     # Make no backup of the file specified with --inject
-    no_backup: Arg = default(False)
+    no_backup: Option = default(False)
 
     if inject and template:
         sys.exit("Cannot specify both --inject and --template")

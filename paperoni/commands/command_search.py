@@ -1,4 +1,4 @@
-from coleo import Argument as Arg, default, tooled
+from coleo import Option, default, tooled
 
 from ..io import PapersFile, ResearchersFile
 from ..papers import Paper
@@ -54,17 +54,17 @@ def command_search():
 
     # File containing the collection
     # [alias: -c]
-    collection: Arg & PapersFile = default(None)
+    collection: Option & PapersFile = default(None)
 
     # Researchers file (JSON)
     # [alias: -r]
-    researchers: Arg & ResearchersFile = default(None)
+    researchers: Option & ResearchersFile = default(None)
 
     # Command to run on every paper
-    command: Arg = default(None)
+    command: Option = default(None)
 
     # Display long form for each paper
-    long: Arg & bool = default(False)
+    long: Option & bool = default(False)
 
     papers = search(collection=collection, researchers=researchers)
 

@@ -1,4 +1,4 @@
-from coleo import Argument as Arg, default, tooled
+from coleo import Option, default, tooled
 
 from ..io import PapersFile, ResearchersFile
 from ..papers import Paper
@@ -39,34 +39,34 @@ def command_collect():
 
     # File containing the collection
     # [alias: -c]
-    collection: Arg & PapersFile
+    collection: Option & PapersFile
 
     # Researchers file (JSON)
     # [alias: -r]
-    researchers: Arg & ResearchersFile = default(None)
+    researchers: Option & ResearchersFile = default(None)
 
     # Command to run on every paper
-    command: Arg = default(None)
+    command: Option = default(None)
 
     # Prompt for papers even if they were excluded from the collection
-    show_excluded: Arg & bool = default(False)
+    show_excluded: Option & bool = default(False)
 
     # Display long form for each paper
-    long: Arg & bool = default(False)
+    long: Option & bool = default(False)
 
     # Update existing papers with new information
-    update: Arg & bool = default(False)
+    update: Option & bool = default(False)
 
     # Include all papers from the collection
     # [options: --yes]
-    yes_: Arg & bool = default(False)
+    yes_: Option & bool = default(False)
 
     if yes_:
         command = "y"
 
     # Exclude all papers from the collection
     # [options: --no]
-    no_: Arg & bool = default(False)
+    no_: Option & bool = default(False)
 
     if no_:
         command = "n"

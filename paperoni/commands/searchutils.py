@@ -1,6 +1,6 @@
 import re
 
-from coleo import Argument as Arg, default, tooled
+from coleo import Option, default, tooled
 
 from ..config import get_config
 from ..io import PapersFile, ResearchersFile
@@ -22,11 +22,11 @@ def search_ext():
 
     # File containing the collection
     # [alias: -c]
-    collection: Arg & PapersFile = default(None)
+    collection: Option & PapersFile = default(None)
 
     # Researchers file (JSON)
     # [alias: -r]
-    researchers: Arg & ResearchersFile = default(None)
+    researchers: Option & ResearchersFile = default(None)
 
     return search(collection=collection, researchers=researchers)
 
@@ -42,28 +42,28 @@ def join(parts):
 def search(collection=None, researchers=None):
 
     # Microsoft Cognitive API key
-    key: Arg & str = default(get_config("key"))
+    key: Option & str = default(get_config("key"))
 
     # [alias: -v]
     # Verbose output
-    verbose: Arg & bool = default(False)
+    verbose: Option & bool = default(False)
 
     # [group: search]
     # Search using a specific paper ID
-    paper_id: Arg & int = default(None)
+    paper_id: Option & int = default(None)
 
     # [group: search]
     # [alias: -t]
     # [nargs: *]
     # Search words in the title
-    title: Arg & str = default(None)
+    title: Option & str = default(None)
     title = join(title)
 
     # [group: search]
     # [alias: -a]
     # [nargs: *]
     # Search for an author
-    author: Arg & str = default(None)
+    author: Option & str = default(None)
     author = join(author)
     if author and re.match(r"^[0-9]+$", author):
         author = int(author)
@@ -72,75 +72,77 @@ def search(collection=None, researchers=None):
     # [alias: -w]
     # [nargs: *]
     # Search words in the title or abstract
-    words: Arg & str = default(None)
+    words: Option & str = default(None)
     words = join(words)
 
     # [group: search]
     # [alias: -k]
     # [nargs: *]
     # Search for keywords
-    keywords: Arg & str = default([])
+    keywords: Option & str = default([])
     keywords = [k.replace("_", " ") for k in keywords]
 
     # [group: search]
     # [alias: -i]
     # [nargs: *]
     # Search papers from institution
-    institution: Arg & str = default(None)
+    institution: Option & str = default(None)
     institution = join(institution)
 
     # [group: search]
     # Search papers from a specific conference or journal
-    venue: Arg & str = default(None)
+    venue: Option & str = default(None)
 
     # [group: search]
     # [nargs: *]
     # Researcher status(es) to filter for
-    status: Arg = default([])
+    status: Option = default([])
 
     # [group: search]
     # [alias: -y]
     # Year
-    year: Arg & int = default(None)
+    year: Option & int = default(None)
 
     # [group: search]
     # Start date (yyyy-mm-dd or yyyy)
-    start: Arg = default(str(year) if year is not None else None)
+    start: Option = default(str(year) if year is not None else None)
     start = _date(start, ending="01-01")
 
     # [group: search]
     # End date (yyyy-mm-dd or yyyy)
-    end: Arg = default(str(year) if year is not None else None)
+    end: Option = default(str(year) if year is not None else None)
     end = _date(end, ending="12-31")
 
     # [group: search]
     # Sort by most recent
-    recent: Arg & bool = default(False)
+    recent: Option & bool = default(False)
 
     # [group: search]
     # Sort by most cited
-    cited: Arg & bool = default(False)
+    cited: Option & bool = default(False)
 
     # Group multiple versions of the same paper
-    group: Arg & bool = default(False)
+    group: Option & bool = default(False)
 
     # [group: search]
-    # [negate: Do not list symposiums]
+    # [false-options]
+    # [false-options-doc: Do not list symposiums]
     # List symposiums
-    symposium: Arg & bool = default(None)
+    symposium: Option & bool = default(None)
 
     # [group: search]
-    # [negate: Do not list workshops]
+    # [false-options]
+    # [false-options-doc: Do not list workshops]
     # List workshops
-    workshop: Arg & bool = default(None)
+    workshop: Option & bool = default(None)
 
     # [group: search]
     # Number of papers to fetch (default: 100)
-    limit: Arg & int = default(None)
+    limit: Option & int = default(None)
 
     # [group: search]
     # Search offset
-    offset: Arg & int = default(0)
+    offset: Option & int = default(0)
 
     if researchers:
         qs = []

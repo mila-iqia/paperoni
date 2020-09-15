@@ -2,7 +2,7 @@ import json
 import re
 from copy import deepcopy
 
-from coleo import Argument as Arg, default, tooled
+from coleo import Option, default, tooled
 
 from ..config import get_config
 from ..io import ResearchersFile
@@ -47,11 +47,11 @@ def _set_property(researcher):
 def _find_ids(rsch):
 
     # Microsoft Cognitive API key
-    key: Arg & str = default(get_config("key"))
+    key: Option & str = default(get_config("key"))
 
     # Query to use to find ids
     # [Alias: -q]
-    query: Arg & str = default(rsch.data["name"])
+    query: Option & str = default(rsch.data["name"])
 
     qm = QueryManager(key)
     queries = qm.interpret(query=f"{query}", count=10)
@@ -118,16 +118,16 @@ def command_researcher():
 
     # Researchers file (JSON)
     # [alias: -f -r]
-    researchers: Arg & ResearchersFile
+    researchers: Option & ResearchersFile
 
     # Name of the researcher
     # [alias: -a]
     # [nargs: +]
-    author: Arg & str
+    author: Option & str
     author = " ".join(author)
 
     # Find IDs for the researcher
-    find_ids: Arg & bool = default(False)
+    find_ids: Option & bool = default(False)
 
     data = researchers.get(author)
 

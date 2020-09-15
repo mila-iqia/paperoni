@@ -258,7 +258,7 @@ showprop = "my_paperoni:showprop"
 **my_paperoni/\_\_init__.py**
 
 ```python
-from coleo import Argument, default, tooled
+from coleo import Option, default, tooled
 from paperoni.commands.searchutils import search
 
 
@@ -267,7 +267,7 @@ def showprop():
 
     # Name of the property to display
     # [alias: -p]
-    prop: Argument & str = default("title")
+    prop: Option & str = default("title")
 
     # This will add all the search options
     papers = search()

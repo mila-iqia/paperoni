@@ -1,4 +1,4 @@
-from coleo import Argument as Arg, default, tooled
+from coleo import Option, default, tooled
 
 from ..config import get_config, write_config
 from ..utils import T
@@ -10,7 +10,7 @@ def command_config():
     cfg = get_config() or {}
     orig_cfg = dict(cfg)
 
-    key: Arg & str = default(None)
+    key: Option & str = default(None)
 
     if key is None:
         print(
