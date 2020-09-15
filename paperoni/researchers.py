@@ -9,6 +9,7 @@ class Role:
     status: str = "unknown"
     begin: str = None
     end: str = None
+    note: str = None
 
     def __contains__(self, date):
         b = self.begin or "\x00"
