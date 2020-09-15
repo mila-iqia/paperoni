@@ -62,11 +62,11 @@ def search(collection=None, researchers=None):
     # [group: search]
     # [alias: -a]
     # [nargs: *]
+    # [action: append]
     # Search for an author
-    author: Option & str = default(None)
-    author = join(author)
-    if author and re.match(r"^[0-9]+$", author):
-        author = int(author)
+    author: Option & str = default([])
+    author = [join(a) for a in author]
+    author = [int(a) if re.match(r"^[0-9]+$", a) else a for a in author]
 
     # [group: search]
     # [alias: -w]
@@ -78,9 +78,10 @@ def search(collection=None, researchers=None):
     # [group: search]
     # [alias: -k]
     # [nargs: *]
+    # [action: append]
     # Search for keywords
     keywords: Option & str = default([])
-    keywords = [k.replace("_", " ") for k in keywords]
+    keywords = [join(k) for k in keywords]
 
     # [group: search]
     # [alias: -i]

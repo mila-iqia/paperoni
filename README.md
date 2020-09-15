@@ -37,7 +37,7 @@ paperoni search -a alan turing
 paperoni search -t the chemical basis of morphogenesis
 
 # Search for the most cited AI papers of 2017
-paperoni search -k artificial_intelligence -y 2017 --cited
+paperoni search -k artificial intelligence -y 2017 --cited
 
 # Collect papers into a file
 paperoni collect -c my-papers.json -a olivier breuleux -y 2018

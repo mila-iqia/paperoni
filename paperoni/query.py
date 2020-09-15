@@ -112,6 +112,8 @@ class QueryManager:
         if isinstance(author, list):
             if len(author) == 1:
                 return self._q_author(author[0])
+            elif len(author) == 0:
+                return ""
             else:
                 results = ",".join(self._q_author(a) for a in author)
                 return f"Or({results})"
