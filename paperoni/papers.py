@@ -400,7 +400,7 @@ class Paper:
         The name for the reference is self.reference_string.
         """
         author_names = [auth.name for auth in self.authors]
-        author = "".join(map(str, join(author_names, lastsep=" and ")))
+        author = "".join(map(str, join(author_names, sep=" and ")))
 
         entries = {
             "author": author,
