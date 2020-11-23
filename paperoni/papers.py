@@ -128,7 +128,14 @@ class Papers:
             file.write(text)
 
     def _q_author(self, papers, author):
-        if isinstance(author, int):
+        if isinstance(author, list):
+            if not author:
+                return papers
+            results = []
+            for auth in author:
+                results += self._q_author(papers, auth)
+            return results
+        elif isinstance(author, int):
             return [
                 p
                 for p in papers
