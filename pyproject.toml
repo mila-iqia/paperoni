@@ -10,7 +10,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-coleo = "^0.2.0"
+coleo = "^0.2.1"
 tqdm = "^4.48.2"
 requests = "^2.24.0"
 blessed = "^1.17.9"
