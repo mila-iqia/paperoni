@@ -83,7 +83,9 @@ class Papers:
 
     def sorted(self, field="date", desc=False):
         results = list(
-            sorted(self.papers.values(), key=lambda paper: getattr(paper, field))
+            sorted(
+                self.papers.values(), key=lambda paper: getattr(paper, field)
+            )
         )
         if desc:
             results.reverse()

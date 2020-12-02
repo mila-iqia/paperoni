@@ -58,4 +58,5 @@ def apikey():
 @pytest.fixture
 def qm(apikey):
     from paperoni.query import QueryManager
+
     return QueryManager(apikey)

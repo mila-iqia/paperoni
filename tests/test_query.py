@@ -7,10 +7,7 @@ from .common import apikey, qm
 
 def test_query_one(qm):
     papers = qm.query(
-        {
-            "author": "yoshua bengio",
-            "words": "GAN",
-        },
+        {"author": "yoshua bengio", "words": "GAN",},
         attrs=",".join(Papers.fields),
         count=7,
         orderby="CC:desc",
@@ -30,19 +27,15 @@ def test_query_one(qm):
 
     # "GAN" must be a word in all papers
     for p in papers:
-        assert (
-            re.findall(r"\bgan\b", p.title.lower())
-            or re.findall(r"\bgan\b", p.abstract.lower())
+        assert re.findall(r"\bgan\b", p.title.lower()) or re.findall(
+            r"\bgan\b", p.abstract.lower()
         )
 
 
 def test_query_two(qm):
     papers = qm.query(
         {
-            "keywords": [
-                "artificial intelligence",
-                "theoretical physics",
-            ],
+            "keywords": ["artificial intelligence", "theoretical physics",],
             "title": "cosmic",
         },
         attrs=",".join(Papers.fields),

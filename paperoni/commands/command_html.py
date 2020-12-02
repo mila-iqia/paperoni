@@ -134,7 +134,7 @@ def format_paper(paper):
             pdf and H.a["link", "pdf-link"]("PDF", href=pdf),
             " ",
             [(_alsosee(p), " ") for p in getattr(paper, "other_versions", [])],
-            ("[Citations: ", paper.citations , "]")
+            ("[Citations: ", paper.citations, "]")
             if show_citation_count
             else "",
         ),

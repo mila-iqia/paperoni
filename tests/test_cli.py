@@ -14,8 +14,7 @@ class Runner:
             shell=True,
         )
         self.stdout, self.stderr = self.proc.communicate(
-            input="\n".join(interaction).encode(),
-            timeout=5,
+            input="\n".join(interaction).encode(), timeout=5,
         )
         self.stdout = self.stdout.decode("utf8")
         self.stderr = self.stderr.decode("utf8")
@@ -37,8 +36,7 @@ class Runner:
 
 def run(cmd, interaction=[]):
     return Runner(
-        cmd=f"paperoni {cmd} -c {here}/oli.json",
-        interaction=interaction,
+        cmd=f"paperoni {cmd} -c {here}/oli.json", interaction=interaction,
     )
 
 
