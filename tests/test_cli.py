@@ -63,12 +63,10 @@ def test_bibtex2():
 
 
 def test_html1():
-    # We're comparing the lengths because the generation is not entirely
-    # deterministic with respect to class names (they could be in any order)
     r = run("html")
-    assert len(r.stdout) == len(open(f"{here}/oli.html", "r").read())
+    assert r.stdout == open(f"{here}/oli.html", "r").read()
 
 
 def test_html2():
     r = run("html -t Theano A CPU and GPU Math Compiler in Python")
-    assert len(r.stdout) == len(open(f"{here}/oli-theano.html", "r").read())
+    assert r.stdout == open(f"{here}/oli-theano.html", "r").read()

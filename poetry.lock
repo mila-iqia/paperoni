@@ -81,7 +81,7 @@ description = "Easy, practical library for making terminal apps, by providing an
 name = "blessed"
 optional = false
 python-versions = "*"
-version = "1.17.11"
+version = "1.17.12"
 
 [package.dependencies]
 jinxed = ">=0.5.4"
@@ -181,7 +181,10 @@ description = "Extensible HTML representation for Python objects."
 name = "hrepr"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "0.2.4"
+version = "0.3.1"
+
+[package.dependencies]
+ovld = ">=0.2.7,<0.3.0"
 
 [[package]]
 category = "main"
@@ -206,14 +209,14 @@ marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = ">=3.6"
-version = "3.0.0"
+version = "3.1.1"
 
 [package.dependencies]
 zipp = ">=0.5"
 
 [package.extras]
-docs = ["sphinx", "rst.linker"]
-testing = ["packaging", "pep517", "importlib-resources (>=1.3)"]
+docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
+testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "packaging", "pep517", "pyfakefs", "flufl.flake8", "pytest-black (>=0.3.7)", "pytest-mypy", "importlib-resources (>=1.3)"]
 
 [[package]]
 category = "dev"
@@ -257,16 +260,23 @@ python-versions = "*"
 version = "0.6.1"
 
 [[package]]
+category = "main"
+description = "Overloading Python functions"
+name = "ovld"
+optional = false
+python-versions = ">=3.6,<4.0"
+version = "0.2.7"
+
+[[package]]
 category = "dev"
 description = "Core utilities for Python packages"
 name = "packaging"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "20.4"
+version = "20.7"
 
 [package.dependencies]
 pyparsing = ">=2.0.2"
-six = "*"
 
 [[package]]
 category = "dev"
@@ -433,7 +443,7 @@ description = "Fast, Extensible Progress Meter"
 name = "tqdm"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "4.53.0"
+version = "4.54.0"
 
 [package.extras]
 dev = ["py-make (>=0.1.0)", "twine", "argopt", "pydoc-markdown", "wheel"]
@@ -481,7 +491,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "344c894c814faede70388f8e86e4f720087c8fbecb712afe7db7e646656a4ec0"
+content-hash = "e1f6b3b82db5838f2f09b07b4b51ecff315039b768c355dc287654e98f5995c3"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -511,8 +521,8 @@ black = [
     {file = "black-19.10b0.tar.gz", hash = "sha256:c2edb73a08e9e0e6f65a0e6af18b059b8b1cdd5bef997d7a0b181df93dc81539"},
 ]
 blessed = [
-    {file = "blessed-1.17.11-py2.py3-none-any.whl", hash = "sha256:81125aa5b84cb9dfc09ff451886f64b4b923b75c5eaf51fde9d1c48a135eb797"},
-    {file = "blessed-1.17.11.tar.gz", hash = "sha256:7d4914079a6e8e14fbe080dcaf14dee596a088057cdc598561080e3266123b48"},
+    {file = "blessed-1.17.12-py2.py3-none-any.whl", hash = "sha256:0a74a8d3f0366db600d061273df77d44f0db07daade7bb7a4d49c8bc22ed9f74"},
+    {file = "blessed-1.17.12.tar.gz", hash = "sha256:580429e7e0c6f6a42ea81b0ae5a4993b6205c6ccbb635d034b4277af8175753e"},
 ]
 certifi = [
     {file = "certifi-2020.11.8-py2.py3-none-any.whl", hash = "sha256:1f422849db327d534e3d0c5f02a263458c3955ec0aae4ff09b95f195c59f4edd"},
@@ -578,8 +588,8 @@ flake8 = [
     {file = "flake8-3.8.4.tar.gz", hash = "sha256:aadae8761ec651813c24be05c6f7b4680857ef6afaae4651a4eccaef97ce6c3b"},
 ]
 hrepr = [
-    {file = "hrepr-0.2.4-py3-none-any.whl", hash = "sha256:abf088e45ba5418d144a9c785186d1cdb18b19fa4448251f280005744da6c224"},
-    {file = "hrepr-0.2.4.tar.gz", hash = "sha256:ba404f37af92f767815aedb864c1424c883c42328caf87e7c3cfc3574bea8478"},
+    {file = "hrepr-0.3.1-py3-none-any.whl", hash = "sha256:573de385386d711441b88078eaec46d0c88932e033690f29bec1db9a62907fb5"},
+    {file = "hrepr-0.3.1.tar.gz", hash = "sha256:a608f334d431923605dde58dbafa508df9900fa7a3f6e2a00b36c3b29b07d7dc"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
@@ -600,8 +610,8 @@ immutables = [
     {file = "immutables-0.14.tar.gz", hash = "sha256:a0a1cc238b678455145bae291d8426f732f5255537ed6a5b7645949704c70a78"},
 ]
 importlib-metadata = [
-    {file = "importlib_metadata-3.0.0-py2.py3-none-any.whl", hash = "sha256:fc3b3f9697703d3833d2803162d60cbe8b9f57b5da5e6496ac81e3cb82bd8d9c"},
-    {file = "importlib_metadata-3.0.0.tar.gz", hash = "sha256:d582eb5c35b2f16c78e365e0f89e369f36af38fdaad0146208aa973c693ba247"},
+    {file = "importlib_metadata-3.1.1-py3-none-any.whl", hash = "sha256:6112e21359ef8f344e7178aa5b72dc6e62b38b0d008e6d3cb212c5b84df72013"},
+    {file = "importlib_metadata-3.1.1.tar.gz", hash = "sha256:b0c2d3b226157ae4517d9625decf63591461c66b3a808c2666d538946519d170"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -619,9 +629,13 @@ mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
+ovld = [
+    {file = "ovld-0.2.7-py3-none-any.whl", hash = "sha256:e62b26f68eb3b289e9c831fed648ffd52e31d42307d75241e02f4b0a1d91caaa"},
+    {file = "ovld-0.2.7.tar.gz", hash = "sha256:28e33c67ef368b71945ec580b3824c7618749551eb949632e6d81f8bab4bac24"},
+]
 packaging = [
-    {file = "packaging-20.4-py2.py3-none-any.whl", hash = "sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"},
-    {file = "packaging-20.4.tar.gz", hash = "sha256:4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8"},
+    {file = "packaging-20.7-py2.py3-none-any.whl", hash = "sha256:eb41423378682dadb7166144a4926e443093863024de508ca5c9737d6bc08376"},
+    {file = "packaging-20.7.tar.gz", hash = "sha256:05af3bb85d320377db281cf254ab050e1a7ebcbf5410685a9a407e18a1f81236"},
 ]
 pathspec = [
     {file = "pathspec-0.8.1-py2.py3-none-any.whl", hash = "sha256:aa0cb481c4041bf52ffa7b0d8fa6cd3e88a2ca4879c533c9153882ee2556790d"},
@@ -719,8 +733,8 @@ toml = [
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
 tqdm = [
-    {file = "tqdm-4.53.0-py2.py3-none-any.whl", hash = "sha256:5ff3f5232b19fa4c5531641e480b7fad4598819f708a32eb815e6ea41c5fa313"},
-    {file = "tqdm-4.53.0.tar.gz", hash = "sha256:3d3f1470d26642e88bd3f73353cb6ff4c51ef7d5d7efef763238f4bc1f7e4e81"},
+    {file = "tqdm-4.54.0-py2.py3-none-any.whl", hash = "sha256:9e7b8ab0ecbdbf0595adadd5f0ebbb9e69010e0bd48bbb0c15e550bf2a5292df"},
+    {file = "tqdm-4.54.0.tar.gz", hash = "sha256:5c0d04e06ccc0da1bd3fa5ae4550effcce42fcad947b4a6cafa77bdc9b09ff22"},
 ]
 typed-ast = [
     {file = "typed_ast-1.4.1-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:73d785a950fc82dd2a25897d525d003f6378d1cb23ab305578394694202a58c3"},

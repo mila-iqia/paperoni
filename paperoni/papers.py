@@ -3,12 +3,8 @@ import re
 from collections import defaultdict
 from hashlib import md5
 
-from hrepr import HTML
-
 from .researchers import Researchers
 from .utils import T, asciiify, download, join, normalize as _norm, print_field
-
-H = HTML()
 
 
 class Papers:

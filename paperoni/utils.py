@@ -5,10 +5,9 @@ from collections import defaultdict
 
 import requests
 from blessed import Terminal
-from hrepr import HTML
+from hrepr import H
 from tqdm import tqdm
 
-H = HTML()
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns
 
