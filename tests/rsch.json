@@ -1,0 +1,24 @@
+{
+    "olivier breuleux": {
+        "name": "olivier breuleux",
+        "ids": [
+            298812021
+        ],
+        "noids": [],
+        "properties": {
+            "blonde": false
+        },
+        "roles": [
+            {
+                "status": "young",
+                "begin": "2000-01-01",
+                "end": "2015-01-01"
+            },
+            {
+                "status": "old",
+                "begin": "2015-01-01",
+                "end": null
+            }
+        ]
+    }
+}

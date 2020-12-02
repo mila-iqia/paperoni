@@ -21,6 +21,8 @@ beautifulsoup4 = "^4.9.1"
 black = "^19.10b0"
 flake8 = "^3.8.3"
 isort = "^5.3.2"
+pytest = "^6.1.2"
+pytest-cov = "^2.10.1"
 
 [tool.poetry.scripts]
 paperoni = "paperoni.__main__:main"
