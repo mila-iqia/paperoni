@@ -10,8 +10,8 @@ def _print(data):
     pprint.PrettyPrinter(indent=2).pprint(data)
 
 
-class SemanticScholarQueryManager:
-    SEARCH_FIELDS = (
+def _paper_long_fields(parent=None, extras=()):
+    fields = (
         "paperId",
         "externalIds",
         "url",
@@ -24,46 +24,32 @@ class SemanticScholarQueryManager:
         "influentialCitationCount",
         "isOpenAccess",
         "fieldsOfStudy",
+    ) + extras
+    return (
+        fields
+        if parent is None
+        else tuple(f"{parent}.{field}" for field in fields)
+    )
+
+
+def _paper_short_fields(parent=None):
+    fields = (
+        "paperId",
+        "url",
+        "title",
+        "venue",
+        "year",
         "authors",  # {authorId, name}
     )
-    PAPER_FIELDS = (
-        "paperId",
-        "externalIds",
-        "url",
-        "title",
-        "abstract",
-        "venue",
-        "year",
-        "referenceCount",
-        "citationCount",
-        "influentialCitationCount",
-        "isOpenAccess",
-        "fieldsOfStudy",
-        # "authors",
-        "authors.authorId",
-        "authors.externalIds",
-        "authors.url",
-        "authors.name",
-        "authors.aliases",
-        "authors.affiliations",
-        "authors.homepage",
-        # "citations",
-        "citations.paperId",
-        "citations.url",
-        "citations.title",
-        "citations.venue",
-        "citations.year",
-        "citations.authors",  # {authorId, name}
-        # "references",
-        "references.paperId",
-        "references.url",
-        "references.title",
-        "references.venue",
-        "references.year",
-        "references.authors",  # {authorId, name}
-        "embedding",
+    return (
+        fields
+        if parent is None
+        else tuple(f"{parent}.{field}" for field in fields)
     )
-    PAPER_AUTHORS_FIELDS = (
+
+
+def _author_fields(parent=None):
+    fields = (
         "authorId",
         "externalIds",
         "url",
@@ -71,69 +57,38 @@ class SemanticScholarQueryManager:
         "aliases",
         "affiliations",
         "homepage",
-        # "papers",
-        "papers.paperId",
-        "papers.externalIds",
-        "papers.url",
-        "papers.title",
-        "papers.abstract",
-        "papers.venue",
-        "papers.year",
-        "papers.referenceCount",
-        "papers.citationCount",
-        "papers.influentialCitationCount",
-        "papers.isOpenAccess",
-        "papers.fieldsOfStudy",
-        "papers.authors",  # {authorId, name}
+    )
+    return (
+        fields
+        if parent is None
+        else tuple(f"{parent}.{field}" for field in fields)
+    )
+
+
+class SemanticScholarQueryManager:
+    # "authors" will have fields "authorId" and "name"
+    SEARCH_FIELDS = _paper_long_fields() + ("authors",)
+    PAPER_FIELDS = (
+        _paper_long_fields()
+        + _author_fields(parent="authors")
+        + _paper_short_fields(parent="citations")
+        + _paper_short_fields(parent="references")
+        + ("embedding",)
+    )
+    PAPER_AUTHORS_FIELDS = _author_fields() + _paper_long_fields(
+        parent="papers", extras=("authors",)
     )
     PAPER_CITATIONS_FIELDS = (
         "contexts",
         "intents",
         "isInfluential",
-        "paperId",
-        "externalIds",
-        "url",
-        "title",
-        "abstract",
-        "venue",
-        "year",
-        "referenceCount",
-        "citationCount",
-        "influentialCitationCount",
-        "isOpenAccess",
-        "fieldsOfStudy",
-        "authors",  # {authorId, name}
-    )
+    ) + SEARCH_FIELDS
     PAPER_REFERENCES_FIELDS = PAPER_CITATIONS_FIELDS
     AUTHOR_FIELDS = PAPER_AUTHORS_FIELDS
     AUTHOR_PAPERS_FIELDS = (
-        "paperId",
-        "externalIds",
-        "url",
-        "title",
-        "abstract",
-        "venue",
-        "year",
-        "referenceCount",
-        "citationCount",
-        "influentialCitationCount",
-        "isOpenAccess",
-        "fieldsOfStudy",
-        "authors",  # {authorId, name}
-        # "citations",
-        "citations.paperId",
-        "citations.url",
-        "citations.title",
-        "citations.venue",
-        "citations.year",
-        "citations.authors",  # {authorId, name}
-        # "references",
-        "references.paperId",
-        "references.url",
-        "references.title",
-        "references.venue",
-        "references.year",
-        "references.authors",  # {authorId, name}
+        SEARCH_FIELDS
+        + _paper_short_fields(parent="citations")
+        + _paper_short_fields(parent="references")
     )
 
     def __init__(self):
@@ -217,7 +172,7 @@ class SemanticScholarQueryManager:
         )
 
     def test(self):
-        # print(self.search("paleontology", fields=()))
+        # _print(self.search("paleontology", fields=()))
         # _print(self.paper("84deebbb20d312acc58785cf58a9e5dd445b4cf4"))
         # _print(self.paper_authors("84deebbb20d312acc58785cf58a9e5dd445b4cf4"))
         # _print(self.paper_citations("84deebbb20d312acc58785cf58a9e5dd445b4cf4"))
