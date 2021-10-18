@@ -30,8 +30,10 @@ def _to_microsoft(paper_data: dict):
         "CC": paper_data["citationCount"],
         "F": [{"FN": f} for f in (paper_data["fieldsOfStudy"] or ())],
         "J": {"JN": paper_data["venue"],},
+        "S": [{"Ty": "1", "U": paper_data["url"]}],
         "VFN": paper_data["venue"],
         "VSN": paper_data["venue"],
+        "BV": paper_data["venue"],
         "PB": paper_data["venue"],
         "AA": [
             {
@@ -59,9 +61,7 @@ def search():
     verbose: Option & bool = default(False)
 
     # [group: search]
-    # [alias: -k]
-    # [nargs: *]
-    # [action: append]
+    # [positional: *]
     # Search for keywords
     keywords: Option & str = default([])
     keywords = [join(k) for k in keywords]
