@@ -34,6 +34,7 @@ bibtex = "paperoni.commands.command_bibtex:command_bibtex"
 researcher = "paperoni.commands.command_researcher:command_researcher"
 collect = "paperoni.commands.command_collect:command_collect"
 html = "paperoni.commands.command_html:command_html"
+semantic-scholar = "paperoni.commands.command_semantic_scholar:command_semantic_scholar"
 
 [tool.black]
 line-length = 80
