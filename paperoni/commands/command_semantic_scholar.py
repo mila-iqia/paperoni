@@ -67,6 +67,11 @@ def search():
     keywords = [join(k) for k in keywords]
 
     # [group: search]
+    # [alias: -a]
+    # Search by author ID
+    author: Option & str = default("")
+
+    # [group: search]
     # Number of papers to fetch (default: 100)
     limit: Option & int = default(100)
 
@@ -74,18 +79,25 @@ def search():
     # Search offset
     offset: Option & int = default(0)
 
-    if not keywords:
-        raise RuntimeError("Keywords required.")
-
-    papers = []
+    if author and keywords:
+        raise RuntimeError(
+            "Please specify either keywords or author ID, but not both"
+        )
+    elif not author and not keywords:
+        raise RuntimeError("Keywords or author ID required.")
 
     qm = SemanticScholarQueryManager()
     if verbose:
         print(
-            f"[semantic scholar search] keywords: {keywords}, limit: {limit}, offset: {offset}"
+            "[semantic scholar search]",
+            f"keywords: {keywords}," if keywords else f"author ID: {author},",
+            f"limit: {limit}, offset: {offset}",
         )
 
-    papers = qm.search(keywords, limit=limit, offset=offset)
+    if keywords:
+        papers = qm.search(keywords, limit=limit, offset=offset)
+    else:
+        papers = qm.author_papers(author, limit=limit, offset=offset)
     papers = [_to_microsoft(dct) for dct in papers["data"]]
     if verbose:
         print(f"Number of results: {len(papers)}")
