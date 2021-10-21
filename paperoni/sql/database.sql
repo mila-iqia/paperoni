@@ -7,18 +7,13 @@ CREATE TABLE IF NOT EXISTS paper (
 	is_open_access SMALLINT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS paper_external_id (
+CREATE TABLE IF NOT EXISTS paper_link (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
-	external_id TEXT NOT NULL,
-	UNIQUE (paper_id, external_id)
-);
-
-CREATE TABLE IF NOT EXISTS paper_url (
-	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
-	-- One of "HTML", "PDF", "TEXT" ...
-	url_type TEXT NOT NULL,
-	url TEXT NOT NULL,
-	UNIQUE (paper_id, url_type, url)
+	-- "url", "arxiv", "doi", etc.
+	link_type TEXT NOT NULL,
+	-- A url, arxiv ID, DOI, etc.
+	link TEXT NOT NULL,
+	UNIQUE (paper_id, link_type, link)
 );
 
 CREATE TABLE IF NOT EXISTS author (
@@ -26,10 +21,13 @@ CREATE TABLE IF NOT EXISTS author (
 	author_name TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS author_external_id (
+CREATE TABLE IF NOT EXISTS author_link (
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
-	author_external_id TEXT NOT NULL,
-	UNIQUE (author_id, author_external_id)
+	-- "url", external ID source, etc.
+	link_type TEXT NOT NULL,
+	-- A url, external ID, etc.
+	link TEXT NOT NULL,
+	UNIQUE (author_id, link_type, link)
 );
 
 CREATE TABLE IF NOT EXISTS author_alias (
@@ -51,13 +49,6 @@ CREATE TABLE IF NOT EXISTS author_affiliation (
 	UNIQUE (author_id, affiliation, role, start_date, end_date)
 );
 
-CREATE TABLE IF NOT EXISTS author_url (
-	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
-	url TEXT NOT NULL,
-	is_homepage SMALLINT NOT NULL DEFAULT 0,
-	UNIQUE (author_id, url, is_homepage)
-);
-
 CREATE TABLE IF NOT EXISTS venue (
 	venue_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	-- One of "journal", "conference", "book" ...
@@ -70,16 +61,15 @@ CREATE TABLE IF NOT EXISTS release (
 	venue_id INTEGER REFERENCES venue(venue_id) ON DELETE CASCADE,
 	-- Timestamp in seconds.
 	release_date UNSIGNED BIG INT,
-	release_year UNSIGNED INT,
+	release_year UNSIGNED INT NOT NULL,
 	volume TEXT,
-	UNIQUE (venue_id, release_date, release_year, volume),
-	-- Either date or year is required.
-	CHECK (release_date IS NOT NULL OR release_year IS NOT NULL)
+	UNIQUE (venue_id, volume)
 );
 
-CREATE TABLE IF NOT EXISTS field_of_study (
-	field_of_study_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	field_of_study_name TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS keyword (
+	keyword_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	keyword TEXT NOT NULL,
+	parent INTEGER REFERENCES keyword(keyword_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS paper_to_author (
@@ -96,8 +86,8 @@ CREATE TABLE IF NOT EXISTS paper_to_release (
 	PRIMARY KEY (paper_id, release_id)
 );
 
-CREATE TABLE IF NOT EXISTS paper_to_field_of_study (
+CREATE TABLE IF NOT EXISTS paper_to_keyword (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
-	field_of_study_id INTEGER REFERENCES field_of_study(field_of_study_id) ON DELETE CASCADE,
-	PRIMARY KEY (paper_id, field_of_study_id)
+	keyword_id INTEGER REFERENCES keyword(keyword_id) ON DELETE CASCADE,
+	PRIMARY KEY (paper_id, keyword_id)
 );
