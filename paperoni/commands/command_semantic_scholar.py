@@ -93,10 +93,10 @@ def search():
         )
 
     if keywords:
-        papers = qm.search(keywords, limit=limit, offset=offset)
+        papers = list(qm.search(keywords, limit=limit, offset=offset))
     else:
-        papers = qm.author_papers(author, limit=limit, offset=offset)
-    papers = [_to_microsoft(dct) for dct in papers["data"]]
+        papers = list(qm.author_papers(author, limit=limit, offset=offset))
+    papers = [_to_microsoft(dct) for dct in papers]
     if verbose:
         print(f"Number of results: {len(papers)}")
 

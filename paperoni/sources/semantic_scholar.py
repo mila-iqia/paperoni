@@ -91,10 +91,7 @@ class SemanticScholarQueryManager:
     def __init__(self):
         self.conn = HTTPSAcquirer("api.semanticscholar.org")
 
-    def _evaluate(self, path: str, fields: tuple = None, **params):
-        params = {k: v for k, v in params.items() if v is not None}
-        if fields is not None:
-            params["fields"] = ",".join(fields)
+    def _evaluate(self, path: str, **params):
         params = urllib.parse.urlencode(params)
         data = self.conn.get(f"/graph/v1/{path}?{params}")
         jdata = json.loads(data)
@@ -102,66 +99,50 @@ class SemanticScholarQueryManager:
             raise QueryError(jdata["error"])
         return jdata
 
-    def search(
-        self, query, offset=0, limit=100, fields=SEARCH_FIELDS,
-    ):
-        # {total: str, offset: int, next: optinal int, data: [...]}
-        return self._evaluate(
-            "paper/search",
-            query=query,
-            offset=offset,
-            limit=limit,
-            fields=fields,
+    def _list(self, path: str, fields: tuple, block_size: int = 100, **params):
+        params = {
+            "fields": ",".join(fields),
+            "limit": block_size or 10000,
+            **params,
+        }
+        next_offset = 0
+        while next_offset is not None:
+            results = self._evaluate(path, offset=next_offset, **params)
+            next_offset = results.get("next", None)
+            for entry in results["data"]:
+                yield entry
+
+    def search(self, query, fields=SEARCH_FIELDS, **params):
+        yield from self._list(
+            "paper/search", query=query, fields=fields, **params,
         )
 
     def paper(self, paper_id, fields=PAPER_FIELDS):
-        # paper dict
-        return self._evaluate(f"paper/{paper_id}", fields=fields)
+        yield from self._evaluate(f"paper/{paper_id}", fields=fields)
 
-    def paper_authors(
-        self, paper_id, offset=0, limit=100, fields=PAPER_AUTHORS_FIELDS,
-    ):
-        # {offset: int, next: optional int, data: [...]}
-        return self._evaluate(
-            f"paper/{paper_id}/authors",
-            offset=offset,
-            limit=limit,
-            fields=fields,
+    def paper_authors(self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params):
+        yield from self._list(
+            f"paper/{paper_id}/authors", fields=fields, **params
         )
 
     def paper_citations(
-        self, paper_id, offset=0, limit=100, fields=PAPER_CITATIONS_FIELDS,
+        self, paper_id, fields=PAPER_CITATIONS_FIELDS, **params
     ):
-        # {offset: int, next: optional int, data: [...]}
-        return self._evaluate(
-            f"paper/{paper_id}/citations",
-            offset=offset,
-            limit=limit,
-            fields=fields,
+        yield from self._list(
+            f"paper/{paper_id}/citations", fields=fields, **params
         )
 
     def paper_references(
-        self, paper_id, offset=0, limit=100, fields=PAPER_REFERENCES_FIELDS,
+        self, paper_id, fields=PAPER_REFERENCES_FIELDS, **params
     ):
-        # {offset: int, next: optional int, data: [...]}
-        return self._evaluate(
-            f"paper/{paper_id}/citations",
-            offset=offset,
-            limit=limit,
-            fields=fields,
+        yield from self._list(
+            f"paper/{paper_id}/citations", fields=fields, **params
         )
 
-    def author(self, author_id, fields=AUTHOR_FIELDS):
-        # author dict
-        return self._evaluate(f"author/{author_id}", fields=fields)
+    def author(self, author_id, fields=AUTHOR_FIELDS, **params):
+        yield from self._list(f"author/{author_id}", fields=fields, **params)
 
-    def author_papers(
-        self, author_id, offset=0, limit=100, fields=AUTHOR_PAPERS_FIELDS,
-    ):
-        # {offset: int, next: optional int, data: [...]}
-        return self._evaluate(
-            f"author/{author_id}/papers",
-            offset=offset,
-            limit=limit,
-            fields=fields,
+    def author_papers(self, author_id, fields=AUTHOR_PAPERS_FIELDS, **params):
+        yield from self._list(
+            f"author/{author_id}/papers", fields=fields, **params
         )
