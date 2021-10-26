@@ -1,9 +1,7 @@
 from coleo import Option, default, tooled
 
-from ..papers import Papers
-from ..papers import Paper
+from ..papers import Paper, Papers
 from ..sources.semantic_scholar import SemanticScholarQueryManager
-
 from .interactive import InteractiveCommands, default_commands
 
 search_commands = InteractiveCommands("Enter a command", default="s")

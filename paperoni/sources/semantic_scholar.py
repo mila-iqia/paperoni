@@ -1,9 +1,8 @@
-import http.client
 import json
 import urllib.parse
 
-from paperoni.query import QueryError
-import pprint
+from ..query import QueryError
+from .acquire import HTTPSAcquirer
 
 
 def _paper_long_fields(parent=None, extras=()):
@@ -20,7 +19,8 @@ def _paper_long_fields(parent=None, extras=()):
         "influentialCitationCount",
         "isOpenAccess",
         "fieldsOfStudy",
-    ) + extras
+        *extras,
+    )
     return (
         fields
         if parent is None
@@ -63,13 +63,13 @@ def _author_fields(parent=None):
 
 class SemanticScholarQueryManager:
     # "authors" will have fields "authorId" and "name"
-    SEARCH_FIELDS = _paper_long_fields() + ("authors",)
+    SEARCH_FIELDS = _paper_long_fields(extras=("authors",))
     PAPER_FIELDS = (
-        _paper_long_fields()
-        + _author_fields(parent="authors")
-        + _paper_short_fields(parent="citations")
-        + _paper_short_fields(parent="references")
-        + ("embedding",)
+        *_paper_long_fields(),
+        *_author_fields(parent="authors"),
+        *_paper_short_fields(parent="citations"),
+        *_paper_short_fields(parent="references"),
+        "embedding",
     )
     PAPER_AUTHORS_FIELDS = _author_fields() + _paper_long_fields(
         parent="papers", extras=("authors",)
@@ -78,7 +78,8 @@ class SemanticScholarQueryManager:
         "contexts",
         "intents",
         "isInfluential",
-    ) + SEARCH_FIELDS
+        *SEARCH_FIELDS,
+    )
     PAPER_REFERENCES_FIELDS = PAPER_CITATIONS_FIELDS
     AUTHOR_FIELDS = PAPER_AUTHORS_FIELDS
     AUTHOR_PAPERS_FIELDS = (
@@ -88,16 +89,14 @@ class SemanticScholarQueryManager:
     )
 
     def __init__(self):
-        self.conn = http.client.HTTPSConnection("api.semanticscholar.org")
+        self.conn = HTTPSAcquirer("api.semanticscholar.org")
 
     def _evaluate(self, path: str, fields: tuple = None, **params):
         params = {k: v for k, v in params.items() if v is not None}
         if fields is not None:
             params["fields"] = ",".join(fields)
         params = urllib.parse.urlencode(params)
-        self.conn.request("GET", f"/graph/v1/{path}?{params}")
-        response = self.conn.getresponse()
-        data = response.read()
+        data = self.conn.get(f"/graph/v1/{path}?{params}")
         jdata = json.loads(data)
         if "error" in jdata:
             raise QueryError(jdata["error"])
