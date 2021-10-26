@@ -2,7 +2,7 @@ from coleo import Option, default, tooled
 
 from ..papers import Papers
 from ..papers import Paper
-from ..semantic_scholar import SemanticScholarQueryManager
+from ..sources.semantic_scholar import SemanticScholarQueryManager
 
 from .interactive import InteractiveCommands, default_commands
 
