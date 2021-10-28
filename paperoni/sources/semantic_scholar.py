@@ -1,6 +1,7 @@
 import json
 import urllib.parse
 
+from ..papers2 import Author, Link, Paper, Release, Topic, Venue
 from ..query import QueryError
 from .acquire import HTTPSAcquirer
 
@@ -89,7 +90,10 @@ class SemanticScholarQueryManager:
     )
 
     def __init__(self):
-        self.conn = HTTPSAcquirer("api.semanticscholar.org")
+        self.conn = HTTPSAcquirer(
+            "api.semanticscholar.org",
+            delay=5 * 60 / 100,  # 100 requests per 5 minutes
+        )
 
     def _evaluate(self, path: str, **params):
         params = urllib.parse.urlencode(params)
@@ -112,13 +116,37 @@ class SemanticScholarQueryManager:
             for entry in results["data"]:
                 yield entry
 
-    def search(self, query, fields=SEARCH_FIELDS, **params):
-        yield from self._list(
-            "paper/search", query=query, fields=fields, **params,
+    def _wrap_author(self, data):
+        return Author(
+            name=data["name"],
+            links=[Link(type="SemanticScholar", ref=data["authorId"])],
         )
 
+    def _wrap_paper(self, data):
+        links = [Link(type="SemanticScholar", ref=data["paperId"])]
+        for typ, ref in data["externalIds"].items():
+            links.append(Link(type=typ, ref=ref))
+        authors = list(map(self._wrap_author, data["authors"]))
+        release = Release(venue=Venue(code=data["venue"],), year=data["year"],)
+        return Paper(
+            links=links,
+            authors=authors,
+            title=data["title"],
+            abstract=data["abstract"],
+            citation_count=data["citationCount"],
+            topics=[Topic(name=field) for field in data["fieldsOfStudy"]],
+            releases=[release],
+        )
+
+    def search(self, query, fields=SEARCH_FIELDS, **params):
+        papers = self._list(
+            "paper/search", query=query, fields=fields, **params,
+        )
+        yield from map(self._wrap_paper, papers)
+
     def paper(self, paper_id, fields=PAPER_FIELDS):
-        yield from self._evaluate(f"paper/{paper_id}", fields=fields)
+        (paper,) = self._list(f"paper/{paper_id}", fields=fields)
+        return paper
 
     def paper_authors(self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params):
         yield from self._list(

@@ -1,6 +1,6 @@
 from coleo import Option, default, tooled
 
-from ..papers import Paper, Papers
+from ..papers2 import Paper
 from ..sources.semantic_scholar import SemanticScholarQueryManager
 from .interactive import InteractiveCommands, default_commands
 
@@ -93,15 +93,11 @@ def search():
         )
 
     if keywords:
-        papers = list(qm.search(keywords, limit=limit, offset=offset))
+        papers = qm.search(keywords)
     else:
-        papers = list(qm.author_papers(author, limit=limit, offset=offset))
-    papers = [_to_microsoft(dct) for dct in papers]
-    if verbose:
-        print(f"Number of results: {len(papers)}")
+        papers = qm.author_papers(author)
 
-    papers = Papers({p["Id"]: p for p in papers})
-    return papers
+    yield from papers
 
 
 @tooled

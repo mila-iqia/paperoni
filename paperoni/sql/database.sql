@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS paper (
 	paper_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT,
 	abstract TEXT,
-	is_open_access SMALLINT NOT NULL DEFAULT 0
+	citation_count INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS paper_link (
@@ -66,13 +66,13 @@ CREATE TABLE IF NOT EXISTS release (
 	UNIQUE (venue_id, release_date, release_year, volume)
 );
 
-CREATE TABLE IF NOT EXISTS keyword (
-	keyword_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	keyword TEXT NOT NULL,
-	parent INTEGER REFERENCES keyword(keyword_id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS topic (
+	topic_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	topic TEXT NOT NULL,
+	parent INTEGER REFERENCES topic(topic_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS paper_to_author (
+CREATE TABLE IF NOT EXISTS paper_author (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	-- Author position in paper authors list.
@@ -81,14 +81,14 @@ CREATE TABLE IF NOT EXISTS paper_to_author (
 	PRIMARY KEY (paper_id, author_id, affiliation)
 );
 
-CREATE TABLE IF NOT EXISTS paper_to_release (
+CREATE TABLE IF NOT EXISTS paper_release (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
 	release_id INTEGER REFERENCES release(release_id) ON DELETE CASCADE,
 	PRIMARY KEY (paper_id, release_id)
 );
 
-CREATE TABLE IF NOT EXISTS paper_to_keyword (
+CREATE TABLE IF NOT EXISTS paper_topic (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
-	keyword_id INTEGER REFERENCES keyword(keyword_id) ON DELETE CASCADE,
-	PRIMARY KEY (paper_id, keyword_id)
+	topic_id INTEGER REFERENCES topic(topic_id) ON DELETE CASCADE,
+	PRIMARY KEY (paper_id, topic_id)
 );

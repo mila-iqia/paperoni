@@ -16,26 +16,26 @@ def test_database_creation():
         "author_affiliation",
         "venue",
         "release",
-        "keyword",
-        "paper_to_author",
-        "paper_to_release",
-        "paper_to_keyword",
+        "topic",
+        "paper_author",
+        "paper_release",
+        "paper_topic",
     ):
         db.cursor.execute(f"SELECT COUNT(*) FROM {table}")
         assert db.cursor.fetchone()[0] == 0
 
     # Test insertion.
-    db.cursor.execute("INSERT INTO keyword (keyword) VALUES (?)", ["test"])
+    db.cursor.execute("INSERT INTO topic (topic) VALUES (?)", ["test"])
     db.connection.commit()
-    db.cursor.execute("SELECT keyword FROM keyword")
+    db.cursor.execute("SELECT topic FROM topic")
     results = db.cursor.fetchall()
     assert len(results) == 1
     assert results[0][0] == "test"
 
     # Test deletion.
-    db.cursor.execute("DELETE FROM keyword WHERE keyword = ?", ["test"])
+    db.cursor.execute("DELETE FROM topic WHERE topic = ?", ["test"])
     db.connection.commit()
-    db.cursor.execute("SELECT COUNT(*) FROM keyword")
+    db.cursor.execute("SELECT COUNT(*) FROM topic")
     assert db.cursor.fetchone()[0] == 0
 
 
