@@ -1,0 +1,194 @@
+import json as json_module
+from coleo import Option, default, tooled
+from paperoni.sql.database import Database
+from paperoni.papers import Paper
+
+
+def _ms_has_author(data: dict, author: str):
+    """Return True if Microsoft Academic paper data has given author."""
+    return any(
+        ms_author.get("DAuN", "").lower() == author
+        or ms_author.get("AuN", "").lower() == author
+        for ms_author in data.get("AA", [])
+    )
+
+
+def _ms_to_sql(data: dict, db: Database):
+    """Save Microsoft Academic JSON data into SQLite database."""
+    paper = Paper(data, None)
+    author_indices = []
+    keyword_indices = []
+    # Paper
+    paper_id = db.select_id(
+        "paper",
+        "paper_id",
+        "title = ? AND abstract = ?",
+        (paper.title, paper.abstract),
+    ) or db.insert(
+        "paper", ("title", "abstract"), (paper.title, paper.abstract)
+    )
+    # Links
+    for link in paper.links:
+        if not db.count(
+            "paper_link",
+            "paper_id",
+            "link_type = ? AND link = ?",
+            (link.type, link.url),
+        ):
+            db.insert(
+                "paper_link",
+                ("paper_id", "link_type", "link"),
+                (paper_id, link.type, link.url),
+            )
+    # Authors
+    for author in paper.authors:
+        # Author
+        author_id = db.select_id(
+            "author", "author_id", "author_name = ?", [author.name]
+        ) or db.insert("author", ["author_name"], [author.name])
+        author_indices.append(author_id)
+        # Author affiliation.
+        for affiliation in author.affiliations:
+            # We don't have start and end date, so we check if
+            # affiliation and role are already registered with null dates.
+            if not db.count(
+                "author_affiliation",
+                "author_id",
+                "affiliation = ? AND role = ? "
+                "AND start_date IS NULL and end_date IS NULL",
+                (affiliation, author.role),
+            ):
+                db.insert(
+                    "author_affiliation",
+                    ("author_id", "affiliation", "role"),
+                    (author_id, affiliation, author.role),
+                )
+    # Venue
+    if paper.venue is not None:
+        venue_type = (
+            "journal"
+            if paper.journal
+            else ("conference" if paper.conference else None)
+        )
+        venue_name = paper.venue
+        if venue_type is None:
+            venue_id = db.select_id(
+                "venue",
+                "venue_id",
+                "venue_type IS NULL and venue_name = ?",
+                [venue_name],
+            )
+        else:
+            venue_id = db.select_id(
+                "venue",
+                "venue_id",
+                "venue_type = ? AND venue_name = ?",
+                (venue_type, venue_name),
+            )
+        if venue_id is None:
+            venue_id = db.insert(
+                "venue", ("venue_type", "venue_name"), (venue_type, venue_name)
+            )
+        # Release
+        release_date = paper.date
+        release_year = paper.year
+        volume = data.get("V", None)
+        release_id = db.select_id(
+            "release",
+            "release_id",
+            "venue_id = ? AND (release_date = ? OR release_year = ?)",
+            (venue_id, release_date, release_year),
+        ) or db.insert(
+            "release",
+            ("venue_id", "release_date", "release_year", "volume"),
+            (venue_id, release_date, release_year, volume),
+        )
+        # paper to release
+        if not db.count(
+            "paper_to_release",
+            "paper_id",
+            "paper_id = ? AND release_id = ?",
+            (paper_id, release_id),
+        ):
+            db.insert(
+                "paper_to_release",
+                ("paper_id", "release_id"),
+                (paper_id, release_id),
+            )
+    # Keywords
+    for keyword in paper.keywords:
+        keyword_id = db.select_id(
+            "keyword", "keyword_id", "keyword = ?", [keyword]
+        ) or db.insert("keyword", ["keyword"], [keyword])
+        keyword_indices.append(keyword_id)
+    # paper to author
+    for author_position, author_id in enumerate(author_indices):
+        if not db.count(
+            "paper_to_author",
+            "paper_id",
+            "paper_id = ? AND author_id = ?",
+            (paper_id, author_id),
+        ):
+            db.insert(
+                "paper_to_author",
+                ("paper_id", "author_id", "author_position"),
+                (paper_id, author_id, author_position),
+            )
+    # paper to keyword
+    for keyword_id in keyword_indices:
+        if not db.count(
+            "paper_to_keyword",
+            "paper_id",
+            "paper_id = ? AND keyword_id = ?",
+            (paper_id, keyword_id),
+        ):
+            db.insert(
+                "paper_to_keyword",
+                ("paper_id", "keyword_id"),
+                (paper_id, keyword_id),
+            )
+
+
+@tooled
+def command_import():
+    """Import papers from JSON file to SQLite database."""
+
+    # [alias: -v]
+    # Verbose output
+    verbose: Option & bool = default(False)
+
+    # [group: json-to-sql]
+    # [alias: -j]
+    # JSON file to import
+    json: Option
+    # [group: json-to-sql]
+    # [alias: -c]
+    # SQLite database to export papers to
+    collection: Option
+    # [group: json-to-sql]
+    # [alias: -a]
+    # Import only papers from this author.
+    # By default, all papers are imported.
+    author: Option = default(None)
+
+    with open(json) as file:
+        ms_papers: dict = json_module.load(file)
+
+    if author:
+        author = author.lower()
+        filtered_ms_papers = [
+            paper
+            for paper in ms_papers.values()
+            if paper and _ms_has_author(paper, author)
+        ]
+    else:
+        filtered_ms_papers = [paper for paper in ms_papers.values() if paper]
+
+    if verbose:
+        print(len(filtered_ms_papers), "selected paper(s).")
+
+    db = Database(collection)
+    for i, paper in enumerate(filtered_ms_papers):
+        _ms_to_sql(paper, db)
+        if verbose and (i + 1) % 10 == 0:
+            print(i + 1, "paper(s) imported.")
