@@ -1,7 +1,10 @@
 import json as json_module
-from coleo import Option, default, tooled
-from paperoni.sql.database import Database
+import pprint
+
+from coleo import default, Option, tooled
+
 from paperoni.papers import Paper
+from paperoni.sql.database import Database
 
 
 def _ms_has_author(data: dict, author: str):
@@ -64,13 +67,16 @@ def _ms_to_sql(data: dict, db: Database):
                     (author_id, affiliation, author.role),
                 )
     # Venue
-    if paper.venue is not None:
-        venue_type = (
-            "journal"
-            if paper.journal
-            else ("conference" if paper.conference else None)
-        )
-        venue_name = paper.venue
+    if paper.journal or paper.conference or paper.venue:
+        if paper.journal:
+            venue_type = "journal"
+            venue_name = paper.journal
+        elif paper.conference:
+            venue_type = "conference"
+            venue_name = paper.conference
+        else:
+            venue_type = None
+            venue_name = paper.venue
         if venue_type is None:
             venue_id = db.select_id(
                 "venue",
@@ -93,16 +99,26 @@ def _ms_to_sql(data: dict, db: Database):
         release_date = paper.date
         release_year = paper.year
         volume = data.get("V", None)
-        release_id = db.select_id(
-            "release",
-            "release_id",
-            "venue_id = ? AND (release_date = ? OR release_year = ?)",
-            (venue_id, release_date, release_year),
-        ) or db.insert(
-            "release",
-            ("venue_id", "release_date", "release_year", "volume"),
-            (venue_id, release_date, release_year, volume),
-        )
+        if volume is None:
+            release_id = db.select_id(
+                "release",
+                "release_id",
+                "venue_id = ? AND release_date = ? AND release_year = ? AND volume IS NULL",
+                (venue_id, release_date, release_year)
+            )
+        else:
+            release_id = db.select_id(
+                "release",
+                "release_id",
+                "venue_id = ? AND release_date = ? AND release_year = ? AND volume = ?",
+                (venue_id, release_date, release_year, volume),
+            )
+        if release_id is None:
+            release_id = db.insert(
+                "release",
+                ("venue_id", "release_date", "release_year", "volume"),
+                (venue_id, release_date, release_year, volume),
+            )
         # paper to release
         if not db.count(
             "paper_to_release",
@@ -149,6 +165,15 @@ def _ms_to_sql(data: dict, db: Database):
             )
 
 
+def json_to_sql(data: dict, db: Database):
+    try:
+        _ms_to_sql(data, db)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Error converting paper: {pprint.pformat(data)}"
+        ) from exc
+
+
 @tooled
 def command_import():
     """Import papers from JSON file to SQLite database."""
@@ -189,6 +214,6 @@ def command_import():
 
     db = Database(collection)
     for i, paper in enumerate(filtered_ms_papers):
-        _ms_to_sql(paper, db)
+        json_to_sql(paper, db)
         if verbose and (i + 1) % 10 == 0:
             print(i + 1, "paper(s) imported.")

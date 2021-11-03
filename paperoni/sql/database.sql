@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS release (
 	release_date UNSIGNED BIG INT,
 	release_year UNSIGNED INT NOT NULL,
 	volume TEXT,
-	UNIQUE (venue_id, volume)
+	UNIQUE (venue_id, release_date, release_year, volume)
 );
 
 CREATE TABLE IF NOT EXISTS keyword (
