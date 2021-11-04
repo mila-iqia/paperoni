@@ -96,8 +96,8 @@ def _ms_to_sql(data: dict, db: Database):
                 "venue", ("venue_type", "venue_name"), (venue_type, venue_name)
             )
         # Release
-        release_date = paper.date
-        release_year = paper.year
+        release_date = db.date_to_timestamp(paper.date)
+        release_year = int(paper.year)
         volume = data.get("V", None)
         if volume is None:
             release_id = db.select_id(

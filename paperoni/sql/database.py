@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from typing import Sequence
+from datetime import datetime
 
 
 class Database:
@@ -64,3 +65,11 @@ class Database:
             where_parameters,
         )
         return self.cursor.fetchone()[0]
+
+    @classmethod
+    def date_to_timestamp(cls, date: str) -> int:
+        return round(datetime.strptime(date, "%Y-%m-%d").timestamp())
+
+    @classmethod
+    def timestamp_to_date(cls, timestamp: int) -> str:
+        return datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d")
