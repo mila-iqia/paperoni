@@ -51,6 +51,14 @@ def _ms_to_sql(data: dict, db: Database):
             "author", "author_id", "author_name = ?", [author.name]
         ) or db.insert("author", ["author_name"], [author.name])
         author_indices.append(author_id)
+        # author link
+        link_type = "mag"
+        link = author.aid
+        db.modify(
+            "INSERT OR IGNORE INTO "
+            "author_link (author_id, link_type, link) VALUES(?, ?, ?)",
+            (author_id, link_type, link),
+        )
         # Author affiliation.
         for affiliation in author.affiliations:
             # We don't have start and end date, so we check if
@@ -110,7 +118,7 @@ def _ms_to_sql(data: dict, db: Database):
                 "release",
                 "release_id",
                 "venue_id = ? AND release_date = ? AND release_year = ? AND volume IS NULL",
-                (venue_id, release_date, release_year)
+                (venue_id, release_date, release_year),
             )
         else:
             release_id = db.select_id(
