@@ -1,3 +1,4 @@
+import re
 import shutil
 import textwrap
 import unicodedata
@@ -81,3 +82,93 @@ def normalize(s):
         return None
     else:
         return asciiify(s).lower()
+
+
+REGEX_URL = re.compile(r"^[a-z]+://")
+REGEX_WORD_THEN_NUMBER = re.compile(r"([^0-9 ])([0-9])")
+REGEX_NUMBER_THEN_WORD = re.compile(r"([0-9])([^0-9 ])")
+REGEX_NO_WORD = re.compile(r"((\W|_)+)")
+REGEX_SEQ_NO_WORD = re.compile(r"( (\W|_)){2,}")
+REGEX_NUMBER = re.compile(r"^[0-9]+$")
+REGEX_VOLUME = re.compile(r"^volume$", re.IGNORECASE)
+REGEX_VOL = re.compile(r"^vol$", re.IGNORECASE)
+WRITTEN_NUMBERS = {
+    "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
+    "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth",
+    "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth",
+    "nineteenth", "twentieth"
+}
+RANK_SUFFIXES = {"st", "nd", "rd", "th"}
+
+
+def _list_starts_with(inp: list, search: list, start=0):
+    if len(inp) - start < len(search):
+        return None
+    for j in range(len(search)):
+        piece = inp[start + j]
+        pattern = search[j]
+        if not (
+            (isinstance(pattern, str) and pattern == piece)
+            or
+            (isinstance(pattern, re.Pattern) and pattern.match(piece))
+        ):
+            return None
+    else:
+        # No break encountered, ie. full pattern found.
+        return inp[start:(start + len(search))]
+
+
+def get_venue_name_and_volume(venue: str):
+    """Try to infer venue name and volume from given venue long name.
+
+    Return a couple (inferred venue name, inferred venue volume)
+    Inferred venue volume is None if no volume was detected.
+    """
+    venue = venue.strip()
+    # We don't try to parse URLs.
+    if REGEX_URL.match(venue):
+        return venue, None
+    # Separate word then number with a space.
+    venue = REGEX_WORD_THEN_NUMBER.sub(r"\1 \2", venue)
+    # Separate number then word with a space.
+    venue = REGEX_NUMBER_THEN_WORD.sub(r"\1 \2", venue)
+    # Make sure to put spaces around any punctuation sequence.
+    venue = REGEX_NO_WORD.sub(r" \1 ", venue)
+    # Split venue on spaces.
+    pieces = venue.split()
+    inferred_volume = []
+    inferred_name = []
+    cursor = 0
+    while cursor < len(pieces):
+        piece = pieces[cursor]
+        if not piece:
+            continue
+        explicit_volume = (
+            _list_starts_with(pieces, [REGEX_VOLUME, REGEX_NUMBER], cursor)
+            or
+            _list_starts_with(pieces, [REGEX_VOL, ".", REGEX_NUMBER], cursor)
+        )
+        if explicit_volume:
+            inferred_volume.append(f"volume {explicit_volume[-1]}")
+            cursor += len(explicit_volume)
+        elif piece.lower() in WRITTEN_NUMBERS:
+            inferred_volume.append(piece)
+            cursor += 1
+        elif REGEX_NUMBER.match(piece):
+            volume = piece
+            cursor += 1
+            if cursor < len(pieces) and pieces[cursor].lower() in RANK_SUFFIXES:
+                volume += pieces[cursor]
+                cursor += 1
+            inferred_volume.append(volume)
+        else:
+            inferred_name.append(piece)
+            cursor += 1
+    # Replace consecutive punctuation with last one.
+    name = REGEX_SEQ_NO_WORD.sub(
+        lambda m: m.group(0)[-1],
+        " ".join(inferred_name)
+    )
+    volume = ", ".join(inferred_volume) or None
+    # Return inferred name and volume.
+    return name, volume

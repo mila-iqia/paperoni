@@ -5,6 +5,7 @@ from coleo import default, Option, tooled
 
 from paperoni.papers import Paper
 from paperoni.sql.database import Database
+from paperoni.utils import get_venue_name_and_volume
 
 
 def _ms_has_author(data: dict, author: str):
@@ -70,13 +71,14 @@ def _ms_to_sql(data: dict, db: Database):
     if paper.journal or paper.conference or paper.venue:
         if paper.journal:
             venue_type = "journal"
-            venue_name = paper.journal
+            venue_long_name = paper.journal
         elif paper.conference:
             venue_type = "conference"
-            venue_name = paper.conference
+            venue_long_name = paper.conference
         else:
             venue_type = None
-            venue_name = paper.venue
+            venue_long_name = paper.venue
+        venue_name, venue_volume = get_venue_name_and_volume(venue_long_name)
         if venue_type is None:
             venue_id = db.select_id(
                 "venue",
@@ -99,6 +101,10 @@ def _ms_to_sql(data: dict, db: Database):
         release_date = db.date_to_timestamp(paper.date)
         release_year = int(paper.year)
         volume = data.get("V", None)
+        if volume is None:
+            volume = venue_volume
+        elif venue_volume:
+            volume = f"{venue_volume}, volume {volume}"
         if volume is None:
             release_id = db.select_id(
                 "release",
