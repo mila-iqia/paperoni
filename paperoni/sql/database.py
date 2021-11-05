@@ -44,6 +44,7 @@ class Database:
         Select one ID from a table and return it if found, else None.
         If more than 1 ID is found, raise a RuntimeError.
         """
+        assert None not in where_parameters
         self.cursor.execute(
             f"SELECT {column} FROM {table} WHERE {where_query}",
             where_parameters,
@@ -60,6 +61,7 @@ class Database:
 
     def count(self, table, column, where_query, where_parameters=()):
         """Select and return count from a table."""
+        assert None not in where_parameters
         self.cursor.execute(
             f"SELECT COUNT({column}) FROM {table} WHERE {where_query}",
             where_parameters,

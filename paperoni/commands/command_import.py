@@ -50,7 +50,7 @@ def _ms_to_sql(data: dict, db: Database):
         author_id = db.select_id(
             "author", "author_id", "author_name = ?", [author.name]
         ) or db.insert("author", ["author_name"], [author.name])
-        author_indices.append(author_id)
+        author_indices.append((author_id, author))
         # author link
         link_type = "mag"
         link = author.aid
@@ -63,13 +63,23 @@ def _ms_to_sql(data: dict, db: Database):
         for affiliation in author.affiliations:
             # We don't have start and end date, so we check if
             # affiliation and role are already registered with null dates.
-            if not db.count(
-                "author_affiliation",
-                "author_id",
-                "affiliation = ? AND role = ? "
-                "AND start_date IS NULL and end_date IS NULL",
-                (affiliation, author.role),
-            ):
+            if author.role is None:
+                count = db.count(
+                    "author_affiliation",
+                    "author_id",
+                    "affiliation = ? AND role IS NULL "
+                    "AND start_date IS NULL and end_date IS NULL",
+                    [affiliation],
+                )
+            else:
+                count = db.count(
+                    "author_affiliation",
+                    "author_id",
+                    "affiliation = ? AND role = ? "
+                    "AND start_date IS NULL and end_date IS NULL",
+                    (affiliation, author.role),
+                )
+            if not count:
                 db.insert(
                     "author_affiliation",
                     ("author_id", "affiliation", "role"),
@@ -152,17 +162,13 @@ def _ms_to_sql(data: dict, db: Database):
         ) or db.insert("keyword", ["keyword"], [keyword])
         keyword_indices.append(keyword_id)
     # paper to author
-    for author_position, author_id in enumerate(author_indices):
-        if not db.count(
-            "paper_to_author",
-            "paper_id",
-            "paper_id = ? AND author_id = ?",
-            (paper_id, author_id),
-        ):
-            db.insert(
-                "paper_to_author",
-                ("paper_id", "author_id", "author_position"),
-                (paper_id, author_id, author_position),
+    for author_position, (author_id, author) in enumerate(author_indices):
+        for affiliation in author.affiliations:
+            db.modify(
+                "INSERT OR IGNORE INTO paper_to_author "
+                "(paper_id, author_id, author_position, affiliation) "
+                "VALUES (?, ?, ?, ?)",
+                (paper_id, author_id, author_position, affiliation)
             )
     # paper to keyword
     for keyword_id in keyword_indices:
