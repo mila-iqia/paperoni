@@ -93,10 +93,26 @@ REGEX_NUMBER = re.compile(r"^[0-9]+$")
 REGEX_VOLUME = re.compile(r"^volume$", re.IGNORECASE)
 REGEX_VOL = re.compile(r"^vol$", re.IGNORECASE)
 WRITTEN_NUMBERS = {
-    "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
-    "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth",
-    "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth",
-    "nineteenth", "twentieth"
+    "first",
+    "second",
+    "third",
+    "fourth",
+    "fifth",
+    "sixth",
+    "seventh",
+    "eighth",
+    "ninth",
+    "tenth",
+    "eleventh",
+    "twelfth",
+    "thirteenth",
+    "fourteenth",
+    "fifteenth",
+    "sixteenth",
+    "seventeenth",
+    "eighteenth",
+    "nineteenth",
+    "twentieth",
 }
 RANK_SUFFIXES = {"st", "nd", "rd", "th"}
 
@@ -109,13 +125,12 @@ def _list_starts_with(inp: list, search: list, start=0):
         pattern = search[j]
         if not (
             (isinstance(pattern, str) and pattern == piece)
-            or
-            (isinstance(pattern, re.Pattern) and pattern.match(piece))
+            or (isinstance(pattern, re.Pattern) and pattern.match(piece))
         ):
             return None
     else:
         # No break encountered, ie. full pattern found.
-        return inp[start:(start + len(search))]
+        return inp[start : (start + len(search))]
 
 
 def get_venue_name_and_volume(venue: str):
@@ -143,11 +158,9 @@ def get_venue_name_and_volume(venue: str):
         piece = pieces[cursor]
         if not piece:
             continue
-        explicit_volume = (
-            _list_starts_with(pieces, [REGEX_VOLUME, REGEX_NUMBER], cursor)
-            or
-            _list_starts_with(pieces, [REGEX_VOL, ".", REGEX_NUMBER], cursor)
-        )
+        explicit_volume = _list_starts_with(
+            pieces, [REGEX_VOLUME, REGEX_NUMBER], cursor
+        ) or _list_starts_with(pieces, [REGEX_VOL, ".", REGEX_NUMBER], cursor)
         if explicit_volume:
             inferred_volume.append(f"volume {explicit_volume[-1]}")
             cursor += len(explicit_volume)
@@ -166,8 +179,7 @@ def get_venue_name_and_volume(venue: str):
             cursor += 1
     # Replace consecutive punctuation with last one.
     name = REGEX_SEQ_NO_WORD.sub(
-        lambda m: m.group(0)[-1],
-        " ".join(inferred_name)
+        lambda m: m.group(0)[-1], " ".join(inferred_name)
     )
     volume = ", ".join(inferred_volume) or None
     # Return inferred name and volume.

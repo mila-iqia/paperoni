@@ -1,7 +1,7 @@
 import os
 import sqlite3
-from typing import Sequence
 from datetime import datetime
+from typing import Sequence
 
 
 class Database:
