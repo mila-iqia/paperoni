@@ -37,3 +37,10 @@ def test_database_creation():
     db.connection.commit()
     db.cursor.execute("SELECT COUNT(*) FROM keyword")
     assert db.cursor.fetchone()[0] == 0
+
+
+def test_date():
+    for date in ("2011-01-07", "2009-11-01", "1995-05-15", "2019-11-14"):
+        timestamp = Database.date_to_timestamp(date)
+        computed_date = Database.timestamp_to_date(timestamp)
+        assert date == computed_date, (date, timestamp, computed_date)
