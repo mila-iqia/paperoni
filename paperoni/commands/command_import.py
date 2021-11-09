@@ -1,8 +1,8 @@
 import json as json_module
 import pprint
-import tqdm
 
-from coleo import default, Option, tooled
+import tqdm
+from coleo import Option, default, tooled
 
 from paperoni.papers import Paper
 from paperoni.sql.database import Database
@@ -169,7 +169,7 @@ def _ms_to_sql(data: dict, db: Database):
                 "INSERT OR IGNORE INTO paper_author "
                 "(paper_id, author_id, author_position, affiliation) "
                 "VALUES (?, ?, ?, ?)",
-                (paper_id, author_id, author_position, affiliation)
+                (paper_id, author_id, author_position, affiliation),
             )
     # paper to topic
     for topic_id in topic_indices:
@@ -180,9 +180,7 @@ def _ms_to_sql(data: dict, db: Database):
             (paper_id, topic_id),
         ):
             db.insert(
-                "paper_topic",
-                ("paper_id", "topic_id"),
-                (paper_id, topic_id),
+                "paper_topic", ("paper_id", "topic_id"), (paper_id, topic_id),
             )
 
 
@@ -235,7 +233,9 @@ def command_import():
 
     db = Database(collection)
 
-    for i, paper in tqdm.tqdm(enumerate(filtered_ms_papers), total=len(filtered_ms_papers)):
+    for i, paper in tqdm.tqdm(
+        enumerate(filtered_ms_papers), total=len(filtered_ms_papers)
+    ):
         json_to_sql(paper, db)
         if verbose and (i + 1) % 10 == 0:
             print(i + 1, "paper(s) imported.")

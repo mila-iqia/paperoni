@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-import loop
-
 from .utils import T, asciiify, download, join, normalize as _norm, print_field
 
 URL_SCHEMES = {
@@ -75,6 +73,7 @@ class Paper:
 
     @property
     def date(self):
+        date = None
         for release in self.releases:
             if release.date is not None:
                 date = release.date
