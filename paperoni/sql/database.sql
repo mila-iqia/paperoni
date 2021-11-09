@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS release (
 	release_date UNSIGNED BIG INT,
 	release_year UNSIGNED INT NOT NULL,
 	volume TEXT,
-	UNIQUE (venue_id, volume)
+	UNIQUE (venue_id, release_date, release_year, volume)
 );
 
 CREATE TABLE IF NOT EXISTS keyword (
@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS paper_to_author (
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	-- Author position in paper authors list.
 	author_position UNSIGNED INT NOT NULL,
-	PRIMARY KEY (paper_id, author_id)
+	affiliation TEXT NOT NULL,
+	PRIMARY KEY (paper_id, author_id, affiliation)
 );
 
 CREATE TABLE IF NOT EXISTS paper_to_release (
