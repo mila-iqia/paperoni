@@ -1,7 +1,8 @@
 import json as json_module
 import pprint
 
-from coleo import default, Option, tooled
+import tqdm
+from coleo import Option, default, tooled
 
 from paperoni.papers import Paper
 from paperoni.sql.database import Database
@@ -21,7 +22,7 @@ def _ms_to_sql(data: dict, db: Database):
     """Save Microsoft Academic JSON data into SQLite database."""
     paper = Paper(data, None)
     author_indices = []
-    keyword_indices = []
+    topic_indices = []
     # Paper
     paper_id = db.select_id(
         "paper",
@@ -145,43 +146,41 @@ def _ms_to_sql(data: dict, db: Database):
             )
         # paper to release
         if not db.count(
-            "paper_to_release",
+            "paper_release",
             "paper_id",
             "paper_id = ? AND release_id = ?",
             (paper_id, release_id),
         ):
             db.insert(
-                "paper_to_release",
+                "paper_release",
                 ("paper_id", "release_id"),
                 (paper_id, release_id),
             )
-    # Keywords
-    for keyword in paper.keywords:
-        keyword_id = db.select_id(
-            "keyword", "keyword_id", "keyword = ?", [keyword]
-        ) or db.insert("keyword", ["keyword"], [keyword])
-        keyword_indices.append(keyword_id)
+    # topics
+    for topic in paper.keywords:
+        topic_id = db.select_id(
+            "topic", "topic_id", "topic = ?", [topic]
+        ) or db.insert("topic", ["topic"], [topic])
+        topic_indices.append(topic_id)
     # paper to author
     for author_position, (author_id, author) in enumerate(author_indices):
         for affiliation in author.affiliations:
             db.modify(
-                "INSERT OR IGNORE INTO paper_to_author "
+                "INSERT OR IGNORE INTO paper_author "
                 "(paper_id, author_id, author_position, affiliation) "
                 "VALUES (?, ?, ?, ?)",
-                (paper_id, author_id, author_position, affiliation)
+                (paper_id, author_id, author_position, affiliation),
             )
-    # paper to keyword
-    for keyword_id in keyword_indices:
+    # paper to topic
+    for topic_id in topic_indices:
         if not db.count(
-            "paper_to_keyword",
+            "paper_topic",
             "paper_id",
-            "paper_id = ? AND keyword_id = ?",
-            (paper_id, keyword_id),
+            "paper_id = ? AND topic_id = ?",
+            (paper_id, topic_id),
         ):
             db.insert(
-                "paper_to_keyword",
-                ("paper_id", "keyword_id"),
-                (paper_id, keyword_id),
+                "paper_topic", ("paper_id", "topic_id"), (paper_id, topic_id),
             )
 
 
@@ -233,7 +232,10 @@ def command_import():
         print(len(filtered_ms_papers), "selected paper(s).")
 
     db = Database(collection)
-    for i, paper in enumerate(filtered_ms_papers):
+
+    for i, paper in tqdm.tqdm(
+        enumerate(filtered_ms_papers), total=len(filtered_ms_papers)
+    ):
         json_to_sql(paper, db)
         if verbose and (i + 1) % 10 == 0:
             print(i + 1, "paper(s) imported.")

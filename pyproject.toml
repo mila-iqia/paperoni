@@ -10,11 +10,11 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-coleo = "^0.2.1"
+coleo = "^0.2.5"
 tqdm = "^4.48.2"
 requests = "^2.24.0"
 blessed = "^1.17.9"
-hrepr = "^0.3.1"
+hrepr = "^0.4.0"
 beautifulsoup4 = "^4.9.1"
 
 [tool.poetry.dev-dependencies]
