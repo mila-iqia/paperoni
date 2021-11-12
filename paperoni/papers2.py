@@ -38,7 +38,8 @@ class Topic:
 class Author:
     links: Sequence[Link] = ()
     name: str = None
-    affiliations: Sequence[str] = ()
+    affiliations: Sequence[str] = ("",)
+    role: str = None
 
 
 @dataclass
@@ -70,6 +71,9 @@ class Paper:
     releases: Sequence[Release] = ()
     topics: Sequence[Topic] = ()
     citation_count: int = None
+
+    def __hash__(self):
+        return hash((self.title, self.abstract))
 
     @property
     def date(self):
@@ -120,3 +124,10 @@ class Paper:
                 print(f"  {T.bold_green(fmt)} {url}")
 
         print_field("Citations", self.citation_count)
+
+    def get_ref(self, link_type):
+        for link in self.links:
+            if link.type == link_type:
+                return link.ref
+        else:
+            return None

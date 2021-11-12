@@ -59,9 +59,49 @@ class Database:
                 f"Found {len(results)} entries for {table}.{column}"
             )
 
+    def select_id_from_values(self, table, column, **values):
+        where_pieces = []
+        where_parameters = []
+        for key, value in values.items():
+            if value is None:
+                where_pieces.append(f"{key} IS NULL")
+            else:
+                where_pieces.append(f"{key} = ?")
+                where_parameters.append(value)
+        where_query = " AND ".join(where_pieces)
+        self.cursor.execute(
+            f"SELECT {column} FROM {table} WHERE {where_query}",
+            where_parameters,
+        )
+        results = self.cursor.fetchall()
+        if len(results) == 0:
+            return None
+        elif len(results) == 1:
+            return results[0][0]
+        else:
+            raise RuntimeError(
+                f"Found {len(results)} entries for {table}.{column}"
+            )
+
     def count(self, table, column, where_query, where_parameters=()):
         """Select and return count from a table."""
         assert None not in where_parameters
+        self.cursor.execute(
+            f"SELECT COUNT({column}) FROM {table} WHERE {where_query}",
+            where_parameters,
+        )
+        return self.cursor.fetchone()[0]
+
+    def count_from_values(self, table, column, **values):
+        where_pieces = []
+        where_parameters = []
+        for key, value in values.items():
+            if value is None:
+                where_pieces.append(f"{key} IS NULL")
+            else:
+                where_pieces.append(f"{key} = ?")
+                where_parameters.append(value)
+        where_query = " AND ".join(where_pieces)
         self.cursor.execute(
             f"SELECT COUNT({column}) FROM {table} WHERE {where_query}",
             where_parameters,

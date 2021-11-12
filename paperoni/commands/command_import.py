@@ -24,16 +24,13 @@ def _ms_to_sql(data: dict, db: Database):
     author_indices = []
     topic_indices = []
     # Paper
-    paper_id = db.select_id(
-        "paper",
-        "paper_id",
-        "title = ? AND abstract = ?",
-        (paper.title, paper.abstract),
+    paper_id = db.select_id_from_values(
+        "paper", "paper_id", title=paper.title, abstract=paper.abstract,
     ) or db.insert(
         "paper", ("title", "abstract"), (paper.title, paper.abstract)
     )
     # MAG ID -> paper_link
-    paper_link_type = "mag"
+    paper_link_type = "MAG"
     paper_link = paper.pid
     if not db.count(
         "paper_link",
@@ -67,7 +64,7 @@ def _ms_to_sql(data: dict, db: Database):
         ) or db.insert("author", ["author_name"], [author.name])
         author_indices.append((author_id, author))
         # author link
-        link_type = "mag"
+        link_type = "MAG"
         link = author.aid
         db.modify(
             "INSERT OR IGNORE INTO "
@@ -112,24 +109,11 @@ def _ms_to_sql(data: dict, db: Database):
             venue_type = None
             venue_long_name = paper.venue
         venue_name, venue_volume = get_venue_name_and_volume(venue_long_name)
-        if venue_type is None:
-            venue_id = db.select_id(
-                "venue",
-                "venue_id",
-                "venue_type IS NULL and venue_name = ?",
-                [venue_name],
-            )
-        else:
-            venue_id = db.select_id(
-                "venue",
-                "venue_id",
-                "venue_type = ? AND venue_name = ?",
-                (venue_type, venue_name),
-            )
-        if venue_id is None:
-            venue_id = db.insert(
-                "venue", ("venue_type", "venue_name"), (venue_type, venue_name)
-            )
+        venue_id = db.select_id_from_values(
+            "venue", "venue_id", venue_type=venue_type, venue_name=venue_name
+        ) or db.insert(
+            "venue", ("venue_type", "venue_name"), (venue_type, venue_name)
+        )
         # Release
         release_date = db.date_to_timestamp(paper.date)
         release_year = int(paper.year)
@@ -138,26 +122,18 @@ def _ms_to_sql(data: dict, db: Database):
             volume = venue_volume
         elif venue_volume:
             volume = f"{venue_volume}, volume {volume}"
-        if volume is None:
-            release_id = db.select_id(
-                "release",
-                "release_id",
-                "venue_id = ? AND release_date = ? AND release_year = ? AND volume IS NULL",
-                (venue_id, release_date, release_year),
-            )
-        else:
-            release_id = db.select_id(
-                "release",
-                "release_id",
-                "venue_id = ? AND release_date = ? AND release_year = ? AND volume = ?",
-                (venue_id, release_date, release_year, volume),
-            )
-        if release_id is None:
-            release_id = db.insert(
-                "release",
-                ("venue_id", "release_date", "release_year", "volume"),
-                (venue_id, release_date, release_year, volume),
-            )
+        release_id = db.select_id_from_values(
+            "release",
+            "release_id",
+            venue_id=venue_id,
+            release_date=release_date,
+            release_year=release_year,
+            volume=volume,
+        ) or db.insert(
+            "release",
+            ("venue_id", "release_date", "release_year", "volume"),
+            (venue_id, release_date, release_year, volume),
+        )
         # paper to release
         if not db.count(
             "paper_release",
