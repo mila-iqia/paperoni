@@ -32,6 +32,20 @@ def _ms_to_sql(data: dict, db: Database):
     ) or db.insert(
         "paper", ("title", "abstract"), (paper.title, paper.abstract)
     )
+    # MAG ID -> paper_link
+    paper_link_type = "mag"
+    paper_link = paper.pid
+    if not db.count(
+        "paper_link",
+        "paper_id",
+        "link_type = ? AND link = ?",
+        (paper_link_type, paper_link),
+    ):
+        db.insert(
+            "paper_link",
+            ("paper_id", "link_type", "link"),
+            (paper_id, paper_link_type, paper_link),
+        )
     # Links
     for link in paper.links:
         if not db.count(
