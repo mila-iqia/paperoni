@@ -30,6 +30,14 @@ class Database:
         self.connection.commit()
         return self.cursor.lastrowid
 
+    def query(self, query, parameters=()):
+        self.cursor.execute(query, parameters)
+        yield from self.cursor
+
+    def query_one(self, query, parameters=()):
+        self.cursor.execute(query, parameters)
+        return self.cursor.fetchone()
+
     def insert(self, table: str, columns: Sequence[str], values: Sequence):
         """Insert a row in a table and return new row ID."""
         assert len(columns) == len(values)
