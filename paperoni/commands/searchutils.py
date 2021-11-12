@@ -7,6 +7,7 @@ from ..io import PapersFile, ResearchersFile
 from ..papers import Papers
 from ..query import QueryManager
 from ..sources.semantic_scholar import SemanticScholarQueryManager
+from ..sql.collection import Collection
 
 
 def _date(x, ending):
@@ -293,3 +294,106 @@ def search_semantic_scholar():
         papers = qm.author_papers(author)
 
     yield from papers
+
+
+@tooled
+def search_sql(collection: Collection):
+
+    # [alias: -v]
+    # Verbose output
+    verbose: Option & bool = default(False)
+
+    # [group: search]
+    # Search using a specific SQL database paper ID
+    paper_id: Option & int = default(None)
+
+    # [group: search]
+    # [alias: -t]
+    # [nargs: *]
+    # Search words in the title
+    title: Option & str = default(None)
+    title = join(title)
+
+    # [group: search]
+    # [alias: -a]
+    # [nargs: *]
+    # [action: append]
+    # Search for an author
+    author: Option & str = default([])
+    author = [join(a) for a in author]
+    author = [int(a) if re.match(r"^[0-9]+$", a) else a for a in author]
+
+    # [group: search]
+    # [alias: -w]
+    # [nargs: *]
+    # Search words in the title or abstract
+    words: Option & str = default(None)
+    words = join(words)
+
+    # [group: search]
+    # [alias: -k]
+    # [nargs: *]
+    # [action: append]
+    # Search for keywords
+    keywords: Option & str = default([])
+    keywords = [join(k) for k in keywords]
+
+    # [group: search]
+    # [alias: -i]
+    # [nargs: *]
+    # Search papers from institution
+    institution: Option & str = default(None)
+    institution = join(institution)
+
+    # [group: search]
+    # Search papers from a specific conference or journal
+    venue: Option & str = default(None)
+
+    # [group: search]
+    # [alias: -y]
+    # Year
+    year: Option & int = default(None)
+
+    # [group: search]
+    # Start date (yyyy-mm-dd or yyyy)
+    start: Option = default(str(year) if year is not None else None)
+    start = _date(start, ending="01-01")
+
+    # [group: search]
+    # End date (yyyy-mm-dd or yyyy)
+    end: Option = default(str(year) if year is not None else None)
+    end = _date(end, ending="12-31")
+
+    # [group: search]
+    # Sort by most recent
+    recent: Option & bool = default(False)
+
+    # [group: search]
+    # Sort by most cited
+    cited: Option & bool = default(False)
+
+    # [group: search]
+    # Number of papers to fetch (default: 100)
+    limit: Option & int = default(None)
+
+    # [group: search]
+    # Search offset
+    offset: Option & int = default(0)
+
+    return collection.query(
+        paper_id=paper_id,
+        title=title,
+        author=author,
+        words=words,
+        keywords=keywords,
+        institution=institution,
+        venue=venue,
+        year=year,
+        start=start,
+        end=end,
+        recent=recent,
+        cited=cited,
+        limit=limit,
+        offset=offset,
+        verbose=verbose,
+    )

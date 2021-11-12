@@ -38,6 +38,7 @@ class Topic:
 class Author:
     links: Sequence[Link] = ()
     name: str = None
+    aliases: Sequence[str] = ()
     affiliations: Sequence[str] = ()
 
     def get_ref(self, link_type):
@@ -137,3 +138,10 @@ class Paper:
                 return link.ref
         else:
             return None
+
+    def download_pdf(self):
+        for link in self.links:
+            if link.type == "pdf":
+                print(link.ref)
+                return True
+        return False
