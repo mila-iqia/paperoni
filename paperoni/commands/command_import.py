@@ -237,5 +237,3 @@ def command_import():
         enumerate(filtered_ms_papers), total=len(filtered_ms_papers)
     ):
         json_to_sql(paper, db)
-        if verbose and (i + 1) % 10 == 0:
-            print(i + 1, "paper(s) imported.")
