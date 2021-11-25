@@ -154,7 +154,9 @@ def _ms_to_sql(data: dict, db: Database):
         topic_indices.append(topic_id)
     # paper to author
     for author_position, (author_id, author) in enumerate(author_indices):
-        for affiliation in author.affiliations:
+        # Author affiliations may be empty, but we must still
+        # save paper to author relation.
+        for affiliation in (author.affiliations or [""]):
             db.modify(
                 "INSERT OR IGNORE INTO paper_author "
                 "(paper_id, author_id, author_position, affiliation) "

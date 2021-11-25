@@ -103,32 +103,6 @@ class Collection:
                     "author_link (author_id, link_type, link) VALUES(?, ?, ?)",
                     (author_id, author_link.type, author_link.ref),
                 )
-            # Author affiliation.
-            for affiliation in author.affiliations:
-                # We don't have start and end date, so we check if
-                # affiliation and role are already registered with null dates.
-                if author.role is None:
-                    count = db.count(
-                        "author_affiliation",
-                        "author_id",
-                        "affiliation = ? AND role IS NULL "
-                        "AND start_date IS NULL and end_date IS NULL",
-                        [affiliation],
-                    )
-                else:
-                    count = db.count(
-                        "author_affiliation",
-                        "author_id",
-                        "affiliation = ? AND role = ? "
-                        "AND start_date IS NULL and end_date IS NULL",
-                        (affiliation, author.role),
-                    )
-                if not count:
-                    db.insert(
-                        "author_affiliation",
-                        ("author_id", "affiliation", "role"),
-                        (author_id, affiliation, author.role),
-                    )
         # Venue
         venue = paper.venue
         if venue.name:
@@ -182,7 +156,9 @@ class Collection:
             topic_indices.append(topic_id)
         # paper to author
         for author_position, (author_id, author) in enumerate(author_indices):
-            for affiliation in author.affiliations:
+            # Author affiliations may be empty, but we must still
+            # save paper to author relation.
+            for affiliation in (author.affiliations or [""]):
                 db.modify(
                     "INSERT OR IGNORE INTO paper_author "
                     "(paper_id, author_id, author_position, affiliation) "

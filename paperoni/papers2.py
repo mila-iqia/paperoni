@@ -38,8 +38,7 @@ class Topic:
 class Author:
     links: Sequence[Link] = ()
     name: str = None
-    affiliations: Sequence[str] = ("",)
-    role: str = None
+    affiliations: Sequence[str] = ()
 
 
 @dataclass
