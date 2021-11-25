@@ -1,7 +1,7 @@
 import pprint
 from coleo import Option, default, tooled
 
-from ..papers2 import Paper
+from ..papers2 import Paper, Author
 from .interactive import InteractiveCommands, default_commands
 from .command_semantic_scholar import search
 from ..sql.database import Database
@@ -81,6 +81,29 @@ class Collection:
             "paper", "paper_id", title=paper.title, abstract=paper.abstract
         )
 
+    def _find_author_id(self, author: Author):
+        # Check paper IDs then title+abstract.
+        for link_type in (
+            "SemanticScholar",
+            "MAG",
+            "ACL",
+            "DBLP",
+            "DOI",
+            "PubMed",
+            "PubMedCentral",
+        ):
+            author_id = self.db.select_id_from_values(
+                "author_link",
+                "author_id",
+                link_type=link_type,
+                link=author.get_ref(link_type),
+            )
+            if author_id is not None:
+                return author_id
+        return self.db.select_id_from_values(
+            "author", "author_id", author_name=author.name
+        )
+
     def _create_paper_entry(self, paper: Paper, excluded: int = 0) -> int:
         paper_id = (
             self._find_paper_id(paper)
@@ -119,9 +142,7 @@ class Collection:
         # Authors
         for author in paper.authors:
             # Author
-            author_id = db.select_id(
-                "author", "author_id", "author_name = ?", [author.name]
-            ) or db.insert("author", ["author_name"], [author.name])
+            author_id = self._find_author_id(author) or db.insert("author", ["author_name"], [author.name])
             author_indices.append((author_id, author))
             # author links
             for author_link in author.links:

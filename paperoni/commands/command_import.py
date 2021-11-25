@@ -25,6 +25,11 @@ def _ms_to_sql(data: dict, db: Database):
     topic_indices = []
     # Paper
     paper_id = db.select_id_from_values(
+        "paper_link",
+        "paper_id",
+        link_type="MAG",
+        link=paper.pid,
+    ) or db.select_id_from_values(
         "paper", "paper_id", title=paper.title, abstract=paper.abstract,
     ) or db.insert(
         "paper", ("title", "abstract"), (paper.title, paper.abstract)
@@ -59,7 +64,12 @@ def _ms_to_sql(data: dict, db: Database):
     # Authors
     for author in paper.authors:
         # Author
-        author_id = db.select_id(
+        author_id = db.select_id_from_values(
+            "author_link",
+            "author_id",
+            link_type="MAG",
+            link=author.aid,
+        ) or db.select_id(
             "author", "author_id", "author_name = ?", [author.name]
         ) or db.insert("author", ["author_name"], [author.name])
         author_indices.append((author_id, author))

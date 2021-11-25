@@ -40,6 +40,13 @@ class Author:
     name: str = None
     affiliations: Sequence[str] = ()
 
+    def get_ref(self, link_type):
+        for link in self.links:
+            if link.type == link_type:
+                return link.ref
+        else:
+            return None
+
 
 @dataclass
 class Venue:
