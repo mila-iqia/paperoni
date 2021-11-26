@@ -36,6 +36,7 @@ collect = "paperoni.commands.command_collect:command_collect"
 html = "paperoni.commands.command_html:command_html"
 semantic-scholar = "paperoni.commands.command_semantic_scholar:command_semantic_scholar"
 import = "paperoni.commands.command_import:command_import"
+collect-semantic-scholar = "paperoni.commands.command_collect_semantic_scholar:command_collect_semantic_scholar"
 
 [tool.black]
 line-length = 80

@@ -1,7 +1,7 @@
 from coleo import Option, default, tooled
 
 from ..papers2 import Paper
-from ..sources.semantic_scholar import SemanticScholarQueryManager
+from .searchutils import search_semantic_scholar as search
 from .interactive import InteractiveCommands, default_commands
 
 search_commands = InteractiveCommands("Enter a command", default="s")
@@ -14,90 +14,6 @@ def _s(self, paper, **_):
 
 
 search_commands.update(default_commands)
-
-
-def _to_microsoft(paper_data: dict):
-    return {
-        "Id": int(paper_data["paperId"], 16),
-        "FamId": paper_data["paperId"],
-        "Y": paper_data["year"],
-        "D": "%04d-01-01" % (paper_data["year"] or 0),
-        "Ti": paper_data["title"],
-        "DN": paper_data["title"],
-        "abstract": paper_data["abstract"],
-        "CC": paper_data["citationCount"],
-        "F": [{"FN": f} for f in (paper_data["fieldsOfStudy"] or ())],
-        "J": {"JN": paper_data["venue"],},
-        "S": [{"Ty": "1", "U": paper_data["url"]}],
-        "VFN": paper_data["venue"],
-        "VSN": paper_data["venue"],
-        "BV": paper_data["venue"],
-        "PB": paper_data["venue"],
-        "AA": [
-            {
-                "AuN": author_dict["name"],
-                "DAuN": author_dict["name"],
-                "AuId": author_dict["authorId"],
-                "DAfN": "",
-            }
-            for author_dict in paper_data["authors"]
-        ],
-    }
-
-
-def join(parts):
-    if parts is None or isinstance(parts, str):
-        return parts
-    else:
-        return " ".join(parts)
-
-
-@tooled
-def search():
-    # [alias: -v]
-    # Verbose output
-    verbose: Option & bool = default(False)
-
-    # [group: search]
-    # [positional: *]
-    # Search for keywords
-    keywords: Option & str = default([])
-    keywords = [join(k) for k in keywords]
-
-    # [group: search]
-    # [alias: -a]
-    # Search by author ID
-    author: Option & str = default("")
-
-    # [group: search]
-    # Number of papers to fetch (default: 100)
-    limit: Option & int = default(100)
-
-    # [group: search]
-    # Search offset
-    offset: Option & int = default(0)
-
-    if author and keywords:
-        raise RuntimeError(
-            "Please specify either keywords or author ID, but not both"
-        )
-    elif not author and not keywords:
-        raise RuntimeError("Keywords or author ID required.")
-
-    qm = SemanticScholarQueryManager()
-    if verbose:
-        print(
-            "[semantic scholar search]",
-            f"keywords: {keywords}," if keywords else f"author ID: {author},",
-            f"limit: {limit}, offset: {offset}",
-        )
-
-    if keywords:
-        papers = qm.search(keywords)
-    else:
-        papers = qm.author_papers(author)
-
-    yield from papers
 
 
 @tooled

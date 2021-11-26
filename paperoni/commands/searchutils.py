@@ -6,6 +6,7 @@ from ..config import get_config
 from ..io import PapersFile, ResearchersFile
 from ..papers import Papers
 from ..query import QueryManager
+from ..sources.semantic_scholar import SemanticScholarQueryManager
 
 
 def _date(x, ending):
@@ -244,3 +245,51 @@ def search(collection=None, researchers=None):
             papers = papers[:limit]
 
     return papers
+
+
+@tooled
+def search_semantic_scholar():
+    # [alias: -v]
+    # Verbose output
+    verbose: Option & bool = default(False)
+
+    # [group: search]
+    # [positional: *]
+    # Search for keywords
+    keywords: Option & str = default([])
+    keywords = [join(k) for k in keywords]
+
+    # [group: search]
+    # [alias: -a]
+    # Search by author ID
+    author: Option & str = default("")
+
+    # [group: search]
+    # Number of papers to fetch (default: 100)
+    limit: Option & int = default(100)
+
+    # [group: search]
+    # Search offset
+    offset: Option & int = default(0)
+
+    if author and keywords:
+        raise RuntimeError(
+            "Please specify either keywords or author ID, but not both"
+        )
+    elif not author and not keywords:
+        raise RuntimeError("Keywords or author ID required.")
+
+    qm = SemanticScholarQueryManager()
+    if verbose:
+        print(
+            "[semantic scholar search]",
+            f"keywords: {keywords}," if keywords else f"author ID: {author},",
+            f"limit: {limit}, offset: {offset}",
+        )
+
+    if keywords:
+        papers = qm.search(keywords)
+    else:
+        papers = qm.author_papers(author)
+
+    yield from papers

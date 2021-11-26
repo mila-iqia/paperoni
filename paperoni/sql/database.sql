@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS paper (
 	paper_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT,
 	abstract TEXT,
-	citation_count INTEGER
+	citation_count INTEGER,
+	excluded INTEGER NOT NULL DEFAULT 0,
+	CHECK (excluded in (0, 1))
 );
 
 CREATE TABLE IF NOT EXISTS paper_link (
