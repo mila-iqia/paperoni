@@ -134,7 +134,9 @@ class SemanticScholarQueryManager:
             title=data["title"],
             abstract=data["abstract"],
             citation_count=data["citationCount"],
-            topics=[Topic(name=field) for field in data["fieldsOfStudy"]],
+            topics=[
+                Topic(name=field) for field in (data["fieldsOfStudy"] or ())
+            ],
             releases=[release],
         )
 
@@ -171,6 +173,7 @@ class SemanticScholarQueryManager:
         yield from self._list(f"author/{author_id}", fields=fields, **params)
 
     def author_papers(self, author_id, fields=AUTHOR_PAPERS_FIELDS, **params):
-        yield from self._list(
+        papers = self._list(
             f"author/{author_id}/papers", fields=fields, **params
         )
+        yield from map(self._wrap_paper, papers)
