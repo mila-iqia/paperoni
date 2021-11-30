@@ -8,13 +8,16 @@ from paperoni.utils import get_venue_name_and_volume
 
 class MutuallyExclusiveError(RuntimeError):
     """
-    Exception raised when two concurrent parameters are passed to
+    Exception raised when concurrent parameters are passed to
     Collection.query().
     """
 
 
 class Shortener:
-    """Helper class to generate short names for tables."""
+    """
+    Helper class to generate short names for tables.
+    Used to generate JOIN statements in SQL queries.
+    """
 
     __slots__ = ("long_to_short", "short_names")
 
@@ -47,12 +50,46 @@ class Shortener:
         return self.long_to_short[snake_name]
 
 
-def int_or_none(value):
-    return None if value is None else int(value)
-
-
 class Collection:
     __slots__ = ("db", "papers_added", "papers_excluded")
+
+    # Tables required for each parameter of Collection.query().
+    PARAM_TO_TABLES = {
+        "title": ["paper"],
+        "words": ["paper"],
+        "keywords": ["topic"],
+        "author": ["paper_author", "author", ],
+        "institution": ["paper_author"],
+        "venue": ["venue"],
+        "year": ["release"],
+        "start": ["release"],
+        "end": ["release"],
+        "recent": ["release"],
+        "cited": ["paper"],
+    }
+
+    # Jointures required to reach a target table from `paper` table.
+    # Used in Collection.query().
+    TABLE_TO_JOINTURES = {
+        "topic": [
+            ("paper", "paper_topic", "paper_id"),
+            ("paper_topic", "topic", "topic_id"),
+        ],
+        "paper_author": [("paper", "paper_author", "paper_id")],
+        "author": [
+            ("paper", "paper_author", "paper_id"),
+            ("paper_author", "author", "author_id"),
+        ],
+        "venue": [
+            ("paper", "paper_release", "paper_id"),
+            ("paper_release", "release", "release_id"),
+            ("release", "venue", "venue_id"),
+        ],
+        "release": [
+            ("paper", "paper_release", "paper_id"),
+            ("paper_release", "release", "release_id"),
+        ],
+    }
 
     def __init__(self, filename):
         self.db = Database(filename)
@@ -401,43 +438,6 @@ class Collection:
                 yield paper
             return
 
-        # Tables required for each parameter.
-        param_to_tables = {
-            "title": ["paper"],
-            "words": ["paper"],
-            "keywords": ["topic"],
-            "author": ["paper_author", "author",],
-            "institution": ["paper_author"],
-            "venue": ["venue"],
-            "year": ["release"],
-            "start": ["release"],
-            "end": ["release"],
-            "recent": ["release"],
-            "cited": ["paper"],
-        }
-
-        # Jointures required to reach a target table from `paper` table.
-        table_to_jointures = {
-            "topic": [
-                ("paper", "paper_topic", "paper_id"),
-                ("paper_topic", "topic", "topic_id"),
-            ],
-            "paper_author": [("paper", "paper_author", "paper_id")],
-            "author": [
-                ("paper", "paper_author", "paper_id"),
-                ("paper_author", "author", "author_id"),
-            ],
-            "venue": [
-                ("paper", "paper_release", "paper_id"),
-                ("paper_release", "release", "release_id"),
-                ("release", "venue", "venue_id"),
-            ],
-            "release": [
-                ("paper", "paper_release", "paper_id"),
-                ("paper_release", "release", "release_id"),
-            ],
-        }
-
         active_params = []
         if title and words:
             raise MutuallyExclusiveError("title", "words")
@@ -454,7 +454,7 @@ class Collection:
         if venue:
             active_params.append("venue")
         if start is not None or end is not None:
-            if year is None:
+            if year is not None:
                 raise MutuallyExclusiveError("year", ("start", "end"))
             if start is not None:
                 active_params.append("start")
@@ -474,14 +474,20 @@ class Collection:
         jointures = []
         seen_tables = set()
         seen_jointures = set()
+
         for key in active_params:
-            for table in param_to_tables[key]:
+            for table in self.PARAM_TO_TABLES[key]:
                 if table not in seen_tables:
                     seen_tables.add(table)
                     tables.append(table)
+
+        if not tables:
+            # No parameter passed. Nothing to return.
+            return
+
         for table in tables:
             shortener.gen(table)
-            for jointure in table_to_jointures.get(table, ()):
+            for jointure in self.TABLE_TO_JOINTURES.get(table, ()):
                 if jointure not in seen_jointures:
                     seen_jointures.add(jointure)
                     jointures.append(jointure)
