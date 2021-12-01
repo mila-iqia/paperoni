@@ -1,9 +1,11 @@
+import sys
+
 from coleo import Option, default, tooled
 
 from ..papers2 import Paper
 from .interactive import InteractiveCommands, default_commands
 from .searchutils import search_sql
-from ..sql.collection import Collection
+from ..sql.collection import Collection, MutuallyExclusiveError
 
 search_commands = InteractiveCommands("Enter a command", default="s")
 
@@ -51,14 +53,17 @@ def command_search2():
     # Display long form for each paper
     long: Option & bool = default(False)
 
-    for paper in search_sql(collection=collection):
-        instruction = search_commands.process_paper(
-            paper,
-            command=command,
-            collection=collection,
-            formatter=Paper.format_term_long if long else Paper.format_term,
-        )
-        if instruction is False:
-            break
+    try:
+        for paper in search_sql(collection=collection):
+            instruction = search_commands.process_paper(
+                paper,
+                command=command,
+                collection=collection,
+                formatter=Paper.format_term_long if long else Paper.format_term,
+            )
+            if instruction is False:
+                break
+    except MutuallyExclusiveError as exc:
+        sys.exit(exc)
 
     collection.save()
