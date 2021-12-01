@@ -570,7 +570,7 @@ class Collection:
         elif year is not None:
             short_release = shortener["release"]
             date_from = str(year).rjust(4, "0") + "-01-01"
-            date_to = str(year).rjust(4, "0") + "12-31"
+            date_to = str(year).rjust(4, "0") + "-12-31"
             where_clauses.append(
                 f"({short_release}.release_year = ? OR ({short_release}.release_date >= ? AND {short_release}.release_date <= ?))"
             )

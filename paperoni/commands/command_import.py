@@ -24,15 +24,21 @@ def _ms_to_sql(data: dict, db: Database):
     author_indices = []
     topic_indices = []
     # Paper
-    paper_id = db.select_id_from_values(
-        "paper_link",
-        "paper_id",
-        link_type="MAG",
-        link=paper.pid,
-    ) or db.select_id_from_values(
-        "paper", "paper_id", title=paper.title, abstract=paper.abstract,
-    ) or db.insert(
-        "paper", ("title", "abstract"), (paper.title, paper.abstract)
+    paper_id = (
+        db.select_id_from_values(
+            "paper_link", "paper_id", link_type="MAG", link=paper.pid,
+        )
+        or db.select_id_from_values(
+            "paper", "paper_id", title=paper.title, abstract=paper.abstract,
+        )
+        or db.insert(
+            "paper", ("title", "abstract"), (paper.title, paper.abstract)
+        )
+    )
+    # Paper citations count
+    db.modify(
+        "UPDATE paper SET citation_count = ? WHERE paper_id = ?",
+        (paper.citations, paper_id),
     )
     # MAG ID -> paper_link
     paper_link_type = "MAG"
@@ -64,14 +70,15 @@ def _ms_to_sql(data: dict, db: Database):
     # Authors
     for author in paper.authors:
         # Author
-        author_id = db.select_id_from_values(
-            "author_link",
-            "author_id",
-            link_type="MAG",
-            link=author.aid,
-        ) or db.select_id(
-            "author", "author_id", "author_name = ?", [author.name]
-        ) or db.insert("author", ["author_name"], [author.name])
+        author_id = (
+            db.select_id_from_values(
+                "author_link", "author_id", link_type="MAG", link=author.aid,
+            )
+            or db.select_id(
+                "author", "author_id", "author_name = ?", [author.name]
+            )
+            or db.insert("author", ["author_name"], [author.name])
+        )
         author_indices.append((author_id, author))
         # author link
         link_type = "MAG"
@@ -166,7 +173,7 @@ def _ms_to_sql(data: dict, db: Database):
     for author_position, (author_id, author) in enumerate(author_indices):
         # Author affiliations may be empty, but we must still
         # save paper to author relation.
-        for affiliation in (author.affiliations or [""]):
+        for affiliation in author.affiliations or [""]:
             db.modify(
                 "INSERT OR IGNORE INTO paper_author "
                 "(paper_id, author_id, author_position, affiliation) "

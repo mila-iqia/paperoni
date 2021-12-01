@@ -159,7 +159,7 @@ class Paper:
         if self.date is not None:
             print_field("Date", self.date)
         if self.venue:
-            print_field("Venue", self.venue.code)
+            print_field("Venue", self.venue.name)
         print_field("URL", self.links[0].ref)
 
     def format_term_long(self):
