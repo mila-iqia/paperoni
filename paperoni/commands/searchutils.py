@@ -356,12 +356,12 @@ def search_sql(collection: Collection):
 
     # [group: search]
     # Start date (yyyy-mm-dd or yyyy)
-    start: Option = default(str(year) if year is not None else None)
+    start: Option = default(None)
     start = _date(start, ending="01-01")
 
     # [group: search]
     # End date (yyyy-mm-dd or yyyy)
-    end: Option = default(str(year) if year is not None else None)
+    end: Option = default(None)
     end = _date(end, ending="12-31")
 
     # [group: search]
@@ -373,7 +373,7 @@ def search_sql(collection: Collection):
     cited: Option & bool = default(False)
 
     # [group: search]
-    # Number of papers to fetch (default: 100)
+    # Number of papers to fetch
     limit: Option & int = default(None)
 
     # [group: search]
