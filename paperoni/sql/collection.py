@@ -115,11 +115,14 @@ class Collection:
         elif paper in self.papers_added:
             return True
         else:
-            return self.db.select_id_from_values(
-                "paper",
-                "paper_id",
-                paper_id=self._find_paper_id(paper),
-                excluded=0,
+            return (
+                self.db.select_id_from_values(
+                    "paper",
+                    "paper_id",
+                    paper_id=self._find_paper_id(paper),
+                    excluded=0,
+                )
+                is not None
             )
 
     def add(self, paper: Paper):
@@ -133,11 +136,15 @@ class Collection:
         self.papers_excluded.add(paper)
 
     def excludes(self, paper: Paper):
-        return paper in self.papers_excluded or self.db.select_id_from_values(
-            "paper",
-            "paper_id",
-            paper_id=self._find_paper_id(paper),
-            excluded=1,
+        return (
+            paper in self.papers_excluded
+            or self.db.select_id_from_values(
+                "paper",
+                "paper_id",
+                paper_id=self._find_paper_id(paper),
+                excluded=1,
+            )
+            is not None
         )
 
     def save(self):
