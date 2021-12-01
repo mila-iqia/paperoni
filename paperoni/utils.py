@@ -45,6 +45,12 @@ def join(elems, sep=", ", lastsep=None):
     return results
 
 
+def get_content_type(url):
+    """Return the 'content-type' header from given URL."""
+    r = requests.head(url)
+    return r.headers.get("content-type", None)
+
+
 def download(url, filename):
     """Download the given url into the given filename."""
     print(f"Downloading {url}")
