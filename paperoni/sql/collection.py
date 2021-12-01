@@ -58,7 +58,7 @@ class Collection:
         "title": ["paper"],
         "words": ["paper"],
         "keywords": ["topic"],
-        "author": ["paper_author", "author", ],
+        "author": ["paper_author", "author",],
         "institution": ["paper_author"],
         "venue": ["venue"],
         "year": ["release"],
@@ -604,5 +604,5 @@ class Collection:
         rows = list(self.db.query(query, where_parameters))
         for i, row in enumerate(rows):
             if verbose:
-                print(f"[paper] {i + 1}/{len(rows)}")
+                print(f"[paper {row[0]}] {i + 1}/{len(rows)}")
             yield self.get_paper(row[0])
