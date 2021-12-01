@@ -1,7 +1,10 @@
+import json
+import re
 from dataclasses import dataclass
+from hashlib import md5
 from typing import Sequence
 
-from .utils import T, asciiify, download, join, normalize as _norm, print_field
+from .utils import asciiify, download, print_field, T, get_content_type
 
 URL_SCHEMES = {
     "html": {
@@ -99,6 +102,47 @@ class Paper:
         else:
             return None
 
+    @property
+    def reference_string(self):
+        """Return a reference string for the paper, for bibtex.
+
+        The reference is formatted as "{author}{date}-{word}{number}" where:
+
+        * author: The last name of the first author if 10 authors or less, the
+          string "collab" if more than 10 authors.
+        * date: The date or year of publication.
+        * word: The longest word in the title.
+        * number: A pseudo-random number between 0 and 99, computed from the
+          hash of the paper's attributes.
+
+        Collisions are possible, but unlikely. The greatest chance of collision
+        would be between the arxiv and peer-published versions of the same
+        paper (~1% chance), but this is unlikely to present a major issue.
+        """
+        words = [w.lower() for w in re.split(r"\W", self.title)]
+        ws = sorted(words, key=len, reverse=True)
+        w = list(ws)[0]
+        if len(self.authors) > 10:
+            auth = "collab"
+        else:
+            auth = re.split(r"\W", self.authors[0].name)[-1].lower()
+        h = md5(
+            json.dumps(
+                [
+                    self.title,
+                    [
+                        {"name": a.name, "affiliations": a.affiliations}
+                        for a in self.authors
+                    ],
+                    self.venue.name if self.venue else None,
+                    self.date,
+                ]
+            ).encode()
+        ).hexdigest()
+        h = int(h, base=16) % 100
+        identifier = f"{auth}{self.date}-{w}{h}"
+        return asciiify(identifier)
+
     def format_term(self):
         """Print the paper on the terminal."""
         print_field("Title", T.bold(self.title))
@@ -139,9 +183,28 @@ class Paper:
         else:
             return None
 
-    def download_pdf(self):
+    def download_pdf(self, filename=None):
+        """Download the PDF in the given file.
+
+        If no filename is given, the PDF is downloaded into
+        {self.reference_string}.pdf.
+
+        Returns:
+            True if there was a PDF to download, False if not.
+        """
+        # Get PDF link
+        pdf = None
         for link in self.links:
-            if link.type == "pdf":
-                print(link.ref)
-                return True
-        return False
+            if (
+                link.type == "pdf"
+                and get_content_type(link.ref) == "application/pdf"
+            ):
+                pdf = link.ref
+                break
+        if pdf is None:
+            return False
+        # Download PDF file
+        if filename is None:
+            filename = f"{self.reference_string}.pdf"
+        download(pdf, filename=filename)
+        return True
