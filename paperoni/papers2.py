@@ -15,6 +15,15 @@ URL_SCHEMES = {
     },
     "pdf": {"ArXiv": "https://arxiv.org/pdf/{ref}",},
 }
+SOURCE_TYPES = (
+    "SemanticScholar",
+    "MAG",
+    "ACL",
+    "DBLP",
+    "DOI",
+    "PubMed",
+    "PubMedCentral",
+)
 
 
 @dataclass
