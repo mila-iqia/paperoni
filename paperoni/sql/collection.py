@@ -1,7 +1,15 @@
 """Collection class to manage a SQL database."""
 import pprint
 from typing import List, Union, Optional
-from paperoni.papers2 import Paper, Link, Author, Venue, Release, Topic
+from paperoni.papers2 import (
+    Paper,
+    Link,
+    Author,
+    Venue,
+    Release,
+    Topic,
+    SOURCE_TYPES,
+)
 from paperoni.sql.database import Database
 from paperoni.utils import get_venue_name_and_volume
 
@@ -162,15 +170,7 @@ class Collection:
 
     def _find_paper_id(self, paper: Paper):
         # Check paper IDs then title+abstract.
-        for link_type in (
-            "SemanticScholar",
-            "MAG",
-            "ACL",
-            "DBLP",
-            "DOI",
-            "PubMed",
-            "PubMedCentral",
-        ):
+        for link_type in SOURCE_TYPES:
             paper_id = self.db.select_id_from_values(
                 "paper_link",
                 "paper_id",
@@ -185,15 +185,7 @@ class Collection:
 
     def _find_author_id(self, author: Author):
         # Check paper IDs then title+abstract.
-        for link_type in (
-            "SemanticScholar",
-            "MAG",
-            "ACL",
-            "DBLP",
-            "DOI",
-            "PubMed",
-            "PubMedCentral",
-        ):
+        for link_type in SOURCE_TYPES:
             author_id = self.db.select_id_from_values(
                 "author_link",
                 "author_id",
