@@ -12,6 +12,19 @@ class MutuallyExclusiveError(RuntimeError):
     Collection.query().
     """
 
+    def __init__(self, p1, p2):
+        self.p1 = p1
+        self.p2 = p2
+
+    def __str__(self):
+        return (
+            f"Mutually exclusive parameters for SQL search: "
+            f"{self._param_to_str(self.p1)} vs {self._param_to_str(self.p2)}"
+        )
+
+    def _param_to_str(self, param):
+        return param if isinstance(param, str) else f"({', '.join(param)})"
+
 
 class Shortener:
     """
