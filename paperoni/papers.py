@@ -458,7 +458,7 @@ class Author:
     def __init__(self, data, role, researcher):
         self.aid = data["AuId"]
         self.name = data["DAuN"]
-        self.affiliations = [data["DAfN"]]
+        self.affiliations = [data["DAfN"]] if data["DAfN"] else []
         self.role = role
         self.data = data
         # This is the Researcher instance for this author.
