@@ -171,15 +171,48 @@ def _ms_to_sql(data: dict, db: Database):
         topic_indices.append(topic_id)
     # paper to author
     for author_position, (author_id, author) in enumerate(author_indices):
-        # Author affiliations may be empty, but we must still
-        # save paper to author relation.
-        for affiliation in author.affiliations or [""]:
+
+        # NB: JSON may contains multiple entries for same paper (same title)
+        # but different authors order. I don't yet know how to resolve it.
+        # By default, the first entry found is prior, so, authors order
+        # in next entries will be ignored.
+
+        old_positions = set()
+        old_affiliations = set()
+        for position, affiliation in db.query(
+            "SELECT author_position, affiliation FROM paper_author "
+            "WHERE paper_id = ? AND author_id = ?",
+            (paper_id, author_id),
+        ):
+            old_positions.add(position)
+            old_affiliations.add(affiliation)
+
+        if old_positions:
+            # There should be only 1 old position
+            assert len(old_positions) == 1
+            # There should be either no empty affiliation,
+            # or only 1 empty affiliation.
+            assert "" not in old_affiliations or len(old_affiliations) == 1
+            affiliations_to_add = author.affiliations
+        else:
+            # No previous entry, make sure to add at least one
+            affiliations_to_add = author.affiliations or [""]
+
+        if affiliations_to_add and "" in old_affiliations:
+            # If there are affiliations to add, remove empty affiliation.
+            db.modify(
+                "DELETE FROM paper_author "
+                "WHERE paper_id = ? AND author_id = ? AND affiliation = ?",
+                (paper_id, author_id, ""),
+            )
+        for affiliation in affiliations_to_add:
             db.modify(
                 "INSERT OR IGNORE INTO paper_author "
                 "(paper_id, author_id, author_position, affiliation) "
                 "VALUES (?, ?, ?, ?)",
                 (paper_id, author_id, author_position, affiliation),
             )
+
     # paper to topic
     for topic_id in topic_indices:
         if not db.count(
