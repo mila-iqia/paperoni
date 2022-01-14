@@ -41,7 +41,7 @@ search_commands.update(default_commands)
 
 @tooled
 def command_search2():
-    """Query the Microsoft Academic database."""
+    """Query papers stored in an SQLite database."""
 
     # File containing the collection
     # [alias: -c]
