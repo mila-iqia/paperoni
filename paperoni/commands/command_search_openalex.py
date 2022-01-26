@@ -1,7 +1,7 @@
 from coleo import Option, default, tooled
 
 from ..papers2 import Paper
-from .searchutils import search_semantic_scholar as search
+from .searchutils import search_openalex as search
 from .interactive import InteractiveCommands, default_commands
 
 search_commands = InteractiveCommands("Enter a command", default="s")
@@ -17,8 +17,8 @@ search_commands.update(default_commands)
 
 
 @tooled
-def command_semantic_scholar():
-    """Query the Semantic Scholar database."""
+def command_search_openalex():
+    """Query the OpenAlex database."""
 
     # Command to run on every paper
     command: Option = default(None)

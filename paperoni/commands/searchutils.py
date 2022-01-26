@@ -7,6 +7,7 @@ from ..io import PapersFile, ResearchersFile
 from ..papers import Papers
 from ..query import QueryManager
 from ..sources.semantic_scholar import SemanticScholarQueryManager
+from ..sources.openalex import OpenAlexQueryManager
 from ..sql.collection import Collection
 
 
@@ -397,3 +398,138 @@ def search_sql(collection: Collection):
         offset=offset,
         verbose=verbose,
     )
+
+
+@tooled
+def search_openalex():
+
+    # [alias: -v]
+    # Verbose output
+    verbose: Option & bool = default(False)
+
+    # [group: search]
+    # Search using a specific paper ID
+    paper_id: Option & str = default(None)
+
+    # [group: search]
+    # [alias: -k]
+    # Search for a specific keyword
+    keyword: Option & str = default(None)
+
+    # [group: search]
+    # [alias: -t]
+    # [nargs: *]
+    # Search sub-text in the title
+    title: Option & str = default(None)
+    title = join(title)
+
+    # [group: search]
+    # [alias: -w]
+    # [nargs: *]
+    # Search words in the title
+    words: Option & str = default([])
+    words = [join(word) for word in words]
+
+    # [group: search]
+    # [alias: -a]
+    # [nargs: *]
+    # Search for an author
+    author: Option & str = default(None)
+    author = join(author)
+
+    # [group: search]
+    # [alias: -i]
+    # [nargs: *]
+    # Search papers from a specific institution
+    institution: Option & str = default(None)
+    institution = join(institution)
+
+    # [group: search]
+    # [nargs: *]
+    # Search papers from a specific conference or journal
+    venue: Option & str = default(None)
+    venue = join(venue)
+
+    # [group: search]
+    # [alias: -y]
+    # Year
+    year: Option & int = default(None)
+
+    # [group: search]
+    # Start date (yyyy-mm-dd or yyyy)
+    start: Option = default(None)
+    start = _date(start, ending="01-01")
+
+    # [group: search]
+    # End date (yyyy-mm-dd or yyyy)
+    end: Option = default(None)
+    end = _date(end, ending="12-31")
+
+    # [group: search]
+    # Sort by most recent
+    recent: Option & bool = default(False)
+
+    # [group: search]
+    # Sort by most cited
+    cited: Option & bool = default(False)
+
+    # [group: search]
+    # Number of papers to display per page (default: 25, minimum 1, maximum 50)
+    limit: Option & int = default(25)
+
+    # [group: search]
+    # Search page to display (default: 1, minimum 1)
+    offset: Option & int = default(1)
+
+    qm = OpenAlexQueryManager()
+    if verbose:
+        print("[openalex search]")
+        if paper_id is not None:
+            print("Paper ID:", paper_id)
+        else:
+            if keyword is not None:
+                print("Keyword:", keyword)
+            if title is not None:
+                print("Title:", title)
+            if words:
+                print("Words:", words)
+            if author is not None:
+                print("Author:", author)
+            if institution is not None:
+                print("Institution:", institution)
+            if venue is not None:
+                print("Venue:", venue)
+            if year is not None:
+                print("Year:", year)
+            if start is not None:
+                print("Start:", start)
+            if end is not None:
+                print("End:", end)
+            print(
+                f"Recent? {recent}, "
+                f"cited? {cited}, "
+                f"per page: {limit}, "
+                f"page: {offset}"
+            )
+
+    if paper_id:
+        papers = [qm.get_paper(paper_id)]
+    else:
+        papers = qm.find_papers(
+            author=author,
+            venue=venue,
+            institution=institution,
+            concept=keyword,
+            title=title,
+            words=words,
+            year=year,
+            start=start,
+            end=end,
+            recent=recent,
+            cited=cited,
+            per_page=limit,
+            page=offset,
+            verbose=verbose,
+        )
+
+    yield from papers

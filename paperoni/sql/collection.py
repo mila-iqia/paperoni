@@ -20,14 +20,12 @@ class MutuallyExclusiveError(RuntimeError):
     Collection.query().
     """
 
-    def __init__(self, p1, p2):
-        self.p1 = p1
-        self.p2 = p2
+    def __init__(self, *args):
+        self.args = args
 
     def __str__(self):
-        return (
-            f"Mutually exclusive parameters for SQL search: "
-            f"{self._param_to_str(self.p1)} vs {self._param_to_str(self.p2)}"
+        return "Mutually exclusive parameters: " + " vs ".join(
+            self._param_to_str(arg) for arg in self.args
         )
 
     def _param_to_str(self, param):
