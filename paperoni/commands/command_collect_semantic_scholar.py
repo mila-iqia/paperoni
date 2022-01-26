@@ -35,7 +35,7 @@ search_commands.update(default_commands)
 
 @tooled
 def command_collect_semantic_scholar():
-    """Collect papers from the Microsoft Academic database."""
+    """Collect papers from the Senantic Scholar database."""
 
     # File containing the collection
     # [alias: -c]
