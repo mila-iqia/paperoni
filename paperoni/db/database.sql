@@ -4,9 +4,7 @@ CREATE TABLE IF NOT EXISTS paper (
 	paper_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	title TEXT,
 	abstract TEXT,
-	citation_count INTEGER,
-	excluded INTEGER NOT NULL DEFAULT 0,
-	CHECK (excluded in (0, 1))
+	citation_count INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS paper_link (
@@ -16,6 +14,14 @@ CREATE TABLE IF NOT EXISTS paper_link (
 	-- A url, arxiv ID, DOI, etc.
 	link TEXT NOT NULL,
 	UNIQUE (paper_id, link_type, link)
+);
+
+CREATE TABLE IF NOT EXISTS paper_flag (
+	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
+	flag_name TEXT NOT NULL,
+	flag INTEGER NOT NULL DEFAULT 0,
+	CHECK (flag in (0, 1)),
+	PRIMARY KEY (paper_id, flag_name)
 );
 
 CREATE TABLE IF NOT EXISTS author (
@@ -41,14 +47,14 @@ CREATE TABLE IF NOT EXISTS author_alias (
 CREATE TABLE IF NOT EXISTS author_affiliation (
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	-- E.g. "UdeM", "McGill", "Mila" ...
-	affiliation TEXT NOT NULL,
+	affiliation_id INTEGER REFERENCES affiliation(affiliation_id) ON DELETE CASCADE,
 	-- E.g. "professor", "PhD student" ...
-	role TEXT,
+	role TEXT NOT NULL,
 	-- Timestamp in seconds.
-	start_date UNSIGNED BIG INT,
+	start_date UNSIGNED BIG INT NOT NULL,
 	-- Timestamp in seconds.
 	end_date UNSIGNED BIG INT,
-	UNIQUE (author_id, affiliation, role, start_date, end_date)
+	PRIMARY KEY (author_id, affiliation_id, role, start_date)
 );
 
 CREATE TABLE IF NOT EXISTS venue (
@@ -63,9 +69,9 @@ CREATE TABLE IF NOT EXISTS release (
 	venue_id INTEGER REFERENCES venue(venue_id) ON DELETE CASCADE,
 	-- Timestamp in seconds.
 	release_date UNSIGNED BIG INT,
-	release_year UNSIGNED INT NOT NULL,
-	volume TEXT,
-	UNIQUE (venue_id, release_date, release_year, volume)
+	date_precision UNSIGNED INT NOT NULL,
+	volume TEXT NOT NULL,
+	UNIQUE (venue_id, volume)
 );
 
 CREATE TABLE IF NOT EXISTS topic (
@@ -74,13 +80,31 @@ CREATE TABLE IF NOT EXISTS topic (
 	parent INTEGER REFERENCES topic(topic_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS affiliation (
+	affiliation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS affiliation_alias (
+	affiliation_id INTEGER REFERENCES affiliation(affiliation_id) ON DELETE CASCADE,
+	alias TEXT NOT NULL,
+	PRIMARY KEY (affiliation_id, alias)
+);
+
 CREATE TABLE IF NOT EXISTS paper_author (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	-- Author position in paper authors list.
 	author_position UNSIGNED INT NOT NULL,
-	affiliation TEXT NOT NULL,
-	PRIMARY KEY (paper_id, author_id, affiliation)
+	PRIMARY KEY (paper_id, author_id)
+);
+
+CREATE TABLE IF NOT EXISTS paper_author_affiliation (
+	paper_id INTEGER,
+	author_id INTEGER,
+	affiliation_id INTEGER REFERENCES affiliation(affiliation_id) ON DELETE CASCADE,
+	FOREIGN KEY (paper_id, author_id) REFERENCES paper_author(paper_id, author_id) ON DELETE CASCADE,
+	PRIMARY KEY (paper_id, author_id, affiliation_id)
 );
 
 CREATE TABLE IF NOT EXISTS paper_release (
