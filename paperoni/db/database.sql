@@ -10,10 +10,10 @@ CREATE TABLE IF NOT EXISTS paper (
 CREATE TABLE IF NOT EXISTS paper_link (
 	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
 	-- "url", "arxiv", "doi", etc.
-	link_type TEXT NOT NULL,
+	type TEXT NOT NULL,
 	-- A url, arxiv ID, DOI, etc.
 	link TEXT NOT NULL,
-	UNIQUE (paper_id, link_type, link)
+	UNIQUE (paper_id, type, link)
 );
 
 CREATE TABLE IF NOT EXISTS paper_flag (
@@ -26,16 +26,16 @@ CREATE TABLE IF NOT EXISTS paper_flag (
 
 CREATE TABLE IF NOT EXISTS author (
 	author_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	author_name TEXT NOT NULL
+	name TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS author_link (
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	-- "url", external ID source, etc.
-	link_type TEXT NOT NULL,
+	type TEXT NOT NULL,
 	-- A url, external ID, etc.
 	link TEXT NOT NULL,
-	UNIQUE (author_id, link_type, link)
+	UNIQUE (author_id, type, link)
 );
 
 CREATE TABLE IF NOT EXISTS author_alias (
@@ -60,17 +60,33 @@ CREATE TABLE IF NOT EXISTS author_affiliation (
 CREATE TABLE IF NOT EXISTS venue (
 	venue_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	-- One of "journal", "conference", "book" ...
-	venue_type TEXT,
-	venue_name TEXT NOT NULL
+	type TEXT,
+	name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS venue_link (
+	venue_id INTEGER REFERENCES venue(venue_id) ON DELETE CASCADE,
+	-- "url", external ID source, etc.
+	type TEXT NOT NULL,
+	-- A url, external ID, etc.
+	link TEXT NOT NULL,
+	UNIQUE (venue_id, type, link)
+);
+
+CREATE TABLE IF NOT EXISTS venue_alias (
+	venue_id INTEGER REFERENCES venue(venue_id) ON DELETE CASCADE,
+	alias TEXT NOT NULL,
+	UNIQUE (venue_id, alias)
 );
 
 CREATE TABLE IF NOT EXISTS release (
 	release_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	venue_id INTEGER REFERENCES venue(venue_id) ON DELETE CASCADE,
 	-- Timestamp in seconds.
-	release_date UNSIGNED BIG INT,
+	date UNSIGNED BIG INT NOT NULL,
 	date_precision UNSIGNED INT NOT NULL,
 	volume TEXT NOT NULL,
+	publisher TEXT,
 	UNIQUE (venue_id, volume)
 );
 
