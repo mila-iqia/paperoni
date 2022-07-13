@@ -38,7 +38,7 @@ class Affiliation(Base):
 class Author(Base):
     __tablename__ = "author"
 
-    author_name = Column(Text, nullable=False)
+    name = Column(Text, nullable=False)
     author_id = Column(Integer, primary_key=True)
 
     author_affiliation = relationship(
@@ -94,9 +94,9 @@ class Topic(Base):
 class Venue(Base):
     __tablename__ = "venue"
 
-    venue_name = Column(Text, nullable=False)
+    name = Column(Text, nullable=False)
     venue_id = Column(Integer, primary_key=True)
-    venue_type = Column(Text)
+    type = Column(Text)
 
     release = relationship("Release", back_populates="venue")
 
@@ -144,9 +144,9 @@ t_author_link = Table(
     "author_link",
     metadata,
     Column("author_id", ForeignKey("author.author_id")),
-    Column("link_type", Text, nullable=False),
+    Column("type", Text, nullable=False),
     Column("link", Text, nullable=False),
-    UniqueConstraint("author_id", "link_type", "link"),
+    UniqueConstraint("author_id", "type", "link"),
 )
 
 
@@ -181,9 +181,9 @@ t_paper_link = Table(
     "paper_link",
     metadata,
     Column("paper_id", ForeignKey("paper.paper_id")),
-    Column("link_type", Text, nullable=False),
+    Column("type", Text, nullable=False),
     Column("link", Text, nullable=False),
-    UniqueConstraint("paper_id", "link_type", "link"),
+    UniqueConstraint("paper_id", "type", "link"),
 )
 
 
@@ -199,17 +199,36 @@ class Release(Base):
     __tablename__ = "release"
     __table_args__ = (UniqueConstraint("venue_id", "volume"),)
 
+    date = Column(Integer, nullable=False)
     date_precision = Column(Integer, nullable=False)
     volume = Column(Text, nullable=False)
-    publisher = Column(Text, nullable=False)
     release_id = Column(Integer, primary_key=True)
     venue_id = Column(ForeignKey("venue.venue_id"))
-    release_date = Column(Integer)
+    publisher = Column(Text)
 
     paper = relationship(
         "Paper", secondary="paper_release", back_populates="release"
     )
     venue = relationship("Venue", back_populates="release")
+
+
+t_venue_alias = Table(
+    "venue_alias",
+    metadata,
+    Column("venue_id", ForeignKey("venue.venue_id")),
+    Column("alias", Text, nullable=False),
+    UniqueConstraint("venue_id", "alias"),
+)
+
+
+t_venue_link = Table(
+    "venue_link",
+    metadata,
+    Column("venue_id", ForeignKey("venue.venue_id")),
+    Column("type", Text, nullable=False),
+    Column("link", Text, nullable=False),
+    UniqueConstraint("venue_id", "type", "link"),
+)
 
 
 t_paper_author_affiliation = Table(
