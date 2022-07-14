@@ -134,3 +134,9 @@ CREATE TABLE IF NOT EXISTS paper_topic (
 	topic_id INTEGER REFERENCES topic(topic_id) ON DELETE CASCADE,
 	PRIMARY KEY (paper_id, topic_id)
 );
+
+CREATE TABLE IF NOT EXISTS paper_scraper (
+	paper_id INTEGER REFERENCES paper(paper_id) ON DELETE CASCADE,
+	scraper TEXT,
+	PRIMARY KEY (paper_id, scraper)
+);

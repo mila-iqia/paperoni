@@ -63,6 +63,7 @@ class Paper(Base):
     )
     paper_author = relationship("PaperAuthor", back_populates="paper")
     paper_flag = relationship("PaperFlag", back_populates="paper")
+    paper_scraper = relationship("PaperScraper", back_populates="paper")
 
 
 t_sqlite_sequence = Table(
@@ -185,6 +186,15 @@ t_paper_link = Table(
     Column("link", Text, nullable=False),
     UniqueConstraint("paper_id", "type", "link"),
 )
+
+
+class PaperScraper(Base):
+    __tablename__ = "paper_scraper"
+
+    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
+    scraper = Column(Text, primary_key=True)
+
+    paper = relationship("Paper", back_populates="paper_scraper")
 
 
 t_paper_topic = Table(
