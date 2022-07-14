@@ -1,7 +1,7 @@
-import re
 import sys
 import json
 from paperoni.sources.model import from_dict
+from paperoni.utils import url_to_id
 
 
 mag_types = {
@@ -14,43 +14,15 @@ mag_types = {
 }
 
 
-url_extractors = {
-    r"https?://[a-z.]*arxiv\.org/(?:abs|pdf)/([0-9]{4}\.[0-9]+).*": "arxiv",
-    r"https?://[a-z.]*arxiv-vanity\.com/papers/([0-9]{4}\.[0-9]+).*": "arxiv",
-    r"https?://(?:[^/]*)arxiv(?:[^/]*)\.cornell\.edu/abs/([0-9]{4}\.[0-9]+).*": "arxiv",
-    r"https?://scirate\.com/arxiv/([0-9]{4}\.[0-9]+).*": "arxiv",
-
-    r"https?://pubmed\.ncbi\.nlm\.nih\.gov/([^/]*)/": "pubmed",
-    r"https?://www\.ncbi\.nlm\.nih\.gov/pubmed/([^/]*)": "pubmed",
-
-    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/([^/]*)": "pmc",
-    r"https?://europepmc.org/article/PMC/([^/]*)": "pmc",
-
-    r"https?://(?:dx\.)?doi\.org/(.*)": "doi",
-
-    r"https?://(?:www\.)?openreview\.net/(?:pdf\?|forum\?)id=(.*)": "openreview",
-}
-
-
-def url_to_id(url):
-    for pattern, key in url_extractors.items():
-        m = re.match(pattern, url)
-        if m:
-            return (key, *m.groups())
-    return None
-
-
 def process_paper(paper):
     def _make_link(link):
         typ = mag_types[link.get("Ty", 99)]
         lnk = link["U"]
-        # return {"type": typ, "link": lnk}
         return url_to_id(lnk) or (typ, lnk)
 
     def _make_links(links):
         links = {_make_link(link) for link in links}
         return [{"type": typ, "link": lnk} for typ, lnk in links]
-
 
     if paper is False:
         return None
