@@ -16,35 +16,39 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
-class Affiliation(Base):
-    __tablename__ = "affiliation"
-
-    name = Column(Text, nullable=False)
-    affiliation_id = Column(Integer, primary_key=True)
-
-    paper_author = relationship(
-        "PaperAuthor",
-        secondary="paper_author_affiliation",
-        back_populates="affiliation",
-    )
-    affiliation_alias = relationship(
-        "AffiliationAlias", back_populates="affiliation"
-    )
-    author_affiliation = relationship(
-        "AuthorAffiliation", back_populates="affiliation"
-    )
-
-
 class Author(Base):
     __tablename__ = "author"
 
     name = Column(Text, nullable=False)
     author_id = Column(Integer, primary_key=True)
 
-    author_affiliation = relationship(
-        "AuthorAffiliation", back_populates="author"
+    author_institution = relationship(
+        "AuthorInstitution", back_populates="author"
     )
     paper_author = relationship("PaperAuthor", back_populates="author")
+
+
+class Institution(Base):
+    __tablename__ = "institution"
+    __table_args__ = (
+        CheckConstraint("category in ('unknown', 'academia', 'industry')"),
+    )
+
+    name = Column(Text, nullable=False)
+    category = Column(Text, nullable=False, server_default=text("'unknown'"))
+    institution_id = Column(Integer, primary_key=True)
+
+    paper_author = relationship(
+        "PaperAuthor",
+        secondary="paper_author_institution",
+        back_populates="institution",
+    )
+    author_institution = relationship(
+        "AuthorInstitution", back_populates="institution"
+    )
+    institution_alias = relationship(
+        "InstitutionAlias", back_populates="institution"
+    )
 
 
 class Paper(Base):
@@ -102,36 +106,6 @@ class Venue(Base):
     release = relationship("Release", back_populates="venue")
 
 
-class AffiliationAlias(Base):
-    __tablename__ = "affiliation_alias"
-
-    alias = Column(Text, primary_key=True, nullable=False)
-    affiliation_id = Column(
-        ForeignKey("affiliation.affiliation_id"), primary_key=True
-    )
-
-    affiliation = relationship(
-        "Affiliation", back_populates="affiliation_alias"
-    )
-
-
-class AuthorAffiliation(Base):
-    __tablename__ = "author_affiliation"
-
-    role = Column(Text, primary_key=True, nullable=False)
-    start_date = Column(Integer, primary_key=True, nullable=False)
-    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
-    affiliation_id = Column(
-        ForeignKey("affiliation.affiliation_id"), primary_key=True
-    )
-    end_date = Column(Integer)
-
-    affiliation = relationship(
-        "Affiliation", back_populates="author_affiliation"
-    )
-    author = relationship("Author", back_populates="author_affiliation")
-
-
 t_author_alias = Table(
     "author_alias",
     metadata,
@@ -139,6 +113,23 @@ t_author_alias = Table(
     Column("alias", Text, nullable=False),
     UniqueConstraint("author_id", "alias"),
 )
+
+
+class AuthorInstitution(Base):
+    __tablename__ = "author_institution"
+
+    role = Column(Text, primary_key=True, nullable=False)
+    start_date = Column(Integer, primary_key=True, nullable=False)
+    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
+    institution_id = Column(
+        ForeignKey("institution.institution_id"), primary_key=True
+    )
+    end_date = Column(Integer)
+
+    author = relationship("Author", back_populates="author_institution")
+    institution = relationship(
+        "Institution", back_populates="author_institution"
+    )
 
 
 t_author_link = Table(
@@ -151,6 +142,19 @@ t_author_link = Table(
 )
 
 
+class InstitutionAlias(Base):
+    __tablename__ = "institution_alias"
+
+    alias = Column(Text, primary_key=True, nullable=False)
+    institution_id = Column(
+        ForeignKey("institution.institution_id"), primary_key=True
+    )
+
+    institution = relationship(
+        "Institution", back_populates="institution_alias"
+    )
+
+
 class PaperAuthor(Base):
     __tablename__ = "paper_author"
 
@@ -158,9 +162,9 @@ class PaperAuthor(Base):
     paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
     author_id = Column(ForeignKey("author.author_id"), primary_key=True)
 
-    affiliation = relationship(
-        "Affiliation",
-        secondary="paper_author_affiliation",
+    institution = relationship(
+        "Institution",
+        secondary="paper_author_institution",
         back_populates="paper_author",
     )
     author = relationship("Author", back_populates="paper_author")
@@ -241,14 +245,14 @@ t_venue_link = Table(
 )
 
 
-t_paper_author_affiliation = Table(
-    "paper_author_affiliation",
+t_paper_author_institution = Table(
+    "paper_author_institution",
     metadata,
     Column("paper_id", Integer, primary_key=True),
     Column("author_id", Integer, primary_key=True),
     Column(
-        "affiliation_id",
-        ForeignKey("affiliation.affiliation_id"),
+        "institution_id",
+        ForeignKey("institution.institution_id"),
         primary_key=True,
     ),
     ForeignKeyConstraint(

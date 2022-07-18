@@ -44,17 +44,17 @@ CREATE TABLE IF NOT EXISTS author_alias (
 	UNIQUE (author_id, alias)
 );
 
-CREATE TABLE IF NOT EXISTS author_affiliation (
+CREATE TABLE IF NOT EXISTS author_institution (
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	-- E.g. "UdeM", "McGill", "Mila" ...
-	affiliation_id INTEGER REFERENCES affiliation(affiliation_id) ON DELETE CASCADE,
+	institution_id INTEGER REFERENCES institution(institution_id) ON DELETE CASCADE,
 	-- E.g. "professor", "PhD student" ...
 	role TEXT NOT NULL,
 	-- Timestamp in seconds.
 	start_date UNSIGNED BIG INT NOT NULL,
 	-- Timestamp in seconds.
 	end_date UNSIGNED BIG INT,
-	PRIMARY KEY (author_id, affiliation_id, role, start_date)
+	PRIMARY KEY (author_id, institution_id, role, start_date)
 );
 
 CREATE TABLE IF NOT EXISTS venue (
@@ -96,15 +96,17 @@ CREATE TABLE IF NOT EXISTS topic (
 	parent INTEGER REFERENCES topic(topic_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS affiliation (
-	affiliation_id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS institution (
+	institution_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL,
+	category TEXT NOT NULL DEFAULT 'unknown',
+	CHECK (category in ('unknown', 'academia', 'industry'))
 );
 
-CREATE TABLE IF NOT EXISTS affiliation_alias (
-	affiliation_id INTEGER REFERENCES affiliation(affiliation_id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS institution_alias (
+	institution_id INTEGER REFERENCES institution(institution_id) ON DELETE CASCADE,
 	alias TEXT NOT NULL,
-	PRIMARY KEY (affiliation_id, alias)
+	PRIMARY KEY (institution_id, alias)
 );
 
 CREATE TABLE IF NOT EXISTS paper_author (
@@ -115,12 +117,12 @@ CREATE TABLE IF NOT EXISTS paper_author (
 	PRIMARY KEY (paper_id, author_id)
 );
 
-CREATE TABLE IF NOT EXISTS paper_author_affiliation (
+CREATE TABLE IF NOT EXISTS paper_author_institution (
 	paper_id INTEGER,
 	author_id INTEGER,
-	affiliation_id INTEGER REFERENCES affiliation(affiliation_id) ON DELETE CASCADE,
+	institution_id INTEGER REFERENCES institution(institution_id) ON DELETE CASCADE,
 	FOREIGN KEY (paper_id, author_id) REFERENCES paper_author(paper_id, author_id) ON DELETE CASCADE,
-	PRIMARY KEY (paper_id, author_id, affiliation_id)
+	PRIMARY KEY (paper_id, author_id, institution_id)
 );
 
 CREATE TABLE IF NOT EXISTS paper_release (
