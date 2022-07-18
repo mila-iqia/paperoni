@@ -4,6 +4,7 @@ import textwrap
 
 from blessed import Terminal
 
+from paperoni.sources.model import DatePrecision
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns
@@ -26,6 +27,10 @@ link_generators = {
     "openreview": {
         "abstract": "https://openreview.net/forum?id={}",
         "pdf": "https://openreview.net/pdf?id={}",
+    },
+    "dblp": {"abstract": "https://dblp.uni-trier.de/rec/{}"},
+    "semantic_scholar": {
+        "abstract": "https://www.semanticscholar.org/paper/{}"
     },
 }
 
@@ -65,9 +70,12 @@ def expand_links(links):
         "openreview.abstract",
         "openreview.pdf",
         "pmc.abstract",
-        "doi.abstract",
+        "dblp.abstract",
         "pdf",
+        "doi.abstract",
         "html",
+        "semantic_scholar.abstract",
+        "corpusid",
         "mag",
         "xml",
         "patent",
@@ -83,7 +91,7 @@ def expand_links(links):
             )
         else:
             results.append((link.type, link.link))
-    results.sort(key=lambda pair: pref.index(pair[0]))
+    results.sort(key=lambda pair: pref.index(pair[0]) if pair[0] in pref else 1)
     return results
 
 
@@ -92,7 +100,9 @@ def format_term(self):
     print_field("Title", T.bold(self.title))
     print_field("Authors", ", ".join(auth.name for auth in self.authors))
     for release in self.releases:
-        print_field("Date", release.date)
+        print_field(
+            "Date", DatePrecision.format(release.date, release.date_precision)
+        )
         print_field("Venue", release.venue.name)
     if self.links:
         print_field("URL", expand_links(self.links)[0][1])
@@ -112,7 +122,9 @@ def format_term_long(self):
         )
     print_field("Abstract", self.abstract)
     for release in self.releases:
-        print_field("Date", release.date)
+        print_field(
+            "Date", DatePrecision.format(release.date, release.date_precision)
+        )
         print_field("Venue", release.venue.name)
     print_field("Topics", ", ".join(t.name for t in self.topics))
     print_field("Sources", "")
