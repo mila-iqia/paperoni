@@ -1,8 +1,11 @@
-import sys
 import json
-from paperoni.sources.model import from_dict
-from paperoni.utils import url_to_id
+import sys
 
+from coleo import auto_cli
+
+from paperoni.config import config, configure
+from paperoni.sources.model import DatePrecision, from_dict
+from paperoni.utils import canonicalize_links
 
 mag_types = {
     1: "html",
@@ -15,15 +18,6 @@ mag_types = {
 
 
 def process_paper(paper):
-    def _make_link(link):
-        typ = mag_types[link.get("Ty", 99)]
-        lnk = link["U"]
-        return url_to_id(lnk) or (typ, lnk)
-
-    def _make_links(links):
-        links = {_make_link(link) for link in links}
-        return [{"type": typ, "link": lnk} for typ, lnk in links]
-
     if paper is False:
         return None
 
@@ -48,8 +42,7 @@ def process_paper(paper):
 
     release = {
         "venue": venue,
-        "date": f"{paper['D']} 00:00:00",
-        "date_precision": 86400,
+        **DatePrecision.assimilate_date(paper["D"]),
         "volume": paper.get("V", None),
         "publisher": paper.get("PB", None),
     }
@@ -57,14 +50,23 @@ def process_paper(paper):
     authors = {}
     for auth in paper["AA"]:
         auid = auth["AuId"]
-        authors.setdefault(auid, {
-            "name": auth["DAuN"],
-            "links": [{"type": "mag", "link": auid}],
-            "affiliations": [],
-        })
-        authors[auid]["affiliations"].append({
-            "name": auth["DAfN"],
-        })
+        authors.setdefault(
+            auid,
+            {
+                "name": auth["DAuN"],
+                "links": [{"type": "mag", "link": auid}],
+                "affiliations": [],
+                "aliases": [],
+                "roles": [],
+            },
+        )
+        authors[auid]["affiliations"].append(
+            {
+                "name": auth["DAfN"],
+                "category": "unknown",
+                "aliases": [],
+            }
+        )
 
     result = {
         "__version__": 1,
@@ -74,16 +76,17 @@ def process_paper(paper):
         "abstract": paper["abstract"],
         "links": [
             {"type": "mag", "link": paper["Id"]},
-            *_make_links(paper.get("S", []))
+            *canonicalize_links(
+                {"type": mag_types[entry.get("Ty", 99)], "link": entry["U"]}
+                for entry in paper.get("S", [])
+            ),
         ],
         "authors": list(authors.values()),
         "releases": [
             release,
         ],
-        "topics": [
-            {"name": f["FN"]}
-            for f in paper.get("F", [])
-        ],
+        "topics": [{"name": f["FN"]} for f in paper.get("F", [])],
+        "scrapers": ["mag"],
         "citation_count": paper["CC"],
     }
     return result
@@ -97,9 +100,27 @@ def mag_papers(json_db):
             yield result
 
 
-def main():
+def show():
     from paperoni.utils import format_term_long as ft
+
     for paper in mag_papers(sys.argv[1]):
         print("=" * 80)
         ft(from_dict(paper))
-        break
+
+
+def store():
+    from paperoni.db.database import Database
+    from paperoni.utils import format_term_long as ft
+
+    configure("config.yaml")
+    db = Database(config.database_file)
+    db.import_all([from_dict(paper) for paper in mag_papers(sys.argv[1])])
+
+
+if __name__ == "__main__":
+    auto_cli(
+        {
+            "show": show,
+            "store": store,
+        }
+    )
