@@ -1,7 +1,7 @@
 import json
 import sys
 
-from coleo import auto_cli
+from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
 from paperoni.sources.model import DatePrecision, from_dict
@@ -103,7 +103,10 @@ def mag_papers(json_db):
 def show():
     from paperoni.utils import format_term_long as ft
 
-    for paper in mag_papers(sys.argv[1]):
+    # [positional]
+    filename: Option
+
+    for paper in mag_papers(filename):
         print("=" * 80)
         ft(from_dict(paper))
 
@@ -112,9 +115,12 @@ def store():
     from paperoni.db.database import Database
     from paperoni.utils import format_term_long as ft
 
-    configure("config.yaml")
+    # [positional]
+    filename: Option
+
+    configure("config.yaml", tag="mag")
     db = Database(config.database_file)
-    db.import_all([from_dict(paper) for paper in mag_papers(sys.argv[1])])
+    db.import_all([from_dict(paper) for paper in mag_papers(filename)])
 
 
 if __name__ == "__main__":

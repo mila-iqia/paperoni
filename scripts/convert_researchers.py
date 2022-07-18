@@ -59,7 +59,7 @@ def store():
     # [positional]
     filename: Option
 
-    configure("config.yaml")
+    configure("config.yaml", tag="researchers")
     db = Database(config.database_file)
     db.import_all(convert(filename))
 
