@@ -30,14 +30,25 @@ def replay():
     config: Option = None
 
     # History file to replay
-    history: Option = None
+    # [positional: *]
+    history: Option = []
+
+    # Lower bound
+    after: Option = None
+
+    # Upper bound
+    before: Option = None
 
     if not config:
         config = os.getenv("PAPERONI_CONFIG")
 
     configure(config)
 
-    Database(pconfig.database_file).replay(history_file=history)
+    Database(pconfig.database_file).replay(
+        history=history,
+        before=before,
+        after=after,
+    )
 
 
 commands = {

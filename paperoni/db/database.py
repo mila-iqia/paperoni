@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+from pathlib import Path
 
 import sqlalchemy as sq
 from pydantic import BaseModel
@@ -196,9 +197,40 @@ class Database:
             data = [x.tagged_json() + "\n" for x in xs]
             f.writelines(data)
 
-    def replay(self, history_file=None):
-        with self:
-            with open(history_file or config.history_file, "r") as f:
-                lines = f.readlines()
-                for l in tqdm(lines):
-                    self.acquire(from_dict(json.loads(l)))
+    def _accumulate_history_files(self, x, before, after, results):
+        match x:
+            case str() as pth:
+                return self._accumulate_history_files(
+                    Path(pth), before, after, results
+                )
+            case Path() as pth:
+                if pth.is_dir():
+                    self._accumulate_history_files(
+                        list(pth.iterdir()), before, after, results
+                    )
+                else:
+                    results.append(pth)
+            case [*paths]:
+                paths = list(sorted(paths))
+                if before:
+                    paths = [x for x in paths if x.name[: len(before)] < before]
+                if after:
+                    paths = [x for x in paths if x.name[: len(after)] > after]
+                for subpth in paths:
+                    self._accumulate_history_files(
+                        subpth, before, after, results
+                    )
+            case _:
+                assert False
+
+    def replay(self, history=None, before=None, after=None):
+        history = history or config.history_root
+        history_files = []
+        self._accumulate_history_files(history, before, after, history_files)
+        for history_file in history_files:
+            print(f"Replaying {history_file}")
+            with self:
+                with open(history_file, "r") as f:
+                    lines = f.readlines()
+                    for l in tqdm(lines):
+                        self.acquire(from_dict(json.loads(l)))
