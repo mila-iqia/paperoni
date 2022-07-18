@@ -121,6 +121,24 @@ def format_term_long(self):
     print_field("Citations", self.citation_count)
 
 
+def format_author(self):
+    """Print an author on the terminal."""
+    print_field("Name", T.bold(self.name))
+    if self.affiliations:
+        print_field("Affiliations", "")
+        for affiliation in self.affiliations:
+            print(f"* {affiliation.name}")
+    if self.roles:
+        print_field("Roles", "")
+        for role in self.roles:
+            print(
+                f"* {role.institution.name:20} as {role.role:20} from {DatePrecision.day.format2(role.start_date)} to {role.end_date and DatePrecision.day.format2(role.end_date) or '-'}"
+            )
+    print_field("Links", "")
+    for typ, link in expand_links(self.links):
+        print(f"  {T.bold_green(typ):20} {link}")
+
+
 url_extractors = {
     r"https?://[a-z.]*arxiv\.org/(?:abs|pdf)/([0-9]{4}\.[0-9]+).*": "arxiv",
     r"https?://[a-z.]*arxiv-vanity\.com/papers/([0-9]{4}\.[0-9]+).*": "arxiv",
@@ -132,12 +150,20 @@ url_extractors = {
     r"https?://europepmc.org/article/PMC/([^/]*)": "pmc",
     r"https?://(?:dx\.)?doi\.org/(.*)": "doi",
     r"https?://(?:www\.)?openreview\.net/(?:pdf\?|forum\?)id=(.*)": "openreview",
+    r"https?://dblp.uni-trier.de/db/([^/]+)/([^/]+)/[^/]+\.html#(.*)": "dblp",
 }
 
 
 def url_to_id(url):
     for pattern, key in url_extractors.items():
-        m = re.match(pattern, url)
-        if m:
-            return (key, *m.groups())
+        if m := re.match(pattern, url):
+            lnk = "/".join(m.groups())
+            return (key, lnk)
     return None
+
+
+def canonicalize_links(links):
+    links = {
+        url_to_id(url := link["link"]) or (link["type"], url) for link in links
+    }
+    return [{"type": typ, "link": lnk} for typ, lnk in links]
