@@ -90,12 +90,12 @@ class Database:
                     self.session.execute(stmt)
 
                 for link in paper.links:
-                    stmt = sq.insert(sch.t_paper_link).values(
+                    lnk = sch.PaperLink(
                         paper_id=pp.paper_id,
                         type=link.type,
                         link=link.link,
                     )
-                    self.session.execute(stmt)
+                    self.session.add(lnk)
 
                 for scraper in paper.scrapers:
                     psps = sch.PaperScraper(
@@ -113,12 +113,12 @@ class Database:
                 # for affiliation in author.affiliations:
                 #     self.acquire(affiliation)
                 for link in author.links:
-                    stmt = sq.insert(sch.t_author_link).values(
+                    lnk = sch.AuthorLink(
                         author_id=aa.author_id,
                         type=link.type,
                         link=link.link,
                     )
-                    self.session.execute(stmt)
+                    self.session.add(lnk)
 
                 for alias in author.aliases:
                     stmt = sq.insert(sch.t_author_alias).values(
@@ -175,12 +175,12 @@ class Database:
                 self.session.commit()
 
                 for link in venue.links:
-                    stmt = sq.insert(sch.t_venue_link).values(
+                    lnk = sch.VenueLink(
                         venue_id=vv.venue_id,
                         type=link.type,
                         link=link.link,
                     )
-                    self.session.execute(stmt)
+                    self.session.add(lnk)
 
                 return vv
 

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS paper_link (
 	type TEXT NOT NULL,
 	-- A url, arxiv ID, DOI, etc.
 	link TEXT NOT NULL,
-	UNIQUE (paper_id, type, link)
+	PRIMARY KEY (paper_id, type, link)
 );
 
 CREATE TABLE IF NOT EXISTS paper_flag (
@@ -35,13 +35,13 @@ CREATE TABLE IF NOT EXISTS author_link (
 	type TEXT NOT NULL,
 	-- A url, external ID, etc.
 	link TEXT NOT NULL,
-	UNIQUE (author_id, type, link)
+	PRIMARY KEY (author_id, type, link)
 );
 
 CREATE TABLE IF NOT EXISTS author_alias (
 	author_id INTEGER REFERENCES author(author_id) ON DELETE CASCADE,
 	alias TEXT NOT NULL,
-	UNIQUE (author_id, alias)
+	PRIMARY KEY (author_id, alias)
 );
 
 CREATE TABLE IF NOT EXISTS author_institution (
@@ -70,13 +70,13 @@ CREATE TABLE IF NOT EXISTS venue_link (
 	type TEXT NOT NULL,
 	-- A url, external ID, etc.
 	link TEXT NOT NULL,
-	UNIQUE (venue_id, type, link)
+	PRIMARY KEY (venue_id, type, link)
 );
 
 CREATE TABLE IF NOT EXISTS venue_alias (
 	venue_id INTEGER REFERENCES venue(venue_id) ON DELETE CASCADE,
 	alias TEXT NOT NULL,
-	UNIQUE (venue_id, alias)
+	PRIMARY KEY (venue_id, alias)
 );
 
 CREATE TABLE IF NOT EXISTS release (
