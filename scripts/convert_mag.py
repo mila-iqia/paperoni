@@ -101,19 +101,18 @@ def mag_papers(json_db):
 
 
 def show():
-    from paperoni.utils import format_term_long as ft
+    from paperoni.utils import display
 
     # [positional]
     filename: Option
 
     for paper in mag_papers(filename):
         print("=" * 80)
-        ft(from_dict(paper))
+        display(paper)
 
 
 def store():
     from paperoni.db.database import Database
-    from paperoni.utils import format_term_long as ft
 
     # [positional]
     filename: Option

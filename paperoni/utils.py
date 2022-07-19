@@ -3,8 +3,9 @@ import shutil
 import textwrap
 
 from blessed import Terminal
+from ovld import ovld
 
-from paperoni.sources.model import DatePrecision
+from paperoni.sources.model import Author, DatePrecision, Paper, from_dict
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns
@@ -108,46 +109,53 @@ def format_term(self):
         print_field("URL", expand_links(self.links)[0][1])
 
 
-def format_term_long(self):
+@ovld
+def display(d: dict):
+    display(from_dict(d))
+
+
+@ovld
+def display(paper: Paper):
     """Print the paper in long form on the terminal.
 
     Long form includes abstract, affiliations, keywords, number of
     citations.
     """
-    print_field("Title", self.title)
+    print_field("Title", paper.title)
     print_field("Authors", "")
-    for auth in self.authors:
+    for auth in paper.authors:
         print(
             f" * {auth.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
         )
-    print_field("Abstract", self.abstract)
-    for release in self.releases:
+    print_field("Abstract", paper.abstract)
+    for release in paper.releases:
         print_field(
             "Date", DatePrecision.format(release.date, release.date_precision)
         )
         print_field("Venue", release.venue.name)
-    print_field("Topics", ", ".join(t.name for t in self.topics))
+    print_field("Topics", ", ".join(t.name for t in paper.topics))
     print_field("Sources", "")
-    for typ, link in expand_links(self.links):
+    for typ, link in expand_links(paper.links):
         print(f"  {T.bold_green(typ)} {link}")
-    print_field("Citations", self.citation_count)
+    print_field("Citations", paper.citation_count)
 
 
-def format_author(self):
+@ovld
+def display(author: Author):
     """Print an author on the terminal."""
-    print_field("Name", T.bold(self.name))
-    if self.affiliations:
+    print_field("Name", T.bold(author.name))
+    if author.affiliations:
         print_field("Affiliations", "")
-        for affiliation in self.affiliations:
+        for affiliation in author.affiliations:
             print(f"* {affiliation.name}")
-    if self.roles:
+    if author.roles:
         print_field("Roles", "")
-        for role in self.roles:
+        for role in author.roles:
             print(
                 f"* {role.institution.name:20} as {role.role:20} from {DatePrecision.day.format2(role.start_date)} to {role.end_date and DatePrecision.day.format2(role.end_date) or '-'}"
             )
     print_field("Links", "")
-    for typ, link in expand_links(self.links):
+    for typ, link in expand_links(author.links):
         print(f"  {T.bold_green(typ):20} {link}")
 
 
