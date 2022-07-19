@@ -11,6 +11,19 @@ scrapers = {}
 
 
 @ovld
+def configure(**extra_config):
+    return configure(None, **extra_config)
+
+
+@ovld
+def configure(config: None, **extra_config):
+    config = os.getenv("PAPERONI_CONFIG")
+    if not config:
+        exit("No configuration could be found.")
+    return configure(config, **extra_config)
+
+
+@ovld
 def configure(config_file: str, **extra_config):
     root = Path(config_file).parent
     cfg = configuration(config_file)
