@@ -22,9 +22,11 @@ class Author(Base):
     name = Column(Text, nullable=False)
     author_id = Column(Integer, primary_key=True)
 
+    author_alias = relationship("AuthorAlias", back_populates="author")
     author_institution = relationship(
         "AuthorInstitution", back_populates="author"
     )
+    author_link = relationship("AuthorLink", back_populates="author")
     paper_author = relationship("PaperAuthor", back_populates="author")
 
 
@@ -67,6 +69,7 @@ class Paper(Base):
     )
     paper_author = relationship("PaperAuthor", back_populates="paper")
     paper_flag = relationship("PaperFlag", back_populates="paper")
+    paper_link = relationship("PaperLink", back_populates="paper")
     paper_scraper = relationship("PaperScraper", back_populates="paper")
 
 
@@ -104,15 +107,17 @@ class Venue(Base):
     type = Column(Text)
 
     release = relationship("Release", back_populates="venue")
+    venue_alias = relationship("VenueAlias", back_populates="venue")
+    venue_link = relationship("VenueLink", back_populates="venue")
 
 
-t_author_alias = Table(
-    "author_alias",
-    metadata,
-    Column("author_id", ForeignKey("author.author_id")),
-    Column("alias", Text, nullable=False),
-    UniqueConstraint("author_id", "alias"),
-)
+class AuthorAlias(Base):
+    __tablename__ = "author_alias"
+
+    alias = Column(Text, primary_key=True, nullable=False)
+    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
+
+    author = relationship("Author", back_populates="author_alias")
 
 
 class AuthorInstitution(Base):
@@ -132,14 +137,14 @@ class AuthorInstitution(Base):
     )
 
 
-t_author_link = Table(
-    "author_link",
-    metadata,
-    Column("author_id", ForeignKey("author.author_id")),
-    Column("type", Text, nullable=False),
-    Column("link", Text, nullable=False),
-    UniqueConstraint("author_id", "type", "link"),
-)
+class AuthorLink(Base):
+    __tablename__ = "author_link"
+
+    type = Column(Text, primary_key=True, nullable=False)
+    link = Column(Text, primary_key=True, nullable=False)
+    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
+
+    author = relationship("Author", back_populates="author_link")
 
 
 class InstitutionAlias(Base):
@@ -182,14 +187,14 @@ class PaperFlag(Base):
     paper = relationship("Paper", back_populates="paper_flag")
 
 
-t_paper_link = Table(
-    "paper_link",
-    metadata,
-    Column("paper_id", ForeignKey("paper.paper_id")),
-    Column("type", Text, nullable=False),
-    Column("link", Text, nullable=False),
-    UniqueConstraint("paper_id", "type", "link"),
-)
+class PaperLink(Base):
+    __tablename__ = "paper_link"
+
+    type = Column(Text, primary_key=True, nullable=False)
+    link = Column(Text, primary_key=True, nullable=False)
+    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
+
+    paper = relationship("Paper", back_populates="paper_link")
 
 
 class PaperScraper(Base):
@@ -226,23 +231,23 @@ class Release(Base):
     venue = relationship("Venue", back_populates="release")
 
 
-t_venue_alias = Table(
-    "venue_alias",
-    metadata,
-    Column("venue_id", ForeignKey("venue.venue_id")),
-    Column("alias", Text, nullable=False),
-    UniqueConstraint("venue_id", "alias"),
-)
+class VenueAlias(Base):
+    __tablename__ = "venue_alias"
+
+    alias = Column(Text, primary_key=True, nullable=False)
+    venue_id = Column(ForeignKey("venue.venue_id"), primary_key=True)
+
+    venue = relationship("Venue", back_populates="venue_alias")
 
 
-t_venue_link = Table(
-    "venue_link",
-    metadata,
-    Column("venue_id", ForeignKey("venue.venue_id")),
-    Column("type", Text, nullable=False),
-    Column("link", Text, nullable=False),
-    UniqueConstraint("venue_id", "type", "link"),
-)
+class VenueLink(Base):
+    __tablename__ = "venue_link"
+
+    type = Column(Text, primary_key=True, nullable=False)
+    link = Column(Text, primary_key=True, nullable=False)
+    venue_id = Column(ForeignKey("venue.venue_id"), primary_key=True)
+
+    venue = relationship("Venue", back_populates="venue_link")
 
 
 t_paper_author_institution = Table(
