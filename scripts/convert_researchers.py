@@ -4,7 +4,7 @@ from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
 from paperoni.sources.model import Author, Institution, Role
-from paperoni.utils import format_author
+from paperoni.utils import display
 
 
 def convert(filename):
@@ -50,7 +50,7 @@ def show():
 
     for entry in convert(filename):
         print("=" * 80)
-        format_author(entry)
+        display(entry)
 
 
 def store():
