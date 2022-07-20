@@ -9,13 +9,17 @@ repository = "https://github.com/mila-iqia/paperoni"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-coleo = "^0.2.5"
+python = "3.10"
+coleo = {extras = ["yaml"], version = "^0.3.1"}
 tqdm = "^4.48.2"
 requests = "^2.24.0"
 blessed = "^1.17.9"
 hrepr = "^0.4.0"
 beautifulsoup4 = "^4.9.1"
+pydantic = "^1.9.1"
+SQLAlchemy = "^1.4.39"
+ovld = "^0.3.2"
+questionary = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 black = ">= 19.10b0"
@@ -25,20 +29,7 @@ pytest = ">= 6.1.2"
 pytest-cov = ">= 2.10.1"
 
 [tool.poetry.scripts]
-paperoni = "paperoni.__main__:main"
-
-[tool.poetry.plugins."paperoni.command"]
-config = "paperoni.commands.command_config:command_config"
-search = "paperoni.commands.command_search:command_search"
-bibtex = "paperoni.commands.command_bibtex:command_bibtex"
-researcher = "paperoni.commands.command_researcher:command_researcher"
-collect = "paperoni.commands.command_collect:command_collect"
-html = "paperoni.commands.command_html:command_html"
-semantic-scholar = "paperoni.commands.command_semantic_scholar:command_semantic_scholar"
-search-openalex = "paperoni.commands.command_search_openalex:command_search_openalex"
-import = "paperoni.commands.command_import:command_import"
-collect-semantic-scholar = "paperoni.commands.command_collect_semantic_scholar:command_collect_semantic_scholar"
-search2 = "paperoni.commands.command_search2:command_search2"
+mpap = "paperoni.cli:main"
 
 [tool.black]
 line-length = 80

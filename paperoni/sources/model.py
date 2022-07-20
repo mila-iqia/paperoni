@@ -15,6 +15,12 @@ class VenueType(str, Enum):
     symposium = "symposium"
     book = "book"
     review = "review"
+    news = "news"
+    study = "study"
+    meta_analysis = "meta_analysis"
+    editorial = "editorial"
+    letters_and_comments = "letters_and_comments"
+    case_report = "case_report"
     unknown = "unknown"
 
 
@@ -55,6 +61,11 @@ class DatePrecision(int, Enum):
                         }
                     case _:
                         assert False
+            case None:
+                return {
+                    "date": "2000-01-01 00:00",
+                    "date_precision": DatePrecision.unknown,
+                }
             case _:
                 assert False
 
@@ -143,6 +154,17 @@ class Role(Base):
     role: str
     start_date: datetime
     end_date: datetime | None
+
+
+class AuthorPaperQuery(Base):
+    author: Author
+    start_date: datetime
+    end_date: datetime | None
+
+
+class AuthorQuery(Base):
+    author_id: int
+    author: Author
 
 
 for cls in list(globals().values()):

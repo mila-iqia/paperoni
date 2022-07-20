@@ -29,6 +29,14 @@ class Author(Base):
     author_link = relationship("AuthorLink", back_populates="author")
     paper_author = relationship("PaperAuthor", back_populates="author")
 
+    @property
+    def links(self):
+        return self.author_link
+
+    @property
+    def aliases(self):
+        return [alias.alias for alias in self.author_alias]
+
 
 class Institution(Base):
     __tablename__ = "institution"
