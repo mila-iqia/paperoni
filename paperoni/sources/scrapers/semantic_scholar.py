@@ -1,13 +1,15 @@
 import json
 import urllib.parse
 
+import questionary as qn
 from coleo import Option, tooled
 
 from ...config import scrapers
-from ...utils import QueryError
+from ...utils import QueryError, display
 from ..acquire import HTTPSAcquirer
 from ..model import (
     Author,
+    AuthorQuery,
     DatePrecision,
     Link,
     Paper,
@@ -27,6 +29,12 @@ venue_type_mapping = {
     "Conference": VenueType.conference,
     "Book": VenueType.book,
     "Review": VenueType.review,
+    "News": VenueType.news,
+    "Study": VenueType.study,
+    "MetaAnalysis": VenueType.meta_analysis,
+    "Editorial": VenueType.editorial,
+    "LettersAndComments": VenueType.letters_and_comments,
+    "CaseReport": VenueType.case_report,
     "_": VenueType.unknown,
 }
 
@@ -112,7 +120,7 @@ class SemanticScholarQueryManager:
         *SEARCH_FIELDS,
     )
     PAPER_REFERENCES_FIELDS = PAPER_CITATIONS_FIELDS
-    AUTHOR_FIELDS = _author_fields()  # PAPER_AUTHORS_FIELDS
+    AUTHOR_FIELDS = PAPER_AUTHORS_FIELDS
     AUTHOR_PAPERS_FIELDS = (
         SEARCH_FIELDS
         + _paper_short_fields(parent="citations")
@@ -166,9 +174,6 @@ class SemanticScholarQueryManager:
         )
 
     def _wrap_paper(self, data):
-        from hrepr import pstr
-
-        print(pstr(data))
         links = [Link(type="semantic_scholar", link=data["paperId"])]
         for typ, ref in data["externalIds"].items():
             links.append(
@@ -243,14 +248,21 @@ class SemanticScholarQueryManager:
             f"paper/{paper_id}/citations", fields=fields, **params
         )
 
-    # def author(self, author_id, fields=AUTHOR_FIELDS, **params):
-    #     yield from self._list(f"author/{author_id}", fields=fields, **params)
-
     def author(self, name, fields=AUTHOR_FIELDS, **params):
         authors = self._list(
             f"author/search", query=name, fields=fields, **params
         )
         yield from map(self._wrap_author, authors)
+
+    def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
+        authors = self._list(
+            f"author/search", query=name, fields=fields, **params
+        )
+        for author in authors:
+            yield (
+                self._wrap_author(author),
+                [self._wrap_paper(p) for p in author["papers"]],
+            )
 
     def author_papers(self, author_id, fields=AUTHOR_PAPERS_FIELDS, **params):
         papers = self._list(
@@ -259,35 +271,116 @@ class SemanticScholarQueryManager:
         yield from map(self._wrap_paper, papers)
 
 
-@tooled
-def query(
-    # Author to query
-    # [alias: -a]
-    # [nargs: +]
-    author: Option = [],
-    # Title of the paper
-    # [alias: -t]
-    # [nargs: +]
-    title: Option = [],
-    # Maximal number of results per query
-    block_size: Option & int = 100,
-    # Maximal number of results to return
-    limit: Option & int = 10000,
-):
-    author = " ".join(author)
-    title = " ".join(title)
+class SemanticScholarScraper:
+    name = "semantic_scholar"
 
-    if author and title:
-        raise QueryError("Cannot query both author and title")
+    @tooled
+    def query(
+        self,
+        # Author to query
+        # [alias: -a]
+        # [nargs: +]
+        author: Option = [],
+        # Title of the paper
+        # [alias: -t]
+        # [nargs: +]
+        title: Option = [],
+        # Maximal number of results per query
+        block_size: Option & int = 100,
+        # Maximal number of results to return
+        limit: Option & int = 10000,
+    ):
+        author = " ".join(author)
+        title = " ".join(title)
 
-    ss = SemanticScholarQueryManager()
+        if author and title:
+            raise QueryError("Cannot query both author and title")
 
-    if title:
-        yield from ss.search(title, block_size=block_size, limit=limit)
+        ss = SemanticScholarQueryManager()
 
-    elif author:
-        for auth in ss.author(author):
-            print(auth)
+        if title:
+            yield from ss.search(title, block_size=block_size, limit=limit)
+
+        elif author:
+            for auth in ss.author(author):
+                print(auth)
+
+    @tooled
+    def acquire(self, queries):
+        from hrepr import pstr
+
+        for x in queries:
+            print(pstr(x.dict()))
+
+    @tooled
+    def prepare(self, researchers):
+        after: Option = ""
+
+        ss = SemanticScholarQueryManager()
+
+        def _ids(x):
+            return [
+                link.link for link in x.links if link.type == "semantic_scholar"
+            ]
+
+        researchers.sort(key=lambda auq: auq.author.name.lower())
+        if after:
+            researchers = [
+                auq
+                for auq in researchers
+                if auq.author.name.lower()[: len(after)] > after
+            ]
+
+        for auq in researchers:
+            aname = auq.author.name
+            existing = _ids(auq.author)
+            ids = {x for x in existing if not x.startswith("!")}
+            noids = {x[1:] for x in existing if x.startswith("!")}
+
+            for author, papers in ss.author_with_papers(aname):
+                (new_id,) = _ids(author)
+                if new_id in ids or new_id in noids:
+                    print(f"Skipping processed ID for {aname}: {new_id}")
+                    continue
+
+                def _make(negate=False):
+                    return AuthorQuery(
+                        author_id=auq.author_id,
+                        author=Author(
+                            name=aname,
+                            affiliations=[],
+                            roles=[],
+                            aliases=author.aliases,
+                            links=[
+                                Link(type="semantic_scholar", link=f"!{new_id}")
+                            ]
+                            if negate
+                            else author.links,
+                        ),
+                    )
+
+                print("=" * 80)
+                print(f"{aname} (ID = {new_id}): {len(papers)} paper(s)")
+                print("=" * 80)
+                for p in papers:
+                    display(p)
+                    print("=" * 80)
+                    action = qn.text(
+                        f"Is this a paper by {aname}? [y]es/[n]o/[m]ore/[s]kip/[q]uit",
+                        validate=lambda x: x in ["y", "n", "m", "s", "q"],
+                    ).unsafe_ask()
+                    if action == "y":
+                        yield _make()
+                        break
+                    elif action == "n":
+                        yield _make(negate=True)
+                        break
+                    elif action == "m":
+                        continue
+                    elif action == "s":
+                        break
+                    elif action == "q":
+                        return
 
 
-scrapers["semantic_scholar"] = query
+scrapers["semantic_scholar"] = SemanticScholarScraper()

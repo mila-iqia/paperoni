@@ -12,6 +12,7 @@ from tqdm import tqdm
 from ..config import config
 from ..sources.model import (
     Author,
+    AuthorQuery,
     Institution,
     Paper,
     Release,
@@ -109,36 +110,7 @@ class Database:
                 aa = sch.Author(name=name)
                 self.session.add(aa)
                 self.session.commit()
-
-                # for affiliation in author.affiliations:
-                #     self.acquire(affiliation)
-                for link in author.links:
-                    lnk = sch.AuthorLink(
-                        author_id=aa.author_id,
-                        type=link.type,
-                        link=link.link,
-                    )
-                    self.session.add(lnk)
-
-                for alias in author.aliases:
-                    stmt = sq.insert(sch.t_author_alias).values(
-                        author_id=aa.author_id,
-                        alias=alias,
-                    )
-                    self.session.execute(stmt)
-
-                for role in author.roles:
-                    rr = sch.AuthorInstitution(
-                        author_id=aa.author_id,
-                        institution_id=self.acquire(
-                            role.institution
-                        ).institution_id,
-                        role=role.role,
-                        start_date=role.start_date,
-                        end_date=role.end_date,
-                    )
-                    self.session.add(rr)
-
+                self.acquire(AuthorQuery(author_id=aa.author_id, author=author))
                 return aa
 
             case Institution(name=name, category=category) as institution:
@@ -183,6 +155,34 @@ class Database:
                     self.session.add(lnk)
 
                 return vv
+
+            case AuthorQuery(author_id=author_id, author=author):
+                for link in author.links:
+                    lnk = sch.AuthorLink(
+                        author_id=author_id,
+                        type=link.type,
+                        link=link.link,
+                    )
+                    self.session.merge(lnk)
+
+                for alias in author.aliases:
+                    aal = sch.AuthorAlias(
+                        author_id=author_id,
+                        alias=alias,
+                    )
+                    self.session.merge(aal)
+
+                for role in author.roles:
+                    rr = sch.AuthorInstitution(
+                        author_id=author_id,
+                        institution_id=self.acquire(
+                            role.institution
+                        ).institution_id,
+                        role=role.role,
+                        start_date=role.start_date,
+                        end_date=role.end_date,
+                    )
+                    self.session.add(rr)
 
             case _:
                 raise TypeError(f"Cannot acquire: {type(x).__name__}")

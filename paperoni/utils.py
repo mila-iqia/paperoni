@@ -5,7 +5,7 @@ import textwrap
 from blessed import Terminal
 from ovld import ovld
 
-from paperoni.sources.model import Author, DatePrecision, Paper, from_dict
+from .sources.model import Author, DatePrecision, Paper, from_dict
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns

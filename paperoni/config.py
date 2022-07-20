@@ -29,7 +29,7 @@ def configure(config_file: str, **extra_config):
     cfg = configuration(config_file)
     cfg["root"] = root
     cfg.update(extra_config)
-    configure(cfg)
+    return configure(cfg)
 
 
 @ovld
@@ -49,3 +49,4 @@ def configure(cfg: dict):
         hfile = Path(hroot) / f"{now}{tag}.jsonl"
         cfg["history_file"] = hfile
     config.__dict__.update(cfg)
+    return config
