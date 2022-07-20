@@ -342,6 +342,7 @@ class SemanticScholarScraper:
                 if new_id in ids or new_id in noids:
                     print(f"Skipping processed ID for {aname}: {new_id}")
                     continue
+                aliases = {*author.aliases, author.name} - {aname}
 
                 def _make(negate=False):
                     return AuthorQuery(
@@ -350,7 +351,7 @@ class SemanticScholarScraper:
                             name=aname,
                             affiliations=[],
                             roles=[],
-                            aliases=author.aliases,
+                            aliases=[] if negate else aliases,
                             links=[
                                 Link(type="semantic_scholar", link=f"!{new_id}")
                             ]
@@ -361,8 +362,15 @@ class SemanticScholarScraper:
 
                 print("=" * 80)
                 print(f"{aname} (ID = {new_id}): {len(papers)} paper(s)")
+                print(f"Aliases: {aliases}")
+                papers = [
+                    (p.releases[0].date.year, i, p)
+                    for i, p in enumerate(papers)
+                ]
+                papers.sort(reverse=True)
+                print(f"Years: {papers[-1][0]} to {papers[0][0]}")
                 print("=" * 80)
-                for p in papers:
+                for _, _, p in papers:
                     display(p)
                     print("=" * 80)
                     action = qn.text(
