@@ -21,6 +21,7 @@ class VenueType(str, Enum):
     editorial = "editorial"
     letters_and_comments = "letters_and_comments"
     case_report = "case_report"
+    clinical_trial = "clinical_trial"
     unknown = "unknown"
 
 

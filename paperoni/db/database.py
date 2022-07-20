@@ -188,6 +188,8 @@ class Database:
                 raise TypeError(f"Cannot acquire: {type(x).__name__}")
 
     def import_all(self, xs: list[BaseModel], history_file=None):
+        if not xs:
+            return
         history_file = history_file or config.history_file
         xs = list(xs)
         with self:

@@ -1,5 +1,6 @@
 import json
 import urllib.parse
+from typing import Counter
 
 import questionary as qn
 from coleo import Option, tooled
@@ -35,6 +36,7 @@ venue_type_mapping = {
     "Editorial": VenueType.editorial,
     "LettersAndComments": VenueType.letters_and_comments,
     "CaseReport": VenueType.case_report,
+    "ClinicalTrial": VenueType.clinical_trial,
     "_": VenueType.unknown,
 }
 
@@ -249,12 +251,14 @@ class SemanticScholarQueryManager:
         )
 
     def author(self, name, fields=AUTHOR_FIELDS, **params):
+        name = name.replace("-", " ")
         authors = self._list(
             f"author/search", query=name, fields=fields, **params
         )
         yield from map(self._wrap_author, authors)
 
     def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
+        name = name.replace("-", " ")
         authors = self._list(
             f"author/search", query=name, fields=fields, **params
         )
@@ -315,6 +319,16 @@ class SemanticScholarScraper:
     @tooled
     def prepare(self, researchers):
         after: Option = ""
+        name: Option = ""
+
+        rids = {}
+        for researcher in researchers:
+            for link in researcher.author.links:
+                if (
+                    link.type == "semantic_scholar"
+                    and not link.link.startswith("!")
+                ):
+                    rids[link.link] = researcher.author.name
 
         ss = SemanticScholarQueryManager()
 
@@ -324,7 +338,11 @@ class SemanticScholarScraper:
             ]
 
         researchers.sort(key=lambda auq: auq.author.name.lower())
-        if after:
+        if name:
+            researchers = [
+                auq for auq in researchers if auq.author.name.lower() == name
+            ]
+        elif after:
             researchers = [
                 auq
                 for auq in researchers
@@ -337,7 +355,28 @@ class SemanticScholarScraper:
             ids = {x for x in existing if not x.startswith("!")}
             noids = {x[1:] for x in existing if x.startswith("!")}
 
-            for author, papers in ss.author_with_papers(aname):
+            def find_common(papers):
+                common = Counter()
+                for p in papers:
+                    for a in p.authors:
+                        for l in a.links:
+                            if l.type == "semantic_scholar" and l.link in rids:
+                                common[rids[l.link]] += 1
+                return sum(common.values()), common
+
+            data = [
+                (author, *find_common(papers), papers)
+                for author, papers in ss.author_with_papers(aname)
+                if len(papers) > 1
+            ]
+            data.sort(key=lambda ap: (-ap[1], -len(ap[-1])))
+
+            for author, _, common, papers in data:
+                if not papers:
+                    continue
+
+                done = False
+
                 (new_id,) = _ids(author)
                 if new_id in ids or new_id in noids:
                     print(f"Skipping processed ID for {aname}: {new_id}")
@@ -362,6 +401,9 @@ class SemanticScholarScraper:
 
                 print("=" * 80)
                 print(f"{aname} (ID = {new_id}): {len(papers)} paper(s)")
+                for name, count in sorted(common.items(), key=lambda x: -x[1]):
+                    print(f"{count} with {name}")
+
                 print(f"Aliases: {aliases}")
                 papers = [
                     (p.releases[0].date.year, i, p)
@@ -374,8 +416,8 @@ class SemanticScholarScraper:
                     display(p)
                     print("=" * 80)
                     action = qn.text(
-                        f"Is this a paper by {aname}? [y]es/[n]o/[m]ore/[s]kip/[q]uit",
-                        validate=lambda x: x in ["y", "n", "m", "s", "q"],
+                        f"Is this a paper by {aname}? [y]es/[n]o/[m]ore/[s]kip/[d]one/[q]uit",
+                        validate=lambda x: x in ["y", "n", "m", "s", "d", "q"],
                     ).unsafe_ask()
                     if action == "y":
                         yield _make()
@@ -383,12 +425,18 @@ class SemanticScholarScraper:
                     elif action == "n":
                         yield _make(negate=True)
                         break
+                    elif action == "d":
+                        done = True
+                        break
                     elif action == "m":
                         continue
                     elif action == "s":
                         break
                     elif action == "q":
                         return
+
+                if done:
+                    break
 
 
 scrapers["semantic_scholar"] = SemanticScholarScraper()
