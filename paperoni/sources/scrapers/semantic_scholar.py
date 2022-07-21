@@ -275,6 +275,15 @@ class SemanticScholarQueryManager:
         yield from map(self._wrap_paper, papers)
 
 
+def _between(name, after, before):
+    name = name.lower()
+    if after and name[: len(after)] <= after:
+        return False
+    if before and name[: len(before)] >= before:
+        return False
+    return True
+
+
 class SemanticScholarScraper:
     name = "semantic_scholar"
 
@@ -311,10 +320,25 @@ class SemanticScholarScraper:
 
     @tooled
     def acquire(self, queries):
-        from hrepr import pstr
+        todo = {}
 
-        for x in queries:
-            print(pstr(x.dict()))
+        after: Option = ""
+        before: Option = ""
+
+        queries.sort(key=lambda auq: auq.author.name.lower())
+
+        for auq in queries:
+            if not _between(auq.author.name, after, before):
+                continue
+            for link in auq.author.links:
+                if link.type == "semantic_scholar":
+                    todo[link.link] = auq
+
+        ss = SemanticScholarQueryManager()
+
+        for ssid, auq in todo.items():
+            print(f"Fetch papers for {auq.author.name} (ID={ssid})")
+            yield from ss.author_papers(ssid, block_size=1000)
 
     @tooled
     def prepare(self, researchers):
@@ -330,9 +354,7 @@ class SemanticScholarScraper:
         ss = SemanticScholarQueryManager()
 
         def _ids(x, typ):
-            return [
-                link.link for link in x.links if link.type == typ
-            ]
+            return [link.link for link in x.links if link.type == typ]
 
         researchers.sort(key=lambda auq: auq.author.name.lower())
         if name:
@@ -387,9 +409,7 @@ class SemanticScholarScraper:
                             affiliations=[],
                             roles=[],
                             aliases=[] if negate else aliases,
-                            links=[
-                                Link(type="!semantic_scholar", link=new_id)
-                            ]
+                            links=[Link(type="!semantic_scholar", link=new_id)]
                             if negate
                             else author.links,
                         ),
