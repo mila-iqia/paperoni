@@ -7,7 +7,6 @@ from coleo import config as configuration
 from ovld import ovld
 
 config = SimpleNamespace()
-scrapers = {}
 
 
 @ovld
