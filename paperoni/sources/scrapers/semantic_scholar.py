@@ -284,8 +284,6 @@ def _between(name, after, before):
 
 
 class SemanticScholarScraper:
-    name = "semantic_scholar"
-
     @tooled
     def query(
         self,

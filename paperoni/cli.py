@@ -8,7 +8,8 @@ from .utils import display
 
 
 class ScraperWrapper:
-    def __init__(self, scraper):
+    def __init__(self, name, scraper):
+        self.name = name
         self.scraper = scraper
         self.__coleo_extras__ = [
             self.scraper.query,
@@ -28,13 +29,13 @@ class ScraperWrapper:
     def acquire(self):
         pqs = generate_paper_queries()
         data = list(self.scraper.acquire(pqs))
-        load_database(tag=f"acquire_{self.scraper.name}").import_all(data)
+        load_database(tag=f"acquire_{self.name}").import_all(data)
 
     @tooled
     def prepare(self):
         pas = generate_author_queries()
         data = list(self.scraper.prepare(pas))
-        load_database(tag=f"prepare_{self.scraper.name}").import_all(data)
+        load_database(tag=f"prepare_{self.name}").import_all(data)
 
 
 def query_scraper(scraper):
@@ -148,7 +149,9 @@ def replay():
 
 scrapers = load_scrapers()
 
-wrapped = {name: ScraperWrapper(scraper) for name, scraper in scrapers.items()}
+wrapped = {
+    name: ScraperWrapper(name, scraper) for name, scraper in scrapers.items()
+}
 
 commands = {
     "query": {name: w.query for name, w in wrapped.items()},
