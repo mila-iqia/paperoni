@@ -27,7 +27,8 @@ class ScraperWrapper:
     @tooled
     def acquire(self):
         pqs = generate_paper_queries()
-        self.scraper.acquire(pqs)
+        data = list(self.scraper.acquire(pqs))
+        load_database(tag=f"acquire_{self.scraper.name}").import_all(data)
 
     @tooled
     def prepare(self):
