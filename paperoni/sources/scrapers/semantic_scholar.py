@@ -324,17 +324,14 @@ class SemanticScholarScraper:
         rids = {}
         for researcher in researchers:
             for link in researcher.author.links:
-                if (
-                    link.type == "semantic_scholar"
-                    and not link.link.startswith("!")
-                ):
+                if link.type == "semantic_scholar":
                     rids[link.link] = researcher.author.name
 
         ss = SemanticScholarQueryManager()
 
-        def _ids(x):
+        def _ids(x, typ):
             return [
-                link.link for link in x.links if link.type == "semantic_scholar"
+                link.link for link in x.links if link.type == typ
             ]
 
         researchers.sort(key=lambda auq: auq.author.name.lower())
@@ -351,9 +348,8 @@ class SemanticScholarScraper:
 
         for auq in researchers:
             aname = auq.author.name
-            existing = _ids(auq.author)
-            ids = {x for x in existing if not x.startswith("!")}
-            noids = {x[1:] for x in existing if x.startswith("!")}
+            ids = set(_ids(auq.author, "semantic_scholar"))
+            noids = set(_ids(auq.author, "!semantic_scholar"))
 
             def find_common(papers):
                 common = Counter()
@@ -392,7 +388,7 @@ class SemanticScholarScraper:
                             roles=[],
                             aliases=[] if negate else aliases,
                             links=[
-                                Link(type="semantic_scholar", link=f"!{new_id}")
+                                Link(type="!semantic_scholar", link=new_id)
                             ]
                             if negate
                             else author.links,
