@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from enum import Enum
+from hashlib import md5
 from typing import Optional
 
 from pydantic import BaseModel
@@ -105,6 +106,10 @@ class Base(BaseModel):
             {"__type__": type(self).__name__, **self.dict()},
             default=self.__json_encoder__,
         )
+
+    def hashid(self):
+        hsh = md5(self.json().encode("utf8"))
+        return int(hsh.hexdigest(), 16) % 2**60
 
 
 class Paper(Base):

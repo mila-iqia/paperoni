@@ -6,7 +6,6 @@ from sqlalchemy import (
     Integer,
     Table,
     Text,
-    UniqueConstraint,
     text,
 )
 from sqlalchemy.orm import declarative_base, relationship
@@ -224,11 +223,10 @@ t_paper_topic = Table(
 
 class Release(Base):
     __tablename__ = "release"
-    __table_args__ = (UniqueConstraint("venue_id", "volume"),)
 
     date = Column(Integer, nullable=False)
     date_precision = Column(Integer, nullable=False)
-    volume = Column(Text, nullable=False)
+    volume = Column(Text)
     release_id = Column(Integer, primary_key=True)
     venue_id = Column(ForeignKey("venue.venue_id"))
     publisher = Column(Text)
