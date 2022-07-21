@@ -5,7 +5,6 @@ from typing import Counter
 import questionary as qn
 from coleo import Option, tooled
 
-from ...config import scrapers
 from ...utils import QueryError, display
 from ..acquire import HTTPSAcquirer
 from ..model import (
@@ -455,4 +454,4 @@ class SemanticScholarScraper:
                     break
 
 
-scrapers["semantic_scholar"] = SemanticScholarScraper()
+__scrapers__ = {"semantic_scholar": SemanticScholarScraper()}

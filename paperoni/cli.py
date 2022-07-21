@@ -2,8 +2,8 @@ from coleo import Option, auto_cli, tooled, with_extras
 
 from paperoni.db.database import Database
 
-from .config import configure, scrapers
-from .sources.scrapers import semantic_scholar
+from .config import configure
+from .sources.scrapers import load_scrapers
 from .utils import display
 
 
@@ -146,8 +146,9 @@ def replay():
     )
 
 
-wrapped = {name: ScraperWrapper(scraper) for name, scraper in scrapers.items()}
+scrapers = load_scrapers()
 
+wrapped = {name: ScraperWrapper(scraper) for name, scraper in scrapers.items()}
 
 commands = {
     "query": {name: w.query for name, w in wrapped.items()},
