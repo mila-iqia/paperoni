@@ -3,9 +3,9 @@ import os
 import sqlite3
 from pathlib import Path
 
-import sqlalchemy as sq
 from pydantic import BaseModel
 from sqlalchemy import create_engine
+from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
 from tqdm import tqdm
 
@@ -36,6 +36,7 @@ class Database:
             cursor.executescript(script_file.read())
             connection.commit()
         self.session = None
+        self.cache = {}
 
     def __enter__(self):
         self.session = Session(self.engine).__enter__()
@@ -47,16 +48,23 @@ class Database:
         self.session = None
 
     def acquire(self, x):
+        if (hid := x.hashid()) not in self.cache:
+            self.cache[hid] = self._acquire(x)
+        return self.cache[hid]
+
+    def _acquire(self, x):
         match x:
             case Paper(
                 title=title, abstract=abstract, citation_count=cc
             ) as paper:
 
                 pp = sch.Paper(
-                    title=title, abstract=abstract, citation_count=cc
+                    paper_id=paper.hashid(),
+                    title=title,
+                    abstract=abstract,
+                    citation_count=cc,
                 )
-                self.session.add(pp)
-                self.session.commit()
+                self.session.merge(pp)
 
                 for i, author in enumerate(paper.authors):
                     aa = self.acquire(author)
@@ -65,28 +73,36 @@ class Database:
                         author_id=aa.author_id,
                         author_position=i,
                     )
-                    self.session.add(pa)
+                    self.session.merge(pa)
 
                     for affiliation in author.affiliations:
                         inst = self.acquire(affiliation)
-                        stmt = sq.insert(sch.t_paper_author_institution).values(
-                            paper_id=pp.paper_id,
-                            author_id=aa.author_id,
-                            institution_id=inst.institution_id,
+                        stmt = (
+                            insert(sch.t_paper_author_institution)
+                            .values(
+                                paper_id=pp.paper_id,
+                                author_id=aa.author_id,
+                                institution_id=inst.institution_id,
+                            )
+                            .on_conflict_do_nothing()
                         )
                         self.session.execute(stmt)
 
                 for release in paper.releases:
                     rr = self.acquire(release)
-                    stmt = sq.insert(sch.t_paper_release).values(
-                        paper_id=pp.paper_id, release_id=rr.release_id
+                    stmt = (
+                        insert(sch.t_paper_release)
+                        .values(paper_id=pp.paper_id, release_id=rr.release_id)
+                        .on_conflict_do_nothing()
                     )
                     self.session.execute(stmt)
 
                 for topic in paper.topics:
                     tt = self.acquire(topic)
-                    stmt = sq.insert(sch.t_paper_topic).values(
-                        paper_id=pp.paper_id, topic_id=tt.topic_id
+                    stmt = (
+                        insert(sch.t_paper_topic)
+                        .values(paper_id=pp.paper_id, topic_id=tt.topic_id)
+                        .on_conflict_do_nothing()
                     )
                     self.session.execute(stmt)
 
@@ -96,27 +112,29 @@ class Database:
                         type=link.type,
                         link=link.link,
                     )
-                    self.session.add(lnk)
+                    self.session.merge(lnk)
 
                 for scraper in paper.scrapers:
                     psps = sch.PaperScraper(
                         paper_id=pp.paper_id, scraper=scraper
                     )
-                    self.session.add(psps)
+                    self.session.merge(psps)
 
                 return pp
 
             case Author(name=name) as author:
-                aa = sch.Author(name=name)
-                self.session.add(aa)
-                self.session.commit()
+                aa = sch.Author(author_id=author.hashid(), name=name)
+                self.session.merge(aa)
                 self.acquire(AuthorQuery(author_id=aa.author_id, author=author))
                 return aa
 
             case Institution(name=name, category=category) as institution:
-                aa = sch.Institution(name=name, category=category)
-                self.session.add(aa)
-                self.session.commit()
+                aa = sch.Institution(
+                    institution_id=institution.hashid(),
+                    name=name,
+                    category=category,
+                )
+                self.session.merge(aa)
                 return aa
 
             case Release(
@@ -127,24 +145,24 @@ class Database:
             ) as release:
                 vv = self.acquire(release.venue)
                 rr = sch.Release(
+                    release_id=release.hashid(),
                     date=date,
                     date_precision=date_precision,
-                    volume=volume or f"@{date}",
+                    volume=volume,
                     publisher=publisher,
                     venue_id=vv.venue_id,
                 )
-                self.session.add(rr)
+                self.session.merge(rr)
                 return rr
 
             case Topic(name=name) as topic:
-                tt = sch.Topic(topic=name)
-                self.session.add(tt)
+                tt = sch.Topic(topic_id=topic.hashid(), topic=name)
+                self.session.merge(tt)
                 return tt
 
             case Venue(type=vtype, name=name) as venue:
-                vv = sch.Venue(type=vtype, name=name)
-                self.session.add(vv)
-                self.session.commit()
+                vv = sch.Venue(venue_id=venue.hashid(), type=vtype, name=name)
+                self.session.merge(vv)
 
                 for link in venue.links:
                     lnk = sch.VenueLink(
@@ -152,7 +170,7 @@ class Database:
                         type=link.type,
                         link=link.link,
                     )
-                    self.session.add(lnk)
+                    self.session.merge(lnk)
 
                 return vv
 
@@ -182,7 +200,7 @@ class Database:
                         start_date=role.start_date,
                         end_date=role.end_date,
                     )
-                    self.session.add(rr)
+                    self.session.merge(rr)
 
             case _:
                 raise TypeError(f"Cannot acquire: {type(x).__name__}")

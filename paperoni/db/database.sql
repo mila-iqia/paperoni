@@ -85,9 +85,9 @@ CREATE TABLE IF NOT EXISTS release (
 	-- Timestamp in seconds.
 	date UNSIGNED BIG INT NOT NULL,
 	date_precision UNSIGNED INT NOT NULL,
-	volume TEXT NOT NULL,
-	publisher TEXT,
-	UNIQUE (venue_id, volume)
+	volume TEXT,
+	publisher TEXT
+	-- UNIQUE (venue_id, volume)
 );
 
 CREATE TABLE IF NOT EXISTS topic (
