@@ -109,7 +109,7 @@ class Base(BaseModel):
 
     def hashid(self):
         hsh = md5(self.json().encode("utf8"))
-        return int(hsh.hexdigest(), 16) % 2**60
+        return hsh.digest()
 
 
 class Paper(Base):
@@ -174,7 +174,7 @@ class AuthorPaperQuery(Base):
 
 
 class AuthorQuery(Base):
-    author_id: int
+    author_id: bytes
     author: Author
 
 

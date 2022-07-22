@@ -4,12 +4,12 @@ from sqlalchemy import (
     ForeignKey,
     ForeignKeyConstraint,
     Integer,
+    LargeBinary,
     Table,
     Text,
     text,
 )
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy.sql.sqltypes import NullType
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -19,7 +19,7 @@ class Author(Base):
     __tablename__ = "author"
 
     name = Column(Text, nullable=False)
-    author_id = Column(Integer, primary_key=True)
+    author_id = Column(LargeBinary, primary_key=True)
 
     author_alias = relationship("AuthorAlias", back_populates="author")
     author_institution = relationship(
@@ -45,7 +45,7 @@ class Institution(Base):
 
     name = Column(Text, nullable=False)
     category = Column(Text, nullable=False, server_default=text("'unknown'"))
-    institution_id = Column(Integer, primary_key=True)
+    institution_id = Column(LargeBinary, primary_key=True)
 
     paper_author = relationship(
         "PaperAuthor",
@@ -63,7 +63,7 @@ class Institution(Base):
 class Paper(Base):
     __tablename__ = "paper"
 
-    paper_id = Column(Integer, primary_key=True)
+    paper_id = Column(LargeBinary, primary_key=True)
     title = Column(Text)
     abstract = Column(Text)
     citation_count = Column(Integer)
@@ -80,19 +80,11 @@ class Paper(Base):
     paper_scraper = relationship("PaperScraper", back_populates="paper")
 
 
-t_sqlite_sequence = Table(
-    "sqlite_sequence",
-    metadata,
-    Column("name", NullType),
-    Column("seq", NullType),
-)
-
-
 class Topic(Base):
     __tablename__ = "topic"
 
     topic = Column(Text, nullable=False)
-    topic_id = Column(Integer, primary_key=True)
+    topic_id = Column(LargeBinary, primary_key=True)
     parent = Column(ForeignKey("topic.topic_id"))
 
     paper = relationship(
@@ -110,7 +102,7 @@ class Venue(Base):
     __tablename__ = "venue"
 
     name = Column(Text, nullable=False)
-    venue_id = Column(Integer, primary_key=True)
+    venue_id = Column(LargeBinary, primary_key=True)
     type = Column(Text)
 
     release = relationship("Release", back_populates="venue")
@@ -226,9 +218,9 @@ class Release(Base):
 
     date = Column(Integer, nullable=False)
     date_precision = Column(Integer, nullable=False)
-    volume = Column(Text)
-    release_id = Column(Integer, primary_key=True)
+    release_id = Column(LargeBinary, primary_key=True)
     venue_id = Column(ForeignKey("venue.venue_id"))
+    volume = Column(Text)
     publisher = Column(Text)
 
     paper = relationship(
