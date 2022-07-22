@@ -48,9 +48,13 @@ class Database:
         self.session = None
 
     def acquire(self, x):
-        if (hid := x.hashid()) not in self.cache:
-            self.cache[hid] = self._acquire(x)
-        return self.cache[hid]
+        match x:
+            case AuthorQuery():
+                return self._acquire(x)
+            case _:
+                if (hid := x.hashid()) not in self.cache:
+                    self.cache[hid] = self._acquire(x)
+                return self.cache[hid]
 
     def _acquire(self, x):
         match x:
