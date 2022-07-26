@@ -187,3 +187,20 @@ def canonicalize_links(links):
         url_to_id(url := link["link"]) or (link["type"], url) for link in links
     }
     return [{"type": typ, "link": lnk} for typ, lnk in links]
+
+
+_uuid_tags = ["transient", "canonical"]
+
+
+def tag_uuid(uuid, status):
+    bit = _uuid_tags.index(status)
+    nums = list(uuid)
+    if bit:
+        nums[0] = nums[0] | 128
+    else:
+        nums[0] = nums[0] & 127
+    return bytes(nums)
+
+
+def get_uuid_tag(uuid):
+    return _uuid_tags[(uuid[0] & 128) >> 7]

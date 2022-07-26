@@ -5,8 +5,9 @@ from datetime import datetime
 from enum import Enum
 from hashlib import md5
 from typing import Optional
+from uuid import UUID, uuid4
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class VenueType(str, Enum):
@@ -131,6 +132,13 @@ class Author(Base):
     links: list[Link]
 
 
+class UniqueAuthor(Author):
+    author_id: UUID = Field(default_factory=uuid4)
+
+    def hashid(self):
+        return self.author_id.bytes
+
+
 class Institution(Base):
     name: str
     category: InstitutionCategory
@@ -171,14 +179,6 @@ class AuthorPaperQuery(Base):
     author: Author
     start_date: datetime
     end_date: datetime | None
-
-
-class AuthorQuery(Base):
-    author_id: bytes
-    author: Author
-
-    def hashid(self):
-        return None
 
 
 for cls in list(globals().values()):

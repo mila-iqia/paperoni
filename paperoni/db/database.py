@@ -12,7 +12,6 @@ from tqdm import tqdm
 from ..config import config
 from ..sources.model import (
     Author,
-    AuthorQuery,
     Institution,
     Paper,
     Release,
@@ -20,6 +19,7 @@ from ..sources.model import (
     Venue,
     from_dict,
 )
+from ..utils import get_uuid_tag
 from . import schema as sch
 
 
@@ -48,9 +48,15 @@ class Database:
         self.session = None
 
     def acquire(self, x):
-        if not (hid := x.hashid()) or hid not in self.cache:
-            # If hid is None that will just always overwrite the value, which
-            # is fine.
+        # The id can be "transient" or "canonical". If it is "transient" it is defined
+        # by its content, so we only ever need to acquire it once. If it is "canonical"
+        # then it may contain new information we need to acquire, so we do not use the
+        # cache for that.
+        if (
+            not (hid := x.hashid())
+            or get_uuid_tag(hid) == "canonical"
+            or hid not in self.cache
+        ):
             self.cache[hid] = self._acquire(x)
         return self.cache[hid]
 
@@ -127,7 +133,34 @@ class Database:
             case Author(name=name) as author:
                 aa = sch.Author(author_id=author.hashid(), name=name)
                 self.session.merge(aa)
-                self.acquire(AuthorQuery(author_id=aa.author_id, author=author))
+
+                for link in author.links:
+                    lnk = sch.AuthorLink(
+                        author_id=aa.author_id,
+                        type=link.type,
+                        link=link.link,
+                    )
+                    self.session.merge(lnk)
+
+                for alias in author.aliases:
+                    aal = sch.AuthorAlias(
+                        author_id=aa.author_id,
+                        alias=alias,
+                    )
+                    self.session.merge(aal)
+
+                for role in author.roles:
+                    rr = sch.AuthorInstitution(
+                        author_id=aa.author_id,
+                        institution_id=self.acquire(
+                            role.institution
+                        ).institution_id,
+                        role=role.role,
+                        start_date=role.start_date,
+                        end_date=role.end_date,
+                    )
+                    self.session.merge(rr)
+
                 return aa
 
             case Institution(name=name, category=category) as institution:
@@ -175,34 +208,6 @@ class Database:
                     self.session.merge(lnk)
 
                 return vv
-
-            case AuthorQuery(author_id=author_id, author=author):
-                for link in author.links:
-                    lnk = sch.AuthorLink(
-                        author_id=author_id,
-                        type=link.type,
-                        link=link.link,
-                    )
-                    self.session.merge(lnk)
-
-                for alias in author.aliases:
-                    aal = sch.AuthorAlias(
-                        author_id=author_id,
-                        alias=alias,
-                    )
-                    self.session.merge(aal)
-
-                for role in author.roles:
-                    rr = sch.AuthorInstitution(
-                        author_id=author_id,
-                        institution_id=self.acquire(
-                            role.institution
-                        ).institution_id,
-                        role=role.role,
-                        start_date=role.start_date,
-                        end_date=role.end_date,
-                    )
-                    self.session.merge(rr)
 
             case _:
                 raise TypeError(f"Cannot acquire: {type(x).__name__}")

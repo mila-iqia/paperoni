@@ -9,12 +9,12 @@ from ...utils import QueryError, display
 from ..acquire import HTTPSAcquirer
 from ..model import (
     Author,
-    AuthorQuery,
     DatePrecision,
     Link,
     Paper,
     Release,
     Topic,
+    UniqueAuthor,
     Venue,
     VenueType,
 )
@@ -344,31 +344,31 @@ class SemanticScholarScraper:
 
         rids = {}
         for researcher in researchers:
-            for link in researcher.author.links:
+            for link in researcher.links:
                 if link.type == "semantic_scholar":
-                    rids[link.link] = researcher.author.name
+                    rids[link.link] = researcher.name
 
         ss = SemanticScholarQueryManager()
 
         def _ids(x, typ):
             return [link.link for link in x.links if link.type == typ]
 
-        researchers.sort(key=lambda auq: auq.author.name.lower())
+        researchers.sort(key=lambda auq: auq.name.lower())
         if name:
             researchers = [
-                auq for auq in researchers if auq.author.name.lower() == name
+                auq for auq in researchers if auq.name.lower() == name
             ]
         elif after:
             researchers = [
                 auq
                 for auq in researchers
-                if auq.author.name.lower()[: len(after)] > after
+                if auq.name.lower()[: len(after)] > after
             ]
 
         for auq in researchers:
-            aname = auq.author.name
-            ids = set(_ids(auq.author, "semantic_scholar"))
-            noids = set(_ids(auq.author, "!semantic_scholar"))
+            aname = auq.name
+            ids = set(_ids(auq, "semantic_scholar"))
+            noids = set(_ids(auq, "!semantic_scholar"))
 
             def find_common(papers):
                 common = Counter()
@@ -392,24 +392,22 @@ class SemanticScholarScraper:
 
                 done = False
 
-                (new_id,) = _ids(author)
+                (new_id,) = _ids(author, "semantic_scholar")
                 if new_id in ids or new_id in noids:
                     print(f"Skipping processed ID for {aname}: {new_id}")
                     continue
                 aliases = {*author.aliases, author.name} - {aname}
 
                 def _make(negate=False):
-                    return AuthorQuery(
+                    return UniqueAuthor(
                         author_id=auq.author_id,
-                        author=Author(
-                            name=aname,
-                            affiliations=[],
-                            roles=[],
-                            aliases=[] if negate else aliases,
-                            links=[Link(type="!semantic_scholar", link=new_id)]
-                            if negate
-                            else author.links,
-                        ),
+                        name=aname,
+                        affiliations=[],
+                        roles=[],
+                        aliases=[] if negate else aliases,
+                        links=[Link(type="!semantic_scholar", link=new_id)]
+                        if negate
+                        else author.links,
                     )
 
                 print("=" * 80)
