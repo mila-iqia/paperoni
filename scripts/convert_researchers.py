@@ -1,10 +1,11 @@
 import json
+from hashlib import md5
 
 from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
-from paperoni.sources.model import Author, Institution, Role
-from paperoni.utils import display
+from paperoni.sources.model import Institution, Role, UniqueAuthor
+from paperoni.utils import display, tag_uuid
 
 
 def convert(filename):
@@ -17,8 +18,10 @@ def convert(filename):
                 props["bio"] = b.split("/")[-1]
                 del props["bio-fr"]
 
-        yield Author(
-            name=author["name"],
+        aname = author["name"]
+        yield UniqueAuthor(
+            author_id=tag_uuid(md5(aname.encode("utf8")).digest(), "canonical"),
+            name=aname,
             aliases=[],
             affiliations=[],
             roles=[

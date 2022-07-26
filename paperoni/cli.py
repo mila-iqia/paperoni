@@ -108,7 +108,8 @@ def generate_author_queries():
         authors = {}
         for ai in db.session.execute(q):
             (ai,) = ai
-            authors[ai.author.author_id] = M.Author(
+            authors[ai.author.author_id] = M.UniqueAuthor(
+                author_id=ai.author_id,
                 name=ai.author.name,
                 affiliations=[],
                 roles=[],
@@ -122,10 +123,7 @@ def generate_author_queries():
                 ],
             )
 
-    results = [
-        M.AuthorQuery(author_id=aid, author=author)
-        for aid, author in authors.items()
-    ]
+    results = [author for author in authors.values()]
     return results
 
 
