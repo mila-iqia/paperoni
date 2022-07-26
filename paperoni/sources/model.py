@@ -177,6 +177,9 @@ class AuthorQuery(Base):
     author_id: bytes
     author: Author
 
+    def hashid(self):
+        return None
+
 
 for cls in list(globals().values()):
     if isinstance(cls, type) and issubclass(cls, BaseModel):
