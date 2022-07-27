@@ -37,6 +37,13 @@ class Author(Base):
         return [alias.alias for alias in self.author_alias]
 
 
+class CanonicalId(Base):
+    __tablename__ = "canonical_id"
+
+    hashid = Column(LargeBinary, primary_key=True)
+    canonical = Column(LargeBinary)
+
+
 class Institution(Base):
     __tablename__ = "institution"
     __table_args__ = (
