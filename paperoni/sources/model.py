@@ -119,16 +119,20 @@ class Paper(Base):
     title: str
     abstract: str
     citation_count: int
-    authors: list[Author]
+    authors: list[PaperAuthor]
     releases: list[Release]
     topics: list[Topic]
     links: list[Link]
     scrapers: list[str]
 
 
+class PaperAuthor(Base):
+    author: Author
+    affiliations: list[Institution]
+
+
 class Author(Base):
     name: str
-    affiliations: list[Institution]
     roles: list[Role]
     aliases: list[str]
     links: list[Link]

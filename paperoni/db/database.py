@@ -74,42 +74,43 @@ class Database:
                 )
                 self.session.merge(pp)
 
-                for i, author in enumerate(paper.authors):
-                    aa = self.acquire(author)
+                for i, paper_author in enumerate(paper.authors):
+                    author = paper_author.author
+                    author_id = self.acquire(author)
                     pa = sch.PaperAuthor(
                         paper_id=pp.paper_id,
-                        author_id=aa.author_id,
+                        author_id=author_id,
                         author_position=i,
                     )
                     self.session.merge(pa)
 
-                    for affiliation in author.affiliations:
-                        inst = self.acquire(affiliation)
+                    for affiliation in paper_author.affiliations:
+                        institution_id = self.acquire(affiliation)
                         stmt = (
                             insert(sch.t_paper_author_institution)
                             .values(
                                 paper_id=pp.paper_id,
-                                author_id=aa.author_id,
-                                institution_id=inst.institution_id,
+                                author_id=author_id,
+                                institution_id=institution_id,
                             )
                             .on_conflict_do_nothing()
                         )
                         self.session.execute(stmt)
 
                 for release in paper.releases:
-                    rr = self.acquire(release)
+                    release_id = self.acquire(release)
                     stmt = (
                         insert(sch.t_paper_release)
-                        .values(paper_id=pp.paper_id, release_id=rr.release_id)
+                        .values(paper_id=pp.paper_id, release_id=release_id)
                         .on_conflict_do_nothing()
                     )
                     self.session.execute(stmt)
 
                 for topic in paper.topics:
-                    tt = self.acquire(topic)
+                    topic_id = self.acquire(topic)
                     stmt = (
                         insert(sch.t_paper_topic)
-                        .values(paper_id=pp.paper_id, topic_id=tt.topic_id)
+                        .values(paper_id=pp.paper_id, topic_id=topic_id)
                         .on_conflict_do_nothing()
                     )
                     self.session.execute(stmt)
@@ -128,7 +129,7 @@ class Database:
                     )
                     self.session.merge(psps)
 
-                return pp
+                return pp.paper_id
 
             case Author(name=name) as author:
                 aa = sch.Author(author_id=author.hashid(), name=name)
@@ -154,23 +155,23 @@ class Database:
                         author_id=aa.author_id,
                         institution_id=self.acquire(
                             role.institution
-                        ).institution_id,
+                        ),
                         role=role.role,
                         start_date=role.start_date,
                         end_date=role.end_date,
                     )
                     self.session.merge(rr)
 
-                return aa
+                return aa.author_id
 
             case Institution(name=name, category=category) as institution:
-                aa = sch.Institution(
+                inst = sch.Institution(
                     institution_id=institution.hashid(),
                     name=name,
                     category=category,
                 )
-                self.session.merge(aa)
-                return aa
+                self.session.merge(inst)
+                return inst.institution_id
 
             case Release(
                 date=date,
@@ -178,22 +179,22 @@ class Database:
                 volume=volume,
                 publisher=publisher,
             ) as release:
-                vv = self.acquire(release.venue)
+                venue_id = self.acquire(release.venue)
                 rr = sch.Release(
                     release_id=release.hashid(),
                     date=date,
                     date_precision=date_precision,
                     volume=volume,
                     publisher=publisher,
-                    venue_id=vv.venue_id,
+                    venue_id=venue_id,
                 )
                 self.session.merge(rr)
-                return rr
+                return rr.release_id
 
             case Topic(name=name) as topic:
                 tt = sch.Topic(topic_id=topic.hashid(), topic=name)
                 self.session.merge(tt)
-                return tt
+                return tt.topic_id
 
             case Venue(type=vtype, name=name) as venue:
                 vv = sch.Venue(venue_id=venue.hashid(), type=vtype, name=name)
@@ -207,7 +208,7 @@ class Database:
                     )
                     self.session.merge(lnk)
 
-                return vv
+                return vv.venue_id
 
             case _:
                 raise TypeError(f"Cannot acquire: {type(x).__name__}")

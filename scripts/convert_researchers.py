@@ -5,7 +5,8 @@ from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
 from paperoni.sources.model import Institution, Role, UniqueAuthor
-from paperoni.utils import display, tag_uuid
+from paperoni.utils import display
+from paperoni.tools import tag_uuid
 
 
 def convert(filename):
@@ -15,7 +16,7 @@ def convert(filename):
     for _, author in data.items():
         match author:
             case {"properties": {"bio": b} as props}:
-                props["bio"] = b.split("/")[-1]
+                props["bio"] = [x for x in b.split("/") if x][-1]
                 del props["bio-fr"]
 
         aname = author["name"]

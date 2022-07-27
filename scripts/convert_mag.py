@@ -53,12 +53,15 @@ def process_paper(paper):
         authors.setdefault(
             auid,
             {
-                "name": auth["DAuN"],
-                "links": [{"type": "mag", "link": auid}],
                 "affiliations": [],
-                "aliases": [],
-                "roles": [],
-            },
+                "author": {
+                    "name": auth["DAuN"],
+                    "links": [{"type": "mag", "link": auid}],
+                    "affiliations": [],
+                    "aliases": [],
+                    "roles": [],
+                },
+            }
         )
         authors[auid]["affiliations"].append(
             {

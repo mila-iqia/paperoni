@@ -125,7 +125,7 @@ def display(paper: Paper):
     print_field("Authors", "")
     for auth in paper.authors:
         print(
-            f" * {auth.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
+            f" * {auth.author.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
         )
     print_field("Abstract", paper.abstract)
     for release in paper.releases:
@@ -144,12 +144,8 @@ def display(paper: Paper):
 def display(author: Author):
     """Print an author on the terminal."""
     print_field("Name", T.bold(author.name))
-    if author.affiliations:
-        print_field("Affiliations", "")
-        for affiliation in author.affiliations:
-            print(f"* {affiliation.name}")
     if author.roles:
-        print_field("Roles", "")
+        print_field("Affiliations", "")
         for role in author.roles:
             print(
                 f"* {role.institution.name:20} as {role.role:20} from {DatePrecision.day.format2(role.start_date)} to {role.end_date and DatePrecision.day.format2(role.end_date) or '-'}"
