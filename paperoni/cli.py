@@ -1,9 +1,12 @@
+from collections import defaultdict
+
 from coleo import Option, auto_cli, tooled, with_extras
 
 from paperoni.db.database import Database
 
 from .config import configure
 from .sources.scrapers import load_scrapers
+from .tools import get_uuid_tag
 from .utils import display
 
 
