@@ -19,7 +19,7 @@ from ..sources.model import (
     Venue,
     from_dict,
 )
-from ..utils import get_uuid_tag
+from ..tools import get_uuid_tag
 from . import schema as sch
 
 

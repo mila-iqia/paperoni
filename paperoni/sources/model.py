@@ -9,6 +9,8 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
 
+from ..tools import tag_uuid
+
 
 class VenueType(str, Enum):
     journal = "journal"
@@ -110,7 +112,7 @@ class Base(BaseModel):
 
     def hashid(self):
         hsh = md5(self.json().encode("utf8"))
-        return hsh.digest()
+        return tag_uuid(hsh.digest(), "transient")
 
 
 class Paper(Base):
