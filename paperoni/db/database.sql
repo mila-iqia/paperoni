@@ -142,3 +142,8 @@ CREATE TABLE IF NOT EXISTS paper_scraper (
 	scraper TEXT,
 	PRIMARY KEY (paper_id, scraper)
 );
+
+CREATE TABLE IF NOT EXISTS canonical_id (
+	hashid BLOB NOT NULL PRIMARY KEY,
+	canonical BLOB
+);

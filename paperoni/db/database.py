@@ -4,7 +4,7 @@ import sqlite3
 from pathlib import Path
 
 from pydantic import BaseModel
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
 from tqdm import tqdm
@@ -37,6 +37,11 @@ class Database:
             connection.commit()
         self.session = None
         self.cache = {}
+        with self:
+            self.canonical = {
+                entry.hashid: entry.canonical
+                for entry, in self.session.execute(select(sch.CanonicalId))
+            }
 
     def __enter__(self):
         self.session = Session(self.engine).__enter__()
@@ -52,12 +57,16 @@ class Database:
         # by its content, so we only ever need to acquire it once. If it is "canonical"
         # then it may contain new information we need to acquire, so we do not use the
         # cache for that.
-        if (
-            not (hid := x.hashid())
-            or get_uuid_tag(hid) == "canonical"
-            or hid not in self.cache
-        ):
+        hid = x.hashid()
+        tag = get_uuid_tag(hid)
+        if hid in self.canonical:
+            assert tag == "transient"
+            return self.canonical[hid] or hid
+        if not hid or tag == "canonical" or hid not in self.cache:
             self.cache[hid] = self._acquire(x)
+            if tag == "transient":
+                hid_object = sch.CanonicalId(hashid=hid, canonical=None)
+                self.session.add(hid_object)
         return self.cache[hid]
 
     def _acquire(self, x):
@@ -153,9 +162,7 @@ class Database:
                 for role in author.roles:
                     rr = sch.AuthorInstitution(
                         author_id=aa.author_id,
-                        institution_id=self.acquire(
-                            role.institution
-                        ),
+                        institution_id=self.acquire(role.institution),
                         role=role.role,
                         start_date=role.start_date,
                         end_date=role.end_date,
