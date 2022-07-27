@@ -12,6 +12,7 @@ from ..model import (
     DatePrecision,
     Link,
     Paper,
+    PaperAuthor,
     Release,
     Topic,
     UniqueAuthor,
@@ -162,13 +163,18 @@ class SemanticScholarQueryManager:
             for entry in results["data"]:
                 yield entry
 
+    def _wrap_paper_author(self, data):
+        return PaperAuthor(
+            affiliations=[],
+            author=self._wrap_author(data),
+        )
+
     def _wrap_author(self, data):
         lnk = (aid := data["authorId"]) and Link(
             type="semantic_scholar", link=aid
         )
         return Author(
             name=data["name"],
-            affiliations=[],
             aliases=data.get("aliases", None) or [],
             links=[lnk] if lnk else [],
             roles=[],
@@ -182,7 +188,7 @@ class SemanticScholarQueryManager:
                     type=external_ids_mapping.get(t := typ.lower(), t), link=ref
                 )
             )
-        authors = list(map(self._wrap_author, data["authors"]))
+        authors = list(map(self._wrap_paper_author, data["authors"]))
         # date = data["publicationDate"] or f'{data["year"]}-01-01'
         if pubd := data["publicationDate"]:
             date = {
