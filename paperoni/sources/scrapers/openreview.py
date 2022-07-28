@@ -1,7 +1,9 @@
 from datetime import datetime
-from coleo import Option, tooled
-import openreview
 
+import openreview
+from coleo import Option, tooled
+
+from ...utils import QueryError
 from ..model import (
     Author,
     DatePrecision,
@@ -10,9 +12,9 @@ from ..model import (
     Release,
     Topic,
     Venue,
-    VenueType
+    VenueType,
 )
-from ...utils import QueryError
+
 
 class OpenReviewScraper:
     @tooled
@@ -38,7 +40,7 @@ class OpenReviewScraper:
         author = " ".join(author)
         title = " ".join(title)
 
-        client = openreview.Client(baseurl='https://api.openreview.net')
+        client = openreview.Client(baseurl="https://api.openreview.net")
         params = {
             "content": {},
             "limit": min(block_size or limit, limit),
@@ -55,7 +57,7 @@ class OpenReviewScraper:
                 "content": {**params["content"], "title": title},
             }
         if not venue:
-            venue = client.get_group(id='venues').members
+            venue = client.get_group(id="venues").members
 
         total = 0
         for v in venue:
@@ -77,21 +79,35 @@ class OpenReviewScraper:
                 notes = client.get_all_notes(**params)
                 for note in notes:
                     authors = []
-                    authors_ids = note.content.get("authorids", (None for _ in range(len(note.content["authors"]))))
-                    authors_emails = note.content.get("author_emails", (None for _ in range(len(note.content["authors"]))))
-                    for name, author_id, authors_email in zip(note.content["authors"], authors_ids, authors_emails):
+                    authors_ids = note.content.get(
+                        "authorids",
+                        (None for _ in range(len(note.content["authors"]))),
+                    )
+                    authors_emails = note.content.get(
+                        "author_emails",
+                        (None for _ in range(len(note.content["authors"]))),
+                    )
+                    for name, author_id, authors_email in zip(
+                        note.content["authors"], authors_ids, authors_emails
+                    ):
                         _links = []
                         if author_id:
-                            _links.append(Link(type="openreview", link=author_id))
+                            _links.append(
+                                Link(type="openreview", link=author_id)
+                            )
                         if authors_email:
-                            _links.append(Link(type="email", link=authors_email))
-                        authors.append(Author(
-                            name=name,
-                            affiliations=[],
-                            aliases=[],
-                            links=_links,
-                            roles=[],
-                        ))
+                            _links.append(
+                                Link(type="email", link=authors_email)
+                            )
+                        authors.append(
+                            Author(
+                                name=name,
+                                affiliations=[],
+                                aliases=[],
+                                links=_links,
+                                roles=[],
+                            )
+                        )
                     _links = [Link(type="openreview", link=note.id)]
                     if "code" in note.content:
                         Link(type="git", link=note.content["code"])
@@ -100,14 +116,25 @@ class OpenReviewScraper:
                         abstract=note.content.get("abstract", ""),
                         citation_count=0,
                         authors=authors,
-                        releases=[Release(venue=Venue(type=venue_type,
-                                                      name=note.content["venue"],
-                                                      links=[]),
-                                          date=str(datetime.fromtimestamp(note.tcdate/1000)),
-                                          date_precision=DatePrecision.day)],
-                        topics=[Topic(name=kw) for kw in note.content.get("keywords", [])],
+                        releases=[
+                            Release(
+                                venue=Venue(
+                                    type=venue_type,
+                                    name=note.content["venue"],
+                                    links=[],
+                                ),
+                                date=str(
+                                    datetime.fromtimestamp(note.tcdate / 1000)
+                                ),
+                                date_precision=DatePrecision.day,
+                            )
+                        ],
+                        topics=[
+                            Topic(name=kw)
+                            for kw in note.content.get("keywords", [])
+                        ],
                         links=_links,
-                        scrapers=["orev"]
+                        scrapers=["orev"],
                     )
                 next_offset += len(notes)
                 if not notes:
@@ -124,8 +151,8 @@ class OpenReviewScraper:
 
     @tooled
     def venues(self):
-        client = openreview.Client(baseurl='https://api.openreview.net')
-        for venue in client.get_group(id='venues').members:
+        client = openreview.Client(baseurl="https://api.openreview.net")
+        for venue in client.get_group(id="venues").members:
             yield venue
 
 
