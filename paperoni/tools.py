@@ -13,3 +13,8 @@ def tag_uuid(uuid, status):
 
 def get_uuid_tag(uuid):
     return _uuid_tags[(uuid[0] & 128) >> 7]
+
+
+def is_canonical_uuid(uuid):
+    # return get_uuid_tag(uuid) == "canonical"
+    return bool(uuid[0] & 128)

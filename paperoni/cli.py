@@ -148,6 +148,58 @@ def replay():
     )
 
 
+class merge:
+    def author():
+        with load_database() as db:
+            results = db.session.execute(
+                """
+                SELECT
+                    hex(a1.author_id),
+                    group_concat(hex(a2.author_id), ';'),
+                    a1.name
+                FROM author as a1
+                JOIN author as a2
+                ON a1.author_id > a2.author_id
+                JOIN author_link as al1
+                ON al1.author_id == a1.author_id
+                JOIN author_link as al2
+                ON al2.author_id == a2.author_id
+                WHERE al1.type == al2.type
+                AND al1.link == al2.link
+                GROUP BY a1.author_id
+                """
+            )
+            for r in results:
+                ids = {r[0], *r[1].split(";")}
+                print(f"Merging {len(ids)} IDs for {r[2]}")
+                db.merge_authors(ids)
+
+    def paper():
+        with load_database() as db:
+            results = db.session.execute(
+                """
+                SELECT
+                    hex(p1.paper_id),
+                    group_concat(hex(p2.paper_id), ';'),
+                    p1.title
+                FROM paper as p1
+                JOIN paper as p2
+                ON p1.paper_id > p2.paper_id
+                JOIN paper_link as pl1
+                ON pl1.paper_id == p1.paper_id
+                JOIN paper_link as pl2
+                ON pl2.paper_id == p2.paper_id
+                WHERE pl1.type == pl2.type
+                AND pl1.link == pl2.link
+                GROUP BY p1.paper_id
+                """
+            )
+            for r in results:
+                ids = {r[0], *r[1].split(";")}
+                print(f"Merging {len(ids)} IDs for {r[2]}")
+                db.merge_papers(ids)
+
+
 scrapers = load_scrapers()
 
 wrapped = {
@@ -159,6 +211,7 @@ commands = {
     "acquire": {name: w.acquire for name, w in wrapped.items()},
     "prepare": {name: w.prepare for name, w in wrapped.items()},
     "replay": replay,
+    "merge": merge,
 }
 
 
