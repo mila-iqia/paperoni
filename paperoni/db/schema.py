@@ -27,6 +27,9 @@ class Author(Base):
     )
     author_link = relationship("AuthorLink", back_populates="author")
     paper_author = relationship("PaperAuthor", back_populates="author")
+    # paper_author_institution = relationship(
+    #     "PaperAuthorInstitution", back_populates="author"
+    # )
 
     @property
     def links(self):
@@ -54,17 +57,15 @@ class Institution(Base):
     category = Column(Text, nullable=False, server_default=text("'unknown'"))
     institution_id = Column(LargeBinary, primary_key=True)
 
-    paper_author = relationship(
-        "PaperAuthor",
-        secondary="paper_author_institution",
-        back_populates="institution",
-    )
     author_institution = relationship(
         "AuthorInstitution", back_populates="institution"
     )
     institution_alias = relationship(
         "InstitutionAlias", back_populates="institution"
     )
+    # paper_author_institution = relationship(
+    #     "PaperAuthorInstitution", back_populates="institution"
+    # )
 
 
 class Paper(Base):
@@ -85,6 +86,9 @@ class Paper(Base):
     paper_flag = relationship("PaperFlag", back_populates="paper")
     paper_link = relationship("PaperLink", back_populates="paper")
     paper_scraper = relationship("PaperScraper", back_populates="paper")
+    # paper_author_institution = relationship(
+    #     "PaperAuthorInstitution", back_populates="paper"
+    # )
 
 
 class Topic(Base):
@@ -173,13 +177,11 @@ class PaperAuthor(Base):
     paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
     author_id = Column(ForeignKey("author.author_id"), primary_key=True)
 
-    institution = relationship(
-        "Institution",
-        secondary="paper_author_institution",
-        back_populates="paper_author",
-    )
     author = relationship("Author", back_populates="paper_author")
     paper = relationship("Paper", back_populates="paper_author")
+    # paper_author_institution = relationship(
+    #     "PaperAuthorInstitution", back_populates="paper_author"
+    # )
 
 
 class PaperFlag(Base):
@@ -255,22 +257,31 @@ class VenueLink(Base):
     venue = relationship("Venue", back_populates="venue_link")
 
 
-t_paper_author_institution = Table(
-    "paper_author_institution",
-    metadata,
-    Column("paper_id", Integer, primary_key=True),
-    Column("author_id", Integer, primary_key=True),
-    Column(
-        "institution_id",
-        ForeignKey("institution.institution_id"),
-        primary_key=True,
-    ),
-    ForeignKeyConstraint(
-        ["paper_id", "author_id"],
-        ["paper_author.paper_id", "paper_author.author_id"],
-        ondelete="CASCADE",
-    ),
-)
+class PaperAuthorInstitution(Base):
+    __tablename__ = "paper_author_institution"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["paper_id", "author_id"],
+            ["paper_author.paper_id", "paper_author.author_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
+    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
+    institution_id = Column(
+        ForeignKey("institution.institution_id"), primary_key=True
+    )
+
+    # author = relationship("Author", back_populates="paper_author_institution")
+    # institution = relationship(
+    #     "Institution", back_populates="paper_author_institution"
+    # )
+    # paper_author = relationship(
+    #     "PaperAuthor", back_populates="paper_author_institution",
+    #     overlaps="author,paper_author_institution"
+    # )
+    # paper = relationship("Paper", back_populates="paper_author_institution")
 
 
 t_paper_release = Table(

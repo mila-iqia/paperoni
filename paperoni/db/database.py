@@ -2,6 +2,7 @@ import json
 import os
 import sqlite3
 from pathlib import Path
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, select
@@ -19,7 +20,7 @@ from ..sources.model import (
     Venue,
     from_dict,
 )
-from ..tools import get_uuid_tag
+from ..tools import get_uuid_tag, is_canonical_uuid, tag_uuid
 from . import schema as sch
 
 
@@ -95,16 +96,12 @@ class Database:
 
                     for affiliation in paper_author.affiliations:
                         institution_id = self.acquire(affiliation)
-                        stmt = (
-                            insert(sch.t_paper_author_institution)
-                            .values(
-                                paper_id=pp.paper_id,
-                                author_id=author_id,
-                                institution_id=institution_id,
-                            )
-                            .on_conflict_do_nothing()
+                        pai = sch.PaperAuthorInstitution(
+                            paper_id=pp.paper_id,
+                            author_id=author_id,
+                            institution_id=institution_id,
                         )
-                        self.session.execute(stmt)
+                        self.session.merge(pai)
 
                 for release in paper.releases:
                     release_id = self.acquire(release)
@@ -269,3 +266,86 @@ class Database:
                     lines = f.readlines()
                     for l in tqdm(lines):
                         self.acquire(from_dict(json.loads(l)))
+
+    def _filter_ids(self, ids, create_canonical):
+        for x in ids:
+            if is_canonical_uuid(UUID(hex=x).bytes):
+                canonical = x
+                break
+        else:
+            canonical = UUID(bytes=tag_uuid(uuid4().bytes, "canonical")).hex
+            create_canonical(canonical, x)
+        return canonical, [x for x in ids if x != canonical]
+
+    def merge_papers(self, paper_ids):
+        def create_canonical(canonical, model):
+            stmt = f"""
+            INSERT OR IGNORE INTO paper (paper_id, title, abstract, citation_count)
+            SELECT '{canonical}', title, abstract, citation_count FROM paper WHERE paper_id = X'{model}'
+            """
+            self.session.execute(stmt)
+
+        canonical, ids = self._filter_ids(paper_ids, create_canonical)
+
+        conds = [f"paper_id = X'{pid}'" for pid in ids]
+        conds = " OR ".join(conds)
+
+        tables = {
+            sch.PaperAuthor: "paper_id",
+            sch.PaperLink: "paper_id",
+            sch.PaperFlag: "paper_id",
+            sch.PaperAuthorInstitution: "paper_id",
+            sch.t_paper_release: "paper_id",
+            sch.t_paper_topic: "paper_id",
+            sch.PaperScraper: "paper_id",
+        }
+
+        for table, field in tables.items():
+            table = getattr(table, "__table__", table)
+
+            stmt = f"""
+            UPDATE OR IGNORE {table}
+            SET {field} = X'{canonical}'
+            WHERE {conds}
+            """
+            self.session.execute(stmt)
+
+        stmt = f"""
+        DELETE FROM paper WHERE {conds}
+        """
+        self.session.execute(stmt)
+
+    def merge_authors(self, author_ids):
+        def create_canonical(canonical, model):
+            stmt = f"""
+            INSERT OR IGNORE INTO author (author_id, name)
+            SELECT '{canonical}', name FROM author WHERE author_id = X'{model}'
+            """
+            self.session.execute(stmt)
+
+        canonical, ids = self._filter_ids(author_ids, create_canonical)
+
+        conds = [f"author_id = X'{aid}'" for aid in ids]
+        conds = " OR ".join(conds)
+
+        tables = {
+            sch.PaperAuthor: "author_id",
+            sch.AuthorLink: "author_id",
+            sch.AuthorAlias: "author_id",
+            sch.AuthorInstitution: "author_id",
+        }
+
+        for table, field in tables.items():
+            table = table.__table__
+
+            stmt = f"""
+            UPDATE OR IGNORE {table}
+            SET {field} = X'{canonical}'
+            WHERE {conds}
+            """
+            self.session.execute(stmt)
+
+        stmt = f"""
+        DELETE FROM author WHERE {conds}
+        """
+        self.session.execute(stmt)

@@ -380,7 +380,7 @@ class SemanticScholarScraper:
                 common = Counter()
                 for p in papers:
                     for a in p.authors:
-                        for l in a.links:
+                        for l in a.author.links:
                             if l.type == "semantic_scholar" and l.link in rids:
                                 common[rids[l.link]] += 1
                 return sum(common.values()), common
