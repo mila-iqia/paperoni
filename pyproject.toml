@@ -20,6 +20,7 @@ pydantic = "^1.9.1"
 SQLAlchemy = "^1.4.39"
 ovld = "^0.3.2"
 questionary = "^1.10.0"
+openreview-py = "^1.5.2"
 
 [tool.poetry.dev-dependencies]
 black = ">= 19.10b0"
