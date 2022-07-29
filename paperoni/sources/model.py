@@ -23,6 +23,11 @@ class VenueType(str, Enum):
     case_report = "case_report"
     clinical_trial = "clinical_trial"
     unknown = "unknown"
+    challenge = "challenge"
+    forum = "forum"
+    track = "track"
+    tutorials = "tutorials"
+    seminar = "seminar"
 
 
 class InstitutionCategory(str, Enum):
