@@ -1,12 +1,14 @@
 from collections import defaultdict
 
 from coleo import Option, auto_cli, tooled, with_extras
+from sqlalchemy import select
 
+from paperoni.db import schema as sch
 from paperoni.db.database import Database
 
 from .config import configure
 from .sources.scrapers import load_scrapers
-from .tools import get_uuid_tag
+from .tools import EquivalenceGroups, get_uuid_tag
 from .utils import display
 
 
@@ -148,6 +150,21 @@ def replay():
     )
 
 
+class search:
+    def paper():
+        # Part of the title of the paper
+        title: Option = ""
+
+        # Author of the paper
+        author: Option = ""
+
+        with load_database() as db:
+            stmt = select(sch.Paper).filter(sch.Paper.title.like(f"%{title}%"))
+            for (entry,) in db.session.execute(stmt):
+                display(entry)
+                print("=" * 80)
+
+
 class merge:
     def author():
         with load_database() as db:
@@ -169,9 +186,16 @@ class merge:
                 GROUP BY a1.author_id
                 """
             )
+            eqv = EquivalenceGroups()
+            names = {}
             for r in results:
                 ids = {r[0], *r[1].split(";")}
-                print(f"Merging {len(ids)} IDs for {r[2]}")
+                eqv.equiv_all(ids)
+                for i in ids:
+                    names[i] = r[2]
+
+            for main, ids in eqv.groups().items():
+                print(f"Merging {len(ids)} IDs for {names[main]}")
                 db.merge_authors(ids)
 
     def paper():
@@ -194,9 +218,17 @@ class merge:
                 GROUP BY p1.paper_id
                 """
             )
+            eqv = EquivalenceGroups()
+            names = {}
             for r in results:
                 ids = {r[0], *r[1].split(";")}
-                print(f"Merging {len(ids)} IDs for {r[2]}")
+                eqv.equiv_all(ids)
+                for i in ids:
+                    names[i] = r[2]
+
+            for main, ids in eqv.groups().items():
+                assert len(ids) > 1
+                print(f"Merging {len(ids)} IDs for {names[main]}")
                 db.merge_papers(ids)
 
 
@@ -212,6 +244,7 @@ commands = {
     "prepare": {name: w.prepare for name, w in wrapped.items()},
     "replay": replay,
     "merge": merge,
+    "search": search,
 }
 
 

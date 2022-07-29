@@ -1,10 +1,12 @@
 import re
 import shutil
 import textwrap
+from typing import Union
 
 from blessed import Terminal
 from ovld import ovld
 
+from .db import schema as sch
 from .sources.model import Author, DatePrecision, Paper, from_dict
 
 T = Terminal()
@@ -115,7 +117,7 @@ def display(d: dict):
 
 
 @ovld
-def display(paper: Paper):
+def display(paper: Union[Paper, sch.Paper]):
     """Print the paper in long form on the terminal.
 
     Long form includes abstract, affiliations, keywords, number of
@@ -128,11 +130,11 @@ def display(paper: Paper):
             f" * {auth.author.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
         )
     print_field("Abstract", paper.abstract)
+    print_field("Venue", "")
     for release in paper.releases:
-        print_field(
-            "Date", DatePrecision.format(release.date, release.date_precision)
-        )
-        print_field("Venue", release.venue.name)
+        d = DatePrecision.format(release.date, release.date_precision)
+        v = release.venue.name
+        print(f"  {T.bold_green(d)} {v}")
     print_field("Topics", ", ".join(t.name for t in paper.topics))
     print_field("Sources", "")
     for typ, link in expand_links(paper.links):

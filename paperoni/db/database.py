@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import sqlite3
@@ -5,7 +6,7 @@ from pathlib import Path
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, text
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
 from tqdm import tqdm
@@ -186,7 +187,7 @@ class Database:
                 venue_id = self.acquire(release.venue)
                 rr = sch.Release(
                     release_id=release.hashid(),
-                    date=date,
+                    date=date.timestamp(),
                     date_precision=date_precision,
                     volume=volume,
                     publisher=publisher,
@@ -281,7 +282,7 @@ class Database:
         def create_canonical(canonical, model):
             stmt = f"""
             INSERT OR IGNORE INTO paper (paper_id, title, abstract, citation_count)
-            SELECT '{canonical}', title, abstract, citation_count FROM paper WHERE paper_id = X'{model}'
+            SELECT X'{canonical}', title, abstract, citation_count FROM paper WHERE paper_id = X'{model}'
             """
             self.session.execute(stmt)
 
@@ -302,7 +303,6 @@ class Database:
 
         for table, field in tables.items():
             table = getattr(table, "__table__", table)
-
             stmt = f"""
             UPDATE OR IGNORE {table}
             SET {field} = X'{canonical}'
@@ -319,7 +319,7 @@ class Database:
         def create_canonical(canonical, model):
             stmt = f"""
             INSERT OR IGNORE INTO author (author_id, name)
-            SELECT '{canonical}', name FROM author WHERE author_id = X'{model}'
+            SELECT X'{canonical}', name FROM author WHERE author_id = X'{model}'
             """
             self.session.execute(stmt)
 

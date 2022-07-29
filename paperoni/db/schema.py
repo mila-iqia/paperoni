@@ -90,6 +90,24 @@ class Paper(Base):
     #     "PaperAuthorInstitution", back_populates="paper"
     # )
 
+    @property
+    def authors(self):
+        pas = self.paper_author
+        pas.sort(key=lambda pa: pa.author_position)
+        return pas
+
+    @property
+    def releases(self):
+        return self.release
+
+    @property
+    def links(self):
+        return self.paper_link
+
+    @property
+    def topics(self):
+        return self.topic
+
 
 class Topic(Base):
     __tablename__ = "topic"
@@ -107,6 +125,10 @@ class Topic(Base):
     topic__reverse = relationship(
         "Topic", remote_side=[parent], back_populates="topic_"
     )
+
+    @property
+    def name(self):
+        return self.topic
 
 
 class Venue(Base):
@@ -179,9 +201,14 @@ class PaperAuthor(Base):
 
     author = relationship("Author", back_populates="paper_author")
     paper = relationship("Paper", back_populates="paper_author")
-    # paper_author_institution = relationship(
-    #     "PaperAuthorInstitution", back_populates="paper_author"
-    # )
+    paper_author_institution = relationship(
+        "PaperAuthorInstitution"  # , back_populates="paper_author"
+    )
+
+    @property
+    def affiliations(self):
+        pais = self.paper_author_institution
+        return [pai.institution for pai in pais]
 
 
 class PaperFlag(Base):
@@ -274,9 +301,9 @@ class PaperAuthorInstitution(Base):
     )
 
     # author = relationship("Author", back_populates="paper_author_institution")
-    # institution = relationship(
-    #     "Institution", back_populates="paper_author_institution"
-    # )
+    institution = relationship(
+        "Institution",  # back_populates="paper_author_institution"
+    )
     # paper_author = relationship(
     #     "PaperAuthor", back_populates="paper_author_institution",
     #     overlaps="author,paper_author_institution"
