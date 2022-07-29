@@ -2,9 +2,9 @@ import json
 import os
 import sqlite3
 from pathlib import Path
-from uuid import UUID, uuid4
+from uuid import UUID
 
-from ovld import OvldBase, ovld
+from ovld import OvldBase
 from pydantic import BaseModel
 from sqlalchemy import create_engine, select
 from sqlalchemy.dialects.sqlite import insert
@@ -292,7 +292,8 @@ class Database(OvldBase):
                 canonical = x
                 break
         else:
-            canonical = UUID(bytes=tag_uuid(uuid4().bytes, "canonical"))
+            ids.sort(key=lambda i: i.hex)
+            canonical = UUID(bytes=tag_uuid(ids[0].bytes, "canonical"))
             create_canonical(canonical, x)
         return canonical, [x for x in ids if x != canonical]
 
