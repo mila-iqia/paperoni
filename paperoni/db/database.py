@@ -1,12 +1,12 @@
-import datetime
 import json
 import os
 import sqlite3
 from pathlib import Path
 from uuid import UUID, uuid4
 
+from ovld import OvldBase, ovld
 from pydantic import BaseModel
-from sqlalchemy import create_engine, select, text
+from sqlalchemy import create_engine, select
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
 from tqdm import tqdm
@@ -25,7 +25,7 @@ from ..tools import get_uuid_tag, is_canonical_uuid, tag_uuid
 from . import schema as sch
 
 
-class Database:
+class Database(OvldBase):
     DATABASE_SCRIPT_FILE = os.path.join(
         os.path.dirname(__file__), "database.sql"
     )
@@ -71,152 +71,139 @@ class Database:
                 self.session.add(hid_object)
         return self.cache[hid]
 
-    def _acquire(self, x):
-        match x:
-            case Paper(
-                title=title, abstract=abstract, citation_count=cc
-            ) as paper:
+    def _acquire(self, paper: Paper):
+        pp = sch.Paper(
+            paper_id=paper.hashid(),
+            title=paper.title,
+            abstract=paper.abstract,
+            citation_count=paper.citation_count,
+        )
+        self.session.merge(pp)
 
-                pp = sch.Paper(
-                    paper_id=paper.hashid(),
-                    title=title,
-                    abstract=abstract,
-                    citation_count=cc,
+        for i, paper_author in enumerate(paper.authors):
+            author = paper_author.author
+            author_id = self.acquire(author)
+            pa = sch.PaperAuthor(
+                paper_id=pp.paper_id,
+                author_id=author_id,
+                author_position=i,
+            )
+            self.session.merge(pa)
+
+            for affiliation in paper_author.affiliations:
+                institution_id = self.acquire(affiliation)
+                pai = sch.PaperAuthorInstitution(
+                    paper_id=pp.paper_id,
+                    author_id=author_id,
+                    institution_id=institution_id,
                 )
-                self.session.merge(pp)
+                self.session.merge(pai)
 
-                for i, paper_author in enumerate(paper.authors):
-                    author = paper_author.author
-                    author_id = self.acquire(author)
-                    pa = sch.PaperAuthor(
-                        paper_id=pp.paper_id,
-                        author_id=author_id,
-                        author_position=i,
-                    )
-                    self.session.merge(pa)
+        for release in paper.releases:
+            release_id = self.acquire(release)
+            stmt = (
+                insert(sch.t_paper_release)
+                .values(paper_id=pp.paper_id, release_id=release_id)
+                .on_conflict_do_nothing()
+            )
+            self.session.execute(stmt)
 
-                    for affiliation in paper_author.affiliations:
-                        institution_id = self.acquire(affiliation)
-                        pai = sch.PaperAuthorInstitution(
-                            paper_id=pp.paper_id,
-                            author_id=author_id,
-                            institution_id=institution_id,
-                        )
-                        self.session.merge(pai)
+        for topic in paper.topics:
+            topic_id = self.acquire(topic)
+            stmt = (
+                insert(sch.t_paper_topic)
+                .values(paper_id=pp.paper_id, topic_id=topic_id)
+                .on_conflict_do_nothing()
+            )
+            self.session.execute(stmt)
 
-                for release in paper.releases:
-                    release_id = self.acquire(release)
-                    stmt = (
-                        insert(sch.t_paper_release)
-                        .values(paper_id=pp.paper_id, release_id=release_id)
-                        .on_conflict_do_nothing()
-                    )
-                    self.session.execute(stmt)
+        for link in paper.links:
+            lnk = sch.PaperLink(
+                paper_id=pp.paper_id,
+                type=link.type,
+                link=link.link,
+            )
+            self.session.merge(lnk)
 
-                for topic in paper.topics:
-                    topic_id = self.acquire(topic)
-                    stmt = (
-                        insert(sch.t_paper_topic)
-                        .values(paper_id=pp.paper_id, topic_id=topic_id)
-                        .on_conflict_do_nothing()
-                    )
-                    self.session.execute(stmt)
+        for scraper in paper.scrapers:
+            psps = sch.PaperScraper(paper_id=pp.paper_id, scraper=scraper)
+            self.session.merge(psps)
 
-                for link in paper.links:
-                    lnk = sch.PaperLink(
-                        paper_id=pp.paper_id,
-                        type=link.type,
-                        link=link.link,
-                    )
-                    self.session.merge(lnk)
+        return pp.paper_id
 
-                for scraper in paper.scrapers:
-                    psps = sch.PaperScraper(
-                        paper_id=pp.paper_id, scraper=scraper
-                    )
-                    self.session.merge(psps)
+    def _acquire(self, author: Author):
+        aa = sch.Author(author_id=author.hashid(), name=author.name)
+        self.session.merge(aa)
 
-                return pp.paper_id
+        for link in author.links:
+            lnk = sch.AuthorLink(
+                author_id=aa.author_id,
+                type=link.type,
+                link=link.link,
+            )
+            self.session.merge(lnk)
 
-            case Author(name=name) as author:
-                aa = sch.Author(author_id=author.hashid(), name=name)
-                self.session.merge(aa)
+        for alias in author.aliases:
+            aal = sch.AuthorAlias(
+                author_id=aa.author_id,
+                alias=alias,
+            )
+            self.session.merge(aal)
 
-                for link in author.links:
-                    lnk = sch.AuthorLink(
-                        author_id=aa.author_id,
-                        type=link.type,
-                        link=link.link,
-                    )
-                    self.session.merge(lnk)
+        for role in author.roles:
+            rr = sch.AuthorInstitution(
+                author_id=aa.author_id,
+                institution_id=self.acquire(role.institution),
+                role=role.role,
+                start_date=role.start_date,
+                end_date=role.end_date,
+            )
+            self.session.merge(rr)
 
-                for alias in author.aliases:
-                    aal = sch.AuthorAlias(
-                        author_id=aa.author_id,
-                        alias=alias,
-                    )
-                    self.session.merge(aal)
+        return aa.author_id
 
-                for role in author.roles:
-                    rr = sch.AuthorInstitution(
-                        author_id=aa.author_id,
-                        institution_id=self.acquire(role.institution),
-                        role=role.role,
-                        start_date=role.start_date,
-                        end_date=role.end_date,
-                    )
-                    self.session.merge(rr)
+    def _acquire(self, institution: Institution):
+        inst = sch.Institution(
+            institution_id=institution.hashid(),
+            name=institution.name,
+            category=institution.category,
+        )
+        self.session.merge(inst)
+        return inst.institution_id
 
-                return aa.author_id
+    def _acquire(self, release: Release):
+        venue_id = self.acquire(release.venue)
+        rr = sch.Release(
+            release_id=release.hashid(),
+            date=release.date.timestamp(),
+            date_precision=release.date_precision,
+            volume=release.volume,
+            publisher=release.publisher,
+            venue_id=venue_id,
+        )
+        self.session.merge(rr)
+        return rr.release_id
 
-            case Institution(name=name, category=category) as institution:
-                inst = sch.Institution(
-                    institution_id=institution.hashid(),
-                    name=name,
-                    category=category,
-                )
-                self.session.merge(inst)
-                return inst.institution_id
+    def _acquire(self, topic: Topic):
+        tt = sch.Topic(topic_id=topic.hashid(), topic=topic.name)
+        self.session.merge(tt)
+        return tt.topic_id
 
-            case Release(
-                date=date,
-                date_precision=date_precision,
-                volume=volume,
-                publisher=publisher,
-            ) as release:
-                venue_id = self.acquire(release.venue)
-                rr = sch.Release(
-                    release_id=release.hashid(),
-                    date=date.timestamp(),
-                    date_precision=date_precision,
-                    volume=volume,
-                    publisher=publisher,
-                    venue_id=venue_id,
-                )
-                self.session.merge(rr)
-                return rr.release_id
+    def _acquire(self, venue: Venue):
+        vv = sch.Venue(
+            venue_id=venue.hashid(), type=venue.type, name=venue.name
+        )
+        self.session.merge(vv)
 
-            case Topic(name=name) as topic:
-                tt = sch.Topic(topic_id=topic.hashid(), topic=name)
-                self.session.merge(tt)
-                return tt.topic_id
+        for link in venue.links:
+            lnk = sch.VenueLink(
+                venue_id=vv.venue_id,
+                type=link.type,
+                link=link.link,
+            )
+            self.session.merge(lnk)
 
-            case Venue(type=vtype, name=name) as venue:
-                vv = sch.Venue(venue_id=venue.hashid(), type=vtype, name=name)
-                self.session.merge(vv)
-
-                for link in venue.links:
-                    lnk = sch.VenueLink(
-                        venue_id=vv.venue_id,
-                        type=link.type,
-                        link=link.link,
-                    )
-                    self.session.merge(lnk)
-
-                return vv.venue_id
-
-            case _:
-                raise TypeError(f"Cannot acquire: {type(x).__name__}")
+        return vv.venue_id
 
     def import_all(self, xs: list[BaseModel], history_file=None):
         if not xs:
@@ -274,7 +261,7 @@ class Database:
                 canonical = x
                 break
         else:
-            canonical = UUID(bytes=tag_uuid(uuid4().bytes, "canonical")).hex
+            canonical = tag_uuid(uuid4().bytes, "canonical").hex()
             create_canonical(canonical, x)
         return canonical, [x for x in ids if x != canonical]
 
