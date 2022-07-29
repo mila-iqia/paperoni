@@ -14,8 +14,10 @@ from tqdm import tqdm
 from ..config import config
 from ..sources.model import (
     Author,
+    AuthorMerge,
     Institution,
     Paper,
+    PaperMerge,
     Release,
     Topic,
     Venue,
@@ -205,6 +207,35 @@ class Database(OvldBase):
 
         return vv.venue_id
 
+    def _acquire(self, merge: AuthorMerge):
+        self._merge_ids_for_table(
+            table=sch.Author,
+            id_field="author_id",
+            ids=merge.ids,
+            redirects={
+                sch.PaperAuthor: "author_id",
+                sch.AuthorLink: "author_id",
+                sch.AuthorAlias: "author_id",
+                sch.AuthorInstitution: "author_id",
+            },
+        )
+
+    def _acquire(self, merge: PaperMerge):
+        self._merge_ids_for_table(
+            table=sch.Paper,
+            id_field="paper_id",
+            ids=merge.ids,
+            redirects={
+                sch.PaperAuthor: "paper_id",
+                sch.PaperLink: "paper_id",
+                sch.PaperFlag: "paper_id",
+                sch.PaperAuthorInstitution: "paper_id",
+                sch.t_paper_release: "paper_id",
+                sch.t_paper_topic: "paper_id",
+                sch.PaperScraper: "paper_id",
+            },
+        )
+
     def import_all(self, xs: list[BaseModel], history_file=None):
         if not xs:
             return
@@ -257,82 +288,49 @@ class Database(OvldBase):
 
     def _filter_ids(self, ids, create_canonical):
         for x in ids:
-            if is_canonical_uuid(UUID(hex=x).bytes):
+            if is_canonical_uuid(x.bytes):
                 canonical = x
                 break
         else:
-            canonical = tag_uuid(uuid4().bytes, "canonical").hex()
+            canonical = UUID(bytes=tag_uuid(uuid4().bytes, "canonical"))
             create_canonical(canonical, x)
         return canonical, [x for x in ids if x != canonical]
 
-    def merge_papers(self, paper_ids):
+    def _merge_ids_for_table(
+        self,
+        table,
+        redirects,
+        id_field,
+        ids,
+    ):
+        table = getattr(table, "__table__", table)
+        fields = [column.name for column in table.columns]
+
         def create_canonical(canonical, model):
+            values = [
+                f"X'{canonical.hex}'" if f == id_field else f for f in fields
+            ]
             stmt = f"""
-            INSERT OR IGNORE INTO paper (paper_id, title, abstract, citation_count)
-            SELECT X'{canonical}', title, abstract, citation_count FROM paper WHERE paper_id = X'{model}'
+            INSERT OR IGNORE INTO {table.name} ({", ".join(fields)})
+            SELECT {", ".join(values)} FROM {table.name} WHERE {id_field} = X'{model.hex}'
             """
             self.session.execute(stmt)
 
-        canonical, ids = self._filter_ids(paper_ids, create_canonical)
+        canonical, ids = self._filter_ids(ids, create_canonical)
 
-        conds = [f"paper_id = X'{pid}'" for pid in ids]
+        conds = [f"{id_field} = X'{pid.hex}'" for pid in ids]
         conds = " OR ".join(conds)
 
-        tables = {
-            sch.PaperAuthor: "paper_id",
-            sch.PaperLink: "paper_id",
-            sch.PaperFlag: "paper_id",
-            sch.PaperAuthorInstitution: "paper_id",
-            sch.t_paper_release: "paper_id",
-            sch.t_paper_topic: "paper_id",
-            sch.PaperScraper: "paper_id",
-        }
-
-        for table, field in tables.items():
-            table = getattr(table, "__table__", table)
+        for subtable, field in redirects.items():
+            subtable = getattr(subtable, "__table__", subtable)
             stmt = f"""
-            UPDATE OR IGNORE {table}
-            SET {field} = X'{canonical}'
+            UPDATE OR IGNORE {subtable}
+            SET {field} = X'{canonical.hex}'
             WHERE {conds}
             """
             self.session.execute(stmt)
 
         stmt = f"""
-        DELETE FROM paper WHERE {conds}
-        """
-        self.session.execute(stmt)
-
-    def merge_authors(self, author_ids):
-        def create_canonical(canonical, model):
-            stmt = f"""
-            INSERT OR IGNORE INTO author (author_id, name)
-            SELECT X'{canonical}', name FROM author WHERE author_id = X'{model}'
-            """
-            self.session.execute(stmt)
-
-        canonical, ids = self._filter_ids(author_ids, create_canonical)
-
-        conds = [f"author_id = X'{aid}'" for aid in ids]
-        conds = " OR ".join(conds)
-
-        tables = {
-            sch.PaperAuthor: "author_id",
-            sch.AuthorLink: "author_id",
-            sch.AuthorAlias: "author_id",
-            sch.AuthorInstitution: "author_id",
-        }
-
-        for table, field in tables.items():
-            table = table.__table__
-
-            stmt = f"""
-            UPDATE OR IGNORE {table}
-            SET {field} = X'{canonical}'
-            WHERE {conds}
-            """
-            self.session.execute(stmt)
-
-        stmt = f"""
-        DELETE FROM author WHERE {conds}
+        DELETE FROM {table.name} WHERE {conds}
         """
         self.session.execute(stmt)

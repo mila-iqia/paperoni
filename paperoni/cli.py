@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from paperoni.db import schema as sch
 from paperoni.db.database import Database
+from paperoni.sources.model import AuthorMerge, PaperMerge
 
 from .config import configure
 from .sources.scrapers import load_scrapers
@@ -167,7 +168,7 @@ class search:
 
 class merge:
     def author():
-        with load_database() as db:
+        with load_database(tag="merge") as db:
             results = db.session.execute(
                 """
                 SELECT
@@ -194,12 +195,15 @@ class merge:
                 for i in ids:
                     names[i] = r[2]
 
+            merges = []
             for main, ids in eqv.groups().items():
                 print(f"Merging {len(ids)} IDs for {names[main]}")
-                db.merge_authors(ids)
+                merges.append(AuthorMerge(ids=ids))
+
+        db.import_all(merges)
 
     def paper():
-        with load_database() as db:
+        with load_database(tag="merge") as db:
             results = db.session.execute(
                 """
                 SELECT
@@ -226,10 +230,13 @@ class merge:
                 for i in ids:
                     names[i] = r[2]
 
+            merges = []
             for main, ids in eqv.groups().items():
                 assert len(ids) > 1
                 print(f"Merging {len(ids)} IDs for {names[main]}")
-                db.merge_papers(ids)
+                merges.append(PaperMerge(ids=ids))
+
+        db.import_all(merges)
 
 
 scrapers = load_scrapers()

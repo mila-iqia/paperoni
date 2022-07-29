@@ -189,6 +189,18 @@ class AuthorPaperQuery(Base):
     end_date: datetime | None
 
 
+class Merge(Base):
+    ids: list[UUID]
+
+
+class AuthorMerge(Merge):
+    pass
+
+
+class PaperMerge(Merge):
+    pass
+
+
 for cls in list(globals().values()):
     if isinstance(cls, type) and issubclass(cls, BaseModel):
         cls.update_forward_refs()
