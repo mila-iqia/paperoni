@@ -3,12 +3,12 @@ from datetime import datetime
 import openreview
 from coleo import Option, tooled
 
-from ...utils import QueryError
 from ..model import (
     Author,
     DatePrecision,
     Link,
     Paper,
+    PaperAuthor,
     Release,
     Topic,
     Venue,
@@ -29,7 +29,7 @@ class OpenReviewScraper:
         # [nargs: +]
         title: Option = [],
         # Maximal number of results per query
-        block_size: Option & int = 100,
+        block_size: Option & int = 1000,
         # Maximal number of results to return
         limit: Option & int = 10000,
         # Venue of the paper
@@ -100,12 +100,15 @@ class OpenReviewScraper:
                                 Link(type="email", link=authors_email)
                             )
                         authors.append(
-                            Author(
-                                name=name,
+                            PaperAuthor(
                                 affiliations=[],
-                                aliases=[],
-                                links=_links,
-                                roles=[],
+                                author=Author(
+                                    name=name,
+                                    affiliations=[],
+                                    aliases=[],
+                                    links=_links,
+                                    roles=[],
+                                ),
                             )
                         )
                     _links = [Link(type="openreview", link=note.id)]
