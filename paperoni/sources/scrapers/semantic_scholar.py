@@ -1,11 +1,9 @@
 import json
 import urllib.parse
-from typing import Counter
 
-import questionary as qn
 from coleo import Option, tooled
 
-from ...utils import QueryError, display
+from ...utils import QueryError
 from ..acquire import HTTPSAcquirer
 from ..model import (
     Author,
@@ -15,10 +13,10 @@ from ..model import (
     PaperAuthor,
     Release,
     Topic,
-    UniqueAuthor,
     Venue,
     VenueType,
 )
+from ..utils import prepare
 
 external_ids_mapping = {
     "pubmedcentral": "pmc",
@@ -327,7 +325,12 @@ class SemanticScholarScraper:
 
         after: Option = ""
         before: Option = ""
+        name: Option = ""
 
+        if name:
+            queries = [
+                auq for auq in queries if auq.author.name.lower() == name
+            ]
         queries.sort(key=lambda auq: auq.author.name.lower())
 
         for auq in queries:
@@ -345,115 +348,12 @@ class SemanticScholarScraper:
 
     @tooled
     def prepare(self, researchers):
-        after: Option = ""
-        name: Option = ""
-
-        rids = {}
-        for researcher in researchers:
-            for link in researcher.links:
-                if link.type == "semantic_scholar":
-                    rids[link.link] = researcher.name
-
         ss = SemanticScholarQueryManager()
-
-        def _ids(x, typ):
-            return [link.link for link in x.links if link.type == typ]
-
-        researchers.sort(key=lambda auq: auq.name.lower())
-        if name:
-            researchers = [
-                auq for auq in researchers if auq.name.lower() == name
-            ]
-        elif after:
-            researchers = [
-                auq
-                for auq in researchers
-                if auq.name.lower()[: len(after)] > after
-            ]
-
-        for auq in researchers:
-            aname = auq.name
-            ids = set(_ids(auq, "semantic_scholar"))
-            noids = set(_ids(auq, "!semantic_scholar"))
-
-            def find_common(papers):
-                common = Counter()
-                for p in papers:
-                    for a in p.authors:
-                        for l in a.author.links:
-                            if l.type == "semantic_scholar" and l.link in rids:
-                                common[rids[l.link]] += 1
-                return sum(common.values()), common
-
-            data = [
-                (author, *find_common(papers), papers)
-                for author, papers in ss.author_with_papers(aname)
-                if len(papers) > 1
-            ]
-            data.sort(key=lambda ap: (-ap[1], -len(ap[-1])))
-
-            for author, _, common, papers in data:
-                if not papers:
-                    continue
-
-                done = False
-
-                (new_id,) = _ids(author, "semantic_scholar")
-                if new_id in ids or new_id in noids:
-                    print(f"Skipping processed ID for {aname}: {new_id}")
-                    continue
-                aliases = {*author.aliases, author.name} - {aname}
-
-                def _make(negate=False):
-                    return UniqueAuthor(
-                        author_id=auq.author_id,
-                        name=aname,
-                        affiliations=[],
-                        roles=[],
-                        aliases=[] if negate else aliases,
-                        links=[Link(type="!semantic_scholar", link=new_id)]
-                        if negate
-                        else author.links,
-                    )
-
-                print("=" * 80)
-                print(f"{aname} (ID = {new_id}): {len(papers)} paper(s)")
-                for name, count in sorted(common.items(), key=lambda x: -x[1]):
-                    print(f"{count} with {name}")
-
-                print(f"Aliases: {aliases}")
-                papers = [
-                    (p.releases[0].date.year, i, p)
-                    for i, p in enumerate(papers)
-                ]
-                papers.sort(reverse=True)
-                print(f"Years: {papers[-1][0]} to {papers[0][0]}")
-                print("=" * 80)
-                for _, _, p in papers:
-                    display(p)
-                    print("=" * 80)
-                    action = qn.text(
-                        f"Is this a paper by {aname}? [y]es/[n]o/[m]ore/[s]kip/[d]one/[q]uit",
-                        validate=lambda x: x in ["y", "n", "m", "s", "d", "q"],
-                    ).unsafe_ask()
-                    if action == "y":
-                        yield _make()
-                        break
-                    elif action == "n":
-                        yield _make(negate=True)
-                        break
-                    elif action == "d":
-                        done = True
-                        break
-                    elif action == "m":
-                        continue
-                    elif action == "s":
-                        break
-                    elif action == "q":
-                        return
-
-                if done:
-                    break
+        return prepare(
+            researchers,
+            idtype="semantic_scholar",
+            query_name=ss.author_with_papers,
+        )
 
 
 __scrapers__ = {"semantic_scholar": SemanticScholarScraper()}
