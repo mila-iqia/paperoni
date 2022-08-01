@@ -482,6 +482,7 @@ commands = {
     "merge": merge,
     "search": search,
     "sql": sql,
+    "report": report,
 }
 
 
