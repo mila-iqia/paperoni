@@ -222,11 +222,7 @@ def date_syntax(query):
     return query
 
 
-def sql():
-
-    # SQL query to run
-    # [positional]
-    query: Option
+def run_sql_query(query):
 
     # JSON output
     # [option: --json]
@@ -263,13 +259,51 @@ def sql():
         show_rows(results, "table")
 
 
+def sql():
+
+    # SQL query to run
+    # [positional]
+    query: Option
+
+    run_sql_query(query)
+
+
+@tooled
+def timespan(timestamp=False):
+    start: Option = None
+    end: Option = None
+    year: Option & int = 0
+
+    if year:
+        assert not start
+        assert not end
+        start = f"{year}-01-01"
+        end = f"{year + 1}-01-01"
+
+    if timestamp:
+        return (
+            start and int(datetime(*map(int, start.split("-"))).timestamp()),
+            end and int(datetime(*map(int, end.split("-"))).timestamp()),
+        )
+    else:
+        return start, end
+
+
 class search:
     def paper():
         # Part of the title of the paper
-        title: Option = ""
+        title: Option = None
 
         # Author of the paper
-        author: Option = ""
+        author: Option = None
+
+        # Publication venue
+        venue: Option = None
+
+        # How to format the results
+        format: Option = "full"
+
+        start, end = timespan(timestamp=True)
 
         with load_database() as db:
             stmt = select(sch.Paper)
@@ -284,10 +318,81 @@ class search:
                     # .join(sch.AuthorAlias.name.like(f"%{author}%"))
                     .filter(sch.Author.name.like(f"%{author}%"))
                 )
+            if venue or start or end:
+                stmt = stmt.join(sch.Paper.release)
+            if venue:
+                if venue.startswith("="):
+                    venue = venue[1:]
+                else:
+                    venue = f"%{venue}%"
+                stmt = stmt.join(sch.Release.venue).filter(
+                    sch.Venue.name.like(venue)
+                )
+            if start:
+                stmt = stmt.filter(sch.Release.date >= start)
+            if end:
+                stmt = stmt.filter(sch.Release.date <= end)
+            stmt = stmt.group_by(sch.Paper.paper_id)
 
             for (entry,) in db.session.execute(stmt):
-                display(entry)
-                print("=" * 80)
+                match format:
+                    case "full":
+                        display(entry)
+                        print("=" * 80)
+                    case "title":
+                        print(entry.title)
+                    case _:
+                        raise Exception(f"Unsupported format: {format}")
+
+
+class report:
+    def productivity():
+        start, end = timespan()
+
+        author: Option = None
+
+        if author:
+            author_joins = """
+            JOIN paper_author as pa ON pa.paper_id = paper.paper_id
+            JOIN author ON pa.author_id = author.author_id
+            """
+            author_filter = f"AND author.name LIKE '%{author}%'"
+        else:
+            author_joins = ""
+            author_filter = ""
+
+        query = f"""
+        SELECT count(paper.paper_id)
+        FROM paper
+        JOIN paper_release AS pr ON pr.paper_id = paper.paper_id
+        JOIN release ON pr.release_id = release.release_id
+        {author_joins}
+        WHERE date > #{start} and date < #{end} {author_filter}
+        """
+
+        run_sql_query(query)
+
+    def venues():
+        start: Option = None
+        end: Option = None
+        year: Option & int = 0
+
+        if year:
+            assert not start
+            assert not end
+            start = f"{year}-01-01"
+            end = f"{year + 1}-01-01"
+
+        query = f"""
+        SELECT count(release_id) as n, date, name
+        FROM release
+        JOIN venue on release.venue_id = venue.venue_id
+        WHERE date >= #{start} and date <= #{end}
+        GROUP BY venue.venue_id
+        ORDER BY n
+        """
+
+        run_sql_query(query)
 
 
 class merge:
