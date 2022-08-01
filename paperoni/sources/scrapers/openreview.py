@@ -17,6 +17,9 @@ from ..model import (
 
 
 class OpenReviewScraper:
+    def __init__(self):
+        self.client = openreview.Client(baseurl="https://api.openreview.net")
+
     @staticmethod
     def _map_venue_type(venueid):
         for v_type in VenueType:
@@ -25,21 +28,17 @@ class OpenReviewScraper:
         else:
             return VenueType.unknown
 
-    @staticmethod
-    def _query(client, params, total=0, limit=1000000):
+    def _query(self, params, total=0, limit=1000000):
         next_offset = 0
         while total < limit:
             params["offset"] = next_offset
-            notes = client.get_all_notes(**params)
+            notes = self.client.get_all_notes(**params)
             for note in notes:
                 authors = []
                 if len(note.content["authors"]) == len(
                     note.content.get("authorids", [])
                 ) and all(
-                    (
-                        aid.startswith("~")
-                        for aid in note.content["authorids"]
-                    )
+                    (aid.startswith("~") for aid in note.content["authorids"])
                 ):
                     authors_ids = note.content["authorids"]
                 else:
@@ -51,9 +50,7 @@ class OpenReviewScraper:
                 ):
                     _links = []
                     if author_id:
-                        _links.append(
-                            Link(type="openreview", link=author_id)
-                        )
+                        _links.append(Link(type="openreview", link=author_id))
                     authors.append(
                         PaperAuthor(
                             affiliations=[],
@@ -77,7 +74,9 @@ class OpenReviewScraper:
                     releases=[
                         Release(
                             venue=Venue(
-                                type=OpenReviewScraper._map_venue_type(note.content["venueid"]),
+                                type=OpenReviewScraper._map_venue_type(
+                                    note.content["venueid"]
+                                ),
                                 name=note.content["venue"],
                                 links=[],
                             ),
@@ -122,7 +121,6 @@ class OpenReviewScraper:
         author = " ".join(author)
         title = " ".join(title)
 
-        client = openreview.Client(baseurl="https://api.openreview.net")
         params = {
             "content": {},
             "limit": min(block_size or limit, limit),
@@ -140,7 +138,7 @@ class OpenReviewScraper:
                 "content": {**params["content"], "title": title},
             }
         if not venue:
-            venue = client.get_group(id="venues").members
+            venue = self.client.get_group(id="venues").members
 
         total = 0
         for v in venue:
@@ -149,7 +147,7 @@ class OpenReviewScraper:
                 "content": {**params["content"], "venueid": v},
             }
 
-            for paper in OpenReviewScraper._query(client, params, total, limit):
+            for paper in self._query(params, total, limit):
                 total += 1
                 yield paper
 
