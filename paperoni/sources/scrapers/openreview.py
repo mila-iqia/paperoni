@@ -79,25 +79,26 @@ class OpenReviewScraper:
                 notes = client.get_all_notes(**params)
                 for note in notes:
                     authors = []
-                    authors_ids = note.content.get(
-                        "authorids",
-                        (None for _ in range(len(note.content["authors"]))),
-                    )
-                    authors_emails = note.content.get(
-                        "author_emails",
-                        (None for _ in range(len(note.content["authors"]))),
-                    )
-                    for name, author_id, authors_email in zip(
-                        note.content["authors"], authors_ids, authors_emails
+                    if len(note.content["authors"]) == len(
+                        note.content.get("authorids", [])
+                    ) and all(
+                        (
+                            aid.startswith("~")
+                            for aid in note.content["authorids"]
+                        )
+                    ):
+                        authors_ids = note.content["authorids"]
+                    else:
+                        authors_ids = (
+                            None for _ in range(len(note.content["authors"]))
+                        )
+                    for name, author_id in zip(
+                        note.content["authors"], authors_ids
                     ):
                         _links = []
                         if author_id:
                             _links.append(
                                 Link(type="openreview", link=author_id)
-                            )
-                        if authors_email:
-                            _links.append(
-                                Link(type="email", link=authors_email)
                             )
                         authors.append(
                             PaperAuthor(
