@@ -1,6 +1,9 @@
-from collections import defaultdict
+import json
+import re
+from datetime import datetime
 
 from coleo import Option, auto_cli, tooled, with_extras
+from ovld import ovld
 from sqlalchemy import select
 
 from paperoni.db import schema as sch
@@ -9,7 +12,7 @@ from paperoni.sources.model import AuthorMerge, PaperMerge
 
 from .config import configure
 from .sources.scrapers import load_scrapers
-from .tools import EquivalenceGroups, get_uuid_tag
+from .tools import EquivalenceGroups
 from .utils import display
 
 
@@ -151,6 +154,115 @@ def replay():
     )
 
 
+@ovld
+def row_text(x: str):
+    return x
+
+
+@ovld
+def row_text(x: bytes):
+    return x.hex()
+
+
+@ovld
+def row_text(x: int):
+    if x > 800000000:
+        return datetime.fromtimestamp(x).strftime("%Y-%m-%d")
+    else:
+        return str(x)
+
+
+@ovld
+def row_text(x: object):
+    return str(x)
+
+
+def show_rows(rows, format):
+    match format:
+        case "plain":
+            return show_rows(rows, ("plain", " "))
+        case ("plain", delimiter):
+            for row in rows:
+                print(delimiter.join(row.values()))
+        case "json":
+            print(json.dumps(rows, indent=4))
+        case "table":
+            from rich.console import Console
+            from rich.table import Table
+
+            if not rows:
+                return
+
+            r0 = rows[0]
+
+            table = Table()
+
+            for k in r0.keys():
+                table.add_column(k)
+
+            for row in rows:
+                table.add_row(*row.values())
+
+            console = Console()
+            console.print(table)
+        case _:
+            raise TypeError(f"Invalid format: {format}")
+
+
+def date_syntax(query):
+    def replacer(m):
+        (date,) = m.groups()
+        parts = [int(x) for x in date.split("-")]
+        while len(parts) < 3:
+            parts.append(1)
+        return str(int(datetime(*parts).timestamp() - 100))
+
+    query = re.sub(pattern="#([0-9-]+)", string=query, repl=replacer)
+
+    return query
+
+
+def sql():
+
+    # SQL query to run
+    # [positional]
+    query: Option
+
+    # JSON output
+    # [option: --json]
+    json_output: Option & bool = False
+
+    # Plain text output
+    plain: Option & bool = False
+
+    # Delimiter for plain output
+    delimiter: Option = None
+
+    if delimiter is None:
+        delimiter = " "
+    else:
+        plain = True
+
+    assert not (
+        json_output and plain
+    ), "--json and --plain are mutually exclusive"
+
+    query = date_syntax(query)
+
+    with load_database() as db:
+        results = [
+            {k: row_text(v) for k, v in zip(row.keys(), row)}
+            for row in db.session.execute(query)
+        ]
+
+    if plain:
+        show_rows(results, ("plain", delimiter))
+    if json_output:
+        show_rows(results, "json")
+    else:
+        show_rows(results, "table")
+
+
 class search:
     def paper():
         # Part of the title of the paper
@@ -160,7 +272,19 @@ class search:
         author: Option = ""
 
         with load_database() as db:
-            stmt = select(sch.Paper).filter(sch.Paper.title.like(f"%{title}%"))
+            stmt = select(sch.Paper)
+            if title:
+                stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
+            if author:
+                stmt = (
+                    stmt.join(sch.Paper.paper_author).join(
+                        sch.PaperAuthor.author
+                    )
+                    # .join(sch.Author.author_alias)
+                    # .join(sch.AuthorAlias.name.like(f"%{author}%"))
+                    .filter(sch.Author.name.like(f"%{author}%"))
+                )
+
             for (entry,) in db.session.execute(stmt):
                 display(entry)
                 print("=" * 80)
@@ -252,6 +376,7 @@ commands = {
     "replay": replay,
     "merge": merge,
     "search": search,
+    "sql": sql,
 }
 
 
