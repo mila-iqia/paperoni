@@ -81,7 +81,7 @@ class DatePrecision(int, Enum):
 
     @staticmethod
     def format(date, precision):
-        if isinstance(date, int):
+        if isinstance(date, (int, float)):
             date = datetime.fromtimestamp(date)
         match DatePrecision(precision):
             case DatePrecision.year | DatePrecision.unknown:
