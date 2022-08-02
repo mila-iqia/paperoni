@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 
 import openreview
@@ -14,6 +15,7 @@ from ..model import (
     Venue,
     VenueType,
 )
+from ..utils import prepare
 
 
 class OpenReviewScraper:
@@ -34,11 +36,16 @@ class OpenReviewScraper:
             params["offset"] = next_offset
             notes = self.client.get_all_notes(**params)
             for note in notes:
+                if "venue" not in note.content:
+                    continue
                 authors = []
                 if len(note.content["authors"]) == len(
                     note.content.get("authorids", [])
                 ) and all(
-                    (aid.startswith("~") for aid in note.content["authorids"])
+                    (
+                        aid is None or aid.startswith("~")
+                        for aid in note.content["authorids"]
+                    )
                 ):
                     authors_ids = note.content["authorids"]
                 else:
@@ -50,7 +57,11 @@ class OpenReviewScraper:
                 ):
                     _links = []
                     if author_id:
-                        _links.append(Link(type="openreview", link=author_id))
+                        _links.append(
+                            Link(
+                                type="openreview", link=author_id or f"/{name}"
+                            )
+                        )
                     authors.append(
                         PaperAuthor(
                             affiliations=[],
@@ -98,6 +109,20 @@ class OpenReviewScraper:
                 break
         total += next_offset
 
+    def _query_all_venues(self, params, venues=None, total=0, limit=1000000):
+        if not venues:
+            venues = self.client.get_group(id="venues").members
+
+        for v in venues:
+            params = {
+                **params,
+                "content": {**params["content"], "venueid": v},
+            }
+
+            for paper in self._query(params, total, limit):
+                total += 1
+                yield paper
+
     @tooled
     def query(
         self,
@@ -137,19 +162,8 @@ class OpenReviewScraper:
                 **params,
                 "content": {**params["content"], "title": title},
             }
-        if not venue:
-            venue = self.client.get_group(id="venues").members
 
-        total = 0
-        for v in venue:
-            params = {
-                **params,
-                "content": {**params["content"], "venueid": v},
-            }
-
-            for paper in self._query(params, total, limit):
-                total += 1
-                yield paper
+        yield from self._query_all_venues(params, venue, 0, limit)
 
     @tooled
     def acquire(self, queries):
@@ -160,20 +174,38 @@ class OpenReviewScraper:
                 if link.type == "openreview":
                     todo[link.link] = auq
 
-        client = openreview.Client(baseurl="https://api.openreview.net")
-
         for author_id, auq in todo.items():
-            print(f"Fetch papers for {auq.author.name} (email={author_id})")
+            print(f"Fetch papers for {auq.author.name} (id={author_id})")
             params = {
                 "content": {"authorids": [author_id]},
                 "mintcdate": int(auq.start_date.timestamp() * 1000),
             }
-            for paper in OpenReviewScraper._query(client, params):
+            for paper in self._query(params):
                 yield paper
+            break
 
     @tooled
     def prepare(self, researchers):
-        pass
+        # Venue on the basis of which to search
+        venue: Option
+
+        papers = list(self._query(params={"content": {"venueid": venue}}))
+
+        def query_name(aname):
+            print(f"Processing {aname}")
+            results = {}
+            for paper in papers:
+                for pa in paper.authors:
+                    au = pa.author
+                    if au.name == aname:
+                        for lnk in au.links:
+                            if lnk.type == "openreview":
+                                results.setdefault(lnk.link, (au, []))
+                                results[lnk.link][1].append(paper)
+            for auid, (au, aupapers) in results.items():
+                yield (au, aupapers)
+
+        return prepare(researchers, idtype="openreview", query_name=query_name)
 
     @tooled
     def venues(self):

@@ -353,6 +353,7 @@ class SemanticScholarScraper:
             researchers,
             idtype="semantic_scholar",
             query_name=ss.author_with_papers,
+            minimum=1,
         )
 
 

@@ -12,6 +12,7 @@ def prepare(
     researchers,
     idtype,
     query_name,
+    minimum=None,
 ):
     after: Option = ""
     name: Option = ""
@@ -50,7 +51,7 @@ def prepare(
         data = [
             (author, *find_common(papers), papers)
             for author, papers in query_name(aname)
-            if len(papers) > 1
+            if not minimum or len(papers) > minimum
         ]
         data.sort(key=lambda ap: (-ap[1], -len(ap[-1])))
 
