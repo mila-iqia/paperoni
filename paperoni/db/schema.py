@@ -87,7 +87,6 @@ class Paper(Base):
     )
     paper_flag = relationship("PaperFlag", back_populates="paper")
     paper_link = relationship("PaperLink", back_populates="paper")
-    paper_scraper = relationship("PaperScraper", back_populates="paper")
 
     @property
     def authors(self):
@@ -106,6 +105,13 @@ class Paper(Base):
     @property
     def topics(self):
         return self.topic
+
+
+class Scraper(Base):
+    __tablename__ = "scraper"
+
+    hashid = Column(LargeBinary, primary_key=True, nullable=False)
+    scraper = Column(Text, primary_key=True)
 
 
 class Topic(Base):
@@ -255,15 +261,6 @@ class PaperLink(Base):
     paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
 
     paper = relationship("Paper", back_populates="paper_link")
-
-
-class PaperScraper(Base):
-    __tablename__ = "paper_scraper"
-
-    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
-    scraper = Column(Text, primary_key=True)
-
-    paper = relationship("Paper", back_populates="paper_scraper")
 
 
 t_paper_topic = Table(

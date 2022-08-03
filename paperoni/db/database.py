@@ -128,7 +128,7 @@ class Database(OvldBase):
             self.session.merge(lnk)
 
         for scraper in paper.scrapers:
-            psps = sch.PaperScraper(paper_id=pp.paper_id, scraper=scraper)
+            psps = sch.Scraper(hashid=pp.paper_id, scraper=scraper)
             self.session.merge(psps)
 
         return pp.paper_id
@@ -218,6 +218,7 @@ class Database(OvldBase):
                 sch.AuthorLink: "author_id",
                 sch.AuthorAlias: "author_id",
                 sch.AuthorInstitution: "author_id",
+                sch.Scraper: "hashid",
             },
         )
 
@@ -233,7 +234,7 @@ class Database(OvldBase):
                 sch.PaperAuthorInstitution: "paper_id",
                 sch.t_paper_release: "paper_id",
                 sch.t_paper_topic: "paper_id",
-                sch.PaperScraper: "paper_id",
+                sch.Scraper: "hashid",
             },
         )
 
@@ -305,6 +306,10 @@ class Database(OvldBase):
         id_field,
         ids,
     ):
+        def conds(field=id_field):
+            conds = [f"{field} = X'{pid.hex}'" for pid in ids]
+            return " OR ".join(conds)
+
         table = getattr(table, "__table__", table)
         fields = [column.name for column in table.columns]
 
@@ -320,19 +325,16 @@ class Database(OvldBase):
 
         canonical, ids = self._filter_ids(ids, create_canonical)
 
-        conds = [f"{id_field} = X'{pid.hex}'" for pid in ids]
-        conds = " OR ".join(conds)
-
         for subtable, field in redirects.items():
             subtable = getattr(subtable, "__table__", subtable)
             stmt = f"""
             UPDATE OR REPLACE {subtable}
             SET {field} = X'{canonical.hex}'
-            WHERE {conds}
+            WHERE {conds(field)}
             """
             self.session.execute(stmt)
 
         stmt = f"""
-        DELETE FROM {table.name} WHERE {conds}
+        DELETE FROM {table.name} WHERE {conds()}
         """
         self.session.execute(stmt)

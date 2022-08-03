@@ -136,10 +136,10 @@ CREATE TABLE IF NOT EXISTS paper_topic (
 	PRIMARY KEY (paper_id, topic_id)
 );
 
-CREATE TABLE IF NOT EXISTS paper_scraper (
-	paper_id BLOB REFERENCES paper(paper_id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS scraper (
+	hashid BLOB NOT NULL,
 	scraper TEXT,
-	PRIMARY KEY (paper_id, scraper)
+	PRIMARY KEY (hashid, scraper)
 );
 
 CREATE TABLE IF NOT EXISTS canonical_id (
