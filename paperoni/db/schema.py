@@ -2,7 +2,6 @@ from sqlalchemy import (
     CheckConstraint,
     Column,
     ForeignKey,
-    ForeignKeyConstraint,
     Integer,
     LargeBinary,
     Table,
@@ -27,9 +26,9 @@ class Author(Base):
     )
     author_link = relationship("AuthorLink", back_populates="author")
     paper_author = relationship("PaperAuthor", back_populates="author")
-    # paper_author_institution = relationship(
-    #     "PaperAuthorInstitution", back_populates="author"
-    # )
+    paper_author_institution = relationship(
+        "PaperAuthorInstitution", back_populates="author"
+    )
 
     @property
     def links(self):
@@ -63,9 +62,9 @@ class Institution(Base):
     institution_alias = relationship(
         "InstitutionAlias", back_populates="institution"
     )
-    # paper_author_institution = relationship(
-    #     "PaperAuthorInstitution", back_populates="institution"
-    # )
+    paper_author_institution = relationship(
+        "PaperAuthorInstitution", back_populates="institution"
+    )
 
 
 class Paper(Base):
@@ -83,12 +82,12 @@ class Paper(Base):
         "Release", secondary="paper_release", back_populates="paper"
     )
     paper_author = relationship("PaperAuthor", back_populates="paper")
+    paper_author_institution = relationship(
+        "PaperAuthorInstitution", back_populates="paper"
+    )
     paper_flag = relationship("PaperFlag", back_populates="paper")
     paper_link = relationship("PaperLink", back_populates="paper")
     paper_scraper = relationship("PaperScraper", back_populates="paper")
-    # paper_author_institution = relationship(
-    #     "PaperAuthorInstitution", back_populates="paper"
-    # )
 
     @property
     def authors(self):
@@ -195,20 +194,46 @@ class InstitutionAlias(Base):
 class PaperAuthor(Base):
     __tablename__ = "paper_author"
 
+    paper_id = Column(
+        ForeignKey("paper.paper_id"), primary_key=True, nullable=False
+    )
+    author_id = Column(
+        ForeignKey("author.author_id"), primary_key=True, nullable=False
+    )
     author_position = Column(Integer, nullable=False)
-    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
-    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
 
     author = relationship("Author", back_populates="paper_author")
     paper = relationship("Paper", back_populates="paper_author")
-    paper_author_institution = relationship(
-        "PaperAuthorInstitution"  # , back_populates="paper_author"
-    )
 
     @property
     def affiliations(self):
-        pais = self.paper_author_institution
-        return [pai.institution for pai in pais]
+        return [
+            pai.institution
+            for pai in self.paper.paper_author_institution
+            if pai.author == self.author
+        ]
+
+
+class PaperAuthorInstitution(Base):
+    __tablename__ = "paper_author_institution"
+
+    paper_id = Column(
+        ForeignKey("paper.paper_id"), primary_key=True, nullable=False
+    )
+    author_id = Column(
+        ForeignKey("author.author_id"), primary_key=True, nullable=False
+    )
+    institution_id = Column(
+        ForeignKey("institution.institution_id"),
+        primary_key=True,
+        nullable=False,
+    )
+
+    author = relationship("Author", back_populates="paper_author_institution")
+    institution = relationship(
+        "Institution", back_populates="paper_author_institution"
+    )
+    paper = relationship("Paper", back_populates="paper_author_institution")
 
 
 class PaperFlag(Base):
@@ -282,33 +307,6 @@ class VenueLink(Base):
     venue_id = Column(ForeignKey("venue.venue_id"), primary_key=True)
 
     venue = relationship("Venue", back_populates="venue_link")
-
-
-class PaperAuthorInstitution(Base):
-    __tablename__ = "paper_author_institution"
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["paper_id", "author_id"],
-            ["paper_author.paper_id", "paper_author.author_id"],
-            ondelete="CASCADE",
-        ),
-    )
-
-    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
-    author_id = Column(ForeignKey("author.author_id"), primary_key=True)
-    institution_id = Column(
-        ForeignKey("institution.institution_id"), primary_key=True
-    )
-
-    # author = relationship("Author", back_populates="paper_author_institution")
-    institution = relationship(
-        "Institution",  # back_populates="paper_author_institution"
-    )
-    # paper_author = relationship(
-    #     "PaperAuthor", back_populates="paper_author_institution",
-    #     overlaps="author,paper_author_institution"
-    # )
-    # paper = relationship("Paper", back_populates="paper_author_institution")
 
 
 t_paper_release = Table(

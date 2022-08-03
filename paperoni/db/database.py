@@ -214,6 +214,7 @@ class Database(OvldBase):
             ids=merge.ids,
             redirects={
                 sch.PaperAuthor: "author_id",
+                sch.PaperAuthorInstitution: "author_id",
                 sch.AuthorLink: "author_id",
                 sch.AuthorAlias: "author_id",
                 sch.AuthorInstitution: "author_id",
@@ -325,7 +326,7 @@ class Database(OvldBase):
         for subtable, field in redirects.items():
             subtable = getattr(subtable, "__table__", subtable)
             stmt = f"""
-            UPDATE OR IGNORE {subtable}
+            UPDATE OR REPLACE {subtable}
             SET {field} = X'{canonical.hex}'
             WHERE {conds}
             """
