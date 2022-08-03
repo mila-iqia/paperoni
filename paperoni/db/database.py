@@ -145,7 +145,7 @@ class Database(OvldBase):
             )
             self.session.merge(lnk)
 
-        for alias in author.aliases:
+        for alias in set(author.aliases) | {author.name}:
             aal = sch.AuthorAlias(
                 author_id=aa.author_id,
                 alias=alias,
