@@ -110,18 +110,17 @@ CREATE TABLE IF NOT EXISTS institution_alias (
 );
 
 CREATE TABLE IF NOT EXISTS paper_author (
-	paper_id BLOB REFERENCES paper(paper_id) ON DELETE CASCADE,
-	author_id BLOB REFERENCES author(author_id) ON DELETE CASCADE,
+	paper_id BLOB NOT NULL REFERENCES paper(paper_id) ON DELETE CASCADE,
+	author_id BLOB NOT NULL REFERENCES author(author_id) ON DELETE CASCADE,
 	-- Author position in paper authors list.
 	author_position UNSIGNED INT NOT NULL,
 	PRIMARY KEY (paper_id, author_id)
 );
 
 CREATE TABLE IF NOT EXISTS paper_author_institution (
-	paper_id BLOB REFERENCES paper(paper_id) ON DELETE CASCADE,
-	author_id BLOB REFERENCES author(author_id) ON DELETE CASCADE,
-	institution_id BLOB REFERENCES institution(institution_id) ON DELETE CASCADE,
-	FOREIGN KEY (paper_id, author_id) REFERENCES paper_author(paper_id, author_id) ON DELETE CASCADE,
+	paper_id BLOB NOT NULL REFERENCES paper(paper_id) ON DELETE CASCADE,
+	author_id BLOB NOT NULL REFERENCES author(author_id) ON DELETE CASCADE,
+	institution_id BLOB NOT NULL REFERENCES institution(institution_id) ON DELETE CASCADE,
 	PRIMARY KEY (paper_id, author_id, institution_id)
 );
 
