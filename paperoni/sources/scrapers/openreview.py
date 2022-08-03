@@ -1,5 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
+import json
+import re
 
 import openreview
 from coleo import Option, tooled
@@ -88,13 +90,18 @@ class OpenReviewScraper:
                                 type=OpenReviewScraper._map_venue_type(
                                     note.content["venueid"]
                                 ),
-                                name=note.content["venue"],
+                                name=re.sub(
+                                    pattern=" 2[0-9]{3} ",
+                                    string=note.content["venue"],
+                                    repl=" ",
+                                ),
                                 links=[],
                             ),
                             date=str(
                                 datetime.fromtimestamp(note.tcdate / 1000)
                             ),
                             date_precision=DatePrecision.day,
+                            volume=note.content["venueid"],
                         )
                     ],
                     topics=[
