@@ -121,6 +121,7 @@ class OpenReviewScraper:
             venues = self.client.get_group(id="venues").members
 
         for v in venues:
+            print(f"Fetching from venue {v}")
             params = {
                 **params,
                 "content": {**params["content"], "venueid": v},
@@ -194,9 +195,11 @@ class OpenReviewScraper:
     @tooled
     def prepare(self, researchers):
         # Venue on the basis of which to search
-        venue: Option
+        venue: Option = None
 
-        papers = list(self._query(params={"content": {"venueid": venue}}))
+        papers = list(
+            self._query_all_venues(params={}, venues=venue and [venue])
+        )
 
         def query_name(aname):
             print(f"Processing {aname}")
