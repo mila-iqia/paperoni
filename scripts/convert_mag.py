@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import sys
 
@@ -40,11 +41,19 @@ def process_paper(paper):
             "links": [],
         }
 
+    venue.update(
+        {
+            "series": venue["name"],
+            **DatePrecision.assimilate_date(paper["D"]),
+            "volume": paper.get("V", None),
+            "publisher": paper.get("PB", None),
+        }
+    )
+
     release = {
         "venue": venue,
-        **DatePrecision.assimilate_date(paper["D"]),
-        "volume": paper.get("V", None),
-        "publisher": paper.get("PB", None),
+        "status": "published",
+        "pages": None,
     }
 
     authors = {}
@@ -61,7 +70,7 @@ def process_paper(paper):
                     "aliases": [],
                     "roles": [],
                 },
-            }
+            },
         )
         authors[auid]["affiliations"].append(
             {
@@ -89,7 +98,6 @@ def process_paper(paper):
             release,
         ],
         "topics": [{"name": f["FN"]} for f in paper.get("F", [])],
-        "scrapers": ["mag"],
         "citation_count": paper["CC"],
     }
     return result
@@ -97,6 +105,11 @@ def process_paper(paper):
 
 def mag_papers(json_db):
     data = json.load(open(json_db))
+    yield {
+        "__type__": "Meta",
+        "scraper": "mag",
+        "date": datetime.now(),
+    }
     for _, paper in data.items():
         result = process_paper(paper)
         if result is not None:

@@ -1,5 +1,6 @@
 import json
 import urllib.parse
+from datetime import datetime
 
 from coleo import Option, tooled
 
@@ -9,6 +10,7 @@ from ..model import (
     Author,
     DatePrecision,
     Link,
+    Meta,
     Paper,
     PaperAuthor,
     Release,
@@ -203,10 +205,13 @@ class SemanticScholarQueryManager:
                     or "_"
                 ],
                 name=data["venue"],
+                series=data["venue"],
                 volume=(j := data["journal"]) and j.get("volume", None),
+                **date,
                 links=[],
             ),
-            **date,
+            status="published",
+            pages=None,
         )
         return Paper(
             links=links,
@@ -218,7 +223,6 @@ class SemanticScholarQueryManager:
                 Topic(name=field) for field in (data["fieldsOfStudy"] or ())
             ],
             releases=[release],
-            scrapers=["ssch"],
         )
 
     def search(self, query, fields=SEARCH_FIELDS, **params):
@@ -341,6 +345,11 @@ class SemanticScholarScraper:
                     todo[link.link] = auq
 
         ss = SemanticScholarQueryManager()
+
+        yield Meta(
+            scraper="ssch",
+            date=datetime.now(),
+        )
 
         for ssid, auq in todo.items():
             print(f"Fetch papers for {auq.author.name} (ID={ssid})")

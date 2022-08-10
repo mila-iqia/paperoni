@@ -3,6 +3,8 @@ PRAGMA foreign_keys=ON;
 CREATE TABLE IF NOT EXISTS paper (
 	paper_id BLOB PRIMARY KEY,
 	title TEXT,
+	-- squashed title for easier merge, e.g. thefundamentalsofdeeplearning
+	squashed TEXT,
 	abstract TEXT,
 	citation_count INTEGER
 );
@@ -59,9 +61,16 @@ CREATE TABLE IF NOT EXISTS author_institution (
 
 CREATE TABLE IF NOT EXISTS venue (
 	venue_id BLOB PRIMARY KEY,
+	name TEXT NOT NULL,
 	-- One of "journal", "conference", "book" ...
 	type TEXT,
-	name TEXT NOT NULL
+	-- Conference/journal series
+	series TEXT,
+	-- Timestamp in seconds.
+	date UNSIGNED BIG INT NOT NULL,
+	date_precision UNSIGNED INT NOT NULL,
+	volume TEXT,
+	publisher TEXT
 );
 
 CREATE TABLE IF NOT EXISTS venue_link (
@@ -82,12 +91,9 @@ CREATE TABLE IF NOT EXISTS venue_alias (
 CREATE TABLE IF NOT EXISTS release (
 	release_id BLOB PRIMARY KEY,
 	venue_id BLOB REFERENCES venue(venue_id) ON DELETE CASCADE,
-	-- Timestamp in seconds.
-	date UNSIGNED BIG INT NOT NULL,
-	date_precision UNSIGNED INT NOT NULL,
-	volume TEXT,
-	publisher TEXT
-	-- UNIQUE (venue_id, volume)
+	-- published, submitted, rejected, poster, spotlight, etc.
+	status TEXT,
+	pages TEXT
 );
 
 CREATE TABLE IF NOT EXISTS topic (
@@ -138,7 +144,9 @@ CREATE TABLE IF NOT EXISTS paper_topic (
 
 CREATE TABLE IF NOT EXISTS scraper (
 	hashid BLOB NOT NULL,
-	scraper TEXT,
+	scraper TEXT NOT NULL,
+	-- Note: latest date should take precedence
+	date TEXT NOT NULL,
 	PRIMARY KEY (hashid, scraper)
 );
 

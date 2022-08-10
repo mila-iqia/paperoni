@@ -72,6 +72,7 @@ class Paper(Base):
 
     paper_id = Column(LargeBinary, primary_key=True)
     title = Column(Text)
+    squashed = Column(Text)
     abstract = Column(Text)
     citation_count = Column(Integer)
 
@@ -111,7 +112,8 @@ class Scraper(Base):
     __tablename__ = "scraper"
 
     hashid = Column(LargeBinary, primary_key=True, nullable=False)
-    scraper = Column(Text, primary_key=True)
+    scraper = Column(Text, primary_key=True, nullable=False)
+    date = Column(Text, nullable=False)
 
 
 class Topic(Base):
@@ -140,8 +142,13 @@ class Venue(Base):
     __tablename__ = "venue"
 
     name = Column(Text, nullable=False)
+    date = Column(Integer, nullable=False)
+    date_precision = Column(Integer, nullable=False)
     venue_id = Column(LargeBinary, primary_key=True)
     type = Column(Text)
+    series = Column(Text)
+    volume = Column(Text)
+    publisher = Column(Text)
 
     release = relationship("Release", back_populates="venue")
     venue_alias = relationship("VenueAlias", back_populates="venue")
@@ -274,12 +281,10 @@ t_paper_topic = Table(
 class Release(Base):
     __tablename__ = "release"
 
-    date = Column(Integer, nullable=False)
-    date_precision = Column(Integer, nullable=False)
     release_id = Column(LargeBinary, primary_key=True)
     venue_id = Column(ForeignKey("venue.venue_id"))
-    volume = Column(Text)
-    publisher = Column(Text)
+    status = Column(Text)
+    pages = Column(Text)
 
     paper = relationship(
         "Paper", secondary="paper_release", back_populates="release"
