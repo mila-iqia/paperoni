@@ -1,6 +1,29 @@
+import re
+import unicodedata
 from collections import defaultdict
 
 _uuid_tags = ["transient", "canonical"]
+
+
+def asciiify(s):
+    """Translate a string to pure ASCII, removing accents and the like.
+
+    Non-ASCII characters that are not accented characters are removed.
+    """
+    norm = unicodedata.normalize("NFD", s)
+    stripped = norm.encode("ASCII", "ignore")
+    return stripped.decode("utf8")
+
+
+def squash_text(txt):
+    """Convert text to a sequence of lowercase characters and numbers.
+
+    * Non-ASCII characters are converted to ASCII or dropped
+    * Uppercase is converted to lowercase
+    * All spaces and special characters are removed, only letters and numbers remain
+    """
+    txt = asciiify(txt).lower()
+    return re.sub(pattern=r"[^a-z0-9]+", string=txt, repl="")
 
 
 def tag_uuid(uuid, status):

@@ -319,19 +319,17 @@ class search:
                     .filter(sch.Author.name.like(f"%{author}%"))
                 )
             if venue or start or end:
-                stmt = stmt.join(sch.Paper.release)
+                stmt = stmt.join(sch.Paper.release).join(sch.Release.venue)
             if venue:
                 if venue.startswith("="):
                     venue = venue[1:]
                 else:
                     venue = f"%{venue}%"
-                stmt = stmt.join(sch.Release.venue).filter(
-                    sch.Venue.name.like(venue)
-                )
+                stmt = stmt.filter(sch.Venue.name.like(venue))
             if start:
-                stmt = stmt.filter(sch.Release.date >= start)
+                stmt = stmt.filter(sch.Venue.date >= start)
             if end:
-                stmt = stmt.filter(sch.Release.date <= end)
+                stmt = stmt.filter(sch.Venue.date <= end)
             stmt = stmt.group_by(sch.Paper.paper_id)
 
             for (entry,) in db.session.execute(stmt):

@@ -7,7 +7,7 @@ from blessed import Terminal
 from ovld import ovld
 
 from .db import schema as sch
-from .sources.model import Author, DatePrecision, Paper, from_dict
+from .sources.model import Author, DatePrecision, Paper, Release, from_dict
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns
@@ -103,10 +103,11 @@ def format_term(self):
     print_field("Title", T.bold(self.title))
     print_field("Authors", ", ".join(auth.name for auth in self.authors))
     for release in self.releases:
+        venue = release.venue
         print_field(
-            "Date", DatePrecision.format(release.date, release.date_precision)
+            "Date", DatePrecision.format(venue.date, venue.date_precision)
         )
-        print_field("Venue", release.venue.name)
+        print_field("Venue", venue.name)
     if self.links:
         print_field("URL", expand_links(self.links)[0][1])
 
@@ -126,15 +127,19 @@ def display(paper: Union[Paper, sch.Paper]):
     print_field("Title", paper.title)
     print_field("Authors", "")
     for auth in paper.authors:
-        print(
-            f" * {auth.author.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
-        )
+        if auth.author:
+            print(
+                f" * {auth.author.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
+            )
+        else:
+            print(T.bold_red("ERROR: MISSING AUTHOR"))
     print_field("Abstract", paper.abstract)
     print_field("Venue", "")
     for release in paper.releases:
-        d = DatePrecision.format(release.date, release.date_precision)
-        v = release.venue.name
-        print(f"  {T.bold_green(d)} {v}")
+        venue = release.venue
+        d = DatePrecision.format(venue.date, venue.date_precision)
+        v = venue.name
+        print(f"  {T.bold_green(d)} {T.bold_magenta(release.status)} {v}")
     print_field("Topics", ", ".join(t.name for t in paper.topics))
     print_field("Sources", "")
     for typ, link in expand_links(paper.links):

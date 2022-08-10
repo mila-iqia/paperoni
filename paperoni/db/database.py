@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import sqlite3
@@ -15,7 +16,9 @@ from ..config import config
 from ..sources.model import (
     Author,
     AuthorMerge,
+    Base,
     Institution,
+    Meta,
     Paper,
     PaperMerge,
     Release,
@@ -23,7 +26,7 @@ from ..sources.model import (
     Venue,
     from_dict,
 )
-from ..tools import get_uuid_tag, is_canonical_uuid, tag_uuid
+from ..tools import get_uuid_tag, is_canonical_uuid, squash_text, tag_uuid
 from . import schema as sch
 
 
@@ -39,6 +42,7 @@ class Database(OvldBase):
         with open(self.DATABASE_SCRIPT_FILE) as script_file:
             cursor.executescript(script_file.read())
             connection.commit()
+        self.meta = None
         self.session = None
         self.cache = {}
         with self:
@@ -56,7 +60,10 @@ class Database(OvldBase):
         self.session.__exit__(*args)
         self.session = None
 
-    def acquire(self, x):
+    def acquire(self, m: Meta):
+        self.meta = m
+
+    def acquire(self, x: Base):
         # The id can be "transient" or "canonical". If it is "transient" it is defined
         # by its content, so we only ever need to acquire it once. If it is "canonical"
         # then it may contain new information we need to acquire, so we do not use the
@@ -71,12 +78,20 @@ class Database(OvldBase):
             if tag == "transient":
                 hid_object = sch.CanonicalId(hashid=hid, canonical=None)
                 self.session.add(hid_object)
+                if self.meta:
+                    scr = sch.Scraper(
+                        hashid=hid,
+                        scraper=self.meta.scraper,
+                        date=int(self.meta.date.timestamp()),
+                    )
+                    self.session.merge(scr)
         return self.cache[hid]
 
     def _acquire(self, paper: Paper):
         pp = sch.Paper(
             paper_id=paper.hashid(),
             title=paper.title,
+            squashed=squash_text(paper.title),
             abstract=paper.abstract,
             citation_count=paper.citation_count,
         )
@@ -127,10 +142,6 @@ class Database(OvldBase):
             )
             self.session.merge(lnk)
 
-        for scraper in paper.scrapers:
-            psps = sch.Scraper(hashid=pp.paper_id, scraper=scraper)
-            self.session.merge(psps)
-
         return pp.paper_id
 
     def _acquire(self, author: Author):
@@ -177,11 +188,9 @@ class Database(OvldBase):
         venue_id = self.acquire(release.venue)
         rr = sch.Release(
             release_id=release.hashid(),
-            date=release.date.timestamp(),
-            date_precision=release.date_precision,
-            volume=release.volume,
-            publisher=release.publisher,
             venue_id=venue_id,
+            status=release.status,
+            pages=release.pages,
         )
         self.session.merge(rr)
         return rr.release_id
@@ -193,7 +202,13 @@ class Database(OvldBase):
 
     def _acquire(self, venue: Venue):
         vv = sch.Venue(
-            venue_id=venue.hashid(), type=venue.type, name=venue.name
+            venue_id=venue.hashid(),
+            type=venue.type,
+            name=venue.name,
+            date=venue.date.timestamp(),
+            date_precision=venue.date_precision,
+            volume=venue.volume,
+            publisher=venue.publisher,
         )
         self.session.merge(vv)
 

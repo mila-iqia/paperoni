@@ -86,7 +86,8 @@ def prepare(
 
             print(f"Aliases: {aliases}")
             papers = [
-                (p.releases[0].date.year, i, p) for i, p in enumerate(papers)
+                (p.releases[0].venue.date.year, i, p)
+                for i, p in enumerate(papers)
             ]
             papers.sort(reverse=True)
             print(f"Years: {papers[-1][0]} to {papers[0][0]}")

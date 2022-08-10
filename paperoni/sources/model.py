@@ -125,7 +125,6 @@ class Paper(Base):
     releases: list[Release]
     topics: list[Topic]
     links: list[Link]
-    scrapers: list[str]
 
 
 class PaperAuthor(Base):
@@ -155,16 +154,18 @@ class Institution(Base):
 
 class Release(Base):
     venue: Venue
-    date: datetime
-    date_precision: DatePrecision
-    volume: Optional[str]
-    publisher: Optional[str]
+    status: str
+    pages: Optional[str]
 
 
 class Venue(Base):
     type: VenueType
     name: str
     links: list[Link]
+    date: datetime
+    date_precision: DatePrecision
+    volume: Optional[str]
+    publisher: Optional[str]
 
 
 class Topic(Base):
@@ -199,6 +200,11 @@ class AuthorMerge(Merge):
 
 class PaperMerge(Merge):
     pass
+
+
+class Meta(Base):
+    scraper: Optional[str]
+    date: datetime
 
 
 for cls in list(globals().values()):
