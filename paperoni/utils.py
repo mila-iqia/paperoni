@@ -7,7 +7,14 @@ from blessed import Terminal
 from ovld import ovld
 
 from .db import schema as sch
-from .sources.model import Author, DatePrecision, Paper, Release, from_dict
+from .sources.model import (
+    Author,
+    DatePrecision,
+    Paper,
+    Release,
+    Venue,
+    from_dict,
+)
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns
@@ -159,6 +166,23 @@ def display(author: Author):
             )
     print_field("Links", "")
     for typ, link in expand_links(author.links):
+        print(f"  {T.bold_green(typ):20} {link}")
+
+
+@ovld
+def display(venue: Venue):
+    """Print a release on the terminal."""
+    print_field("Venue", T.bold(venue.name))
+    print_field("Series", T.bold(venue.series))
+    print_field("Type", T.bold(venue.type))
+    if venue.aliases:
+        print_field("Aliases", "")
+        for alias in venue.aliases:
+            print(f"* {alias}")
+    d = DatePrecision.format(venue.date, venue.date_precision)
+    print_field("Date", d)
+    print_field("Links", "")
+    for typ, link in expand_links(venue.links):
         print(f"  {T.bold_green(typ):20} {link}")
 
 
