@@ -1,6 +1,7 @@
 import re
 import unicodedata
 from collections import defaultdict
+from datetime import datetime
 
 _uuid_tags = ["transient", "canonical"]
 
@@ -24,6 +25,71 @@ def squash_text(txt):
     """
     txt = asciiify(txt).lower()
     return re.sub(pattern=r"[^a-z0-9]+", string=txt, repl="")
+
+
+def extract_date(txt):
+    from paperoni.sources.model import DatePrecision
+
+    if not isinstance(txt, str):
+        return None
+
+    months = [
+        "Jan-uary",
+        "Feb-ruary",
+        "Mar-ch",
+        "Apr-il",
+        "May-",
+        "Jun-e",
+        "Jul-y",
+        "Aug-ust",
+        "Sep-tember",
+        "Oct-ober",
+        "Nov-ember",
+        "Dec-ember",
+    ]
+    months = [m.split("-") for m in months]
+    stems = [a.lower() for a, b in months]
+    months = [(f"{a}(?:{b})?" if b else a) for a, b in months]
+    month = "|".join(months)
+
+    patterns = {
+        rf"({month}) ([0-9]{{1,2}}) *- *(?:{month}) [0-9]{{1,2}}[, ]+([0-9]{{4}})": (
+            "m",
+            "d",
+            "y",
+        ),
+        rf"({month}) ([0-9]{{1,2}}) *- *[0-9]{{1,2}}[, ]+([0-9]{{4}})": (
+            "m",
+            "d",
+            "y",
+        ),
+        rf"({month}) ([0-9]{{1,2}})[, ]+([0-9]{{4}})": ("m", "d", "y"),
+        rf"([0-9]{{1,2}}) *- *[0-9]{{1,2}}[ ,]+({month})[, ]+([0-9]{{4}})": (
+            "d",
+            "m",
+            "y",
+        ),
+        rf"([0-9]{{1,2}})[ ,]+({month})[, ]+([0-9]{{4}})": ("d", "m", "y"),
+        rf"({month}) +([0-9]{{4}})": ("m", "y"),
+    }
+
+    for pattern, parts in patterns.items():
+        if m := re.search(pattern=pattern, string=txt, flags=re.IGNORECASE):
+            results = {k: m.groups()[i] for i, k in enumerate(parts)}
+            precision = DatePrecision.day
+            if "d" not in results:
+                results.setdefault("d", 1)
+                precision = DatePrecision.month
+            return {
+                "date": datetime(
+                    int(results["y"]),
+                    stems.index(results["m"].lower()[:3]) + 1,
+                    int(results["d"]),
+                ),
+                "date_precision": precision,
+            }
+    else:
+        return None
 
 
 def tag_uuid(uuid, status):

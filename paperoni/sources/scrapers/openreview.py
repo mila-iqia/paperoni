@@ -6,6 +6,8 @@ from datetime import datetime
 import openreview
 from coleo import Option, tooled
 
+from paperoni.tools import extract_date
+
 from ..model import (
     Author,
     DatePrecision,
@@ -20,7 +22,11 @@ from ..model import (
 from ..utils import prepare
 
 
-def parse_venue(venue):
+def venue_to_series(venueid):
+    return re.sub(pattern=r"/[0-4]{4}", string=venueid, repl="")
+
+
+def parse_openreview_venue(venue):
     extractors = {
         r"\b(2[0-9]{3})\b": "year",
         r"\b(submitted|poster|oral|spotlight)\b": "status",
@@ -97,7 +103,7 @@ class OpenReviewScraper:
                 if "code" in note.content:
                     Link(type="git", link=note.content["code"])
 
-                venue_data = parse_venue(note.content["venue"])
+                venue_data = parse_openreview_venue(note.content["venue"])
                 date = datetime.fromtimestamp(note.tcdate / 1000)
                 precision = DatePrecision.day
                 if "year" in venue_data:
@@ -108,23 +114,29 @@ class OpenReviewScraper:
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
 
+                vid = note.content["venueid"]
+
                 yield Paper(
                     title=note.content["title"],
-                    abstract=note.content.get("abstract", ""),
+                    abstract=note.content.get("abstract"),
                     citation_count=0,
                     authors=authors,
                     releases=[
                         Release(
                             venue=Venue(
-                                type=OpenReviewScraper._map_venue_type(
-                                    note.content["venueid"]
-                                ),
-                                name=note.content["venueid"],
-                                series=venue_data["venue"],
+                                type=OpenReviewScraper._map_venue_type(vid),
+                                name=vid,
+                                series=venue_to_series(vid),
                                 volume=venue_data["venue"],
                                 date=date,
                                 date_precision=precision,
-                                links=[],
+                                links=[
+                                    Link(
+                                        type="openreview-venue",
+                                        link=vid,
+                                    )
+                                ],
+                                aliases=[],
                             ),
                             status=venue_data.get("status", "published"),
                             pages=None,
@@ -142,7 +154,9 @@ class OpenReviewScraper:
                 break
         total += next_offset
 
-    def _query_all_venues(self, params, venues=None, total=0, limit=1000000):
+    def _query_papers_from_venues(
+        self, params, venues=None, total=0, limit=1000000
+    ):
         if not venues:
             venues = self.client.get_group(id="venues").members
 
@@ -157,6 +171,47 @@ class OpenReviewScraper:
             for paper in self._query(params, total, limit):
                 total += 1
                 yield paper
+
+    def _query_venues(self, venues):
+        patterns = {
+            "date": [
+                r"(['\"]?)date\1: *(['\"])([^'\"]*)\2",
+                r"(['\"]?)location\1: *(['\"])([^'\"]*)\2",
+            ],
+            "title": [
+                r"(['\"]?)title\1: *(['\"])([^'\"]*)\2",
+            ],
+        }
+
+        for venueid in venues:
+            data = self.client.get_group(id=venueid)
+
+            info = {}
+            for key, patts in patterns.items():
+                for p in patts:
+                    if m := re.search(pattern=p, string=data.web):
+                        info[key] = m.groups()[2]
+                        break
+                else:
+                    info[key] = None
+
+            xdate = (
+                extract_date(info.get("date"))
+                or extract_date(info.get("location"))
+                or extract_date(info.get("title"))
+            )
+            title = info.get("title")
+            if not xdate or not title:
+                continue
+
+            yield Venue(
+                type=self._map_venue_type(venueid),
+                name=title,
+                series=venue_to_series(venueid),
+                aliases=[],
+                links=[Link(type="openreview-venue", link=venueid)],
+                **xdate,
+            )
 
     @tooled
     def query(
@@ -180,7 +235,21 @@ class OpenReviewScraper:
         # [alias: -v]
         # [nargs: +]
         venue: Option = [],
+        # Show venues
+        show_venues: Option & bool = False,
     ):
+        if show_venues:
+            assert not author
+            assert not title
+
+            members = self.client.get_group(id="venues").members
+            import random
+
+            random.shuffle(members)
+
+            yield from self._query_venues(members)
+            return
+
         author = " ".join(author)
         title = " ".join(title)
 
@@ -208,7 +277,7 @@ class OpenReviewScraper:
                 "content": {**params["content"], "title": title},
             }
 
-        yield from self._query_all_venues(params, venue, 0, limit)
+        yield from self._query_papers_from_venues(params, venue, 0, limit)
 
     @tooled
     def acquire(self, queries):
@@ -235,7 +304,7 @@ class OpenReviewScraper:
         venue: Option = None
 
         papers = list(
-            self._query_all_venues(
+            self._query_papers_from_venues(
                 params={"content": {}}, venues=venue and [venue]
             )
         )

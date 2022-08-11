@@ -208,6 +208,7 @@ class SemanticScholarQueryManager:
                 series=data["venue"],
                 volume=(j := data["journal"]) and j.get("volume", None),
                 **date,
+                aliases=[],
                 links=[],
             ),
             status="published",

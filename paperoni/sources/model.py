@@ -161,11 +161,13 @@ class Release(Base):
 class Venue(Base):
     type: VenueType
     name: str
-    links: list[Link]
+    series: str
     date: datetime
     date_precision: DatePrecision
     volume: Optional[str]
     publisher: Optional[str]
+    aliases: list[str]
+    links: list[Link]
 
 
 class Topic(Base):
