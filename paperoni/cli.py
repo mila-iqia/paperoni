@@ -401,9 +401,11 @@ def merge():
     list: Option & bool = False
 
     method_map = {
-        "author_link": mergers.merge_authors_by_shared_link,
         "paper_link": mergers.merge_papers_by_shared_link,
         "paper_name": mergers.merge_papers_by_name,
+        "author_link": mergers.merge_authors_by_shared_link,
+        "author_name": mergers.merge_authors_by_name,
+        "author_position": mergers.merge_authors_by_position,
     }
 
     if list:
