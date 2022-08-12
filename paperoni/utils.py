@@ -7,14 +7,7 @@ from blessed import Terminal
 from ovld import ovld
 
 from .db import schema as sch
-from .sources.model import (
-    Author,
-    DatePrecision,
-    Paper,
-    Release,
-    Venue,
-    from_dict,
-)
+from .model import Author, DatePrecision, Paper, Venue, from_dict
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns

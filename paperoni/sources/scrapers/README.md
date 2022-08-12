@@ -39,7 +39,7 @@ You may define three methods: `query`, `prepare` and `acquire`.
 
 ## query
 
-`query` is meant to simply query the scraper. This is the first method that should be defined, and it should be used to test that the right papers with the right information are produced. `query` must return or yield a list of `paperoni.sources.model.Paper`. Try to implement it as a generator if possible.
+`query` is meant to simply query the scraper. This is the first method that should be defined, and it should be used to test that the right papers with the right information are produced. `query` must return or yield a list of `paperoni.model.Paper`. Try to implement it as a generator if possible.
 
 You may add any options you want, depending on what the scraper supports. For example, you may have `--author` if it can query by author, or `--conference` if it can query by conference name, or no options if it cannot be configured.
 
@@ -49,7 +49,7 @@ The options should be defined using [coleo](https://github.com/breuleux/coleo#co
 
 `prepare` is only relevant for certain scrapers that associate researchers to IDs (for example, Semantic Scholar or OpenAlex).
 
-As input it takes a list of `paperoni.sources.model.AuthorQuery` (you can ignore the `author_id` field). It should return or yield a list of `paperoni.sources.model.AuthorQuery` that will add extra information to the given authors.
+As input it takes a list of `paperoni.model.AuthorQuery` (you can ignore the `author_id` field). It should return or yield a list of `paperoni.model.AuthorQuery` that will add extra information to the given authors.
 
 For example, if `auq` is the first `AuthorQuery`, and `auq.author.name == "Olivier Breuleux"`, you could yield:
 

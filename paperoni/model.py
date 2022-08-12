@@ -9,7 +9,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
 
-from ..tools import tag_uuid
+from .tools import tag_uuid
 
 
 class VenueType(str, Enum):

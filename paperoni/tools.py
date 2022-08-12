@@ -28,7 +28,7 @@ def squash_text(txt):
 
 
 def extract_date(txt):
-    from paperoni.sources.model import DatePrecision
+    from .model import DatePrecision
 
     if not isinstance(txt, str):
         return None
