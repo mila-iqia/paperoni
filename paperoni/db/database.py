@@ -45,6 +45,7 @@ class Database(OvldBase):
         self.meta = None
         self.session = None
         self.cache = {}
+        self._ctxlevel = 0
         with self:
             self.canonical = {
                 entry.hashid: entry.canonical
@@ -52,13 +53,17 @@ class Database(OvldBase):
             }
 
     def __enter__(self):
-        self.session = Session(self.engine).__enter__()
+        if not self._ctxlevel:
+            self.session = Session(self.engine).__enter__()
+        self._ctxlevel += 1
         return self
 
     def __exit__(self, *args):
-        self.session.commit()
-        self.session.__exit__(*args)
-        self.session = None
+        self._ctxlevel -= 1
+        if not self._ctxlevel:
+            self.session.commit()
+            self.session.__exit__(*args)
+            self.session = None
 
     def acquire(self, m: Meta):
         self.meta = m
