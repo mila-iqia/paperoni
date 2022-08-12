@@ -114,6 +114,8 @@ def is_canonical_uuid(uuid):
 class EquivalenceGroups:
     def __init__(self):
         self.representatives = {}
+        self.names = {}
+        self.classes = {}
 
     def equiv(self, a, b):
         ar = self.follow(a)
@@ -129,12 +131,15 @@ class EquivalenceGroups:
         else:
             self.representatives[b] = a
 
-    def equiv_all(self, ids):
+    def equiv_all(self, ids, cls=None, under=None):
         if not ids:
             return
         a, *rest = list(ids)
         for b in rest:
             self.equiv(a, b)
+        for x in ids:
+            self.names[x] = under
+            self.classes[x] = cls
 
     def follow(self, a):
         if b := self.representatives.get(a, None):
@@ -152,3 +157,9 @@ class EquivalenceGroups:
         for k, v in self.representatives.items():
             results[v].add(k)
         return results
+
+    def __iter__(self):
+        for main, ids in self.groups().items():
+            assert len(ids) > 1
+            print(f"Merging {len(ids)} IDs for {self.names[main]}")
+            yield self.classes[main](ids=ids)

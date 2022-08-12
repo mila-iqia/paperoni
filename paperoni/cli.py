@@ -1,15 +1,15 @@
 import json
 import re
 from datetime import datetime
+from fnmatch import fnmatch
 
 from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
 from .config import configure
-from .db import schema as sch
+from .db import merge as mergers, schema as sch
 from .db.database import Database
-from .model import AuthorMerge, PaperMerge
 from .sources.scrapers import load_scrapers
 from .tools import EquivalenceGroups
 from .utils import display
@@ -392,77 +392,42 @@ class report:
         run_sql_query(query)
 
 
-class merge:
-    def author():
-        with load_database(tag="merge") as db:
-            results = db.session.execute(
-                """
-                SELECT
-                    hex(a1.author_id),
-                    group_concat(hex(a2.author_id), ';'),
-                    a1.name
-                FROM author as a1
-                JOIN author as a2
-                ON a1.author_id > a2.author_id
-                JOIN author_link as al1
-                ON al1.author_id == a1.author_id
-                JOIN author_link as al2
-                ON al2.author_id == a2.author_id
-                WHERE al1.type == al2.type
-                AND al1.link == al2.link
-                GROUP BY a1.author_id
-                """
-            )
-            eqv = EquivalenceGroups()
-            names = {}
-            for r in results:
-                ids = {r[0], *r[1].split(";")}
-                eqv.equiv_all(ids)
-                for i in ids:
-                    names[i] = r[2]
+def merge():
+    # Merging methods to use
+    # [positional: *]
+    methods: Option
 
-            merges = []
-            for main, ids in eqv.groups().items():
-                print(f"Merging {len(ids)} IDs for {names[main]}")
-                merges.append(AuthorMerge(ids=ids))
+    # List the methods
+    list: Option & bool = False
 
-        db.import_all(merges)
+    method_map = {
+        "author_link": mergers.merge_authors_by_shared_link,
+        "paper_link": mergers.merge_papers_by_shared_link,
+        "paper_name": mergers.merge_papers_by_name,
+    }
 
-    def paper():
-        with load_database(tag="merge") as db:
-            results = db.session.execute(
-                """
-                SELECT
-                    hex(p1.paper_id),
-                    group_concat(hex(p2.paper_id), ';'),
-                    p1.title
-                FROM paper as p1
-                JOIN paper as p2
-                ON p1.paper_id > p2.paper_id
-                JOIN paper_link as pl1
-                ON pl1.paper_id == p1.paper_id
-                JOIN paper_link as pl2
-                ON pl2.paper_id == p2.paper_id
-                WHERE pl1.type == pl2.type
-                AND pl1.link == pl2.link
-                GROUP BY p1.paper_id
-                """
-            )
-            eqv = EquivalenceGroups()
-            names = {}
-            for r in results:
-                ids = {r[0], *r[1].split(";")}
-                eqv.equiv_all(ids)
-                for i in ids:
-                    names[i] = r[2]
+    if list:
+        for mm, fn in method_map.items():
+            print(mm)
+            print(f"    {fn.__doc__}")
+        exit()
 
-            merges = []
-            for main, ids in eqv.groups().items():
-                assert len(ids) > 1
-                print(f"Merging {len(ids)} IDs for {names[main]}")
-                merges.append(PaperMerge(ids=ids))
+    to_apply = set()
+    for m in methods:
+        for mm, fn in method_map.items():
+            if fnmatch(pat=m, name=mm):
+                to_apply.add(fn)
 
-        db.import_all(merges)
+    if not to_apply:
+        exit(
+            "Found no merge function to apply. Use --list to list the options."
+        )
+
+    with load_database(tag="merge") as db:
+        eqv = EquivalenceGroups()
+        for method in to_apply:
+            method(db, eqv)
+        db.import_all(eqv)
 
 
 scrapers = load_scrapers()
