@@ -4,9 +4,7 @@ from datetime import datetime
 
 from coleo import Option, tooled
 
-from ...utils import QueryError
-from ..acquire import HTTPSAcquirer
-from ..model import (
+from ...model import (
     Author,
     DatePrecision,
     Link,
@@ -18,6 +16,8 @@ from ..model import (
     Venue,
     VenueType,
 )
+from ...utils import QueryError
+from ..acquire import HTTPSAcquirer
 from ..utils import prepare
 
 external_ids_mapping = {

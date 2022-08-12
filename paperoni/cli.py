@@ -6,11 +6,10 @@ from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
-from paperoni.db import schema as sch
-from paperoni.db.database import Database
-from paperoni.sources.model import AuthorMerge, PaperMerge
-
 from .config import configure
+from .db import schema as sch
+from .db.database import Database
+from .model import AuthorMerge, PaperMerge
 from .sources.scrapers import load_scrapers
 from .tools import EquivalenceGroups
 from .utils import display

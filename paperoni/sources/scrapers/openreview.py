@@ -8,7 +8,7 @@ from coleo import Option, tooled
 
 from paperoni.tools import extract_date
 
-from ..model import (
+from ...model import (
     Author,
     DatePrecision,
     Link,

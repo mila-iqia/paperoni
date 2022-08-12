@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from tqdm import tqdm
 
 from ..config import config
-from ..sources.model import (
+from ..model import (
     Author,
     AuthorMerge,
     Base,
