@@ -2,6 +2,7 @@ import re
 import unicodedata
 from collections import defaultdict
 from datetime import datetime
+from difflib import SequenceMatcher
 
 _uuid_tags = ["transient", "canonical"]
 
@@ -25,6 +26,13 @@ def squash_text(txt):
     """
     txt = asciiify(txt).lower()
     return re.sub(pattern=r"[^a-z0-9]+", string=txt, repl="")
+
+
+def similarity(s1, s2):
+    def junk(x):
+        return x in ".-"
+
+    return SequenceMatcher(junk, s1, s2).ratio()
 
 
 def extract_date(txt):
