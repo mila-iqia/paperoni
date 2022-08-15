@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from ..model import AuthorMerge, PaperMerge
+from ..model import AuthorMerge, PaperMerge, VenueMerge
 from ..tools import similarity
 
 
@@ -131,3 +131,28 @@ def merge_authors_by_position(db, eqv):
         # are below 0.5 as well, but it is too noisy.
         for sim, id1, id2, name1, name2 in data:
             eqv.equiv_all([id1, id2], under=name1, cls=AuthorMerge)
+
+
+def merge_venues_by_shared_link(db, eqv):
+    """Merge venues that share a link or ID."""
+    results = db.session.execute(
+        """
+        SELECT
+            hex(v1.venue_id),
+            group_concat(hex(v2.venue_id), ';'),
+            v1.name
+        FROM venue as v1
+        JOIN venue as v2
+        ON v1.venue_id > v2.venue_id
+        JOIN venue_link as pl1
+        ON pl1.venue_id == v1.venue_id
+        JOIN venue_link as pl2
+        ON pl2.venue_id == v2.venue_id
+        WHERE pl1.type == pl2.type
+        AND pl1.link == pl2.link
+        GROUP BY v1.venue_id
+        """
+    )
+    for r in results:
+        ids = {r[0], *r[1].split(";")}
+        eqv.equiv_all(ids, under=r[2], cls=VenueMerge)

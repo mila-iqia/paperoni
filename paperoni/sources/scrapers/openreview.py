@@ -1,7 +1,9 @@
 import json
 import re
+import sys
 import time
 from datetime import datetime
+from fnmatch import fnmatch
 
 import openreview
 from coleo import Option, tooled
@@ -41,7 +43,7 @@ def parse_openreview_venue(venue):
     return results
 
 
-class OpenReviewScraper:
+class OpenReviewScraperBase:
     def __init__(self):
         self.client = openreview.Client(baseurl="https://api.openreview.net")
 
@@ -184,7 +186,12 @@ class OpenReviewScraper:
         }
 
         for venueid in venues:
-            data = self.client.get_group(id=venueid)
+            print(f"Query {venueid}")
+            try:
+                data = self.client.get_group(id=venueid)
+            except openreview.OpenReviewException:
+                print(f"Cannot view {venueid}", file=sys.stderr)
+                continue
 
             info = {}
             for key, patts in patterns.items():
@@ -213,6 +220,8 @@ class OpenReviewScraper:
                 **xdate,
             )
 
+
+class OpenReviewPaperScraper(OpenReviewScraperBase):
     @tooled
     def query(
         self,
@@ -235,21 +244,7 @@ class OpenReviewScraper:
         # [alias: -v]
         # [nargs: +]
         venue: Option = [],
-        # Show venues
-        show_venues: Option & bool = False,
     ):
-        if show_venues:
-            assert not author
-            assert not title
-
-            members = self.client.get_group(id="venues").members
-            import random
-
-            random.shuffle(members)
-
-            yield from self._query_venues(members)
-            return
-
         author = " ".join(author)
         title = " ".join(title)
 
@@ -325,11 +320,32 @@ class OpenReviewScraper:
 
         return prepare(researchers, idtype="openreview", query_name=query_name)
 
+
+class OpenReviewVenueScraper(OpenReviewScraperBase):
     @tooled
-    def venues(self):
-        client = openreview.Client(baseurl="https://api.openreview.net")
-        for venue in client.get_group(id="venues").members:
-            yield venue
+    def query(
+        self,
+        # Pattern for the conferences to query
+        pattern: Option = "*",
+    ):
+        members = self.client.get_group(id="venues").members
+        members = [
+            member
+            for member in members
+            if fnmatch(pat=pattern, name=member.lower())
+        ]
+        yield from self._query_venues(members)
+
+    @tooled
+    def acquire(self, queries):
+        yield from self.query()
+
+    @tooled
+    def prepare(self, researchers):
+        print("TODO")
 
 
-__scrapers__ = {"openreview": OpenReviewScraper()}
+__scrapers__ = {
+    "openreview": OpenReviewPaperScraper(),
+    "openreview-venues": OpenReviewVenueScraper(),
+}

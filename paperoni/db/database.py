@@ -1,4 +1,3 @@
-import datetime
 import json
 import os
 import sqlite3
@@ -24,6 +23,7 @@ from ..model import (
     Release,
     Topic,
     Venue,
+    VenueMerge,
     from_dict,
 )
 from ..tools import get_uuid_tag, is_canonical_uuid, squash_text, tag_uuid
@@ -254,6 +254,19 @@ class Database(OvldBase):
                 sch.PaperAuthorInstitution: "paper_id",
                 sch.t_paper_release: "paper_id",
                 sch.t_paper_topic: "paper_id",
+                sch.Scraper: "hashid",
+            },
+        )
+
+    def _acquire(self, merge: VenueMerge):
+        self._merge_ids_for_table(
+            table=sch.Venue,
+            id_field="venue_id",
+            ids=merge.ids,
+            redirects={
+                sch.Release: "venue_id",
+                sch.VenueLink: "venue_id",
+                sch.VenueAlias: "venue_id",
                 sch.Scraper: "hashid",
             },
         )

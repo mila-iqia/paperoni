@@ -204,6 +204,10 @@ class PaperMerge(Merge):
     pass
 
 
+class VenueMerge(Merge):
+    pass
+
+
 class Meta(Base):
     scraper: Optional[str]
     date: datetime
