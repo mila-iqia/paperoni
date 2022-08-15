@@ -2,11 +2,13 @@ import json
 import re
 from datetime import datetime
 from fnmatch import fnmatch
+from typing import Union
 
 from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
+from . import model as M
 from .config import configure
 from .db import merge as mergers, schema as sch
 from .db.database import Database
@@ -73,11 +75,6 @@ def load_database(tag=None):
 
 
 def generate_paper_queries():
-    from sqlalchemy import select
-
-    from paperoni.db import schema as sch
-    from paperoni.sources import model as M
-
     with load_database() as db:
         q = select(sch.AuthorInstitution)
         queries = []
@@ -164,7 +161,7 @@ def row_text(x: bytes):
 
 
 @ovld
-def row_text(x: int):
+def row_text(x: Union[int, float]):
     if x > 800000000:
         return datetime.fromtimestamp(x).strftime("%Y-%m-%d")
     else:
@@ -406,6 +403,7 @@ def merge():
         "author_link": mergers.merge_authors_by_shared_link,
         "author_name": mergers.merge_authors_by_name,
         "author_position": mergers.merge_authors_by_position,
+        "venue_link": mergers.merge_venues_by_shared_link,
     }
 
     if list:
