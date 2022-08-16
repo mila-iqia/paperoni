@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS paper (
 	-- squashed title for easier merge, e.g. thefundamentalsofdeeplearning
 	squashed TEXT,
 	abstract TEXT,
-	citation_count INTEGER
+	citation_count INTEGER,
+	quality INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS paper_link (
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS paper_flag (
 
 CREATE TABLE IF NOT EXISTS author (
 	author_id BLOB PRIMARY KEY,
-	name TEXT NOT NULL
+	name TEXT NOT NULL,
+	quality INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS author_link (
@@ -70,7 +72,12 @@ CREATE TABLE IF NOT EXISTS venue (
 	date UNSIGNED BIG INT NOT NULL,
 	date_precision UNSIGNED INT NOT NULL,
 	volume TEXT,
-	publisher TEXT
+	publisher TEXT,
+	open INTEGER NOT NULL DEFAULT 0,
+	peer_reviewed INTEGER NOT NULL DEFAULT 0,
+	quality INTEGER NOT NULL DEFAULT 0,
+	CHECK (open in (0, 1)),
+	CHECK (peer_reviewed in (0, 1))
 );
 
 CREATE TABLE IF NOT EXISTS venue_link (

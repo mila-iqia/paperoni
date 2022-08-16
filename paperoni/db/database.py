@@ -17,6 +17,7 @@ from ..model import (
     AuthorMerge,
     Base,
     Institution,
+    MergeEntry,
     Meta,
     Paper,
     PaperMerge,
@@ -99,6 +100,7 @@ class Database(OvldBase):
             squashed=squash_text(paper.title),
             abstract=paper.abstract,
             citation_count=paper.citation_count,
+            quality=paper.quality_int(),
         )
         self.session.merge(pp)
 
@@ -150,7 +152,12 @@ class Database(OvldBase):
         return pp.paper_id
 
     def _acquire(self, author: Author):
-        aa = sch.Author(author_id=author.hashid(), name=author.name)
+        aa = sch.Author(
+            author_id=author.hashid(),
+            name=author.name,
+            quality=author.quality_int(),
+        )
+
         self.session.merge(aa)
 
         for link in author.links:
@@ -214,6 +221,7 @@ class Database(OvldBase):
             date_precision=venue.date_precision,
             volume=venue.volume,
             publisher=venue.publisher,
+            quality=venue.quality_int(),
         )
         self.session.merge(vv)
 
@@ -323,13 +331,16 @@ class Database(OvldBase):
 
     def _filter_ids(self, ids, create_canonical):
         for x in ids:
-            if is_canonical_uuid(x.bytes):
+            if is_canonical_uuid(x.id.bytes):
                 canonical = x
                 break
         else:
-            ids.sort(key=lambda i: i.hex)
-            canonical = UUID(bytes=tag_uuid(ids[0].bytes, "canonical"))
-            create_canonical(canonical, x)
+            ids.sort(key=lambda i: i.id.hex)
+            canonical = MergeEntry(
+                id=UUID(bytes=tag_uuid(ids[0].id.bytes, "canonical")),
+                quality=0,
+            )
+            create_canonical(canonical.id, x.id)
         return canonical, [x for x in ids if x != canonical]
 
     def _merge_ids_for_table(
@@ -340,7 +351,7 @@ class Database(OvldBase):
         ids,
     ):
         def conds(field=id_field):
-            conds = [f"{field} = X'{pid.hex}'" for pid in ids]
+            conds = [f"{field} = X'{pid.id.hex}'" for pid in ids]
             return " OR ".join(conds)
 
         table = getattr(table, "__table__", table)
@@ -362,12 +373,55 @@ class Database(OvldBase):
             subtable = getattr(subtable, "__table__", subtable)
             stmt = f"""
             UPDATE OR REPLACE {subtable}
-            SET {field} = X'{canonical.hex}'
+            SET {field} = X'{canonical.id.hex}'
             WHERE {conds(field)}
             """
             self.session.execute(stmt)
 
-        stmt = f"""
+        # Merge existing entries, starting with the one with the best quality
+        # This uses a bunch of coalesce() calls in sqlite which returns the first
+        # non-null entry.
+
+        nonid_fields = [field for field in fields if field != id_field]
+        contributors = [canonical, *ids]
+        contributors.sort(reverse=True, key=lambda m: m.quality)
+        # We only keep the 10 best because coalesce() has a limit on the number of
+        # arguments and it's unlikely that we will need to pull info past the top
+        # ten (in the worst case we can tweak the quality metric to reflect the number
+        # of non-null fields)
+        contributors = contributors[:10]
+        best, *rest = contributors
+
+        joins = [
+            f" JOIN {table.name} as t{i + 1} ON t{i + 1}.{id_field} = X'{m.id.hex}'"
+            for i, m in enumerate(rest)
+        ]
+        coalesce_parts = [
+            (field, [f"t{i}.{field}" for i in range(len(contributors))])
+            for field in nonid_fields
+        ]
+        coalesces = [
+            f"coalesce({','.join(parts)}) as value__{field}"
+            for field, parts in coalesce_parts
+        ]
+        updates = [f"{field} = value__{field}" for field in nonid_fields]
+
+        merge_stmt = f"""
+        UPDATE {table.name}
+        SET {", ".join(updates)}
+        FROM (
+            SELECT {', '.join(coalesces)}
+            FROM {table.name} as t0
+            {" ".join(joins)}
+            WHERE t0.{id_field} = X'{best.id.hex}'
+        )
+        WHERE {id_field} = X'{canonical.id.hex}'
+        """
+        self.session.execute(merge_stmt)
+
+        # Delete all the entries we merged except for the main one (canonical)
+
+        del_stmt = f"""
         DELETE FROM {table.name} WHERE {conds()}
         """
-        self.session.execute(stmt)
+        self.session.execute(del_stmt)

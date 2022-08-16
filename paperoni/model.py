@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from hashlib import md5
@@ -112,6 +113,15 @@ class Base(BaseModel):
             default=self.__json_encoder__,
         )
 
+    def quality_int(self):
+        assert hasattr(self, "quality") and len(self.quality) <= 4
+        qual = self.quality + (0,) * (4 - len(self.quality))
+        result = 0
+        for x in qual:
+            result <<= 8
+            result |= int(x * 255) & 255
+        return result
+
     def hashid(self):
         hsh = md5(self.json().encode("utf8"))
         return tag_uuid(hsh.digest(), "transient")
@@ -125,6 +135,7 @@ class Paper(Base):
     releases: list[Release]
     topics: list[Topic]
     links: list[Link]
+    quality: tuple[float] = Field(default_factory=lambda: ())
 
 
 class PaperAuthor(Base):
@@ -137,6 +148,7 @@ class Author(Base):
     roles: list[Role]
     aliases: list[str]
     links: list[Link]
+    quality: tuple[float] = Field(default_factory=lambda: ())
 
 
 class UniqueAuthor(Author):
@@ -168,6 +180,9 @@ class Venue(Base):
     publisher: Optional[str]
     aliases: list[str]
     links: list[Link]
+    open: bool = Field(default_factory=lambda: False)
+    peer_reviewed: bool = Field(default_factory=lambda: False)
+    quality: tuple[float] = Field(default_factory=lambda: ())
 
 
 class Topic(Base):
@@ -192,8 +207,14 @@ class AuthorPaperQuery(Base):
     end_date: datetime | None
 
 
+@dataclass(frozen=True)
+class MergeEntry:
+    id: UUID
+    quality: int
+
+
 class Merge(Base):
-    ids: list[UUID]
+    ids: list[MergeEntry]
 
 
 class AuthorMerge(Merge):
