@@ -4,7 +4,7 @@ from hashlib import md5
 from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
-from paperoni.sources.model import Institution, Role, UniqueAuthor
+from paperoni.model import Institution, Role, UniqueAuthor
 from paperoni.utils import display
 from paperoni.tools import tag_uuid
 
@@ -45,6 +45,7 @@ def convert(filename):
                 ],
                 *[{"type": "mag", "link": id} for id in author["ids"]],
             ],
+            quality=(1.0,)
         )
 
 

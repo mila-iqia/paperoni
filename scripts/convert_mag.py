@@ -1,11 +1,10 @@
 from datetime import datetime
 import json
-import sys
 
 from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
-from paperoni.sources.model import DatePrecision, from_dict
+from paperoni.model import DatePrecision, from_dict
 from paperoni.utils import canonicalize_links
 
 mag_types = {
@@ -23,22 +22,33 @@ def process_paper(paper):
         return None
 
     if "J" in paper:
+        j = paper["J"]
+        detail = paper.get("V", None) or paper["D"]
+        lnk = f'{j["JId"]}/{detail}'
         venue = {
             "type": "journal",
-            "name": paper.get("BV", None) or paper["J"]["JN"],
-            "links": [{"type": "mag", "link": paper["J"]["JId"]}],
+            "name": paper.get("BV", None) or j["JN"],
+            "series": j["JN"],
+            "links": [{"type": "mag", "link": lnk}],
+            "quality": [0.5],
         }
     elif "C" in paper:
+        c = paper["C"]
+        lnk = f'{c["CId"]}/{paper["Y"]}'
         venue = {
             "type": "conference",
-            "name": paper.get("BV", None) or paper["C"]["CN"],
-            "links": [{"type": "mag", "link": paper["C"]["CId"]}],
+            "name": paper.get("BV", None) or c["CN"],
+            "series": c["CN"],
+            "links": [{"type": "mag", "link": lnk}],
+            "quality": [0.5],
         }
     else:
         venue = {
             "type": "unknown",
-            "name": paper.get("BV", None) or paper.get("VFN", None) or "n/a",
+            "name": (name := paper.get("BV", None) or paper.get("VFN", None) or "n/a"),
+            "series": name,
             "links": [],
+            "quality": [0.0],
         }
 
     venue.update(
@@ -47,6 +57,7 @@ def process_paper(paper):
             **DatePrecision.assimilate_date(paper["D"]),
             "volume": paper.get("V", None),
             "publisher": paper.get("PB", None),
+            "aliases": [],
         }
     )
 
@@ -69,6 +80,7 @@ def process_paper(paper):
                     "affiliations": [],
                     "aliases": [],
                     "roles": [],
+                    "quality": [0.5],
                 },
             },
         )
@@ -99,6 +111,7 @@ def process_paper(paper):
         ],
         "topics": [{"name": f["FN"]} for f in paper.get("F", [])],
         "citation_count": paper["CC"],
+        "quality": [0.5],
     }
     return result
 

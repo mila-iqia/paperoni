@@ -360,6 +360,7 @@ class report:
         FROM paper
         JOIN paper_release AS pr ON pr.paper_id = paper.paper_id
         JOIN release ON pr.release_id = release.release_id
+        JOIN venue ON release.venue_id = venue.venue_id
         {author_joins}
         WHERE date > #{start} and date < #{end} {author_filter}
         """
@@ -378,10 +379,12 @@ class report:
             end = f"{year + 1}-01-01"
 
         query = f"""
-        SELECT count(release_id) as n, date, name
-        FROM release
+        SELECT count(paper.paper_id) as n, date, name
+        FROM paper
+        JOIN paper_release AS pr ON pr.paper_id = paper.paper_id
+        JOIN release ON pr.release_id = release.release_id
         JOIN venue on release.venue_id = venue.venue_id
-        WHERE date >= #{start} and date <= #{end}
+        WHERE venue.date >= #{start} and venue.date <= #{end}
         GROUP BY venue.venue_id
         ORDER BY n
         """
