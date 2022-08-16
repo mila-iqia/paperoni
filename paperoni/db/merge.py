@@ -4,14 +4,35 @@ from ..model import AuthorMerge, MergeEntry, PaperMerge, VenueMerge
 from ..tools import similarity
 
 
+def _process_standard_rows(rows, eqv, cls):
+    """Process the equivalences of a "standard row".
+
+    A standard row has the following columns, in order:
+
+    0. A name representing the equivalent ids to merge
+    1. An ID (hex)
+    2. A semicolon-separated sequence of IDs (hex1;hex2;...)
+    3. An integer representing the quality of (1)
+    4. A semicolon-separated sequence of integers, the qualities of (2)
+    """
+    for r in rows:
+        ids = [r[1], *r[2].split(";")]
+        quals = [r[3], *map(int, r[4].split(";"))]
+        eqv.equiv_all(
+            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
+            under=r[0],
+            cls=cls,
+        )
+
+
 def merge_papers_by_shared_link(db, eqv):
     """Merge papers that share a link or ID."""
     results = db.session.execute(
         """
         SELECT
+            p1.title,
             hex(p1.paper_id),
             group_concat(hex(p2.paper_id), ';'),
-            p1.title,
             p1.quality,
             group_concat(p2.quality, ';')
         FROM paper as p1
@@ -26,14 +47,7 @@ def merge_papers_by_shared_link(db, eqv):
         GROUP BY p1.paper_id
         """
     )
-    for r in results:
-        ids = {r[0], *r[1].split(";")}
-        quals = [r[3], *map(int, r[4].split(";"))]
-        eqv.equiv_all(
-            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
-            under=r[2],
-            cls=PaperMerge,
-        )
+    _process_standard_rows(results, eqv, PaperMerge)
 
 
 def merge_authors_by_shared_link(db, eqv):
@@ -41,9 +55,9 @@ def merge_authors_by_shared_link(db, eqv):
     results = db.session.execute(
         """
         SELECT
+            a1.name,
             hex(a1.author_id),
             group_concat(hex(a2.author_id), ';'),
-            a1.name,
             a1.quality,
             group_concat(a2.quality, ';')
         FROM author as a1
@@ -58,14 +72,7 @@ def merge_authors_by_shared_link(db, eqv):
         GROUP BY a1.author_id
         """
     )
-    for r in results:
-        ids = {r[0], *r[1].split(";")}
-        quals = [r[3], *map(int, r[4].split(";"))]
-        eqv.equiv_all(
-            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
-            under=r[2],
-            cls=AuthorMerge,
-        )
+    _process_standard_rows(results, eqv, AuthorMerge)
 
 
 def merge_papers_by_name(db, eqv):
@@ -73,9 +80,9 @@ def merge_papers_by_name(db, eqv):
     results = db.session.execute(
         """
         SELECT
+            p1.title,
             hex(p1.paper_id),
             group_concat(hex(p2.paper_id), ';'),
-            p1.title,
             p1.quality,
             group_concat(p2.quality, ';')
         FROM paper as p1
@@ -85,14 +92,7 @@ def merge_papers_by_name(db, eqv):
         GROUP BY p1.paper_id
         """
     )
-    for r in results:
-        ids = {r[0], *r[1].split(";")}
-        quals = [r[3], *map(int, r[4].split(";"))]
-        eqv.equiv_all(
-            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
-            under=r[2],
-            cls=PaperMerge,
-        )
+    _process_standard_rows(results, eqv, PaperMerge)
 
 
 def merge_authors_by_name(db, eqv):
@@ -100,9 +100,9 @@ def merge_authors_by_name(db, eqv):
     results = db.session.execute(
         """
         SELECT
+            a1.name,
             hex(a1.author_id),
             group_concat(hex(a2.author_id), ';'),
-            a1.name,
             a1.quality,
             group_concat(a2.quality, ';')
         FROM author as a1
@@ -112,14 +112,7 @@ def merge_authors_by_name(db, eqv):
         GROUP BY a1.author_id
         """
     )
-    for r in results:
-        ids = {r[0], *r[1].split(";")}
-        quals = [r[3], *map(int, r[4].split(";"))]
-        eqv.equiv_all(
-            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
-            under=r[2],
-            cls=AuthorMerge,
-        )
+    _process_standard_rows(results, eqv, AuthorMerge)
 
 
 def merge_authors_by_position(db, eqv):
@@ -175,9 +168,9 @@ def merge_venues_by_shared_link(db, eqv):
     results = db.session.execute(
         """
         SELECT
+            v1.name,
             hex(v1.venue_id),
             group_concat(hex(v2.venue_id), ';'),
-            v1.name,
             v1.quality,
             group_concat(v2.quality, ';')
         FROM venue as v1
@@ -192,11 +185,4 @@ def merge_venues_by_shared_link(db, eqv):
         GROUP BY v1.venue_id
         """
     )
-    for r in results:
-        ids = [r[0], *r[1].split(";")]
-        quals = [r[3], *map(int, r[4].split(";"))]
-        eqv.equiv_all(
-            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
-            under=r[2],
-            cls=VenueMerge,
-        )
+    _process_standard_rows(results, eqv, VenueMerge)
