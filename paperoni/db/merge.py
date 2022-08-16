@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from ..model import AuthorMerge, PaperMerge, VenueMerge
+from ..model import AuthorMerge, MergeEntry, PaperMerge, VenueMerge
 from ..tools import similarity
 
 
@@ -11,7 +11,9 @@ def merge_papers_by_shared_link(db, eqv):
         SELECT
             hex(p1.paper_id),
             group_concat(hex(p2.paper_id), ';'),
-            p1.title
+            p1.title,
+            p1.quality,
+            group_concat(p2.quality, ';')
         FROM paper as p1
         JOIN paper as p2
         ON p1.paper_id > p2.paper_id
@@ -26,7 +28,12 @@ def merge_papers_by_shared_link(db, eqv):
     )
     for r in results:
         ids = {r[0], *r[1].split(";")}
-        eqv.equiv_all(ids, under=r[2], cls=PaperMerge)
+        quals = [r[3], *map(int, r[4].split(";"))]
+        eqv.equiv_all(
+            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
+            under=r[2],
+            cls=PaperMerge,
+        )
 
 
 def merge_authors_by_shared_link(db, eqv):
@@ -36,7 +43,9 @@ def merge_authors_by_shared_link(db, eqv):
         SELECT
             hex(a1.author_id),
             group_concat(hex(a2.author_id), ';'),
-            a1.name
+            a1.name,
+            a1.quality,
+            group_concat(a2.quality, ';')
         FROM author as a1
         JOIN author as a2
         ON a1.author_id > a2.author_id
@@ -51,7 +60,12 @@ def merge_authors_by_shared_link(db, eqv):
     )
     for r in results:
         ids = {r[0], *r[1].split(";")}
-        eqv.equiv_all(ids, under=r[2], cls=AuthorMerge)
+        quals = [r[3], *map(int, r[4].split(";"))]
+        eqv.equiv_all(
+            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
+            under=r[2],
+            cls=AuthorMerge,
+        )
 
 
 def merge_papers_by_name(db, eqv):
@@ -61,7 +75,9 @@ def merge_papers_by_name(db, eqv):
         SELECT
             hex(p1.paper_id),
             group_concat(hex(p2.paper_id), ';'),
-            p1.title
+            p1.title,
+            p1.quality,
+            group_concat(p2.quality, ';')
         FROM paper as p1
         JOIN paper as p2
         ON p1.paper_id > p2.paper_id
@@ -71,7 +87,12 @@ def merge_papers_by_name(db, eqv):
     )
     for r in results:
         ids = {r[0], *r[1].split(";")}
-        eqv.equiv_all(ids, under=r[2], cls=PaperMerge)
+        quals = [r[3], *map(int, r[4].split(";"))]
+        eqv.equiv_all(
+            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
+            under=r[2],
+            cls=PaperMerge,
+        )
 
 
 def merge_authors_by_name(db, eqv):
@@ -81,7 +102,9 @@ def merge_authors_by_name(db, eqv):
         SELECT
             hex(a1.author_id),
             group_concat(hex(a2.author_id), ';'),
-            a1.name
+            a1.name,
+            a1.quality,
+            group_concat(a2.quality, ';')
         FROM author as a1
         JOIN author as a2
         ON a1.author_id > a2.author_id
@@ -91,7 +114,12 @@ def merge_authors_by_name(db, eqv):
     )
     for r in results:
         ids = {r[0], *r[1].split(";")}
-        eqv.equiv_all(ids, under=r[2], cls=AuthorMerge)
+        quals = [r[3], *map(int, r[4].split(";"))]
+        eqv.equiv_all(
+            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
+            under=r[2],
+            cls=AuthorMerge,
+        )
 
 
 def merge_authors_by_position(db, eqv):
@@ -103,7 +131,9 @@ def merge_authors_by_position(db, eqv):
             hex(a2.author_id),
             a1.name,
             a2.name,
-            p.paper_id
+            p.paper_id,
+            a1.quality,
+            a2.quality
         FROM author as a1
         JOIN author as a2
         ON a1.author_id > a2.author_id
@@ -117,9 +147,9 @@ def merge_authors_by_position(db, eqv):
     )
     by_paper = defaultdict(list)
     for r in results:
-        id1, id2, name1, name2, paper = r
+        id1, id2, name1, name2, paper, q1, q2 = r
         sim = similarity(name1, name2)
-        by_paper[paper].append((sim, id1, id2, name1, name2))
+        by_paper[paper].append((sim, id1, id2, name1, name2, q1, q2))
 
     for paper, data in by_paper.items():
         if any(sim < 0.5 for sim, *_ in data):
@@ -129,8 +159,15 @@ def merge_authors_by_position(db, eqv):
         # The 0.5 threshold may appear a bit low, but we are trying to merge
         # e.g. "C. S. Lewis" with "Clive Staples Lewis". Some proper matches
         # are below 0.5 as well, but it is too noisy.
-        for sim, id1, id2, name1, name2 in data:
-            eqv.equiv_all([id1, id2], under=name1, cls=AuthorMerge)
+        for sim, id1, id2, name1, name2, q1, q2 in data:
+            eqv.equiv_all(
+                [
+                    MergeEntry(id=id1, quality=q1),
+                    MergeEntry(id=id2, quality=q2),
+                ],
+                under=name1,
+                cls=AuthorMerge,
+            )
 
 
 def merge_venues_by_shared_link(db, eqv):
@@ -140,19 +177,26 @@ def merge_venues_by_shared_link(db, eqv):
         SELECT
             hex(v1.venue_id),
             group_concat(hex(v2.venue_id), ';'),
-            v1.name
+            v1.name,
+            v1.quality,
+            group_concat(v2.quality, ';')
         FROM venue as v1
         JOIN venue as v2
         ON v1.venue_id > v2.venue_id
-        JOIN venue_link as pl1
-        ON pl1.venue_id == v1.venue_id
-        JOIN venue_link as pl2
-        ON pl2.venue_id == v2.venue_id
-        WHERE pl1.type == pl2.type
-        AND pl1.link == pl2.link
+        JOIN venue_link as vl1
+        ON vl1.venue_id == v1.venue_id
+        JOIN venue_link as vl2
+        ON vl2.venue_id == v2.venue_id
+        WHERE vl1.type == vl2.type
+        AND vl1.link == vl2.link
         GROUP BY v1.venue_id
         """
     )
     for r in results:
-        ids = {r[0], *r[1].split(";")}
-        eqv.equiv_all(ids, under=r[2], cls=VenueMerge)
+        ids = [r[0], *r[1].split(";")]
+        quals = [r[3], *map(int, r[4].split(";"))]
+        eqv.equiv_all(
+            [MergeEntry(id=i, quality=q) for q, i in zip(quals, ids)],
+            under=r[2],
+            cls=VenueMerge,
+        )

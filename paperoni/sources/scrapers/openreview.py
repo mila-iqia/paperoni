@@ -2,7 +2,7 @@ import json
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from fnmatch import fnmatch
 
 import openreview
@@ -106,7 +106,10 @@ class OpenReviewScraperBase:
                     Link(type="git", link=note.content["code"])
 
                 venue_data = parse_openreview_venue(note.content["venue"])
-                date = datetime.fromtimestamp(note.tcdate / 1000)
+                date = datetime.fromtimestamp(note.tcdate // 1000)
+                date -= timedelta(
+                    hours=date.hour, minutes=date.minute, seconds=date.second
+                )
                 precision = DatePrecision.day
                 if "year" in venue_data:
                     # Make sure that the year is correct
@@ -126,7 +129,7 @@ class OpenReviewScraperBase:
                     releases=[
                         Release(
                             venue=Venue(
-                                type=OpenReviewScraper._map_venue_type(vid),
+                                type=OpenReviewScraperBase._map_venue_type(vid),
                                 name=vid,
                                 series=venue_to_series(vid),
                                 volume=venue_data["venue"],
@@ -217,6 +220,7 @@ class OpenReviewScraperBase:
                 series=venue_to_series(venueid),
                 aliases=[],
                 links=[Link(type="openreview-venue", link=venueid)],
+                quality=(1.0,),
                 **xdate,
             )
 

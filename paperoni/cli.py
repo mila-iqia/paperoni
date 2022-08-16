@@ -162,7 +162,7 @@ def row_text(x: bytes):
 
 @ovld
 def row_text(x: Union[int, float]):
-    if x > 800000000:
+    if x > 800000000 and x < 2000000000:
         return datetime.fromtimestamp(x).strftime("%Y-%m-%d")
     else:
         return str(x)

@@ -18,6 +18,7 @@ class Author(Base):
     __tablename__ = "author"
 
     name = Column(Text, nullable=False)
+    quality = Column(Integer, nullable=False, server_default=text("0"))
     author_id = Column(LargeBinary, primary_key=True)
 
     author_alias = relationship("AuthorAlias", back_populates="author")
@@ -70,6 +71,7 @@ class Institution(Base):
 class Paper(Base):
     __tablename__ = "paper"
 
+    quality = Column(Integer, nullable=False, server_default=text("0"))
     paper_id = Column(LargeBinary, primary_key=True)
     title = Column(Text)
     squashed = Column(Text)
@@ -140,10 +142,17 @@ class Topic(Base):
 
 class Venue(Base):
     __tablename__ = "venue"
+    __table_args__ = (
+        CheckConstraint("open in (0, 1)"),
+        CheckConstraint("peer_reviewed in (0, 1)"),
+    )
 
     name = Column(Text, nullable=False)
     date = Column(Integer, nullable=False)
     date_precision = Column(Integer, nullable=False)
+    open = Column(Integer, nullable=False, server_default=text("0"))
+    peer_reviewed = Column(Integer, nullable=False, server_default=text("0"))
+    quality = Column(Integer, nullable=False, server_default=text("0"))
     venue_id = Column(LargeBinary, primary_key=True)
     type = Column(Text)
     series = Column(Text)
