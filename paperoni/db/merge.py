@@ -36,14 +36,14 @@ def merge_papers_by_shared_link(db, eqv):
             p1.quality,
             group_concat(p2.quality, ';')
         FROM paper as p1
-        JOIN paper as p2
-        ON p1.paper_id > p2.paper_id
-        JOIN paper_link as pl1
-        ON pl1.paper_id == p1.paper_id
-        JOIN paper_link as pl2
-        ON pl2.paper_id == p2.paper_id
+            JOIN paper as p2
+                ON p1.paper_id > p2.paper_id
+            JOIN paper_link as pl1
+                ON pl1.paper_id == p1.paper_id
+            JOIN paper_link as pl2
+                ON pl2.paper_id == p2.paper_id
         WHERE pl1.type == pl2.type
-        AND pl1.link == pl2.link
+            AND pl1.link == pl2.link
         GROUP BY p1.paper_id
         """
     )
@@ -61,14 +61,14 @@ def merge_authors_by_shared_link(db, eqv):
             a1.quality,
             group_concat(a2.quality, ';')
         FROM author as a1
-        JOIN author as a2
-        ON a1.author_id > a2.author_id
-        JOIN author_link as al1
-        ON al1.author_id == a1.author_id
-        JOIN author_link as al2
-        ON al2.author_id == a2.author_id
+            JOIN author as a2
+                ON a1.author_id > a2.author_id
+            JOIN author_link as al1
+                ON al1.author_id == a1.author_id
+            JOIN author_link as al2
+                ON al2.author_id == a2.author_id
         WHERE al1.type == al2.type
-        AND al1.link == al2.link
+            AND al1.link == al2.link
         GROUP BY a1.author_id
         """
     )
@@ -86,9 +86,10 @@ def merge_papers_by_name(db, eqv):
             p1.quality,
             group_concat(p2.quality, ';')
         FROM paper as p1
-        JOIN paper as p2
-        ON p1.paper_id > p2.paper_id
+            JOIN paper as p2
+                ON p1.paper_id > p2.paper_id
         WHERE p1.squashed = p2.squashed
+            AND length(p1.title) >= 25
         GROUP BY p1.paper_id
         """
     )
@@ -106,8 +107,8 @@ def merge_authors_by_name(db, eqv):
             a1.quality,
             group_concat(a2.quality, ';')
         FROM author as a1
-        JOIN author as a2
-        ON a1.author_id > a2.author_id
+            JOIN author as a2
+                ON a1.author_id > a2.author_id
         WHERE a1.name = a2.name
         GROUP BY a1.author_id
         """
@@ -128,13 +129,13 @@ def merge_authors_by_position(db, eqv):
             a1.quality,
             a2.quality
         FROM author as a1
-        JOIN author as a2
-        ON a1.author_id > a2.author_id
-        JOIN paper as p
-        JOIN paper_author as pa1
-        ON a1.author_id = pa1.author_id AND p.paper_id = pa1.paper_id
-        JOIN paper_author as pa2
-        ON a2.author_id = pa2.author_id AND p.paper_id = pa2.paper_id
+            JOIN author as a2
+                ON a1.author_id > a2.author_id
+            JOIN paper as p
+            JOIN paper_author as pa1
+                ON a1.author_id = pa1.author_id AND p.paper_id = pa1.paper_id
+            JOIN paper_author as pa2
+                ON a2.author_id = pa2.author_id AND p.paper_id = pa2.paper_id
         WHERE pa1.author_position = pa2.author_position
         """
     )
@@ -174,14 +175,14 @@ def merge_venues_by_shared_link(db, eqv):
             v1.quality,
             group_concat(v2.quality, ';')
         FROM venue as v1
-        JOIN venue as v2
-        ON v1.venue_id > v2.venue_id
-        JOIN venue_link as vl1
-        ON vl1.venue_id == v1.venue_id
-        JOIN venue_link as vl2
-        ON vl2.venue_id == v2.venue_id
+            JOIN venue as v2
+                ON v1.venue_id > v2.venue_id
+            JOIN venue_link as vl1
+                ON vl1.venue_id == v1.venue_id
+            JOIN venue_link as vl2
+                ON vl2.venue_id == v2.venue_id
         WHERE vl1.type == vl2.type
-        AND vl1.link == vl2.link
+            AND vl1.link == vl2.link
         GROUP BY v1.venue_id
         """
     )

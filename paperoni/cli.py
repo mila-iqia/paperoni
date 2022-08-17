@@ -103,11 +103,6 @@ def generate_paper_queries():
 
 
 def generate_author_queries():
-    from sqlalchemy import select
-
-    from paperoni.db import schema as sch
-    from paperoni.sources import model as M
-
     with load_database() as db:
         q = select(sch.AuthorInstitution)
         authors = {}
@@ -255,13 +250,31 @@ def run_sql_query(query):
         show_rows(results, "table")
 
 
+def papers_query(query, filter=None):
+    with load_database() as db:
+        results = db.session.execute(date_syntax(query))
+        for row in results:
+            pq = select(sch.Paper).filter(sch.Paper.paper_id == row[0])
+            for (p,) in db.session.execute(pq):
+                if filter and not filter(p):
+                    continue
+                display(p)
+                print("=" * 80)
+
+
 def sql():
 
     # SQL query to run
     # [positional]
     query: Option
 
-    run_sql_query(query)
+    # Display the matching papers
+    papers: Option & bool = False
+
+    if papers:
+        papers_query(query)
+    else:
+        run_sql_query(query)
 
 
 @tooled
@@ -296,6 +309,12 @@ class search:
         # Publication venue
         venue: Option = None
 
+        # Link pattern
+        link: Option = None
+
+        # Only show the paper count
+        count: Option & bool = False
+
         # How to format the results
         format: Option = "full"
 
@@ -326,9 +345,20 @@ class search:
                 stmt = stmt.filter(sch.Venue.date >= start)
             if end:
                 stmt = stmt.filter(sch.Venue.date <= end)
+            if link:
+                stmt = (
+                    stmt.join(sch.Paper.paper_link)
+                    .filter(sch.PaperLink.link.like(f"%{link}%"))
+                )
             stmt = stmt.group_by(sch.Paper.paper_id)
 
-            for (entry,) in db.session.execute(stmt):
+            results = db.session.execute(stmt)
+
+            if count:
+                print(len(list(results)))
+                return
+
+            for (entry,) in results:
                 match format:
                     case "full":
                         display(entry)
