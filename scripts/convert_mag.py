@@ -110,7 +110,7 @@ def process_paper(paper):
             release,
         ],
         "topics": [{"name": f["FN"]} for f in paper.get("F", [])],
-        "citation_count": paper["CC"],
+        "citation_count": None,  # The counts are stale anyway
         "quality": [0.5],
     }
     return result

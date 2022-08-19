@@ -1,4 +1,3 @@
-import json
 import re
 import sys
 import time
@@ -124,7 +123,6 @@ class OpenReviewScraperBase:
                 yield Paper(
                     title=note.content["title"],
                     abstract=note.content.get("abstract"),
-                    citation_count=0,
                     authors=authors,
                     releases=[
                         Release(
@@ -152,7 +150,7 @@ class OpenReviewScraperBase:
                         for kw in note.content.get("keywords", [])
                     ],
                     links=_links,
-                    scrapers=["orev"],
+                    citation_count=None,
                 )
             next_offset += len(notes)
             if not notes:

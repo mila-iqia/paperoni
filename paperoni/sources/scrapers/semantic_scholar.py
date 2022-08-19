@@ -1,4 +1,5 @@
 import json
+import re
 import urllib.parse
 from datetime import datetime
 
@@ -102,6 +103,46 @@ def _author_fields(parent=None):
     )
 
 
+def _figure_out_date(data):
+    if pubd := data["publicationDate"]:
+        date = {
+            "date": f"{pubd} 00:00",
+            "date_precision": DatePrecision.day,
+        }
+    else:
+        date = DatePrecision.assimilate_date(data["year"])
+
+    # The dblp code usually embeds the year at the end, e.g. journals/jojo/Smith21
+    # for an article published in 2021. Semantic Scholar may mess up the publication
+    # date by picking up the preprint's, so we "fix" it with the dblp code if we can.
+    # We have to be careful, though, because e.g. arxiv codes are like
+    # journals/corr/abs-2110-01234. It's possible other cases are messed up, we'll
+    # take care of it when it happens.
+    for typ, ref in data["externalIds"].items():
+        if typ.lower() == "dblp":
+            if m := re.search(pattern=r"([0-9]+)$", string=ref):
+                syear = m.groups()[0]
+                if len(syear) == 4 or len(syear) == 2:
+                    year = int(syear)
+                    if year < 2100:
+                        if 50 < year < 100:
+                            year += 1900
+                        elif year < 50:
+                            year += 2000
+                    if (
+                        year
+                        != datetime.strptime(
+                            date["date"], "%Y-%m-%d %H:%M"
+                        ).year
+                    ):
+                        date = {
+                            "date": f"{year}-01-01 00:00",
+                            "date_precision": DatePrecision.year,
+                        }
+
+    return date
+
+
 class SemanticScholarQueryManager:
     # "authors" will have fields "authorId" and "name"
     SEARCH_FIELDS = _paper_long_fields(extras=("authors",))
@@ -189,14 +230,9 @@ class SemanticScholarQueryManager:
                 )
             )
         authors = list(map(self._wrap_paper_author, data["authors"]))
-        # date = data["publicationDate"] or f'{data["year"]}-01-01'
-        if pubd := data["publicationDate"]:
-            date = {
-                "date": f"{pubd} 00:00",
-                "date_precision": DatePrecision.day,
-            }
-        else:
-            date = DatePrecision.assimilate_date(data["year"])
+
+        date = _figure_out_date(data)
+
         release = Release(
             venue=Venue(
                 type=venue_type_mapping[

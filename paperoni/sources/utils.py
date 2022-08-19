@@ -17,6 +17,10 @@ def prepare(
     after: Option = ""
     name: Option = ""
 
+    # ID to give to the researcher
+    # [option: --id]
+    given_id: Option = None
+
     rids = {}
     for researcher in researchers:
         for link in researcher.links:
@@ -28,11 +32,26 @@ def prepare(
 
     researchers.sort(key=lambda auq: auq.name.lower())
     if name:
-        researchers = [auq for auq in researchers if auq.name.lower() == name]
+        researchers = [
+            auq for auq in researchers if auq.name.lower() == name.lower()
+        ]
     elif after:
         researchers = [
             auq for auq in researchers if auq.name.lower()[: len(after)] > after
         ]
+
+    if given_id:
+        assert len(researchers) == 1
+        for auq in researchers:
+            yield UniqueAuthor(
+                author_id=auq.author_id,
+                name=auq.name,
+                affiliations=[],
+                roles=[],
+                aliases=[],
+                links=[Link(type=idtype, link=given_id)],
+            )
+        return
 
     for auq in researchers:
         aname = auq.name

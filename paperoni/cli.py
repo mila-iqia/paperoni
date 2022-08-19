@@ -13,6 +13,7 @@ from .config import configure
 from .db import merge as mergers, schema as sch
 from .db.database import Database
 from .sources.scrapers import load_scrapers
+from .sources.utils import prepare
 from .tools import EquivalenceGroups
 from .utils import display
 
@@ -25,6 +26,7 @@ class ScraperWrapper:
             self.scraper.query,
             self.scraper.acquire,
             self.scraper.prepare,
+            prepare,
         ]
 
     @tooled
@@ -213,6 +215,7 @@ def date_syntax(query):
     return query
 
 
+@tooled
 def run_sql_query(query):
 
     # JSON output
@@ -224,6 +227,9 @@ def run_sql_query(query):
 
     # Delimiter for plain output
     delimiter: Option = None
+
+    # Display only the count
+    count: Option & bool = False
 
     if delimiter is None:
         delimiter = " "
@@ -242,9 +248,11 @@ def run_sql_query(query):
             for row in db.session.execute(query)
         ]
 
-    if plain:
+    if count:
+        print(len(results))
+    elif plain:
         show_rows(results, ("plain", delimiter))
-    if json_output:
+    elif json_output:
         show_rows(results, "json")
     else:
         show_rows(results, "table")
@@ -346,9 +354,8 @@ class search:
             if end:
                 stmt = stmt.filter(sch.Venue.date <= end)
             if link:
-                stmt = (
-                    stmt.join(sch.Paper.paper_link)
-                    .filter(sch.PaperLink.link.like(f"%{link}%"))
+                stmt = stmt.join(sch.Paper.paper_link).filter(
+                    sch.PaperLink.link.like(f"%{link}%")
                 )
             stmt = stmt.group_by(sch.Paper.paper_id)
 
