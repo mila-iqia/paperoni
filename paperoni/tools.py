@@ -7,6 +7,25 @@ from difflib import SequenceMatcher
 _uuid_tags = ["transient", "canonical"]
 
 
+class QueryError(Exception):
+    pass
+
+
+class MutuallyExclusiveError(RuntimeError):
+    """Exception raised when mutually exclusive parameters are used in queries."""
+
+    def __init__(self, *args):
+        self.args = args
+
+    def __str__(self):
+        return "Mutually exclusive parameters: " + " vs ".join(
+            self._param_to_str(arg) for arg in self.args
+        )
+
+    def _param_to_str(self, param):
+        return param if isinstance(param, str) else f"({', '.join(param)})"
+
+
 def asciiify(s):
     """Translate a string to pure ASCII, removing accents and the like.
 
@@ -26,6 +45,36 @@ def squash_text(txt):
     """
     txt = asciiify(txt).lower()
     return re.sub(pattern=r"[^a-z0-9]+", string=txt, repl="")
+
+
+url_extractors = {
+    r"https?://[a-z.]*arxiv\.org/(?:abs|pdf)/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://[a-z.]*arxiv-vanity\.com/papers/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://(?:[^/]*)arxiv(?:[^/]*)\.cornell\.edu/abs/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://scirate\.com/arxiv/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://pubmed\.ncbi\.nlm\.nih\.gov/([^/]*)/": "pubmed",
+    r"https?://www\.ncbi\.nlm\.nih\.gov/pubmed/([^/]*)": "pubmed",
+    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/([^/]*)": "pmc",
+    r"https?://europepmc.org/article/PMC/([^/]*)": "pmc",
+    r"https?://(?:dx\.)?doi\.org/(.*)": "doi",
+    r"https?://(?:www\.)?openreview\.net/(?:pdf\?|forum\?)id=(.*)": "openreview",
+    r"https?://dblp.uni-trier.de/db/([^/]+)/([^/]+)/[^/]+\.html#(.*)": "dblp",
+}
+
+
+def url_to_id(url):
+    for pattern, key in url_extractors.items():
+        if m := re.match(pattern, url):
+            lnk = "/".join(m.groups())
+            return (key, lnk)
+    return None
+
+
+def canonicalize_links(links):
+    links = {
+        url_to_id(url := link["link"]) or (link["type"], url) for link in links
+    }
+    return [{"type": typ, "link": lnk} for typ, lnk in links]
 
 
 def similarity(s1, s2):

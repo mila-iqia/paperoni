@@ -5,7 +5,7 @@ from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
 from paperoni.model import DatePrecision, from_dict
-from paperoni.utils import canonicalize_links
+from paperoni.tools import canonicalize_links
 
 mag_types = {
     1: "html",
@@ -130,7 +130,7 @@ def mag_papers(json_db):
 
 
 def show():
-    from paperoni.utils import display
+    from paperoni.display import display
 
     # [positional]
     filename: Option
