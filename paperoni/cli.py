@@ -2,9 +2,11 @@ import json
 import re
 from datetime import datetime
 from fnmatch import fnmatch
+from pathlib import Path
 from typing import Union
 
 from coleo import Option, auto_cli, tooled, with_extras
+from hrepr import H
 from ovld import ovld
 from sqlalchemy import select
 
@@ -12,10 +14,52 @@ from . import model as M
 from .config import configure
 from .db import merge as mergers, schema as sch
 from .db.database import Database
-from .display import display
+from .display import display, html as display_html
 from .sources.scrapers import load_scrapers
 from .sources.utils import prepare
 from .tools import EquivalenceGroups
+
+
+class TerminalPrinter:
+    def __init__(self, transform=None):
+        self.transform = transform or (lambda x: x)
+
+    def __call__(self, obj):
+        print(self.transform(obj))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        pass
+
+
+class TerminalDisplayer:
+    def __call__(self, obj):
+        display(obj)
+        print("=" * 80)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        pass
+
+
+class HTMLDisplayer:
+    def __init__(self):
+        self.entries = []
+
+    def __call__(self, obj):
+        self.entries.append(display_html(obj))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        page = open(Path(__file__).parent / "default.html").read()
+        page = page.replace("{{papers}}", "\n".join(map(str, self.entries)))
+        print(page)
 
 
 class ScraperWrapper:
@@ -258,16 +302,16 @@ def run_sql_query(query):
         show_rows(results, "table")
 
 
-def papers_query(query, filter=None):
-    with load_database() as db:
-        results = db.session.execute(date_syntax(query))
-        for row in results:
-            pq = select(sch.Paper).filter(sch.Paper.paper_id == row[0])
-            for (p,) in db.session.execute(pq):
-                if filter and not filter(p):
-                    continue
-                display(p)
-                print("=" * 80)
+def papers_query(query, formatter, filter=None):
+    with formatter as fmt:
+        with load_database() as db:
+            results = db.session.execute(date_syntax(query))
+            for row in results:
+                pq = select(sch.Paper).filter(sch.Paper.paper_id == row[0])
+                for (p,) in db.session.execute(pq):
+                    if filter and not filter(p):
+                        continue
+                    fmt(p)
 
 
 def sql():
@@ -279,8 +323,14 @@ def sql():
     # Display the matching papers
     papers: Option & bool = False
 
+    # Display results in HTML
+    html: Option & bool = False
+
     if papers:
-        papers_query(query)
+        papers_query(
+            query,
+            formatter=HTMLDisplayer() if html else TerminalDisplayer(),
+        )
     else:
         run_sql_query(query)
 
@@ -365,15 +415,19 @@ class search:
                 print(len(list(results)))
                 return
 
-            for (entry,) in results:
-                match format:
-                    case "full":
-                        display(entry)
-                        print("=" * 80)
-                    case "title":
-                        print(entry.title)
-                    case _:
-                        raise Exception(f"Unsupported format: {format}")
+            match format:
+                case "full":
+                    formatter = TerminalDisplayer()
+                case "title":
+                    formatter = TerminalPrinter(lambda x: x.title)
+                case "html":
+                    formatter = HTMLDisplayer()
+                case _:
+                    raise Exception(f"Unsupported format: {format}")
+
+            with formatter as fmt:
+                for (entry,) in results:
+                    fmt(entry)
 
 
 class report:
