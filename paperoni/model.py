@@ -130,12 +130,12 @@ class Base(BaseModel):
 class Paper(Base):
     title: str
     abstract: str
-    citation_count: int
     authors: list[PaperAuthor]
     releases: list[Release]
     topics: list[Topic]
     links: list[Link]
-    quality: tuple[float] = Field(default_factory=lambda: ())
+    citation_count: Optional[int]
+    quality: tuple[float] = Field(default_factory=lambda: (0.0,))
 
 
 class PaperAuthor(Base):
@@ -148,7 +148,7 @@ class Author(Base):
     roles: list[Role]
     aliases: list[str]
     links: list[Link]
-    quality: tuple[float] = Field(default_factory=lambda: ())
+    quality: tuple[float] = Field(default_factory=lambda: (0.0,))
 
 
 class UniqueAuthor(Author):
@@ -182,7 +182,7 @@ class Venue(Base):
     links: list[Link]
     open: bool = Field(default_factory=lambda: False)
     peer_reviewed: bool = Field(default_factory=lambda: False)
-    quality: tuple[float] = Field(default_factory=lambda: ())
+    quality: tuple[float] = Field(default_factory=lambda: (0.0,))
 
 
 class Topic(Base):
