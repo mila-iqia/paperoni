@@ -119,16 +119,17 @@ def _figure_out_date(data):
     # journals/corr/abs-2110-01234. It's possible other cases are messed up, we'll
     # take care of it when it happens.
     for typ, ref in data["externalIds"].items():
-        if typ.lower() == "dblp":
+        if typ.lower() == "dblp" and not ref.startswith("journals/corr/abs-"):
             if m := re.search(pattern=r"([0-9]+)$", string=ref):
                 syear = m.groups()[0]
                 if len(syear) == 4 or len(syear) == 2:
                     year = int(syear)
-                    if year < 2100:
-                        if 50 < year < 100:
-                            year += 1900
-                        elif year < 50:
-                            year += 2000
+                    if 50 < year < 100:
+                        year += 1900
+                    elif year < 50:
+                        year += 2000
+                    elif not (1950 <= year <= 2050):
+                        continue
                     if (
                         year
                         != datetime.strptime(

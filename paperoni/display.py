@@ -3,6 +3,7 @@ import textwrap
 from typing import Union
 
 from blessed import Terminal
+from hrepr import H
 from ovld import ovld
 
 from .db import schema as sch
@@ -157,3 +158,115 @@ def display(venue: Venue):
     print_field("Links", "")
     for typ, link in expand_links(venue.links):
         print(f"  {T.bold_green(typ):20} {link}")
+
+
+def join(elems, sep=", ", lastsep=None):
+    """Create a list using the given separators.
+
+    If lastsep is None, lastsep = sep.
+
+    Returns:
+        [elem0, (sep, elem1), (sep, elem2), ... (lastsep, elemn)]
+    """
+    if lastsep is None:
+        lastsep = sep
+    elems = list(elems)
+    if len(elems) <= 1:
+        return elems
+    results = [elems[0]]
+    for elem in elems[1:-1]:
+        results.extend((H.raw(sep), elem))
+    results.extend((H.raw(lastsep), elems[-1]))
+    return results
+
+
+@ovld
+def html(paper: Union[Paper, sch.Paper]):
+    show_affiliations = True
+    show_keywords = True
+    show_citation_count = True
+    maxauth = 10
+
+    affiliations = {}
+    if show_affiliations:
+        for auth in paper.authors:
+            for aff in auth.affiliations:
+                aff = aff.name
+                if aff not in affiliations:
+                    affiliations[aff] = aff and (len(affiliations) + 1)
+        if len(affiliations) == 1:
+            affiliations[list(affiliations.keys())[0]] = ""
+
+    def _format_author(auth):
+        bio = [
+            f"https://mila.quebec/en/person/{l.link}"
+            for l in auth.author.links
+            if l.type == "bio"
+        ]
+        if bio:
+            (bio,) = bio
+            authname = H.a["author-name"](auth.author.name, href=bio)
+        else:
+            authname = H.span["author-name"](auth.author.name)
+
+        return H.span["author"](
+            authname,
+            [
+                H.sup["author-affiliation"](affiliations[aff.name])
+                for aff in auth.affiliations
+                if aff.name in affiliations
+            ],
+        )
+
+    nauth = len(paper.authors)
+    more = nauth - maxauth if nauth > maxauth else 0
+
+    venues = H.div["venues"]
+    for release in paper.releases:
+        v = release.venue
+        venues = venues(
+            H.div["venue"](
+                H.span["venue-date"](
+                    DatePrecision.format(v.date, v.date_precision)
+                ),
+                H.span["venue-name"](v.name),
+                H.span["venue-status"](release.status),
+            )
+        )
+
+    def _domain(lnk):
+        return lnk.split("/")[2]
+
+    pdfs = [lnk for k, lnk in expand_links(paper.links) if "pdf" in lnk]
+
+    return H.div["paper"](
+        H.div["title"](H.a(paper.title, href=pdfs[0]) if pdfs else paper.title),
+        H.div["authors"](
+            join(
+                [_format_author(auth) for auth in paper.authors[:maxauth]],
+                lastsep=", " if more else " and ",
+            ),
+            f"... ({more} more)" if more else "",
+        ),
+        H.div["affiliations"](
+            (H.sup["author-affiliation"](idx), H.span["affiliation"](aff), " ")
+            for aff, idx in affiliations.items()
+        )
+        if show_affiliations
+        else "",
+        venues,
+        H.div["keywords"](join(x.name for x in paper.topics))
+        if show_keywords
+        else "",
+        H.div["extra"](
+            H.a["link"](
+                _domain(link) if typ == "html" else typ.replace("_", "-"),
+                href=link,
+            )
+            for typ, link in expand_links(paper.links)
+            if link.startswith("http")
+        ),
+        H.div(paper.citation_count, " citations")
+        if paper.citation_count
+        else "",
+    )

@@ -1,4 +1,4 @@
-from paperoni.utils import asciiify, group_by, normalize, print_field
+from paperoni.display import asciiify, group_by, normalize, print_field
 
 
 def test_asciiify():
