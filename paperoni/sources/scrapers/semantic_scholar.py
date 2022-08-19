@@ -17,7 +17,7 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...utils import QueryError
+from ...tools import QueryError
 from ..acquire import HTTPSAcquirer
 from ..utils import prepare
 

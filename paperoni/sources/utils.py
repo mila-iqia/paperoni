@@ -3,8 +3,8 @@ from collections import Counter
 import questionary as qn
 from coleo import Option, tooled
 
+from ..display import display
 from ..model import Link, UniqueAuthor
-from ..utils import display
 
 
 @tooled

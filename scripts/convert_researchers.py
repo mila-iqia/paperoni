@@ -5,7 +5,7 @@ from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
 from paperoni.model import Institution, Role, UniqueAuthor
-from paperoni.utils import display
+from paperoni.display import display
 from paperoni.tools import tag_uuid
 
 

@@ -12,10 +12,10 @@ from . import model as M
 from .config import configure
 from .db import merge as mergers, schema as sch
 from .db.database import Database
+from .display import display
 from .sources.scrapers import load_scrapers
 from .sources.utils import prepare
 from .tools import EquivalenceGroups
-from .utils import display
 
 
 class ScraperWrapper:
