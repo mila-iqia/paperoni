@@ -194,6 +194,14 @@ class Database(OvldBase):
             category=institution.category,
         )
         self.session.merge(inst)
+
+        for alias in set(institution.aliases) | {institution.name}:
+            ial = sch.InstitutionAlias(
+                institution_id=inst.institution_id,
+                alias=alias,
+            )
+            self.session.merge(ial)
+
         return inst.institution_id
 
     def _acquire(self, release: Release):
@@ -224,6 +232,13 @@ class Database(OvldBase):
             quality=venue.quality_int(),
         )
         self.session.merge(vv)
+
+        for alias in set(venue.aliases) | {venue.name}:
+            val = sch.VenueAlias(
+                venue_id=vv.venue_id,
+                alias=alias,
+            )
+            self.session.merge(val)
 
         for link in venue.links:
             lnk = sch.VenueLink(
