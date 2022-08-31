@@ -128,6 +128,8 @@ def extract_date(txt):
         ),
         rf"([0-9]{{1,2}})[ ,]+({month})[, ]+([0-9]{{4}})": ("d", "m", "y"),
         rf"({month}) +([0-9]{{4}})": ("m", "y"),
+        rf"([0-9]{{4}}) ({month}) ([0-9]{{1,2}})": ("y", "m", "d"),
+        rf"([0-9]{{4}}) ({month})": ("y", "m"),
     }
 
     for pattern, parts in patterns.items():
