@@ -267,6 +267,6 @@ def html(paper: Union[Paper, sch.Paper]):
             if link.startswith("http")
         ),
         H.div(paper.citation_count, " citations")
-        if paper.citation_count
+        if paper.citation_count and show_citation_count
         else "",
     )
