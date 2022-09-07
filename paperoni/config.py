@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 
-from coleo import config as configuration
+from coleo import Option, config as configuration, tooled
 from ovld import ovld
 
 config = SimpleNamespace()
@@ -49,3 +49,19 @@ def configure(cfg: dict):
         cfg["history_file"] = hfile
     config.__dict__.update(cfg)
     return config
+
+
+@tooled
+def load_config(tag=None):
+    # Configuration file
+    config: Option = None
+
+    return configure(config, tag=tag)
+
+
+@tooled
+def load_database(tag=None):
+    from .db.database import Database
+
+    config = load_config(tag=tag)
+    return Database(config.database_file)
