@@ -11,9 +11,8 @@ from ovld import ovld
 from sqlalchemy import select
 
 from . import model as M
-from .config import configure
+from .config import load_config, load_database
 from .db import merge as mergers, schema as sch
-from .db.database import Database
 from .display import display, html as display_html
 from .sources.scrapers import load_scrapers
 from .sources.utils import prepare
@@ -104,20 +103,6 @@ def query_scraper(scraper):
             display(paper)
 
     return wrapped
-
-
-@tooled
-def load_config(tag=None):
-    # Configuration file
-    config: Option = None
-
-    return configure(config, tag=tag)
-
-
-@tooled
-def load_database(tag=None):
-    config = load_config(tag=tag)
-    return Database(config.database_file)
 
 
 def generate_paper_queries():
