@@ -1,3 +1,4 @@
+import functools
 import re
 import unicodedata
 from collections import defaultdict
@@ -222,3 +223,21 @@ class EquivalenceGroups:
             assert len(ids) > 1
             print(f"Merging {len(ids)} IDs for {self.names[main]}")
             yield self.classes[main](ids=ids)
+
+
+def keyword_decorator(deco):
+    """Wrap a decorator to optionally takes keyword arguments."""
+
+    @functools.wraps(deco)
+    def new_deco(fn=None, **kwargs):
+        if fn is None:
+
+            @functools.wraps(deco)
+            def newer_deco(fn):
+                return deco(fn, **kwargs)
+
+            return newer_deco
+        else:
+            return deco(fn, **kwargs)
+
+    return new_deco
