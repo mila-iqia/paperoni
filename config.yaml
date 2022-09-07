@@ -1,2 +1,3 @@
 database_file: milapapers.db
 history_root: history
+cache: paperoni-cache

@@ -22,6 +22,7 @@ ovld = "^0.3.2"
 questionary = "^1.10.0"
 openreview-py = "^1.5.2"
 rich = "^12.5.1"
+lxml = "^4.9.1"
 
 [tool.poetry.dev-dependencies]
 black = ">= 19.10b0"
