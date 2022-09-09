@@ -74,22 +74,24 @@ class ScraperWrapper:
 
     @tooled
     def query(self):
-        load_config()
-
-        for paper in self.scraper.query():
-            print("=" * 80)
-            display(paper)
+        config = load_config()
+        with load_database() as db:
+            for paper in self.scraper(config, db).query():
+                print("=" * 80)
+                display(paper)
 
     @tooled
     def acquire(self):
-        pqs = generate_paper_queries()
-        data = list(self.scraper.acquire(pqs))
+        config = load_config()
+        with load_database() as db:
+            data = list(self.scraper(config, db).acquire())
         load_database(tag=f"acquire_{self.name}").import_all(data)
 
     @tooled
     def prepare(self):
-        pas = generate_author_queries()
-        data = list(self.scraper.prepare(pas))
+        config = load_config()
+        with load_database() as db:
+            data = list(self.scraper(config, db).prepare())
         load_database(tag=f"prepare_{self.name}").import_all(data)
 
 
@@ -103,59 +105,6 @@ def query_scraper(scraper):
             display(paper)
 
     return wrapped
-
-
-def generate_paper_queries():
-    with load_database() as db:
-        q = select(sch.AuthorInstitution)
-        queries = []
-        for ai in db.session.execute(q):
-            (ai,) = ai
-            paper_query = M.AuthorPaperQuery(
-                author=M.Author(
-                    name=ai.author.name,
-                    affiliations=[],
-                    roles=[],
-                    aliases=ai.author.aliases,
-                    links=[
-                        M.Link(
-                            type=link.type,
-                            link=link.link,
-                        )
-                        for link in ai.author.links
-                    ],
-                ),
-                start_date=ai.start_date,
-                end_date=ai.end_date,
-            )
-            queries.append(paper_query)
-
-    return queries
-
-
-def generate_author_queries():
-    with load_database() as db:
-        q = select(sch.AuthorInstitution)
-        authors = {}
-        for ai in db.session.execute(q):
-            (ai,) = ai
-            authors[ai.author.author_id] = M.UniqueAuthor(
-                author_id=ai.author_id,
-                name=ai.author.name,
-                affiliations=[],
-                roles=[],
-                aliases=ai.author.aliases,
-                links=[
-                    M.Link(
-                        type=link.type,
-                        link=link.link,
-                    )
-                    for link in ai.author.links
-                ],
-            )
-
-    results = [author for author in authors.values()]
-    return results
 
 
 def replay():

@@ -7,8 +7,6 @@ from fnmatch import fnmatch
 import openreview
 from coleo import Option, tooled
 
-from paperoni.tools import extract_date
-
 from ...model import (
     Author,
     DatePrecision,
@@ -20,7 +18,9 @@ from ...model import (
     Venue,
     VenueType,
 )
+from ...tools import extract_date
 from ..utils import prepare
+from .base import BaseScraper
 
 
 def venue_to_series(venueid):
@@ -42,8 +42,9 @@ def parse_openreview_venue(venue):
     return results
 
 
-class OpenReviewScraperBase:
-    def __init__(self):
+class OpenReviewScraperBase(BaseScraper):
+    def __init__(self, config, db):
+        super().__init__(config=config, db=db)
         self.client = openreview.Client(baseurl="https://api.openreview.net")
 
     @staticmethod
@@ -277,7 +278,9 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
         yield from self._query_papers_from_venues(params, venue, 0, limit)
 
     @tooled
-    def acquire(self, queries):
+    def acquire(self):
+        queries = self.generate_paper_queries()
+
         todo = {}
 
         for auq in queries:
@@ -296,7 +299,9 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
                 yield paper
 
     @tooled
-    def prepare(self, researchers):
+    def prepare(self):
+        researchers = self.generate_author_queries()
+
         # Venue on the basis of which to search
         venue: Option = None
 
@@ -339,15 +344,15 @@ class OpenReviewVenueScraper(OpenReviewScraperBase):
         yield from self._query_venues(members)
 
     @tooled
-    def acquire(self, queries):
+    def acquire(self):
         yield from self.query()
 
     @tooled
-    def prepare(self, researchers):
+    def prepare(self):
         print("TODO")
 
 
 __scrapers__ = {
-    "openreview": OpenReviewPaperScraper(),
-    "openreview-venues": OpenReviewVenueScraper(),
+    "openreview": OpenReviewPaperScraper,
+    "openreview-venues": OpenReviewVenueScraper,
 }

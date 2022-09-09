@@ -19,14 +19,12 @@ from paperoni.model import (
     Venue,
     VenueType,
 )
-from paperoni.sources.scrapers.pdftools import (
-    find_fulltext_affiliations,
-    pdf_to_text,
-)
-from paperoni.tools import extract_date, keyword_decorator
 
 from ...config import load_config, load_database
 from ...db import schema as sch
+from ...tools import extract_date, keyword_decorator
+from .base import BaseScraper
+from .pdftools import find_fulltext_affiliations, pdf_to_text
 
 refiners = defaultdict(list)
 
@@ -177,7 +175,7 @@ def refine(db, paper, link):
     )
 
 
-class Refiner:
+class Refiner(BaseScraper):
     @tooled
     def query(
         self,
@@ -186,34 +184,33 @@ class Refiner:
         link: Option = None,
     ):
         type, link = link.split(":", 1)
-        with load_database() as db:
-            pq = (
-                select(sch.Paper)
-                .join(sch.PaperLink)
-                .filter(sch.PaperLink.type == type, sch.PaperLink.link == link)
+        pq = (
+            select(sch.Paper)
+            .join(sch.PaperLink)
+            .filter(sch.PaperLink.type == type, sch.PaperLink.link == link)
+        )
+        [[paper]] = self.db.session.execute(pq)
+
+        _refiners = []
+        for link in paper.links:
+            _refiners.extend(
+                [(p, link, r) for (p, r) in refiners.get(link.type, [])]
             )
-            [[paper]] = db.session.execute(pq)
 
-            _refiners = []
-            for link in paper.links:
-                _refiners.extend(
-                    [(p, link, r) for (p, r) in refiners.get(link.type, [])]
-                )
+        _refiners.sort(reverse=True, key=lambda data: data[0])
 
-            _refiners.sort(reverse=True, key=lambda data: data[0])
-
-            for _, link, refiner in _refiners:
-                if result := refiner(db, paper, link):
-                    yield result
-                    return
+        for _, link, refiner in _refiners:
+            if result := refiner(self.db, paper, link):
+                yield result
+                return
 
     @tooled
-    def acquire(self, db):
+    def acquire(self):
         pass
 
     @tooled
-    def prepare(self, db):
+    def prepare(self):
         pass
 
 
-__scrapers__ = {"refine": Refiner()}
+__scrapers__ = {"refine": Refiner}

@@ -20,6 +20,7 @@ from ...model import (
 from ...tools import QueryError
 from ..acquire import HTTPSAcquirer
 from ..utils import prepare
+from .base import BaseScraper
 
 external_ids_mapping = {
     "pubmedcentral": "pmc",
@@ -329,7 +330,7 @@ def _between(name, after, before):
     return True
 
 
-class SemanticScholarScraper:
+class SemanticScholarScraper(BaseScraper):
     @tooled
     def query(
         self,
@@ -362,7 +363,9 @@ class SemanticScholarScraper:
                 print(auth)
 
     @tooled
-    def acquire(self, queries):
+    def acquire(self):
+        queries = self.generate_paper_queries()
+
         todo = {}
 
         after: Option = ""
@@ -394,7 +397,8 @@ class SemanticScholarScraper:
             yield from ss.author_papers(ssid, block_size=1000)
 
     @tooled
-    def prepare(self, researchers):
+    def prepare(self):
+        researchers = self.generate_author_queries()
         ss = SemanticScholarQueryManager()
         return prepare(
             researchers,
@@ -404,4 +408,4 @@ class SemanticScholarScraper:
         )
 
 
-__scrapers__ = {"semantic_scholar": SemanticScholarScraper()}
+__scrapers__ = {"semantic_scholar": SemanticScholarScraper}
