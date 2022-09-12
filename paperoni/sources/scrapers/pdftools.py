@@ -111,7 +111,7 @@ def find_fulltext_affiliation_by_footnote(name, fulltext, institutions):
                 for entry in result.split(","):
                     entry = unicodedata.normalize("NFKC", entry.strip())
                     if entry and entry in institutions:
-                        affiliations.append(entry)
+                        affiliations.append(institutions[entry])
         return affiliations
 
 
@@ -126,6 +126,6 @@ def find_fulltext_affiliation_under_name(name, fulltext, institutions):
         for line in re.split(string=m.groups()[0], pattern=r"[,\n]+"):
             entry = line.strip()
             if entry and entry in institutions:
-                affiliations.append(entry)
+                affiliations.append(institutions[entry])
         return affiliations
     return None

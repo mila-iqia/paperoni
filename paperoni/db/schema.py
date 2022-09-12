@@ -67,6 +67,10 @@ class Institution(Base):
         "PaperAuthorInstitution", back_populates="institution"
     )
 
+    @property
+    def aliases(self):
+        return [alias.alias for alias in self.institution_alias]
+
 
 class Paper(Base):
     __tablename__ = "paper"
