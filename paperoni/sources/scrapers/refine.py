@@ -16,6 +16,8 @@ from paperoni.model import (
     PaperAuthor,
     Release,
     Topic,
+    UniqueAuthor,
+    UniqueInstitution,
     Venue,
     VenueType,
 )
@@ -105,10 +107,9 @@ def _pdf_refiner(db, paper, link, pth, url):
 
     fulltext = pdf_to_text(cache_base=pth, url=url)
 
-    institutions = db.session.execute(
-        "SELECT institution_id, alias FROM institution_alias"
-    )
-    institutions = {alias: iid for iid, alias in institutions}
+    institutions = {}
+    for (inst,) in db.session.execute(select(sch.Institution)):
+        institutions.update({alias: inst for alias in inst.aliases})
 
     author_affiliations = find_fulltext_affiliations(
         paper, fulltext, institutions
@@ -122,17 +123,19 @@ def _pdf_refiner(db, paper, link, pth, url):
         abstract="",
         authors=[
             PaperAuthor(
-                author=Author(
+                author=UniqueAuthor(
+                    author_id=author.author_id,
                     name=author.name,
                     roles=[],
                     aliases=[],
                     links=[],
-                    quality=(0,),
+                    quality=author.quality,
                 ),
                 affiliations=[
-                    Institution(
-                        name=aff,
-                        category=InstitutionCategory.unknown,
+                    UniqueInstitution(
+                        institution_id=aff.institution_id,
+                        name=aff.name,
+                        category=aff.category,
                         aliases=[],
                     )
                     for aff in affiliations

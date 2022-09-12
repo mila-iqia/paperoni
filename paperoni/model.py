@@ -8,7 +8,7 @@ from hashlib import md5
 from typing import Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, create_model
 
 from .tools import tag_uuid
 
@@ -114,7 +114,8 @@ class Base(BaseModel):
         )
 
     def quality_int(self):
-        assert hasattr(self, "quality") and len(self.quality) <= 4
+        if isinstance(self.quality, int):
+            return self.quality
         qual = self.quality + (0,) * (4 - len(self.quality))
         result = 0
         for x in qual:
@@ -135,7 +136,7 @@ class Paper(Base):
     topics: list[Topic]
     links: list[Link]
     citation_count: Optional[int]
-    quality: tuple[float] = Field(default_factory=lambda: (0.0,))
+    quality: tuple[float] | int = Field(default_factory=lambda: (0.0,))
 
 
 class PaperAuthor(Base):
@@ -148,14 +149,7 @@ class Author(Base):
     roles: list[Role]
     aliases: list[str]
     links: list[Link]
-    quality: tuple[float] = Field(default_factory=lambda: (0.0,))
-
-
-class UniqueAuthor(Author):
-    author_id: UUID = Field(default_factory=uuid4)
-
-    def hashid(self):
-        return self.author_id.bytes
+    quality: tuple[float] | int = Field(default_factory=lambda: (0.0,))
 
 
 class Institution(Base):
@@ -182,7 +176,7 @@ class Venue(Base):
     links: list[Link]
     open: bool = Field(default_factory=lambda: False)
     peer_reviewed: bool = Field(default_factory=lambda: False)
-    quality: tuple[float] = Field(default_factory=lambda: (0.0,))
+    quality: tuple[float] | int = Field(default_factory=lambda: (0.0,))
 
 
 class Topic(Base):
@@ -234,9 +228,29 @@ class Meta(Base):
     date: datetime
 
 
+def ided(cls, pfx):
+    field_name = f"{pfx}_id"
+
+    def hashid(self):
+        return getattr(self, field_name).bytes
+
+    return create_model(
+        f"Unique{cls.__name__}",
+        __base__=cls,
+        **{
+            field_name: (UUID, Field(default_factory=uuid4, type=UUID)),
+            "hashid": hashid,
+        },
+    )
+
+
 for cls in list(globals().values()):
     if isinstance(cls, type) and issubclass(cls, BaseModel):
         cls.update_forward_refs()
+
+
+UniqueAuthor = ided(Author, "author")
+UniqueInstitution = ided(Institution, "institution")
 
 
 def from_dict(data):
