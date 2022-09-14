@@ -79,10 +79,9 @@ def canonicalize_links(links):
 
 
 def similarity(s1, s2):
-    def junk(x):
-        return x in ".-"
-
-    return SequenceMatcher(junk, s1, s2).ratio()
+    s1 = re.sub(string=s1, pattern="[. -]", repl="")
+    s2 = re.sub(string=s2, pattern="[. -]", repl="")
+    return SequenceMatcher(a=s1, b=s2).ratio()
 
 
 def extract_date(txt):
@@ -181,15 +180,8 @@ class EquivalenceGroups:
         ar = self.follow(a)
         br = self.follow(b)
         self.representatives[a] = ar
-        self.representatives[b] = br
-        if ar:
-            self.representatives[b] = ar
-            if br:
-                self.representatives[br] = ar
-        elif br:
-            self.representatives[a] = br
-        else:
-            self.representatives[b] = a
+        self.representatives[b] = ar
+        self.representatives[br] = ar
 
     def equiv_all(self, ids, cls=None, under=None):
         if not ids:
