@@ -1,0 +1,3 @@
+database_file: transient-papers.db
+history_root: history
+cache_root: cache
