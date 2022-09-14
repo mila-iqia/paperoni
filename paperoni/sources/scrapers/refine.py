@@ -159,7 +159,7 @@ def refine(db, paper, link):
         db=db,
         paper=paper,
         link=link,
-        pth=Path(f"{config.cache}/arxiv/{arxiv_id}.pdf"),
+        pth=Path(f"{config.cache_root}/arxiv/{arxiv_id}.pdf"),
         url=f"https://arxiv.org/pdf/{arxiv_id}.pdf",
     )
 
@@ -173,7 +173,7 @@ def refine(db, paper, link):
         db=db,
         paper=paper,
         link=link,
-        pth=Path(f"{config.cache}/openreview/{openreview_id}.pdf"),
+        pth=Path(f"{config.cache_root}/openreview/{openreview_id}.pdf"),
         url=f"https://openreview.net/pdf?id={openreview_id}",
     )
 
@@ -192,7 +192,7 @@ class Refiner(BaseScraper):
             .join(sch.PaperLink)
             .filter(sch.PaperLink.type == type, sch.PaperLink.link == link)
         )
-        [[paper]] = self.db.session.execute(pq)
+        [[paper], *_] = self.db.session.execute(pq)
 
         _refiners = []
         for link in paper.links:

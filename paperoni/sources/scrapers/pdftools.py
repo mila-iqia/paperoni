@@ -86,17 +86,16 @@ def find_fulltext_affiliations(paper, fulltext, institutions):
         return None
 
 
-@affiliation_extractor(priority=100)
-def find_fulltext_affiliation_by_footnote(name, fulltext, institutions):
+def _find_fulltext_affiliation_by_footnote(
+    name, fulltext, institutions, splitter
+):
     if m := re.search(
         pattern=rf"{name}(\n?[, †‡\uE005?∗*0-9]+)",
         string=fulltext,
         flags=re.IGNORECASE | re.MULTILINE,
     ):
         indexes = [
-            x
-            for x in re.findall(pattern=r"[0-9]+|.", string=m.groups()[0])
-            if x not in (" ", ",", "\n")
+            x for x in splitter(m.groups()[0]) if x not in (" ", ",", "\n")
         ]
         affiliations = []
 
@@ -115,10 +114,29 @@ def find_fulltext_affiliation_by_footnote(name, fulltext, institutions):
         return affiliations
 
 
+@affiliation_extractor(priority=101)
+def find_fulltext_affiliation_by_footnote(name, fulltext, institutions):
+    def splitter(x):
+        return re.findall(pattern=r"[0-9]+|.", string=x)
+
+    return _find_fulltext_affiliation_by_footnote(
+        name, fulltext, institutions, splitter
+    )
+
+
+@affiliation_extractor(priority=100)
+def find_fulltext_affiliation_by_footnote_2(name, fulltext, institutions):
+    return _find_fulltext_affiliation_by_footnote(
+        name, fulltext, institutions, splitter=list
+    )
+
+
 @affiliation_extractor(priority=90)
 def find_fulltext_affiliation_under_name(name, fulltext, institutions):
+    # Replace . by a regexp, so that B. Smith will match Bernard Smith, Bob Smith, etc.
+    name_re = name.replace(".", "[^ ]*")
     if m := re.search(
-        pattern=rf"{name}(?:[ \n*]+)?((?:.*\n){{2}})",
+        pattern=rf"{name_re}(?:[ \n*]+)?((?:.*\n){{2}})",
         string=fulltext,
         flags=re.IGNORECASE | re.MULTILINE,
     ):
