@@ -1,5 +1,12 @@
 import http.client
+import json
 import time
+from hashlib import md5
+from pathlib import Path
+
+from bs4 import BeautifulSoup
+
+from ..config import load_config
 
 
 class RateLimitedAcquirer:
@@ -57,3 +64,47 @@ class HTTPSAcquirer(RateLimitedAcquirer):
         self.conn.request("GET", url)
         response = self.conn.getresponse()
         return response.read()
+
+
+def readpage(url, format=None, cache=True):
+    cfg = load_config()
+    domain = url.split("/")[2]
+    filename = (
+        Path(cfg.cache_root)
+        / "https"
+        / domain
+        / md5(url.encode("utf8")).hexdigest()
+    )
+    if cache and filename.exists():
+        with open(filename) as f:
+            content = f.read()
+        cache = False  # This will avoid writing the file again
+    else:
+        conn = http.client.HTTPSConnection(domain)
+        conn.request("GET", url)
+        resp = conn.getresponse()
+        if resp.status == 301:
+            loc = resp.info().get_all("Location")[0]
+            content = readpage(loc)
+        else:
+            content = resp.read()
+            resp.close()
+
+    if cache:
+        filename.parent.mkdir(parents=True, exist_ok=True)
+        with open(filename, "w") as f:
+            f.write(content.decode("utf8"))
+            f.close()
+
+    match format:
+        case "json":
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                return None
+        case "xml":
+            return BeautifulSoup(content, features="xml")
+        case "html":
+            return BeautifulSoup(content, features="html")
+        case _:
+            return content

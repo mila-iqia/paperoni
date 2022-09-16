@@ -6,6 +6,7 @@ from bisect import insort
 import requests
 from tqdm import tqdm
 
+from ...model import Institution, InstitutionCategory
 from ...tools import keyword_decorator
 
 affiliation_extractors = []
@@ -72,25 +73,64 @@ def _name_fulltext_affiliations(author, method, fulltext, institutions):
 
 
 def find_fulltext_affiliations(paper, fulltext, institutions):
-    for _, method in affiliation_extractors:
-        aff = {
-            aa.author: _name_fulltext_affiliations(
-                aa.author, method, fulltext, institutions
-            )
-            or []
-            for aa in paper.authors
-        }
-        if any(x for x in aff.values()):
-            return aff
+    findings = [
+        (
+            (
+                aff := {
+                    aa.author: _name_fulltext_affiliations(
+                        aa.author, method, fulltext, institutions
+                    )
+                    or []
+                    for aa in paper.authors
+                }
+            ),
+            (len([x for x in aff.values() if x]), -i),
+        )
+        for i, (_, method) in enumerate(affiliation_extractors)
+    ]
+
+    findings.sort(key=lambda row: row[1], reverse=True)
+    aff, (score, _) = findings[0]
+    if score:
+        return aff
     else:
         return None
+
+
+triggers = {
+    "Mila": InstitutionCategory.academia,
+    "MILA": InstitutionCategory.academia,
+    "Université": InstitutionCategory.academia,
+    "Universite": InstitutionCategory.academia,
+    "University": InstitutionCategory.academia,
+    "Polytechnique": InstitutionCategory.academia,
+    "Montréal": InstitutionCategory.academia,
+    "Québec": InstitutionCategory.academia,
+}
+
+index_re = r"[, †‡\uE005?∗*0-9]+"
+
+
+def recognize_institution(entry, institutions):
+    normalized = unicodedata.normalize("NFKC", entry.strip())
+    if entry and normalized in institutions:
+        return [institutions[normalized]]
+    elif (
+        entry
+        and any((trigger := t) in entry for t in triggers)
+        and "@" not in entry
+    ):
+        return [Institution(name=entry, aliases=[], category=triggers[trigger])]
+    else:
+        return []
 
 
 def _find_fulltext_affiliation_by_footnote(
     name, fulltext, institutions, splitter
 ):
+    name_re = name.replace(".", "[^ ]*")
     if m := re.search(
-        pattern=rf"{name}(\n?[, †‡\uE005?∗*0-9]+)",
+        pattern=rf"{name_re}(\n?{index_re})",
         string=fulltext,
         flags=re.IGNORECASE | re.MULTILINE,
     ):
@@ -98,7 +138,6 @@ def _find_fulltext_affiliation_by_footnote(
             x for x in splitter(m.groups()[0]) if x not in (" ", ",", "\n")
         ]
         affiliations = []
-
         for idx in indexes:
             idx = idx.replace("*", r"\*")
             idx = idx.replace("?", r"\?")
@@ -108,9 +147,7 @@ def _find_fulltext_affiliation_by_footnote(
             ):
                 result = result[0] or result[1]
                 for entry in result.split(","):
-                    entry = unicodedata.normalize("NFKC", entry.strip())
-                    if entry and entry in institutions:
-                        affiliations.append(institutions[entry])
+                    affiliations += recognize_institution(entry, institutions)
         return affiliations
 
 
@@ -131,19 +168,18 @@ def find_fulltext_affiliation_by_footnote_2(name, fulltext, institutions):
     )
 
 
-@affiliation_extractor(priority=90)
+@affiliation_extractor(priority=110)
 def find_fulltext_affiliation_under_name(name, fulltext, institutions):
     # Replace . by a regexp, so that B. Smith will match Bernard Smith, Bob Smith, etc.
     name_re = name.replace(".", "[^ ]*")
     if m := re.search(
-        pattern=rf"{name_re}(?:[ \n*]+)?((?:.*\n){{2}})",
+        pattern=rf"{name_re}(?:\n{index_re})?(?:[ \n*]+)?((?:.*\n){{3}})",
         string=fulltext,
         flags=re.IGNORECASE | re.MULTILINE,
     ):
         affiliations = []
         for line in re.split(string=m.groups()[0], pattern=r"[,\n]+"):
             entry = line.strip()
-            if entry and entry in institutions:
-                affiliations.append(institutions[entry])
+            affiliations += recognize_institution(entry, institutions)
         return affiliations
     return None
