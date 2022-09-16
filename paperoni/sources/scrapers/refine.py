@@ -1,11 +1,11 @@
-import http.client
-import json
+import os
+import re
 from collections import defaultdict
 from datetime import datetime
+from operator import itemgetter
 from pathlib import Path
 from types import SimpleNamespace
 
-from bs4 import BeautifulSoup
 from coleo import Option, tooled
 from sqlalchemy import select
 
@@ -27,35 +27,11 @@ from ...model import (
     VenueType,
 )
 from ...tools import extract_date, keyword_decorator
+from ..acquire import readpage
 from .base import BaseScraper
 from .pdftools import find_fulltext_affiliations, pdf_to_text
 
 refiners = defaultdict(list)
-
-
-def readpage(url, format=None):
-    domain = url.split("/")[2]
-    conn = http.client.HTTPSConnection(domain)
-    conn.request("GET", url)
-    resp = conn.getresponse()
-    if resp.status == 301:
-        loc = resp.info().get_all("Location")[0]
-        return readpage(loc, format=format)
-    else:
-        content = resp.read()
-        resp.close()
-        match format:
-            case "json":
-                try:
-                    return json.loads(content)
-                except json.JSONDecodeError:
-                    return None
-            case "xml":
-                return BeautifulSoup(content, features="xml")
-            case "html":
-                return BeautifulSoup(content, features="html")
-            case _:
-                return content
 
 
 @keyword_decorator
@@ -89,6 +65,18 @@ def _paper_from_jats(soup, links):
                 ),
             }
 
+    def find_affiliation(aff):
+        node = soup.select_one(f'aff#{aff.attrs["rid"]} institution')
+        if not node:
+            node = soup.select_one(f'aff#{aff.attrs["rid"]}')
+        name = node.text
+        name = re.sub(pattern="^[0-9]+", string=name, repl="")
+        return Institution(
+            name=name,
+            category=InstitutionCategory.unknown,
+            aliases=[],
+        )
+
     return Paper(
         title=soup.find("article-title").text,
         authors=[
@@ -109,13 +97,7 @@ def _paper_from_jats(soup, links):
                     quality=(0,),
                 ),
                 affiliations=[
-                    Institution(
-                        name=soup.select_one(
-                            f'aff#{aff.attrs["rid"]} institution, aff#{aff.attrs["rid"]}'
-                        ).text,
-                        category=InstitutionCategory.unknown,
-                        aliases=[],
-                    )
+                    find_affiliation(aff)
                     for aff in author.select('xref[ref-type="aff"]')
                 ],
             )
@@ -145,6 +127,71 @@ def _paper_from_jats(soup, links):
             )
         ],
         topics=[Topic(name=kwd.text) for kwd in soup.select("kwd-group kwd")],
+        quality=(0,),
+    )
+
+
+@refiner(type="doi", priority=90)
+def refine_doi_with_ieeexplore(db, paper, link):
+    doi = link.link
+    if not doi.startswith("10.1109/"):
+        return None
+
+    apikey = os.environ.get("XPLORE_API_KEY", None)
+    if not apikey:
+        return None
+
+    data = readpage(
+        f"http://ieeexploreapi.ieee.org/api/v1/search/articles?apikey={apikey}&format=json&max_records=25&start_record=1&sort_order=asc&sort_field=article_number&doi={doi}",
+        format="json",
+    )
+    (data,) = data["articles"]
+
+    topics = []
+    for _, terms in data["index_terms"].items():
+        topics.extend(Topic(name=term) for term in terms["terms"])
+
+    return Paper(
+        title=data["title"],
+        authors=[
+            PaperAuthor(
+                author=Author(
+                    name=author["full_name"],
+                    roles=[],
+                    aliases=[],
+                    links=[Link(type="xplore", link=author["id"])],
+                ),
+                affiliations=[
+                    Institution(
+                        name=author["affiliation"],
+                        category=InstitutionCategory.unknown,
+                        aliases=[],
+                    )
+                ],
+            )
+            for author in sorted(
+                data["authors"]["authors"], key=itemgetter("author_order")
+            )
+        ],
+        abstract=data["abstract"],
+        links=[Link(type="doi", link=doi)],
+        topics=topics,
+        releases=[
+            Release(
+                venue=Venue(
+                    name=(jname := data["publication_title"]),
+                    series=jname,
+                    type=VenueType.journal,
+                    **extract_date(data["publication_date"]),
+                    publisher=data["publisher"],
+                    links=[],
+                    aliases=[],
+                    volume=data["volume"],
+                ),
+                status="published",
+                pages=f"{data['start_page']}-{data['end_page']}",
+            )
+        ],
         quality=(0,),
     )
 
@@ -253,7 +300,9 @@ def _pdf_refiner(db, paper, link, pth, url):
                     quality=author.quality,
                 ),
                 affiliations=[
-                    UniqueInstitution(
+                    aff
+                    if isinstance(aff, Institution)
+                    else UniqueInstitution(
                         institution_id=aff.institution_id,
                         name=aff.name,
                         category=aff.category,

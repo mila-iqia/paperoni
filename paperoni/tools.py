@@ -106,7 +106,7 @@ def extract_date(txt):
     ]
     months = [m.split("-") for m in months]
     stems = [a.lower() for a, b in months]
-    months = [(f"{a}(?:{b})?" if b else a) for a, b in months]
+    months = [(f"{a}(?:{b})?\\.?" if b else a) for a, b in months]
     month = "|".join(months)
 
     patterns = {
