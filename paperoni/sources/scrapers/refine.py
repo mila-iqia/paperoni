@@ -1,14 +1,19 @@
 import http.client
+import json
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 from bs4 import BeautifulSoup
 from coleo import Option, tooled
 from sqlalchemy import select
 
-from paperoni.config import load_config, load_database
-from paperoni.model import (
+from ...config import load_config
+from ...db import schema as sch
+from ...model import (
     Author,
+    DatePrecision,
     Institution,
     InstitutionCategory,
     Link,
@@ -21,14 +26,36 @@ from paperoni.model import (
     Venue,
     VenueType,
 )
-
-from ...config import load_config, load_database
-from ...db import schema as sch
 from ...tools import extract_date, keyword_decorator
 from .base import BaseScraper
 from .pdftools import find_fulltext_affiliations, pdf_to_text
 
 refiners = defaultdict(list)
+
+
+def readpage(url, format=None):
+    domain = url.split("/")[2]
+    conn = http.client.HTTPSConnection(domain)
+    conn.request("GET", url)
+    resp = conn.getresponse()
+    if resp.status == 301:
+        loc = resp.info().get_all("Location")[0]
+        return readpage(loc, format=format)
+    else:
+        content = resp.read()
+        resp.close()
+        match format:
+            case "json":
+                try:
+                    return json.loads(content)
+                except json.JSONDecodeError:
+                    return None
+            case "xml":
+                return BeautifulSoup(content, features="xml")
+            case "html":
+                return BeautifulSoup(content, features="html")
+            case _:
+                return content
 
 
 @keyword_decorator
@@ -37,14 +64,31 @@ def refiner(fn, *, type, priority):
     return fn
 
 
-@refiner(type="pmc", priority=10)
-def refine(db, paper, link):
-    pmc_id = link.link
-    url = f"https://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:{pmc_id}&metadataPrefix=pmc_fm"
-    conn = http.client.HTTPSConnection("www.ncbi.nlm.nih.gov")
-    conn.request("GET", url)
-    txt = conn.getresponse().read()
-    soup = BeautifulSoup(txt, features="xml")
+def _paper_from_jats(soup, links):
+    date1 = soup.select_one('pub-date[date-type="pub"] string-date')
+    if date1:
+        date = extract_date(date1.text)
+    else:
+        date2 = soup.select_one('pub-date[pub-type="epub"]')
+        if date2:
+            y = date2.find("year")
+            m = date2.find("month")
+            d = date2.find("day")
+            date = {
+                "date": datetime(
+                    int(y.text),
+                    int((m and m.text) or 1),
+                    int((d and d.text) or 1),
+                ),
+                "date_precision": (
+                    DatePrecision.day
+                    if d
+                    else DatePrecision.month
+                    if m
+                    else DatePrecision.year
+                ),
+            }
+
     return Paper(
         title=soup.find("article-title").text,
         authors=[
@@ -67,7 +111,7 @@ def refine(db, paper, link):
                 affiliations=[
                     Institution(
                         name=soup.select_one(
-                            f'aff#{aff.attrs["rid"]} institution'
+                            f'aff#{aff.attrs["rid"]} institution, aff#{aff.attrs["rid"]}'
                         ).text,
                         category=InstitutionCategory.unknown,
                         aliases=[],
@@ -78,19 +122,21 @@ def refine(db, paper, link):
             for author in soup.select('contrib[contrib-type="author"]')
         ],
         abstract="",
-        links=[Link(type="pmc", link=pmc_id)],
+        links=links,
         releases=[
             Release(
                 venue=Venue(
-                    name=(jname := soup.find("journal-title").text),
-                    series=jname,
-                    type=VenueType.journal,
-                    **extract_date(
-                        soup.select_one(
-                            'pub-date[date-type="pub"] string-date'
+                    name=(
+                        jname := soup.select_one(
+                            "journal-meta journal-title"
                         ).text
                     ),
-                    publisher=soup.find("publisher-name").text,
+                    series=jname,
+                    type=VenueType.journal,
+                    **date,
+                    publisher=soup.select_one(
+                        "journal-meta publisher-name"
+                    ).text,
                     links=[],
                     aliases=[],
                 ),
@@ -100,6 +146,81 @@ def refine(db, paper, link):
         ],
         topics=[Topic(name=kwd.text) for kwd in soup.select("kwd-group kwd")],
         quality=(0,),
+    )
+
+
+@refiner(type="doi", priority=100)
+def refine_doi_with_crossref(db, paper, link):
+    doi = link.link
+    data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
+
+    if data["status"] != "ok":
+        return None
+    data = SimpleNamespace(**data["message"])
+
+    if not any(auth.get("affiliation", None) for auth in data.author):
+        return None
+
+    return Paper(
+        title=data.title[0],
+        authors=[
+            PaperAuthor(
+                author=Author(
+                    name=f"{author['given']} {author['family']}",
+                    roles=[],
+                    aliases=[],
+                    links=[],
+                ),
+                affiliations=[
+                    Institution(
+                        name=aff["name"],
+                        category=InstitutionCategory.unknown,
+                        aliases=[],
+                    )
+                    for aff in author["affiliation"]
+                ],
+            )
+            for author in data.author
+        ],
+        abstract="",
+        links=[Link(type="doi", link=doi)],
+        topics=[],
+        releases=[],
+        quality=(0,),
+    )
+
+
+@refiner(type="doi", priority=90)
+def refine_doi_with_biorxiv(db, paper, link):
+    doi = link.link
+    if not doi.startswith("10.1101/"):
+        return None
+
+    data = readpage(
+        f"https://api.biorxiv.org/details/biorxiv/{doi}", format="json"
+    )
+
+    if {"status": "ok"} not in data["messages"] or not data["collection"]:
+        return None
+
+    jats = data["collection"][0]["jatsxml"]
+
+    return _paper_from_jats(
+        readpage(jats, format="xml"),
+        links=[Link(type="doi", link=doi)],
+    )
+
+
+@refiner(type="pmc", priority=110)
+def refine(db, paper, link):
+    pmc_id = link.link
+    soup = readpage(
+        f"https://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:{pmc_id}&metadataPrefix=pmc_fm",
+        format="xml",
+    )
+    return _paper_from_jats(
+        soup,
+        links=[Link(type="pmc", link=pmc_id)],
     )
 
 
