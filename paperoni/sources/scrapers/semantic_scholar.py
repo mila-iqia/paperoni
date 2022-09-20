@@ -151,7 +151,7 @@ class SemanticScholarQueryManager:
     PAPER_FIELDS = (
         *_paper_long_fields(),
         *_author_fields(parent="authors"),
-        *_paper_short_fields(parent="citations"),
+        # *_paper_short_fields(parent="citations"),
         *_paper_short_fields(parent="references"),
         "embedding",
     )
@@ -168,7 +168,7 @@ class SemanticScholarQueryManager:
     AUTHOR_FIELDS = PAPER_AUTHORS_FIELDS
     AUTHOR_PAPERS_FIELDS = (
         SEARCH_FIELDS
-        + _paper_short_fields(parent="citations")
+        # + _paper_short_fields(parent="citations")
         + _paper_short_fields(parent="references")
     )
 
