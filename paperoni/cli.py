@@ -107,6 +107,7 @@ def query_scraper(scraper):
     return wrapped
 
 
+@tooled
 def replay():
     # History file to replay
     # [positional: *]

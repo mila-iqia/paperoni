@@ -317,7 +317,7 @@ class Database(OvldBase):
                     self._accumulate_history_files(
                         list(pth.iterdir()), before, after, results
                     )
-                else:
+                elif pth.suffix == ".jsonl":
                     results.append(pth)
             case [*paths]:
                 paths = list(sorted(paths))

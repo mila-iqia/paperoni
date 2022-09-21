@@ -60,8 +60,10 @@ def load_config(tag=None):
 
 
 @tooled
-def load_database(tag=None):
+def load_database(tag=None, config=None):
     from .db.database import Database
 
-    config = load_config(tag=tag)
+    if config is None or tag is not None:
+        config = load_config(tag=tag)
+
     return Database(config.database_file)
