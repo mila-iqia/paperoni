@@ -1,13 +1,9 @@
-import http.client
 import json
 import time
 import urllib
-from hashlib import md5
-from pathlib import Path
 
+import requests
 from bs4 import BeautifulSoup
-
-from ..config import load_config
 
 
 class RateLimitedAcquirer:
@@ -57,48 +53,21 @@ class RateLimitedAcquirer:
 class HTTPSAcquirer(RateLimitedAcquirer):
     """Acquire resources from an HTTPS connection."""
 
-    def __init__(self, url, format="text", cache=True, **kwargs):
+    def __init__(self, url, format="text", **kwargs):
         super().__init__(**kwargs)
         self.base_url = url
         self.format = format
-        self.cache = cache
 
     def get_now(self, url, params=None):
         if params:
             params = urllib.parse.urlencode(params)
             url = f"https://{self.base_url}{url}?{params}"
-        return readpage(url, format=self.format, cache=self.cache)
+        return readpage(url, format=self.format)
 
 
-def readpage(url, format=None, cache=True):
-    cfg = load_config()
-    domain = url.split("/")[2]
-    filename = (
-        Path(cfg.cache_root)
-        / "https"
-        / domain
-        / md5(url.encode("utf8")).hexdigest()
-    )
-    if cache and filename.exists():
-        with open(filename) as f:
-            content = f.read()
-        cache = False  # This will avoid writing the file again
-    else:
-        conn = http.client.HTTPSConnection(domain)
-        conn.request("GET", url)
-        resp = conn.getresponse()
-        if resp.status == 301:
-            loc = resp.info().get_all("Location")[0]
-            content = readpage(loc)
-        else:
-            content = resp.read()
-            resp.close()
-
-    if cache:
-        filename.parent.mkdir(parents=True, exist_ok=True)
-        with open(filename, "w") as f:
-            f.write(content.decode("utf8"))
-            f.close()
+def readpage(url, format=None):
+    resp = requests.get(url)
+    content = resp.text
 
     match format:
         case "json":
