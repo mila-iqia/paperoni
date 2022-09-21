@@ -56,7 +56,14 @@ def load_config(tag=None):
     # Configuration file
     config: Option = None
 
-    return configure(config, tag=tag)
+    cfg = configure(config, tag=tag)
+
+    if os.environ.get("PAPERONI_CACHE_REQUESTS") and cfg.requests_cache_file:
+        import requests_cache
+
+        requests_cache.install_cache(cfg.requests_cache_file)
+
+    return cfg
 
 
 @tooled

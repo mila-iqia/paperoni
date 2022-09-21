@@ -23,6 +23,8 @@ questionary = "^1.10.0"
 openreview-py = "^1.5.2"
 rich = "^12.5.1"
 lxml = "^4.9.1"
+requests-cache = "^0.9.6"
+exceptiongroup = "^1.0.0-rc.9"
 
 [tool.poetry.dev-dependencies]
 black = ">= 19.10b0"
