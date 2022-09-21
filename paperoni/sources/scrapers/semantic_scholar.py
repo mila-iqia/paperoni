@@ -176,14 +176,13 @@ class SemanticScholarQueryManager:
         self.conn = HTTPSAcquirer(
             "api.semanticscholar.org",
             delay=5 * 60 / 100,  # 100 requests per 5 minutes
+            format="json",
         )
 
     def _evaluate(self, path: str, **params):
-        params = urllib.parse.urlencode(params)
-        data = self.conn.get(f"/graph/v1/{path}?{params}")
-        jdata = json.loads(data)
-        if "error" in jdata:
-            raise QueryError(jdata["error"])
+        jdata = self.conn.get(f"/graph/v1/{path}", params=params)
+        if jdata is None or "error" in jdata:  # pragma: no cover
+            raise QueryError(jdata["error"] if jdata else "Received bad JSON")
         return jdata
 
     def _list(
@@ -347,8 +346,10 @@ class SemanticScholarScraper(BaseScraper):
         # Maximal number of results to return
         limit: Option & int = 10000,
     ):
-        author = " ".join(author)
-        title = " ".join(title)
+        if isinstance(author, list):
+            author = " ".join(author)
+        if isinstance(title, list):
+            title = " ".join(title)
 
         if author and title:
             raise QueryError("Cannot query both author and title")
