@@ -1,0 +1,133 @@
+{
+    "autodiff_query": {
+        "__type__": "Paper",
+        "title": "Automatic differentiation in ML: Where we are and where we should be going",
+        "abstract": "We review the current state of automatic differentiation (AD) for array programming in machine learning (ML), including the different approaches such as operator overloading (OO) and source transformation (ST) used for AD, graph-based intermediate representations for programs, and source languages. Based on these insights, we introduce a new graph-based intermediate representation (IR) which specifically aims to efficiently support fully-general AD for array programming. Unlike existing dataflow programming representations in ML frameworks, our IR naturally supports function calls, higher-order functions and recursion, making ML models easier to implement. The ability to represent closures allows us to perform AD using ST without a tape, making the resulting derivative (adjoint) program amenable to ahead-of-time optimization using tools from functional language compilers, and enabling higher-order derivatives. Lastly, we introduce a proof of concept compiler toolchain called Myia which uses a subset of Python as a front end.",
+        "authors": [
+            {
+                "author": {
+                    "name": "Bart van Merrienboer",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "semantic_scholar",
+                            "link": "3158246"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Olivier Breuleux",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "semantic_scholar",
+                            "link": "1967465"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Arnaud Bergeron",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "semantic_scholar",
+                            "link": "47944877"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Pascal Lamblin",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "semantic_scholar",
+                            "link": "3087941"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            }
+        ],
+        "releases": [
+            {
+                "venue": {
+                    "type": "journal",
+                    "name": "NeurIPS",
+                    "series": "NeurIPS",
+                    "date": "2018-10-01T00:00:00",
+                    "date_precision": 3,
+                    "volume": null,
+                    "publisher": null,
+                    "aliases": [],
+                    "links": [],
+                    "open": false,
+                    "peer_reviewed": false,
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "status": "published",
+                "pages": null
+            }
+        ],
+        "topics": [
+            {
+                "name": "Computer Science"
+            },
+            {
+                "name": "Mathematics"
+            }
+        ],
+        "links": [
+            {
+                "type": "semantic_scholar",
+                "link": "e812eddda9b29d2f88f98b41999f33c46155b8c8"
+            },
+            {
+                "type": "dblp",
+                "link": "journals/corr/abs-1810-11530"
+            },
+            {
+                "type": "mag",
+                "link": "2890411254"
+            },
+            {
+                "type": "arxiv",
+                "link": "1810.11530"
+            },
+            {
+                "type": "corpusid",
+                "link": "53093859"
+            }
+        ],
+        "citation_count": 45,
+        "quality": [
+            0.0
+        ]
+    }
+}
