@@ -7,7 +7,7 @@ import requests
 from tqdm import tqdm
 
 from ...model import Institution, InstitutionCategory
-from ...tools import keyword_decorator
+from ...tools import keyword_decorator, similarity
 
 affiliation_extractors = []
 
@@ -64,21 +64,24 @@ def pdf_to_text(cache_base, url):
     return fulltext
 
 
-def _name_fulltext_affiliations(author, method, fulltext, institutions):
+def _name_fulltext_affiliations(
+    author, method, fulltext, institutions, blockers
+):
     for name in sorted(author.aliases, key=len, reverse=True):
-        if aff := method(name, fulltext, institutions):
+        if aff := method(name, fulltext, institutions, blockers):
             return aff
     else:
         return None
 
 
 def find_fulltext_affiliations(paper, fulltext, institutions):
+    blockers = [author.author.name for author in paper.authors]
     findings = [
         (
             (
                 aff := {
                     aa.author: _name_fulltext_affiliations(
-                        aa.author, method, fulltext, institutions
+                        aa.author, method, fulltext, institutions, blockers
                     )
                     or []
                     for aa in paper.authors
@@ -125,8 +128,18 @@ def recognize_institution(entry, institutions):
         return []
 
 
+def should_break(line, blockers):
+    """Return True if the line is similar enough to one of the blockers.
+
+    This signifies that the line we are reading pertains to an author of the
+    paper and probably starts a new section, so we should ignore it and what
+    goes below it.
+    """
+    return any(similarity(line, blocker) > 0.5 for blocker in blockers)
+
+
 def _find_fulltext_affiliation_by_footnote(
-    name, fulltext, institutions, splitter
+    name, fulltext, institutions, blockers, splitter
 ):
     name_re = name.replace(".", "[^ ]*")
     if m := re.search(
@@ -147,39 +160,49 @@ def _find_fulltext_affiliation_by_footnote(
             ):
                 result = result[0] or result[1]
                 for entry in result.split(","):
+                    if should_break(entry, blockers):
+                        break
                     affiliations += recognize_institution(entry, institutions)
         return affiliations
 
 
 @affiliation_extractor(priority=101)
-def find_fulltext_affiliation_by_footnote(name, fulltext, institutions):
+def find_fulltext_affiliation_by_footnote(
+    name, fulltext, institutions, blockers
+):
     def splitter(x):
         return re.findall(pattern=r"[0-9]+|.", string=x)
 
     return _find_fulltext_affiliation_by_footnote(
-        name, fulltext, institutions, splitter
+        name, fulltext, institutions, blockers, splitter=splitter
     )
 
 
 @affiliation_extractor(priority=100)
-def find_fulltext_affiliation_by_footnote_2(name, fulltext, institutions):
+def find_fulltext_affiliation_by_footnote_2(
+    name, fulltext, institutions, blockers
+):
     return _find_fulltext_affiliation_by_footnote(
-        name, fulltext, institutions, splitter=list
+        name, fulltext, institutions, blockers, splitter=list
     )
 
 
-@affiliation_extractor(priority=110)
-def find_fulltext_affiliation_under_name(name, fulltext, institutions):
+@affiliation_extractor(priority=90)
+def find_fulltext_affiliation_under_name(
+    name, fulltext, institutions, blockers
+):
     # Replace . by a regexp, so that B. Smith will match Bernard Smith, Bob Smith, etc.
     name_re = name.replace(".", "[^ ]*")
     if m := re.search(
-        pattern=rf"{name_re}(?:\n{index_re})?(?:[ \n*]+)?((?:.*\n){{3}})",
+        pattern=rf"{name_re}(?:\n{index_re})?(?:[ \n*]+)?((?:.*\n){{5}})",
         string=fulltext,
         flags=re.IGNORECASE | re.MULTILINE,
     ):
         affiliations = []
         for line in re.split(string=m.groups()[0], pattern=r"[,\n]+"):
             entry = line.strip()
+            if should_break(entry, blockers):
+                break
             affiliations += recognize_institution(entry, institutions)
         return affiliations
     return None

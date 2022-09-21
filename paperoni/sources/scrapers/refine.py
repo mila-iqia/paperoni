@@ -131,7 +131,7 @@ def _paper_from_jats(soup, links):
     )
 
 
-@refiner(type="doi", priority=90)
+@refiner(type="doi", priority=190)
 def refine_doi_with_ieeexplore(db, paper, link):
     doi = link.link
     if not doi.startswith("10.1109/"):
@@ -373,9 +373,13 @@ class Refiner(BaseScraper):
         _refiners.sort(reverse=True, key=lambda data: data[0])
 
         for _, link, refiner in _refiners:
-            if result := refiner(self.db, paper, link):
-                yield result
-                return
+            try:
+                if result := refiner(self.db, paper, link):
+                    yield result
+                    return
+            except Exception as exc:
+                print(exc)
+                continue
 
     @tooled
     def acquire(self):
