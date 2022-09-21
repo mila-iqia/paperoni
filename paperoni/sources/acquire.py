@@ -1,6 +1,7 @@
 import http.client
 import json
 import time
+import urllib
 from hashlib import md5
 from pathlib import Path
 
@@ -39,7 +40,7 @@ class RateLimitedAcquirer:
         self.bulks = 0
         self.count = 0
 
-    def get(self, url):
+    def get(self, url, **kwargs):
         """Get the resource while respecting the rate limit."""
         bulk = self.first_bulk if self.bulks == 0 else self.bulk
         if self.count >= bulk:
@@ -47,7 +48,7 @@ class RateLimitedAcquirer:
             self.count = 0
             self.bulks += 1
         self.count += 1
-        return self.get_now(url)
+        return self.get_now(url, **kwargs)
 
     def get_now(self, url):
         raise NotImplementedError()
@@ -56,14 +57,17 @@ class RateLimitedAcquirer:
 class HTTPSAcquirer(RateLimitedAcquirer):
     """Acquire resources from an HTTPS connection."""
 
-    def __init__(self, url, **kwargs):
+    def __init__(self, url, format="text", cache=True, **kwargs):
         super().__init__(**kwargs)
-        self.conn = http.client.HTTPSConnection(url)
+        self.base_url = url
+        self.format = format
+        self.cache = cache
 
-    def get_now(self, url):
-        self.conn.request("GET", url)
-        response = self.conn.getresponse()
-        return response.read()
+    def get_now(self, url, params=None):
+        if params:
+            params = urllib.parse.urlencode(params)
+            url = f"https://{self.base_url}{url}?{params}"
+        return readpage(url, format=self.format, cache=self.cache)
 
 
 def readpage(url, format=None, cache=True):
