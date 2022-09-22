@@ -1,5 +1,5 @@
 paths:
-  database: milapapers.db
+  database: papers.db
   history: history
-  cache: paperoni-cache
+  cache: cache
   requests_cache: requests-cache

@@ -1,76 +1,85 @@
-import os
-from datetime import datetime
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Union
 
-from coleo import Option, config as configuration, tooled
+from coleo import config as configuration
 from ovld import ovld
 
-config = SimpleNamespace()
+config = ContextVar("paperoni_config")
 
 
 @ovld
-def configure(**extra_config):
-    return configure(None, **extra_config)
+def make_configuration(self, config_dir: Path, keyname: str, d: dict):
+    match keyname:
+        case "paths":
+            return SimpleNamespace(
+                **{k: self(config_dir, k, Path(v)) for k, v in d.items()}
+            )
+        case _:
+            return SimpleNamespace(
+                **{k: self(config_dir, k, v) for k, v in d.items()}
+            )
 
 
 @ovld
-def configure(config: None, **extra_config):
-    config = os.getenv("PAPERONI_CONFIG")
-    if not config:
-        exit("No configuration could be found.")
-    return configure(config, **extra_config)
+def make_configuration(self, config_dir: Path, keyname: str, p: Path):
+    p = p.expanduser()
+    if not p.is_absolute():
+        p = config_dir / p
+    return p
 
 
 @ovld
-def configure(config_file: str, **extra_config):
-    root = Path(config_file).parent
-    cfg = configuration(config_file)
-    cfg["root"] = root
-    cfg.update(extra_config)
-    return configure(cfg)
+def make_configuration(self, config_dir: Path, keyname: str, o: object):
+    return o
 
 
 @ovld
-def configure(cfg: dict):
-    global config
-    root = Path(cfg.get("root", os.curdir))
-    for k, v in cfg.items():
-        if k.endswith("_file") or k.endswith("_root"):
-            if not v.startswith("/"):
-                cfg[k] = str(root / v)
-    if "history_file" not in cfg:
-        hroot = cfg["history_root"]
-        os.makedirs(hroot, exist_ok=True)
-        now = datetime.now().strftime("%Y-%m-%d-%s")
-        tag = cfg.get("tag", "")
-        tag = tag and f"-{tag}"
-        hfile = Path(hroot) / f"{now}{tag}.jsonl"
-        cfg["history_file"] = hfile
-    config.__dict__.update(cfg)
-    return config
+def make_configuration(self, config_path: Union[str, Path]):
+    config_path = Path(config_path).expanduser().absolute()
+    x = configuration(str(config_path))
+    return Configuration(self(config_path.parent, "", x))
 
 
-@tooled
-def load_config(tag=None):
-    # Configuration file
-    config: Option = None
+class Configuration:
+    def __init__(self, ns):
+        self.__dict__.update(ns.__dict__)
+        self._database = None
 
-    cfg = configure(config, tag=tag)
+    def install(self):
+        if rq := getattr(self.paths, "requests_cache", None):
+            import requests_cache
 
-    if os.environ.get("PAPERONI_CACHE_REQUESTS") and cfg.requests_cache_file:
-        import requests_cache
+            requests_cache.install_cache(rq)
 
-        requests_cache.install_cache(cfg.requests_cache_file)
+    def uninstall(self):
+        if getattr(self.paths, "requests_cache", None):
+            import requests_cache
 
-    return cfg
+            requests_cache.uninstall_cache()
+
+    @property
+    def database(self):
+        if self._database is None:
+            from .db.database import Database
+
+            self._database = Database(self.paths.database)
+        return self._database
 
 
-@tooled
-def load_database(tag=None, config=None):
-    from .db.database import Database
+@contextmanager
+def load_config(config_path, **extra):
+    config_path = Path(config_path).expanduser().absolute()
+    x = configuration(str(config_path))
+    x.update(extra)
+    c = Configuration(make_configuration(config_path.parent, "", x))
+    c.install()
+    token = config.set(c)
 
-    if config is None or tag is not None:
-        config = load_config(tag=tag)
-
-    return Database(config.database_file)
+    try:
+        yield c
+    finally:
+        config.reset(token)
+        c.uninstall()

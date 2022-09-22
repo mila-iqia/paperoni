@@ -1,3 +1,4 @@
-database_file: transient-papers.db
-history_root: history
-cache_root: cache
+paths:
+  database: transient-papers.db
+  history: history
+  cache: cache

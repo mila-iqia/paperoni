@@ -9,7 +9,7 @@ from types import SimpleNamespace
 from coleo import Option, tooled
 from sqlalchemy import select
 
-from ...config import load_config
+from ...config import config
 from ...db import schema as sch
 from ...model import (
     Author,
@@ -323,13 +323,12 @@ def _pdf_refiner(db, paper, link, pth, url):
 @refiner(type="arxiv", priority=5)
 def refine(db, paper, link):
     arxiv_id = link.link
-    config = load_config()
 
     return _pdf_refiner(
         db=db,
         paper=paper,
         link=link,
-        pth=Path(f"{config.cache_root}/arxiv/{arxiv_id}.pdf"),
+        pth=Path(f"{config.get().paths.cache}/arxiv/{arxiv_id}.pdf"),
         url=f"https://arxiv.org/pdf/{arxiv_id}.pdf",
     )
 
@@ -337,13 +336,12 @@ def refine(db, paper, link):
 @refiner(type="openreview", priority=5)
 def refine(db, paper, link):
     openreview_id = link.link
-    config = load_config()
 
     return _pdf_refiner(
         db=db,
         paper=paper,
         link=link,
-        pth=Path(f"{config.cache_root}/openreview/{openreview_id}.pdf"),
+        pth=Path(f"{config.get().paths.cache}/openreview/{openreview_id}.pdf"),
         url=f"https://openreview.net/pdf?id={openreview_id}",
     )
 
