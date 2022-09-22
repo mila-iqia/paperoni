@@ -297,7 +297,7 @@ class Database(OvldBase):
     def import_all(self, xs: list[BaseModel], history_file=None):
         if not xs:
             return
-        history_file = history_file or config.history_file
+        history_file = history_file or config.get().paths.history_file
         xs = list(xs)
         with self:
             for x in tqdm(xs):
@@ -333,7 +333,7 @@ class Database(OvldBase):
                 assert False
 
     def replay(self, history=None, before=None, after=None):
-        history = history or config.history_root
+        history = history or config.get().paths.history
         history_files = []
         self._accumulate_history_files(history, before, after, history_files)
         for history_file in history_files:

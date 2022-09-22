@@ -1,5 +1,7 @@
 import json
+import os
 import re
+from contextlib import contextmanager
 from datetime import datetime
 from fnmatch import fnmatch
 from pathlib import Path
@@ -11,12 +13,42 @@ from ovld import ovld
 from sqlalchemy import select
 
 from . import model as M
-from .config import load_config, load_database
+from .config import config as _config, load_config
 from .db import merge as mergers, schema as sch
 from .display import display, html as display_html
 from .sources.scrapers import load_scrapers
 from .sources.utils import prepare
 from .tools import EquivalenceGroups
+
+
+@contextmanager
+@tooled
+def set_config(**extra):
+    # Configuration file
+    config: Option = None
+
+    try:
+        yield _config.get()
+        return
+    except LookupError:
+        pass
+
+    if config is None:
+        config = os.getenv("PAPERONI_CONFIG")
+
+    if not config:
+        exit("No configuration could be found.")
+
+    with load_config(config, **extra) as cfg:
+        yield cfg
+
+
+@contextmanager
+@tooled
+def set_database(**extra):
+    with set_config(**extra) as config:
+        with config.database as db:
+            yield db
 
 
 class TerminalPrinter:
@@ -74,35 +106,34 @@ class ScraperWrapper:
 
     @tooled
     def query(self):
-        config = load_config()
-        with load_database() as db:
-            for paper in self.scraper(config, db).query():
-                print("=" * 80)
-                display(paper)
+        with set_config() as config:
+            with config.database as db:
+                for paper in self.scraper(config, db).query():
+                    print("=" * 80)
+                    display(paper)
 
     @tooled
     def acquire(self):
-        config = load_config()
-        with load_database() as db:
-            data = list(self.scraper(config, db).acquire())
-        load_database(tag=f"acquire_{self.name}").import_all(data)
+        with set_config(tag=f"acquire_{self.name}") as config:
+            with config.database as db:
+                data = list(self.scraper(config, db).acquire())
+            config.database.import_all(data)
 
     @tooled
     def prepare(self):
-        config = load_config()
-        with load_database() as db:
-            data = list(self.scraper(config, db).prepare())
-        load_database(tag=f"prepare_{self.name}").import_all(data)
+        with set_config(tag=f"prepare_{self.name}") as config:
+            with config.database as db:
+                data = list(self.scraper(config, db).prepare())
+            config.database.import_all(data)
 
 
 def query_scraper(scraper):
     @with_extras(scraper)
     def wrapped():
-        load_config()
-
-        for paper in scraper():
-            print("=" * 80)
-            display(paper)
+        with set_config():
+            for paper in scraper():
+                print("=" * 80)
+                display(paper)
 
     return wrapped
 
@@ -119,11 +150,12 @@ def replay():
     # Upper bound
     before: Option = None
 
-    load_database().replay(
-        history=history,
-        before=before,
-        after=after,
-    )
+    with set_config() as cfg:
+        cfg.database.replay(
+            history=history,
+            before=before,
+            after=after,
+        )
 
 
 @ovld
@@ -221,7 +253,7 @@ def run_sql_query(query):
 
     query = date_syntax(query)
 
-    with load_database() as db:
+    with set_database() as db:
         results = [
             {k: row_text(v) for k, v in zip(row.keys(), row)}
             for row in db.session.execute(query)
@@ -239,7 +271,7 @@ def run_sql_query(query):
 
 def papers_query(query, formatter, filter=None):
     with formatter as fmt:
-        with load_database() as db:
+        with set_database() as db:
             results = db.session.execute(date_syntax(query))
             for row in results:
                 pq = select(sch.Paper).filter(sch.Paper.paper_id == row[0])
