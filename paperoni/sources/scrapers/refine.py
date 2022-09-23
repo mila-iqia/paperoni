@@ -1,12 +1,17 @@
+import json
+import operator
 import os
 import re
+import urllib
 from collections import defaultdict
 from datetime import datetime
+from functools import reduce
 from operator import itemgetter
 from pathlib import Path
 from types import SimpleNamespace
 
 from coleo import Option, tooled
+from ovld import ovld
 from sqlalchemy import select
 
 from ...config import config
@@ -255,6 +260,100 @@ def refine_doi_with_biorxiv(db, paper, link):
     return _paper_from_jats(
         readpage(jats, format="xml"),
         links=[Link(type="doi", link=doi)],
+    )
+
+
+@ovld
+def _sd_find(d: dict, tag, indices):
+    if d.get("#name", None) == tag:
+        for idx in indices:
+            d = d[idx]
+        return [d]
+    return _sd_find(list(d.values()), tag, indices)
+
+
+@ovld
+def _sd_find(li: list, tag, indices):
+    results = []
+    for v in li:
+        results += _sd_find(v, tag, indices)
+    return results
+
+
+@ovld
+def _sd_find(x, tag, indices):
+    return []
+
+
+def _sd_find_one(x, tag, indices=[]):
+    return _sd_find(x, tag, indices)[0]
+
+
+@refiner(type="doi", priority=90)
+def refine_doi_with_sciencedirect(db, paper, link):
+    doi = link.link
+    if not doi.startswith("10.1016/"):
+        return None
+
+    info = readpage(f"https://doi.org/api/handles/{doi}", format="json")
+    url1 = [v for v in info["values"] if v["type"] == "URL"][0]["data"]["value"]
+    redirector = readpage(url1, format="html")
+    url2 = redirector.select_one("#redirectURL").attrs["value"]
+    url2 = urllib.parse.unquote(url2)
+    if "sciencedirect" not in url2:
+        return
+
+    soup = readpage(url2, format="html", headers={"User-Agent": "Mozilla/5.0"})
+    data = json.loads(soup.select_one('script[type="application/json"]').text)
+
+    authors_raw = _sd_find(data["authors"], "author", [])
+    aff_raw = {
+        aff["$"]["id"]: aff
+        for aff in _sd_find(data["authors"], "affiliation", [])
+    }
+
+    authors = []
+    for author in authors_raw:
+        given = _sd_find_one(author, "given-name", "_")
+        surname = _sd_find_one(author, "surname", "_")
+        name = f"{given} {surname}"
+        affids = [
+            x
+            for x in _sd_find(author, "cross-ref", ("$", "refid"))
+            if x.startswith("aff")
+        ]
+        affs = [
+            _sd_find(aff_raw[affid], "organization", "_") for affid in affids
+        ]
+        affs = reduce(operator.add, affs)
+        authors.append(
+            PaperAuthor(
+                author=Author(
+                    name=name,
+                    roles=[],
+                    aliases=[],
+                    links=[],
+                    quality=(0,),
+                ),
+                affiliations=[
+                    Institution(
+                        name=aff,
+                        category=InstitutionCategory.unknown,
+                        aliases=[],
+                    )
+                    for aff in affs
+                ],
+            )
+        )
+
+    return Paper(
+        title=_sd_find_one(data["article"], "title", "_"),
+        abstract="",
+        authors=authors,
+        links=[Link(type=link.type, link=link.link)],
+        releases=[],
+        topics=[],
+        quality=(0,),
     )
 
 
