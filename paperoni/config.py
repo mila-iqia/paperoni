@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from contextvars import ContextVar
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Union
@@ -47,6 +48,7 @@ class Configuration:
     def __init__(self, ns):
         self.__dict__.update(ns.__dict__)
         self._database = None
+        self._history_file = None
 
     def install(self):
         if rq := getattr(self.paths, "requests_cache", None):
@@ -67,6 +69,18 @@ class Configuration:
 
             self._database = Database(self.paths.database)
         return self._database
+
+    @property
+    def history_file(self):
+        if self._history_file is None:
+            hroot = self.paths.history
+            hroot.mkdir(parents=True, exist_ok=True)
+            now = datetime.now().strftime("%Y-%m-%d-%s")
+            tag = getattr(self, "tag", "")
+            tag = tag and f"-{tag}"
+            hfile = hroot / f"{now}{tag}.jsonl"
+            self._history_file = hfile
+        return self._history_file
 
 
 @contextmanager

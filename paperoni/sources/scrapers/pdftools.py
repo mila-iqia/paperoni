@@ -2,6 +2,7 @@ import re
 import subprocess
 import unicodedata
 from bisect import insort
+from pathlib import Path
 
 import requests
 from tqdm import tqdm
@@ -20,15 +21,21 @@ def affiliation_extractor(fn, *, priority):
 
 def download(url, filename):
     """Download the given url into the given filename."""
+    from ...config import config
+
     print(f"Downloading {url}")
-    r = requests.get(url, stream=True)
-    total = int(r.headers.get("content-length") or "1024")
-    with open(filename, "wb") as f:
-        with tqdm(total=total) as progress:
-            for chunk in r.iter_content(chunk_size=total // 100):
-                f.write(chunk)
-                f.flush()
-                progress.update(len(chunk))
+    config.get().uninstall()
+    try:
+        r = requests.get(url, stream=True)
+        total = int(r.headers.get("content-length") or "1024")
+        with open(filename, "wb") as f:
+            with tqdm(total=total) as progress:
+                for chunk in r.iter_content(chunk_size=total // 100):
+                    f.write(chunk)
+                    f.flush()
+                    progress.update(len(chunk))
+    finally:
+        config.get().install()
     print(f"Saved {filename}")
 
 
@@ -41,10 +48,12 @@ def pdf_to_text(cache_base, url):
 
     html = pdf.with_suffix(".html")
     if not html.exists():
-        subprocess.run(["pdf2htmlEX", str(pdf), str(html)])
+        _pdf = str(pdf.relative_to(Path.cwd()))
+        _html = str(html.relative_to(Path.cwd()))
+        subprocess.run(["pdf2htmlEX", _pdf, _html])
 
     txt = pdf.with_suffix(".txt")
-    if not txt.exists():
+    if not txt.exists() or not txt.stat().st_size:
         subprocess.run(
             ["html2text", "-width", "1000", "-o", str(txt), str(html)]
         )

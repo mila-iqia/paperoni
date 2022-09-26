@@ -50,7 +50,9 @@ def _paper_from_jats(soup, links):
     if date1:
         date = extract_date(date1.text)
     else:
-        date2 = soup.select_one('pub-date[pub-type="epub"]')
+        date2 = soup.select_one('pub-date[pub-type="epub"]') or soup.select_one(
+            'pub-date[date-type="pub"]'
+        )
         if date2:
             y = date2.find("year")
             m = date2.find("month")
@@ -107,6 +109,7 @@ def _paper_from_jats(soup, links):
                 ],
             )
             for author in soup.select('contrib[contrib-type="author"]')
+            if author.find("surname")
         ],
         abstract="",
         links=links,
@@ -191,7 +194,7 @@ def refine_doi_with_ieeexplore(db, paper, link):
                     publisher=data["publisher"],
                     links=[],
                     aliases=[],
-                    volume=data["volume"],
+                    volume=data.get("volume", None),
                 ),
                 status="published",
                 pages=f"{data['start_page']}-{data['end_page']}",
@@ -204,6 +207,9 @@ def refine_doi_with_ieeexplore(db, paper, link):
 @refiner(type="doi", priority=100)
 def refine_doi_with_crossref(db, paper, link):
     doi = link.link
+    if "arXiv" in doi:
+        return None
+
     data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
 
     if data["status"] != "ok":
@@ -308,7 +314,7 @@ def refine_doi_with_sciencedirect(db, paper, link):
 
     authors_raw = _sd_find(data["authors"], "author", [])
     aff_raw = {
-        aff["$"]["id"]: aff
+        aff["$"].get("id", "n/a"): aff
         for aff in _sd_find(data["authors"], "affiliation", [])
     }
 
@@ -320,12 +326,12 @@ def refine_doi_with_sciencedirect(db, paper, link):
         affids = [
             x
             for x in _sd_find(author, "cross-ref", ("$", "refid"))
-            if x.startswith("aff")
+            if x.startswith("af")
         ]
         affs = [
             _sd_find(aff_raw[affid], "organization", "_") for affid in affids
         ]
-        affs = reduce(operator.add, affs)
+        affs = reduce(operator.add, affs, [])
         authors.append(
             PaperAuthor(
                 author=Author(
@@ -358,7 +364,7 @@ def refine_doi_with_sciencedirect(db, paper, link):
 
 
 @refiner(type="pmc", priority=110)
-def refine(db, paper, link):
+def refine_with_pubmedcentral(db, paper, link):
     pmc_id = link.link
     soup = readpage(
         f"https://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:{pmc_id}&metadataPrefix=pmc_fm",
@@ -419,7 +425,7 @@ def _pdf_refiner(db, paper, link, pth, url):
     )
 
 
-@refiner(type="arxiv", priority=5)
+@refiner(type="arxiv", priority=6)
 def refine(db, paper, link):
     arxiv_id = link.link
 
