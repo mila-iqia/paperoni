@@ -65,8 +65,8 @@ class HTTPSAcquirer(RateLimitedAcquirer):
         return readpage(url, format=self.format)
 
 
-def readpage(url, format=None):
-    resp = requests.get(url)
+def readpage(url, format=None, **kwargs):
+    resp = requests.get(url, **kwargs)
     content = resp.text
 
     match format:

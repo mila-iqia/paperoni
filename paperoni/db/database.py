@@ -297,7 +297,7 @@ class Database(OvldBase):
     def import_all(self, xs: list[BaseModel], history_file=None):
         if not xs:
             return
-        history_file = history_file or config.get().paths.history_file
+        history_file = history_file or config.get().history_file
         xs = list(xs)
         with self:
             for x in tqdm(xs):

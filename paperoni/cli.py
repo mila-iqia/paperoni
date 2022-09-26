@@ -345,7 +345,7 @@ class search:
 
         start, end = timespan(timestamp=True)
 
-        with load_database() as db:
+        with set_database() as db:
             stmt = select(sch.Paper)
             if title:
                 stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
@@ -484,7 +484,7 @@ def merge():
             "Found no merge function to apply. Use --list to list the options."
         )
 
-    with load_database(tag="merge") as db:
+    with set_database(tag="merge") as db:
         eqv = EquivalenceGroups()
         for method in to_apply:
             method(db, eqv)
