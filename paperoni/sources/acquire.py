@@ -78,6 +78,6 @@ def readpage(url, format=None, **kwargs):
         case "xml":
             return BeautifulSoup(content, features="xml")
         case "html":
-            return BeautifulSoup(content, features="html")
+            return BeautifulSoup(content, features="lxml")
         case _:
             return content
