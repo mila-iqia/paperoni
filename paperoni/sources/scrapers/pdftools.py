@@ -62,10 +62,13 @@ def pdf_to_text(cache_base, url):
     fulltext = re.sub(string=fulltext, pattern="-\n(?![0-9])", repl="")
     fulltext = re.sub(string=fulltext, pattern=",\n(?![0-9])", repl=", ")
     fulltext = re.sub(
-        string=fulltext, pattern="\n´\n([a-zA-Z])", repl="\\1\u0301"
+        string=fulltext, pattern="\n?´\n?([a-zA-Z])", repl="\\1\u0301"
     )
     fulltext = re.sub(
-        string=fulltext, pattern="\n\u02DC\n([a-zA-Z])", repl="\\1\u0303"
+        string=fulltext, pattern="\n?`\n?([a-zA-Z])", repl="\\1\u0300"
+    )
+    fulltext = re.sub(
+        string=fulltext, pattern="\n?\u02DC\n?([a-zA-Z])", repl="\\1\u0303"
     )
 
     fulltext = unicodedata.normalize("NFKC", fulltext.strip())
@@ -147,10 +150,14 @@ def should_break(line, blockers):
     return any(similarity(line, blocker) > 0.5 for blocker in blockers)
 
 
+def make_name_re(name):
+    return name.replace(" ", "[ \n]+").replace(".", "[^ ]*") + ",?"
+
+
 def _find_fulltext_affiliation_by_footnote(
     name, fulltext, institutions, blockers, splitter
 ):
-    name_re = name.replace(".", "[^ ]*")
+    name_re = make_name_re(name)
     if m := re.search(
         pattern=rf"{name_re}(\n?{index_re})",
         string=fulltext,
@@ -201,7 +208,7 @@ def find_fulltext_affiliation_under_name(
     name, fulltext, institutions, blockers
 ):
     # Replace . by a regexp, so that B. Smith will match Bernard Smith, Bob Smith, etc.
-    name_re = name.replace(".", "[^ ]*")
+    name_re = make_name_re(name)
     if m := re.search(
         pattern=rf"{name_re}(?:\n{index_re})?(?:[ \n*]+)?((?:.*\n){{5}})",
         string=fulltext,

@@ -48,6 +48,7 @@ def print_field(title, contents, bold=False):
 
 def expand_links(links):
     pref = [
+        "doi.abstract",
         "arxiv.abstract",
         "arxiv.pdf",
         "pubmed.abstract",
@@ -56,7 +57,6 @@ def expand_links(links):
         "pmc.abstract",
         "dblp.abstract",
         "pdf",
-        "doi.abstract",
         "html",
         "semantic_scholar.abstract",
         "corpusid",
@@ -198,6 +198,8 @@ def html(paper: Union[Paper, sch.Paper]):
             affiliations[list(affiliations.keys())[0]] = ""
 
     def _format_author(auth):
+        if not auth.author:
+            return H.span["author"]("XX")
         bio = [
             f"https://mila.quebec/en/person/{l.link}"
             for l in auth.author.links

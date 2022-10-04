@@ -45,6 +45,12 @@ def refiner(fn, *, type, priority):
     return fn
 
 
+def _only_if_affiliations(paper):
+    if paper and any(auth.affiliations for auth in paper.authors):
+        return paper
+    return None
+
+
 def _paper_from_jats(soup, links):
     date1 = soup.select_one('pub-date[date-type="pub"] string-date')
     if date1:
@@ -425,8 +431,8 @@ def _pdf_refiner(db, paper, link, pth, url):
     )
 
 
-@refiner(type="arxiv", priority=6)
-def refine(db, paper, link):
+@refiner(type="arxiv", priority=7)
+def refine_with_arxiv(db, paper, link):
     arxiv_id = link.link
 
     return _pdf_refiner(
@@ -438,8 +444,30 @@ def refine(db, paper, link):
     )
 
 
+@refiner(type="doi", priority=6)
+def refine_with_pdf_url_from_crossref(db, paper, link):
+    doi = link.link
+
+    data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
+
+    if data["status"] != "ok":
+        return None
+    data = SimpleNamespace(**data["message"])
+    doi2 = doi.replace("/", "__")
+
+    for lnk in data.link:
+        if lnk["content-type"] == "application/pdf":
+            return _pdf_refiner(
+                db=db,
+                paper=paper,
+                link=link,
+                pth=Path(f"{config.get().paths.cache}/doi/{doi2}.pdf"),
+                url=lnk["URL"],
+            )
+
+
 @refiner(type="openreview", priority=5)
-def refine(db, paper, link):
+def refine_with_openreview(db, paper, link):
     openreview_id = link.link
 
     return _pdf_refiner(
