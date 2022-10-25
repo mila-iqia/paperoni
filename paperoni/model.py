@@ -62,7 +62,6 @@ class DatePrecision(int, Enum):
                             if month == "01":
                                 precision = DatePrecision.year
                             else:
-                                # precision = DatePrecision.month
                                 precision = DatePrecision.day
                         else:
                             precision = DatePrecision.day
@@ -70,14 +69,14 @@ class DatePrecision(int, Enum):
                             "date": f"{year}-{month}-{day} 00:00",
                             "date_precision": precision,
                         }
-                    case _:
+                    case _:  # pragma: no cover
                         assert False
             case None:
                 return {
                     "date": "2000-01-01 00:00",
                     "date_precision": DatePrecision.unknown,
                 }
-            case _:
+            case _:  # pragma: no cover
                 assert False
 
     @staticmethod
@@ -91,18 +90,7 @@ class DatePrecision(int, Enum):
                 return date.strftime("%Y-%m")
             case DatePrecision.day:
                 return date.strftime("%Y-%m-%d")
-            case _:
-                assert False
-
-    def format2(self, date):
-        match self:
-            case DatePrecision.year | DatePrecision.unknown:
-                return date.strftime("%Y")
-            case DatePrecision.month:
-                return date.strftime("%Y-%m")
-            case DatePrecision.day:
-                return date.strftime("%Y-%m-%d")
-            case _:
+            case _:  # pragma: no cover
                 assert False
 
 
@@ -112,6 +100,14 @@ class Base(BaseModel):
             {"__type__": type(self).__name__, **self.dict()},
             default=self.__json_encoder__,
         )
+
+    def hashid(self):
+        hsh = md5(self.json().encode("utf8"))
+        return tag_uuid(hsh.digest(), "transient")
+
+
+class BaseWithQuality(Base):
+    quality: tuple[float, ...] | int = Field(default_factory=lambda: (0.0,))
 
     def quality_int(self):
         if isinstance(self.quality, int):
@@ -123,12 +119,8 @@ class Base(BaseModel):
             result |= int(x * 255) & 255
         return result
 
-    def hashid(self):
-        hsh = md5(self.json().encode("utf8"))
-        return tag_uuid(hsh.digest(), "transient")
 
-
-class Paper(Base):
+class Paper(BaseWithQuality):
     title: str
     abstract: str
     authors: list[PaperAuthor]
@@ -136,7 +128,6 @@ class Paper(Base):
     topics: list[Topic]
     links: list[Link]
     citation_count: Optional[int]
-    quality: tuple[float] | int = Field(default_factory=lambda: (0.0,))
 
 
 class PaperAuthor(Base):
@@ -144,12 +135,11 @@ class PaperAuthor(Base):
     affiliations: list[Institution]
 
 
-class Author(Base):
+class Author(BaseWithQuality):
     name: str
     roles: list[Role]
     aliases: list[str]
     links: list[Link]
-    quality: tuple[float] | int = Field(default_factory=lambda: (0.0,))
 
 
 class Institution(Base):
@@ -164,7 +154,7 @@ class Release(Base):
     pages: Optional[str]
 
 
-class Venue(Base):
+class Venue(BaseWithQuality):
     type: VenueType
     name: str
     series: str
@@ -176,7 +166,6 @@ class Venue(Base):
     links: list[Link]
     open: bool = Field(default_factory=lambda: False)
     peer_reviewed: bool = Field(default_factory=lambda: False)
-    quality: tuple[float] | int = Field(default_factory=lambda: (0.0,))
 
 
 class Topic(Base):
