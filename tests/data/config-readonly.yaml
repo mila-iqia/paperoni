@@ -1,0 +1,6 @@
+paths:
+  database: readonly.db
+  history: history
+  cache: cache
+  requests_cache: requests-cache
+writable: false
