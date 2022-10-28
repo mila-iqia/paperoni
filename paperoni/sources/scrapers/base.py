@@ -10,31 +10,32 @@ class BaseScraper:
         self.db = db
 
     def generate_paper_queries(self):
-        q = select(sch.AuthorInstitution)
-        queries = []
-        for ai in self.db.session.execute(q):
-            (ai,) = ai
-            paper_query = M.AuthorPaperQuery(
-                author=M.UniqueAuthor(
-                    author_id=ai.author_id,
-                    name=ai.author.name,
-                    affiliations=[],
-                    roles=[],
-                    aliases=ai.author.aliases,
-                    links=[
-                        M.Link(
-                            type=link.type,
-                            link=link.link,
-                        )
-                        for link in ai.author.links
-                    ],
-                ),
-                start_date=ai.start_date,
-                end_date=ai.end_date,
-            )
-            queries.append(paper_query)
+        with self.db:
+            q = select(sch.AuthorInstitution)
+            queries = []
+            for ai in self.db.session.execute(q):
+                (ai,) = ai
+                paper_query = M.AuthorPaperQuery(
+                    author=M.UniqueAuthor(
+                        author_id=ai.author_id,
+                        name=ai.author.name,
+                        affiliations=[],
+                        roles=[],
+                        aliases=ai.author.aliases,
+                        links=[
+                            M.Link(
+                                type=link.type,
+                                link=link.link,
+                            )
+                            for link in ai.author.links
+                        ],
+                    ),
+                    start_date=ai.start_date,
+                    end_date=ai.end_date,
+                )
+                queries.append(paper_query)
 
-        return queries
+            return queries
 
     def generate_author_queries(self):
         authors = {}

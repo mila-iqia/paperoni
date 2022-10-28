@@ -1,5 +1,5 @@
 paths:
-  database: empty.db
+  database: yoshua.db
   history: history
   cache: cache
   requests_cache: requests-cache

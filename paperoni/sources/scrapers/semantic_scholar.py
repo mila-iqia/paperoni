@@ -1,6 +1,4 @@
-import json
 import re
-import urllib.parse
 from datetime import datetime
 
 from coleo import Option, tooled
@@ -19,7 +17,11 @@ from ...model import (
 )
 from ...tools import QueryError
 from ..acquire import HTTPSAcquirer
-from ..utils import prepare
+from ..utils import (
+    filter_researchers_interface,
+    prepare_interface,
+    prompt_controller,
+)
 from .base import BaseScraper
 
 external_ids_mapping = {
@@ -129,7 +131,7 @@ def _figure_out_date(data):
                         year += 1900
                     elif year < 50:
                         year += 2000
-                    elif not (1950 <= year <= 2050):
+                    elif not (1950 <= year <= 2050):  # pragma: no cover
                         continue
                     if (
                         year
@@ -272,30 +274,32 @@ class SemanticScholarQueryManager:
         )
         yield from map(self._wrap_paper, papers)
 
-    def paper(self, paper_id, fields=PAPER_FIELDS):
+    def paper(self, paper_id, fields=PAPER_FIELDS):  # pragma: no cover
         (paper,) = self._list(f"paper/{paper_id}", fields=fields)
         return paper
 
-    def paper_authors(self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params):
+    def paper_authors(
+        self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params
+    ):  # pragma: no cover
         yield from self._list(
             f"paper/{paper_id}/authors", fields=fields, **params
         )
 
     def paper_citations(
         self, paper_id, fields=PAPER_CITATIONS_FIELDS, **params
-    ):
+    ):  # pragma: no cover
         yield from self._list(
             f"paper/{paper_id}/citations", fields=fields, **params
         )
 
     def paper_references(
         self, paper_id, fields=PAPER_REFERENCES_FIELDS, **params
-    ):
+    ):  # pragma: no cover
         yield from self._list(
             f"paper/{paper_id}/citations", fields=fields, **params
         )
 
-    def author(self, name, fields=AUTHOR_FIELDS, **params):
+    def author(self, name, fields=AUTHOR_FIELDS, **params):  # pragma: no cover
         name = name.replace("-", " ")
         authors = self._list(
             f"author/search", query=name, fields=fields, **params
@@ -318,15 +322,6 @@ class SemanticScholarQueryManager:
             f"author/{author_id}/papers", fields=fields, **params
         )
         yield from map(self._wrap_paper, papers)
-
-
-def _between(name, after, before):
-    name = name.lower()
-    if after and name[: len(after)] <= after:
-        return False
-    if before and name[: len(before)] >= before:
-        return False
-    return True
 
 
 class SemanticScholarScraper(BaseScraper):
@@ -360,8 +355,8 @@ class SemanticScholarScraper(BaseScraper):
             yield from ss.search(title, block_size=block_size, limit=limit)
 
         elif author:
-            for auth in ss.author(author):
-                print(auth)
+            for _, papers in ss.author_with_papers(author):
+                yield from papers
 
     @tooled
     def acquire(self):
@@ -369,19 +364,11 @@ class SemanticScholarScraper(BaseScraper):
 
         todo = {}
 
-        after: Option = ""
-        before: Option = ""
-        name: Option = ""
-
-        if name:
-            queries = [
-                auq for auq in queries if auq.author.name.lower() == name
-            ]
-        queries.sort(key=lambda auq: auq.author.name.lower())
+        queries = filter_researchers_interface(
+            queries, getname=lambda q: q.author.name
+        )
 
         for auq in queries:
-            if not _between(auq.author.name, after, before):
-                continue
             for link in auq.author.links:
                 if link.type == "semantic_scholar":
                     todo[link.link] = auq
@@ -398,13 +385,13 @@ class SemanticScholarScraper(BaseScraper):
             yield from ss.author_papers(ssid, block_size=1000)
 
     @tooled
-    def prepare(self):
-        researchers = self.generate_author_queries()
+    def prepare(self, controller=prompt_controller):
         ss = SemanticScholarQueryManager()
-        return prepare(
-            researchers,
+        return prepare_interface(
+            researchers=self.generate_author_queries(),
             idtype="semantic_scholar",
             query_name=ss.author_with_papers,
+            controller=controller,
             minimum=1,
         )
 

@@ -1,5 +1,5 @@
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from pytest import fixture
 
@@ -55,3 +55,13 @@ def config_readonly():
 @fixture
 def config_empty():
     yield from transient_config("config-empty.yaml")
+
+
+@fixture
+def config_profs():
+    yield from transient_config("config-profs.yaml")
+
+
+@fixture
+def config_yoshua():
+    yield from transient_config("config-yoshua.yaml")
