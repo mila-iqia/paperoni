@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
-from ovld import ovld, OvldMC
+
+from ovld import OvldMC, ovld
 
 
 class Artifact(metaclass=OvldMC):
@@ -32,3 +33,13 @@ class Artifacts:
 
     def __getitem__(self, name):
         return Artifact(self.artifacts[name])
+
+
+def controller_from_generator(genfn):
+    gen = genfn()
+    next(gen)
+
+    def controller(author, paper):
+        return gen.send((author, paper))
+
+    return controller
