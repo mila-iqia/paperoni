@@ -1,0 +1,6 @@
+paths:
+  database: profs.db
+  history: history
+  cache: cache
+  requests_cache: requests-cache
+writable: true
