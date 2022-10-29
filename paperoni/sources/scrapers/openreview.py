@@ -19,7 +19,7 @@ from ...model import (
     VenueType,
 )
 from ...tools import extract_date
-from ..utils import prepare
+from ..utils import prepare_interface, prompt_controller
 from .base import BaseScraper
 
 
@@ -299,19 +299,21 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
                 yield paper
 
     @tooled
-    def prepare(self):
-        researchers = self.generate_author_queries()
-
+    def prepare(self, controller=prompt_controller):
         # Venue on the basis of which to search
         venue: Option = None
 
-        papers = list(
-            self._query_papers_from_venues(
-                params={"content": {}}, venues=venue and [venue]
-            )
-        )
+        _papers = None
 
         def query_name(aname):
+            nonlocal _papers
+            if _papers is None:
+                papers = list(
+                    self._query_papers_from_venues(
+                        params={"content": {}}, venues=venue and [venue]
+                    )
+                )
+
             print(f"Processing {aname}")
             results = {}
             for paper in papers:
@@ -325,7 +327,12 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             for auid, (au, aupapers) in results.items():
                 yield (au, aupapers)
 
-        return prepare(researchers, idtype="openreview", query_name=query_name)
+        return prepare_interface(
+            researchers=self.generate_author_queries(),
+            idtype="openreview",
+            query_name=query_name,
+            controller=controller,
+        )
 
 
 class OpenReviewVenueScraper(OpenReviewScraperBase):

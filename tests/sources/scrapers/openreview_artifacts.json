@@ -1,0 +1,248 @@
+{
+    "discrete": {
+        "__type__": "Paper",
+        "title": "Discrete-Valued Neural Communication",
+        "abstract": "Deep learning has advanced from fully connected architectures to structured models organized into components, e.g., the transformer composed of positional elements, modular architectures divided into slots, and graph neural nets made up of nodes. The nature of structured models is that communication among the components has a bottleneck, typically achieved by restricted connectivity and attention. In this work, we further tighten the bottleneck via discreteness of the representations transmitted between components. We hypothesize that this constraint serves as a useful form of inductive bias. Our hypothesis is motivated by past empirical work showing the benefits of discretization in non-structured architectures as well as our own theoretical results showing that discretization increases noise robustness and reduces the underlying dimensionality of the model. Building on an existing technique for discretization from the VQ-VAE, we consider multi-headed discretization with shared codebooks as the output of each architectural component. One motivating intuition is human language in which communication occurs through multiple discrete symbols. This form of communication is hypothesized to facilitate transmission of information between functional components of the brain by providing a common interlingua, just as it does for human-to-human communication. Our experiments show that discrete-valued neural communication (DVNC) substantially improves systematic generalization in a variety of architectures\u2014transformers, modular architectures, and graph neural networks. We also show that the DVNC is robust to the choice of hyperparameters, making the method useful in practice.",
+        "authors": [
+            {
+                "author": {
+                    "name": "Dianbo Liu",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Dianbo_Liu2"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Alex Lamb",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Alex_Lamb1"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Kenji Kawaguchi",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Kenji_Kawaguchi1"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Anirudh Goyal",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Anirudh_Goyal1"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Chen Sun",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Chen_Sun7"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Michael Curtis Mozer",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Michael_Curtis_Mozer1"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "name": "Yoshua Bengio",
+                    "roles": [],
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Yoshua_Bengio1"
+                        }
+                    ],
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "affiliations": []
+            }
+        ],
+        "releases": [
+            {
+                "venue": {
+                    "type": "conference",
+                    "name": "NeurIPS.cc/2021/Conference",
+                    "series": "NeurIPS.cc/Conference",
+                    "date": "2021-05-21T00:00:00",
+                    "date_precision": 3,
+                    "volume": "NeurIPS 2021",
+                    "publisher": null,
+                    "aliases": [],
+                    "links": [
+                        {
+                            "type": "openreview-venue",
+                            "link": "NeurIPS.cc/2021/Conference"
+                        }
+                    ],
+                    "open": false,
+                    "peer_reviewed": false,
+                    "quality": [
+                        0.0
+                    ]
+                },
+                "status": "poster",
+                "pages": null
+            }
+        ],
+        "topics": [
+            {
+                "name": "structured architecture"
+            },
+            {
+                "name": "discretization"
+            },
+            {
+                "name": "communication"
+            },
+            {
+                "name": "specialist components"
+            },
+            {
+                "name": "system 2"
+            }
+        ],
+        "links": [
+            {
+                "type": "openreview",
+                "link": "YSYXmOzlrou"
+            }
+        ],
+        "citation_count": null,
+        "quality": [
+            0.0
+        ]
+    },
+    "iclr2017": {
+        "__type__": "Venue",
+        "type": "conference",
+        "name": "ICLR 2017 Conference Track",
+        "series": "ICLR.cc/2017/conference",
+        "date": "2017-04-24T00:00:00",
+        "date_precision": 3,
+        "volume": null,
+        "publisher": null,
+        "aliases": [],
+        "links": [
+            {
+                "type": "openreview-venue",
+                "link": "ICLR.cc/2017/conference"
+            }
+        ],
+        "open": false,
+        "peer_reviewed": false,
+        "quality": [
+            1.0
+        ]
+    },
+    "iclr2020": {
+        "__type__": "Venue",
+        "type": "conference",
+        "name": "International Conference on Learning Representations",
+        "series": "ICLR.cc/Conference",
+        "date": "2020-04-30T00:00:00",
+        "date_precision": 3,
+        "volume": null,
+        "publisher": null,
+        "aliases": [],
+        "links": [
+            {
+                "type": "openreview-venue",
+                "link": "ICLR.cc/2020/Conference"
+            }
+        ],
+        "open": false,
+        "peer_reviewed": false,
+        "quality": [
+            1.0
+        ]
+    },
+    "iclr2021": {
+        "__type__": "Venue",
+        "type": "conference",
+        "name": "International Conference on Learning Representations",
+        "series": "ICLR.cc/Conference",
+        "date": "2021-05-04T00:00:00",
+        "date_precision": 3,
+        "volume": null,
+        "publisher": null,
+        "aliases": [],
+        "links": [
+            {
+                "type": "openreview-venue",
+                "link": "ICLR.cc/2021/Conference"
+            }
+        ],
+        "open": false,
+        "peer_reviewed": false,
+        "quality": [
+            1.0
+        ]
+    }
+}
