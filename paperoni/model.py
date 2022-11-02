@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date as _date, datetime, timedelta
 from enum import Enum
 from hashlib import md5
 from typing import Optional
@@ -48,9 +48,14 @@ class DatePrecision(int, Enum):
     day = 3
 
     @staticmethod
-    def assimilate_date(date):
+    def assimilate_date(date, infer_precision=True):
         match date:
             case int() as year:
+                return {
+                    "date": f"{year}-01-01 00:00",
+                    "date_precision": DatePrecision.year,
+                }
+            case str() as year if re.match("^[0-9]{4}$", date):
                 return {
                     "date": f"{year}-01-01 00:00",
                     "date_precision": DatePrecision.year,
@@ -58,7 +63,7 @@ class DatePrecision(int, Enum):
             case str() if m := re.match("^(....)-(..)-(..).*", date):
                 match m.groups():
                     case (year, month, day):
-                        if day == "01":
+                        if infer_precision and day == "01":
                             if month == "01":
                                 precision = DatePrecision.year
                             else:
@@ -72,12 +77,39 @@ class DatePrecision(int, Enum):
                     case _:  # pragma: no cover
                         assert False
             case None:
-                return {
-                    "date": "2000-01-01 00:00",
-                    "date_precision": DatePrecision.unknown,
-                }
+                return (
+                    {
+                        "date": "2000-01-01 00:00",
+                        "date_precision": DatePrecision.unknown,
+                    }
+                    if infer_precision
+                    else None
+                )
             case _:  # pragma: no cover
                 assert False
+
+    @staticmethod
+    def make_date(date, alignment="start", infer_precision=False):
+        date = DatePrecision.assimilate_date(
+            date, infer_precision=infer_precision
+        )
+        if date is None:
+            return None
+        precision = date["date_precision"]
+        assert precision != DatePrecision.month
+        date = _date.fromisoformat(date["date"][:10])
+        if alignment == "start":
+            return datetime(date.year, date.month, date.day)
+        elif precision == DatePrecision.year:
+            return datetime(date.year + 1, date.month, date.day) - timedelta(
+                days=1
+            )
+        elif precision == DatePrecision.month:  # pragma: no cover
+            return datetime(date.year, date.month + 1, date.day) - timedelta(
+                days=1
+            )
+        else:
+            return datetime(date.year, date.month, date.day)
 
     @staticmethod
     def format(date, precision):
