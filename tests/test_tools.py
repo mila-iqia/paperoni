@@ -1,10 +1,15 @@
 from dataclasses import dataclass
 
+from giving import given
+
 from paperoni.model import DatePrecision, PaperMerge
 from paperoni.tools import (
+    Doing,
     EquivalenceGroups,
     asciiify,
     canonicalize_links,
+    covguard,
+    covguard_fn,
     extract_date,
     get_uuid_tag,
     is_canonical_uuid,
@@ -171,3 +176,32 @@ def test_uuid_tagging():
 def test_similarity():
     assert similarity("bonjour", "bonjour") == 1
     assert similarity("bonjour", "bon-jour.") == 1
+
+
+def test_covguard():
+    with given() as gv:
+        gv.where(a=1, b=2, c=3).fail_if_empty()
+
+        with Doing(a=1, b=2):
+            with covguard(c=3):
+                pass
+
+
+def test_covguard_fn():
+    @covguard_fn
+    def f1(x):
+        return x + 1
+
+    @covguard_fn(x=5)
+    def f2(y):
+        return y + 2
+
+    with given() as gv:
+        gv.where(a=1).fail_if_empty()
+        gv.where(a=2, x=5).fail_if_empty()
+
+        with Doing(a=1):
+            assert f1(4) == 5
+
+        with Doing(a=2):
+            assert f2(4) == 6
