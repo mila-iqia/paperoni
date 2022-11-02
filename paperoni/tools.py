@@ -1,9 +1,14 @@
 import functools
+import inspect
 import re
 import unicodedata
 from collections import defaultdict
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime
 from difflib import SequenceMatcher
+
+from giving import give
 
 _uuid_tags = ["transient", "canonical"]
 
@@ -233,3 +238,42 @@ def keyword_decorator(deco):
             return deco(fn, **kwargs)
 
     return new_deco
+
+
+currently_doing = ContextVar("doing", default=None)
+
+
+class Doing:
+    def __init__(self, **description):
+        self.description = description
+
+    def __enter__(self):
+        self.token = currently_doing.set(self)
+        return self
+
+    def __exit__(self, *_):
+        currently_doing.reset(self.token)
+
+
+@contextmanager
+def covguard(**more_keys):
+    info = inspect.getframeinfo(inspect.stack()[2][0])
+    doing = currently_doing.get()
+    kw = doing.description if doing else {}
+    if doing:
+        give(
+            situation="cover",
+            location=f"{info.filename}:{info.lineno}",
+            **kw,
+            **more_keys,
+        )
+    yield
+
+
+@keyword_decorator
+def covguard_fn(fn, **keys):
+    def deco(*args, **kwargs):
+        with covguard(**keys):
+            return fn(*args, **kwargs)
+
+    return deco
