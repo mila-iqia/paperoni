@@ -67,6 +67,19 @@ def test_date_precision_assimilate_date():
         assert not DatePrecision.assimilate_date(d)
 
 
+def test_date_precision_make_date():
+    d = 1987
+    assert DatePrecision.make_date(d) == datetime(1987, 1, 1)
+    assert DatePrecision.make_date(d, alignment="end") == datetime(1987, 12, 31)
+
+    d = "2001-04-03"
+    assert DatePrecision.make_date(d) == datetime(2001, 4, 3)
+    assert DatePrecision.make_date(d, alignment="end") == datetime(2001, 4, 3)
+
+    d = None
+    assert DatePrecision.make_date(d) is None
+
+
 def test_quality_calculation():
     X = BaseWithQuality
 
