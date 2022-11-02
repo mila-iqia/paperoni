@@ -3,6 +3,7 @@ import sys
 import time
 from datetime import datetime, timedelta
 from fnmatch import fnmatch
+from functools import reduce
 
 import openreview
 from coleo import Option, tooled
@@ -10,15 +11,18 @@ from coleo import Option, tooled
 from ...model import (
     Author,
     DatePrecision,
+    Institution,
+    InstitutionCategory,
     Link,
     Paper,
     PaperAuthor,
     Release,
+    Role,
     Topic,
     Venue,
     VenueType,
 )
-from ...tools import extract_date
+from ...tools import Doing, covguard, extract_date
 from ..utils import prepare_interface, prompt_controller
 from .base import BaseScraper
 
@@ -161,7 +165,7 @@ class OpenReviewScraperBase(BaseScraper):
     def _query_papers_from_venues(
         self, params, venues=None, total=0, limit=1000000
     ):
-        if not venues:
+        if not venues:  # pragma: no cover
             venues = self.client.get_group(id="venues").members
 
         for v in venues:
@@ -188,40 +192,118 @@ class OpenReviewScraperBase(BaseScraper):
         }
 
         for venueid in venues:
-            print(f"Query {venueid}")
-            try:
-                data = self.client.get_group(id=venueid)
-            except openreview.OpenReviewException:
-                print(f"Cannot view {venueid}", file=sys.stderr)
-                continue
+            with Doing(venue=venueid):
+                print(f"Query {venueid}")
+                try:
+                    data = self.client.get_group(id=venueid)
+                except openreview.OpenReviewException:
+                    print(f"Cannot view {venueid}", file=sys.stderr)
+                    continue
 
-            info = {}
-            for key, patts in patterns.items():
-                for p in patts:
-                    if m := re.search(pattern=p, string=data.web):
-                        info[key] = m.groups()[2]
-                        break
-                else:
-                    info[key] = None
+                info = {}
+                for key, patts in patterns.items():
+                    for p in patts:
+                        if m := re.search(pattern=p, string=data.web):
+                            info[key] = m.groups()[2]
+                            break
+                    else:
+                        with covguard():
+                            info[key] = None
 
-            xdate = (
-                extract_date(info.get("date"))
-                or extract_date(info.get("location"))
-                or extract_date(info.get("title"))
+                xdate = (
+                    extract_date(info.get("date"))
+                    or extract_date(info.get("location"))
+                    or extract_date(info.get("title"))
+                )
+                title = info.get("title")
+                if not xdate or not title:
+                    with covguard():
+                        continue
+
+                yield Venue(
+                    type=self._map_venue_type(venueid),
+                    name=title,
+                    series=venue_to_series(venueid),
+                    aliases=[],
+                    links=[Link(type="openreview-venue", link=venueid)],
+                    quality=(1.0,),
+                    **xdate,
+                )
+
+    def get_profile(self, authorid):
+        def _position(entry):
+            return entry.get("position", "affiliated").lower().replace(" ", "_")
+
+        def _make_institution(entry):
+            inst = entry["institution"]
+            pos = _position(entry)
+
+            category = InstitutionCategory.unknown
+            if (
+                "phd" in pos
+                or "msc" in pos
+                or "student" in pos
+                or "professor" in pos
+            ):
+                category = InstitutionCategory.academia
+            return Institution(
+                name=inst["name"],
+                category=category,
+                aliases=[inst["domain"]],
             )
-            title = info.get("title")
-            if not xdate or not title:
-                continue
 
-            yield Venue(
-                type=self._map_venue_type(venueid),
-                name=title,
-                series=venue_to_series(venueid),
-                aliases=[],
-                links=[Link(type="openreview-venue", link=venueid)],
-                quality=(1.0,),
-                **xdate,
+        def make_name(namedata):
+            parts = [namedata["first"], namedata["middle"], namedata["last"]]
+            parts = [p for p in parts if p]
+            name = " ".join(parts)
+            return namedata.get("preferred", False), name
+
+        def _make_role(entry):
+            end_date = DatePrecision.make_date(entry["end"], alignment="end")
+            start_date = (
+                DatePrecision.make_date(entry["start"], alignment="start")
+                or DatePrecision.make_date(entry["end"], alignment="start")
+                or datetime(2000, 1, 1)
             )
+            return Role(
+                role=_position(entry),
+                start_date=start_date,
+                end_date=end_date,
+                institution=_make_institution(entry),
+            )
+
+        data = self.client.get_profile(authorid)
+
+        names = [make_name(x) for x in data.content["names"]]
+        names.sort(reverse=True)
+        names = [n[1] for n in names]
+
+        return Author(
+            name=names[0],
+            aliases=names[1:],
+            links=[
+                Link(type="openreview", link=name["username"])
+                for name in data.content["names"]
+            ],
+            roles=[_make_role(entry) for entry in data.content["history"]],
+            quality=0.0,
+        )
+
+    def _venues_from_wildcard(self, pattern):
+        if isinstance(pattern, list):
+            return reduce(
+                list.__add__, [self._venues_from_wildcard(p) for p in pattern]
+            )
+        elif "*" not in pattern:
+            return [pattern]
+        else:
+            members = self.client.get_group(id="venues").members
+            print("~~", pattern, members)
+            return [
+                member
+                for member in members
+                if fnmatch(pat=pattern.lower(), name=member.lower())
+            ]
 
 
 class OpenReviewPaperScraper(OpenReviewScraperBase):
@@ -279,24 +361,36 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
 
     @tooled
     def acquire(self):
-        queries = self.generate_paper_queries()
+        # Venue to fetch from
+        # [alias: -v]
+        # [nargs: +]
+        venue: Option = None
 
-        todo = {}
+        if venue:
+            venues = self._venues_from_wildcard(venue)
+            yield from self._query_papers_from_venues(
+                params={"content": {}}, venues=venues
+            )
 
-        for auq in queries:
-            for link in auq.author.links:
-                if link.type == "openreview":
-                    todo[link.link] = auq
+        else:
+            queries = self.generate_paper_queries()
 
-        for author_id, auq in todo.items():
-            print(f"Fetch papers for {auq.author.name} (id={author_id})")
-            time.sleep(5)
-            params = {
-                "content": {"authorids": [author_id]},
-                "mintcdate": int(auq.start_date.timestamp() * 1000),
-            }
-            for paper in self._query(params):
-                yield paper
+            todo = {}
+
+            for auq in queries:
+                for link in auq.author.links:
+                    if link.type == "openreview":
+                        todo[link.link] = auq
+
+            for author_id, auq in todo.items():
+                print(f"Fetch papers for {auq.author.name} (id={author_id})")
+                time.sleep(5)
+                params = {
+                    "content": {"authorids": [author_id]},
+                    "mintcdate": int(auq.start_date.timestamp() * 1000),
+                }
+                for paper in self._query(params):
+                    yield paper
 
     @tooled
     def prepare(self, controller=prompt_controller):
@@ -342,12 +436,7 @@ class OpenReviewVenueScraper(OpenReviewScraperBase):
         # Pattern for the conferences to query
         pattern: Option = "*",
     ):
-        members = self.client.get_group(id="venues").members
-        members = [
-            member
-            for member in members
-            if fnmatch(pat=pattern, name=member.lower())
-        ]
+        members = self._venues_from_wildcard(pattern)
         yield from self._query_venues(members)
 
     @tooled
@@ -355,11 +444,29 @@ class OpenReviewVenueScraper(OpenReviewScraperBase):
         yield from self.query()
 
     @tooled
-    def prepare(self):
+    def prepare(self):  # pragma: no cover
+        print("TODO")
+
+
+class OpenReviewProfileScraper(OpenReviewScraperBase):
+    @tooled
+    def query(self, authorid: Option & str = None):
+        assert authorid
+        yield self.get_profile(authorid)
+
+    @tooled
+    def acquire(self):
+        with self.db as db:
+            query = "SELECT * FROM "
+            db.execute(query)
+
+    @tooled
+    def prepare(self):  # pragma: no cover
         print("TODO")
 
 
 __scrapers__ = {
     "openreview": OpenReviewPaperScraper,
     "openreview-venues": OpenReviewVenueScraper,
+    "openreview-profiles": OpenReviewProfileScraper,
 }

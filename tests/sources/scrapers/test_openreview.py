@@ -3,9 +3,11 @@ import pytest
 from giving import given
 from pytest import fixture
 
+from paperoni.display import display
 from paperoni.model import Paper
 from paperoni.sources.scrapers.openreview import (
     OpenReviewPaperScraper,
+    OpenReviewProfileScraper,
     OpenReviewVenueScraper,
 )
 from paperoni.tools import QueryError
@@ -26,6 +28,11 @@ def scraper(config_empty):
 @fixture
 def vscraper(config_empty):
     return OpenReviewVenueScraper(config_empty, config_empty.database)
+
+
+@fixture
+def pscraper(config_empty):
+    return OpenReviewProfileScraper(config_empty, config_empty.database)
 
 
 @fixture
@@ -63,6 +70,18 @@ def test_query_author_id(scraper, artifacts):
             venue=["NeurIPS.cc/2021/Conference"],
         )
     )
+
+
+profiles = [
+    "~Yoshua_Bengio1",
+    "~Aaron_Courville3",
+    "~Yann_LeCun1",
+]
+
+
+@pytest.mark.parametrize(argnames=["name"], argvalues=[[x] for x in profiles])
+def test_get_profile(name, pscraper, artifacts):
+    assert artifacts[name].isin(pscraper.query(name))
 
 
 def test_prepare(scraper_p):
@@ -136,6 +155,15 @@ def test_query_venues(vscraper, artifacts):
     assert artifacts["iclr2021"].isin(confs)
 
 
+def test_query_venues_neurips(vscraper):
+    confs = list(
+        vscraper.query(
+            pattern="neurips*conference",
+        )
+    )
+    assert len(confs) >= 2
+
+
 def test_acquire_venues(vscraper, artifacts):
     with coleo.setvars(pattern="iclr*conference"):
         confs = list(vscraper.acquire())
@@ -143,4 +171,4 @@ def test_acquire_venues(vscraper, artifacts):
     assert artifacts["iclr2020"].isin(confs)
     assert artifacts["iclr2021"].isin(confs)
     with vscraper.db as db:
-        db.import_all(confs)
+        db.import_all(confs, history_file=False)

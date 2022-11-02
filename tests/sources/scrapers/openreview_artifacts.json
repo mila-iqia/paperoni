@@ -244,5 +244,209 @@
         "quality": [
             1.0
         ]
+    },
+    "~Yoshua_Bengio1": {
+        "__type__": "Author",
+        "quality": 0,
+        "name": "Yoshua Bengio",
+        "roles": [
+            {
+                "institution": {
+                    "name": "University of Montreal",
+                    "category": "academia",
+                    "aliases": [
+                        "umontreal.ca"
+                    ]
+                },
+                "role": "full_professor",
+                "start_date": "1993-01-01T00:00:00",
+                "end_date": null
+            }
+        ],
+        "aliases": [],
+        "links": [
+            {
+                "type": "openreview",
+                "link": "~Yoshua_Bengio1"
+            }
+        ]
+    },
+    "~Aaron_Courville3": {
+        "__type__": "Author",
+        "quality": 0,
+        "name": "Aaron Courville",
+        "roles": [
+            {
+                "institution": {
+                    "name": "University of Montreal",
+                    "category": "academia",
+                    "aliases": [
+                        "umontreal.ca"
+                    ]
+                },
+                "role": "assistant_professor",
+                "start_date": "2012-01-01T00:00:00",
+                "end_date": null
+            },
+            {
+                "institution": {
+                    "name": "Universit\u00e9 de Montr\u00e9al",
+                    "category": "academia",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "assistant_professor",
+                "start_date": "2012-01-01T00:00:00",
+                "end_date": null
+            }
+        ],
+        "aliases": [
+            "Aaron C. Courville"
+        ],
+        "links": [
+            {
+                "type": "openreview",
+                "link": "~Aaron_Courville3"
+            },
+            {
+                "type": "openreview",
+                "link": "~Aaron_C._Courville1"
+            }
+        ]
+    },
+    "~Yann_LeCun1": {
+        "__type__": "Author",
+        "quality": 0,
+        "name": "Yann LeCun",
+        "roles": [
+            {
+                "institution": {
+                    "name": "Facebook",
+                    "category": "unknown",
+                    "aliases": [
+                        "fb.com"
+                    ]
+                },
+                "role": "director",
+                "start_date": "2013-01-01T00:00:00",
+                "end_date": null
+            },
+            {
+                "institution": {
+                    "name": "Facebook AI Research",
+                    "category": "unknown",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "director",
+                "start_date": "2013-01-01T00:00:00",
+                "end_date": null
+            },
+            {
+                "institution": {
+                    "name": "New York University",
+                    "category": "academia",
+                    "aliases": [
+                        "nyu.edu"
+                    ]
+                },
+                "role": "full_professor",
+                "start_date": "2003-01-01T00:00:00",
+                "end_date": null
+            },
+            {
+                "institution": {
+                    "name": "New York University",
+                    "category": "academia",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "professor",
+                "start_date": "2003-01-01T00:00:00",
+                "end_date": null
+            },
+            {
+                "institution": {
+                    "name": "AT&T Bell Laboratories",
+                    "category": "unknown",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "researcher",
+                "start_date": "1988-01-01T00:00:00",
+                "end_date": null
+            },
+            {
+                "institution": {
+                    "name": "University of Toronto",
+                    "category": "unknown",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "post_doc",
+                "start_date": "1987-01-01T00:00:00",
+                "end_date": "1988-12-31T00:00:00"
+            },
+            {
+                "institution": {
+                    "name": "Universite Pierre et Marie Curie-Paris",
+                    "category": "academia",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "graduate_student",
+                "start_date": "1987-01-01T00:00:00",
+                "end_date": "1987-12-31T00:00:00"
+            },
+            {
+                "institution": {
+                    "name": "Universite Pierre et Marie Curie-Paris",
+                    "category": "academia",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "graduate_student",
+                "start_date": "1987-01-01T00:00:00",
+                "end_date": "1987-12-31T00:00:00"
+            },
+            {
+                "institution": {
+                    "name": "Ecole Superieure d'Ingenieurs en Electrotechnique et Electronique ",
+                    "category": "unknown",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "undergraduate",
+                "start_date": "1983-01-01T00:00:00",
+                "end_date": "1983-12-31T00:00:00"
+            },
+            {
+                "institution": {
+                    "name": "Ecole Superieure d'Ingenieurs en Electrotechnique et Electronique ",
+                    "category": "unknown",
+                    "aliases": [
+                        " "
+                    ]
+                },
+                "role": "undergraduate",
+                "start_date": "1983-01-01T00:00:00",
+                "end_date": "1983-12-31T00:00:00"
+            }
+        ],
+        "aliases": [],
+        "links": [
+            {
+                "type": "openreview",
+                "link": "~Yann_LeCun1"
+            }
+        ]
     }
 }
