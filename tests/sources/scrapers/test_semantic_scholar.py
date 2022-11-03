@@ -7,12 +7,7 @@ from paperoni.model import Paper
 from paperoni.sources.scrapers.semantic_scholar import SemanticScholarScraper
 from paperoni.tools import QueryError
 
-from .utils import Artifacts, controller_from_generator
-
-
-@fixture(scope="module")
-def artifacts():
-    return Artifacts("semantic_scholar_artifacts")
+from .utils import controller_from_generator, isin
 
 
 @fixture
@@ -30,15 +25,23 @@ def scraper_p(config_profs):
     return SemanticScholarScraper(config_profs, config_profs.database)
 
 
-def test_query_title(scraper, artifacts):
-    assert artifacts["autodiff_query"].isin(
-        scraper.query(title=["automatic differentiation in ml where we are"])
+def test_query_title(scraper, data_regression):
+    isin(
+        data_regression,
+        scraper.query(title=["automatic differentiation in ml where we are"]),
+        basename="autodiff_in_ml",
+        ignore=["citation_count"],
+        title="Automatic differentiation in ML: Where we are and where we should be going",
     )
 
 
-def test_query_author(scraper, artifacts):
-    assert artifacts["autodiff_query"].isin(
-        scraper.query(author=["Olivier Breuleux"])
+def test_query_author(scraper, data_regression):
+    isin(
+        data_regression,
+        scraper.query(title=["automatic differentiation in ml where we are"]),
+        basename="autodiff_in_ml",
+        ignore=["citation_count"],
+        title="Automatic differentiation in ML: Where we are and where we should be going",
     )
 
 
@@ -144,7 +147,7 @@ def test_prepare_and_commit(scraper_p):
 
         with scraper_p.db as db:
             # Commit all of our work
-            db.import_all(auths)
+            db.import_all(auths, history_file=False)
 
         # We should be skipping all ids because we already have them
         with coleo.setvars(names=["Blake Richards"]):

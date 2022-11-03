@@ -1,0 +1,27 @@
+__type__: Author
+aliases:
+- Aaron C. Courville
+links:
+- link: ~Aaron_Courville3
+  type: openreview
+- link: ~Aaron_C._Courville1
+  type: openreview
+name: Aaron Courville
+quality: 0
+roles:
+- end_date: null
+  institution:
+    aliases:
+    - umontreal.ca
+    category: academia
+    name: University of Montreal
+  role: assistant_professor
+  start_date: '2012-01-01T00:00:00'
+- end_date: null
+  institution:
+    aliases:
+    - ' '
+    category: academia
+    name: Université de Montréal
+  role: assistant_professor
+  start_date: '2012-01-01T00:00:00'
