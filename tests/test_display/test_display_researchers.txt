@@ -1,0 +1,13 @@
+Name: Yoshua Bengio
+Affiliations: 
+* core                 Mila                                     from 2015-01-01 to -
+* chair                Mila                                     from 2018-04-01 to -
+Links: 
+  bio                  bengio-yoshua
+  wpid_fr              96
+  wpid_en              348
+  mag                  161269817
+  mag                  2969309771
+  mag                  3049675594
+  mag                  2550477701
+  mag                  2762122187

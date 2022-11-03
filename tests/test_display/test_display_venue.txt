@@ -1,0 +1,8 @@
+Venue: Third Worldwide Illuminati Tussle
+Series: Worldwide Illuminati Tussle
+Type: conference
+Aliases: 
+* TWIT
+Date: 2022
+Links: 
+  illuminati           1

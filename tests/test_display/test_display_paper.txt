@@ -1,0 +1,28 @@
+Title: A Remedy For Distributional Shifts Through Expected Domain Translation
+Authors: 
+ * Jean-Christophe Gagnon-Audet   
+ * Soroosh Shahtalebi             
+ * F. Rudzicz                     
+ * I. Rish                        
+Abstract: Machine learning models often fail to generalize to unseen domains due
+to the distributional shifts. A family of such shifts, “correlation shifts,” is
+caused by spurious correlations in the data. It is studied under the overarching
+topic of “domain generalization.” In this work, we employ multi-modal
+translation networks to tackle the correlation shifts that appear when data is
+sampled out-of-distribution. Learning a generative model from training domains
+enables us to translate each training sample under the special characteristics
+of other possible domains. We show that by training a predictor solely on the
+generated samples, the spurious correlations in training domains average out,
+and the invariant features corresponding to true correlations emerge. Our
+proposed technique, Expected Domain Translation (EDT), is benchmarked on the
+Colored MNIST dataset and drastically improves the state-of-the-art
+classification accuracy by 38% with train-domain validation model selection.
+Venue: 
+  2022-05-23 published ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)
+Topics: Computer Science
+Sources: 
+  doi.abstract https://doi.org/10.1109/icassp43922.2022.9746434
+  dblp.abstract https://dblp.uni-trier.de/rec/conf/icassp/Gagnon-AudetSRR22
+  semantic_scholar.abstract https://www.semanticscholar.org/paper/c8050f03670cb4c153801e6d3db2d50646c5da40
+  corpusid 249436377
+Citations: 0

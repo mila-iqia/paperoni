@@ -1,5 +1,6 @@
 import shutil
 import textwrap
+from pathlib import Path
 from typing import Union
 
 from blessed import Terminal
@@ -79,20 +80,6 @@ def expand_links(links):
     return results
 
 
-def format_term(self):
-    """Print the paper on the terminal."""
-    print_field("Title", T.bold(self.title))
-    print_field("Authors", ", ".join(auth.name for auth in self.authors))
-    for release in self.releases:
-        venue = release.venue
-        print_field(
-            "Date", DatePrecision.format(venue.date, venue.date_precision)
-        )
-        print_field("Venue", venue.name)
-    if self.links:
-        print_field("URL", expand_links(self.links)[0][1])
-
-
 @ovld
 def display(d: dict):
     display(from_dict(d))
@@ -112,7 +99,7 @@ def display(paper: Union[Paper, sch.Paper]):
             print(
                 f" * {auth.author.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
             )
-        else:
+        else:  # pragma: no cover
             print(T.bold_red("ERROR: MISSING AUTHOR"))
     print_field("Abstract", paper.abstract)
     print_field("Venue", "")
@@ -132,15 +119,17 @@ def display(paper: Union[Paper, sch.Paper]):
 def display(author: Author):
     """Print an author on the terminal."""
     print_field("Name", T.bold(author.name))
+    if author.aliases:
+        print_field("Aliases", ", ".join(author.aliases))
     if author.roles:
         print_field("Affiliations", "")
         for role in author.roles:
             print(
-                f"* {role.institution.name:20} as {role.role:20} from {DatePrecision.day.format2(role.start_date)} to {role.end_date and DatePrecision.day.format2(role.end_date) or '-'}"
+                f"* {role.role:20} {role.institution.name:40} from {DatePrecision.format(role.start_date, DatePrecision.day)} to {role.end_date and DatePrecision.format(role.end_date, DatePrecision.day) or '-'}"
             )
     print_field("Links", "")
-    for typ, link in expand_links(author.links):
-        print(f"  {T.bold_green(typ):20} {link}")
+    for link in author.links:
+        print(f"  {T.bold_green(link.type):20} {link.link}")
 
 
 @ovld
@@ -198,7 +187,7 @@ def html(paper: Union[Paper, sch.Paper]):
             affiliations[list(affiliations.keys())[0]] = ""
 
     def _format_author(auth):
-        if not auth.author:
+        if not auth.author:  # pragma: no cover
             return H.span["author"]("XX")
         bio = [
             f"https://mila.quebec/en/person/{l.link}"
@@ -272,3 +261,45 @@ def html(paper: Union[Paper, sch.Paper]):
         if paper.citation_count and show_citation_count
         else "",
     )
+
+
+class TerminalPrinter:
+    def __init__(self, transform=None):
+        self.transform = transform or (lambda x: x)
+
+    def __call__(self, obj):
+        print(self.transform(obj))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        pass
+
+
+class TerminalDisplayer:
+    def __call__(self, obj):
+        display(obj)
+        print("=" * 80)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        pass
+
+
+class HTMLDisplayer:
+    def __init__(self):
+        self.entries = []
+
+    def __call__(self, obj):
+        self.entries.append(html(obj))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        page = open(Path(__file__).parent / "default.html").read()
+        page = page.replace("{{papers}}", "\n".join(map(str, self.entries)))
+        print(page)
