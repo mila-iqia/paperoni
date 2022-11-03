@@ -13,7 +13,7 @@ from paperoni.display import (
 )
 
 
-def test_display_paper(config_readonly, file_regression, capsys):
+def test_display_paper(config_readonly, out_regression):
     pq = (
         select(sch.Paper)
         .where(
@@ -25,20 +25,18 @@ def test_display_paper(config_readonly, file_regression, capsys):
     with config_readonly.database as db:
         (paper,) = db.session.execute(pq)
         display(paper[0])
-    file_regression.check(capsys.readouterr().out)
 
 
-def test_display_researchers(config_profs, file_regression, capsys):
+def test_display_researchers(config_profs, out_regression):
     yoshua = json.loads(
         config_profs.paths.database.with_suffix(".jsonl")
         .read_text()
         .split("\n")[0]
     )
     display(yoshua)
-    file_regression.check(capsys.readouterr().out)
 
 
-def test_display_author(file_regression, capsys):
+def test_display_author(out_regression):
     author = model.Author(
         name="Olivier Breuleux",
         aliases=["O Brizzle"],
@@ -47,10 +45,9 @@ def test_display_author(file_regression, capsys):
         roles=[],
     )
     display(author)
-    file_regression.check(capsys.readouterr().out)
 
 
-def test_display_venue(file_regression, capsys):
+def test_display_venue(out_regression):
     venue = model.Venue(
         name="Third Worldwide Illuminati Tussle",
         aliases=["TWIT"],
@@ -66,23 +63,20 @@ def test_display_venue(file_regression, capsys):
         volume="3",
     )
     display(venue)
-    file_regression.check(capsys.readouterr().out)
 
 
-def test_TerminalPrinter(file_regression, capsys):
+def test_TerminalPrinter(out_regression):
     with TerminalPrinter(lambda x: 2 * x) as tp:
         tp("hello")
         tp("cool")
-    file_regression.check(capsys.readouterr().out)
 
 
-def test_TerminalDisplayer(config_readonly, file_regression, capsys):
+def test_TerminalDisplayer(config_readonly, out_regression):
     with TerminalDisplayer() as td:
         pq = select(sch.Paper).limit(3)
         with config_readonly.database as db:
             for row in db.session.execute(pq):
                 td(row[0])
-    file_regression.check(capsys.readouterr().out)
 
 
 def test_HTMLDisplayer(config_readonly, file_regression, capsys):
