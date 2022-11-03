@@ -1,0 +1,95 @@
+Title: A Remedy For Distributional Shifts Through Expected Domain Translation
+Authors: 
+ * Jean-Christophe Gagnon-Audet   
+ * Soroosh Shahtalebi             
+ * F. Rudzicz                     
+ * I. Rish                        
+Abstract: Machine learning models often fail to generalize to unseen domains due
+to the distributional shifts. A family of such shifts, “correlation shifts,” is
+caused by spurious correlations in the data. It is studied under the overarching
+topic of “domain generalization.” In this work, we employ multi-modal
+translation networks to tackle the correlation shifts that appear when data is
+sampled out-of-distribution. Learning a generative model from training domains
+enables us to translate each training sample under the special characteristics
+of other possible domains. We show that by training a predictor solely on the
+generated samples, the spurious correlations in training domains average out,
+and the invariant features corresponding to true correlations emerge. Our
+proposed technique, Expected Domain Translation (EDT), is benchmarked on the
+Colored MNIST dataset and drastically improves the state-of-the-art
+classification accuracy by 38% with train-domain validation model selection.
+Venue: 
+  2022-05-23 published ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)
+Topics: Computer Science
+Sources: 
+  doi.abstract https://doi.org/10.1109/icassp43922.2022.9746434
+  dblp.abstract https://dblp.uni-trier.de/rec/conf/icassp/Gagnon-AudetSRR22
+  semantic_scholar.abstract https://www.semanticscholar.org/paper/c8050f03670cb4c153801e6d3db2d50646c5da40
+  corpusid 249436377
+Citations: 0
+================================================================================
+Title: Myofiber reconstruction at micron scale reveals longitudinal bands in
+heart ventricular walls
+Authors: 
+ * Drisya Dileep                  
+ * Tabish A. Syed                 
+ * Tyler F. W. Sloan              
+ * Perundurai S. Dhandapany       
+ * Kaleem Siddiqi                 
+ * M. Sirajuddin                  
+Abstract: The coordinated contraction of myocytes drives the heart to beat and
+circulate blood. Due to the limited spatial resolution of whole heart imaging
+and the piecemeal nature of high-magnification studies, a confirmed model of
+myofiber geometry does not yet exist. Using microscopy and computer vision we
+report the first three-dimensional reconstruction of myofibers across entire
+mouse ventricular walls at the micron scale, representing a gain of three orders
+of magnitude in spatial resolution over the existing models. Our analysis
+reveals prominent longitudinal bands of fibers that are orthogonal to the well-
+known circumferential ones. Our discovery impacts present understanding of heart
+wall mechanics and electrical function, with fundamental implications for the
+study of diseases related to myofiber disorganization.
+Venue: 
+  2022-05-12 published bioRxiv
+Topics: Biology
+Sources: 
+  doi.abstract https://doi.org/10.1101/2022.05.12.491149
+  semantic_scholar.abstract https://www.semanticscholar.org/paper/bbb616d3f2bcdb643846780d5f0b4eb4750ed663
+  corpusid 248815183
+Citations: 0
+================================================================================
+Title: DEUP: Direct Epistemic Uncertainty Prediction
+Authors: 
+ * Moksh Jain                     
+ * Salem Lahlou                   
+ * Hadi Nekoei                    
+ * Victor Butoi                   
+ * Paul Bertin                    
+ * Jarrid Rector-Brooks           
+ * Maksym Korablyov               
+ * Yoshua Bengio                  
+Abstract: Epistemic uncertainty is the part of out-of-sample prediction error
+due to the lack of knowledge of the learner. Whereas previous work was focus-ing
+on model variance, we propose a principled approach for directly estimating
+epistemic uncertainty by learning to predict generalization error and
+subtracting an estimate of aleatoric uncertainty, i.e., intrinsic
+unpredictability. This estimator of epistemic uncertainty includes the effect of
+model bias (or misspeciﬁcation) and is useful in interactive learning
+environments arising in active learning or reinforcement learning. In addition
+to discussing these properties of Direct Epistemic Uncertainty Prediction
+(DEUP), we illustrate its advantage against existing methods for uncertainty
+estimation on downstream tasks including sequential model optimization and
+reinforcement learning. We also evaluate the quality of uncertainty estimates
+from DEUP for probabilistic classiﬁcation of images and for estimating
+uncertainty about synergistic drug combinations. Correlation of the predicted
+uncertainty with the true generalization error, in addition to the OOD Detection
+AUROC. We
+Venue: 
+  2021-02-16 published ArXiv
+Topics: Computer Science, Mathematics
+Sources: 
+  arxiv.abstract https://arxiv.org/abs/2102.08501
+  arxiv.pdf https://arxiv.org/pdf/2102.08501.pdf
+  dblp.abstract https://dblp.uni-trier.de/rec/journals/corr/abs-2102-08501
+  semantic_scholar.abstract https://www.semanticscholar.org/paper/e3b0983fed3a91efad60acfab9dcb0ce86b738e1
+  corpusid 231942346
+Citations: 21
+================================================================================

@@ -8,16 +8,21 @@ from pathlib import Path
 from typing import Union
 
 from coleo import Option, auto_cli, tooled, with_extras
-from hrepr import H
 from ovld import ovld
 from sqlalchemy import select
 
 from . import model as M
 from .config import config as _config, load_config
 from .db import merge as mergers, schema as sch
-from .display import display, html as display_html
+from .display import (
+    HTMLDisplayer,
+    TerminalDisplayer,
+    TerminalPrinter,
+    display,
+    expand_links,
+)
 from .sources.scrapers import load_scrapers
-from .sources.utils import prepare
+from .sources.utils import filter_researchers, prepare_interface
 from .tools import EquivalenceGroups
 
 
@@ -51,48 +56,6 @@ def set_database(**extra):
             yield db
 
 
-class TerminalPrinter:
-    def __init__(self, transform=None):
-        self.transform = transform or (lambda x: x)
-
-    def __call__(self, obj):
-        print(self.transform(obj))
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc, tb):
-        pass
-
-
-class TerminalDisplayer:
-    def __call__(self, obj):
-        display(obj)
-        print("=" * 80)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc, tb):
-        pass
-
-
-class HTMLDisplayer:
-    def __init__(self):
-        self.entries = []
-
-    def __call__(self, obj):
-        self.entries.append(display_html(obj))
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc, tb):
-        page = open(Path(__file__).parent / "default.html").read()
-        page = page.replace("{{papers}}", "\n".join(map(str, self.entries)))
-        print(page)
-
-
 class ScraperWrapper:
     def __init__(self, name, scraper):
         self.name = name
@@ -101,7 +64,8 @@ class ScraperWrapper:
             self.scraper.query,
             self.scraper.acquire,
             self.scraper.prepare,
-            prepare,
+            prepare_interface,
+            filter_researchers,
         ]
 
     @tooled
