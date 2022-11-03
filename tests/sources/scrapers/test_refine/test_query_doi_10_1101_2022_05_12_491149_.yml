@@ -1,0 +1,103 @@
+__type__: Paper
+abstract: ''
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Cardiovascular Biology and Diseases, Institute for Stem Cell
+      Science and Regenerative Medicine
+  - aliases: []
+    category: unknown
+    name: The University of Trans-Disciplinary Health Sciences and Technology (TDU)
+  author:
+    aliases: []
+    links: []
+    name: Drisya Dileep
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science and Centre for Intelligent Machines, McGill University,
+      and MILA – Québec AI Institute
+  author:
+    aliases: []
+    links: []
+    name: Tabish A. Syed
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Quorumetrix Studio
+  author:
+    aliases: []
+    links: []
+    name: Tyler F. W. Sloan
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Cardiovascular Biology and Diseases, Institute for Stem Cell
+      Science and Regenerative Medicine
+  author:
+    aliases: []
+    links: []
+    name: Perundurai S. Dhandapany
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science and Centre for Intelligent Machines, McGill University,
+      and MILA – Québec AI Institute
+  author:
+    aliases: []
+    links: []
+    name: Kaleem Siddiqi
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Cardiovascular Biology and Diseases, Institute for Stem Cell
+      Science and Regenerative Medicine
+  author:
+    aliases: []
+    links: []
+    name: Minhajuddin Sirajuddin
+    quality:
+    - 0.0
+    roles: []
+citation_count: null
+links:
+- link: 10.1101/2022.05.12.491149
+  type: doi
+quality:
+- 0.0
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-05-12T00:00:00'
+    date_precision: 3
+    links: []
+    name: bioRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory
+    quality:
+    - 0.0
+    series: bioRxiv
+    type: journal
+    volume: null
+title: Myofiber reconstruction at micron scale reveals longitudinal bands in heart
+  ventricular walls
+topics: []

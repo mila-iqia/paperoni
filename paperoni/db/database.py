@@ -294,17 +294,19 @@ class Database(OvldBase):
             },
         )
 
-    def import_all(self, xs: list[BaseModel], history_file=None):
+    def import_all(self, xs: list[BaseModel], history_file=True):
         if not xs:
             return
-        history_file = history_file or config.get().history_file
+        if history_file is True:
+            history_file = config.get().history_file
         xs = list(xs)
         with self:
             for x in tqdm(xs):
                 self.acquire(x)
-        with open(history_file, "a") as f:
-            data = [x.tagged_json() + "\n" for x in xs]
-            f.writelines(data)
+        if history_file:
+            with open(history_file, "a") as f:
+                data = [x.tagged_json() + "\n" for x in xs]
+                f.writelines(data)
 
     def _accumulate_history_files(self, x, before, after, results):
         match x:
@@ -342,7 +344,8 @@ class Database(OvldBase):
                 with open(history_file, "r") as f:
                     lines = f.readlines()
                     for l in tqdm(lines):
-                        self.acquire(from_dict(json.loads(l)))
+                        if l.strip():
+                            self.acquire(from_dict(json.loads(l)))
 
     def _filter_ids(self, ids, create_canonical):
         for x in ids:

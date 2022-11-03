@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass
 from datetime import date as _date, datetime, timedelta
@@ -127,6 +128,9 @@ class DatePrecision(int, Enum):
 
 
 class Base(BaseModel):
+    def tagged_dict(self):
+        return json.loads(self.tagged_json())
+
     def tagged_json(self):
         return self.__config__.json_dumps(
             {"__type__": type(self).__name__, **self.dict()},

@@ -3,12 +3,16 @@ import subprocess
 import unicodedata
 from bisect import insort
 from pathlib import Path
+from types import SimpleNamespace
 
 import requests
+from eventlet.timeout import Timeout
 from tqdm import tqdm
 
+from ...config import config
 from ...model import Institution, InstitutionCategory
 from ...tools import keyword_decorator, similarity
+from ..acquire import readpage
 
 affiliation_extractors = []
 
@@ -23,6 +27,17 @@ def download(url, filename):
     """Download the given url into the given filename."""
     from ...config import config
 
+    def iter_with_timeout(r, chunk_size, timeout):
+        it = r.iter_content(chunk_size=chunk_size)
+        try:
+            while True:
+                with Timeout(timeout):
+                    yield next(it)
+        except StopIteration:
+            pass
+        finally:
+            it.close()
+
     print(f"Downloading {url}")
     config.get().uninstall()
     try:
@@ -30,7 +45,9 @@ def download(url, filename):
         total = int(r.headers.get("content-length") or "1024")
         with open(filename, "wb") as f:
             with tqdm(total=total) as progress:
-                for chunk in r.iter_content(chunk_size=total // 100):
+                for chunk in iter_with_timeout(
+                    r, chunk_size=max(total // 100, 1), timeout=5
+                ):
                     f.write(chunk)
                     f.flush()
                     progress.update(len(chunk))
@@ -39,20 +56,81 @@ def download(url, filename):
     print(f"Saved {filename}")
 
 
-def pdf_to_text(cache_base, url):
+def link_to_pdf_text(link, only_use_cache=False):
+    lnk = link.link.replace("/", "__")
+    if not lnk.endswith(".pdf"):
+        lnk = f"{lnk}.pdf"
+    pth = Path(config.get().paths.cache) / link.type / lnk
+
+    if only_use_cache:
+        return pdf_to_text(
+            cache_base=pth, url=None, only_use_cache=only_use_cache
+        )
+
+    match link.type:
+        case "arxiv":
+            url = f"https://arxiv.org/pdf/{link.link}.pdf"
+        case "openreview":
+            url = f"https://openreview.net/pdf?id={link.link}"
+        case "doi":
+            data = readpage(
+                f"https://api.crossref.org/v1/works/{link.link}", format="json"
+            )
+            if (
+                data is None
+                or data["status"] != "ok"
+                or "link" not in data["message"]
+            ):
+                return None
+            data = SimpleNamespace(**data["message"])
+            for lnk in data.link:
+                if lnk["content-type"] == "application/pdf":
+                    url = lnk["URL"]
+                    break
+            else:
+                return None
+        case "pdf":
+            url = link.link
+        case _:
+            return None
+
+    return pdf_to_text(cache_base=pth, url=url)
+
+
+def pdf_to_text(cache_base, url, only_use_cache=False):
+    if len(str(cache_base)) > 255:
+        return ""
+
     cache_base.parent.mkdir(exist_ok=True)
 
     pdf = cache_base.with_suffix(".pdf")
-    if not pdf.exists():
-        download(filename=pdf, url=url)
-
     html = pdf.with_suffix(".html")
+    txt = pdf.with_suffix(".txt")
+
+    if only_use_cache:
+        if txt.exists():
+            return txt.read_text()
+        else:
+            return ""
+
+    if not pdf.exists():
+        try:
+            download(filename=pdf, url=url)
+        except requests.exceptions.SSLError:
+            pdf.write_text("")
+            html.write_text("")
+            txt.write_text(bah := "failure")
+            return bah
+
     if not html.exists():
         _pdf = str(pdf.relative_to(Path.cwd()))
         _html = str(html.relative_to(Path.cwd()))
         subprocess.run(["pdf2htmlEX", _pdf, _html])
+        if not html.exists():
+            html.write_text("")
+            txt.write_text(bah := "failure")
+            return bah
 
-    txt = pdf.with_suffix(".txt")
     if not txt.exists() or not txt.stat().st_size:
         subprocess.run(
             ["html2text", "-width", "1000", "-o", str(txt), str(html)]
@@ -87,6 +165,7 @@ def _name_fulltext_affiliations(
 
 
 def find_fulltext_affiliations(paper, fulltext, institutions):
+    assert fulltext is not None
     blockers = [author.author.name for author in paper.authors]
     findings = [
         (

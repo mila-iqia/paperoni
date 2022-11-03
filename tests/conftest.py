@@ -53,6 +53,11 @@ def config_readonly():
 
 
 @fixture
+def config_refine():
+    yield from transient_config("config-refine.yaml")
+
+
+@fixture
 def config_empty():
     yield from transient_config("config-empty.yaml")
 

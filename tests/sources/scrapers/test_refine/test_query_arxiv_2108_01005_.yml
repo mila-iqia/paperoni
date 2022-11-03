@@ -1,0 +1,184 @@
+__type__: Paper
+abstract: ''
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
+    name: Université de Montréal
+  author:
+    aliases: []
+    author_id: 16729bd4-6149-c0b0-3b28-3706825b200a
+    links: []
+    name: Fabrice Normandin
+    quality: 0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    author_id: 55858820-52b2-cc3e-d4bd-7443ecb5318d
+    links: []
+    name: Florian Golemo
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
+    name: Université de Montréal
+  author:
+    aliases: []
+    author_id: 28f6c334-63f9-d20f-1efb-4a9cfdbf3841
+    links: []
+    name: O. Ostapenko
+    quality: 0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    author_id: 587858e1-40d6-ceee-995f-9ac52e780460
+    links: []
+    name: Pau Rodríguez López
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
+    name: Université de Montréal
+  author:
+    aliases: []
+    author_id: 185a0d74-e278-2fb1-2da5-f93b33e4bbb8
+    links: []
+    name: M. Riemer
+    quality: 0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    author_id: 6c73be07-93d9-f6d1-ef2a-aed21e7825ec
+    links: []
+    name: J. Hurtado
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 2d649788-22cc-f867-6fd9-f98e10c823c2
+    name: McGill University
+  author:
+    aliases: []
+    author_id: 7dc8d3b8-f2bf-151d-76fb-835d13dbcad5
+    links: []
+    name: Khimya Khetarpal
+    quality: 0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    author_id: 69314996-fc89-3c1d-c470-94e3464aa6e1
+    links: []
+    name: Dominic Zhao
+    quality: 0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    author_id: 72a30077-8bad-d95e-6478-ae90bd20f501
+    links: []
+    name: Ryan Lindeborg
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  author:
+    aliases: []
+    author_id: 765cacf4-5106-6da7-48c7-6c8964b0e1a0
+    links: []
+    name: Timothée Lesort
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 0ea2649f-a678-b9ca-c97a-8a62adf7e041
+    name: HEC Montréal
+  - aliases: []
+    category: unknown
+    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
+    name: Canada CIFAR AI Chair
+  author:
+    aliases: []
+    author_id: 5519d377-0775-07b9-b34b-438f1761c319
+    links: []
+    name: Laurent Charlin
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
+    name: Université de Montréal
+  - aliases: []
+    category: unknown
+    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
+    name: Canada CIFAR AI Chair
+  author:
+    aliases: []
+    author_id: 77bfadb7-61eb-b605-819f-8d7b09509825
+    links: []
+    name: I. Rish
+    quality: 0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
+    name: Université de Montréal
+  author:
+    aliases: []
+    author_id: 06121db6-e6cd-b432-e663-9e328c34ac90
+    links: []
+    name: Massimo Caccia
+    quality: 0
+    roles: []
+citation_count: null
+links:
+- link: '2108.01005'
+  type: arxiv
+quality:
+- 0.0
+releases: []
+title: 'Sequoia: A Software Framework to Unify Continual Learning Research'
+topics: []
