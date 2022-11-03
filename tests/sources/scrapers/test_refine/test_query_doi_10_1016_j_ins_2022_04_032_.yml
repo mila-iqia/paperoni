@@ -1,0 +1,55 @@
+__type__: Paper
+abstract: ''
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science
+  - aliases: []
+    category: unknown
+    name: McGill University
+  author:
+    aliases: []
+    links: []
+    name: Miles Q. Li
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Information Studies
+  - aliases: []
+    category: unknown
+    name: McGill University
+  author:
+    aliases: []
+    links: []
+    name: Benjamin C.M. Fung
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Mission Critical Cyber Security Section
+  - aliases: []
+    category: unknown
+    name: Defence R&D Canada
+  author:
+    aliases: []
+    links: []
+    name: Philippe Charland
+    quality:
+    - 0.0
+    roles: []
+citation_count: null
+links:
+- link: 10.1016/j.ins.2022.04.032
+  type: doi
+quality:
+- 0.0
+releases: []
+title: 'DyAdvDefender: An instance-based online machine learning model for perturbation-trial-based
+  black-box adversarial defense'
+topics: []

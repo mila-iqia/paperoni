@@ -2,19 +2,18 @@ import json
 import operator
 import os
 import re
+import traceback
 import urllib
 from collections import defaultdict
 from datetime import datetime
 from functools import reduce
 from operator import itemgetter
-from pathlib import Path
 from types import SimpleNamespace
 
 from coleo import Option, tooled
 from ovld import ovld
 from sqlalchemy import select
 
-from ...config import config
 from ...db import schema as sch
 from ...model import (
     Author,
@@ -31,10 +30,16 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...tools import extract_date, keyword_decorator
+from ...tools import (
+    Doing,
+    covguard,
+    covguard_fn,
+    extract_date,
+    keyword_decorator,
+)
 from ..acquire import readpage
 from .base import BaseScraper
-from .pdftools import find_fulltext_affiliations, pdf_to_text
+from .pdftools import find_fulltext_affiliations, link_to_pdf_text
 
 refiners = defaultdict(list)
 
@@ -54,7 +59,8 @@ def _only_if_affiliations(paper):
 def _paper_from_jats(soup, links):
     date1 = soup.select_one('pub-date[date-type="pub"] string-date')
     if date1:
-        date = extract_date(date1.text)
+        with covguard():
+            date = extract_date(date1.text)
     else:
         date2 = soup.select_one('pub-date[pub-type="epub"]') or soup.select_one(
             'pub-date[date-type="pub"]'
@@ -81,7 +87,8 @@ def _paper_from_jats(soup, links):
     def find_affiliation(aff):
         node = soup.select_one(f'aff#{aff.attrs["rid"]} institution')
         if not node:
-            node = soup.select_one(f'aff#{aff.attrs["rid"]}')
+            with covguard():
+                node = soup.select_one(f'aff#{aff.attrs["rid"]}')
         name = node.text
         name = re.sub(pattern="^[0-9]+", string=name, repl="")
         return Institution(
@@ -152,7 +159,7 @@ def refine_doi_with_ieeexplore(db, paper, link):
         return None
 
     apikey = os.environ.get("XPLORE_API_KEY", None)
-    if not apikey:
+    if not apikey:  # pragma: no cover
         return None
 
     data = readpage(
@@ -214,47 +221,50 @@ def refine_doi_with_ieeexplore(db, paper, link):
 def refine_doi_with_crossref(db, paper, link):
     doi = link.link
     if "arXiv" in doi:
-        return None
+        with covguard():
+            return None
 
     data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
 
     if data["status"] != "ok":
-        return None
+        with covguard():
+            return None
     data = SimpleNamespace(**data["message"])
 
     if not any(auth.get("affiliation", None) for auth in data.author):
         return None
 
-    return Paper(
-        title=data.title[0],
-        authors=[
-            PaperAuthor(
-                author=Author(
-                    name=f"{author['given']} {author['family']}",
-                    roles=[],
-                    aliases=[],
-                    links=[],
-                ),
-                affiliations=[
-                    Institution(
-                        name=aff["name"],
-                        category=InstitutionCategory.unknown,
+    with covguard():
+        return Paper(
+            title=data.title[0],
+            authors=[
+                PaperAuthor(
+                    author=Author(
+                        name=f"{author['given']} {author['family']}",
+                        roles=[],
                         aliases=[],
-                    )
-                    for aff in author["affiliation"]
-                ],
-            )
-            for author in data.author
-        ],
-        abstract="",
-        links=[Link(type="doi", link=doi)],
-        topics=[],
-        releases=[],
-        quality=(0,),
-    )
+                        links=[],
+                    ),
+                    affiliations=[
+                        Institution(
+                            name=aff["name"],
+                            category=InstitutionCategory.unknown,
+                            aliases=[],
+                        )
+                        for aff in author["affiliation"]
+                    ],
+                )
+                for author in data.author
+            ],
+            abstract="",
+            links=[Link(type="doi", link=doi)],
+            topics=[],
+            releases=[],
+            quality=(0,),
+        )
 
 
-@refiner(type="doi", priority=90)
+@refiner(type="doi", priority=190)
 def refine_doi_with_biorxiv(db, paper, link):
     doi = link.link
     if not doi.startswith("10.1101/"):
@@ -265,7 +275,8 @@ def refine_doi_with_biorxiv(db, paper, link):
     )
 
     if {"status": "ok"} not in data["messages"] or not data["collection"]:
-        return None
+        with covguard():
+            return None
 
     jats = data["collection"][0]["jatsxml"]
 
@@ -305,7 +316,8 @@ def _sd_find_one(x, tag, indices=[]):
 def refine_doi_with_sciencedirect(db, paper, link):
     doi = link.link
     if not doi.startswith("10.1016/"):
-        return None
+        with covguard():
+            return None
 
     info = readpage(f"https://doi.org/api/handles/{doi}", format="json")
     url1 = [v for v in info["values"] if v["type"] == "URL"][0]["data"]["value"]
@@ -313,7 +325,8 @@ def refine_doi_with_sciencedirect(db, paper, link):
     url2 = redirector.select_one("#redirectURL").attrs["value"]
     url2 = urllib.parse.unquote(url2)
     if "sciencedirect" not in url2:
-        return
+        with covguard():
+            return
 
     soup = readpage(url2, format="html", headers={"User-Agent": "Mozilla/5.0"})
     data = json.loads(soup.select_one('script[type="application/json"]').text)
@@ -370,6 +383,7 @@ def refine_doi_with_sciencedirect(db, paper, link):
 
 
 @refiner(type="pmc", priority=110)
+@covguard_fn
 def refine_with_pubmedcentral(db, paper, link):
     pmc_id = link.link
     soup = readpage(
@@ -382,20 +396,39 @@ def refine_with_pubmedcentral(db, paper, link):
     )
 
 
-def _pdf_refiner(db, paper, link, pth, url):
+# @refiner(type="doi", priority=111)
+# def refine_with_springer(db, paper, link):
+#     doi = link.link
+#     apikey = os.environ.get("SPRINGER_API_KEY", None)
+#     if not apikey or not doi.startswith("10.1007/"):
+#         return None
 
-    fulltext = pdf_to_text(cache_base=pth, url=url)
+#     soup = readpage(
+#         f"https://api.springernature.com/meta/v2/jats?q=doi:{doi}&api_key={apikey}",
+#         format="xml",
+#     )
+#     return _paper_from_jats(
+#         soup,
+#         links=[Link(type="doi", link=doi)],
+#     )
+
+
+def _pdf_refiner(db, paper, link):
+
+    fulltext = link_to_pdf_text(link)
 
     institutions = {}
     for (inst,) in db.session.execute(select(sch.Institution)):
-        institutions.update({alias: inst for alias in inst.aliases})
+        with covguard():
+            institutions.update({alias: inst for alias in inst.aliases})
 
     author_affiliations = find_fulltext_affiliations(
         paper, fulltext, institutions
     )
 
     if not author_affiliations:
-        return None
+        with covguard():
+            return None
 
     return Paper(
         title=paper.title,
@@ -433,57 +466,37 @@ def _pdf_refiner(db, paper, link, pth, url):
 
 @refiner(type="arxiv", priority=7)
 def refine_with_arxiv(db, paper, link):
-    arxiv_id = link.link
-
-    return _pdf_refiner(
-        db=db,
-        paper=paper,
-        link=link,
-        pth=Path(f"{config.get().paths.cache}/arxiv/{arxiv_id}.pdf"),
-        url=f"https://arxiv.org/pdf/{arxiv_id}.pdf",
-    )
+    with covguard():
+        return _pdf_refiner(db=db, paper=paper, link=link)
 
 
 @refiner(type="doi", priority=6)
 def refine_with_pdf_url_from_crossref(db, paper, link):
-    doi = link.link
-
-    data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
-
-    if data["status"] != "ok":
-        return None
-    data = SimpleNamespace(**data["message"])
-    doi2 = doi.replace("/", "__")
-
-    for lnk in data.link:
-        if lnk["content-type"] == "application/pdf":
-            return _pdf_refiner(
-                db=db,
-                paper=paper,
-                link=link,
-                pth=Path(f"{config.get().paths.cache}/doi/{doi2}.pdf"),
-                url=lnk["URL"],
-            )
+    with covguard():
+        return _pdf_refiner(db=db, paper=paper, link=link)
 
 
 @refiner(type="openreview", priority=5)
 def refine_with_openreview(db, paper, link):
-    openreview_id = link.link
-
-    return _pdf_refiner(
-        db=db,
-        paper=paper,
-        link=link,
-        pth=Path(f"{config.get().paths.cache}/openreview/{openreview_id}.pdf"),
-        url=f"https://openreview.net/pdf?id={openreview_id}",
-    )
+    with covguard():
+        return _pdf_refiner(db=db, paper=paper, link=link)
 
 
 class Refiner(BaseScraper):
+    def _iterate_refiners(self, links):
+        _refiners = []
+        for link in links:
+            _refiners.extend(
+                [(p, link, r) for (p, r) in refiners.get(link.type, [])]
+            )
+        _refiners.sort(reverse=True, key=lambda data: data[0])
+        for _, link, refiner in _refiners:
+            with Doing(refine=f"{link.type}:{link.link}"):
+                yield link, refiner
+
     @tooled
     def query(
         self,
-        # [positional]
         # Link to query
         link: Option = None,
     ):
@@ -495,29 +508,22 @@ class Refiner(BaseScraper):
         )
         [[paper], *_] = self.db.session.execute(pq)
 
-        _refiners = []
-        for link in paper.links:
-            _refiners.extend(
-                [(p, link, r) for (p, r) in refiners.get(link.type, [])]
-            )
-
-        _refiners.sort(reverse=True, key=lambda data: data[0])
-
-        for _, link, refiner in _refiners:
+        for link, refiner in self._iterate_refiners(paper.links):
             try:
-                if result := refiner(self.db, paper, link):
+                if result := _only_if_affiliations(
+                    refiner(self.db, paper, link)
+                ):
                     yield result
                     return
-            except Exception as exc:
-                print(exc)
-                continue
+            except Exception as e:
+                traceback.print_exception(e)
 
     @tooled
     def acquire(self):
         pass
 
     @tooled
-    def prepare(self):
+    def prepare(self):  # pragma: no cover
         pass
 
 

@@ -1,0 +1,106 @@
+__type__: Paper
+abstract: Machine learning models often fail to generalize to unseen domains due to
+  the distributional shifts. A family of such shifts, “correlation shifts,” is caused
+  by spurious correlations in the data. It is studied under the overarching topic
+  of “domain generalization.” In this work, we employ multi-modal translation networks
+  to tackle the correlation shifts that appear when data is sampled out-of-distribution.
+  Learning a generative model from training domains enables us to translate each training
+  sample under the special characteristics of other possible domains. We show that
+  by training a predictor solely on the generated samples, the spurious correlations
+  in training domains average out, and the invariant features corresponding to true
+  correlations emerge. Our proposed technique, Expected Domain Translation (EDT),
+  is benchmarked on the Colored MNIST dataset and drastically improves the state-of-the-art
+  classification accuracy by 38% with train-domain validation model selection.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Département d’informatique et de Recherche Opérationnelle, University of
+      Montréal, Canada
+  author:
+    aliases: []
+    links:
+    - link: '37089467241'
+      type: xplore
+    name: Jean-Christophe Gagnon-Audet
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Vector Institute for Artificial Intelligence, Toronto, Canada
+  author:
+    aliases: []
+    links:
+    - link: '37086259048'
+      type: xplore
+    name: Soroosh Shahtalebi
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Computer Science, University of Toronto, Canada
+  author:
+    aliases: []
+    links:
+    - link: '37545464100'
+      type: xplore
+    name: Frank Rudzicz
+    quality:
+    - 0.0
+    roles: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Département d’informatique et de Recherche Opérationnelle, University of
+      Montréal, Canada
+  author:
+    aliases: []
+    links:
+    - link: '37268997000'
+      type: xplore
+    name: Irina Rish
+    quality:
+    - 0.0
+    roles: []
+citation_count: null
+links:
+- link: 10.1109/icassp43922.2022.9746434
+  type: doi
+quality:
+- 0.0
+releases:
+- pages: 4523-4527
+  status: published
+  venue:
+    aliases: []
+    date: '2022-05-23T00:00:00'
+    date_precision: 3
+    links: []
+    name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and
+      Signal Processing (ICASSP)
+    open: false
+    peer_reviewed: false
+    publisher: IEEE
+    quality:
+    - 0.0
+    series: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
+      and Signal Processing (ICASSP)
+    type: journal
+    volume: null
+title: A Remedy For Distributional Shifts Through Expected Domain Translation
+topics:
+- name: Training
+- name: Correlation
+- name: Conferences
+- name: Machine learning
+- name: Signal processing
+- name: Benchmark testing
+- name: Acoustics
+- name: machine learning
+- name: domain generalization
+- name: out-of-distribution generalization
+- name: correlation shift
