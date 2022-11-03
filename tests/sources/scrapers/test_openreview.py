@@ -3,21 +3,14 @@ import pytest
 from giving import given
 from pytest import fixture
 
-from paperoni.display import display
 from paperoni.model import Paper
 from paperoni.sources.scrapers.openreview import (
     OpenReviewPaperScraper,
     OpenReviewProfileScraper,
     OpenReviewVenueScraper,
 )
-from paperoni.tools import QueryError
 
-from .utils import Artifacts, controller_from_generator
-
-
-@fixture(scope="module")
-def artifacts():
-    return Artifacts("openreview_artifacts")
+from .utils import controller_from_generator, isin
 
 
 @fixture
@@ -45,30 +38,39 @@ def scraper_p(config_profs):
     return OpenReviewPaperScraper(config_profs, config_profs.database)
 
 
-def test_query_title(scraper, artifacts):
-    assert artifacts["discrete"].isin(
+def test_query_title(scraper, data_regression):
+    isin(
+        data_regression,
         scraper.query(
             title=["Discrete-Valued Neural Communication"],
             venue=["NeurIPS.cc/2021/Conference"],
-        )
+        ),
+        basename="discrete",
+        title="Discrete-Valued Neural Communication",
     )
 
 
-def test_query_author(scraper, artifacts):
-    assert artifacts["discrete"].isin(
+def test_query_author(scraper, data_regression):
+    isin(
+        data_regression,
         scraper.query(
             author=["Yoshua Bengio"],
             venue=["NeurIPS.cc/2021/Conference"],
-        )
+        ),
+        basename="discrete",
+        title="Discrete-Valued Neural Communication",
     )
 
 
-def test_query_author_id(scraper, artifacts):
-    assert artifacts["discrete"].isin(
+def test_query_author_id(scraper, data_regression):
+    isin(
+        data_regression,
         scraper.query(
             author_id=["~Yoshua_Bengio1"],
             venue=["NeurIPS.cc/2021/Conference"],
-        )
+        ),
+        basename="discrete",
+        title="Discrete-Valued Neural Communication",
     )
 
 
@@ -80,8 +82,9 @@ profiles = [
 
 
 @pytest.mark.parametrize(argnames=["name"], argvalues=[[x] for x in profiles])
-def test_get_profile(name, pscraper, artifacts):
-    assert artifacts[name].isin(pscraper.query(name))
+def test_get_profile(name, pscraper, data_regression):
+    (result,) = pscraper.query(name)
+    data_regression.check(result.tagged_dict())
 
 
 def test_prepare(scraper_p):
@@ -144,31 +147,27 @@ def test_acquire(scraper_y):
     assert len(papers) < 200
 
 
-def test_query_venues(vscraper, artifacts):
+def test_query_venues(vscraper, data_regression):
     confs = list(
         vscraper.query(
             pattern="iclr*conference",
         )
     )
-    assert artifacts["iclr2017"].isin(confs)
-    assert artifacts["iclr2020"].isin(confs)
-    assert artifacts["iclr2021"].isin(confs)
+    data_regression.check([x.tagged_dict() for x in confs])
 
 
-def test_query_venues_neurips(vscraper):
+def test_query_venues_neurips(vscraper, data_regression):
     confs = list(
         vscraper.query(
             pattern="neurips*conference",
         )
     )
-    assert len(confs) >= 2
+    data_regression.check([x.tagged_dict() for x in confs])
 
 
-def test_acquire_venues(vscraper, artifacts):
+def test_acquire_venues(vscraper, data_regression):
     with coleo.setvars(pattern="iclr*conference"):
         confs = list(vscraper.acquire())
-    assert artifacts["iclr2017"].isin(confs)
-    assert artifacts["iclr2020"].isin(confs)
-    assert artifacts["iclr2021"].isin(confs)
+    data_regression.check([x.tagged_dict() for x in confs])
     with vscraper.db as db:
         db.import_all(confs, history_file=False)

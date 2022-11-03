@@ -1,40 +1,3 @@
-import json
-from pathlib import Path
-
-from ovld import OvldMC, ovld
-
-
-class Artifact(metaclass=OvldMC):
-    def __init__(self, data):
-        self.data = data
-
-    @ovld
-    def same(self, value: str):
-        return self.same(json.loads(value))
-
-    @ovld
-    def same(self, value: dict):
-        return all(value[k] == v for k, v in self.data.items())
-
-    @ovld
-    def same(self, value: object):
-        return self.same(value.tagged_json())
-
-    def isin(self, entries):
-        for e in entries:
-            if self.same(e):
-                return e
-        return None
-
-
-class Artifacts:
-    def __init__(self, stem):
-        self.artifacts = json.load(open(Path(__file__).parent / f"{stem}.json"))
-
-    def __getitem__(self, name):
-        return Artifact(self.artifacts[name])
-
-
 def controller_from_generator(genfn):
     gen = genfn()
     next(gen)
@@ -43,3 +6,17 @@ def controller_from_generator(genfn):
         return gen.send((author, paper))
 
     return controller
+
+
+def isin(data_regression, results, ignore=[], basename=None, **filter):
+    for r in results:
+        if any(getattr(r, k) != v for k, v in filter.items()):
+            continue
+        r = r.tagged_dict()
+        for k in ignore:
+            del r[k]
+        data_regression.check(r, basename=basename)
+        break
+    else:
+        raise Exception(f"No data found that corresponds to {filter}")
+    return True
