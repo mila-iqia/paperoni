@@ -43,6 +43,12 @@ def transient_config(name):
 
 
 @fixture
+def out_regression(file_regression, capsys):
+    yield
+    file_regression.check(capsys.readouterr().out)
+
+
+@fixture
 def config_writable():
     yield from transient_config("config-writable.yaml")
 
