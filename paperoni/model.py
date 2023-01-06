@@ -52,6 +52,8 @@ class DatePrecision(int, Enum):
     def assimilate_date(date, infer_precision=True):
         match date:
             case int() as year:
+                if year < 100:
+                    year += 2000
                 return {
                     "date": f"{year}-01-01 00:00",
                     "date_precision": DatePrecision.year,
@@ -77,7 +79,7 @@ class DatePrecision(int, Enum):
                         }
                     case _:  # pragma: no cover
                         assert False
-            case None:
+            case None | "":
                 return (
                     {
                         "date": "2000-01-01 00:00",
@@ -116,6 +118,8 @@ class DatePrecision(int, Enum):
     def format(date, precision):
         if isinstance(date, (int, float)):
             date = datetime.fromtimestamp(date)
+        if isinstance(date, str):
+            date = datetime.fromisoformat(date)
         match DatePrecision(precision):
             case DatePrecision.year | DatePrecision.unknown:
                 return date.strftime("%Y")
@@ -127,7 +131,7 @@ class DatePrecision(int, Enum):
                 assert False
 
 
-class Base(BaseModel):
+class SimpleBase(BaseModel):
     def tagged_dict(self):
         return json.loads(self.tagged_json())
 
@@ -137,6 +141,8 @@ class Base(BaseModel):
             default=self.__json_encoder__,
         )
 
+
+class Base(SimpleBase):
     def hashid(self):
         hsh = md5(self.json().encode("utf8"))
         return tag_uuid(hsh.digest(), "transient")
@@ -218,6 +224,13 @@ class Role(Base):
     role: str
     start_date: datetime
     end_date: datetime | None
+
+
+class ScraperData(SimpleBase):
+    scraper: str
+    tag: str
+    data: str | None
+    date: datetime
 
 
 class AuthorPaperQuery(Base):
