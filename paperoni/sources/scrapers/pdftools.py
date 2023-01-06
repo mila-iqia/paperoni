@@ -101,7 +101,7 @@ def pdf_to_text(cache_base, url, only_use_cache=False):
     if len(str(cache_base)) > 255:
         return ""
 
-    cache_base.parent.mkdir(exist_ok=True)
+    cache_base.parent.mkdir(parents=True, exist_ok=True)
 
     pdf = cache_base.with_suffix(".pdf")
     html = pdf.with_suffix(".html")

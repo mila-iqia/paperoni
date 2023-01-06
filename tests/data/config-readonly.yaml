@@ -1,6 +1,6 @@
 paths:
   database: readonly.db
   history: history
-  cache: cache
-  requests_cache: requests-cache
+  cache: ../../_test_cache/cache
+  requests_cache: ../../_test_cache/requests-cache
 writable: false
