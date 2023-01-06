@@ -1,11 +1,16 @@
-from datetime import datetime
+import builtins
 import json
+from datetime import datetime
 
 from coleo import Option, auto_cli
+from giving import give, given
 
 from paperoni.config import config, configure
 from paperoni.model import DatePrecision, from_dict
 from paperoni.tools import canonicalize_links
+
+builtins.give = give
+
 
 mag_types = {
     1: "html",
@@ -152,9 +157,11 @@ def store():
 
 
 if __name__ == "__main__":
-    auto_cli(
-        {
-            "show": show,
-            "store": store,
-        }
-    )
+    with given() as gv:
+        gv.display()
+        auto_cli(
+            {
+                "show": show,
+                "store": store,
+            }
+        )

@@ -516,7 +516,8 @@ class Refiner(BaseScraper):
                     yield result
                     return
             except Exception as e:
-                traceback.print_exception(e)
+                with covguard():
+                    traceback.print_exception(e)
 
     @tooled
     def acquire(self):

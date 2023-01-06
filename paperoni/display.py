@@ -116,7 +116,7 @@ def display(paper: Union[Paper, sch.Paper]):
 
 
 @ovld
-def display(author: Author):
+def display(author: Union[Author, sch.Author]):
     """Print an author on the terminal."""
     print_field("Name", T.bold(author.name))
     if author.aliases:
