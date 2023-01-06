@@ -74,13 +74,13 @@ releases:
     date: '2018-10-01T00:00:00'
     date_precision: 3
     links: []
-    name: NeurIPS
+    name: Neural Information Processing Systems
     open: false
     peer_reviewed: false
     publisher: null
     quality:
     - 0.0
-    series: NeurIPS
+    series: Neural Information Processing Systems
     type: journal
     volume: null
 title: 'Automatic differentiation in ML: Where we are and where we should be going'

@@ -6,3 +6,6 @@ dist/
 tests/example.db
 paperoni-cache
 old-paperoni
+_test_cache
+tests/data/*.db
+tests/data/*.db.fixed
