@@ -39,6 +39,10 @@ class Author(Base):
     def aliases(self):
         return [alias.alias for alias in self.author_alias]
 
+    @property
+    def roles(self):
+        return [x for x in self.author_institution]
+
 
 class CanonicalId(Base):
     __tablename__ = "canonical_id"
@@ -120,6 +124,15 @@ class Scraper(Base):
     hashid = Column(LargeBinary, primary_key=True, nullable=False)
     scraper = Column(Text, primary_key=True, nullable=False)
     date = Column(Text, nullable=False)
+
+
+class ScraperData(Base):
+    __tablename__ = "scraper_data"
+
+    scraper = Column(Text, primary_key=True, nullable=False)
+    tag = Column(Text, primary_key=True, nullable=False)
+    date = Column(Integer, nullable=False)
+    data = Column(Text)
 
 
 class Topic(Base):

@@ -22,6 +22,8 @@ from ..model import (
     Paper,
     PaperMerge,
     Release,
+    ScraperData,
+    SimpleBase,
     Topic,
     Venue,
     VenueMerge,
@@ -68,6 +70,11 @@ class Database(OvldBase):
 
     def acquire(self, m: Meta):
         self.meta = m
+
+    def acquire(self, x: SimpleBase):
+        entry = self._acquire(x)
+        self.session.merge(entry)
+        return entry
 
     def acquire(self, x: Base):
         # The id can be "transient" or "canonical". If it is "transient" it is defined
@@ -180,8 +187,8 @@ class Database(OvldBase):
                 author_id=aa.author_id,
                 institution_id=self.acquire(role.institution),
                 role=role.role,
-                start_date=role.start_date,
-                end_date=role.end_date,
+                start_date=role.start_date and role.start_date.timestamp(),
+                end_date=role.end_date and role.end_date.timestamp(),
             )
             self.session.merge(rr)
 
@@ -249,6 +256,14 @@ class Database(OvldBase):
             self.session.merge(lnk)
 
         return vv.venue_id
+
+    def _acquire(self, x: ScraperData):
+        return sch.ScraperData(
+            scraper=x.scraper,
+            tag=x.tag,
+            date=x.date,
+            data=x.data,
+        )
 
     def _acquire(self, merge: AuthorMerge):
         self._merge_ids_for_table(

@@ -161,3 +161,11 @@ CREATE TABLE IF NOT EXISTS canonical_id (
 	hashid BLOB NOT NULL PRIMARY KEY,
 	canonical BLOB
 );
+
+CREATE TABLE IF NOT EXISTS scraper_data (
+	scraper TEXT NOT NULL,
+	tag TEXT NOT NULL,
+	data TEXT,
+	date UNSIGNED BIG INT NOT NULL,
+	PRIMARY KEY (scraper, tag)
+);
