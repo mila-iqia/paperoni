@@ -25,6 +25,6 @@ links_for_tests = [
     argnames=["lnk"], argvalues=[[x] for x in links_for_tests]
 )
 def test_query(lnk, scraper, data_regression):
-    result, = scraper.query(link=lnk)
+    (result,) = scraper.query(link=lnk)
     display(result)
     data_regression.check(result.tagged_dict())
