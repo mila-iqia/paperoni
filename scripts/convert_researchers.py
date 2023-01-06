@@ -4,8 +4,8 @@ from hashlib import md5
 from coleo import Option, auto_cli
 
 from paperoni.config import config, configure
-from paperoni.model import Institution, Role, UniqueAuthor
 from paperoni.display import display
+from paperoni.model import Institution, Role, UniqueAuthor
 from paperoni.tools import tag_uuid
 
 
