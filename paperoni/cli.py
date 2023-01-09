@@ -4,7 +4,7 @@ import re
 from contextlib import contextmanager
 from datetime import datetime
 from fnmatch import fnmatch
-from pathlib import Path
+from functools import partial
 from typing import Union
 
 from coleo import Option, auto_cli, tooled, with_extras
@@ -192,7 +192,6 @@ def date_syntax(query):
 
 @tooled
 def run_sql_query(query):
-
     # JSON output
     # [option: --json]
     json_output: Option & bool = False
@@ -246,7 +245,6 @@ def papers_query(query, formatter, filter=None):
 
 
 def sql():
-
     # SQL query to run
     # [positional]
     query: Option
@@ -285,6 +283,21 @@ def timespan(timestamp=False):
         )
     else:
         return start, end
+
+
+formatters = {
+    "full": TerminalDisplayer,
+    "title": partial(TerminalPrinter, lambda x: x.title),
+    "html": HTMLDisplayer,
+}
+
+
+def define_formatter(name):
+    def deco(fn):
+        formatters[name] = fn
+        return fn
+
+    return deco
 
 
 class search:
@@ -346,19 +359,23 @@ class search:
                 print(len(list(results)))
                 return
 
-            match format:
-                case "full":
-                    formatter = TerminalDisplayer()
-                case "title":
-                    formatter = TerminalPrinter(lambda x: x.title)
-                case "html":
-                    formatter = HTMLDisplayer()
-                case _:
-                    raise Exception(f"Unsupported format: {format}")
+            formatter = formatters.get(format, None)
+            if not formatter:
+                raise Exception(f"Unsupported format: {format}")
 
-            with formatter as fmt:
+            with formatter() as fmt:
                 for (entry,) in results:
                     fmt(entry)
+
+    def author():
+        # Name of the author to search for
+        name: Option & str = None
+
+        with set_database() as db:
+            stmt = select(sch.Author).filter(sch.Author.name == name)
+            results = db.session.execute(stmt)
+            for (result,) in results:
+                display(result)
 
 
 class report:
