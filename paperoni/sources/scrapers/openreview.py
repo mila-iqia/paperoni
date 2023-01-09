@@ -8,6 +8,8 @@ from functools import reduce
 import openreview
 from coleo import Option, tooled
 
+from paperoni.display import display
+
 from ...model import (
     Author,
     DatePrecision,
@@ -18,6 +20,7 @@ from ...model import (
     PaperAuthor,
     Release,
     Role,
+    ScraperData,
     Topic,
     Venue,
     VenueType,
@@ -232,7 +235,11 @@ class OpenReviewScraperBase(BaseScraper):
 
     def get_profile(self, authorid):
         def _position(entry):
-            return entry.get("position", "affiliated").lower().replace(" ", "_")
+            return (
+                (entry.get("position") or "affiliated")
+                .lower()
+                .replace(" ", "_")
+            )
 
         def _make_institution(entry):
             inst = entry["institution"]
@@ -249,7 +256,7 @@ class OpenReviewScraperBase(BaseScraper):
             return Institution(
                 name=inst["name"],
                 category=category,
-                aliases=[inst["domain"]],
+                aliases=[inst["domain"]] if inst.get("domain", None) else [],
             )
 
         def make_name(namedata):
@@ -259,11 +266,13 @@ class OpenReviewScraperBase(BaseScraper):
             return namedata.get("preferred", False), name
 
         def _make_role(entry):
-            end_date = DatePrecision.make_date(entry["end"], alignment="end")
             start_date = (
-                DatePrecision.make_date(entry["start"], alignment="start")
-                or DatePrecision.make_date(entry["end"], alignment="start")
+                DatePrecision.make_date(entry.get("start"), alignment="start")
+                or DatePrecision.make_date(entry.get("end"), alignment="start")
                 or datetime(2000, 1, 1)
+            )
+            end_date = DatePrecision.make_date(
+                entry.get("end"), alignment="end"
             )
             return Role(
                 role=_position(entry),
@@ -274,7 +283,7 @@ class OpenReviewScraperBase(BaseScraper):
 
         data = self.client.get_profile(authorid)
 
-        names = [make_name(x) for x in data.content["names"]]
+        names = [make_name(x) for x in data.content.get("names", [])]
         names.sort(reverse=True)
         names = [n[1] for n in names]
 
@@ -284,8 +293,11 @@ class OpenReviewScraperBase(BaseScraper):
             links=[
                 Link(type="openreview", link=name["username"])
                 for name in data.content["names"]
+                if "username" in name
             ],
-            roles=[_make_role(entry) for entry in data.content["history"]],
+            roles=[
+                _make_role(entry) for entry in data.content.get("history", [])
+            ],
             quality=0.0,
         )
 
@@ -456,9 +468,32 @@ class OpenReviewProfileScraper(OpenReviewScraperBase):
 
     @tooled
     def acquire(self):
+        limit: Option & int = 1000
+
         with self.db as db:
-            query = "SELECT * FROM "
-            db.execute(query)
+            query = """
+            SELECT DISTINCT link FROM author_link WHERE type = "openreview"
+            EXCEPT
+            SELECT link FROM author_link
+                JOIN scraper_data ON tag = link
+                WHERE scraper = "openreview-profiles"
+                AND type = "openreview"
+            """
+            rows = db.session.execute(query)
+            for row in list(rows)[:limit]:
+                print(f"Acquiring {row.link}")
+                for result in self.query(authorid=row.link):
+                    display(result)
+                    yield result
+                    for lnk in result.links:
+                        if lnk.type == "openreview":
+                            yield ScraperData(
+                                scraper="openreview-profiles",
+                                tag=lnk.link,
+                                date=datetime.now(),
+                                data=None,
+                            )
+                time.sleep(0.5)
 
     @tooled
     def prepare(self):  # pragma: no cover
