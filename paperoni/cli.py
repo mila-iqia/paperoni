@@ -490,5 +490,32 @@ commands = {
 }
 
 
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj, "tagged_json"):
+            return json.loads(obj.tagged_json())
+        try:
+            return json.JSONEncoder.default(self, obj)
+        except TypeError:
+            return None
+
+
 def main():
-    auto_cli(commands)
+    import builtins
+
+    from giving import give, given
+
+    builtins.give = give
+    with given() as gv:
+        gv.display()
+        covers = gv.where(situation="cover").accum()
+        auto_cli(commands)
+
+    if covers:
+        covdict = {}
+        for x in covers:
+            loc = x.pop("location")
+            covdict[loc] = x
+        tag = datetime.now().strftime("%Y-%m-%d-%s")
+        with open(f"new-coverage-{tag}", "w") as f:
+            f.write(json.dumps(covdict, indent=4, cls=MyEncoder))
