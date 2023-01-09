@@ -200,6 +200,8 @@ triggers = {
     "Polytechnique": InstitutionCategory.academia,
     "Montréal": InstitutionCategory.academia,
     "Québec": InstitutionCategory.academia,
+    "Montreal": InstitutionCategory.academia,
+    "Quebec": InstitutionCategory.academia,
 }
 
 index_re = r"[, †‡\uE005?∗*0-9]+"
