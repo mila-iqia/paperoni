@@ -1,9 +1,4 @@
 
-# Paperoni
-
-Paperoni is Mila's tool to collect publications from our researchers and generate HTML or reports from them.
-
-
 # Defining a new scraper
 
 To define a new scraper called `scraperoni`, create a `scraperoni.py` file in this directory with the following contents:
