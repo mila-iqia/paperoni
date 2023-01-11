@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from contextvars import ContextVar
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Union
@@ -51,12 +51,20 @@ class Configuration:
         self._history_file = None
 
     def install(self):
+        """Set up relevant features globally, as defined in this config.
+
+        * Import requests_cache and set up with cache path ``paths.requests_cache``.
+        """
         if rq := getattr(self.paths, "requests_cache", None):
             import requests_cache
 
-            requests_cache.install_cache(rq)
+            requests_cache.install_cache(rq, expire_after=timedelta(days=6))
 
     def uninstall(self):
+        """Undo what has been done in self.install().
+
+        * Disable requests_cache.
+        """
         if getattr(self.paths, "requests_cache", None):
             import requests_cache
 
@@ -64,6 +72,7 @@ class Configuration:
 
     @property
     def database(self):
+        """Load the database from ``paths.database`` (lazily)."""
         if self._database is None:
             from .db.database import Database
 
@@ -72,6 +81,11 @@ class Configuration:
 
     @property
     def history_file(self):
+        """Return the history file to use.
+
+        The history file is located in the ``paths.history`` directory and
+        is a function of the time and the ``tag`` configuration parameter.
+        """
         if self._history_file is None:
             hroot = self.paths.history
             hroot.mkdir(parents=True, exist_ok=True)
@@ -84,7 +98,16 @@ class Configuration:
 
 
 @contextmanager
-def load_config(config_path, **extra):
+def load_config(config_path: str | Path, **extra) -> Configuration:
+    """Load the configuration located at the given path.
+
+    Any path defined in the configuration file is relative to the
+    configuration file's parent directory.
+
+    Arguments:
+        config_path: Path to the configuration
+        extras: Key/value pairs to set in the config (overrides it)
+    """
     config_path = Path(config_path).expanduser().absolute()
     x = configuration(str(config_path))
     x.update(extra)
