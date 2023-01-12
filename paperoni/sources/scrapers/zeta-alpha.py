@@ -1,4 +1,5 @@
-from ...tools import canonicalize_links
+from coleo import Option, tooled
+
 from ...model import (
     Author,
     DatePrecision,
@@ -11,9 +12,9 @@ from ...model import (
     Venue,
     VenueType,
 )
+from ...tools import canonicalize_links
 from ..acquire import HTTPSAcquirer
 from .base import BaseScraper
-from coleo import tooled, Option
 
 
 class ZetaAlphaScraper(BaseScraper):

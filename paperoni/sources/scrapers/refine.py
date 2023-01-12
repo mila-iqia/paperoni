@@ -414,7 +414,6 @@ def refine_with_pubmedcentral(db, paper, link):
 
 
 def _pdf_refiner(db, paper, link):
-
     fulltext = link_to_pdf_text(link)
 
     institutions = {}
