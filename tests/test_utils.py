@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from giving import given
 
 from paperoni.model import DatePrecision, PaperMerge
-from paperoni.tools import (
+from paperoni.utils import (
     Doing,
     EquivalenceGroups,
     asciiify,

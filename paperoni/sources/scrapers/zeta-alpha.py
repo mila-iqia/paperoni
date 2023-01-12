@@ -12,7 +12,7 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...tools import canonicalize_links
+from ...utils import canonicalize_links
 from ..acquire import HTTPSAcquirer
 from .base import BaseScraper
 

@@ -6,7 +6,7 @@ from coleo import Option, auto_cli
 from paperoni.config import config, configure
 from paperoni.display import display
 from paperoni.model import Institution, Role, UniqueAuthor
-from paperoni.tools import tag_uuid
+from paperoni.utils import tag_uuid
 
 
 def convert(filename):

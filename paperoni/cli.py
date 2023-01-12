@@ -16,7 +16,7 @@ from .db import merge as mergers, schema as sch
 from .display import HTMLDisplayer, TerminalDisplayer, TerminalPrinter, display
 from .sources.helpers import filter_researchers, prepare_interface
 from .sources.scrapers import load_scrapers
-from .tools import EquivalenceGroups
+from .utils import EquivalenceGroups
 
 
 @contextmanager

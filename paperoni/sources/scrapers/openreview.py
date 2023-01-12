@@ -25,7 +25,7 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...tools import Doing, covguard, extract_date
+from ...utils import Doing, covguard, extract_date
 from ..helpers import prepare_interface, prompt_controller
 from .base import BaseScraper
 

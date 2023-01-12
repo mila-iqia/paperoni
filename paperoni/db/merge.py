@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from ..model import AuthorMerge, MergeEntry, PaperMerge, VenueMerge
-from ..tools import similarity
+from ..utils import similarity
 
 
 def _process_standard_rows(rows, eqv, cls):

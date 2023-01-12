@@ -11,7 +11,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, create_model
 
-from .tools import tag_uuid
+from .utils import tag_uuid
 
 
 class VenueType(str, Enum):

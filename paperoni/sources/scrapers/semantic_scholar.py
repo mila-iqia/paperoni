@@ -15,7 +15,7 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...tools import QueryError
+from ...utils import QueryError
 from ..acquire import HTTPSAcquirer
 from ..helpers import (
     filter_researchers_interface,

@@ -7,7 +7,7 @@ from giving import give, given
 
 from paperoni.config import config, configure
 from paperoni.model import DatePrecision, from_dict
-from paperoni.tools import canonicalize_links
+from paperoni.utils import canonicalize_links
 
 builtins.give = give
 

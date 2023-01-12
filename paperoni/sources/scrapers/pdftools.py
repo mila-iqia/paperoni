@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from ...config import config
 from ...model import Institution, InstitutionCategory
-from ...tools import keyword_decorator, similarity
+from ...utils import keyword_decorator, similarity
 from ..acquire import readpage
 
 affiliation_extractors = []

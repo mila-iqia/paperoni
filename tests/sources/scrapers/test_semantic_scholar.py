@@ -5,7 +5,7 @@ from pytest import fixture
 
 from paperoni.model import Paper
 from paperoni.sources.scrapers.semantic_scholar import SemanticScholarScraper
-from paperoni.tools import QueryError
+from paperoni.utils import QueryError
 
 from .utils import controller_from_generator, isin
 
