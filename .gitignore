@@ -4,8 +4,7 @@ dist/
 .pytest_cache
 .coverage*
 tests/example.db
-paperoni-cache
-old-paperoni
-_test_cache
 tests/data/*.db
 tests/data/*.db.fixed
+_test_cache
+junk/

@@ -11,18 +11,11 @@ from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
-from . import model as M
 from .config import config as _config, load_config
 from .db import merge as mergers, schema as sch
-from .display import (
-    HTMLDisplayer,
-    TerminalDisplayer,
-    TerminalPrinter,
-    display,
-    expand_links,
-)
+from .display import HTMLDisplayer, TerminalDisplayer, TerminalPrinter, display
+from .sources.helpers import filter_researchers, prepare_interface
 from .sources.scrapers import load_scrapers
-from .sources.utils import filter_researchers, prepare_interface
 from .tools import EquivalenceGroups
 
 

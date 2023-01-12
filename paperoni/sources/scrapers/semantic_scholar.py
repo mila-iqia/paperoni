@@ -17,7 +17,7 @@ from ...model import (
 )
 from ...tools import QueryError
 from ..acquire import HTTPSAcquirer
-from ..utils import (
+from ..helpers import (
     filter_researchers_interface,
     prepare_interface,
     prompt_controller,

@@ -1,7 +1,7 @@
 from pytest import fixture
 
+from paperoni.sources.helpers import filter_researchers
 from paperoni.sources.scrapers.base import BaseScraper
-from paperoni.sources.utils import filter_researchers
 
 
 @fixture
