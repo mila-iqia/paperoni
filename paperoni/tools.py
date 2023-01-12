@@ -32,7 +32,7 @@ class MutuallyExclusiveError(RuntimeError):
         return param if isinstance(param, str) else f"({', '.join(param)})"
 
 
-def asciiify(s):
+def asciiify(s: str) -> str:
     """Translate a string to pure ASCII, removing accents and the like.
 
     Non-ASCII characters that are not accented characters are removed.
@@ -42,7 +42,7 @@ def asciiify(s):
     return stripped.decode("utf8")
 
 
-def squash_text(txt):
+def squash_text(txt: str) -> str:
     """Convert text to a sequence of lowercase characters and numbers.
 
     * Non-ASCII characters are converted to ASCII or dropped
@@ -68,7 +68,16 @@ url_extractors = {
 }
 
 
-def url_to_id(url):
+def url_to_id(url: str) -> tuple[str, str]:
+    """Return an ID from a URL.
+
+    * Given a link to an arxiv abstract or pdf, return ``("arxiv", arxiv_id)``
+    * Given a DOI link, return ``("doi", the_doi)``
+    * etc.
+
+    See the ``url_extractors`` dictionary for the regexps and corresponding ID type.
+    ``url_to_id`` tries each extractor in order.
+    """
     for pattern, key in url_extractors.items():
         if m := re.match(pattern, url):
             lnk = "/".join(m.groups())
@@ -76,7 +85,14 @@ def url_to_id(url):
     return None
 
 
-def canonicalize_links(links):
+def canonicalize_links(links: dict[str, str]) -> dict[str, str]:
+    """Reduce a list of URL-based links to more precise types of links.
+
+    For example:
+
+    >>> canonicalize_links([{"type": "html", "link": "https://arxiv.org/pdf/1234.5678"}])
+    [{"type": "arxiv", "link": "1234.5678"}]
+    """
     links = {
         url_to_id(url := link["link"]) or (link["type"], url) for link in links
     }
@@ -89,12 +105,14 @@ def similarity(s1, s2):
     return SequenceMatcher(a=s1, b=s2).ratio()
 
 
-def extract_date(txt):
+def extract_date(txt: str) -> dict | None:
     from .model import DatePrecision
 
     if not isinstance(txt, str):
         return None
 
+    # The dash just separates the 3-letter abbreviation from the rest of the month,
+    # it is split immediately after that
     months = [
         "Jan-uary",
         "Feb-ruary",
@@ -112,28 +130,38 @@ def extract_date(txt):
     months = [m.split("-") for m in months]
     stems = [a.lower() for a, b in months]
     months = [(f"{a}(?:{b})?\\.?" if b else a) for a, b in months]
-    month = "|".join(months)
+    month = "|".join(
+        months
+    )  # This is a regexp like "Jan(uary)?|Feb(ruary)?|..."
 
     patterns = {
+        # Jan 3-Jan 7 2020
         rf"({month}) ([0-9]{{1,2}}) *- *(?:{month}) [0-9]{{1,2}}[, ]+([0-9]{{4}})": (
             "m",
             "d",
             "y",
         ),
+        # Jan 3-7 2020
         rf"({month}) ([0-9]{{1,2}}) *- *[0-9]{{1,2}}[, ]+([0-9]{{4}})": (
             "m",
             "d",
             "y",
         ),
+        # Jan 3 2020
         rf"({month}) ?([0-9]{{1,2}})[, ]+([0-9]{{4}})": ("m", "d", "y"),
+        # 3-7 Jan 2020
         rf"([0-9]{{1,2}}) *- *[0-9]{{1,2}}[ ,]+({month})[, ]+([0-9]{{4}})": (
             "d",
             "m",
             "y",
         ),
+        # 3 Jan 2020
         rf"([0-9]{{1,2}})[ ,]+({month})[, ]+([0-9]{{4}})": ("d", "m", "y"),
+        # Jan 2020
         rf"({month}) +([0-9]{{4}})": ("m", "y"),
+        # 2020 Jan 3
         rf"([0-9]{{4}}) ({month}) ([0-9]{{1,2}})": ("y", "m", "d"),
+        # 2020 Jan
         rf"([0-9]{{4}}) ({month})": ("y", "m"),
     }
 
@@ -240,10 +268,17 @@ def keyword_decorator(deco):
     return new_deco
 
 
+##############################
+# covguard-related utilities #
+##############################
+
+
 currently_doing = ContextVar("doing", default=None)
 
 
 class Doing:
+    """Usage: ``with Doing(method="refine", title="blah"): ...``"""
+
     def __init__(self, **description):
         self.description = description
 
@@ -257,6 +292,12 @@ class Doing:
 
 @contextmanager
 def covguard(**more_keys):
+    """Propagate a message about coverage of a block of code.
+
+    Use ``with covguard() ...`` to wrap some piece of code that is not
+    covered by tests. If some use case triggers the covered code, information
+    will be propagated about what we are doing, to help craft a test case.
+    """
     info = inspect.getframeinfo(inspect.stack()[2][0])
     doing = currently_doing.get()
     kw = doing.description if doing else {}
@@ -272,6 +313,8 @@ def covguard(**more_keys):
 
 @keyword_decorator
 def covguard_fn(fn, **keys):
+    """Apply covguard to the execution of the function."""
+
     def deco(*args, **kwargs):
         with covguard(**keys):
             return fn(*args, **kwargs)
