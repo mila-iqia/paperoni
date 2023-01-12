@@ -16,18 +16,18 @@ class ScraperoniScraper:
         # Use & bool for boolean flags
         flag: Option & bool,
     ):
-        # mpap query scraperoni --option xyz --flag
+        # paperoni query scraperoni --option xyz --flag
         print(f"{option=}")
         print(f"{flag=}")
 
     @tooled
     def prepare(self, queries):
-        # mpap prepare scraperoni
+        # paperoni prepare scraperoni
         return []
 
     @tooled
     def acquire(self, queries):
-        # mpap acquire scraperoni
+        # paperoni acquire scraperoni
         return []
 
 
