@@ -9,7 +9,7 @@ from pathlib import Path
 
 from hrepr import H
 from sqlalchemy import select
-from starbear import Queue, bear
+from starbear import ClientWrap, Queue, bear
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
@@ -50,15 +50,16 @@ async def regenerator(queue, regen, reset):
 @bear
 async def app(page):
     q = Queue()
+    debounced = ClientWrap(q, debounce=0.3)
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
     area = H.div["area"]().autoid()
-    page.print(H.input(oninput=q))
+    page.print(H.input(oninput=debounced))
     page.print(area)
 
     def regen(event=None):
-        title = "neural" if event is None else event.arg["value"]
+        title = "neural" if event is None else event["value"]
         return generate(title)
 
     def generate(title):
