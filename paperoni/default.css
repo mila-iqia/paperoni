@@ -1,0 +1,59 @@
+body {
+    margin: auto;
+    width: 800px;
+    font-size: 16px;
+}
+.paper {
+    margin: 5px;
+    padding: 10px;
+    /* border: 1px solid grey;
+    border-radius: 5px; */
+}
+.extra {
+    font-size: 14px;
+}
+.title {
+    font-weight: bold;
+}
+.venue > * {
+    margin-right: 5px;
+}
+.venue-status {
+    color: #555;
+}
+.venue-status:before {
+    content: "[";
+}
+.venue-status:after {
+    content: "]";
+}
+.venue-date {
+    font-weight: bold;
+    color: green;
+    margin-right: 5px;
+}
+.venue-name {
+    font-weight: bold;
+    color: purple;
+}
+.affiliations {
+    padding-left: 20px;
+}
+.author-affiliation {
+    font-size: 12px;
+}
+.keywords {
+    font-size: 14px;
+    color: #888;
+}
+.link {
+    padding: 2px;
+    background-color: #eef;
+    margin-right: 5px;
+}
+.latest-on {
+    font-weight: bold;
+}
+.area {
+    border: 1px solid green;
+}
