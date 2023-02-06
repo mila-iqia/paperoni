@@ -264,7 +264,7 @@ def html(paper: Union[Paper, sch.Paper]):
         ),
         H.div(paper.citation_count, " citations")
         if paper.citation_count and show_citation_count
-        else "",
+        else "",    
     )
 
 

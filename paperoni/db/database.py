@@ -463,3 +463,18 @@ class Database(OvldBase):
         DELETE FROM {table.name} WHERE {conds()}
         """
         self.session.execute(del_stmt)
+    
+    def insertFlag(self,paper,val):
+        pf = sch.PaperFlag(
+            paper_id=paper.paper_id,
+        )
+        ins_stmt = f"""
+        INSERT INTO {pf.__tablename__}
+        VALUES (X'{paper.paper_id.hex()}',"validation",{val})
+        """
+
+        self.session.execute(ins_stmt)
+        self.session.commit()
+
+    def isPaperFlagged(self,paper):
+        return len(paper.paper_flag) > 0
