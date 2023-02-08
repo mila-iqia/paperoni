@@ -439,16 +439,22 @@ def refine_with_pubmedcentral(db, paper, link):
 #     )
 
 
+_institutions = None
+
+
 def _pdf_refiner(db, paper, link):
+    global _institutions
+
     fulltext = link_to_pdf_text(link)
 
-    institutions = {}
-    for (inst,) in db.session.execute(select(sch.Institution)):
-        with covguard():
-            institutions.update({alias: inst for alias in inst.aliases})
+    if _institutions is None:
+        _institutions = {}
+        for (inst,) in db.session.execute(select(sch.Institution)):
+            with covguard():
+                _institutions.update({alias: inst for alias in inst.aliases})
 
     author_affiliations = find_fulltext_affiliations(
-        paper, fulltext, institutions
+        paper, fulltext, _institutions
     )
 
     if not author_affiliations:

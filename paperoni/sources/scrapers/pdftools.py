@@ -1,7 +1,5 @@
-import re
 import subprocess
 import unicodedata
-from bisect import insort
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -11,16 +9,13 @@ from tqdm import tqdm
 
 from ...config import config
 from ...model import Institution, InstitutionCategory
-from ...utils import keyword_decorator, similarity
 from ..acquire import readpage
-
-affiliation_extractors = []
-
-
-@keyword_decorator
-def affiliation_extractor(fn, *, priority):
-    insort(affiliation_extractors, (-priority, fn))
-    return fn
+from .pdfanal import (
+    classify_superscripts,
+    make_document_from_layout,
+    normalize,
+    undertext,
+)
 
 
 def download(url, filename):
@@ -104,12 +99,11 @@ def pdf_to_text(cache_base, url, only_use_cache=False):
     cache_base.parent.mkdir(parents=True, exist_ok=True)
 
     pdf = cache_base.with_suffix(".pdf")
-    html = pdf.with_suffix(".html")
-    txt = pdf.with_suffix(".txt")
+    data = pdf.with_suffix(".data")
 
     if only_use_cache:
-        if txt.exists():
-            return txt.read_text()
+        if data.exists():
+            return data.read_text()
         else:
             return ""
 
@@ -118,77 +112,14 @@ def pdf_to_text(cache_base, url, only_use_cache=False):
             download(filename=pdf, url=url)
         except requests.exceptions.SSLError:
             pdf.write_text("")
-            html.write_text("")
-            txt.write_text(bah := "failure")
+            data.write_text(bah := "failure")
             return bah
 
-    if not html.exists():
-        _pdf = str(pdf.relative_to(Path.cwd()))
-        _html = str(html.relative_to(Path.cwd()))
-        subprocess.run(["pdf2htmlEX", _pdf, _html])
-        if not html.exists():
-            html.write_text("")
-            txt.write_text(bah := "failure")
-            return bah
+    if True or not data.exists() or not data.stat().st_size:
+        subprocess.run(["pdftotext", "-bbox-layout", str(pdf), str(data)])
 
-    if not txt.exists() or not txt.stat().st_size:
-        subprocess.run(
-            ["html2text", "-width", "1000", "-o", str(txt), str(html)]
-        )
-
-    fulltext = open(txt).read()
-    fulltext = re.sub(string=fulltext, pattern="-\n(?![0-9])", repl="")
-    fulltext = re.sub(string=fulltext, pattern=",\n(?![0-9])", repl=", ")
-    fulltext = re.sub(
-        string=fulltext, pattern="\n?´\n?([a-zA-Z])", repl="\\1\u0301"
-    )
-    fulltext = re.sub(
-        string=fulltext, pattern="\n?`\n?([a-zA-Z])", repl="\\1\u0300"
-    )
-    fulltext = re.sub(
-        string=fulltext, pattern="\n?\u02DC\n?([a-zA-Z])", repl="\\1\u0303"
-    )
-
-    fulltext = unicodedata.normalize("NFKC", fulltext.strip())
-
+    fulltext = open(data).read()
     return fulltext
-
-
-def _name_fulltext_affiliations(
-    author, method, fulltext, institutions, blockers
-):
-    for name in sorted(author.aliases, key=len, reverse=True):
-        if aff := method(name, fulltext, institutions, blockers):
-            return aff
-    else:
-        return None
-
-
-def find_fulltext_affiliations(paper, fulltext, institutions):
-    assert fulltext is not None
-    blockers = [author.author.name for author in paper.authors]
-    findings = [
-        (
-            (
-                aff := {
-                    aa.author: _name_fulltext_affiliations(
-                        aa.author, method, fulltext, institutions, blockers
-                    )
-                    or []
-                    for aa in paper.authors
-                }
-            ),
-            (len([x for x in aff.values() if x]), -i),
-        )
-        for i, (_, method) in enumerate(affiliation_extractors)
-    ]
-
-    findings.sort(key=lambda row: row[1], reverse=True)
-    aff, (score, _) = findings[0]
-    if score:
-        return aff
-    else:
-        return None
 
 
 triggers = {
@@ -204,11 +135,9 @@ triggers = {
     "Quebec": InstitutionCategory.academia,
 }
 
-index_re = r"[, †‡\uE005?∗*0-9]+"
-
 
 def recognize_institution(entry, institutions):
-    normalized = unicodedata.normalize("NFKC", entry.strip())
+    normalized = unicodedata.normalize("NFKC", entry.strip().strip(","))
     if entry and normalized in institutions:
         return [institutions[normalized]]
     elif (
@@ -221,85 +150,72 @@ def recognize_institution(entry, institutions):
         return []
 
 
-def should_break(line, blockers):
-    """Return True if the line is similar enough to one of the blockers.
-
-    This signifies that the line we are reading pertains to an author of the
-    paper and probably starts a new section, so we should ignore it and what
-    goes below it.
-    """
-    return any(similarity(line, blocker) > 0.5 for blocker in blockers)
-
-
-def make_name_re(name):
-    return name.replace(" ", "[ \n]+").replace(".", "[^ ]*") + ",?"
-
-
-def _find_fulltext_affiliation_by_footnote(
-    name, fulltext, institutions, blockers, splitter
-):
-    name_re = make_name_re(name)
-    if m := re.search(
-        pattern=rf"{name_re}(\n?{index_re})",
-        string=fulltext,
-        flags=re.IGNORECASE | re.MULTILINE,
-    ):
-        indexes = [
-            x for x in splitter(m.groups()[0]) if x not in (" ", ",", "\n")
-        ]
-        affiliations = []
-        for idx in indexes:
-            idx = idx.replace("*", r"\*")
-            idx = idx.replace("?", r"\?")
-            for result in re.findall(
-                pattern=rf"\n{idx}(?=\n(.*)\n)|\n{idx}:(?=(.*)\n)",
-                string=fulltext,
-            ):
-                result = result[0] or result[1]
-                for entry in result.split(","):
-                    if should_break(entry, blockers):
-                        break
-                    affiliations += recognize_institution(entry, institutions)
-        return affiliations
-
-
-@affiliation_extractor(priority=101)
-def find_fulltext_affiliation_by_footnote(
-    name, fulltext, institutions, blockers
-):
-    def splitter(x):
-        return re.findall(pattern=r"[0-9]+|.", string=x)
-
-    return _find_fulltext_affiliation_by_footnote(
-        name, fulltext, institutions, blockers, splitter=splitter
-    )
-
-
-@affiliation_extractor(priority=100)
-def find_fulltext_affiliation_by_footnote_2(
-    name, fulltext, institutions, blockers
-):
-    return _find_fulltext_affiliation_by_footnote(
-        name, fulltext, institutions, blockers, splitter=list
-    )
-
-
-@affiliation_extractor(priority=90)
-def find_fulltext_affiliation_under_name(
-    name, fulltext, institutions, blockers
-):
-    # Replace . by a regexp, so that B. Smith will match Bernard Smith, Bob Smith, etc.
-    name_re = make_name_re(name)
-    if m := re.search(
-        pattern=rf"{name_re}(?:\n{index_re})?(?:[ \n*]+)?((?:.*\n){{5}})",
-        string=fulltext,
-        flags=re.IGNORECASE | re.MULTILINE,
-    ):
-        affiliations = []
-        for line in re.split(string=m.groups()[0], pattern=r"[,\n]+"):
-            entry = line.strip()
-            if should_break(entry, blockers):
+def recognize_institutions(lines, institutions):
+    affiliations = []
+    for line in lines:
+        if line.startswith(","):
+            continue
+        candidates = [line, *line.split(",")]
+        for candidate in candidates:
+            if insts := recognize_institution(candidate, institutions):
+                affiliations += insts
                 break
-            affiliations += recognize_institution(entry, institutions)
-        return affiliations
-    return None
+    return affiliations
+
+
+def find_fulltext_affiliation_by_footnote(doc, superscripts):
+    def find(name, institutions):
+        nname = normalize(name)
+        if nname in superscripts:
+            return recognize_institutions(
+                set(superscripts[nname]), institutions
+            )
+
+    return find
+
+
+def find_fulltext_affiliation_under_name(doc, extra_margin):
+    def find(name, institutions):
+        return recognize_institutions(
+            (
+                line
+                for utgrp in undertext(doc, name, extra_margin)
+                for line in utgrp
+            ),
+            institutions,
+        )
+
+    return find
+
+
+def _name_fulltext_affiliations(author, method, fulltext, institutions):
+    for name in sorted(author.aliases, key=len, reverse=True):
+        if aff := method(name, institutions):
+            return aff
+    else:
+        return None
+
+
+def find_fulltext_affiliations(paper, fulltext, institutions):
+    if fulltext is None:
+        return None
+
+    doc = make_document_from_layout(fulltext)
+    superscripts = classify_superscripts(doc)
+
+    methods = [
+        find_fulltext_affiliation_by_footnote(doc, superscripts),
+        find_fulltext_affiliation_under_name(doc, 5),
+        find_fulltext_affiliation_under_name(doc, 10000),
+    ]
+
+    for method in methods:
+        aff = {
+            aa.author: _name_fulltext_affiliations(
+                aa.author, method, doc, institutions
+            )
+            or []
+            for aa in paper.authors
+        }
+        if any(x for x in aff.values()):
+            return aff
