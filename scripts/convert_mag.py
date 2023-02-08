@@ -50,7 +50,9 @@ def process_paper(paper):
     else:
         venue = {
             "type": "unknown",
-            "name": (name := paper.get("BV", None) or paper.get("VFN", None) or "n/a"),
+            "name": (
+                name := paper.get("BV", None) or paper.get("VFN", None) or "n/a"
+            ),
             "series": name,
             "links": [],
             "quality": [0.0],

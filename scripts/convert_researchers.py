@@ -1,9 +1,10 @@
 import json
+import os
 from hashlib import md5
 
 from coleo import Option, auto_cli
 
-from paperoni.config import config, configure
+from paperoni.config import load_config
 from paperoni.display import display
 from paperoni.model import Institution, Role, UniqueAuthor
 from paperoni.utils import tag_uuid
@@ -45,7 +46,7 @@ def convert(filename):
                 ],
                 *[{"type": "mag", "link": id} for id in author["ids"]],
             ],
-            quality=(1.0,)
+            quality=(1.0,),
         )
 
 
@@ -59,14 +60,14 @@ def show():
 
 
 def store():
-    from paperoni.db.database import Database
-
     # [positional]
     filename: Option
 
-    configure("config.yaml", tag="researchers")
-    db = Database(config.database_file)
-    db.import_all(convert(filename))
+    with load_config(
+        os.environ["PAPERONI_CONFIG"], tag="researchers"
+    ) as config:
+        with config.database as db:
+            db.import_all(convert(filename))
 
 
 if __name__ == "__main__":

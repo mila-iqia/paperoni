@@ -8,3 +8,4 @@ tests/data/*.db
 tests/data/*.db.fixed
 _test_cache
 junk/
+new-coverage-*

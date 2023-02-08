@@ -97,7 +97,7 @@ def display(paper: Union[Paper, sch.Paper]):
     for auth in paper.authors:
         if auth.author:
             print(
-                f" * {auth.author.name:30} {', '.join(aff.name for aff in auth.affiliations)}"
+                f" * {auth.author.name:30} {'; '.join(aff.name for aff in auth.affiliations)}"
             )
         else:  # pragma: no cover
             print(T.bold_red("ERROR: MISSING AUTHOR"))

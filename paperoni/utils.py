@@ -315,6 +315,7 @@ def covguard(**more_keys):
 def covguard_fn(fn, **keys):
     """Apply covguard to the execution of the function."""
 
+    @functools.wraps(fn)
     def deco(*args, **kwargs):
         with covguard(**keys):
             return fn(*args, **kwargs)
