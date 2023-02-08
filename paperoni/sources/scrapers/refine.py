@@ -231,8 +231,34 @@ def refine_doi_with_crossref(db, paper, link):
             return None
     data = SimpleNamespace(**data["message"])
 
-    if not any(auth.get("affiliation", None) for auth in data.author):
-        return None
+    if evt := getattr(data, "event", None):
+        date_parts = evt["start"]["date-parts"][0]
+        precision = [
+            DatePrecision.year,
+            DatePrecision.month,
+            DatePrecision.day,
+        ][len(date_parts)]
+        date_parts += [1] * (3 - len(date_parts))
+        release = Release(
+            venue=Venue(
+                aliases=[],
+                name=evt["name"],
+                type=VenueType.conference,
+                series=evt["name"],
+                links=[],
+                open=False,
+                peer_reviewed=False,
+                publisher=None,
+                date_precision=precision,
+                date=datetime(*date_parts),
+                quality=(1,),
+            ),
+            status="published",
+            pages=None,
+        )
+        releases = [release]
+    else:
+        releases = []
 
     with covguard():
         return Paper(
@@ -259,7 +285,7 @@ def refine_doi_with_crossref(db, paper, link):
             abstract="",
             links=[Link(type="doi", link=doi)],
             topics=[],
-            releases=[],
+            releases=releases,
             quality=(0,),
         )
 
