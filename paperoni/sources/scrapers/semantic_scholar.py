@@ -106,14 +106,18 @@ def _author_fields(parent=None):
     )
 
 
-def _figure_out_date(data):
+def _date_from_data(data):
     if pubd := data["publicationDate"]:
-        date = {
+        return {
             "date": f"{pubd} 00:00",
             "date_precision": DatePrecision.day,
         }
     else:
-        date = DatePrecision.assimilate_date(data["year"])
+        return DatePrecision.assimilate_date(data["year"])
+
+
+def _figure_out_date(data):
+    date = _date_from_data(data)
 
     # The dblp code usually embeds the year at the end, e.g. journals/jojo/Smith21
     # for an article published in 2021. Semantic Scholar may mess up the publication
@@ -234,25 +238,40 @@ class SemanticScholarQueryManager:
             )
         authors = list(map(self._wrap_paper_author, data["authors"]))
 
-        date = _figure_out_date(data)
+        if "ArXiv" in data["externalIds"]:
+            release = Release(
+                venue=Venue(
+                    type=VenueType.preprint,
+                    name="ArXiv",
+                    series="ArXiv",
+                    volume=None,
+                    **_date_from_data(data),
+                    aliases=[],
+                    links=[],
+                ),
+                status="preprint",
+                pages=None,
+            )
 
-        release = Release(
-            venue=Venue(
-                type=venue_type_mapping[
-                    (pubt := data.get("publicationTypes", []))
-                    and pubt[0]
-                    or "_"
-                ],
-                name=data["venue"],
-                series=data["venue"],
-                volume=(j := data["journal"]) and j.get("volume", None),
-                **date,
-                aliases=[],
-                links=[],
-            ),
-            status="published",
-            pages=None,
-        )
+        else:
+            release = Release(
+                venue=Venue(
+                    type=venue_type_mapping[
+                        (pubt := data.get("publicationTypes", []))
+                        and pubt[0]
+                        or "_"
+                    ],
+                    name=data["venue"],
+                    series=data["venue"],
+                    volume=(j := data["journal"]) and j.get("volume", None),
+                    **_date_from_data(data),
+                    aliases=[],
+                    links=[],
+                ),
+                status="published",
+                pages=None,
+            )
+
         return Paper(
             links=links,
             authors=authors,
