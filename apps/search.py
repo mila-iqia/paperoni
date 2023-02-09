@@ -1,5 +1,4 @@
 """Simple search app.
-
 Run with `uvicorn apps.search:app`
 """
 
@@ -16,6 +15,7 @@ from paperoni.db import schema as sch
 from paperoni.display import html
 
 here = Path(__file__).parent
+
 
 async def regenerator(queue, regen, reset):
     gen = regen()
@@ -66,21 +66,7 @@ async def app(page):
         stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
         results = list(db.session.execute(stmt))
         for (r,) in results:
-            if not isPaperFlagged(r):
-                yield r
-
-    def validate(paper):
-        db.insertFlag(paper, 1)
-        deleteid = "p"+paper.paper_id.hex()
-        page[deleteid].delete()
-    
-    def invalidate(paper):
-        db.insertFlag(paper, 0)
-        deleteid = "p"+paper.paper_id.hex()
-        page[deleteid].delete()
-
-    def isPaperFlagged(paper):
-        return db.isPaperFlagged(paper)
+            yield r
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
@@ -90,16 +76,5 @@ async def app(page):
                 reset=page[area].clear,
             )
             async for result in regen:
-                if not isPaperFlagged(result):
-                    div = html(result)
-                    valDiv = H.div["validationDiv"](
-                            div,
-                            H.button["button"]("Validate",
-                            onclick=(lambda event, paper=result:validate(paper))),
-                            H.button["button","invalidate"]("Invalidate",
-                            onclick=(lambda event, paper=result:invalidate(paper)))
-                    )(id="p"+result.paper_id.hex())
-                    page[area].print(
-                        valDiv
-                    )
-                    
+                div = html(result)
+                page[area].print(div)
