@@ -237,7 +237,7 @@ def refine_doi_with_crossref(db, paper, link):
             DatePrecision.year,
             DatePrecision.month,
             DatePrecision.day,
-        ][len(date_parts)]
+        ][len(date_parts) - 1]
         date_parts += [1] * (3 - len(date_parts))
         release = Release(
             venue=Venue(

@@ -1,3 +1,4 @@
+import re
 import subprocess
 import sys
 import unicodedata
@@ -267,17 +268,24 @@ def make_document_from_layout(content):
 
 
 @ovld
-def undertext(grp: Group, text: str, extra_margin: int = 5):
+def undertext(grp: Group, text: str, extra_margin: int = 5, regexp=False):
     for part in grp.parts:
-        yield from undertext(part, text, extra_margin)
+        yield from undertext(part, text, extra_margin, regexp)
 
 
 @ovld
-def undertext(line: Line, text: str, extra_margin: int = 5):
+def undertext(line: Line, text: str, extra_margin: int = 5, regexp=False):
     if line.ymax >= 1:
         return
     for i, block in enumerate(line.parts[:-1]):
-        if len(block.text) < (len(text) + extra_margin) and text in block.text:
+
+        def belongs():
+            if regexp:
+                return re.search(string=block.text, pattern=text)
+            else:
+                return text in block.text
+
+        if len(block.text) < (len(text) + extra_margin) and belongs():
             break
     else:
         return
@@ -355,8 +363,7 @@ def possible_superscripts(sup):
 
 
 def normalize(x):
-    norm = unicodedata.normalize("NFKC", x)
-    return norm.lower().replace(",", "").replace(" ", "")
+    return unicodedata.normalize("NFKC", x).lower()
 
 
 def classify_superscripts(doc):
