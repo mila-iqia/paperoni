@@ -68,20 +68,20 @@ quality:
 - 0.0
 releases:
 - pages: null
-  status: published
+  status: preprint
   venue:
     aliases: []
     date: '2018-10-01T00:00:00'
     date_precision: 3
     links: []
-    name: Neural Information Processing Systems
+    name: ArXiv
     open: false
     peer_reviewed: false
     publisher: null
     quality:
     - 0.0
-    series: Neural Information Processing Systems
-    type: journal
+    series: ArXiv
+    type: preprint
     volume: null
 title: 'Automatic differentiation in ML: Where we are and where we should be going'
 topics:

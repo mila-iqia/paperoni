@@ -97,7 +97,15 @@ authors:
     name: Dominic Zhao
     quality: 0
     roles: []
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
+    name: Université de Montréal
   author:
     aliases: []
     author_id: 72a30077-8bad-d95e-6478-ae90bd20f501
@@ -120,16 +128,16 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
+    name: Canada CIFAR AI Chair
+  - aliases: []
+    category: unknown
     institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
     name: Mila - Quebec AI Institute
   - aliases: []
     category: unknown
     institution_id: 0ea2649f-a678-b9ca-c97a-8a62adf7e041
     name: HEC Montréal
-  - aliases: []
-    category: unknown
-    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
-    name: Canada CIFAR AI Chair
   author:
     aliases: []
     author_id: 5519d377-0775-07b9-b34b-438f1761c319
@@ -140,16 +148,16 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
+    name: Canada CIFAR AI Chair
+  - aliases: []
+    category: unknown
     institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
     name: Mila - Quebec AI Institute
   - aliases: []
     category: unknown
     institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a
     name: Université de Montréal
-  - aliases: []
-    category: unknown
-    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
-    name: Canada CIFAR AI Chair
   author:
     aliases: []
     author_id: 77bfadb7-61eb-b605-819f-8d7b09509825
