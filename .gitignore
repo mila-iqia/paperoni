@@ -10,3 +10,5 @@ history
 _test_cache
 junk/
 new-coverage-*
+papers.db
+requests-cache.sqlite

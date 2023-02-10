@@ -64,21 +64,22 @@ async def app(page):
         stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
         results = list(db.session.execute(stmt))
         for (r,) in results:
-            if not isPaperFlagged(r):
+            if not hasPaperValidation(r):
                 yield r
 
-    def validate(paper):
-        db.insertFlag(paper, 1)
-        deleteid = "#p"+paper.paper_id.hex()
-        page[deleteid].delete()
-    
-    def invalidate(paper):
-        db.insertFlag(paper, 0)
+    def validateButton(paper,val):
+        db.insertFlag(paper, "validation", val)
         deleteid = "#p"+paper.paper_id.hex()
         page[deleteid].delete()
 
-    def isPaperFlagged(paper):
-        return db.isPaperFlagged(paper)
+    def hasPaperValidation(paper):
+        return db.hasPaperValidation(paper)
+
+    def getFlags(paper):
+        flagTab = []
+        for flag in db.getAllFlags(paper):
+            flagTab.append(H.div["flag"](str(flag.flag_name)))
+        return flagTab
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
@@ -88,14 +89,16 @@ async def app(page):
                 reset=page[area].clear,
             )
             async for result in regen:
-                if not isPaperFlagged(result):
+                if not hasPaperValidation(result):
                     div = html(result)
+                    divFlags = getFlags(result)
                     valDiv = H.div["validationDiv"](
                             div,
                             H.button["button"]("Validate",
-                            onclick=(lambda event, paper=result:validate(paper))),
+                            onclick=(lambda event, paper=result:validateButton(paper,1))),
                             H.button["button","invalidate"]("Invalidate",
-                            onclick=(lambda event, paper=result:invalidate(paper)))
+                            onclick=(lambda event, paper=result:validateButton(paper,0))),
+                            divFlags
                     )(id="p"+result.paper_id.hex())
                     page[area].print(
                         valDiv

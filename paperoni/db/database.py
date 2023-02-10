@@ -464,17 +464,23 @@ class Database(OvldBase):
         """
         self.session.execute(del_stmt)
     
-    def insertFlag(self,paper,val):
+    def insertFlag(self,paper,flag_name,val):
         pf = sch.PaperFlag(
             paper_id=paper.paper_id,
         )
         ins_stmt = f"""
         INSERT INTO {pf.__tablename__}
-        VALUES (X'{paper.paper_id.hex()}',"validation",{val})
+        VALUES (X'{paper.paper_id.hex()}',"{flag_name}",{val})
         """
-
+        
         self.session.execute(ins_stmt)
         self.session.commit()
+    
+    def getAllFlags(self,paper):
+        return paper.paper_flag
 
-    def isPaperFlagged(self,paper):
-        return len(paper.paper_flag) > 0
+    def hasPaperValidation(self,paper):
+        for flag in paper.paper_flag:
+            if flag.flag_name == "validation":
+                return True
+        return False
