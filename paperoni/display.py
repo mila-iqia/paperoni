@@ -236,7 +236,11 @@ def html(paper: Union[Paper, sch.Paper]):
     pdfs = [lnk for k, lnk in expand_links(paper.links) if "pdf" in lnk]
 
     return H.div["paper"](
-        H.div["title"](H.a(paper.title, href=pdfs[0],target="_blank") if pdfs else paper.title),
+        H.div["title"](
+            H.a(paper.title, href=pdfs[0], target="_blank")
+            if pdfs
+            else paper.title
+        ),
         H.div["authors"](
             join(
                 [_format_author(auth) for auth in paper.authors[:maxauth]],
@@ -265,7 +269,7 @@ def html(paper: Union[Paper, sch.Paper]):
         ),
         H.div(paper.citation_count, " citations")
         if paper.citation_count and show_citation_count
-        else "",    
+        else "",
     )
 
 

@@ -56,28 +56,28 @@ async def app(page):
     page.print(area)
 
     def regen(event=None):
-        title = "neural" if event is None else event["value"]
+        title = None if event is None else event["value"]
         return generate(title)
 
     def generate(title):
         stmt = select(sch.Paper)
-        stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
+        if title is not None and not "":
+            stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
         results = list(db.session.execute(stmt))
         for (r,) in results:
-            if not hasPaperValidation(r):
                 yield r
 
-    def validateButton(paper,val):
-        db.insertFlag(paper, "validation", val)
+    def validate_button(paper,val):
+        db.insert_flag(paper, "validation", val)
         deleteid = "#p"+paper.paper_id.hex()
         page[deleteid].delete()
 
-    def hasPaperValidation(paper):
-        return db.hasPaperValidation(paper)
+    def has_paper_validation(paper):
+        return db.has_flag(paper,"validation")
 
-    def getFlags(paper):
+    def get_flags(paper):
         flagTab = []
-        for flag in db.getAllFlags(paper):
+        for flag in paper.paper_flag:
             flagTab.append(H.div["flag"](str(flag.flag_name)))
         return flagTab
 
@@ -89,15 +89,15 @@ async def app(page):
                 reset=page[area].clear,
             )
             async for result in regen:
-                if not hasPaperValidation(result):
+                if not has_paper_validation(result):
                     div = html(result)
-                    divFlags = getFlags(result)
+                    divFlags = get_flags(result)
                     valDiv = H.div["validationDiv"](
                             div,
                             H.button["button"]("Validate",
-                            onclick=(lambda event, paper=result:validateButton(paper,1))),
+                            onclick=(lambda event, paper=result:validate_button(paper,1))),
                             H.button["button","invalidate"]("Invalidate",
-                            onclick=(lambda event, paper=result:validateButton(paper,0))),
+                            onclick=(lambda event, paper=result:validate_button(paper,0))),
                             divFlags
                     )(id="p"+result.paper_id.hex())
                     page[area].print(
