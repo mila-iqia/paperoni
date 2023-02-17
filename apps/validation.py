@@ -42,38 +42,69 @@ async def regenerator(queue, regen, reset):
             done = True
             continue
 
-        yield element
-
+        yield element 
 
 @bear
 async def app(page):
     q = Queue()
-    debounced = ClientWrap(q, debounce=0.3)
+    debounced = ClientWrap(q, debounce=0.3,form=True)
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
     area = H.div["area"]().autoid()
+    page.print(H.form(
+            H.input(name="title",placeholder="Title", oninput=debounced),
+            H.input(name="author",placeholder="Author", oninput=debounced),
+            H.input(name="date",placeholder="Date", oninput=debounced),
+            H.button("Submit"),
+            onsubmit=debounced))
     page.print(area)
-
+    
     def regen(event=None):
-        title = None if event is None else event["value"]
-        return generate(title)
+        if event is not None:
+            title = event["title"]
+            author = event["author"]
+            date = event["date"]      
+            return generate(title,author,date)
+        return generate()
 
-    def generate(title):
+    def generate(title = None, author = None, date = None):
         stmt = select(sch.Paper)
-        if title is not None and not "":
-            stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
+        if not all(val is "" or val is None for val in [title,author,date]):
+            stmt = search(title,author,date)
         results = list(db.session.execute(stmt))
         for (r,) in results:
                 yield r
 
+    def search(title,author,date):
+        stmt = select(sch.Paper)
+        #Selecting from the title
+        if title is not None and title is not "":
+            stmt = select(sch.Paper).filter(sch.Paper.title.like(f"%{title}%"))
+        #Selecting from author
+        if author is not None and author is not "":
+            stmt = (
+                    stmt.join(sch.Paper.paper_author).join(
+                        sch.PaperAuthor.author
+                    )
+                    .filter(sch.Author.name.like(f"%{author}%"))
+                )
+        #Selecting from date
+        print("author : ", date)
+        if date is not None and date is not "":
+            pass
+        print(stmt)
+        return  stmt
+        
     def validate_button(paper,val):
         db.insert_flag(paper, "validation", val)
         deleteid = "#p"+paper.paper_id.hex()
         page[deleteid].delete()
 
-    def has_paper_validation(paper):
-        return db.has_flag(paper,"validation")
+    def has_paper_validation(result):
+        if type(result).__name__ == "Paper":
+            return db.has_flag(result,"validation")
+        return False
 
     def get_flags(paper):
         flagTab = []
@@ -103,4 +134,5 @@ async def app(page):
                     page[area].print(
                         valDiv
                     )
+
                     
