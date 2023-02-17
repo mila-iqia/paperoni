@@ -56,8 +56,7 @@ async def app(page):
             H.input(name="title",placeholder="Title", oninput=debounced),
             H.input(name="author",placeholder="Author", oninput=debounced),
             H.input(name="date",placeholder="Date", oninput=debounced),
-            H.button("Submit"),
-            onsubmit=debounced))
+            ))
     page.print(area)
     
     def regen(event=None):
