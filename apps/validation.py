@@ -83,10 +83,8 @@ async def app(page):
             results = list(db.session.execute(stmt))
             for (r,) in results:
                 yield r
-        except OperationalError: 
-            print("error in dates")
-        except:
-            print("something else went wrong")
+        except Exception as e: 
+            print("Error : ", e)
         
 
     def search(title,author,date_start,date_end):
@@ -102,7 +100,7 @@ async def app(page):
                     )
                     .filter(sch.Author.name.like(f"%{author}%"))
                 )
-                
+
         #Selecting from date
         if date_start is not None and date_start != "":
             date_start_stamp = int(datetime(*map(int, date_start.split("-"))).timestamp())
