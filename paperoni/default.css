@@ -5,9 +5,17 @@ body {
     font-size: 16px;
 }
 input{
+    margin-top: 5px;
     padding: 5px;
     width: 400px;
+}
+.calender{
+    width: 120px;
     margin-left: 10px;
+}
+form{
+    display: block;
+    margin-left: 20px;
 }
 .paper {
     margin: 5px;

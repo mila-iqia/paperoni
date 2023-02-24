@@ -8,7 +8,9 @@ from pathlib import Path
 
 from hrepr import H
 from sqlalchemy import select
+from sqlalchemy.exc import OperationalError
 from starbear import ClientWrap, Queue, bear
+from datetime import datetime
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
@@ -55,7 +57,12 @@ async def app(page):
     page.print(H.form(
             H.input(name="title",placeholder="Title", oninput=debounced),
             H.input(name="author",placeholder="Author", oninput=debounced),
-            H.input(name="date",placeholder="Date", oninput=debounced),
+            H.br,
+            "Start Date",
+            H.input(type="date", id="start", name="date-start", oninput=debounced)["calender"],
+            H.br,
+            "End Date",
+            H.input(type="date", id="start", name="date-end", oninput=debounced)["calender"],
             ))
     page.print(area)
     
@@ -63,36 +70,47 @@ async def app(page):
         if event is not None:
             title = event["title"]
             author = event["author"]
-            date = event["date"]      
-            return generate(title,author,date)
+            date_start = event["date-start"]
+            date_end = event["date-end"]
+            return generate(title,author,date_start,date_end)
         return generate()
 
-    def generate(title = None, author = None, date = None):
+    def generate(title = None, author = None, date_start = None, date_end = None):
         stmt = select(sch.Paper)
-        if not all(val is "" or val is None for val in [title,author,date]):
-            stmt = search(title,author,date)
-        results = list(db.session.execute(stmt))
-        for (r,) in results:
+        if not all(val is "" or val is None for val in [title,author,date_start,date_end]):
+            stmt = search(title,author,date_start,date_end)
+        try:
+            results = list(db.session.execute(stmt))
+            for (r,) in results:
                 yield r
+        except OperationalError: 
+            print("error in dates")
+        except:
+            print("something else went wrong")
+        
 
-    def search(title,author,date):
+    def search(title,author,date_start,date_end):
         stmt = select(sch.Paper)
         #Selecting from the title
-        if title is not None and title is not "":
+        if title is not None and title != "":
             stmt = select(sch.Paper).filter(sch.Paper.title.like(f"%{title}%"))
         #Selecting from author
-        if author is not None and author is not "":
+        if author is not None and author != "":
             stmt = (
                     stmt.join(sch.Paper.paper_author).join(
                         sch.PaperAuthor.author
                     )
                     .filter(sch.Author.name.like(f"%{author}%"))
                 )
+                
         #Selecting from date
-        print("author : ", date)
-        if date is not None and date is not "":
-            pass
-        print(stmt)
+        if date_start is not None and date_start != "":
+            date_start_stamp = int(datetime(*map(int, date_start.split("-"))).timestamp())
+            stmt = stmt.join(sch.Paper.release).join(sch.Release.venue).filter(sch.Venue.date >= date_start_stamp)
+        if date_end is not None and date_end != "":
+            date_end_stamp = int(datetime(*map(int, date_end.split("-"))).timestamp())
+            stmt = stmt.join(sch.Paper.release).join(sch.Release.venue).filter(sch.Venue.date <= date_end_stamp)
+        
         return  stmt
         
     def validate_button(paper,val):
