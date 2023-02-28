@@ -62,8 +62,10 @@ def _paper_from_jats(soup, links):
         with covguard():
             date = extract_date(date1.text)
     else:
-        date2 = soup.select_one('pub-date[pub-type="epub"]') or soup.select_one(
-            'pub-date[date-type="pub"]'
+        date2 = (
+            soup.select_one('pub-date[pub-type="ppub"]')
+            or soup.select_one('pub-date[date-type="pub"]')
+            or soup.select_one('pub-date[pub-type="epub"]')
         )
         if date2:
             y = date2.find("year")
@@ -172,6 +174,11 @@ def refine_doi_with_ieeexplore(db, paper, link):
     for _, terms in data["index_terms"].items():
         topics.extend(Topic(name=term) for term in terms["terms"])
 
+    if "publication_date" in data:
+        extracted_date = extract_date(data["publication_date"])
+    else:
+        extracted_date = extract_date(data["publication_year"])
+
     return Paper(
         title=data["title"],
         authors=[
@@ -180,7 +187,9 @@ def refine_doi_with_ieeexplore(db, paper, link):
                     name=author["full_name"],
                     roles=[],
                     aliases=[],
-                    links=[Link(type="xplore", link=author["id"])],
+                    links=[Link(type="xplore", link=author["id"])]
+                    if "id" in author
+                    else [],
                 ),
                 affiliations=[
                     Institution(
@@ -188,7 +197,9 @@ def refine_doi_with_ieeexplore(db, paper, link):
                         category=InstitutionCategory.unknown,
                         aliases=[],
                     )
-                ],
+                ]
+                if "affiliation" in author
+                else [],
             )
             for author in sorted(
                 data["authors"]["authors"], key=itemgetter("author_order")
@@ -203,7 +214,7 @@ def refine_doi_with_ieeexplore(db, paper, link):
                     name=(jname := data["publication_title"]),
                     series=jname,
                     type=VenueType.journal,
-                    **extract_date(data["publication_date"]),
+                    **extracted_date,
                     publisher=data["publisher"],
                     links=[],
                     aliases=[],
@@ -232,7 +243,17 @@ def refine_doi_with_crossref(db, paper, link):
     data = SimpleNamespace(**data["message"])
 
     if evt := getattr(data, "event", None):
-        date_parts = evt["start"]["date-parts"][0]
+        if "start" in evt:
+            date_parts = evt["start"]["date-parts"][0]
+        else:
+            for field in (
+                "published-print",
+                "published",
+                "published-online",
+                "created",
+            ):
+                if dateholder := getattr(data, field, None):
+                    date_parts = dateholder["date-parts"][0]
         precision = [
             DatePrecision.year,
             DatePrecision.month,
@@ -509,6 +530,12 @@ def refine_with_pdf_url_from_crossref(db, paper, link):
 
 @refiner(type="openreview", priority=5)
 def refine_with_openreview(db, paper, link):
+    with covguard():
+        return _pdf_refiner(db=db, paper=paper, link=link)
+
+
+@refiner(type="pdf", priority=5)
+def refine_with_pdf_link(db, paper, link):
     with covguard():
         return _pdf_refiner(db=db, paper=paper, link=link)
 

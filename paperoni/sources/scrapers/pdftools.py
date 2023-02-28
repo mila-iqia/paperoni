@@ -179,7 +179,7 @@ def recognize_institutions(lines, institutions):
     for line in lines:
         if line.startswith(","):
             continue
-        candidates = [line, *re.split(pattern=",|and|;", string=line)]
+        candidates = [line, *re.split(pattern=",|and|;|&", string=line)]
         for candidate in candidates:
             known = recognize_known_institution(candidate, institutions)
             if known and known not in affiliations:
@@ -279,6 +279,7 @@ def find_fulltext_affiliations(paper, fulltext, institutions):
             )
             or []
             for aa in paper.authors
+            if aa.author
         }
         results.append((sum(1 for x in aff.values() if x), -i, aff))
 

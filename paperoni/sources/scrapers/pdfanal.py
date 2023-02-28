@@ -223,7 +223,7 @@ def columnize(lines):
                 done_columns.append(col)
                 continue
             best = candidates.pop()
-            if col.ymax < best.ymin < col.ymax + 0.01:
+            if col.ymax - 0.01 < best.ymin < col.ymax + 0.01:
                 active_columns.append(Line(parts=[*col.parts, best]))
             else:
                 done_columns.append(col)
