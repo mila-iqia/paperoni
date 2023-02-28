@@ -1,8 +1,10 @@
 import json
+import re
 import time
 import urllib
 
 import requests
+import yaml
 from bs4 import BeautifulSoup
 
 
@@ -75,6 +77,10 @@ def readpage(url, format=None, **kwargs):
                 return json.loads(content)
             except json.JSONDecodeError:
                 return None
+        case "yaml":
+            # Remove illegal characters
+            content = re.sub(string=content, pattern=r"[\x80-\xff]", repl="")
+            return yaml.safe_load(content)
         case "xml":
             return BeautifulSoup(content, features="xml")
         case "html":
