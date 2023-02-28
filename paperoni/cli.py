@@ -500,7 +500,7 @@ def main():
 
     builtins.give = give
     with given() as gv:
-        gv.display()
+        # gv.where("!refine").display()
         covers = gv.where(situation="cover").accum()
         auto_cli(commands)
 

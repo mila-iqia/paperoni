@@ -210,6 +210,7 @@ class OpenReviewScraperBase(BaseScraper):
                             info[key] = m.groups()[2]
                             break
                     else:
+                        # Currently covered with NeurIPS.cc/2023
                         with covguard():
                             info[key] = None
 
@@ -310,7 +311,6 @@ class OpenReviewScraperBase(BaseScraper):
             return [pattern]
         else:
             members = self.client.get_group(id="venues").members
-            print("~~", pattern, members)
             return [
                 member
                 for member in members
@@ -416,7 +416,8 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             if _papers is None:
                 papers = list(
                     self._query_papers_from_venues(
-                        params={"content": {}}, venues=venue and [venue]
+                        params={"content": {}},
+                        venues=self._venues_from_wildcard(venue),
                     )
                 )
 
