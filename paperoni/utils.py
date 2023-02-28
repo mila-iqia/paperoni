@@ -108,6 +108,12 @@ def similarity(s1, s2):
 def extract_date(txt: str) -> dict | None:
     from .model import DatePrecision
 
+    if isinstance(txt, int):
+        return {
+            "date": datetime(txt, 1, 1),
+            "date_precision": DatePrecision.year,
+        }
+
     if not isinstance(txt, str):
         return None
 
@@ -163,6 +169,7 @@ def extract_date(txt: str) -> dict | None:
         rf"([0-9]{{4}}) ({month}) ([0-9]{{1,2}})": ("y", "m", "d"),
         # 2020 Jan
         rf"([0-9]{{4}}) ({month})": ("y", "m"),
+        rf"([0-9]{{4}})": ("y",),
     }
 
     for pattern, parts in patterns.items():
@@ -172,6 +179,9 @@ def extract_date(txt: str) -> dict | None:
             if "d" not in results:
                 results.setdefault("d", 1)
                 precision = DatePrecision.month
+            if "m" not in results:
+                results.setdefault("m", "Jan")
+                precision = DatePrecision.year
             return {
                 "date": datetime(
                     int(results["y"]),
