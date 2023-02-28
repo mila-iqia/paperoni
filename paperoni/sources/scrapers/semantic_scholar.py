@@ -1,4 +1,5 @@
 import re
+import time
 from datetime import datetime
 
 from coleo import Option, tooled
@@ -401,6 +402,7 @@ class SemanticScholarScraper(BaseScraper):
 
         for ssid, auq in todo.items():
             print(f"Fetch papers for {auq.author.name} (ID={ssid})")
+            time.sleep(5)
             yield from ss.author_papers(ssid, block_size=1000)
 
     @tooled
