@@ -24,6 +24,7 @@ from ...model import (
     Paper,
     PaperAuthor,
     Release,
+    ScraperData,
     Topic,
     UniqueAuthor,
     UniqueInstitution,
@@ -552,11 +553,51 @@ class Refiner(BaseScraper):
             with Doing(refine=f"{link.type}:{link.link}"):
                 yield link, refiner
 
+    def _refine(self, paper, links):
+        for link, refiner in self._iterate_refiners(links):
+            try:
+                if result := refiner(self.db, paper, link):
+                    yield refiner, result
+            except Exception as e:
+                with covguard():
+                    traceback.print_exception(e)
+
+    def refine(self, paper, merge=False, links=None):
+        def uniq(entries):
+            rval = []
+            for entry in entries:
+                if entry not in rval:
+                    rval.append(entry)
+            return rval
+
+        results = list(
+            self._refine(paper, links=paper.links if links is None else links)
+        )
+        if not merge or not results:
+            return results
+
+        (_, merged), *rest = results
+
+        for _, result in rest:
+            already_has_affs = any(auth.affiliations for auth in merged.authors)
+            merged = Paper(
+                title=paper.title,
+                abstract=merged.abstract or result.abstract,
+                authors=merged.authors if already_has_affs else result.authors,
+                links=uniq([*merged.links, *result.links]),
+                releases=merged.releases or result.releases,
+                topics=uniq([*merged.topics, *result.topics]),
+                quality=merged.quality,
+            )
+
+        return [("refine", merged)]
+
     @tooled
     def query(
         self,
         # Link to query
         link: Option = None,
+        separate: Option & bool = False,
     ):
         type, link = link.split(":", 1)
         pq = (
@@ -566,20 +607,55 @@ class Refiner(BaseScraper):
         )
         [[paper], *_] = self.db.session.execute(pq)
 
-        for link, refiner in self._iterate_refiners(paper.links):
-            try:
-                if result := _only_if_affiliations(
-                    refiner(self.db, paper, link)
-                ):
-                    yield result
-                    return
-            except Exception as e:
-                with covguard():
-                    traceback.print_exception(e)
+        for _, entry in self.refine(paper, merge=not separate):
+            yield entry
 
     @tooled
     def acquire(self):
-        pass
+        def been_processed(l):
+            tag = f"{l.type}:{l.link}"
+            pq = (
+                select(sch.ScraperData)
+                .filter(sch.ScraperData.scraper == "refine")
+                .filter(sch.ScraperData.tag == tag)
+            )
+            for _ in self.db.session.execute(pq):
+                return True
+            return False
+
+        limit: Option & int = None
+
+        now = datetime.now()
+
+        pq = select(sch.Paper)
+        papers = self.db.session.execute(pq)
+
+        i = 0
+        for (paper,) in papers:
+            if limit and (i == limit):
+                break
+
+            links = [l for l in paper.links if not been_processed(l)]
+
+            if not links:
+                continue
+
+            print(i, paper.title)
+
+            for _, result in self.refine(paper, merge=True, links=links):
+                yield result
+
+            for l in links:
+                yield ScraperData(
+                    scraper="refine",
+                    tag=f"{l.type}:{l.link}",
+                    data="",
+                    date=now,
+                )
+
+            i += 1
+
+        yield from []
 
     @tooled
     def prepare(self):  # pragma: no cover
