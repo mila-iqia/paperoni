@@ -21,12 +21,12 @@ class ScraperoniScraper:
         print(f"{flag=}")
 
     @tooled
-    def prepare(self, queries):
+    def prepare(self):
         # paperoni prepare scraperoni
         return []
 
     @tooled
-    def acquire(self, queries):
+    def acquire(self):
         # paperoni acquire scraperoni
         return []
 

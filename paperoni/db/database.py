@@ -32,7 +32,6 @@ from ..model import (
 from ..utils import (
     get_uuid_tag,
     is_canonical_uuid,
-    iterate,
     squash_text,
     tag_uuid,
 )
