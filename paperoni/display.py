@@ -32,6 +32,9 @@ link_generators = {
         "abstract": "https://openreview.net/forum?id={}",
         "pdf": "https://openreview.net/pdf?id={}",
     },
+    "mlr": {
+        "abstract": "https://proceedings.mlr.press/v{}.html",
+    },
     "dblp": {"abstract": "https://dblp.uni-trier.de/rec/{}"},
     "semantic_scholar": {
         "abstract": "https://www.semanticscholar.org/paper/{}"
@@ -50,11 +53,13 @@ def print_field(title, contents, bold=False):
 def expand_links(links):
     pref = [
         "doi.abstract",
+        "mlr.abstract",
+        "mlr.pdf",
+        "openreview.abstract",
+        "openreview.pdf",
         "arxiv.abstract",
         "arxiv.pdf",
         "pubmed.abstract",
-        "openreview.abstract",
-        "openreview.pdf",
         "pmc.abstract",
         "dblp.abstract",
         "pdf",
