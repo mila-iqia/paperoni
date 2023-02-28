@@ -165,7 +165,7 @@ class BaseWithQuality(Base):
 
 class Paper(BaseWithQuality):
     title: str
-    abstract: str
+    abstract: Optional[str]
     authors: list[PaperAuthor]
     releases: list[Release]
     topics: list[Topic]
