@@ -1,7 +1,7 @@
 body {
     margin: auto;
     margin-top: 10px;
-    width: 800px;
+    width: 1000px;
     font-size: 16px;
 }
 input{
@@ -9,6 +9,21 @@ input{
     padding: 5px;
     width: 400px;
 }
+.up:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+.column{
+    border: #555 0.5px solid;
+    float: left;
+    width: 24%;
+    margin: auto;
+}
+.column-name{
+    margin: 45%;
+}
+
 .calender{
     width: 120px;
     margin-left: 10px;
@@ -19,7 +34,6 @@ form{
 }
 .paper {
     margin: 5px;
-    
     padding: 10px;
     overflow: auto;
 }
@@ -85,7 +99,6 @@ input {
     margin-bottom: 10px;
     box-sizing: border-box;
 }
-
 .button{
     background-color: green;
     color: white;

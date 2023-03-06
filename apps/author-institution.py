@@ -54,12 +54,16 @@ async def app(page):
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
     area = H.div["area"](
-        H.div["up"],
+        H.div["up"](
+            H.div["column"](H.span["column-name"]("Nom")),
+            H.div["column"](H.span["column-name"]("Role")),
+            H.div["column"](H.span["column-name"]("Start")),
+            H.div["column"](H.span["column-name"]("End"))
+        ),
         H.div["mid"],
         H.div["down"]
 
     ).autoid()
-    page.print(H.input(oninput=debounced))
     page.print(area)
 
     def regen(event=None):
