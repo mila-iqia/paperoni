@@ -5,6 +5,7 @@ Run with `uvicorn apps.search:app`
 import asyncio
 import os
 from pathlib import Path
+from datetime import datetime
 
 from hrepr import H
 from sqlalchemy import select
@@ -60,8 +61,25 @@ async def app(page):
             H.div["column"](H.span["column-name"]("Start")),
             H.div["column"](H.span["column-name"]("End"))
         ),
-        H.div["mid"],
-        H.div["down"]
+        H.div(id= "mid-div")["mid"](
+        ),
+        H.div["down"](
+            H.form(
+            H.input(name="title", placeholder="Name")["authorinput"],
+            H.input(name="title", placeholder="Role")["authorinput"],
+            "Start Date",
+            H.input(
+                type="date", id="start", name="date-start"
+            )["calender","authorinput"],
+            "End Date",
+            H.input(
+                type="date", id="start", name="date-end"
+            )["calender","authorinput"],
+            H.br,
+            H.button("Submit")["button"],
+            onsubmit=q
+        )
+        )
 
     ).autoid()
     page.print(area)
@@ -71,21 +89,22 @@ async def app(page):
         return generate(title)
     
     def htmlAuthor(author):
-        #tab = []
-        #if len(author.roles) > 0:
-        #    for role in author.roles:
-        #        tab.append(H.span["author-name"](role.role))
-        #    return H.div["author"](
-        #        author.name,
-        #        tab
-        #    )
-        #
-        #return None      
-        #div = []
-        #div.append(H.div["up"])
-        #div.append(H.div["mid"])
-        #div.append(H.div["down"])
-        return None
+        for i in range(len(author.roles)):
+            date_start = ""
+            date_end = ""
+            if author.roles[i].start_date is not None:
+                date_start = datetime.fromtimestamp(author.roles[i].start_date).date()
+            if author.roles[i].end_date is not None:
+                date_end = datetime.fromtimestamp(author.roles[i].end_date).date()
+
+            page["#mid-div"].print(
+                H.div["author-column"](
+                    H.div["column-mid"](H.span(author.name)),
+                    H.div["column-mid"](H.span["align-mid"](author.roles[i].role)),
+                    H.div["column-mid"](H.span["align-mid"](date_start)),
+                    H.div["column-mid"](H.span["align-mid"](date_end))
+                    )
+            )
 
     def generate(title):
         stmt = select(sch.Author)
@@ -97,7 +116,6 @@ async def app(page):
         #           )
         #           .filter(sch.Author.name.like(f"")))
         #       )
-        print(db.session.execute(stmt))
         results = list(db.session.execute(stmt))
         for (r,) in results:
             yield r
@@ -110,7 +128,7 @@ async def app(page):
                 reset=page[area].clear,
             )
             async for result in regen:
-                print(result)
-                div = htmlAuthor(result)
-                page[area].print(div)
+                if len(result.roles) > 0:
+                    htmlAuthor(result)
+                    #page[area].print(div)
                 #page[area].print(H.br)

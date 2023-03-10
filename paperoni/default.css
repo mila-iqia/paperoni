@@ -9,6 +9,12 @@ input{
     padding: 5px;
     width: 400px;
 }
+.authorinput{
+    width: 24.9%;
+}
+.area{
+    border: #555 2px solid;
+}
 .up:after {
     content: "";
     display: table;
@@ -17,13 +23,38 @@ input{
 .column{
     border: #555 0.5px solid;
     float: left;
-    width: 24%;
+    width: 24.9%;
+    height: 20px;
     margin: auto;
 }
+.mid{
+    border: #555 0.5px solid;
+    width:100%;
+    height: 600px;
+    overflow: auto;
+}
+.down{
+    width: 100%;
+    height: 100px;
+    border: #555 0.5px solid;
+}
+
 .column-name{
     margin: 45%;
 }
-
+.align-mid{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.column-mid{
+    position: relative;
+    float: left;
+    width: 25%;
+    height: 30px;
+    margin: auto;
+}
 .calender{
     width: 120px;
     margin-left: 10px;
