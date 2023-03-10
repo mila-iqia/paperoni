@@ -11,6 +11,7 @@ input{
 }
 .authorinput{
     width: 24.9%;
+    margin: 5px;
 }
 .area{
     border: #555 2px solid;
@@ -55,6 +56,10 @@ input{
     height: 30px;
     margin: auto;
 }
+.addform{
+    margin: auto;
+}
+
 .calender{
     width: 120px;
     margin-left: 10px;

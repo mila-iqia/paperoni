@@ -50,7 +50,7 @@ async def regenerator(queue, regen, reset):
 @bear
 async def app(page):
     q = Queue()
-    debounced = ClientWrap(q, debounce=0.3)
+    debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
@@ -64,20 +64,20 @@ async def app(page):
         H.div(id= "mid-div")["mid"](
         ),
         H.div["down"](
-            H.form(
-            H.input(name="title", placeholder="Name")["authorinput"],
-            H.input(name="title", placeholder="Role")["authorinput"],
-            "Start Date",
+            H.form["addform"](
+            H.input(name="name", placeholder="Name")["authorinput"],
+            H.input(name="role", placeholder="Role")["authorinput"],
+            "Start date",
             H.input(
                 type="date", id="start", name="date-start"
             )["calender","authorinput"],
-            "End Date",
+            "End date",
             H.input(
                 type="date", id="start", name="date-end"
             )["calender","authorinput"],
             H.br,
-            H.button("Submit")["button"],
-            onsubmit=q
+            H.button("Add")["button"],
+            onsubmit=debounced
         )
         )
 
@@ -85,7 +85,8 @@ async def app(page):
     page.print(area)
 
     def regen(event=None):
-        title = "neural" if event is None else event["value"]
+        print(event)
+        title = "neural" if event is None else event["name"]
         return generate(title)
     
     def htmlAuthor(author):
@@ -125,7 +126,7 @@ async def app(page):
             regen = regenerator(
                 queue=q,
                 regen=regen,
-                reset=page[area].clear,
+                reset=page["#mid-div"].clear,
             )
             async for result in regen:
                 if len(result.roles) > 0:
