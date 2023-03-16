@@ -63,7 +63,7 @@ async def app(page):
         ),
         H.div(id= "mid-div")["mid"](
         ),
-        H.div["down"](
+        H.div(id= "down-div")["down"](
             H.form["addform"](
             H.input(name="name", placeholder="Name")["authorinput"],
             H.input(name="role", placeholder="Role")["authorinput"],
@@ -73,7 +73,7 @@ async def app(page):
             )["calender","authorinput"],
             "End date",
             H.input(
-                type="date", id="start", name="date-end"
+                type="date", id="end", name="date-end"
             )["calender","authorinput"],
             H.br,
             H.button("Add")["button"],
@@ -86,9 +86,36 @@ async def app(page):
 
     def regen(event=None):
         print(event)
-        title = "neural" if event is None else event["name"]
-        return generate(title)
-    
+        if event is not None:
+            addAuthor(event)        
+        return generate()
+
+    def addAuthor(event):
+        name = event["name"]
+        role = event["role"]
+        start_date = event["date-start"]
+        end_date = event["date-end"]
+        page["#errormessage"].delete()
+        if not (name == "" or role == "" or start_date == ""):
+            stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
+            results = list(db.session.execute(stmt))
+            mila_id = "b'vP\x1fi\xea~\xf9uE\x86\xe11E,\xad\x17'" #tmp?
+            if len(results) == 0:
+                author_id = "b'\xfdgk\xfd-,\xc8\xea\x03\xac\xb1+\xb2+\xcd0'"#tmp
+                db.insert_author(author_id,name,0)
+                db.insert_author_institution(author_id,mila_id,role,start_date,end_date)
+            else:
+                for (i,)  in results:
+                    #Choisir quel auteur prendre...
+                    db.insert_author_institution(author_id,mila_id,role,start_date,end_date)
+                    print(i)
+                    print(i.name)
+                    print(i.roles)
+            
+        else:
+            page["#down-div"].print(H.span(id="errormessage")("error, name, role and start date is required"))
+            print("error, name, role and start date is required")
+
     def htmlAuthor(author):
         for i in range(len(author.roles)):
             date_start = ""
@@ -96,7 +123,7 @@ async def app(page):
             if author.roles[i].start_date is not None:
                 date_start = datetime.fromtimestamp(author.roles[i].start_date).date()
             if author.roles[i].end_date is not None:
-                date_end = datetime.fromtimestamp(author.roles[i].end_date).date()
+                date_end = author.roles[i].institution_id#datetime.fromtimestamp(author.roles[i].end_date).date()
 
             page["#mid-div"].print(
                 H.div["author-column"](
@@ -107,16 +134,8 @@ async def app(page):
                     )
             )
 
-    def generate(title):
+    def generate():
         stmt = select(sch.Author)
-        #stmt = stmt.filter(sch.AuthorInstitution.role.like(f"%{title}%"))
-        #stmt = stmt.join(sch.Author.author_id)
-        #stmt = (
-        #           stmt.join(sch.Author).join(
-        #               sch.AuthorInstitution
-        #           )
-        #           .filter(sch.Author.name.like(f"")))
-        #       )
         results = list(db.session.execute(stmt))
         for (r,) in results:
             yield r
