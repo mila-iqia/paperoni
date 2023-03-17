@@ -14,7 +14,9 @@ from starbear import ClientWrap, Queue, bear
 from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
-
+from paperoni.utils import tag_uuid
+from paperoni.model import Institution, Role, UniqueAuthor  
+from hashlib import md5
 here = Path(__file__).parent
 
 
@@ -97,46 +99,66 @@ async def app(page):
         end_date = event["date-end"]
         page["#errormessage"].delete()
         if not (name == "" or role == "" or start_date == ""):
-            stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
-            results = list(db.session.execute(stmt))
-            mila_id = "b'vP\x1fi\xea~\xf9uE\x86\xe11E,\xad\x17'" #tmp?
-            if len(results) == 0:
-                author_id = "b'\xfdgk\xfd-,\xc8\xea\x03\xac\xb1+\xb2+\xcd0'"#tmp
-                db.insert_author(author_id,name,0)
-                db.insert_author_institution(author_id,mila_id,role,start_date,end_date)
-            else:
-                for (i,)  in results:
-                    #Choisir quel auteur prendre...
-                    db.insert_author_institution(author_id,mila_id,role,start_date,end_date)
-                    print(i)
-                    print(i.name)
-                    print(i.roles)
+            uaRole = Role(
+                        institution=Institution(
+                            category="academia",
+                            name="Mila",
+                            aliases=[],
+                        ),
+                        role=role,
+                        start_date=(d := start_date) and f"{d} 00:00",
+                    )
+            if end_date != "":
+                uaRole = Role(
+                            institution=Institution(
+                                category="academia",
+                                name="Mila",
+                                aliases=[],
+                            ),
+                            role=role,
+                            start_date=(d := start_date) and f"{d} 00:00",
+                            end_date=(d := end_date) and f"{d} 00:00",
+                        )
             
+            ua = UniqueAuthor(
+                author_id=tag_uuid(md5(name.encode("utf8")).digest(), "canonical"),
+                name=name,
+                aliases=[],
+                affiliations=[],
+                roles=[
+                    uaRole
+                ],
+                links=[
+                ],
+                quality=(1.0,)
+                )
+            db.acquire(ua)      
         else:
             page["#down-div"].print(H.span(id="errormessage")("error, name, role and start date is required"))
             print("error, name, role and start date is required")
 
-    def htmlAuthor(author):
-        for i in range(len(author.roles)):
-            date_start = ""
-            date_end = ""
-            if author.roles[i].start_date is not None:
-                date_start = datetime.fromtimestamp(author.roles[i].start_date).date()
-            if author.roles[i].end_date is not None:
-                date_end = author.roles[i].institution_id#datetime.fromtimestamp(author.roles[i].end_date).date()
-
-            page["#mid-div"].print(
-                H.div["author-column"](
-                    H.div["column-mid"](H.span(author.name)),
-                    H.div["column-mid"](H.span["align-mid"](author.roles[i].role)),
-                    H.div["column-mid"](H.span["align-mid"](date_start)),
-                    H.div["column-mid"](H.span["align-mid"](date_end))
-                    )
-            )
+    def htmlAuthor(result):
+        author = result.author
+        date_start = ""
+        date_end = ""
+        if result.start_date is not None:
+            date_start = datetime.fromtimestamp(result.start_date).date()
+        if result.end_date is not None:
+            date_end = datetime.fromtimestamp(result.end_date).date()
+        page["#mid-div"].print(
+            H.div["author-column"](
+                H.div["column-mid"](H.span(author.name)),
+                H.div["column-mid"](H.span["align-mid"](result.role)),
+                H.div["column-mid"](H.span["align-mid"](date_start)),
+                H.div["column-mid"](H.span["align-mid"](date_end))
+                )
+        )
 
     def generate():
-        stmt = select(sch.Author)
+        stmt = select(sch.AuthorInstitution)
+        stmt = stmt.join(sch.Author)
         results = list(db.session.execute(stmt))
+        
         for (r,) in results:
             yield r
 
@@ -148,7 +170,4 @@ async def app(page):
                 reset=page["#mid-div"].clear,
             )
             async for result in regen:
-                if len(result.roles) > 0:
-                    htmlAuthor(result)
-                    #page[area].print(div)
-                #page[area].print(H.br)
+                htmlAuthor(result)
