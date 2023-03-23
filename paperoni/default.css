@@ -13,6 +13,10 @@ input{
     width: 24.9%;
     margin: 5px;
 }
+.roleinput{
+    width: 20%;
+    margin: 5px;
+}
 .area{
     border: #555 2px solid;
 }
@@ -36,10 +40,14 @@ input{
 }
 .down{
     width: 100%;
-    height: 100px;
+    height: 120px;
     border: #555 0.5px solid;
 }
-
+#errormessage{
+    color: red;
+    font-size: 14px;
+    margin: 5px;
+}
 .column-name{
     margin: 45%;
 }
