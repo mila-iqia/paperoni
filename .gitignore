@@ -6,6 +6,9 @@ dist/
 tests/example.db
 tests/data/*.db
 tests/data/*.db.fixed
+history
 _test_cache
 junk/
 new-coverage-*
+papers.db
+requests-cache.sqlite

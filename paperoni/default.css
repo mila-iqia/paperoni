@@ -1,14 +1,34 @@
 body {
     margin: auto;
+    margin-top: 10px;
     width: 800px;
     font-size: 16px;
 }
+input{
+    margin-top: 5px;
+    padding: 5px;
+    width: 400px;
+}
+.calender{
+    width: 120px;
+    margin-left: 10px;
+}
+form{
+    display: block;
+    margin-left: 20px;
+}
 .paper {
     margin: 5px;
+    
     padding: 10px;
-    /* border: 1px solid grey;
-    border-radius: 5px; */
+    overflow: auto;
 }
+.validationDiv{
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin: 10px;
+}
+
 .extra {
     font-size: 14px;
 }
@@ -64,4 +84,19 @@ input {
     margin-top: 10px;
     margin-bottom: 10px;
     box-sizing: border-box;
+}
+
+.button{
+    background-color: green;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom:10px;
+    margin: 5px;
+}
+
+.invalidate{
+    background-color: rgb(172, 4, 4);
 }

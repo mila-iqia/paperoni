@@ -1,5 +1,4 @@
 """Simple search app.
-
 Run with `uvicorn apps.search:app`
 """
 

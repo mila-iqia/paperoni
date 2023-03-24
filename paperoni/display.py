@@ -236,7 +236,11 @@ def html(paper: Union[Paper, sch.Paper]):
     pdfs = [lnk for k, lnk in expand_links(paper.links) if "pdf" in lnk]
 
     return H.div["paper"](
-        H.div["title"](H.a(paper.title, href=pdfs[0]) if pdfs else paper.title),
+        H.div["title"](
+            H.a(paper.title, href=pdfs[0], target="_blank")
+            if pdfs
+            else paper.title
+        ),
         H.div["authors"](
             join(
                 [_format_author(auth) for auth in paper.authors[:maxauth]],
@@ -258,6 +262,7 @@ def html(paper: Union[Paper, sch.Paper]):
             H.a["link"](
                 _domain(link) if typ == "html" else typ.replace("_", "-"),
                 href=link,
+                target="_blank",
             )
             for typ, link in expand_links(paper.links)
             if link.startswith("http")
