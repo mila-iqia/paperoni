@@ -67,7 +67,7 @@ async def app(page):
         "industry-core",
         "industry-associate",
     ]
-    form = H.form(id="addform",autocomplete="off")["addform"](
+    form = H.form(id="addform", autocomplete="off")["addform"](
         H.input(
             id="formname", name="name", placeholder="Name", oninput=debounced
         )["authorinput"],
