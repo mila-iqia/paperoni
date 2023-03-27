@@ -57,20 +57,23 @@ async def app(page):
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
+    roles = [
+        "associate",
+        "core",
+        "chair",
+        "idt",
+        "art",
+        "associate-external",
+        "industry-core",
+        "industry-associate",
+    ]
     form = H.form(id="addform")["addform"](
-        H.input(name="name", placeholder="Name", oninput=debounced)[
-            "authorinput"
-        ],
+        H.input(
+            id="formname", name="name", placeholder="Name", oninput=debounced
+        )["authorinput"],
         "Role",
         H.select(name="role")["roleinput"](
-            H.option(value="associate")("associate"),
-            H.option(value="core")("core"),
-            H.option(value="chair")("chair"),
-            H.option(value="idt")("idt"),
-            H.option(value="art")("art"),
-            H.option(value="associate-external")("associate-external"),
-            H.option(value="industry-core")("industry-core"),
-            H.option(value="industry-associate")("industry-associate"),
+            [H.option(value=role)(role) for role in roles]
         ),
         "Start date",
         H.input(type="date", id="start", name="date-start")[
@@ -95,6 +98,7 @@ async def app(page):
         H.div(id="down-div")["down"](form),
     ).autoid()
     page.print(area)
+    dataAuthors = {}
 
     def regen(event=None):
         name = None
@@ -157,6 +161,45 @@ async def app(page):
                 )
             )
 
+    async def clickAuthor(id=None):
+        print(dataAuthors[id])
+        startdate = dataAuthors[id]["start"].strftime("%Y-%m-%d")
+        enddate = ""
+        if dataAuthors[id]["end"] != "":
+            enddate = dataAuthors[id]["end"].strftime("%Y-%m-%d")
+
+        filledForm = H.form(id="addform")["addform"](
+            H.input(
+                id="formname",
+                name="name",
+                placeholder="Name",
+                value=dataAuthors[id]["nom"],
+                oninput=debounced,
+            )["authorinput"],
+            "Role",
+            H.select(name="role")["roleinput"](
+                [
+                    H.option(value=role, selected="selected")(role)
+                    if role == dataAuthors[id]["role"]
+                    else H.option(value=role)(role)
+                    for role in roles
+                ]
+            ),
+            "Start date",
+            H.input(
+                type="date", id="start", name="date-start", value=startdate
+            )["calender", "authorinput"],
+            "End date",
+            H.input(type="date", id="end", name="date-end", value=enddate)[
+                "calender", "authorinput"
+            ],
+            H.br,
+            H.button("Add")["button"],
+            onsubmit=debounced,
+        )
+        page["#addform"].clear()
+        page["#down-div"].print(filledForm)
+
     def htmlAuthor(result):
         author = result.author
         date_start = ""
@@ -165,9 +208,20 @@ async def app(page):
             date_start = datetime.fromtimestamp(result.start_date).date()
         if result.end_date is not None:
             date_end = datetime.fromtimestamp(result.end_date).date()
+        id = len(dataAuthors)
+        dataAuthors[id] = {
+            "nom": author.name,
+            "role": result.role,
+            "start": date_start,
+            "end": date_end,
+        }
         page["#mid-div"].print(
-            H.div["author-column"](
-                H.div["column-mid"](H.span(author.name)),
+            H.div(onclick=lambda event, id=id: clickAuthor(id))[
+                "author-column"
+            ](
+                H.div(id="authorname")["column-mid"](
+                    H.span(id="autspan")(author.name)
+                ),
                 H.div["column-mid"](H.span["align-mid"](result.role)),
                 H.div["column-mid"](H.span["align-mid"](date_start)),
                 H.div["column-mid"](H.span["align-mid"](date_end)),
