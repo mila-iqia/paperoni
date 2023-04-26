@@ -100,3 +100,10 @@ input {
 .invalidate{
     background-color: rgb(172, 4, 4);
 }
+
+#seeFlagged{
+    float: right;
+    text-align: center;
+    width: 300px;
+    margin: 5px 10px 5px 10px;
+}

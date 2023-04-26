@@ -70,7 +70,10 @@ async def app(page):
             H.input(
                 type="date", id="start", name="date-end", oninput=debounced
             )["calender"],
-            H.input(type="checkbox", id="seeFlagged", name="seeFlagged", value="seeFlagged", oninput=debounced),
+            H.div(id="seeFlagged")["seeFlagged"](
+            "See Flagged Papers",
+            H.input(type="checkbox", id="seeFlasgged", name="seeFlagged", value="seeFlagged", oninput=debounced),
+            ),
         )
     )
     page.print(area)
