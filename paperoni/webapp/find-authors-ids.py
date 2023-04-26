@@ -16,6 +16,10 @@ from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
 
+from collections import Counter
+from giving import give
+from paperoni.model import Link, UniqueAuthor
+
 here = Path(__file__).parent
 
 
@@ -46,6 +50,154 @@ async def regenerator(queue, regen, reset):
             continue
 
         yield element
+
+def _fill_rids(rids, researchers, idtype):
+    for researcher in researchers:
+        for link in researcher.links:
+            if link.type == idtype:
+                rids[link.link] = researcher.name
+
+def _getname(x):
+    return x.name
+
+def filter_researchers(
+    researchers, names=None, before=None, after=None, getname=_getname
+):
+    if names is not None:
+        names = [n.lower() for n in names]
+        researchers = [r for r in researchers if getname(r).lower() in names]
+
+    researchers.sort(key=getname)
+
+    if before is not None:
+        researchers = [
+            r
+            for r in researchers
+            if getname(r)[: len(before)].lower() < before.lower()
+        ]
+
+    if after is not None:
+        researchers = [
+            r
+            for r in researchers
+            if getname(r)[: len(after)].lower() > after.lower()
+        ]
+
+    return researchers
+
+def prepare(
+    researchers,
+    idtype,
+    query_name,
+    minimum=None,
+):
+    rids = {}
+    _fill_rids(rids, researchers, idtype)
+
+    def _ids(x, typ):
+        return [link.link for link in x.links if link.type == typ]
+
+    for auq in researchers:
+        aname = auq.name
+        ids = set(_ids(auq, idtype))
+        noids = set(_ids(auq, f"!{idtype}"))
+
+        def find_common(papers):
+            common = Counter()
+            for p in papers:
+                for a in p.authors:
+                    for l in a.author.links:
+                        if l.type == idtype and l.link in rids:
+                            common[rids[l.link]] += 1
+            return sum(common.values()), common
+
+        data = [
+            (author, *find_common(papers), papers)
+            for author, papers in query_name(aname)
+            if not minimum or len(papers) > minimum
+        ]
+        data.sort(key=lambda ap: (-ap[1], -len(ap[-1])))
+
+        for author, _, common, papers in data:
+            if not papers:  # pragma: no cover
+                continue
+
+            done = False
+
+            (new_id,) = _ids(author, idtype)
+            if new_id in ids or new_id in noids:
+                give(author=aname, skip_id=new_id)
+                continue
+
+            aliases = {*author.aliases, author.name} - {aname}
+
+            def _make(negate=False):
+                auth = UniqueAuthor(
+                    author_id=auq.author_id,
+                    name=aname,
+                    affiliations=[],
+                    roles=[],
+                    aliases=[] if negate else aliases,
+                    links=[Link(type=f"!{idtype}", link=new_id)]
+                    if negate
+                    else author.links,
+                )
+                if not negate:
+                    _fill_rids(rids, [auth], idtype)
+                return auth
+
+            papers = [
+                (p.releases[0].venue.date.year, i, p)
+                for i, p in enumerate(papers)
+            ]
+            papers.sort(reverse=True)
+
+            give(
+                author=author,
+                author_name=aname,
+                id=new_id,
+                npapers=len(papers),
+                common=dict(sorted(common.items(), key=lambda x: -x[1])),
+                aliases=aliases,
+                start_year=papers[-1][0],
+                end_year=papers[0][0],
+            )
+
+            for _, _, p in papers:
+                pass
+
+def prepare_interface(
+    researchers,
+    idtype,
+    query_name,
+    minimum=None,
+):
+    # ID to give to the researcher
+    # [option: --id]
+    #given_id: Option = None
+    given_id = None
+
+    researchers = filter_researchers(researchers)
+
+    if given_id:
+        assert len(researchers) == 1
+        for auq in researchers:
+            yield UniqueAuthor(
+                author_id=auq.author_id,
+                name=auq.name,
+                affiliations=[],
+                roles=[],
+                aliases=[],
+                links=[Link(type=idtype, link=given_id)],
+            )
+
+    else:
+        yield from prepare(
+            researchers=researchers,
+            idtype=idtype,
+            minimum=minimum,
+            query_name=query_name,
+        )
 
 
 @bear
