@@ -100,9 +100,13 @@ def canonicalize_links(links: dict[str, str]) -> dict[str, str]:
 
 
 def similarity(s1, s2):
+    caps1 = re.sub(string=s1, pattern="[a-z. -]", repl="")
+    caps2 = re.sub(string=s2, pattern="[a-z. -]", repl="")
+    capsr = SequenceMatcher(a=caps1, b=caps2).ratio()
     s1 = re.sub(string=s1, pattern="[. -]", repl="")
     s2 = re.sub(string=s2, pattern="[. -]", repl="")
-    return SequenceMatcher(a=s1, b=s2).ratio()
+    sr = SequenceMatcher(a=s1, b=s2).ratio()
+    return capsr * sr
 
 
 def extract_date(txt: str) -> dict | None:

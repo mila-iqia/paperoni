@@ -94,7 +94,7 @@ class Database(OvldBase):
         if not hid or tag == "canonical" or hid not in self.cache:
             self.cache[hid] = self._acquire(x)
             if tag == "transient":
-                hid_object = sch.CanonicalId(hashid=hid, canonical=None)
+                hid_object = sch.CanonicalId(hashid=hid, canonical=hid)
                 self.session.add(hid_object)
                 if self.meta:
                     scr = sch.Scraper(
@@ -282,6 +282,7 @@ class Database(OvldBase):
                 sch.AuthorAlias: "author_id",
                 sch.AuthorInstitution: "author_id",
                 sch.Scraper: "hashid",
+                sch.CanonicalId: "canonical",
             },
         )
 
@@ -298,6 +299,7 @@ class Database(OvldBase):
                 sch.t_paper_release: "paper_id",
                 sch.t_paper_topic: "paper_id",
                 sch.Scraper: "hashid",
+                sch.CanonicalId: "canonical",
             },
         )
 
@@ -311,6 +313,7 @@ class Database(OvldBase):
                 sch.VenueLink: "venue_id",
                 sch.VenueAlias: "venue_id",
                 sch.Scraper: "hashid",
+                sch.CanonicalId: "canonical",
             },
         )
 
@@ -388,6 +391,8 @@ class Database(OvldBase):
         id_field,
         ids,
     ):
+        ids = sorted(ids, key=lambda entry: entry.id.hex, reverse=True)
+
         def conds(field=id_field):
             conds = [f"{field} = X'{pid.id.hex}'" for pid in ids]
             return " OR ".join(conds)
@@ -443,6 +448,24 @@ class Database(OvldBase):
             for field, parts in coalesce_parts
         ]
         updates = [f"{field} = value__{field}" for field in nonid_fields]
+
+        # Set up forwarding to the canonical ID
+
+        canhex = f"X'{canonical.id.hex}'"
+        canon_stmt = f"""
+        UPDATE canonical_id
+        SET canonical = {canhex}
+        WHERE {conds('hashid')} OR {conds('canonical')}
+        """
+        self.session.execute(canon_stmt)
+
+        canon_ins_stmt = f"""
+        INSERT INTO canonical_id(hashid, canonical)
+        VALUES ({canhex}, {canhex})
+        ON CONFLICT(hashid) DO UPDATE
+        SET canonical = {canhex}
+        """
+        self.session.execute(canon_ins_stmt)
 
         merge_stmt = f"""
         UPDATE {table.name}
