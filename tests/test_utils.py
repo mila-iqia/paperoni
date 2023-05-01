@@ -49,6 +49,7 @@ def test_extract_date():
         "June 2002": (2002, 6, 1, DatePrecision.month),
         "2002 June": (2002, 6, 1, DatePrecision.month),
         "2008 Jul 4": (2008, 7, 4, DatePrecision.day),
+        2002: (2002, 1, 1, DatePrecision.year),
     }
     for date, (y, m, d, p) in tests.items():
         output = extract_date(date)
@@ -60,7 +61,6 @@ def test_extract_date():
 
 
 def test_extract_date_failures():
-    assert extract_date(1234) is None
     assert extract_date("what is this?") is None
 
 
@@ -176,6 +176,10 @@ def test_uuid_tagging():
 def test_similarity():
     assert similarity("bonjour", "bonjour") == 1
     assert similarity("bonjour", "bon-jour.") == 1
+
+
+def test_similarity_2():
+    assert similarity("Hugo Larochelle", "Marc Bellemare") < 0.5
 
 
 def test_covguard():
