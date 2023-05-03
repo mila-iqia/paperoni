@@ -138,6 +138,55 @@ async def app(page):
 
         return stmt
 
+    def getChangedButton(result):
+        for flag in result.paper_flag:
+            print("in changed Button, looping in flags my man. heres the flag:", flag.flag_name, flag.flag)
+            if flag.flag_name == "validation" and flag.flag == 1:
+                print("ok this one is validated, sending invalidate button")
+                return H.button["button", "invalidate"](
+                                "Invalidate",
+                                onclick=(
+                                    lambda event, paper=result: changeValidation(
+                                        paper, 0
+                                    )
+                                ),
+                            )
+            elif flag.flag_name == "validation" and flag.flag == 0:
+                return H.button["button"](
+                                "Validate",
+                                onclick=(
+                                    lambda event, paper=result: changeValidation(
+                                        paper, 1
+                                    )
+                                ),
+                            )
+        return None
+
+    def changeValidation(paper,val):
+        print(val)
+        db.remove_flags(paper, "validation")
+        db.insert_flag(paper, "validation", val)
+        deleteid = "#p" + paper.paper_id.hex()
+        page[deleteid].clear()
+        #Update the paper html
+        print("CLICKED CHANGEVALIDATION")
+        print(paper.paper_flag[0].flag)
+        page[deleteid].print(
+            H.div(
+                html(paper),
+                H.button["button"](
+                    "Undo",
+                    onclick=(
+                        lambda event, paper=paper: unValidate(
+                            paper
+                        )
+                    ),
+                ),
+                getChangedButton(paper),
+                get_flags(paper)
+            )
+        )
+    
     def validate_button(paper, val):
         db.insert_flag(paper, "validation", val)
         deleteid = "#p" + paper.paper_id.hex()
@@ -174,6 +223,7 @@ async def app(page):
                     if has_paper_validation(result):
                         div = html(result)
                         divFlags = get_flags(result)
+                        buttonChange = getChangedButton(result)
                         valDiv = H.div["validationDiv"](
                             div,
                             H.button["button"](
@@ -184,6 +234,7 @@ async def app(page):
                                     )
                                 ),
                             ),
+                            buttonChange,
                             divFlags,
                             )(id="p" + result.paper_id.hex())
                         page[area].print(valDiv)
