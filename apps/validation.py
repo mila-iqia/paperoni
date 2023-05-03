@@ -93,7 +93,7 @@ async def app(page):
         
         stmt = select(sch.Paper)
         if not all(
-            val is "" or val is None
+            val == "" or val is None
             for val in [title, author, date_start, date_end]
         ):
             stmt = search(title, author, date_start, date_end)
@@ -140,9 +140,7 @@ async def app(page):
 
     def getChangedButton(result):
         for flag in result.paper_flag:
-            print("in changed Button, looping in flags my man. heres the flag:", flag.flag_name, flag.flag)
             if flag.flag_name == "validation" and flag.flag == 1:
-                print("ok this one is validated, sending invalidate button")
                 return H.button["button", "invalidate"](
                                 "Invalidate",
                                 onclick=(
@@ -163,14 +161,11 @@ async def app(page):
         return None
 
     def changeValidation(paper,val):
-        print(val)
         db.remove_flags(paper, "validation")
         db.insert_flag(paper, "validation", val)
         deleteid = "#p" + paper.paper_id.hex()
         page[deleteid].clear()
         #Update the paper html
-        print("CLICKED CHANGEVALIDATION")
-        print(paper.paper_flag[0].flag)
         page[deleteid].print(
             H.div(
                 html(paper),
