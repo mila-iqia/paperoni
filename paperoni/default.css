@@ -147,7 +147,11 @@ form{
 .area {
     border: 1px solid black;
 }
-
+#authorpapersid{
+    border: 1px solid green;
+    height: 400px;
+    overflow: auto;
+}
 input {
     width: 100%;
     padding: 5px;

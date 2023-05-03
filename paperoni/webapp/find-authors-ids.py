@@ -19,10 +19,10 @@ from paperoni.display import html
 from collections import Counter
 from giving import give
 from paperoni.model import Link, UniqueAuthor
-
+from paperoni.sources.scrapers.semantic_scholar import SemanticScholarQueryManager
 here = Path(__file__).parent
 
-
+ss = SemanticScholarQueryManager()
 async def regenerator(queue, regen, reset):
     gen = regen()
     done = False
@@ -85,12 +85,13 @@ def filter_researchers(
 
     return researchers
 
-def prepare(
+async def prepare(
     researchers,
     idtype,
     query_name,
     minimum=None,
 ):
+    print("hey bud")
     rids = {}
     _fill_rids(rids, researchers, idtype)
 
@@ -164,40 +165,24 @@ def prepare(
             )
 
             for _, _, p in papers:
-                pass
+                print("\n HEY, new paper : \n")
+                print(p)
+                yield p
+                #pass
 
-def prepare_interface(
-    researchers,
+async def l(researchers,
     idtype,
-    query_name,
-    minimum=None,
-):
-    # ID to give to the researcher
-    # [option: --id]
-    #given_id: Option = None
-    given_id = None
-
-    researchers = filter_researchers(researchers)
-
-    if given_id:
-        assert len(researchers) == 1
-        for auq in researchers:
-            yield UniqueAuthor(
-                author_id=auq.author_id,
-                name=auq.name,
-                affiliations=[],
-                roles=[],
-                aliases=[],
-                links=[Link(type=idtype, link=given_id)],
-            )
-
-    else:
-        yield from prepare(
-            researchers=researchers,
-            idtype=idtype,
-            minimum=minimum,
-            query_name=query_name,
+    query_name):
+        print(researchers)
+        researchers = filter_researchers(researchers)
+        print("hey")
+        prepare(
+                researchers=researchers,
+                idtype=idtype,
+                minimum=None,
+                query_name=query_name,
         )
+
 
 
 @bear
@@ -207,7 +192,7 @@ async def app(page):
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
-    area = H.div["area"]().autoid()
+    area = H.div["authorarea"](id="authorpapersid")
     page.print(H.span("Validation"))
     page.print(area)
 
@@ -219,8 +204,8 @@ async def app(page):
             author = event["author"]
             date_start = event["date-start"]
             date_end = event["date-end"]
-            return generate(title, author, date_start, date_end)
-        return generate()
+            #return generate(title, author, date_start, date_end)
+        #return generate()
 
     def generate(title=None, author=None, date_start=None, date_end=None):
         stmt = select(sch.Paper)
@@ -279,15 +264,72 @@ async def app(page):
 
         return stmt
 
+    def getAuthors(name):
+        authors = []
+        stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
+        try:
+            results = list(db.session.execute(stmt))
+            i = 0
+            for (r,) in results:
+                authors.append(r)
+                print(r)
+                print(i)
+                i +=1
+        except Exception as e:
+            print("Error : ", e)
+        return authors
+
+
+
+    def lo(
+    researchers,
+    idtype,
+    query_name,
+    minimum=None,
+    ):
+        print("in fct")
+        # ID to give to the researcher
+        # [option: --id]
+        #given_id: Option = None
+        given_id = None
+
+        researchers = filter_researchers(researchers)
+
+        if given_id:
+            assert len(researchers) == 1
+            for auq in researchers:
+                yield UniqueAuthor(
+                    author_id=auq.author_id,
+                    name=auq.name,
+                    affiliations=[],
+                    roles=[],
+                    aliases=[],
+                    links=[Link(type=idtype, link=given_id)],
+                )
+
+        else:
+            print("yes")
+            yield from prepare(
+                researchers=researchers,
+                idtype=idtype,
+                minimum=minimum,
+                query_name=query_name,
+            )
+
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
-            regen = regenerator(
-                queue=q,
-                regen=regen,
-                reset=page[area].clear,
-            )
+            #regen = regenerator(
+            #    queue=q,
+            #    regen=regen,
+            #    reset=page[area].clear,
+            #)
+            print("calling prepare")
+            regen = prepare(researchers=getAuthors(author_name),idtype="semantic_scholar",query_name=ss.author_with_papers)
+            print("called prepare") 
             async for result in regen:
+                print("in loop")
                 div = html(result)
                 valDiv = H.div["validationDiv"](
                         div)
                 page[area].print(valDiv)
+                
