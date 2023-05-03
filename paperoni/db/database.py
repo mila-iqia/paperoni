@@ -29,12 +29,7 @@ from ..model import (
     VenueMerge,
     from_dict,
 )
-from ..utils import (
-    get_uuid_tag,
-    is_canonical_uuid,
-    squash_text,
-    tag_uuid,
-)
+from ..utils import get_uuid_tag, is_canonical_uuid, squash_text, tag_uuid
 from . import schema as sch
 
 

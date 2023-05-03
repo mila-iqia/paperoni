@@ -47,6 +47,7 @@ async def regenerator(queue, regen, reset):
 
         yield element
 
+
 @bear
 async def app(page):
     seeFlagged = False
@@ -71,13 +72,19 @@ async def app(page):
                 type="date", id="start", name="date-end", oninput=debounced
             )["calender"],
             H.div(id="seeFlagged")["seeFlagged"](
-            "See Flagged Papers",
-            H.input(type="checkbox", id="seeFlasgged", name="seeFlagged", value="seeFlagged", oninput=debounced),
+                "See Flagged Papers",
+                H.input(
+                    type="checkbox",
+                    id="seeFlasgged",
+                    name="seeFlagged",
+                    value="seeFlagged",
+                    oninput=debounced,
+                ),
             ),
         )
     )
     page.print(area)
-    
+
     def regen(event=None):
         if event is not None and event:
             nonlocal seeFlagged
@@ -90,7 +97,6 @@ async def app(page):
         return generate()
 
     def generate(title=None, author=None, date_start=None, date_end=None):
-        
         stmt = select(sch.Paper)
         if not all(
             val == "" or val is None
@@ -142,46 +148,38 @@ async def app(page):
         for flag in result.paper_flag:
             if flag.flag_name == "validation" and flag.flag == 1:
                 return H.button["button", "invalidate"](
-                                "Invalidate",
-                                onclick=(
-                                    lambda event, paper=result: changeValidation(
-                                        paper, 0
-                                    )
-                                ),
-                            )
+                    "Invalidate",
+                    onclick=(
+                        lambda event, paper=result: changeValidation(paper, 0)
+                    ),
+                )
             elif flag.flag_name == "validation" and flag.flag == 0:
                 return H.button["button"](
-                                "Validate",
-                                onclick=(
-                                    lambda event, paper=result: changeValidation(
-                                        paper, 1
-                                    )
-                                ),
-                            )
+                    "Validate",
+                    onclick=(
+                        lambda event, paper=result: changeValidation(paper, 1)
+                    ),
+                )
         return None
 
-    def changeValidation(paper,val):
+    def changeValidation(paper, val):
         db.remove_flags(paper, "validation")
         db.insert_flag(paper, "validation", val)
         deleteid = "#p" + paper.paper_id.hex()
         page[deleteid].clear()
-        #Update the paper html
+        # Update the paper html
         page[deleteid].print(
             H.div(
                 html(paper),
                 H.button["button"](
                     "Undo",
-                    onclick=(
-                        lambda event, paper=paper: unValidate(
-                            paper
-                        )
-                    ),
+                    onclick=(lambda event, paper=paper: unValidate(paper)),
                 ),
                 getChangedButton(paper),
-                get_flags(paper)
+                get_flags(paper),
             )
         )
-    
+
     def validate_button(paper, val):
         db.insert_flag(paper, "validation", val)
         deleteid = "#p" + paper.paper_id.hex()
@@ -201,9 +199,13 @@ async def app(page):
         flagTab = []
         for flag in paper.paper_flag:
             if flag.flag == 1:
-                flagTab.append(H.div["flag"](str(flag.flag_name) + " : Validated"))
+                flagTab.append(
+                    H.div["flag"](str(flag.flag_name) + " : Validated")
+                )
             else:
-                flagTab.append(H.div["flag"](str(flag.flag_name) + " : Invalidated"))
+                flagTab.append(
+                    H.div["flag"](str(flag.flag_name) + " : Invalidated")
+                )
         return flagTab
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
@@ -231,7 +233,7 @@ async def app(page):
                             ),
                             buttonChange,
                             divFlags,
-                            )(id="p" + result.paper_id.hex())
+                        )(id="p" + result.paper_id.hex())
                         page[area].print(valDiv)
                 else:
                     if not has_paper_validation(result):
