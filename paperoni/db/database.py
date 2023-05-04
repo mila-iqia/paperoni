@@ -521,10 +521,12 @@ class Database(OvldBase):
         self.session.execute(ins_stmt)
         self.session.commit()
 
-    def insert_author_institution(self, author_id, institution_id, role, start_date, end_date):
+    def insert_author_institution(
+        self, author_id, institution_id, role, start_date, end_date
+    ):
         print("inside insert_author_institution")
         author = sch.AuthorInstitution(
-            author_id= author_id,
+            author_id=author_id,
         )
         ins_stmt = f"""
         INSERT INTO {author.__tablename__}
