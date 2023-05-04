@@ -162,7 +162,6 @@ async def app(page):
             )
 
     async def clickAuthor(id=None):
-        print(dataAuthors[id])
         startdate = dataAuthors[id]["start"].strftime("%Y-%m-%d")
         enddate = ""
         if dataAuthors[id]["end"] != "":

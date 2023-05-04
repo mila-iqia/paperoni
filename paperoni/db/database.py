@@ -512,19 +512,16 @@ class Database(OvldBase):
         return False
 
     def insert_author(self, author_id, name, quality):
-        print("INSIDE insert_author")
         ins_stmt = f"""
         INSERT INTO author
         VALUES (X'{author_id}',"{name}",{quality})
         """
-        print(ins_stmt)
         self.session.execute(ins_stmt)
         self.session.commit()
 
     def insert_author_institution(
         self, author_id, institution_id, role, start_date, end_date
     ):
-        print("inside insert_author_institution")
         author = sch.AuthorInstitution(
             author_id=author_id,
         )
@@ -532,6 +529,5 @@ class Database(OvldBase):
         INSERT INTO {author.__tablename__}
         VALUES (X'{author.author_id}',"{institution_id}",{role}, {start_date})
         """
-        print(ins_stmt)
         self.session.execute(ins_stmt)
         self.session.commit()
