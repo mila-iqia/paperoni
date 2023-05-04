@@ -29,12 +29,7 @@ from ..model import (
     VenueMerge,
     from_dict,
 )
-from ..utils import (
-    get_uuid_tag,
-    is_canonical_uuid,
-    squash_text,
-    tag_uuid,
-)
+from ..utils import get_uuid_tag, is_canonical_uuid, squash_text, tag_uuid
 from . import schema as sch
 
 
@@ -497,6 +492,17 @@ class Database(OvldBase):
         """
 
         self.session.execute(ins_stmt)
+        self.session.commit()
+
+    def remove_flags(self, paper, flag_name):
+        pf = sch.PaperFlag(
+            paper_id=paper.paper_id,
+        )
+        del_stmt = f"""
+        DELETE FROM {pf.__tablename__}
+        WHERE paper_id = X'{paper.paper_id.hex()}' AND flag_name = "{flag_name}"
+        """
+        self.session.execute(del_stmt)
         self.session.commit()
 
     def has_flag(self, paper, flagname):
