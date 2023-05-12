@@ -1,3 +1,4 @@
+import json
 import re
 import subprocess
 import unicodedata
@@ -63,6 +64,14 @@ class PDF:
 
         self.pdf_path = Path(config.get().paths.cache) / link.type / lnk
         self.data_path = self.pdf_path.with_suffix(".data")
+        self.meta_path = self.pdf_path.with_suffix(".json")
+
+        if self.meta_path.exists():
+            self.meta = json.loads(self.meta_path.read_text())
+        else:
+            self.meta = {}
+
+        self.last_failure = self.meta.get("failure", None)
 
     def get_url(self):
         link = self.link
@@ -111,19 +120,36 @@ class PDF:
         pdf.parent.mkdir(parents=True, exist_ok=True)
 
         if not pdf.exists() or self.cache_policy == "force":
+            if self.last_failure not in [None, "anonymous"]:
+                print(
+                    f"Skip {self} because of last failure: {self.last_failure}"
+                )
+                return None
+            url = self.get_url()
+            if url is None:
+                return None
             try:
-                download(filename=pdf, url=self.get_url())
+                download(filename=pdf, url=url)
             except requests.exceptions.SSLError:
+                print(f"failed to download pdf file for {self}")
+                self.clear(failure="ssl-error")
                 return None
 
-        subprocess.run(["pdftotext", "-bbox-layout", str(pdf), str(data)])
+        outcome = subprocess.run(
+            ["pdftotext", "-bbox-layout", str(pdf), str(data)],
+            capture_output=True,
+        )
+        if outcome.returncode != 0:
+            print(f"pdftotext failed to process pdf file for {self}")
+            self.clear(failure="invalid-pdf")
+            return None
 
         if not data.stat().st_size:
             data.unlink()
 
         fulltext = data.read_text()
         if not fulltext:
-            self.clear()
+            self.clear(failure="empty")
             return None
 
         return fulltext
@@ -143,15 +169,23 @@ class PDF:
                 ):
                     # Throw away the data; a later download might have the author info
                     print("Anonymous authors; throwing away.")
-                    self.clear()
+                    self.clear(failure="anonymous")
                     return None
             else:
                 break
         return doc
 
-    def clear(self):
+    def clear(self, failure=None):
+        self.write_meta(failure=failure)
         self.pdf_path.unlink(missing_ok=True)
         self.data_path.unlink(missing_ok=True)
+
+    def write_meta(self, **data):
+        self.meta.update(data)
+        self.meta_path.write_text(json.dumps(data, indent=4))
+
+    def __str__(self):
+        return f"{self.link.type}:{self.link.link}"
 
 
 triggers = {
