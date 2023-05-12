@@ -63,7 +63,6 @@ class PDF:
 
         self.pdf_path = Path(config.get().paths.cache) / link.type / lnk
         self.data_path = self.pdf_path.with_suffix(".data")
-        self.fulltext = self.get_fulltext()
 
     def get_url(self):
         link = self.link
@@ -128,6 +127,27 @@ class PDF:
             return None
 
         return fulltext
+
+    def get_document(self):
+        fulltext = self.get_fulltext()
+        if not fulltext:
+            return None
+        doc = make_document_from_layout(fulltext)
+        for line in doc.parts:
+            if line.ymin < 1:
+                # First page
+                if re.search(
+                    pattern="anonymous author",
+                    string=line.text,
+                    flags=re.IGNORECASE,
+                ):
+                    # Throw away the data; a later download might have the author info
+                    print("Anonymous authors; throwing away.")
+                    self.clear()
+                    return None
+            else:
+                break
+        return doc
 
     def clear(self):
         self.pdf_path.unlink(missing_ok=True)
@@ -245,7 +265,7 @@ def initialize(name):
         return "".join(new_parts)
 
 
-def _name_fulltext_affiliations(author, method, fulltext, institutions):
+def _name_fulltext_affiliations(author, method, doc, institutions):
     aliases = list(sorted(author.aliases, key=len, reverse=True))
     for name in aliases:
         if aff := method(name, institutions):
@@ -254,11 +274,10 @@ def _name_fulltext_affiliations(author, method, fulltext, institutions):
         return method(initialize(aliases[0]), institutions, regex=True)
 
 
-def find_fulltext_affiliations(paper, fulltext, institutions):
-    if fulltext is None:
+def find_fulltext_affiliations(paper, doc, institutions):
+    if doc is None:
         return None
 
-    doc = make_document_from_layout(fulltext)
     superscripts = classify_superscripts(doc)
 
     methods = [

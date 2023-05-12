@@ -467,8 +467,8 @@ _institutions = None
 def _pdf_refiner(db, paper, link):
     global _institutions
 
-    fulltext = PDF(link).fulltext
-    if not fulltext:
+    doc = PDF(link).get_document()
+    if not doc:
         return None
 
     if _institutions is None:
@@ -477,9 +477,7 @@ def _pdf_refiner(db, paper, link):
             with covguard():
                 _institutions.update({alias: inst for alias in inst.aliases})
 
-    author_affiliations = find_fulltext_affiliations(
-        paper, fulltext, _institutions
-    )
+    author_affiliations = find_fulltext_affiliations(paper, doc, _institutions)
 
     if not author_affiliations:
         with covguard():

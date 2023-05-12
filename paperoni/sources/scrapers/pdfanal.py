@@ -96,10 +96,6 @@ class Document(Group[Line]):
     pass
 
 
-# class Document(BaseModel):
-#     lines: list[Line]
-
-
 def coalesce(parts, initial_state, criterion):
     def _coalesce():
         if not q:
