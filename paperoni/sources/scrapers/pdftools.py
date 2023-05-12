@@ -52,16 +52,14 @@ def download(url, filename):
     print(f"Saved {filename}")
 
 
-def link_to_pdf_text(link, only_use_cache=False):
+def link_to_pdf_text(link, cache_policy="use"):
     lnk = link.link.replace("/", "__")
     if not lnk.endswith(".pdf"):
         lnk = f"{lnk}.pdf"
     pth = Path(config.get().paths.cache) / link.type / lnk
 
-    if only_use_cache:
-        return pdf_to_text(
-            cache_base=pth, url=None, only_use_cache=only_use_cache
-        )
+    if cache_policy == "only":
+        return pdf_to_text(cache_base=pth, url=None, cache_policy=cache_policy)
 
     match link.type:
         case "arxiv":
@@ -90,51 +88,43 @@ def link_to_pdf_text(link, only_use_cache=False):
         case _:
             return None
 
-    return pdf_to_text(cache_base=pth, url=url)
+    return pdf_to_text(cache_base=pth, url=url, cache_policy=cache_policy)
 
 
-def pdf_to_text(cache_base, url, only_use_cache=False):
+def pdf_to_text(cache_base, url, cache_policy="use"):
     if len(str(cache_base)) > 255:
+        # Weird stuff happens if this is true, so we just ignore it I guess?
         return ""
-
-    cache_base.parent.mkdir(parents=True, exist_ok=True)
 
     pdf = cache_base.with_suffix(".pdf")
     data = pdf.with_suffix(".data")
 
-    if only_use_cache:
-        if data.exists():
+    if data.exists():
+        if cache_policy != "force":
             return data.read_text()
-        else:
-            return ""
+    elif cache_policy == "only":
+        return None
 
-    if not pdf.exists():
+    cache_base.parent.mkdir(parents=True, exist_ok=True)
+
+    if not pdf.exists() or cache_policy == "force":
         try:
             download(filename=pdf, url=url)
         except requests.exceptions.SSLError:
-            pdf.write_text("")
-            data.write_text(bah := "failure")
-            return bah
+            return None
 
-    if True or not data.exists() or not data.stat().st_size:
-        subprocess.run(["pdftotext", "-bbox-layout", str(pdf), str(data)])
+    subprocess.run(["pdftotext", "-bbox-layout", str(pdf), str(data)])
 
-    fulltext = open(data).read()
+    if not data.stat().st_size:
+        data.unlink()
+
+    fulltext = data.read_text()
+    if not fulltext:
+        pdf.unlink(missing_ok=True)
+        data.unlink(missing_ok=True)
+        return None
+
     return fulltext
-
-
-# triggers = {
-#     "Mila": InstitutionCategory.academia,
-#     "MILA": InstitutionCategory.academia,
-#     "Université": InstitutionCategory.academia,
-#     "Universite": InstitutionCategory.academia,
-#     "University": InstitutionCategory.academia,
-#     "Polytechnique": InstitutionCategory.academia,
-#     "Montréal": InstitutionCategory.academia,
-#     "Québec": InstitutionCategory.academia,
-#     "Montreal": InstitutionCategory.academia,
-#     "Quebec": InstitutionCategory.academia,
-# }
 
 
 triggers = {

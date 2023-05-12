@@ -468,6 +468,8 @@ def _pdf_refiner(db, paper, link):
     global _institutions
 
     fulltext = link_to_pdf_text(link)
+    if not fulltext:
+        return None
 
     if _institutions is None:
         _institutions = {}
