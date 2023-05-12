@@ -40,7 +40,7 @@ from ...utils import (
 )
 from ..acquire import readpage
 from .base import BaseScraper
-from .pdftools import find_fulltext_affiliations, link_to_pdf_text
+from .pdftools import PDF, find_fulltext_affiliations
 
 refiners = defaultdict(list)
 
@@ -467,7 +467,7 @@ _institutions = None
 def _pdf_refiner(db, paper, link):
     global _institutions
 
-    fulltext = link_to_pdf_text(link)
+    fulltext = PDF(link).fulltext
     if not fulltext:
         return None
 

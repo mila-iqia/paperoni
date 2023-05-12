@@ -52,79 +52,86 @@ def download(url, filename):
     print(f"Saved {filename}")
 
 
-def link_to_pdf_text(link, cache_policy="use"):
-    lnk = link.link.replace("/", "__")
-    if not lnk.endswith(".pdf"):
-        lnk = f"{lnk}.pdf"
-    pth = Path(config.get().paths.cache) / link.type / lnk
+class PDF:
+    def __init__(self, link, cache_policy="use"):
+        self.link = link
+        self.cache_policy = cache_policy
 
-    if cache_policy == "only":
-        return pdf_to_text(cache_base=pth, url=None, cache_policy=cache_policy)
+        lnk = link.link.replace("/", "__")
+        if not lnk.endswith(".pdf"):
+            lnk = f"{lnk}.pdf"
 
-    match link.type:
-        case "arxiv":
-            url = f"https://arxiv.org/pdf/{link.link}.pdf"
-        case "openreview":
-            url = f"https://openreview.net/pdf?id={link.link}"
-        case "doi":
-            data = readpage(
-                f"https://api.crossref.org/v1/works/{link.link}", format="json"
-            )
-            if (
-                data is None
-                or data["status"] != "ok"
-                or "link" not in data["message"]
-            ):
+        self.pdf_path = Path(config.get().paths.cache) / link.type / lnk
+        self.data_path = self.pdf_path.with_suffix(".data")
+        self.fulltext = self.get_fulltext()
+
+    def get_url(self):
+        link = self.link
+
+        match link.type:
+            case "arxiv":
+                return f"https://arxiv.org/pdf/{link.link}.pdf"
+            case "openreview":
+                return f"https://openreview.net/pdf?id={link.link}"
+            case "doi":
+                data = readpage(
+                    f"https://api.crossref.org/v1/works/{link.link}",
+                    format="json",
+                )
+                if (
+                    data is None
+                    or data["status"] != "ok"
+                    or "link" not in data["message"]
+                ):
+                    return None
+                data = SimpleNamespace(**data["message"])
+                for lnk in data.link:
+                    if lnk["content-type"] == "application/pdf":
+                        return lnk["URL"]
+                else:
+                    return None
+            case "pdf":
+                return link.link
+            case _:
                 return None
-            data = SimpleNamespace(**data["message"])
-            for lnk in data.link:
-                if lnk["content-type"] == "application/pdf":
-                    url = lnk["URL"]
-                    break
-            else:
-                return None
-        case "pdf":
-            url = link.link
-        case _:
+
+    def get_fulltext(self):
+        if len(str(self.pdf_path)) > 255:
+            # Weird stuff happens if this is true, so we just ignore it I guess?
+            return ""
+
+        pdf = self.pdf_path
+        data = self.data_path
+
+        if data.exists():
+            if self.cache_policy != "force":
+                return data.read_text()
+        elif self.cache_policy == "only":
             return None
 
-    return pdf_to_text(cache_base=pth, url=url, cache_policy=cache_policy)
+        pdf.parent.mkdir(parents=True, exist_ok=True)
 
+        if not pdf.exists() or self.cache_policy == "force":
+            try:
+                download(filename=pdf, url=self.get_url())
+            except requests.exceptions.SSLError:
+                return None
 
-def pdf_to_text(cache_base, url, cache_policy="use"):
-    if len(str(cache_base)) > 255:
-        # Weird stuff happens if this is true, so we just ignore it I guess?
-        return ""
+        subprocess.run(["pdftotext", "-bbox-layout", str(pdf), str(data)])
 
-    pdf = cache_base.with_suffix(".pdf")
-    data = pdf.with_suffix(".data")
+        if not data.stat().st_size:
+            data.unlink()
 
-    if data.exists():
-        if cache_policy != "force":
-            return data.read_text()
-    elif cache_policy == "only":
-        return None
-
-    cache_base.parent.mkdir(parents=True, exist_ok=True)
-
-    if not pdf.exists() or cache_policy == "force":
-        try:
-            download(filename=pdf, url=url)
-        except requests.exceptions.SSLError:
+        fulltext = data.read_text()
+        if not fulltext:
+            self.clear()
             return None
 
-    subprocess.run(["pdftotext", "-bbox-layout", str(pdf), str(data)])
+        return fulltext
 
-    if not data.stat().st_size:
-        data.unlink()
-
-    fulltext = data.read_text()
-    if not fulltext:
-        pdf.unlink(missing_ok=True)
-        data.unlink(missing_ok=True)
-        return None
-
-    return fulltext
+    def clear(self):
+        self.pdf_path.unlink(missing_ok=True)
+        self.data_path.unlink(missing_ok=True)
 
 
 triggers = {
