@@ -180,6 +180,10 @@ class Venue(Base):
     venue_alias = relationship("VenueAlias", back_populates="venue")
     venue_link = relationship("VenueLink", back_populates="venue")
 
+    @property
+    def links(self):
+        return self.venue_link
+
 
 class AuthorAlias(Base):
     __tablename__ = "author_alias"

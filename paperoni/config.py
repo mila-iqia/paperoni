@@ -120,3 +120,7 @@ def load_config(config_path: str | Path, **extra) -> Configuration:
     finally:
         config.reset(token)
         c.uninstall()
+
+
+def get_config():
+    return config.get()

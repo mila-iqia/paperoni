@@ -11,6 +11,7 @@ from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
+from .cli_helper import query_papers
 from .config import config as _config, load_config
 from .db import merge as mergers, schema as sch
 from .display import HTMLDisplayer, TerminalDisplayer, TerminalPrinter, display
@@ -315,38 +316,15 @@ class search:
 
         start, end = timespan(timestamp=True)
 
-        with set_database() as db:
-            stmt = select(sch.Paper)
-            if title:
-                stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
-            if author:
-                stmt = (
-                    stmt.join(sch.Paper.paper_author).join(
-                        sch.PaperAuthor.author
-                    )
-                    # .join(sch.Author.author_alias)
-                    # .join(sch.AuthorAlias.name.like(f"%{author}%"))
-                    .filter(sch.Author.name.like(f"%{author}%"))
-                )
-            if venue or start or end:
-                stmt = stmt.join(sch.Paper.release).join(sch.Release.venue)
-            if venue:
-                if venue.startswith("="):
-                    venue = venue[1:]
-                else:
-                    venue = f"%{venue}%"
-                stmt = stmt.filter(sch.Venue.name.like(venue))
-            if start:
-                stmt = stmt.filter(sch.Venue.date >= start)
-            if end:
-                stmt = stmt.filter(sch.Venue.date <= end)
-            if link:
-                stmt = stmt.join(sch.Paper.paper_link).filter(
-                    sch.PaperLink.link.like(f"%{link}%")
-                )
-            stmt = stmt.group_by(sch.Paper.paper_id)
-
-            results = db.session.execute(stmt)
+        with set_config():
+            results = query_papers(
+                title=title,
+                author=author,
+                venue=venue,
+                link=link,
+                start=start,
+                end=end,
+            )
 
             if count:
                 print(len(list(results)))
