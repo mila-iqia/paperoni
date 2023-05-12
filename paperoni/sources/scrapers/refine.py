@@ -14,6 +14,7 @@ from coleo import Option, tooled
 from ovld import ovld
 from sqlalchemy import select
 
+from ...config import config
 from ...db import schema as sch
 from ...model import (
     Author,
@@ -161,8 +162,9 @@ def refine_doi_with_ieeexplore(db, paper, link):
     if not doi.startswith("10.1109/"):
         return None
 
-    apikey = os.environ.get("XPLORE_API_KEY", None)
+    apikey = config.get().get_token("xplore")
     if not apikey:  # pragma: no cover
+        # TODO: log
         return None
 
     data = readpage(
@@ -447,7 +449,8 @@ def refine_with_pubmedcentral(db, paper, link):
 # @refiner(type="doi", priority=111)
 # def refine_with_springer(db, paper, link):
 #     doi = link.link
-#     apikey = os.environ.get("SPRINGER_API_KEY", None)
+#     apikey = config.get().get_token("springer")
+#     # apikey = os.environ.get("SPRINGER_API_KEY", None)
 #     if not apikey or not doi.startswith("10.1007/"):
 #         return None
 

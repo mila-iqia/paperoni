@@ -1,5 +1,6 @@
 from coleo import Option, tooled
 
+from ...config import config
 from ...model import (
     Author,
     DatePrecision,
@@ -134,6 +135,7 @@ class ZetaAlphaScraper(BaseScraper):
             query_string=" ".join(title),
             organizations=institution or None,
             # token=os.environ["ZETA_ALPHA_TOKEN"],
+            # token=config.get().get_token("zeta_alpha")
             limit=limit,
             block_size=block_size,
         )

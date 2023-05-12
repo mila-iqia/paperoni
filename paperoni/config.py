@@ -46,6 +46,7 @@ def make_configuration(self, config_path: Union[str, Path]):
 
 class Configuration:
     def __init__(self, ns):
+        self.tokens = {}
         self.__dict__.update(ns.__dict__)
         self._database = None
         self._history_file = None
@@ -95,6 +96,9 @@ class Configuration:
             hfile = hroot / f"{now}{tag}.jsonl"
             self._history_file = hfile
         return self._history_file
+
+    def get_token(self, service):
+        return getattr(self.tokens, service, None)
 
 
 @contextmanager
