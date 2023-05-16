@@ -147,10 +147,29 @@ form{
 .area {
     border: 1px solid black;
 }
-#authorpapersid{
+.authorarea{
     border: 1px solid green;
-    height: 400px;
-    overflow: auto;
+    height: 500px;
+    margin: 10px;
+}
+.papersarea{
+height: 100%;
+width: 70%;
+overflow: auto;
+float: right;
+}
+.authornamearea{
+height: 90%;
+width: 25%;
+float: left;
+margin: 10px;
+position: relative;
+}
+.authoridbuttonarea{
+    position: absolute;
+    width: 150px;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
 }
 input {
     width: 100%;

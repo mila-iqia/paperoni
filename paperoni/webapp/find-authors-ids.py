@@ -91,7 +91,6 @@ async def prepare(
     query_name,
     minimum=None,
 ):
-    print("hey bud")
     rids = {}
     _fill_rids(rids, researchers, idtype)
 
@@ -122,8 +121,6 @@ async def prepare(
         for author, _, common, papers in data:
             if not papers:  # pragma: no cover
                 continue
-
-            done = False
 
             (new_id,) = _ids(author, idtype)
             if new_id in ids or new_id in noids:
@@ -165,25 +162,7 @@ async def prepare(
             )
 
             for _, _, p in papers:
-                print("\n HEY, new paper : \n")
-                print(p)
-                yield p
-                #pass
-
-async def l(researchers,
-    idtype,
-    query_name):
-        print(researchers)
-        researchers = filter_researchers(researchers)
-        print("hey")
-        prepare(
-                researchers=researchers,
-                idtype=idtype,
-                minimum=None,
-                query_name=query_name,
-        )
-
-
+                yield author, p
 
 @bear
 async def app(page):
@@ -192,144 +171,77 @@ async def app(page):
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
-    area = H.div["authorarea"](id="authorpapersid")
-    page.print(H.span("Validation"))
-    page.print(area)
 
     author_name = "Amin Emad"
 
-    def regen(event=None):
-        if event is not None:
-            title = event["title"]
-            author = event["author"]
-            date_start = event["date-start"]
-            date_end = event["date-end"]
-            #return generate(title, author, date_start, date_end)
-        #return generate()
+    def confirm_id(auth, int):
+        link = auth.links[0].link
 
-    def generate(title=None, author=None, date_start=None, date_end=None):
-        stmt = select(sch.Paper)
-        stmt = (
-                stmt.join(sch.Paper.paper_author)
-                .join(sch.PaperAuthor.author)
-                .filter(sch.Author.name.like(f"%{author_name}%"))
-            )
-        if not all(
-            val is "" or val is None
-            for val in [title, author, date_start, date_end]
-        ):
-            stmt = (
-                stmt.join(sch.Paper.paper_author)
-                .join(sch.PaperAuthor.author)
-                .filter(sch.Author.name.like(f"%{author_name}%"))
-            )
-        try:
-            results = list(db.session.execute(stmt))
-            for (r,) in results:
-                yield r
-        except Exception as e:
-            print("Error : ", e)
+        #deleteid = "#area" + link
+        #print(deleteid)
+        #page[deleteid].delete()
 
-    def search(title, author, date_start, date_end):
-        stmt = select(sch.Paper)
-        # Selecting from the title
-        if title is not None and title != "":
-            stmt = select(sch.Paper).filter(sch.Paper.title.like(f"%{title}%"))
-        # Selecting from author
-        if author is not None and author != "":
-            stmt = (
-                stmt.join(sch.Paper.paper_author)
-                .join(sch.PaperAuthor.author)
-                .filter(sch.Author.name.like(f"%{author}%"))
-            )
-
-        # Selecting from date
-        # Joining the tables if any of the dates are set
-        if (date_start is not None and date_start != "") or (
-            date_end is not None and date_end != ""
-        ):
-            stmt = stmt.join(sch.Paper.release).join(sch.Release.venue)
-
-        # Filtering for the dates
-        if date_start is not None and date_start != "":
-            date_start_stamp = int(
-                datetime(*map(int, date_start.split("-"))).timestamp()
-            )
-            stmt = stmt.filter(sch.Venue.date >= date_start_stamp)
-        if date_end is not None and date_end != "":
-            date_end_stamp = int(
-                datetime(*map(int, date_end.split("-"))).timestamp()
-            )
-            stmt = stmt.filter(sch.Venue.date <= date_end_stamp)
-
-        return stmt
-
-    def getAuthors(name):
+    def get_authors(name):
         authors = []
         stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
         try:
             results = list(db.session.execute(stmt))
-            i = 0
             for (r,) in results:
                 authors.append(r)
-                print(r)
-                print(i)
-                i +=1
+                print("links : ")
+                for i in r.links:
+                    print("Type :", i.type, " Link :", i.link)
         except Exception as e:
             print("Error : ", e)
         return authors
 
-
-
-    def lo(
-    researchers,
-    idtype,
-    query_name,
-    minimum=None,
-    ):
-        print("in fct")
-        # ID to give to the researcher
-        # [option: --id]
-        #given_id: Option = None
-        given_id = None
-
-        researchers = filter_researchers(researchers)
-
-        if given_id:
-            assert len(researchers) == 1
-            for auq in researchers:
-                yield UniqueAuthor(
-                    author_id=auq.author_id,
-                    name=auq.name,
-                    affiliations=[],
-                    roles=[],
-                    aliases=[],
-                    links=[Link(type=idtype, link=given_id)],
-                )
-
-        else:
-            print("yes")
-            yield from prepare(
-                researchers=researchers,
-                idtype=idtype,
-                minimum=minimum,
-                query_name=query_name,
-            )
-
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
-            #regen = regenerator(
-            #    queue=q,
-            #    regen=regen,
-            #    reset=page[area].clear,
-            #)
-            print("calling prepare")
-            regen = prepare(researchers=getAuthors(author_name),idtype="semantic_scholar",query_name=ss.author_with_papers)
-            print("called prepare") 
-            async for result in regen:
-                print("in loop")
+            print(get_authors(author_name))
+            reaserchers = get_authors(author_name)
+            tabIDS = []
+
+            results = prepare(researchers=reaserchers,idtype="semantic_scholar",query_name=ss.author_with_papers)
+            print("called prepare")
+            async for auth, result in results:
+                link = auth.links[0].link
+                if link not in tabIDS:
+                    tabIDS.append(link)
+                    author_name_area = H.div["authornamearea"](
+                        auth.name,
+                        H.br,
+                        H.br,
+                        auth.links[0].type,
+                        H.br,
+                        H.a["link"](link, href="https://www.semanticscholar.org/author/" + auth.name+"/"+str(link), target="_blank"),
+                        H.div["authoridbuttonarea"](
+                            H.button["button"](
+                                "Include ID",
+                                onclick=(
+                                    lambda event, auth=auth: confirm_id(
+                                        auth, 1
+                                    )
+                                ),
+                            ),
+                            H.button["button", "invalidate"](
+                                "Exclude ID",
+                                onclick=(
+                                    lambda event, auth=auth: confirm_id(
+                                        auth, 0
+                                    )
+                                ),
+                            ),
+                        )
+                    )
+                    papers_area = H.div["papersarea"](id="a" + link)
+                    area = H.div["authorarea"](
+                        author_name_area,
+                        papers_area,
+                    )(id="area"+link)
+                    page.print(area)
                 div = html(result)
                 valDiv = H.div["validationDiv"](
                         div)
-                page[area].print(valDiv)
+                aid = "#a" + link
+                page[aid].print(valDiv)
                 
