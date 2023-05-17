@@ -299,8 +299,8 @@ def initialize(name):
         return "".join(new_parts)
 
 
-def _name_fulltext_affiliations(author, method, doc, institutions):
-    aliases = list(sorted(author.aliases, key=len, reverse=True))
+def _name_fulltext_affiliations(aliases, method, doc, institutions):
+    aliases = list(sorted(aliases, key=len, reverse=True))
     for name in aliases:
         if aff := method(name, institutions):
             return aff
@@ -322,14 +322,25 @@ def find_fulltext_affiliations(paper, doc, institutions):
 
     results = []
 
+    authors = {}
+
+    for aa in paper.authors:
+        if aa.author:
+            apos = aa.author_position
+            aliases = aa.author.aliases
+            maxl = max(map(len, aliases))
+            if authors.get(apos, [0])[0] < maxl:
+                authors[apos] = (maxl, aa.author, aliases)
+
+    authors = sorted(authors.items(), key=lambda x: x[0])
+
     for i, method in enumerate(methods):
         aff = {
-            aa.author: _name_fulltext_affiliations(
-                aa.author, method, doc, institutions
+            author: _name_fulltext_affiliations(
+                aliases, method, doc, institutions
             )
             or []
-            for aa in paper.authors
-            if aa.author
+            for _, (_, author, aliases) in authors
         }
         results.append((sum(1 for x in aff.values() if x), -i, aff))
 
