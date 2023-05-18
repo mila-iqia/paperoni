@@ -296,35 +296,14 @@ def define_formatter(name):
 
 class search:
     def paper():
-        # Part of the title of the paper
-        title: Option = None
-
-        # Author of the paper
-        author: Option = None
-
-        # Publication venue
-        venue: Option = None
-
-        # Link pattern
-        link: Option = None
-
         # Only show the paper count
         count: Option & bool = False
 
         # How to format the results
         format: Option = "full"
 
-        start, end = timespan(timestamp=True)
-
         with set_config():
-            results = query_papers(
-                title=title,
-                author=author,
-                venue=venue,
-                link=link,
-                start=start,
-                end=end,
-            )
+            results = query_papers()
 
             if count:
                 print(len(list(results)))

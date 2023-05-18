@@ -28,15 +28,36 @@ def timespan(timestamp=False):
         return start, end
 
 
+def _timespan(start=None, end=None, year=0, timestamp=False):
+    if year:
+        assert not start
+        assert not end
+        start = f"{year}-01-01"
+        end = f"{year + 1}-01-01"
+
+    if timestamp:
+        return (
+            start and int(datetime(*map(int, start.split("-"))).timestamp()),
+            end and int(datetime(*map(int, end.split("-"))).timestamp()),
+        )
+    else:
+        return start, end
+
+
+@tooled
 def query_papers(
-    title=None,
-    author=None,
-    venue=None,
-    venue_link=None,
-    link=None,
-    start=None,
-    end=None,
+    title: Option = None,
+    author: Option = None,
+    author_link: Option = None,
+    venue: Option = None,
+    venue_link: Option = None,
+    link: Option = None,
+    start: Option = None,
+    end: Option = None,
+    year: Option & int = 0,
 ):
+    start, end = _timespan(start, end, year, timestamp=True)
+
     def likefmt(field, x):
         if x.startswith("="):
             return field == x[1:]
@@ -48,12 +69,18 @@ def query_papers(
         stmt = select(sch.Paper)
         if title:
             stmt = stmt.filter(likefmt(sch.Paper.title, title))
+        if author or author_link:
+            stmt = stmt.join(sch.Paper.paper_author).join(
+                sch.PaperAuthor.author
+            )
         if author:
-            stmt = (
-                stmt.join(sch.Paper.paper_author)
-                .join(sch.PaperAuthor.author)
-                .join(sch.Author.author_alias)
-                .filter(likefmt(sch.AuthorAlias.alias, author))
+            stmt = stmt.join(sch.Author.author_alias).filter(
+                likefmt(sch.AuthorAlias.alias, author)
+            )
+        if author_link:
+            atyp, alnk = author_link.split(":")
+            stmt = stmt.join(sch.Author.author_link).filter(
+                sch.AuthorLink.type == atyp, sch.AuthorLink.link == alnk
             )
         if venue or venue_link or start or end:
             stmt = stmt.join(sch.Paper.release).join(sch.Release.venue)
