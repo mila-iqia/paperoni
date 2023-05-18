@@ -83,8 +83,7 @@ class Database(OvldBase):
         # cache for that.
         hid = x.hashid()
         tag = get_uuid_tag(hid)
-        if hid in self.canonical:
-            assert tag == "transient"
+        if hid in self.canonical and tag == "transient":
             return self.canonical[hid] or hid
         if not hid or tag == "canonical" or hid not in self.cache:
             self.cache[hid] = self._acquire(x)

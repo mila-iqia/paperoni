@@ -285,6 +285,9 @@ def refine_doi_with_crossref(db, paper, link):
         releases = []
 
     with covguard():
+        required_keys = {"given", "family", "affiliation"}
+        # TODO: some affiliations are given by ROR id...
+        # for example: {'id': [{'id': 'https://ror.org/03cve4549', 'id-type': 'ROR', 'asserted-by': 'publisher'}]}
         return Paper(
             title=data.title[0],
             authors=[
@@ -302,9 +305,11 @@ def refine_doi_with_crossref(db, paper, link):
                             aliases=[],
                         )
                         for aff in author["affiliation"]
+                        if "name" in aff
                     ],
                 )
                 for author in data.author
+                if not (required_keys - author.keys())
             ],
             abstract="",
             links=[Link(type="doi", link=doi)],
@@ -630,7 +635,11 @@ class Refiner(BaseScraper):
 
         now = datetime.now()
 
-        pq = select(sch.Paper)
+        # Select all papers and order them from most recent
+        pq = select(sch.Paper).distinct(sch.Paper.paper_id)
+        pq = pq.join(sch.Paper.release).join(sch.Release.venue)
+        pq = pq.order_by(sch.Venue.date.desc())
+
         papers = self.db.session.execute(pq)
 
         i = 0
