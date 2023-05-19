@@ -10,6 +10,7 @@ from coleo import Option, tooled
 
 from paperoni.display import display
 
+from ...config import config
 from ...model import (
     Author,
     DatePrecision,
@@ -52,6 +53,9 @@ def parse_openreview_venue(venue):
 class OpenReviewScraperBase(BaseScraper):
     def __init__(self, config, db):
         super().__init__(config=config, db=db)
+        self.set_client()
+
+    def set_client(self):
         self.client = openreview.Client(baseurl="https://api.openreview.net")
 
     @staticmethod
@@ -450,7 +454,11 @@ class OpenReviewVenueScraper(OpenReviewScraperBase):
         pattern: Option = "*",
     ):
         members = self._venues_from_wildcard(pattern)
-        yield from self._query_venues(members)
+        with config.get().permanent_request_cache():
+            # Reset client because we are using a different requests.Session
+            self.set_client()
+            yield from self._query_venues(members)
+        self.set_client()
 
     @tooled
     def acquire(self):

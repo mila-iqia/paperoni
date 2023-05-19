@@ -5,6 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Union
 
+import requests_cache
 from coleo import config as configuration
 from ovld import ovld
 
@@ -51,14 +52,25 @@ class Configuration:
         self._database = None
         self._history_file = None
 
+    @contextmanager
+    def permanent_request_cache(self):
+        if rq := getattr(self.paths, "permanent_requests_cache", None):
+            # enabled() cannot be nested with itself (which we may want to do to
+            # use different parameters in each call), but with disabled()
+            # in-between, the finalization of disabled() will put back the
+            # previous session cache, so it's a kind of workaround
+            with requests_cache.disabled():
+                with requests_cache.enabled(rq):
+                    yield
+        else:
+            yield
+
     def install(self):
         """Set up relevant features globally, as defined in this config.
 
         * Import requests_cache and set up with cache path ``paths.requests_cache``.
         """
         if rq := getattr(self.paths, "requests_cache", None):
-            import requests_cache
-
             requests_cache.install_cache(rq, expire_after=timedelta(days=6))
 
     def uninstall(self):
@@ -67,8 +79,6 @@ class Configuration:
         * Disable requests_cache.
         """
         if getattr(self.paths, "requests_cache", None):
-            import requests_cache
-
             requests_cache.uninstall_cache()
 
     @property

@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import requests
+import requests_cache
 from eventlet.timeout import Timeout
 from tqdm import tqdm
 
@@ -22,7 +23,6 @@ from .pdfanal import (
 
 def download(url, filename):
     """Download the given url into the given filename."""
-    from ...config import config
 
     def iter_with_timeout(r, chunk_size, timeout):
         it = r.iter_content(chunk_size=chunk_size)
@@ -35,9 +35,8 @@ def download(url, filename):
         finally:
             it.close()
 
-    print(f"Downloading {url}")
-    config.get().uninstall()
-    try:
+    with requests_cache.disabled():
+        print(f"Downloading {url}")
         r = requests.get(url, stream=True)
         total = int(r.headers.get("content-length") or "1024")
         with open(filename, "wb") as f:
@@ -48,9 +47,7 @@ def download(url, filename):
                     f.write(chunk)
                     f.flush()
                     progress.update(len(chunk))
-    finally:
-        config.get().install()
-    print(f"Saved {filename}")
+        print(f"Saved {filename}")
 
 
 class PDF:
