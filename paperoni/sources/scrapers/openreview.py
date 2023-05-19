@@ -207,6 +207,9 @@ class OpenReviewScraperBase(BaseScraper):
                     print(f"Cannot view {venueid}", file=sys.stderr)
                     continue
 
+                if not data.web:
+                    continue
+
                 info = {}
                 for key, patts in patterns.items():
                     for p in patts:
