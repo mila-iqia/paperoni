@@ -58,6 +58,7 @@ class ScraperWrapper:
             self.scraper.query,
             self.scraper.acquire,
             self.scraper.prepare,
+            self.scraper.generate_paper_queries,
             prepare_interface,
             filter_researchers,
         ]

@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+
+from coleo import Option, tooled
 from sqlalchemy import select
 
 from ... import model as M
@@ -9,12 +12,23 @@ class BaseScraper:
         self.config = config
         self.db = db
 
-    def generate_paper_queries(self):
+    @tooled
+    def generate_paper_queries(self, cutoff: Option & int = -30 * 6):
+        if cutoff and isinstance(cutoff, int):
+            cutoff = datetime.now() - timedelta(days=-cutoff)
         with self.db:
             q = select(sch.AuthorInstitution)
             queries = []
             for ai in self.db.session.execute(q):
                 (ai,) = ai
+                if ai.role == "chair":
+                    continue
+                if (
+                    cutoff
+                    and ai.end_date
+                    and datetime.fromtimestamp(ai.end_date) < cutoff
+                ):
+                    continue
                 paper_query = M.AuthorPaperQuery(
                     author=M.UniqueAuthor(
                         author_id=ai.author_id,
