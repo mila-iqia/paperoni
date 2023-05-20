@@ -13,6 +13,7 @@ from types import SimpleNamespace
 from coleo import Option, tooled
 from ovld import ovld
 from sqlalchemy import select
+from fake_useragent import UserAgent
 
 from ...config import config
 from ...db import schema as sch
@@ -43,6 +44,7 @@ from ..acquire import readpage
 from .base import BaseScraper
 from .pdftools import PDF, find_fulltext_affiliations
 
+ua = UserAgent()
 refiners = defaultdict(list)
 
 
@@ -383,7 +385,7 @@ def refine_doi_with_sciencedirect(db, paper, link):
         with covguard():
             return
 
-    soup = readpage(url2, format="html", headers={"User-Agent": "Mozilla/5.0"})
+    soup = readpage(url2, format="html", headers={"User-Agent": ua.chrome})
     data = json.loads(soup.select_one('script[type="application/json"]').text)
 
     authors_raw = _sd_find(data["authors"], "author", [])
