@@ -541,7 +541,7 @@ class Database(OvldBase):
         """
         self.session.execute(ins_stmt)
         self.session.commit()
-    
+
     def update_author_link(self, author_id, type, old_link, new_link):
         author_link = sch.AuthorLink(
             author_id=author_id,

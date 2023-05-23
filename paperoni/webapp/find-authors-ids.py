@@ -4,9 +4,11 @@ Run with `uvicorn apps.validation:app`
 
 import asyncio
 import os
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
+from giving import give
 from hrepr import H
 from sqlalchemy import select
 from sqlalchemy.exc import OperationalError
@@ -15,14 +17,15 @@ from starbear import ClientWrap, Queue, bear
 from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
-
-from collections import Counter
-from giving import give
 from paperoni.model import Link, UniqueAuthor
-from paperoni.sources.scrapers.semantic_scholar import SemanticScholarQueryManager
+from paperoni.sources.scrapers.semantic_scholar import (
+    SemanticScholarQueryManager,
+)
+
 here = Path(__file__).parent
 
 ss = SemanticScholarQueryManager()
+
 
 def _fill_rids(rids, researchers, idtype):
     for researcher in researchers:
@@ -30,8 +33,10 @@ def _fill_rids(rids, researchers, idtype):
             if link.type == idtype:
                 rids[link.link] = researcher.name
 
+
 def _getname(x):
     return x.name
+
 
 def filter_researchers(
     researchers, names=None, before=None, after=None, getname=_getname
@@ -57,6 +62,7 @@ def filter_researchers(
         ]
 
     return researchers
+
 
 async def prepare(
     researchers,
@@ -114,6 +120,7 @@ async def prepare(
             for _, _, p in papers:
                 yield author, p
 
+
 @bear
 async def app(page):
     page["head"].print(
@@ -126,21 +133,23 @@ async def app(page):
         link = auth.links[0].link
         type = auth.links[0].type
         if not confirmed:
-            link="!" + auth.links[0].link
-        
+            link = "!" + auth.links[0].link
+
         id_linked = is_linked(link, type, author_name)
         if not id_linked:
-            db.insert_author_link(auth_id,type,link)
+            db.insert_author_link(auth_id, type, link)
         elif id_linked != link:
-            db.update_author_link(auth_id,type,id_linked,link)    
-        
-        #Modify the page
+            db.update_author_link(auth_id, type, id_linked, link)
+
+        # Modify the page
         clear_id = link[1:] if link.startswith("!") else link
         page["#authoridbuttonarea" + clear_id].clear()
-        page["#authoridbuttonarea" + clear_id].print_html(get_buttons(auth, auth_id, clear_id, confirmed))
+        page["#authoridbuttonarea" + clear_id].print_html(
+            get_buttons(auth, auth_id, clear_id, confirmed)
+        )
         page["#idstatus" + clear_id].clear()
         if confirmed:
-            page["#idstatus" + clear_id].print("ID Included")            
+            page["#idstatus" + clear_id].print("ID Included")
         else:
             page["#idstatus" + clear_id].print("ID Excluded")
 
@@ -152,7 +161,7 @@ async def app(page):
             if strippedlink in links:
                 return links
         return False
-    
+
     def get_links(type, author_name):
         author = get_authors(author_name)[0]
         links = []
@@ -160,7 +169,7 @@ async def app(page):
             if link.type == type:
                 links.append(link.link)
         return links
-    
+
     def get_authors(name):
         authors = []
         stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
@@ -174,40 +183,44 @@ async def app(page):
 
     def get_buttons(auth, author_id, link, included=None):
         includeButton = H.button["button"](
-                                "Include ID",
-                                onclick=(
-                                    lambda event, auth=auth,author_id=author_id: confirm_id(
-                                        auth, 1, author_id
-                                    )
-                                ),
-                            )
+            "Include ID",
+            onclick=(
+                lambda event, auth=auth, author_id=author_id: confirm_id(
+                    auth, 1, author_id
+                )
+            ),
+        )
         excludeButton = H.button["button", "invalidate"](
-                                "Exclude ID",
-                                onclick=(
-                                    lambda event, auth=auth,author_id=author_id: confirm_id(
-                                        auth, 0, author_id
-                                    )
-                                ),
-                            )
+            "Exclude ID",
+            onclick=(
+                lambda event, auth=auth, author_id=author_id: confirm_id(
+                    auth, 0, author_id
+                )
+            ),
+        )
         if included is not None:
             if included:
                 includeButton = H.button["button", "notavailable"](
-                                    "Include ID",
-                                )
+                    "Include ID",
+                )
             else:
                 excludeButton = H.button["button", "notavailable"](
-                                    "Exclude ID",
-                                )
+                    "Exclude ID",
+                )
         buttons = [includeButton, excludeButton]
         return buttons
-    
+
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
             reaserchers = get_authors(author_name)
             author_id = reaserchers[0].author_id
             tabIDS = []
 
-            results = prepare(researchers=reaserchers,idtype="semantic_scholar",query_name=ss.author_with_papers)
+            results = prepare(
+                researchers=reaserchers,
+                idtype="semantic_scholar",
+                query_name=ss.author_with_papers,
+            )
             async for auth, result in results:
                 link = auth.links[0].link
                 if link not in tabIDS:
@@ -218,38 +231,54 @@ async def app(page):
                         H.br,
                         auth.links[0].type,
                         H.br,
-                        H.a["link"](link, href="https://www.semanticscholar.org/author/" + auth.name+"/"+str(link), target="_blank"),
+                        H.a["link"](
+                            link,
+                            href="https://www.semanticscholar.org/author/"
+                            + auth.name
+                            + "/"
+                            + str(link),
+                            target="_blank",
+                        ),
                         H.br,
                         H.div["IDstatus"](id="idstatus" + link),
-                        H.div["authoridbuttonarea"](id="authoridbuttonarea" + link)
+                        H.div["authoridbuttonarea"](
+                            id="authoridbuttonarea" + link
+                        ),
                     )
 
                     papers_area = H.div["papersarea"](id="a" + link)
-                    
+
                     area = H.div["authorarea"](
                         author_name_area,
                         papers_area,
-                    )(id="area"+link)
-                    
+                    )(id="area" + link)
+
                     page.print(area)
-                    
+
                     linked = is_linked(link, "semantic_scholar", author_name)
                     if linked != False:
-                        page["#authoridbuttonarea" + link].print_html(get_buttons(auth, author_id, link, not linked.startswith("!")))
+                        page["#authoridbuttonarea" + link].print_html(
+                            get_buttons(
+                                auth,
+                                author_id,
+                                link,
+                                not linked.startswith("!"),
+                            )
+                        )
                         if linked.startswith("!"):
-                            page["#idstatus" +link].print("ID Excluded")
+                            page["#idstatus" + link].print("ID Excluded")
                         else:
-                            page["#idstatus" +link].print("ID Included")
+                            page["#idstatus" + link].print("ID Included")
                     else:
-                        page["#authoridbuttonarea" + link].print_html(get_buttons(auth, author_id, link))
-                
+                        page["#authoridbuttonarea" + link].print_html(
+                            get_buttons(auth, author_id, link)
+                        )
+
                 div = html(result)
-                valDiv = H.div["validationDiv"](
-                        div)
+                valDiv = H.div["validationDiv"](div)
                 aid = "#a" + link
                 page[aid].print(valDiv)
-                
-            #Keep the app running
+
+            # Keep the app running
             while True:
                 await asyncio.sleep(1)
-                
