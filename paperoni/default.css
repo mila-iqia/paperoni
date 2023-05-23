@@ -193,6 +193,10 @@ input {
     background-color: rgb(172, 4, 4);
 }
 
+.notavailable{
+    background-color: rgb(85, 85, 85);
+}
+
 #seeFlagged{
     float: right;
     text-align: center;
