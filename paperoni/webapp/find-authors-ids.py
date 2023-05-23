@@ -116,8 +116,6 @@ async def prepare(
 
 @bear
 async def app(page):
-    q = Queue()
-    debounced = ClientWrap(q, debounce=0.3)
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
     )
@@ -125,30 +123,26 @@ async def app(page):
     author_name = "Amin Emad"
 
     def confirm_id(auth, confirmed, auth_id):
-        uaLink = None
-        if confirmed:
-           uaLink = auth.links[0]
-        else:
-            uaLink = Link(type=auth.links[0].type, link="!" + auth.links[0].link)
+        link = auth.links[0].link
+        type = auth.links[0].type
+        if not confirmed:
+            link="!" + auth.links[0].link
         
-        id_linked = is_linked(uaLink.link, uaLink.type, author_name)
-        if id_linked:
-            if id_linked != uaLink.link:
-                db.update_author_link(auth_id,uaLink.type,id_linked,uaLink.link)
-        else:
-            db.insert_author_link(auth_id,uaLink.type,uaLink.link)
+        id_linked = is_linked(link, type, author_name)
+        if not id_linked:
+            db.insert_author_link(auth_id,type,link)
+        elif id_linked != link:
+            db.update_author_link(auth_id,type,id_linked,link)    
         
         #Modify the page
-        clear_id = uaLink.link[1:] if uaLink.link.startswith("!") else uaLink.link
-        modifid = "#idstatus" + clear_id
-        page[modifid].clear()
+        clear_id = link[1:] if link.startswith("!") else link
         page["#authoridbuttonarea" + clear_id].clear()
+        page["#authoridbuttonarea" + clear_id].print_html(get_buttons(auth, auth_id, clear_id, confirmed))
+        page["#idstatus" + clear_id].clear()
         if confirmed:
-            page[modifid].print("ID Included")
-            page["#authoridbuttonarea" + clear_id].print_html(get_buttons(auth, auth_id, clear_id, True))
+            page["#idstatus" + clear_id].print("ID Included")            
         else:
-            page[modifid].print("ID Excluded")
-            page["#authoridbuttonarea" + clear_id].print_html(get_buttons(auth, auth_id, clear_id, False))
+            page["#idstatus" + clear_id].print("ID Excluded")
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
     def is_linked(link, type, author_name):
