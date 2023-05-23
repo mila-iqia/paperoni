@@ -282,6 +282,36 @@ def keyword_decorator(deco):
     return new_deco
 
 
+####################
+# Proxying objects #
+####################
+
+
+class Proxy:
+    def __init__(self, base, **replacements):
+        self._proxy_base = base
+        self._proxy_replacements = replacements
+
+    def __getattribute__(self, attr):
+        if attr.startswith("_proxy_"):
+            return object.__getattribute__(self, attr)
+        if attr in self._proxy_replacements:
+            return self._proxy_replacements[attr]
+        else:
+            return getattr(self._proxy_base, attr)
+
+
+def conditional_proxy(base, **replacements):
+    if any(v == [] or v is None for v in replacements.values()):
+        return None
+
+    if isinstance(base, Proxy):
+        base = base._proxy_base
+        replacements = {**base._proxy_replacements, **replacements}
+
+    return Proxy(base, **replacements)
+
+
 ##############################
 # covguard-related utilities #
 ##############################
