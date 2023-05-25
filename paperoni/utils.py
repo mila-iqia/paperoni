@@ -100,6 +100,8 @@ def canonicalize_links(links: dict[str, str]) -> dict[str, str]:
 
 
 def similarity(s1, s2):
+    s1 = asciiify(s1)
+    s2 = asciiify(s2)
     caps1 = re.sub(string=s1, pattern="[a-z. -]", repl="")
     caps2 = re.sub(string=s2, pattern="[a-z. -]", repl="")
     capsr = SequenceMatcher(a=caps1, b=caps2).ratio()
@@ -107,6 +109,31 @@ def similarity(s1, s2):
     s2 = re.sub(string=s2, pattern="[. -]", repl="")
     sr = SequenceMatcher(a=s1, b=s2).ratio()
     return capsr * sr
+
+
+def associate(names1, names2):
+    matrix = [
+        (similarity(n1, n2), i, j)
+        for i, n1 in enumerate(names1)
+        for j, n2 in enumerate(names2)
+    ]
+    results = []
+    to_process1 = set(range(len(names1)))
+    to_process2 = set(range(len(names2)))
+    matrix.sort(reverse=True)
+    for sim, i, j in matrix:
+        if i not in to_process1 or j not in to_process2:
+            continue
+        elif sim >= 0.5:
+            to_process1.discard(i)
+            to_process2.discard(j)
+            results.append((i, j))
+        else:
+            break
+    results += [(i, None) for i in to_process1]
+    results += [(None, j) for j in to_process2]
+    results.sort(key=lambda x: x[1] if x[0] is None else x[0])
+    return results
 
 
 def extract_date(txt: str) -> dict | None:

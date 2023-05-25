@@ -1,7 +1,10 @@
 from collections import defaultdict
 
+from sqlalchemy import select
+
+from ..db import schema as sch
 from ..model import AuthorMerge, MergeEntry, PaperMerge, VenueMerge
-from ..utils import similarity
+from ..utils import associate, similarity
 
 
 def _process_standard_rows(rows, eqv, cls):
@@ -15,6 +18,7 @@ def _process_standard_rows(rows, eqv, cls):
     3. An integer representing the quality of (1)
     4. A semicolon-separated sequence of integers, the qualities of (2)
     """
+    idgroups = []
     for r in rows:
         ids = [r[1], *r[2].split(";")]
         quals = [r[3], *map(int, r[4].split(";"))]
@@ -23,6 +27,45 @@ def _process_standard_rows(rows, eqv, cls):
             under=r[0],
             cls=cls,
         )
+        idgroups.append(ids)
+    return idgroups
+
+
+def _process_paper_rows(db, rows, eqv):
+    idgroups = _process_standard_rows(rows, eqv, PaperMerge)
+    for grp in idgroups:
+        _generate_author_merges(db, eqv, grp)
+
+
+def _generate_author_merges(db, eqv, ids):
+    p1, *others = [
+        list(
+            db.session.execute(
+                select(sch.Paper).filter(
+                    sch.Paper.paper_id == bytes.fromhex(entry)
+                )
+            )
+        )[0][0]
+        for entry in ids
+    ]
+    names1 = [pa.author.name for pa in p1.authors]
+    for p2 in others:
+        names2 = [pa.author.name for pa in p2.authors]
+        for i, j in associate(names1, names2):
+            if i is None or j is None:
+                continue
+            au1 = p1.authors[i].author
+            au2 = p2.authors[j].author
+            if au1.author_id == au2.author_id:
+                continue
+            eqv.equiv_all(
+                [
+                    MergeEntry(id=au1.author_id, quality=au1.quality),
+                    MergeEntry(id=au2.author_id, quality=au2.quality),
+                ],
+                under=au1.name,
+                cls=AuthorMerge,
+            )
 
 
 def merge_papers_by_shared_link(db, eqv):
@@ -47,7 +90,7 @@ def merge_papers_by_shared_link(db, eqv):
         GROUP BY p1.paper_id
         """
     )
-    _process_standard_rows(results, eqv, PaperMerge)
+    _process_paper_rows(db, results, eqv)
 
 
 def merge_authors_by_shared_link(db, eqv):
@@ -93,7 +136,7 @@ def merge_papers_by_name(db, eqv):
         GROUP BY p1.paper_id
         """
     )
-    _process_standard_rows(results, eqv, PaperMerge)
+    _process_paper_rows(db, results, eqv)
 
 
 def merge_authors_by_name(db, eqv):

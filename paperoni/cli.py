@@ -395,7 +395,7 @@ def merge():
         "paper_name": mergers.merge_papers_by_name,
         "author_link": mergers.merge_authors_by_shared_link,
         "author_name": mergers.merge_authors_by_name,
-        "author_position": mergers.merge_authors_by_position,
+        # "author_position": mergers.merge_authors_by_position,
         "venue_link": mergers.merge_venues_by_shared_link,
     }
 

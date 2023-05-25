@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import random
 
 from giving import given
 
@@ -7,6 +8,7 @@ from paperoni.utils import (
     Doing,
     EquivalenceGroups,
     asciiify,
+    associate,
     canonicalize_links,
     covguard,
     covguard_fn,
@@ -180,6 +182,64 @@ def test_similarity():
 
 def test_similarity_2():
     assert similarity("Hugo Larochelle", "Marc Bellemare") < 0.5
+
+
+def _test_permutations(tries, names1, transform=lambda x: x, extra=[], omit=0):
+    random.seed(1234)
+    print("Reference:", names1)
+    for _ in range(tries):
+        names2 = [transform(n1) for n1 in names1[omit:]] + extra
+        random.shuffle(names2)
+        print("Versus:", names2)
+        results = associate(names1, names2)
+        print("Results:", results)
+        assert len(results) == len(names1) + len(extra)
+        for i, j in results:
+            if i is not None and j is not None:
+                assert transform(names1[i]) == names2[j]
+
+
+def test_associate_permutations():
+    names = ["James Smith", "Annette Singalong", "Bob Yam", "Carole Nomnom"]
+    _test_permutations(10, names)
+
+
+def _initialify(name):
+    first, last = name.split(" ")
+    return f"{first[0]}. {last}"
+
+
+def test_associate_initials():
+    names = ["James Smith", "Annette Singalong", "Bob Yam", "Carole Nomnom"]
+    _test_permutations(10, names, _initialify)
+
+
+def test_associate_extra():
+    names = ["James Smith", "Annette Singalong", "Bob Yam", "Carole Nomnom"]
+    _test_permutations(10, names, _initialify, extra=["H. Boone"])
+
+
+def test_associate_omit():
+    names = ["James Smith", "Annette Singalong", "Bob Yam", "Carole Nomnom"]
+    _test_permutations(10, names, _initialify, omit=1)
+
+
+def test_associate_completely_different():
+    names1 = ["James Smith", "Annette Singalong", "Bob Yam", "Carole Nomnom"]
+    names2 = ["Oliver Kool", "Anne-Louise Lovelace"]
+    assert len(associate(names1, names2)) == len(names1) + len(names2)
+
+
+def test_associate_real_close():
+    names1 = ["James Smith", "James Smeth"]
+    names2 = ["James Smeth", "James Smith"]
+    assert associate(names1, names2) == [(0, 1), (1, 0)]
+
+
+def test_associate_real_close_initials():
+    names1 = ["James Smith", "James Smeth"]
+    names2 = ["J. Smeth", "J. Smith"]
+    assert associate(names1, names2) == [(0, 1), (1, 0)]
 
 
 def test_covguard():
