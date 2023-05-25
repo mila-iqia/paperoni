@@ -11,9 +11,9 @@ from operator import itemgetter
 from types import SimpleNamespace
 
 from coleo import Option, tooled
+from fake_useragent import UserAgent
 from ovld import ovld
 from sqlalchemy import select
-from fake_useragent import UserAgent
 
 from ...config import config
 from ...db import schema as sch
@@ -622,8 +622,12 @@ class Refiner(BaseScraper):
 
     @tooled
     def acquire(self):
+        processed_cache = set()
+
         def been_processed(l):
             tag = f"{l.type}:{l.link}"
+            if tag in processed_cache:
+                return True
             pq = (
                 select(sch.ScraperData)
                 .filter(sch.ScraperData.scraper == "refine")
@@ -660,9 +664,11 @@ class Refiner(BaseScraper):
                 yield result
 
             for l in links:
+                tag = f"{l.type}:{l.link}"
+                processed_cache.add(tag)
                 yield ScraperData(
                     scraper="refine",
-                    tag=f"{l.type}:{l.link}",
+                    tag=tag,
                     data="",
                     date=now,
                 )
