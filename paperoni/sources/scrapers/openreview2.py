@@ -56,7 +56,7 @@ class OpenReviewScraperBase(BaseScraper):
         self.set_client()
 
     def set_client(self):
-        self.client = openreview.Client(baseurl="https://api.openreview.net")
+        self.client = openreview.Client(baseurl="https://api2.openreview.net")
 
     @staticmethod
     def _map_venue_type(venueid):
@@ -72,26 +72,27 @@ class OpenReviewScraperBase(BaseScraper):
             params["offset"] = next_offset
             notes = self.client.get_all_notes(**params)
             for note in notes:
-                if "venueid" not in note.content or note.content[
-                    "venueid"
+                if "venueid" not in note.content or note.content["venueid"][
+                    "value"
                 ].startswith("dblp.org"):
                     continue
                 authors = []
-                if len(note.content["authors"]) == len(
-                    note.content.get("authorids", [])
+                if len(note.content["authors"]["value"]) == len(
+                    note.content.get("authorids", {}).get("value", [])
                 ) and all(
                     (
                         aid is None or aid.startswith("~")
-                        for aid in note.content["authorids"]
+                        for aid in note.content["authorids"]["value"]
                     )
                 ):
-                    authors_ids = note.content["authorids"]
+                    authors_ids = note.content["authorids"]["value"]
                 else:
                     authors_ids = (
-                        None for _ in range(len(note.content["authors"]))
+                        None
+                        for _ in range(len(note.content["authors"]["value"]))
                     )
                 for name, author_id in zip(
-                    note.content["authors"], authors_ids
+                    note.content["authors"]["value"], authors_ids
                 ):
                     _links = []
                     if author_id:
@@ -114,9 +115,11 @@ class OpenReviewScraperBase(BaseScraper):
                     )
                 _links = [Link(type="openreview", link=note.id)]
                 if "code" in note.content:
-                    Link(type="git", link=note.content["code"])
+                    Link(type="git", link=note.content["code"]["value"])
 
-                venue_data = parse_openreview_venue(note.content["venue"])
+                venue_data = parse_openreview_venue(
+                    note.content["venue"]["value"]
+                )
                 date = datetime.fromtimestamp(note.tcdate // 1000)
                 date -= timedelta(
                     hours=date.hour, minutes=date.minute, seconds=date.second
@@ -130,11 +133,11 @@ class OpenReviewScraperBase(BaseScraper):
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
 
-                vid = note.content["venueid"]
+                vid = note.content["venueid"]["value"]
 
                 yield Paper(
-                    title=note.content["title"],
-                    abstract=note.content.get("abstract"),
+                    title=note.content["title"]["value"],
+                    abstract=note.content.get("abstract", {}).get("value"),
                     authors=authors,
                     releases=[
                         Release(
@@ -159,7 +162,9 @@ class OpenReviewScraperBase(BaseScraper):
                     ],
                     topics=[
                         Topic(name=kw)
-                        for kw in note.content.get("keywords", [])
+                        for kw in note.content.get("keywords", {}).get(
+                            "value", []
+                        )
                     ],
                     links=_links,
                     citation_count=None,
@@ -513,7 +518,7 @@ class OpenReviewProfileScraper(OpenReviewScraperBase):
 
 
 __scrapers__ = {
-    "openreview": OpenReviewPaperScraper,
-    "openreview-venues": OpenReviewVenueScraper,
-    "openreview-profiles": OpenReviewProfileScraper,
+    "openreview2": OpenReviewPaperScraper,
+    "openreview2-venues": OpenReviewVenueScraper,
+    "openreview2-profiles": OpenReviewProfileScraper,
 }
