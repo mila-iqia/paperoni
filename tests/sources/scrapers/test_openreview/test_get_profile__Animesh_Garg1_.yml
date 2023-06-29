@@ -17,14 +17,6 @@ roles:
 - end_date: null
   institution:
     aliases:
-    - gatech.edu
-    category: academia
-    name: Georgia Institute of Technology
-  role: assistant_professor
-  start_date: '2023-01-01T00:00:00'
-- end_date: null
-  institution:
-    aliases:
     - nvidia.com
     category: unknown
     name: NVIDIA

@@ -81,7 +81,6 @@ profiles = [
     "~Adam_Klivans1",  # Has a lot of missing keys in the query data
     "~Animesh_Garg1",  # "" in a date
     "~Sheng_Zhong1",
-    "~Yin_Tat_Lee1",
 ]
 
 
