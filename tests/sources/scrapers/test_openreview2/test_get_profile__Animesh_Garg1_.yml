@@ -1,0 +1,56 @@
+__type__: Author
+aliases: []
+links:
+- link: ~Animesh_Garg1
+  type: openreview
+name: Animesh Garg
+quality: 0
+roles:
+- end_date: null
+  institution:
+    aliases:
+    - gatech.edu
+    category: academia
+    name: Georgia Institute of Technology
+  role: assistant_professor
+  start_date: '2023-01-01T00:00:00'
+- end_date: null
+  institution:
+    aliases:
+    - nvidia.com
+    category: unknown
+    name: NVIDIA
+  role: researcher
+  start_date: '2018-01-01T00:00:00'
+- end_date: '2023-12-31T00:00:00'
+  institution:
+    aliases:
+    - toronto.edu
+    category: academia
+    name: University of Toronto
+  role: assistant_professor
+  start_date: '2019-01-01T00:00:00'
+- end_date: '2018-12-31T00:00:00'
+  institution:
+    aliases:
+    - stanford.edu
+    category: unknown
+    name: Stanford University
+  role: postdoc
+  start_date: '2016-01-01T00:00:00'
+- end_date: '2016-12-31T00:00:00'
+  institution:
+    aliases:
+    - berkeley.edu
+    category: academia
+    name: University of California Berkeley
+  role: phd_student
+  start_date: '2011-01-01T00:00:00'
+- end_date: '2011-12-31T00:00:00'
+  institution:
+    aliases:
+    - gatech.edu
+    category: academia
+    name: Georgia Institute of Technology
+  role: ms_student
+  start_date: '2010-01-01T00:00:00'

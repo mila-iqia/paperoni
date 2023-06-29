@@ -1,0 +1,15 @@
+__type__: Author
+aliases: []
+links:
+- link: ~Sheng_Zhong1
+  type: openreview
+name: Sheng Zhong
+quality: 0
+roles:
+- end_date: null
+  institution:
+    aliases: []
+    category: unknown
+    name: Nanjing University
+  role: affiliated
+  start_date: '2000-01-01T00:00:00'

@@ -1,0 +1,144 @@
+- __type__: Venue
+  aliases: []
+  date: '2013-05-02T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2013/conference
+    type: openreview-venue
+  name: International Conference on Learning Representations
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2014-04-14T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2014/conference
+    type: openreview-venue
+  name: International Conference on Learning Representations
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2017-04-24T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2017/conference
+    type: openreview-venue
+  name: ICLR 2017 Conference Track
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/2017/conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2018-04-30T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2018/Conference
+    type: openreview-venue
+  name: ICLR 2018 Conference Track
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/2018/Conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2019-05-06T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2019/Conference
+    type: openreview-venue
+  name: ICLR 2019
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/2019/Conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2020-04-30T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2020/Conference
+    type: openreview-venue
+  name: International Conference on Learning Representations
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/Conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2021-05-04T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2021/Conference
+    type: openreview-venue
+  name: International Conference on Learning Representations
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/Conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2022-04-25T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2022/Conference
+    type: openreview-venue
+  name: 'The Tenth International Conference on Learning Representations '
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/Conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2023-05-01T00:00:00'
+  date_precision: 3
+  links:
+  - link: ICLR.cc/2023/Conference
+    type: openreview-venue
+  name: 'The Eleventh International Conference on Learning Representations '
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: ICLR.cc/Conference
+  type: conference
+  volume: null

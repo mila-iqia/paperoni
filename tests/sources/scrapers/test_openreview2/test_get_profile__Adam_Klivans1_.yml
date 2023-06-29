@@ -1,0 +1,19 @@
+__type__: Author
+aliases:
+- Adam Klivans
+links:
+- link: ~Adam_Klivans1
+  type: openreview
+- link: ~Adam_R._Klivans1
+  type: openreview
+name: Adam R. Klivans
+quality: 0
+roles:
+- end_date: null
+  institution:
+    aliases:
+    - cs.utexas.edu
+    category: academia
+    name: University of Texas, Austin
+  role: professor
+  start_date: '2000-01-01T00:00:00'
