@@ -120,7 +120,10 @@ class OpenReviewScraperBase(BaseScraper):
                 venue_data = parse_openreview_venue(
                     note.content["venue"]["value"]
                 )
-                date = datetime.fromtimestamp(note.tcdate // 1000)
+                date = datetime.fromtimestamp(
+                    (note.tcdate or note.pdate or note.odate or note.tmdate)
+                    // 1000
+                )
                 date -= timedelta(
                     hours=date.hour, minutes=date.minute, seconds=date.second
                 )
