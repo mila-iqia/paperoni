@@ -260,3 +260,6 @@ async def app(page):
                             divFlags,
                         )(id="p" + result.paper_id.hex())
                         page[area].print(valDiv)
+
+
+ROUTES = app

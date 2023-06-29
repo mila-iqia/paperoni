@@ -247,3 +247,6 @@ async def app(page):
             )
             async for result in regen:
                 htmlAuthor(result)
+
+
+ROUTES = app
