@@ -334,10 +334,6 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
     @tooled
     def query(
         self,
-        # Author to query
-        # [alias: -a]
-        # [nargs: +]
-        author: Option = [],
         # Author ID to query
         # [alias: --aid]
         author_id: Option = [],
@@ -354,7 +350,6 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
         # [nargs: +]
         venue: Option = [],
     ):
-        author = " ".join(author)
         title = " ".join(title)
 
         params = {
@@ -363,11 +358,6 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             "offset": 0,
         }
 
-        if author:
-            params = {
-                **params,
-                "content": {**params["content"], "authors": [author]},
-            }
         if author_id:
             params = {
                 **params,
