@@ -1,0 +1,16 @@
+__type__: Author
+aliases: []
+links:
+- link: ~Yoshua_Bengio1
+  type: openreview
+name: Yoshua Bengio
+quality: 0
+roles:
+- end_date: null
+  institution:
+    aliases:
+    - umontreal.ca
+    category: academia
+    name: University of Montreal
+  role: full_professor
+  start_date: '1993-01-01T00:00:00'

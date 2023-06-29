@@ -1,0 +1,25 @@
+__type__: Author
+aliases:
+- Yin Tat Lee
+links:
+- link: ~Yin_Tat_Lee1
+  type: openreview
+name: Yin Tat Lee
+quality: 0
+roles:
+- end_date: null
+  institution:
+    aliases:
+    - u.washington.edu
+    category: unknown
+    name: University of Washington
+  role: affiliated
+  start_date: '2000-01-01T00:00:00'
+- end_date: null
+  institution:
+    aliases:
+    - uw.edu
+    category: academia
+    name: University of Washington, Seattle
+  role: assistant_professor
+  start_date: '2017-01-01T00:00:00'

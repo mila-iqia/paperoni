@@ -1,0 +1,94 @@
+__type__: Paper
+abstract: We consider the problem of generating musical soundtracks in sync with rhythmic
+  visual cues. Most existing works rely on pre-defined music representations, leading
+  to the incompetence of generative flexibility and complexity. Other methods directly
+  generating video-conditioned waveforms suffer from limited scenarios, short lengths,
+  and unstable generation quality. To this end, we present Long-Term Rhythmic Video
+  Soundtracker (LORIS), a novel framework to synthesize long-term conditional waveforms.
+  Specifically, our framework consists of a latent conditional diffusion probabilistic
+  model to perform waveform synthesis. Furthermore, a series of context-aware conditioning
+  encoders are proposed to take temporal information into consideration for a long-term
+  generation. Notably, we extend our model's applicability from dances to multiple
+  sports scenarios such as floor exercise and figure skating. To perform comprehensive
+  evaluations, we establish a benchmark for rhythmic video soundtracks including the
+  pre-processed dataset, improved evaluation metrics, and robust generative baselines.
+  Extensive experiments show that our model generates long-term soundtracks with state-of-the-art
+  musical quality and rhythmic correspondence. Codes are available at https://github.com/OpenGVLab/LORIS.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: ~Jiashuo_Yu1
+      type: openreview
+    name: Jiashuo Yu
+    quality:
+    - 0.0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: ~Yaohui_Wang1
+      type: openreview
+    name: Yaohui Wang
+    quality:
+    - 0.0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: ~Xinyuan_Chen1
+      type: openreview
+    name: Xinyuan Chen
+    quality:
+    - 0.0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: ~Xiao_Sun8
+      type: openreview
+    name: Xiao Sun
+    quality:
+    - 0.0
+    roles: []
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: ~Yu_Qiao1
+      type: openreview
+    name: Yu Qiao
+    quality:
+    - 0.0
+    roles: []
+citation_count: null
+links:
+- link: es2ykIhttu
+  type: openreview
+quality:
+- 0.0
+releases:
+- pages: null
+  status: poster
+  venue:
+    aliases: []
+    date: '2023-01-09T00:00:00'
+    date_precision: 3
+    links:
+    - link: ICML.cc/2023/Conference
+      type: openreview-venue
+    name: ICML.cc/2023/Conference
+    open: false
+    peer_reviewed: false
+    publisher: null
+    quality:
+    - 0.0
+    series: ICML.cc/Conference
+    type: conference
+    volume: ICML 2023
+title: Long-Term Rhythmic Video Soundtracker
+topics: []

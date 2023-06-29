@@ -1,0 +1,32 @@
+- __type__: Venue
+  aliases: []
+  date: '2021-12-07T00:00:00'
+  date_precision: 3
+  links:
+  - link: NeurIPS.cc/2021/Conference
+    type: openreview-venue
+  name: Thirty-Fifth Conference on Neural Information Processing Systems
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: NeurIPS.cc/Conference
+  type: conference
+  volume: null
+- __type__: Venue
+  aliases: []
+  date: '2022-11-28T00:00:00'
+  date_precision: 3
+  links:
+  - link: NeurIPS.cc/2022/Conference
+    type: openreview-venue
+  name: Thirty-Sixth Conference on Neural Information Processing Systems
+  open: false
+  peer_reviewed: false
+  publisher: null
+  quality:
+  - 1.0
+  series: NeurIPS.cc/Conference
+  type: conference
+  volume: null
