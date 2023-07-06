@@ -54,7 +54,7 @@ async def app(page):
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
+        H.link(rel="stylesheet", href=here.parent /  "default.css")
     )
     area = H.div["area"]().autoid()
     page.print(
