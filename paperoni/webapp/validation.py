@@ -50,11 +50,12 @@ async def regenerator(queue, regen, reset):
 
 @bear
 async def app(page):
+    """Validate papers."""
     seeFlagged = False
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
+        H.link(rel="stylesheet", href=here.parent / "default.css")
     )
     area = H.div["area"]().autoid()
     page.print(
@@ -260,3 +261,6 @@ async def app(page):
                             divFlags,
                         )(id="p" + result.paper_id.hex())
                         page[area].print(valDiv)
+
+
+ROUTES = app

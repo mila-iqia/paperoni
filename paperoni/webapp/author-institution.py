@@ -14,7 +14,6 @@ from starbear import ClientWrap, Queue, bear
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
-from paperoni.display import html
 from paperoni.model import Institution, Role, UniqueAuthor
 from paperoni.utils import tag_uuid
 
@@ -52,10 +51,11 @@ async def regenerator(queue, regen, reset):
 
 @bear
 async def app(page):
+    """Edit/update the list of researchers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
+        H.link(rel="stylesheet", href=here.parent / "default.css")
     )
     roles = [
         "associate",
@@ -247,3 +247,6 @@ async def app(page):
             )
             async for result in regen:
                 htmlAuthor(result)
+
+
+ROUTES = app

@@ -48,10 +48,11 @@ async def regenerator(queue, regen, reset):
 
 @bear
 async def app(page):
+    """Search for papers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3)
     page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
+        H.link(rel="stylesheet", href=here.parent / "default.css")
     )
     area = H.div["area"]().autoid()
     page.print(H.input(oninput=debounced))
@@ -78,3 +79,6 @@ async def app(page):
             async for result in regen:
                 div = html(result)
                 page[area].print(div)
+
+
+ROUTES = app
