@@ -14,7 +14,6 @@ from starbear import ClientWrap, Queue, bear
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
-from paperoni.display import html
 from paperoni.model import Institution, Role, UniqueAuthor
 from paperoni.utils import tag_uuid
 
