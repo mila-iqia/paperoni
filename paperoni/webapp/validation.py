@@ -50,6 +50,7 @@ async def regenerator(queue, regen, reset):
 
 @bear
 async def app(page):
+    """Validate papers."""
     seeFlagged = False
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)

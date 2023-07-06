@@ -52,6 +52,7 @@ async def regenerator(queue, regen, reset):
 
 @bear
 async def app(page):
+    """Edit/update the list of researchers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(

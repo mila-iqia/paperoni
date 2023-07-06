@@ -48,6 +48,7 @@ async def regenerator(queue, regen, reset):
 
 @bear
 async def app(page):
+    """Search for papers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3)
     page["head"].print(
