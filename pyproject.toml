@@ -27,7 +27,7 @@ rich = "^12.5.1"
 SQLAlchemy = "^1.4.39"
 tqdm = "^4.48.2"
 fake-useragent = "^1.1.3"
-grizzlaxy = "^0.0.1"
+grizzlaxy = ">=0.0.2"
 
 [tool.poetry.dev-dependencies]
 black = ">= 19.10b0"
