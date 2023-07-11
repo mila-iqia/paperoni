@@ -147,7 +147,30 @@ form{
 .area {
     border: 1px solid black;
 }
-
+.authorarea{
+    border: 1px solid green;
+    height: 500px;
+    margin: 10px;
+}
+.papersarea{
+height: 100%;
+width: 70%;
+overflow: auto;
+float: right;
+}
+.authornamearea{
+height: 90%;
+width: 25%;
+float: left;
+margin: 10px;
+position: relative;
+}
+.authoridbuttonarea{
+    position: absolute;
+    width: 150px;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+}
 input {
     width: 100%;
     padding: 5px;
@@ -168,6 +191,10 @@ input {
 
 .invalidate{
     background-color: rgb(172, 4, 4);
+}
+
+.notavailable{
+    background-color: rgb(85, 85, 85);
 }
 
 #seeFlagged{
