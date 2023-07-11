@@ -131,11 +131,12 @@ async def prepare(
 
 @bear
 async def app(page):
+    """Include/Exclude author Ids."""
     page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "paperoni" / "default.css")
+        H.link(rel="stylesheet", href=here.parent / "default.css")
     )
 
-    author_name = "Amin Emad"
+    author_name = page.query_params.get("author")
 
     def confirm_id(auth, confirmed, auth_id):
         link = auth.links[0].link
@@ -289,3 +290,6 @@ async def app(page):
             # Keep the app running
             while True:
                 await asyncio.sleep(1)
+
+
+ROUTES = app
