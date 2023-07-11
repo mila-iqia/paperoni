@@ -237,11 +237,8 @@ async def app(page):
                 if link not in tabIDS:
                     tabIDS.append(link)
                     author_name_area = H.div["authornamearea"](
-                        auth.name,
-                        H.br,
-                        H.br,
-                        auth.links[0].type,
-                        H.br,
+                        H.p(auth.name),
+                        H.p(auth.links[0].type),
                         H.a["link"](
                             link,
                             href="https://www.semanticscholar.org/author/"
@@ -250,7 +247,6 @@ async def app(page):
                             + str(link),
                             target="_blank",
                         ),
-                        H.br,
                         H.div["IDstatus"](id="idstatus" + link),
                         H.div["authoridbuttonarea"](
                             id="authoridbuttonarea" + link
