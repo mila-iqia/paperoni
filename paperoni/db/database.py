@@ -542,14 +542,14 @@ class Database(OvldBase):
         self.session.execute(ins_stmt)
         self.session.commit()
 
-    def update_author_link(self, author_id, type, old_link, new_link):
+    def update_author_type(self, author_id, type, link):
         author_link = sch.AuthorLink(
             author_id=author_id,
         )
         upd_stmt = f"""
         UPDATE {author_link.__tablename__}
-        SET link = "{new_link}"
-        WHERE link = "{old_link}" AND type = "{type}"
+        SET type = "{type}"
+        WHERE link = "{link}"
         """
         self.session.execute(upd_stmt)
         self.session.commit()

@@ -30,7 +30,10 @@ ss = SemanticScholarQueryManager()
 def _fill_rids(rids, researchers, idtype):
     for researcher in researchers:
         for link in researcher.links:
-            if link.type == idtype:
+            strippedtype = (
+                link.type[1:] if link.type.startswith("!") else link.type
+            )
+            if strippedtype == idtype:
                 rids[link.link] = researcher.name
 
 
@@ -78,6 +81,11 @@ async def prepare(
 
     for auq in researchers:
         aname = auq.name
+        no_ids = [
+            link.link
+            for link in auq.links
+            if (link.type.startswith("!") and link.type[1:] == idtype)
+        ]
 
         def find_common(papers):
             common = Counter()
@@ -118,7 +126,7 @@ async def prepare(
                 end_year=papers[0][0],
             )
             for _, _, p in papers:
-                yield author, p
+                yield author, p, no_ids
 
 
 @bear
@@ -132,33 +140,33 @@ async def app(page):
     def confirm_id(auth, confirmed, auth_id):
         link = auth.links[0].link
         type = auth.links[0].type
-        if not confirmed:
-            link = "!" + auth.links[0].link
 
         id_linked = is_linked(link, type, author_name)
+
+        if not confirmed:
+            type = "!" + auth.links[0].type
+
         if not id_linked:
             db.insert_author_link(auth_id, type, link)
-        elif id_linked != link:
-            db.update_author_link(auth_id, type, id_linked, link)
+        elif id_linked.type != type:
+            db.update_author_type(auth_id, type, link)
 
         # Modify the page
-        clear_id = link[1:] if link.startswith("!") else link
-        page["#authoridbuttonarea" + clear_id].clear()
-        page["#authoridbuttonarea" + clear_id].print_html(
-            get_buttons(auth, auth_id, clear_id, confirmed)
+        page["#authoridbuttonarea" + link].clear()
+        page["#authoridbuttonarea" + link].print_html(
+            get_buttons(auth, auth_id, confirmed)
         )
-        page["#idstatus" + clear_id].clear()
+        page["#idstatus" + link].clear()
         if confirmed:
-            page["#idstatus" + clear_id].print("ID Included")
+            page["#idstatus" + link].print("ID Included")
         else:
-            page["#idstatus" + clear_id].print("ID Excluded")
+            page["#idstatus" + link].print("ID Excluded")
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
     def is_linked(link, type, author_name):
         already_linked = get_links(type, author_name)
-        strippedlink = link[1:] if link.startswith("!") else link
         for links in already_linked:
-            if strippedlink in links:
+            if link in links.link:
                 return links
         return False
 
@@ -166,8 +174,11 @@ async def app(page):
         author = get_authors(author_name)[0]
         links = []
         for link in author.links:
-            if link.type == type:
-                links.append(link.link)
+            strippedtype = (
+                link.type[1:] if link.type.startswith("!") else link.type
+            )
+            if strippedtype == type:
+                links.append(link)
         return links
 
     def get_authors(name):
@@ -181,7 +192,7 @@ async def app(page):
             print("Error : ", e)
         return authors
 
-    def get_buttons(auth, author_id, link, included=None):
+    def get_buttons(auth, author_id, included=None):
         includeButton = H.button["button"](
             "Include ID",
             onclick=(
@@ -221,7 +232,7 @@ async def app(page):
                 idtype="semantic_scholar",
                 query_name=ss.author_with_papers,
             )
-            async for auth, result in results:
+            async for auth, result, no_ids in results:
                 link = auth.links[0].link
                 if link not in tabIDS:
                     tabIDS.append(link)
@@ -257,21 +268,21 @@ async def app(page):
 
                     linked = is_linked(link, "semantic_scholar", author_name)
                     if linked != False:
+                        is_excluded = link in no_ids
                         page["#authoridbuttonarea" + link].print_html(
                             get_buttons(
                                 auth,
                                 author_id,
-                                link,
-                                not linked.startswith("!"),
+                                not is_excluded,
                             )
                         )
-                        if linked.startswith("!"):
+                        if is_excluded:
                             page["#idstatus" + link].print("ID Excluded")
                         else:
                             page["#idstatus" + link].print("ID Included")
                     else:
                         page["#authoridbuttonarea" + link].print_html(
-                            get_buttons(auth, author_id, link)
+                            get_buttons(auth, author_id)
                         )
 
                 div = html(result)
