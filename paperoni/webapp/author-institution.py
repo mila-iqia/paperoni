@@ -87,12 +87,13 @@ async def app(page):
         H.button("Add")["button"],
         onsubmit=debounced,
     )
-    area = H.div["area"](
+    area = H.div["area-authorlink"](
         H.div["up"](
-            H.div["column"](H.span["column-name"]("Nom")),
-            H.div["column"](H.span["column-name"]("Role")),
-            H.div["column"](H.span["column-name"]("Start")),
-            H.div["column"](H.span["column-name"]("End")),
+            H.div["column"]("Nom"),
+            H.div["column"]("Role"),
+            H.div["column"]("Start"),
+            H.div["column"]("End"),
+            H.div["column"](" Semantic Scholar Ids"),
         ),
         H.div(id="mid-div")["mid"](),
         H.div(id="down-div")["down"](form),
@@ -199,6 +200,13 @@ async def app(page):
         page["#addform"].clear()
         page["#down-div"].print(filledForm)
 
+    def get_semantic_links(author):
+        num_links = 0
+        for i in author.links:
+            if i.type == "semantic_scholar":
+                num_links += 1
+        return num_links
+
     def htmlAuthor(result):
         author = result.author
         date_start = ""
@@ -214,6 +222,7 @@ async def app(page):
             "start": date_start,
             "end": date_end,
         }
+        semantic_links = get_semantic_links(author)
         page["#mid-div"].print(
             H.div(onclick=lambda event, id=id: clickAuthor(id))[
                 "author-column"
@@ -224,7 +233,13 @@ async def app(page):
                 H.div["column-mid"](H.span["align-mid"](result.role)),
                 H.div["column-mid"](H.span["align-mid"](date_start)),
                 H.div["column-mid"](H.span["align-mid"](date_end)),
-            )
+            ),
+            H.div["column-mid-link"](
+                semantic_links,
+                onclick="window.open('http://localhost:8000/find-authors-ids?author="
+                + str(author.name)
+                + "');",
+            ),
         )
 
     def generate(name=None):

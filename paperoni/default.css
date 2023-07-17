@@ -10,7 +10,7 @@ input{
     width: 400px;
 }
 .authorinput{
-    width: 24.9%;
+    width: 20%;
     margin: 5px;
 }
 .roleinput{
@@ -18,7 +18,11 @@ input{
     margin: 5px;
 }
 .area{
-    border: #555 2px solid;
+    outline: 1px solid #555;
+}
+.area-authorlink{
+    width: 1300px;
+    outline: 1px solid #555;
 }
 .up:after {
     content: "";
@@ -26,14 +30,15 @@ input{
     clear: both;
   }
 .column{
-    border: #555 0.5px solid;
+    outline: 1px solid #555;
     float: left;
-    width: 24.8%;
+    width: 20%;
     height: 20px;
     margin: auto;
+    text-align: center;
 }
 .mid{
-    border: #555 0.5px solid;
+    outline: 1px solid #555;
     width:100%;
     height: 600px;
     overflow: auto;
@@ -41,15 +46,12 @@ input{
 .down{
     width: 100%;
     height: 120px;
-    border: #555 0.5px solid;
+    outline: 1px solid #555;
 }
 #errormessage{
     color: red;
     font-size: 14px;
     margin: 5px;
-}
-.column-name{
-    margin: 45%;
 }
 .align-mid{
     position: absolute;
@@ -60,10 +62,14 @@ input{
 .author-column{
     position: relative;
     float: left;
-    width: 100%;
+    width: 80%;
     height: 30px;
-    margin: auto;
-    
+    margin: auto;   
+}
+
+.author-column:hover, .column-mid-link:hover{
+    background-color: #eef;
+    cursor: pointer;
 }
 .author-column:hover{
     background-color: #eef;
@@ -75,6 +81,14 @@ input{
     width: 25%;
     height: 30px;
     margin: auto;
+}
+.column-mid-link{
+    position: relative;
+    float: left;
+    width: 20%;
+    height: 30px;
+    margin: auto;
+    text-align: center;
 }
 .addform{
     margin: auto;
