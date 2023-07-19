@@ -99,7 +99,9 @@ async def app(page):
             return generate(title, author, venue, date_start, date_end)
         return generate()
 
-    def generate(title=None, author=None, venue=None, date_start=None, date_end=None):
+    def generate(
+        title=None, author=None, venue=None, date_start=None, date_end=None
+    ):
         stmt = select(sch.Paper)
         if not all(
             val == "" or val is None
