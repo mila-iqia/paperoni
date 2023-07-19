@@ -62,6 +62,7 @@ async def app(page):
         H.form(
             H.input(name="title", placeholder="Title", oninput=debounced),
             H.input(name="author", placeholder="Author", oninput=debounced),
+            H.input(name="venue", placeholder="Venue", oninput=debounced),
             H.br,
             "Start Date",
             H.input(
@@ -92,18 +93,19 @@ async def app(page):
             seeFlagged = event["seeFlagged"]
             title = event["title"]
             author = event["author"]
+            venue = event["venue"]
             date_start = event["date-start"]
             date_end = event["date-end"]
-            return generate(title, author, date_start, date_end)
+            return generate(title, author, venue, date_start, date_end)
         return generate()
 
-    def generate(title=None, author=None, date_start=None, date_end=None):
+    def generate(title=None, author=None, venue=None, date_start=None, date_end=None):
         stmt = select(sch.Paper)
         if not all(
             val == "" or val is None
-            for val in [title, author, date_start, date_end]
+            for val in [title, author, venue, date_start, date_end]
         ):
-            stmt = search(title, author, date_start, date_end)
+            stmt = search(title, author, venue, date_start, date_end)
         try:
             results = list(db.session.execute(stmt))
             for (r,) in results:
@@ -111,7 +113,7 @@ async def app(page):
         except Exception as e:
             print("Error : ", e)
 
-    def search(title, author, date_start, date_end):
+    def search(title, author, venue, date_start, date_end):
         stmt = select(sch.Paper)
         # Selecting from the title
         if title is not None and title != "":
@@ -122,6 +124,13 @@ async def app(page):
                 stmt.join(sch.Paper.paper_author)
                 .join(sch.PaperAuthor.author)
                 .filter(sch.Author.name.like(f"%{author}%"))
+            )
+        # Selecting from venue
+        if venue is not None and venue != "":
+            stmt = (
+                stmt.join(sch.Paper.release)
+                .join(sch.Release.venue)
+                .filter(sch.Venue.name.like(f"%{venue}%"))
             )
 
         # Selecting from date
