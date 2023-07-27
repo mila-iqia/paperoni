@@ -201,7 +201,7 @@ async def app(page):
         page["#addform"].clear()
         page["#down-div"].print(filledForm)
 
-    def get_type_links(author,type):
+    def get_type_links(author, type):
         num_links = 0
         for i in author.links:
             if i.type == type:
@@ -235,13 +235,13 @@ async def app(page):
                 H.div["column-mid"](H.span["align-mid"](date_end)),
             ),
             H.div["column-mid-link"](
-                get_type_links(author,"semantic_scholar"),
+                get_type_links(author, "semantic_scholar"),
                 onclick="window.open('http://localhost:8000/find-authors-ids?scrapper=semantic_scholar&author="
                 + str(author.name)
                 + "');",
             ),
             H.div["column-mid-link"](
-                get_type_links(author,"openreview"),
+                get_type_links(author, "openreview"),
                 onclick="window.open('http://localhost:8000/find-authors-ids?scrapper=openreview&author="
                 + str(author.name)
                 + "');",

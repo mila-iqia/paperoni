@@ -8,6 +8,7 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
+from coleo import Option, tooled
 from giving import give
 from hrepr import H
 from sqlalchemy import select
@@ -18,13 +19,10 @@ from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
 from paperoni.model import Link, UniqueAuthor
+from paperoni.sources.scrapers.openreview import OpenReviewPaperScraper
 from paperoni.sources.scrapers.semantic_scholar import (
     SemanticScholarQueryManager,
 )
-from paperoni.sources.scrapers.openreview import (
-    OpenReviewPaperScraper
-)
-from coleo import Option, tooled
 
 here = Path(__file__).parent
 
@@ -132,11 +130,12 @@ async def prepare(
             for _, _, p in papers:
                 yield author, p, no_ids
 
+
 @bear
 async def app(page):
     """Include/Exclude author Ids."""
     page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "default.css")   
+        H.link(rel="stylesheet", href=here.parent / "default.css")
     )
 
     author_name = page.query_params.get("author")
@@ -145,7 +144,7 @@ async def app(page):
     def confirm_id(auth, confirmed, auth_id):
         link = auth.links[0].link
         type = auth.links[0].type
-        clear_link = filter_link(link) #Just for html
+        clear_link = filter_link(link)  # Just for html
 
         id_linked = is_linked(link, type, author_name)
         if not confirmed:
@@ -225,11 +224,11 @@ async def app(page):
                 )
         buttons = [includeButton, excludeButton]
         return buttons
-    
-    def filter_link(link): #For html elements
+
+    def filter_link(link):  # For html elements
         filtered_link = link.replace("~", "")
         return filtered_link
-    
+
     # Query name for openreview
     def query_name(aname):
         papers = list(
@@ -254,26 +253,33 @@ async def app(page):
         nonlocal venue
         venue = event["value"]
         await build_page("openreview")
-    
+
     async def build_page(scrapper):
         for i in tabIDS:
             page["#area" + i].delete()
             page["#authorarea" + i].delete()
             tabIDS.remove(i)
         results = prepare(
-                researchers=reaserchers,
-                idtype=scrapper,
-                query_name=current_query_name,
-            )
+            researchers=reaserchers,
+            idtype=scrapper,
+            query_name=current_query_name,
+        )
         async for auth, result, no_ids in results:
             link = filter_link(auth.links[0].link)
             olink = auth.links[0].link
             if link not in tabIDS:
                 tabIDS.append(link)
                 if scrapper == "semantic_scholar":
-                    author_siteweb = "https://www.semanticscholar.org/author/"+ auth.name + "/" + str(link)
+                    author_siteweb = (
+                        "https://www.semanticscholar.org/author/"
+                        + auth.name
+                        + "/"
+                        + str(link)
+                    )
                 elif scrapper == "openreview":
-                    author_siteweb = "https://openreview.net/profile?id=" + str(olink)
+                    author_siteweb = "https://openreview.net/profile?id=" + str(
+                        olink
+                    )
                 author_name_area = H.div["authornamearea"](
                     H.p(auth.name),
                     H.p(auth.links[0].type),
@@ -283,9 +289,7 @@ async def app(page):
                         target="_blank",
                     ),
                     H.div["IDstatus"](id="idstatus" + link),
-                    H.div["authoridbuttonarea"](
-                        id="authoridbuttonarea" + link
-                    ),
+                    H.div["authoridbuttonarea"](id="authoridbuttonarea" + link),
                 )
                 papers_area = H.div["papersarea"](id="a" + link)
                 area = H.div["authorarea"](
@@ -311,7 +315,7 @@ async def app(page):
                     page["#authoridbuttonarea" + link].print_html(
                         get_buttons(auth, author_id)
                     )
-            
+
             div = html(result)
             valDiv = H.div["validationDiv"](div)
             aid = str("#a" + link)
@@ -326,17 +330,20 @@ async def app(page):
             if scrapper == "semantic_scholar":
                 current_query_name = ss.author_with_papers
             elif scrapper == "openreview":
-                or_scrapper = OpenReviewPaperScraper(cfg,db)
-                all_venues = or_scrapper._venues_from_wildcard("*") 
+                or_scrapper = OpenReviewPaperScraper(cfg, db)
+                all_venues = or_scrapper._venues_from_wildcard("*")
                 current_query_name = query_name
-                
+
                 optionTab = []
                 for venue in all_venues:
                     optionTab.append(H.option[venue](venue))
-                dropdown = H.select["venuedropdown"](optionTab, onchange=(
-                lambda event, author_id=author_id: select_venue(
-                    event
-                )),label="Select a venue")
+                dropdown = H.select["venuedropdown"](
+                    optionTab,
+                    onchange=(
+                        lambda event, author_id=author_id: select_venue(event)
+                    ),
+                    label="Select a venue",
+                )
                 page.print("Venues : ")
                 page.print(dropdown)
             await build_page(scrapper)
