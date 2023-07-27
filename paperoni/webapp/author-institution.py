@@ -94,6 +94,7 @@ async def app(page):
             H.div["column"]("Start"),
             H.div["column"]("End"),
             H.div["column"](" Semantic Scholar Ids"),
+            H.div["column"](" Openreview Ids"),
         ),
         H.div(id="mid-div")["mid"](),
         H.div(id="down-div")["down"](form),
@@ -200,10 +201,10 @@ async def app(page):
         page["#addform"].clear()
         page["#down-div"].print(filledForm)
 
-    def get_semantic_links(author):
+    def get_type_links(author,type):
         num_links = 0
         for i in author.links:
-            if i.type == "semantic_scholar":
+            if i.type == type:
                 num_links += 1
         return num_links
 
@@ -222,7 +223,6 @@ async def app(page):
             "start": date_start,
             "end": date_end,
         }
-        semantic_links = get_semantic_links(author)
         page["#mid-div"].print(
             H.div(onclick=lambda event, id=id: clickAuthor(id))[
                 "author-column"
@@ -235,8 +235,14 @@ async def app(page):
                 H.div["column-mid"](H.span["align-mid"](date_end)),
             ),
             H.div["column-mid-link"](
-                semantic_links,
-                onclick="window.open('http://localhost:8000/find-authors-ids?author="
+                get_type_links(author,"semantic_scholar"),
+                onclick="window.open('http://localhost:8000/find-authors-ids?scrapper=semantic_scholar&author="
+                + str(author.name)
+                + "');",
+            ),
+            H.div["column-mid-link"](
+                get_type_links(author,"openreview"),
+                onclick="window.open('http://localhost:8000/find-authors-ids?scrapper=openreview&author="
                 + str(author.name)
                 + "');",
             ),
