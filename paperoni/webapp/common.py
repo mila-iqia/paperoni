@@ -17,10 +17,8 @@ def search_interface(event=None,db=None):
                     venue = event["venue"]
                 if "date-start" in event.keys():
                     date_start = event["date-start"]
-                    date_start = int(datetime(*map(int, date_start.split("-"))).timestamp())
                 if "date-end" in event.keys():
                     date_end = event["date-end"]
-                    date_end = int(datetime(*map(int, date_end.split("-"))).timestamp())
            
             stmt = search_stmt(title=title, author=author, venue=venue, start=date_start, end=date_end)
             try:
