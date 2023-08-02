@@ -458,11 +458,10 @@ def main():
 
     builtins.give = give
     with given() as gv:
-        # gv.where("!refine").display()
         covers = gv.where(situation="cover").accum()
         auto_cli(commands)
 
-    if covers:
+    if covers and os.environ.get("PAPERONI_LOG_NEW_COVERAGE", False):
         covdict = {}
         for x in covers:
             loc = x.pop("location")
