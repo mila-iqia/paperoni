@@ -75,7 +75,7 @@ class PDF:
 
         match link.type:
             case "arxiv":
-                return f"https://arxiv.org/pdf/{link.link}.pdf"
+                return f"https://export.arxiv.org/pdf/{link.link}.pdf"
             case "openreview":
                 return f"https://openreview.net/pdf?id={link.link}"
             case "doi":
