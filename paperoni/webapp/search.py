@@ -12,7 +12,8 @@ from starbear import ClientWrap, Queue, bear
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
-from paperoni.display import html
+
+from .render import paper_html
 
 from .common import search_interface
 
@@ -53,9 +54,7 @@ async def app(page):
     """Search for papers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
-    page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "default.css")
-    )
+    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
     area = H.div["area"]().autoid()
     page.print(
         H.form(
@@ -85,7 +84,7 @@ async def app(page):
                 db=db,
             )
             async for result in regen:
-                div = html(result)
+                div = paper_html(result)
                 page[area].print(div)
 
 

@@ -48,6 +48,7 @@ def make_configuration(self, config_path: Union[str, Path]):
 class Configuration:
     def __init__(self, ns):
         self.tokens = {}
+        self.tweaks = {}
         self.__dict__.update(ns.__dict__)
         self._database = None
         self._history_file = None

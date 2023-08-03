@@ -12,8 +12,7 @@ from coleo import Option, tooled
 from giving import give
 from hrepr import H
 from sqlalchemy import select
-from sqlalchemy.exc import OperationalError
-from starbear import ClientWrap, Queue, bear
+from starbear import bear
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
@@ -134,9 +133,7 @@ async def prepare(
 @bear
 async def app(page):
     """Include/Exclude author Ids."""
-    page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "default.css")
-    )
+    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
 
     author_name = page.query_params.get("author")
     scraper = page.query_params.get("scraper")
