@@ -128,12 +128,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
-    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
-    name: Canada CIFAR AI Chair
-  - aliases: []
-    category: unknown
     institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
     name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
+    name: Canada CIFAR AI Chair
   - aliases: []
     category: unknown
     institution_id: 0ea2649f-a678-b9ca-c97a-8a62adf7e041
@@ -148,12 +148,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
-    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
-    name: Canada CIFAR AI Chair
-  - aliases: []
-    category: unknown
     institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
     name: Mila - Quebec AI Institute
+  - aliases: []
+    category: unknown
+    institution_id: 0a4595cd-fa4e-6d9d-22cc-74f6a6a2666f
+    name: Canada CIFAR AI Chair
   - aliases: []
     category: unknown
     institution_id: 200bed81-461c-ad60-7d59-3360fe5fcc0a

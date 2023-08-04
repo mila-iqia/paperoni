@@ -56,12 +56,12 @@ authors:
 links:
 - link: e812eddda9b29d2f88f98b41999f33c46155b8c8
   type: semantic_scholar
-- link: journals/corr/abs-1810-11530
-  type: dblp
-- link: '2890411254'
-  type: mag
 - link: '1810.11530'
   type: arxiv
+- link: conf/nips/MerrienboerBBL18
+  type: dblp
+- link: '2949304624'
+  type: mag
 - link: '53093859'
   type: corpusid
 quality:
