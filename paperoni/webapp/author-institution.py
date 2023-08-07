@@ -242,7 +242,7 @@ async def app(page):
             ),
             H.div["column-mid-link"](
                 get_type_links(author, "openreview"),
-                onclick="window.open('http://localhost:8000/find-authors-ids?scrapper=openreview&author="
+                onclick="window.open('http://localhost:8000/find-authors-ids?scraper=openreview&author="
                 + str(author.name)
                 + "');",
             ),

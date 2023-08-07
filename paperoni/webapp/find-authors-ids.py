@@ -139,7 +139,7 @@ async def app(page):
     )
 
     author_name = page.query_params.get("author")
-    scrapper = page.query_params.get("scrapper")
+    scraper = page.query_params.get("scraper")
 
     def confirm_id(auth, confirmed, auth_id):
         link = auth.links[0].link
@@ -232,9 +232,9 @@ async def app(page):
     # Query name for openreview
     def query_name(aname):
         papers = list(
-            or_scrapper._query_papers_from_venues(
+            or_scraper._query_papers_from_venues(
                 params={"content": {}},
-                venues=or_scrapper._venues_from_wildcard(venue),
+                venues=or_scraper._venues_from_wildcard(venue),
             )
         )
         results = {}
@@ -254,29 +254,32 @@ async def app(page):
         venue = event["value"]
         await build_page("openreview")
 
-    async def build_page(scrapper):
+    async def build_page(scraper):
         for i in tabIDS:
             page["#area" + i].delete()
             page["#authorarea" + i].delete()
             tabIDS.remove(i)
+        page["#noresults"].delete()
         results = prepare(
             researchers=reaserchers,
-            idtype=scrapper,
+            idtype=scraper,
             query_name=current_query_name,
         )
+        num_results = 0
         async for auth, result, no_ids in results:
+            num_results += 1
             link = filter_link(auth.links[0].link)
             olink = auth.links[0].link
             if link not in tabIDS:
                 tabIDS.append(link)
-                if scrapper == "semantic_scholar":
+                if scraper == "semantic_scholar":
                     author_siteweb = (
                         "https://www.semanticscholar.org/author/"
                         + auth.name
                         + "/"
                         + str(link)
                     )
-                elif scrapper == "openreview":
+                elif scraper == "openreview":
                     author_siteweb = "https://openreview.net/profile?id=" + str(
                         olink
                     )
@@ -297,7 +300,7 @@ async def app(page):
                     papers_area,
                 )(id="area" + link)
                 page.print(area)
-                linked = is_linked(link, scrapper, author_name)
+                linked = is_linked(link, scraper, author_name)
                 if linked != False:
                     is_excluded = link in no_ids
                     page["#authoridbuttonarea" + link].print_html(
@@ -320,6 +323,9 @@ async def app(page):
             valDiv = H.div["validationDiv"](div)
             aid = str("#a" + link)
             page[aid].print(valDiv)
+        if num_results == 0:
+            page.print(H.div["authorarea"]("No results found")(id="noresults"))
+        print(num_results)
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
@@ -327,11 +333,11 @@ async def app(page):
             author_id = reaserchers[0].author_id
             tabIDS = []
             current_query_name = ss.author_with_papers
-            if scrapper == "semantic_scholar":
+            if scraper == "semantic_scholar":
                 current_query_name = ss.author_with_papers
-            elif scrapper == "openreview":
-                or_scrapper = OpenReviewPaperScraper(cfg, db)
-                all_venues = or_scrapper._venues_from_wildcard("*")
+            elif scraper == "openreview":
+                or_scraper = OpenReviewPaperScraper(cfg, db)
+                all_venues = or_scraper._venues_from_wildcard("*")
                 current_query_name = query_name
 
                 optionTab = []
@@ -346,7 +352,7 @@ async def app(page):
                 )
                 page.print("Venues : ")
                 page.print(dropdown)
-            await build_page(scrapper)
+            await build_page(scraper)
 
             # Keep the app running
             while True:
