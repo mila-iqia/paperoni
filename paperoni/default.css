@@ -10,18 +10,18 @@ input{
     width: 400px;
 }
 .authorinput{
-    width: 20%;
+    width: 16.66%;
     margin: 5px;
 }
 .roleinput{
-    width: 20%;
+    width: 16.66%;
     margin: 5px;
 }
 .area{
     outline: 1px solid #555;
 }
 .area-authorlink{
-    width: 1300px;
+    width: 1400px;
     outline: 1px solid #555;
 }
 .up:after {
@@ -32,7 +32,7 @@ input{
 .column{
     outline: 1px solid #555;
     float: left;
-    width: 20%;
+    width: 16.66%;
     height: 20px;
     margin: auto;
     text-align: center;
@@ -62,7 +62,7 @@ input{
 .author-column{
     position: relative;
     float: left;
-    width: 80%;
+    width: 66.66%;
     height: 30px;
     margin: auto;   
 }
@@ -85,7 +85,7 @@ input{
 .column-mid-link{
     position: relative;
     float: left;
-    width: 20%;
+    width: 16.66%;
     height: 30px;
     margin: auto;
     text-align: center;

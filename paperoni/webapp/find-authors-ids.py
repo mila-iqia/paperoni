@@ -8,6 +8,7 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
+from coleo import Option, tooled
 from giving import give
 from hrepr import H
 from sqlalchemy import select
@@ -18,6 +19,7 @@ from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
 from paperoni.model import Link, UniqueAuthor
+from paperoni.sources.scrapers.openreview import OpenReviewPaperScraper
 from paperoni.sources.scrapers.semantic_scholar import (
     SemanticScholarQueryManager,
 )
@@ -137,13 +139,14 @@ async def app(page):
     )
 
     author_name = page.query_params.get("author")
+    scraper = page.query_params.get("scraper")
 
     def confirm_id(auth, confirmed, auth_id):
         link = auth.links[0].link
         type = auth.links[0].type
+        clear_link = filter_link(link)  # Just for html
 
         id_linked = is_linked(link, type, author_name)
-
         if not confirmed:
             type = "!" + auth.links[0].type
 
@@ -153,15 +156,15 @@ async def app(page):
             db.update_author_type(auth_id, type, link)
 
         # Modify the page
-        page["#authoridbuttonarea" + link].clear()
-        page["#authoridbuttonarea" + link].print_html(
+        page["#authoridbuttonarea" + clear_link].clear()
+        page["#authoridbuttonarea" + clear_link].print_html(
             get_buttons(auth, auth_id, confirmed)
         )
-        page["#idstatus" + link].clear()
+        page["#idstatus" + clear_link].clear()
         if confirmed:
-            page["#idstatus" + link].print("ID Included")
+            page["#idstatus" + clear_link].print("ID Included")
         else:
-            page["#idstatus" + link].print("ID Excluded")
+            page["#idstatus" + clear_link].print("ID Excluded")
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
     def is_linked(link, type, author_name):
@@ -222,70 +225,134 @@ async def app(page):
         buttons = [includeButton, excludeButton]
         return buttons
 
+    def filter_link(link):  # For html elements
+        filtered_link = link.replace("~", "")
+        return filtered_link
+
+    # Query name for openreview
+    def query_name(aname):
+        papers = list(
+            or_scraper._query_papers_from_venues(
+                params={"content": {}},
+                venues=or_scraper._venues_from_wildcard(venue),
+            )
+        )
+        results = {}
+        for paper in papers:
+            for pa in paper.authors:
+                au = pa.author
+                if au.name == aname:
+                    for lnk in au.links:
+                        if lnk.type == "openreview":
+                            results.setdefault(lnk.link, (au, []))
+                            results[lnk.link][1].append(paper)
+        for auid, (au, aupapers) in results.items():
+            yield (au, aupapers)
+
+    async def select_venue(event):
+        nonlocal venue
+        venue = event["value"]
+        await build_page("openreview")
+
+    async def build_page(scraper):
+        for i in tabIDS:
+            page["#area" + i].delete()
+            page["#authorarea" + i].delete()
+            tabIDS.remove(i)
+        page["#noresults"].delete()
+        results = prepare(
+            researchers=reaserchers,
+            idtype=scraper,
+            query_name=current_query_name,
+        )
+        num_results = 0
+        async for auth, result, no_ids in results:
+            num_results += 1
+            link = filter_link(auth.links[0].link)
+            olink = auth.links[0].link
+            if link not in tabIDS:
+                tabIDS.append(link)
+                if scraper == "semantic_scholar":
+                    author_siteweb = (
+                        "https://www.semanticscholar.org/author/"
+                        + auth.name
+                        + "/"
+                        + str(link)
+                    )
+                elif scraper == "openreview":
+                    author_siteweb = "https://openreview.net/profile?id=" + str(
+                        olink
+                    )
+                author_name_area = H.div["authornamearea"](
+                    H.p(auth.name),
+                    H.p(auth.links[0].type),
+                    H.a["link"](
+                        olink,
+                        href=author_siteweb,
+                        target="_blank",
+                    ),
+                    H.div["IDstatus"](id="idstatus" + link),
+                    H.div["authoridbuttonarea"](id="authoridbuttonarea" + link),
+                )
+                papers_area = H.div["papersarea"](id="a" + link)
+                area = H.div["authorarea"](
+                    author_name_area,
+                    papers_area,
+                )(id="area" + link)
+                page.print(area)
+                linked = is_linked(link, scraper, author_name)
+                if linked != False:
+                    is_excluded = link in no_ids
+                    page["#authoridbuttonarea" + link].print_html(
+                        get_buttons(
+                            auth,
+                            author_id,
+                            not is_excluded,
+                        )
+                    )
+                    if is_excluded:
+                        page["#idstatus" + link].print("ID Excluded")
+                    else:
+                        page["#idstatus" + link].print("ID Included")
+                else:
+                    page["#authoridbuttonarea" + link].print_html(
+                        get_buttons(auth, author_id)
+                    )
+
+            div = html(result)
+            valDiv = H.div["validationDiv"](div)
+            aid = str("#a" + link)
+            page[aid].print(valDiv)
+        if num_results == 0:
+            page.print(H.div["authorarea"]("No results found")(id="noresults"))
+        print(num_results)
+
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
             reaserchers = get_authors(author_name)
             author_id = reaserchers[0].author_id
             tabIDS = []
+            current_query_name = ss.author_with_papers
+            if scraper == "semantic_scholar":
+                current_query_name = ss.author_with_papers
+            elif scraper == "openreview":
+                or_scraper = OpenReviewPaperScraper(cfg, db)
+                all_venues = or_scraper._venues_from_wildcard("*")
+                current_query_name = query_name
 
-            results = prepare(
-                researchers=reaserchers,
-                idtype="semantic_scholar",
-                query_name=ss.author_with_papers,
-            )
-            async for auth, result, no_ids in results:
-                link = auth.links[0].link
-                if link not in tabIDS:
-                    tabIDS.append(link)
-                    author_name_area = H.div["authornamearea"](
-                        H.p(auth.name),
-                        H.p(auth.links[0].type),
-                        H.a["link"](
-                            link,
-                            href="https://www.semanticscholar.org/author/"
-                            + auth.name
-                            + "/"
-                            + str(link),
-                            target="_blank",
-                        ),
-                        H.div["IDstatus"](id="idstatus" + link),
-                        H.div["authoridbuttonarea"](
-                            id="authoridbuttonarea" + link
-                        ),
-                    )
-
-                    papers_area = H.div["papersarea"](id="a" + link)
-
-                    area = H.div["authorarea"](
-                        author_name_area,
-                        papers_area,
-                    )(id="area" + link)
-
-                    page.print(area)
-
-                    linked = is_linked(link, "semantic_scholar", author_name)
-                    if linked != False:
-                        is_excluded = link in no_ids
-                        page["#authoridbuttonarea" + link].print_html(
-                            get_buttons(
-                                auth,
-                                author_id,
-                                not is_excluded,
-                            )
-                        )
-                        if is_excluded:
-                            page["#idstatus" + link].print("ID Excluded")
-                        else:
-                            page["#idstatus" + link].print("ID Included")
-                    else:
-                        page["#authoridbuttonarea" + link].print_html(
-                            get_buttons(auth, author_id)
-                        )
-
-                div = html(result)
-                valDiv = H.div["validationDiv"](div)
-                aid = "#a" + link
-                page[aid].print(valDiv)
+                optionTab = []
+                for venue in all_venues:
+                    optionTab.append(H.option[venue](venue))
+                dropdown = H.select["venuedropdown"](
+                    optionTab,
+                    onchange=(
+                        lambda event, author_id=author_id: select_venue(event)
+                    ),
+                    label="Select a venue",
+                )
+                page.print("Venues : ")
+                page.print(dropdown)
+            await build_page(scraper)
 
             # Keep the app running
             while True:
