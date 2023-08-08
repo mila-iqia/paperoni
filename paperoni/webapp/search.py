@@ -13,10 +13,13 @@ from starbear import ClientWrap, Queue, bear
 from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
+
 from .common import search_interface
+
 here = Path(__file__).parent
 
-async def regenerator(queue, regen, reset,db):
+
+async def regenerator(queue, regen, reset, db):
     gen = regen(db=db)
     done = False
     while True:
@@ -29,7 +32,7 @@ async def regenerator(queue, regen, reset,db):
                 inp = None
 
         if inp is not None:
-            new_gen = regen(inp,db)
+            new_gen = regen(inp, db)
             if new_gen is not None:
                 done = False
                 gen = new_gen

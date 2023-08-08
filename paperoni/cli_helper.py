@@ -43,6 +43,7 @@ def _timespan(start=None, end=None, year=0, timestamp=False):
     else:
         return start, end
 
+
 def search_stmt(
     title: Option = None,
     author: Option = None,
@@ -55,18 +56,18 @@ def search_stmt(
     year: Option & int = 0,
 ):
     start, end = _timespan(start, end, year, timestamp=True)
+
     def likefmt(field, x):
         if x.startswith("="):
             return field == x[1:]
         else:
             return field.like(f"%{x}%")
+
     stmt = select(sch.Paper)
     if title:
         stmt = stmt.filter(likefmt(sch.Paper.title, title))
     if author or author_link:
-        stmt = stmt.join(sch.Paper.paper_author).join(
-            sch.PaperAuthor.author
-        )
+        stmt = stmt.join(sch.Paper.paper_author).join(sch.PaperAuthor.author)
     if author:
         stmt = stmt.join(sch.Author.author_alias).filter(
             likefmt(sch.AuthorAlias.alias, author)
@@ -96,7 +97,8 @@ def search_stmt(
         )
     stmt = stmt.group_by(sch.Paper.paper_id)
     return stmt
-    
+
+
 @tooled
 def query_papers(
     title: Option = None,
@@ -111,7 +113,17 @@ def query_papers(
 ):
     cfg = get_config()
     with cfg.database as db:
-        stmt = search_stmt(title, author, author_link, venue, venue_link, link, start, end, year)
+        stmt = search_stmt(
+            title,
+            author,
+            author_link,
+            venue,
+            venue_link,
+            link,
+            start,
+            end,
+            year,
+        )
 
         for (paper,) in db.session.execute(stmt):
             yield paper

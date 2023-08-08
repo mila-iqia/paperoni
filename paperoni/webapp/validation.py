@@ -15,12 +15,13 @@ from starbear import ClientWrap, Queue, bear
 from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
+
 from .common import search_interface
 
 here = Path(__file__).parent
 
 
-async def regenerator(queue, regen, reset,db):
+async def regenerator(queue, regen, reset, db):
     gen = regen(db=db)
     done = False
     while True:
@@ -33,7 +34,7 @@ async def regenerator(queue, regen, reset,db):
                 inp = None
 
         if inp is not None:
-            new_gen = regen(inp,db)
+            new_gen = regen(inp, db)
             if new_gen is not None:
                 done = False
                 gen = new_gen
@@ -59,6 +60,12 @@ async def app(page):
         H.link(rel="stylesheet", href=here.parent / "default.css")
     )
     area = H.div["area"]().autoid()
+
+    async def toggleSeeFlagged(form=None):
+        nonlocal seeFlagged
+        seeFlagged = not seeFlagged
+        await q.put(form)
+
     page.print(
         H.form(
             H.input(name="title", placeholder="Title", oninput=debounced),
@@ -68,12 +75,12 @@ async def app(page):
             "Start Date",
             H.input(
                 type="date", id="start", name="date-start", oninput=debounced
-            )["calender"],
+            )["calendar"],
             H.br,
             "End Date",
             H.input(
                 type="date", id="start", name="date-end", oninput=debounced
-            )["calender"],
+            )["calendar"],
             H.div(id="seeFlagged")["seeFlagged"](
                 "See Flagged Papers",
                 H.input(
@@ -81,18 +88,12 @@ async def app(page):
                     id="seeFlagged",
                     name="seeFlagged",
                     value="seeFlagged",
-                    oninput=(lambda event: checkSeeFlagged(event)),
+                    oninput=ClientWrap(toggleSeeFlagged, form=True),
                 ),
-            )
+            ),
         ),
     )
     page.print(area)
-
-    async def checkSeeFlagged(event=None):
-        nonlocal seeFlagged
-        seeFlagged = not seeFlagged
-        page[area].clear()
-        await build_page()
 
     def getChangedButton(result):
         for flag in result.paper_flag:
@@ -157,64 +158,61 @@ async def app(page):
                     H.div["flag"](str(flag.flag_name) + " : Invalidated")
                 )
         return flagTab
-    
-    async def build_page():
-        regen = regenerator(
+
+    with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
+        with cfg.database as db:
+            seeFlagged = False
+            regen = regenerator(
                 queue=q,
                 regen=search_interface,
                 reset=page[area].clear,
                 db=db,
             )
-        async for result in regen:
-            if seeFlagged:
-                if has_paper_validation(result):
-                    div = html(result)
-                    divFlags = get_flags(result)
-                    buttonChange = getChangedButton(result)
-                    valDiv = H.div["validationDiv"](
-                        div,
-                        H.button["button"](
-                            "Undo",
-                            onclick=(
-                                lambda event, paper=result: unValidate(
-                                    paper
-                                )
+            async for result in regen:
+                if seeFlagged:
+                    if has_paper_validation(result):
+                        div = html(result)
+                        divFlags = get_flags(result)
+                        buttonChange = getChangedButton(result)
+                        valDiv = H.div["validationDiv"](
+                            div,
+                            H.button["button"](
+                                "Undo",
+                                onclick=(
+                                    lambda event, paper=result: unValidate(
+                                        paper
+                                    )
+                                ),
                             ),
-                        ),
-                        buttonChange,
-                        divFlags,
-                    )(id="p" + result.paper_id.hex())
-                    page[area].print(valDiv)
-            else:
-                if not has_paper_validation(result):
-                    div = html(result)
-                    divFlags = get_flags(result)
-                    valDiv = H.div["validationDiv"](
-                        div,
-                        H.button["button"](
-                            "Validate",
-                            onclick=(
-                                lambda event, paper=result: validate_button(
-                                    paper, 1
-                                )
+                            buttonChange,
+                            divFlags,
+                        )(id="p" + result.paper_id.hex())
+                        page[area].print(valDiv)
+                else:
+                    if not has_paper_validation(result):
+                        div = html(result)
+                        divFlags = get_flags(result)
+                        valDiv = H.div["validationDiv"](
+                            div,
+                            H.button["button"](
+                                "Validate",
+                                onclick=(
+                                    lambda event, paper=result: validate_button(
+                                        paper, 1
+                                    )
+                                ),
                             ),
-                        ),
-                        H.button["button", "invalidate"](
-                            "Invalidate",
-                            onclick=(
-                                lambda event, paper=result: validate_button(
-                                    paper, 0
-                                )
+                            H.button["button", "invalidate"](
+                                "Invalidate",
+                                onclick=(
+                                    lambda event, paper=result: validate_button(
+                                        paper, 0
+                                    )
+                                ),
                             ),
-                        ),
-                        divFlags,
-                    )(id="p" + result.paper_id.hex())
-                    page[area].print(valDiv)
-
-    with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
-        with cfg.database as db:
-                seeFlagged = False
-                await build_page()
+                            divFlags,
+                        )(id="p" + result.paper_id.hex())
+                        page[area].print(valDiv)
 
 
 ROUTES = app
