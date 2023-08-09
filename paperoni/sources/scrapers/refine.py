@@ -530,7 +530,9 @@ def _pdf_refiner(db, paper, link):
                         category=aff.category,
                         aliases=[],
                     )
-                    for aff in sorted(affiliations, key=str)
+                    for aff in sorted(
+                        affiliations, key=lambda x: getattr(x, "name", None)
+                    )
                 ],
             )
             for author, affiliations in author_affiliations.items()
