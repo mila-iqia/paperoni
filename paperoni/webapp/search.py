@@ -52,13 +52,30 @@ async def regenerator(queue, regen, reset, db):
 async def app(page):
     """Search for papers."""
     q = Queue()
-    debounced = ClientWrap(q, debounce=0.3)
+    debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "default.css")
     )
     area = H.div["area"]().autoid()
-    page.print(H.input(name="title", placeholder="Title", oninput=debounced))
+    page.print(
+        H.form(
+            H.input(name="title", placeholder="Title", oninput=debounced),
+            H.input(name="author", placeholder="Author", oninput=debounced),
+            H.input(name="venue", placeholder="Venue", oninput=debounced),
+            H.br,
+            "Start Date",
+            H.input(
+                type="date", id="start", name="date-start", oninput=debounced
+            )["calendar"],
+            H.br,
+            "End Date",
+            H.input(
+                type="date", id="start", name="date-end", oninput=debounced
+            )["calendar"],
+        ),
+    )
     page.print(area)
+
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
             regen = regenerator(
