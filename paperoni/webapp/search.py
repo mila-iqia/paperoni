@@ -14,11 +14,13 @@ from paperoni.config import load_config
 from paperoni.db import schema as sch
 from paperoni.display import html
 
+from .common import search_interface
+
 here = Path(__file__).parent
 
 
-async def regenerator(queue, regen, reset):
-    gen = regen()
+async def regenerator(queue, regen, reset, db):
+    gen = regen(db=db)
     done = False
     while True:
         if done:
@@ -30,7 +32,7 @@ async def regenerator(queue, regen, reset):
                 inp = None
 
         if inp is not None:
-            new_gen = regen(inp)
+            new_gen = regen(inp, db)
             if new_gen is not None:
                 done = False
                 gen = new_gen
@@ -50,31 +52,37 @@ async def regenerator(queue, regen, reset):
 async def app(page):
     """Search for papers."""
     q = Queue()
-    debounced = ClientWrap(q, debounce=0.3)
+    debounced = ClientWrap(q, debounce=0.3, form=True)
     page["head"].print(
         H.link(rel="stylesheet", href=here.parent / "default.css")
     )
     area = H.div["area"]().autoid()
-    page.print(H.input(oninput=debounced))
+    page.print(
+        H.form(
+            H.input(name="title", placeholder="Title", oninput=debounced),
+            H.input(name="author", placeholder="Author", oninput=debounced),
+            H.input(name="venue", placeholder="Venue", oninput=debounced),
+            H.br,
+            "Start Date",
+            H.input(
+                type="date", id="start", name="date-start", oninput=debounced
+            )["calendar"],
+            H.br,
+            "End Date",
+            H.input(
+                type="date", id="start", name="date-end", oninput=debounced
+            )["calendar"],
+        ),
+    )
     page.print(area)
-
-    def regen(event=None):
-        title = "neural" if event is None else event["value"]
-        return generate(title)
-
-    def generate(title):
-        stmt = select(sch.Paper)
-        stmt = stmt.filter(sch.Paper.title.like(f"%{title}%"))
-        results = list(db.session.execute(stmt))
-        for (r,) in results:
-            yield r
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
             regen = regenerator(
                 queue=q,
-                regen=regen,
+                regen=search_interface,
                 reset=page[area].clear,
+                db=db,
             )
             async for result in regen:
                 div = html(result)

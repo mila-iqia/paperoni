@@ -315,7 +315,7 @@ class search:
                 raise Exception(f"Unsupported format: {format}")
 
             with formatter() as fmt:
-                for (entry,) in results:
+                for entry in results:
                     fmt(entry)
 
     def author():
