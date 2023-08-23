@@ -123,7 +123,11 @@ def test_prepare_given(scraper_p):
 def test_acquire(scraper_y):
     papers = list(scraper_y.acquire())
     print(len(papers))
-    assert len(papers) == 14
+    assert len(papers) > 20
+    # OpenReview cross-indexes papers from DBLP, and we don't want to add those
+    # because we get them from Semantic Scholar or other sources, so we check that
+    # there are not too many results
+    assert len(papers) < 200
 
 
 def test_query_venues(vscraper, data_regression):

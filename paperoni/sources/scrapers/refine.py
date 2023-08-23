@@ -60,35 +60,50 @@ def _only_if_affiliations(paper):
     return None
 
 
-def _paper_from_jats(soup, links):
-    date1 = soup.select_one('pub-date[date-type="pub"] string-date')
-    if date1:
-        with covguard():
-            date = extract_date(date1.text)
+def _extract_date_from_xml(node):
+    if node is None:
+        return None
+
+    y = node.find("year")
+    if y is not None:
+        m = node.find("month")
+        d = node.find("day")
+        date = {
+            "date": datetime(
+                int(y.text),
+                int((m and m.text) or 1),
+                int((d and d.text) or 1),
+            ),
+            "date_precision": (
+                DatePrecision.day
+                if d
+                else DatePrecision.month
+                if m
+                else DatePrecision.year
+            ),
+        }
+        return date
     else:
-        date2 = (
-            soup.select_one('pub-date[pub-type="ppub"]')
-            or soup.select_one('pub-date[date-type="pub"]')
-            or soup.select_one('pub-date[pub-type="epub"]')
-        )
-        if date2:
-            y = date2.find("year")
-            m = date2.find("month")
-            d = date2.find("day")
-            date = {
-                "date": datetime(
-                    int(y.text),
-                    int((m and m.text) or 1),
-                    int((d and d.text) or 1),
-                ),
-                "date_precision": (
-                    DatePrecision.day
-                    if d
-                    else DatePrecision.month
-                    if m
-                    else DatePrecision.year
-                ),
-            }
+        date_node = node.find("string-date")
+        if date_node:
+            return extract_date(date_node.text)
+        else:
+            return None
+
+
+def _paper_from_jats(soup, links):
+    selectors = [
+        'pub-date[date-type="pub"]',
+        'pub-date[date-type="pub"]',
+        'pub-date[pub-type="epub"]',
+    ]
+    date_candidates = [
+        result
+        for selector in selectors
+        if (result := _extract_date_from_xml(soup.select_one(selector)))
+    ]
+    date_candidates.sort(key=lambda x: -x["date_precision"])
+    date = date_candidates and date_candidates[0]
 
     def find_affiliation(aff):
         node = soup.select_one(f'aff#{aff.attrs["rid"]} institution')
@@ -471,23 +486,23 @@ def refine_with_pubmedcentral(db, paper, link):
 #     )
 
 
-_institutions = None
+_institutions = [None, None]
 
 
 def _pdf_refiner(db, paper, link):
-    global _institutions
-
     doc = PDF(link).get_document()
     if not doc:
         return None
 
-    if _institutions is None:
-        _institutions = {}
+    if _institutions[0] is not db:
+        _institutions[:] = [db, {}]
         for (inst,) in db.session.execute(select(sch.Institution)):
             with covguard():
-                _institutions.update({alias: inst for alias in inst.aliases})
+                _institutions[1].update({alias: inst for alias in inst.aliases})
 
-    author_affiliations = find_fulltext_affiliations(paper, doc, _institutions)
+    author_affiliations = find_fulltext_affiliations(
+        paper, doc, _institutions[1]
+    )
 
     if not author_affiliations:
         with covguard():
@@ -515,7 +530,9 @@ def _pdf_refiner(db, paper, link):
                         category=aff.category,
                         aliases=[],
                     )
-                    for aff in affiliations
+                    for aff in sorted(
+                        affiliations, key=lambda x: getattr(x, "name", None)
+                    )
                 ],
             )
             for author, affiliations in author_affiliations.items()

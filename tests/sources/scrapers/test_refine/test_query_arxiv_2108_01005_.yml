@@ -76,12 +76,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
-    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
-    name: Mila - Quebec AI Institute
-  - aliases: []
-    category: unknown
     institution_id: 2d649788-22cc-f867-6fd9-f98e10c823c2
     name: McGill University
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
   author:
     aliases: []
     author_id: 7dc8d3b8-f2bf-151d-76fb-835d13dbcad5
@@ -132,12 +132,12 @@ authors:
     name: Canada CIFAR AI Chair
   - aliases: []
     category: unknown
-    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
-    name: Mila - Quebec AI Institute
-  - aliases: []
-    category: unknown
     institution_id: 0ea2649f-a678-b9ca-c97a-8a62adf7e041
     name: HEC Montréal
+  - aliases: []
+    category: unknown
+    institution_id: 2e7644e4-4887-77eb-735a-190201699cd0
+    name: Mila - Quebec AI Institute
   author:
     aliases: []
     author_id: 5519d377-0775-07b9-b34b-438f1761c319
