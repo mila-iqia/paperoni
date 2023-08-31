@@ -54,9 +54,7 @@ async def app(page):
     """Edit/update the list of researchers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
-    page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "default.css")
-    )
+    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
     roles = [
         "associate",
         "core",

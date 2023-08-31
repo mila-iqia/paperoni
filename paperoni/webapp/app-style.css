@@ -1,0 +1,261 @@
+/* General */
+
+body {
+    margin: auto;
+    margin-top: 10px;
+    width: 1000px;
+    font-size: 16px;
+}
+
+/* General interface */
+
+input {
+    width: 100%;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* Papers */
+
+.paper {
+    position: relative;
+}
+
+.paper .content {
+    margin: 5px;
+    padding: 10px;
+    overflow: auto;
+    border-top: 2px solid black;
+    border-left: 40px solid black;
+}
+
+.paper .band {
+    position: absolute;
+    font-size: 25px;
+    z-index: 1000;
+    color: white;
+    left: 15px;
+    top: 8px;
+}
+
+.paper .author {
+    display: inline-flex;
+    flex-direction: column;
+    /* background: #f0f0f0; */
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: scroll;
+}
+
+.paper.excellent .content  {
+    border-color: orange;
+}
+
+.paper.good .content  {
+    border-color: green;
+}
+
+.paper.ok .content  {
+    border-color: blue;
+}
+
+.paper.unknown .content  {
+    border-color: #bbb;
+    opacity: 80%;
+}
+
+.paper .author.excellent {
+    background: gold;
+}
+
+.paper .author.good {
+    background: #aaf;
+}
+
+.paper .author.known {
+    background: #ddf;
+}
+
+.paper .author .affiliation {
+    font-size: 13px;
+}
+
+.venue > * {
+    margin-right: 5px;
+}
+.venue-status {
+    color: #555;
+}
+.venue-status:before {
+    content: "[";
+}
+.venue-status:after {
+    content: "]";
+}
+.venue-date {
+    font-weight: bold;
+    color: green;
+    margin-right: 5px;
+}
+.venue-name {
+    font-weight: bold;
+    color: purple;
+}
+
+.extra {
+    font-size: 14px;
+}
+.link {
+    padding: 2px;
+    background-color: #eef;
+    margin-right: 5px;
+}
+
+/* Other, to clean up */
+
+.authorinput{
+    width: 20%;
+    margin: 5px;
+}
+.roleinput{
+    width: 20%;
+    margin: 5px;
+}
+
+.area-authorlink{
+    /* width: 1300px; */
+    outline: 1px solid #555;
+}
+.up:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+.column{
+    outline: 1px solid #555;
+    float: left;
+    width: 20%;
+    height: 20px;
+    margin: auto;
+    text-align: center;
+}
+.mid{
+    outline: 1px solid #555;
+    width:100%;
+    height: 600px;
+    overflow: auto;
+}
+.down{
+    width: 100%;
+    height: 120px;
+    outline: 1px solid #555;
+}
+#errormessage{
+    color: red;
+    font-size: 14px;
+    margin: 5px;
+}
+.align-mid{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.author-column{
+    position: relative;
+    float: left;
+    width: 80%;
+    height: 30px;
+    margin: auto;   
+}
+
+.author-column:hover, .column-mid-link:hover{
+    background-color: #eef;
+    cursor: pointer;
+}
+.author-column:hover{
+    background-color: #eef;
+    cursor: pointer;
+}
+.column-mid{
+    position: relative;
+    float: left;
+    width: 25%;
+    height: 30px;
+    margin: auto;
+}
+.column-mid-link{
+    position: relative;
+    float: left;
+    width: 20%;
+    height: 30px;
+    margin: auto;
+    text-align: center;
+}
+.addform{
+    margin: auto;
+}
+
+.calender{
+    width: 120px;
+    margin-left: 10px;
+}
+form{
+    display: block;
+    margin-left: 20px;
+}
+
+.authorarea{
+    border: 1px solid green;
+    height: 500px;
+    margin: 10px;
+}
+.papersarea{
+height: 100%;
+width: 70%;
+overflow: auto;
+float: right;
+}
+.authornamearea{
+height: 90%;
+width: 25%;
+float: left;
+margin: 10px;
+position: relative;
+}
+.authoridbuttonarea{
+    position: absolute;
+    width: 150px;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+}
+.button{
+    background-color: green;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom:10px;
+    margin: 5px;
+}
+
+.invalidate{
+    background-color: rgb(172, 4, 4);
+}
+
+.notavailable{
+    background-color: rgb(85, 85, 85);
+}
+
+#seeFlagged{
+    float: right;
+    text-align: center;
+    width: 300px;
+    margin: 5px 10px 5px 10px;
+}

@@ -9,12 +9,12 @@ from pathlib import Path
 
 from hrepr import H
 from sqlalchemy import select
-from sqlalchemy.exc import OperationalError
 from starbear import ClientWrap, Queue, bear
 
 from paperoni.config import load_config
 from paperoni.db import schema as sch
-from paperoni.display import html
+
+from .render import paper_html
 
 from .common import search_interface
 
@@ -56,9 +56,7 @@ async def app(page):
     seeFlagged = False
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
-    page["head"].print(
-        H.link(rel="stylesheet", href=here.parent / "default.css")
-    )
+    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
     area = H.div["area"]().autoid()
 
     async def toggleSeeFlagged(form=None):
@@ -121,7 +119,7 @@ async def app(page):
         # Update the paper html
         page[deleteid].print(
             H.div(
-                html(paper),
+                paper_html(paper),
                 H.button["button"](
                     "Undo",
                     onclick=(lambda event, paper=paper: unValidate(paper)),
@@ -171,7 +169,7 @@ async def app(page):
             async for result in regen:
                 if seeFlagged:
                     if has_paper_validation(result):
-                        div = html(result)
+                        div = paper_html(result)
                         divFlags = get_flags(result)
                         buttonChange = getChangedButton(result)
                         valDiv = H.div["validationDiv"](
@@ -190,7 +188,7 @@ async def app(page):
                         page[area].print(valDiv)
                 else:
                     if not has_paper_validation(result):
-                        div = html(result)
+                        div = paper_html(result)
                         divFlags = get_flags(result)
                         valDiv = H.div["validationDiv"](
                             div,
