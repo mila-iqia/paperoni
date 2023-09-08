@@ -101,12 +101,63 @@ class PDF:
             case _:
                 return None
 
-    def get_fulltext(self, fulldata=True):
-        if len(str(self.pdf_path)) > 255:
-            # Weird stuff happens if this is true, so we just ignore it I guess?
-            return ""
-
+    def acquire_and_process(self):
         pdf = self.pdf_path
+
+        if len(str(pdf)) > 255:
+            # Weird stuff happens if this is true, so we just ignore it I guess?
+            return False
+
+        pdf.parent.mkdir(parents=True, exist_ok=True)
+
+        if not pdf.exists() or self.cache_policy == "force":
+            if self.last_failure not in [None, "anonymous"]:
+                print(
+                    f"Skip {self} because of last failure: {self.last_failure}"
+                )
+                return False
+            url = self.get_url()
+            if url is None:
+                return False
+            try:
+                download(filename=pdf, url=url)
+            except requests.exceptions.SSLError:
+                print(f"failed to download pdf file for {self}")
+                self.clear(failure="ssl-error")
+                return False
+
+        # With metadata
+        outcome = subprocess.run(
+            ["pdftotext", "-bbox-layout", str(pdf), str(self.data_path)],
+            capture_output=True,
+        )
+        if outcome.returncode != 0:
+            print(f"pdftotext failed to process pdf file for {self}")
+            self.clear(failure="invalid-pdf")
+            return False
+
+        if not self.data_path.stat().st_size:
+            self.pdf_path.unlink()
+            self.data_path.unlink()
+            self.clear(failure="empty")
+            return False
+
+        # Without
+        outcome = subprocess.run(
+            ["pdftotext", str(pdf), str(self.text_path)],
+            capture_output=True,
+        )
+        # Remove newlines between words
+        self.text_path.write_text(
+            re.sub(
+                string=self.text_path.read_text(),
+                pattern=r"(\w) *\n *(\w)",
+                repl=r"\1 \2",
+            )
+        )
+        return True
+
+    def get_fulltext(self, fulldata=True):
         if fulldata:
             target = self.data_path
         else:
@@ -118,50 +169,8 @@ class PDF:
         elif self.cache_policy == "only":
             return None
 
-        pdf.parent.mkdir(parents=True, exist_ok=True)
-
-        if not pdf.exists() or self.cache_policy == "force":
-            if self.last_failure not in [None, "anonymous"]:
-                print(
-                    f"Skip {self} because of last failure: {self.last_failure}"
-                )
-                return None
-            url = self.get_url()
-            if url is None:
-                return None
-            try:
-                download(filename=pdf, url=url)
-            except requests.exceptions.SSLError:
-                print(f"failed to download pdf file for {self}")
-                self.clear(failure="ssl-error")
-                return None
-
-        extra_args = ["-bbox-layout"] if fulldata else []
-        outcome = subprocess.run(
-            ["pdftotext", *extra_args, str(pdf), str(target)],
-            capture_output=True,
-        )
-        if not fulldata:
-            # Remove newlines between words
-            target.write_text(
-                re.sub(
-                    string=target.read_text(), pattern=r"\w *\n *\w", repl=" "
-                )
-            )
-        if outcome.returncode != 0:
-            print(f"pdftotext failed to process pdf file for {self}")
-            self.clear(failure="invalid-pdf")
-            return None
-
-        if not target.stat().st_size:
-            target.unlink()
-
-        fulltext = target.read_text()
-        if not fulltext:
-            self.clear(failure="empty")
-            return None
-
-        return fulltext
+        self.acquire_and_process()
+        return target.read_text()
 
     def get_document(self):
         fulltext = self.get_fulltext()
