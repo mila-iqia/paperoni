@@ -61,6 +61,7 @@ class PDF:
 
         self.pdf_path = Path(config.get().paths.cache) / link.type / lnk
         self.data_path = self.pdf_path.with_suffix(".data")
+        self.text_path = self.pdf_path.with_suffix(".txt")
         self.meta_path = self.pdf_path.with_suffix(".json")
 
         if self.meta_path.exists():
@@ -100,17 +101,20 @@ class PDF:
             case _:
                 return None
 
-    def get_fulltext(self):
+    def get_fulltext(self, fulldata=True):
         if len(str(self.pdf_path)) > 255:
             # Weird stuff happens if this is true, so we just ignore it I guess?
             return ""
 
         pdf = self.pdf_path
-        data = self.data_path
+        if fulldata:
+            target = self.data_path
+        else:
+            target = self.text_path
 
-        if data.exists():
+        if target.exists():
             if self.cache_policy != "force":
-                return data.read_text()
+                return target.read_text()
         elif self.cache_policy == "only":
             return None
 
@@ -132,19 +136,27 @@ class PDF:
                 self.clear(failure="ssl-error")
                 return None
 
+        extra_args = ["-bbox-layout"] if fulldata else []
         outcome = subprocess.run(
-            ["pdftotext", "-bbox-layout", str(pdf), str(data)],
+            ["pdftotext", *extra_args, str(pdf), str(target)],
             capture_output=True,
         )
+        if not fulldata:
+            # Remove newlines between words
+            target.write_text(
+                re.sub(
+                    string=target.read_text(), pattern=r"\w *\n *\w", repl=" "
+                )
+            )
         if outcome.returncode != 0:
             print(f"pdftotext failed to process pdf file for {self}")
             self.clear(failure="invalid-pdf")
             return None
 
-        if not data.stat().st_size:
-            data.unlink()
+        if not target.stat().st_size:
+            target.unlink()
 
-        fulltext = data.read_text()
+        fulltext = target.read_text()
         if not fulltext:
             self.clear(failure="empty")
             return None
