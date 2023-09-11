@@ -60,14 +60,22 @@ class PDF:
             lnk = f"{lnk}.pdf"
 
         self.pdf_path = Path(config.get().paths.cache) / link.type / lnk
-        self.data_path = self.pdf_path.with_suffix(".data")
-        self.text_path = self.pdf_path.with_suffix(".txt")
-        self.meta_path = self.pdf_path.with_suffix(".json")
 
-        if self.meta_path.exists():
-            self.meta = json.loads(self.meta_path.read_text())
+        if len(str(self.pdf_path)) > 255:
+            # Weird stuff happens if this is true, so we just ignore it I guess?
+            self.pdf_path = (
+                self.data_path
+            ) = self.text_path = self.meta_path = None
+            self.meta = {"failure": "bad_path"}
         else:
-            self.meta = {}
+            self.data_path = self.pdf_path.with_suffix(".data")
+            self.text_path = self.pdf_path.with_suffix(".txt")
+            self.meta_path = self.pdf_path.with_suffix(".json")
+
+            if self.meta_path.exists():
+                self.meta = json.loads(self.meta_path.read_text())
+            else:
+                self.meta = {}
 
         self.last_failure = self.meta.get("failure", None)
 
@@ -103,12 +111,13 @@ class PDF:
 
     def acquire_and_process(self):
         pdf = self.pdf_path
-
-        if len(str(pdf)) > 255:
-            # Weird stuff happens if this is true, so we just ignore it I guess?
+        if not pdf:
             return False
 
         pdf.parent.mkdir(parents=True, exist_ok=True)
+
+        if not pdf.exists() and self.cache_policy == "no_download":
+            return False
 
         if not pdf.exists() or self.cache_policy == "force":
             if self.last_failure not in [None, "anonymous"]:
@@ -158,6 +167,9 @@ class PDF:
         return True
 
     def get_fulltext(self, fulldata=True):
+        if not self.pdf_path:
+            return None
+
         if fulldata:
             target = self.data_path
         else:
@@ -169,8 +181,10 @@ class PDF:
         elif self.cache_policy == "only":
             return None
 
-        self.acquire_and_process()
-        return target.read_text()
+        if self.acquire_and_process():
+            return target.read_text()
+        else:
+            return None
 
     def get_document(self):
         fulltext = self.get_fulltext()
