@@ -28,6 +28,9 @@ input {
     padding: 10px;
     overflow: auto;
     border-top: 2px solid black;
+}
+
+.paper.validation .content {
     border-left: 40px solid black;
 }
 

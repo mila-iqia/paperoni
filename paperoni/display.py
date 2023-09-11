@@ -118,6 +118,9 @@ def display(paper: Union[Paper, sch.Paper]):
     for typ, link in expand_links(paper.links):
         print(f"  {T.bold_green(typ)} {link}")
     print_field("Citations", paper.citation_count)
+    if hasattr(paper, "excerpt"):
+        before, match, after = paper.excerpt
+        print_field("Excerpt", before + T.bold_red(match) + after)
 
 
 @ovld

@@ -14,9 +14,8 @@ from starbear import ClientWrap, Queue, bear
 from paperoni.config import load_config
 from paperoni.db import schema as sch
 
-from .render import paper_html
-
 from .common import search_interface
+from .render import validation_html
 
 here = Path(__file__).parent
 
@@ -119,7 +118,7 @@ async def app(page):
         # Update the paper html
         page[deleteid].print(
             H.div(
-                paper_html(paper),
+                validation_html(paper),
                 H.button["button"](
                     "Undo",
                     onclick=(lambda event, paper=paper: unValidate(paper)),
@@ -169,7 +168,7 @@ async def app(page):
             async for result in regen:
                 if seeFlagged:
                     if has_paper_validation(result):
-                        div = paper_html(result)
+                        div = validation_html(result)
                         divFlags = get_flags(result)
                         buttonChange = getChangedButton(result)
                         valDiv = H.div["validationDiv"](
@@ -188,7 +187,7 @@ async def app(page):
                         page[area].print(valDiv)
                 else:
                     if not has_paper_validation(result):
-                        div = paper_html(result)
+                        div = validation_html(result)
                         divFlags = get_flags(result)
                         valDiv = H.div["validationDiv"](
                             div,

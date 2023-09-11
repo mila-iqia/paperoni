@@ -48,7 +48,7 @@ def author_html(auth):
     )
 
 
-def paper_html(paper, maxauth=50):
+def validation_html(paper, maxauth=50):
     low_confidence = getattr(get_config().tweaks, "low_confidence_authors")
     c = Confidence(
         institution_name=r".*\bmila\b.*|.*montr.al institute.*learning algorithm.*",
@@ -78,7 +78,7 @@ def paper_html(paper, maxauth=50):
 
     total_score, author_scores = c.paper_score(paper)
 
-    return H.div["paper", _paper_score_class(total_score)](
+    return H.div["paper", "validation", _paper_score_class(total_score)](
         H.div["band"](int(total_score)),
         H.div["content"](
             H.div["title"](
@@ -103,5 +103,58 @@ def paper_html(paper, maxauth=50):
                 for typ, link in expand_links(paper.links)
                 if link.startswith("http")
             ),
+        ),
+    )
+
+
+def paper_html(paper, maxauth=50):
+    def _domain(lnk):
+        return lnk.split("/")[2]
+
+    venues = H.div["venues"]
+    for release in paper.releases:
+        v = release.venue
+        venues = venues(
+            H.div["venue"](
+                H.span["venue-date"](
+                    DatePrecision.format(v.date, v.date_precision)
+                ),
+                H.span["venue-name"](v.name),
+                H.span["venue-status"](release.status),
+            )
+        )
+
+    nauth = len(paper.authors)
+    more = nauth - maxauth if nauth > maxauth else 0
+    pdfs = [lnk for k, lnk in expand_links(paper.links) if "pdf" in lnk]
+
+    if hasattr(paper, "excerpt"):
+        before, matching, after = paper.excerpt
+        excerpt = H.div["excerpt"](before, H.b(matching), after)
+    else:
+        excerpt = ""
+
+    return H.div["paper"](
+        H.div["content"](
+            H.div["title"](
+                H.a(paper.title, href=pdfs[0], target="_blank")
+                if pdfs
+                else paper.title
+            ),
+            H.div["authors"](
+                [author_html(auth) for auth in paper.authors],
+                f"... ({more} more)" if more else "",
+            ),
+            venues,
+            H.div["extra"](
+                H.a["link"](
+                    _domain(link) if typ == "html" else typ.replace("_", "-"),
+                    href=link,
+                    target="_blank",
+                )
+                for typ, link in expand_links(paper.links)
+                if link.startswith("http")
+            ),
+            excerpt,
         ),
     )

@@ -1,15 +1,17 @@
+import traceback
 from datetime import datetime
 
 from sqlalchemy import select
 
 from paperoni.db import schema as sch
 
-from ..cli_helper import search_stmt
+from ..cli_helper import search, search_stmt
 
 
 def search_interface(event=None, db=None):
     def regen(event=None):
-        title, author, venue, date_start, date_end = (
+        title, author, venue, date_start, date_end, excerpt = (
+            None,
             None,
             None,
             None,
@@ -31,18 +33,21 @@ def search_interface(event=None, db=None):
                 date_start = event["date-start"]
             if "date-end" in event.keys():
                 date_end = event["date-end"]
+            if "excerpt" in event.keys():
+                excerpt = event["excerpt"]
 
-        stmt = search_stmt(
+        results = search(
             title=title,
             author=author,
             venue=venue,
             start=date_start,
             end=date_end,
+            excerpt=excerpt,
+            allow_download=False,
         )
         try:
-            for (r,) in db.session.execute(stmt):
-                yield r
+            yield from results
         except Exception as e:
-            print("Error : ", e)
+            traceback.print_exception(e)
 
     return regen(event=event)

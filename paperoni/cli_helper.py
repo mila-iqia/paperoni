@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from coleo import Option, tooled
@@ -5,6 +6,7 @@ from sqlalchemy import or_, select
 
 from .config import get_config
 from .db import schema as sch
+from .paper_utils import fulltext
 
 
 @tooled
@@ -45,15 +47,15 @@ def _timespan(start=None, end=None, year=0, timestamp=False):
 
 
 def search_stmt(
-    title: Option = None,
-    author: Option = None,
-    author_link: Option = None,
-    venue: Option = None,
-    venue_link: Option = None,
-    link: Option = None,
-    start: Option = None,
-    end: Option = None,
-    year: Option & int = 0,
+    title=None,
+    author=None,
+    author_link=None,
+    venue=None,
+    venue_link=None,
+    link=None,
+    start=None,
+    end=None,
+    year=0,
 ):
     start, end = _timespan(start, end, year, timestamp=True)
 
@@ -99,17 +101,18 @@ def search_stmt(
     return stmt
 
 
-@tooled
-def query_papers(
-    title: Option = None,
-    author: Option = None,
-    author_link: Option = None,
-    venue: Option = None,
-    venue_link: Option = None,
-    link: Option = None,
-    start: Option = None,
-    end: Option = None,
-    year: Option & int = 0,
+def search(
+    title=None,
+    author=None,
+    author_link=None,
+    venue=None,
+    venue_link=None,
+    link=None,
+    start=None,
+    end=None,
+    year=0,
+    excerpt=None,
+    allow_download=False,
 ):
     cfg = get_config()
     with cfg.database as db:
@@ -126,4 +129,50 @@ def query_papers(
         )
 
         for (paper,) in db.session.execute(stmt):
+            if excerpt:
+                text = fulltext(
+                    paper, cache_policy="use" if allow_download else "only"
+                )
+                if text is None:
+                    continue
+                match = re.search(string=text, pattern=excerpt, flags=re.IGNORECASE)
+                if not match:
+                    continue
+                start, end = match.span()
+                context = 100
+                paper.excerpt = (
+                    text[max(0, start - context) : start],
+                    text[start:end],
+                    text[end : end + context],
+                )
             yield paper
+
+
+@tooled
+def query_papers(
+    title: Option = None,
+    author: Option = None,
+    author_link: Option = None,
+    venue: Option = None,
+    venue_link: Option = None,
+    link: Option = None,
+    start: Option = None,
+    end: Option = None,
+    year: Option & int = 0,
+    excerpt: Option & str = None,
+    # [negate]
+    allow_download: Option & bool = True,
+):
+    yield from search(
+        title=title,
+        author=author,
+        author_link=author_link,
+        venue=venue,
+        venue_link=venue_link,
+        link=link,
+        start=start,
+        end=end,
+        year=year,
+        excerpt=excerpt,
+        allow_download=allow_download,
+    )

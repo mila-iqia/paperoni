@@ -13,9 +13,8 @@ from starbear import ClientWrap, Queue, bear
 from paperoni.config import load_config
 from paperoni.db import schema as sch
 
-from .render import paper_html
-
 from .common import search_interface
+from .render import paper_html
 
 here = Path(__file__).parent
 

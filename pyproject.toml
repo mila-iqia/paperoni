@@ -15,7 +15,6 @@ blessed = "^1.17.9"
 coleo = {extras = ["yaml"], version = "^0.3.2"}
 eventlet = "^0.33.1"
 giving = "^0.4.1"
-hrepr = "^0.5.0"
 lxml = "^4.9.1"
 openreview-py = "^1.5.2"
 ovld = "^0.3.2"
