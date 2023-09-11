@@ -4,16 +4,12 @@ Run with `uvicorn apps.validation:app`
 
 import asyncio
 import os
-from datetime import datetime
 from pathlib import Path
 
 from hrepr import H
-from sqlalchemy import select
 from starbear import ClientWrap, Queue, bear
 
-from paperoni.config import load_config
-from paperoni.db import schema as sch
-
+from ..config import load_config
 from .common import search_interface
 from .render import validation_html
 

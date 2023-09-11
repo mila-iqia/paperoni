@@ -12,10 +12,10 @@ from hrepr import H
 from sqlalchemy import select
 from starbear import ClientWrap, Queue, bear
 
-from paperoni.config import load_config
-from paperoni.db import schema as sch
-from paperoni.model import Institution, Role, UniqueAuthor
-from paperoni.utils import tag_uuid
+from ..config import load_config
+from ..db import schema as sch
+from ..model import Institution, Role, UniqueAuthor
+from ..utils import tag_uuid
 
 here = Path(__file__).parent
 

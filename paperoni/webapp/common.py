@@ -1,11 +1,6 @@
 import traceback
-from datetime import datetime
 
-from sqlalchemy import select
-
-from paperoni.db import schema as sch
-
-from ..cli_helper import search, search_stmt
+from ..cli_helper import search
 
 
 def search_interface(event=None, db=None):

@@ -7,12 +7,9 @@ import os
 from pathlib import Path
 
 from hrepr import H
-from sqlalchemy import select
 from starbear import ClientWrap, Queue, bear
 
-from paperoni.config import load_config
-from paperoni.db import schema as sch
-
+from ..config import load_config
 from .common import search_interface
 from .render import paper_html
 

@@ -135,7 +135,9 @@ def search(
                 )
                 if text is None:
                     continue
-                match = re.search(string=text, pattern=excerpt, flags=re.IGNORECASE)
+                match = re.search(
+                    string=text, pattern=excerpt, flags=re.IGNORECASE
+                )
                 if not match:
                     continue
                 start, end = match.span()
