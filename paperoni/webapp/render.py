@@ -37,7 +37,7 @@ def author_html(auth):
         if l.type == "wpid_en"
     ]
     if bio:
-        (bio,) = bio
+        bio = bio[0]
         authname = H.a["author-name"](auth.author.name, href=bio)
     else:
         authname = H.span["author-name"](auth.author.name)
