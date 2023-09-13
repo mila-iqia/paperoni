@@ -2,7 +2,6 @@
 Run with `uvicorn apps.validation:app`
 """
 
-import asyncio
 import os
 from pathlib import Path
 
@@ -10,39 +9,10 @@ from hrepr import H
 from starbear import ClientWrap, Queue, bear
 
 from ..config import load_config
-from .common import search_interface
+from .common import regenerator, search_interface
 from .render import validation_html
 
 here = Path(__file__).parent
-
-
-async def regenerator(queue, regen, reset, db):
-    gen = regen(db=db)
-    done = False
-    while True:
-        if done:
-            inp = await queue.get()
-        else:
-            try:
-                inp = await asyncio.wait_for(queue.get(), 0.01)
-            except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
-                inp = None
-
-        if inp is not None:
-            new_gen = regen(inp, db)
-            if new_gen is not None:
-                done = False
-                gen = new_gen
-                reset()
-                continue
-
-        try:
-            element = next(gen)
-        except StopIteration:
-            done = True
-            continue
-
-        yield element
 
 
 @bear

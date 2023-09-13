@@ -1,6 +1,134 @@
+import asyncio
 import traceback
 
+from starbear import ClientWrap
+
 from ..cli_helper import search
+
+
+class GUI:
+    def __init__(self, db, queue, params, defaults):
+        self.db = db
+        self.queue = queue
+        self.params = defaults | params
+        self.debounced = ClientWrap(queue, debounce=0.3, form=True)
+
+    async def loop(self, reset):
+        gen = self.regen()
+        done = False
+        while True:
+            if done:
+                inp = await self.queue.get()
+            else:
+                try:
+                    inp = await asyncio.wait_for(self.queue.get(), 0.01)
+                except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
+                    inp = None
+
+            if inp is not None:
+                self.params = inp
+                new_gen = self.regen()
+                if new_gen is not None:
+                    done = False
+                    gen = new_gen
+                    reset()
+                    continue
+
+            try:
+                element = next(gen)
+            except StopIteration:
+                done = True
+                continue
+
+            yield element
+
+    def regen(self):
+        yield from []
+
+
+class SearchGUI(GUI):
+    def __init__(self, db, queue, params, defaults):
+        search_defaults = {
+            "title": None,
+            "author": None,
+            "venue": None,
+            "date-start": None,
+            "date-end": None,
+            "excerpt": None,
+        }
+        super().__init__(
+            db=db,
+            queue=queue,
+            params=params,
+            defaults=search_defaults | defaults,
+        )
+
+    def regen(self):
+        results = search(
+            title=self.params["title"],
+            author=self.params["author"],
+            venue=self.params["venue"],
+            start=self.params["date-start"],
+            end=self.params["date-end"],
+            excerpt=self.params["excerpt"],
+            allow_download=False,
+            db=self.db,
+        )
+        try:
+            yield from results
+        except Exception as e:
+            traceback.print_exception(e)
+
+    def __hrepr__(self, H, hrepr):
+        def _input(name, description, type=False):
+            return H.div["form-input"](
+                H.label({"for": f"input-{name}"})(description),
+                H.input(
+                    name=name,
+                    id=f"input-{name}",
+                    type=type,
+                    oninput=self.debounced,
+                    value=self.params.get(name, False) or False,
+                ),
+            )
+
+        return H.form["search-form"](
+            _input("title", "Title"),
+            _input("author", "Author"),
+            _input("venue", "Venue"),
+            _input("excerpt", "Excerpt"),
+            _input("date-start", "Start date", type="date"),
+            _input("date-end", "End date", type="date"),
+        )
+
+
+async def regenerator(queue, regen, reset, db):
+    gen = regen(db=db)
+    done = False
+    while True:
+        if done:
+            inp = await queue.get()
+        else:
+            try:
+                inp = await asyncio.wait_for(queue.get(), 0.01)
+            except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
+                inp = None
+
+        if inp is not None:
+            new_gen = regen(inp, db)
+            if new_gen is not None:
+                done = False
+                gen = new_gen
+                reset()
+                continue
+
+        try:
+            element = next(gen)
+        except StopIteration:
+            done = True
+            continue
+
+        yield element
 
 
 def search_interface(event=None, db=None):
@@ -39,6 +167,7 @@ def search_interface(event=None, db=None):
             end=date_end,
             excerpt=excerpt,
             allow_download=False,
+            db=db,
         )
         try:
             yield from results
