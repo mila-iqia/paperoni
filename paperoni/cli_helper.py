@@ -101,6 +101,22 @@ def search_stmt(
     return stmt
 
 
+def find_excerpt(paper, excerpt, allow_download=True):
+    text = fulltext(paper, cache_policy="use" if allow_download else "only")
+    if text is None:
+        return None
+    match = re.search(string=text, pattern=excerpt, flags=re.IGNORECASE)
+    if not match:
+        return None
+    start, end = match.span()
+    context = 100
+    return (
+        text[max(0, start - context) : start],
+        text[start:end],
+        text[end : end + context],
+    )
+
+
 def search(
     title=None,
     author=None,
@@ -130,23 +146,10 @@ def search(
 
         for (paper,) in db.session.execute(stmt):
             if excerpt:
-                text = fulltext(
-                    paper, cache_policy="use" if allow_download else "only"
-                )
-                if text is None:
+                ranges = find_excerpt(paper, excerpt, allow_download)
+                if ranges is None:
                     continue
-                match = re.search(
-                    string=text, pattern=excerpt, flags=re.IGNORECASE
-                )
-                if not match:
-                    continue
-                start, end = match.span()
-                context = 100
-                paper.excerpt = (
-                    text[max(0, start - context) : start],
-                    text[start:end],
-                    text[end : end + context],
-                )
+                paper.excerpt = ranges
             yield paper
 
 
