@@ -129,9 +129,9 @@ def search(
     year=0,
     excerpt=None,
     allow_download=False,
+    db=None,
 ):
-    cfg = get_config()
-    with cfg.database as db:
+    def proceed(db):
         stmt = search_stmt(
             title,
             author,
@@ -151,6 +151,13 @@ def search(
                     continue
                 paper.excerpt = ranges
             yield paper
+
+    if db is None:
+        cfg = get_config()
+        with cfg.database as db:
+            yield from proceed(db)
+    else:
+        yield from proceed(db)
 
 
 @tooled
