@@ -24,7 +24,7 @@ async def app(page):
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
-            gui = SearchGUI(db, q, dict(page.query_params), defaults={})
+            gui = SearchGUI(page, db, q, dict(page.query_params), defaults={})
             page.print(gui)
             page.print(area)
 

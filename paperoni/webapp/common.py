@@ -1,17 +1,38 @@
 import asyncio
 import traceback
+from pathlib import Path
+from urllib.parse import urlencode
 
+from hrepr import H
 from starbear import ClientWrap
 
 from ..cli_helper import search
 
+here = Path(__file__).parent
+
 
 class GUI:
-    def __init__(self, db, queue, params, defaults):
+    def __init__(self, page, db, queue, params, defaults):
+        self.page = page
         self.db = db
         self.queue = queue
         self.params = defaults | params
         self.debounced = ClientWrap(queue, debounce=0.3, form=True)
+        self.link_area = H.div["copy-link"](
+            "📋 Copy link",
+            H.span["copiable"](self.link()),
+            __constructor={
+                "module": Path(here / "lib.js"),
+                "symbol": "clip",
+                "arguments": [H.self()],
+            },
+        )
+
+    def link(self):
+        encoded = urlencode(
+            {p: v for p, v in self.params.items() if "$" not in p and v}
+        )
+        return f"?{encoded}"
 
     async def loop(self, reset):
         gen = self.regen()
@@ -31,6 +52,7 @@ class GUI:
                 if new_gen is not None:
                     done = False
                     gen = new_gen
+                    self.page[self.link_area, ".copiable"].set(self.link())
                     reset()
                     continue
 
@@ -47,7 +69,7 @@ class GUI:
 
 
 class SearchGUI(GUI):
-    def __init__(self, db, queue, params, defaults):
+    def __init__(self, page, db, queue, params, defaults):
         search_defaults = {
             "title": None,
             "author": None,
@@ -57,6 +79,7 @@ class SearchGUI(GUI):
             "excerpt": None,
         }
         super().__init__(
+            page=page,
             db=db,
             queue=queue,
             params=params,
@@ -85,7 +108,6 @@ class SearchGUI(GUI):
                 H.label({"for": f"input-{name}"})(description),
                 H.input(
                     name=name,
-                    id=f"input-{name}",
                     type=type,
                     oninput=self.debounced,
                     value=self.params.get(name, False) or False,
@@ -99,6 +121,7 @@ class SearchGUI(GUI):
             _input("excerpt", "Excerpt"),
             _input("date-start", "Start date", type="date"),
             _input("date-end", "End date", type="date"),
+            self.link_area,
         )
 
 

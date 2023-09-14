@@ -262,3 +262,14 @@ position: relative;
     width: 300px;
     margin: 5px 10px 5px 10px;
 }
+
+.copy-link {
+    padding: 5px;
+    border-radius: 5px;
+    background: #eea;
+    cursor: pointer;
+}
+
+.copiable {
+    display: none;
+}
