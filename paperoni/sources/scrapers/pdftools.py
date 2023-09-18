@@ -344,10 +344,15 @@ def find_fulltext_affiliations(paper, doc, institutions):
     if doc is None:
         return None
 
-    superscripts = classify_superscripts(doc)
-
     methods = [
-        find_fulltext_affiliation_by_footnote(doc, superscripts),
+        find_fulltext_affiliation_by_footnote(
+            doc,
+            superscripts=classify_superscripts(doc, lenient=False),
+        ),
+        find_fulltext_affiliation_by_footnote(
+            doc,
+            superscripts=classify_superscripts(doc, lenient=True),
+        ),
         find_fulltext_affiliation_under_name(doc, 5),
         find_fulltext_affiliation_under_name(doc, 10000),
     ]
@@ -374,7 +379,17 @@ def find_fulltext_affiliations(paper, doc, institutions):
             or []
             for _, (_, author, aliases) in authors
         }
-        results.append((sum(1 for x in aff.values() if x), -i, aff))
+        score = sum(
+            0
+            if len(afflist) == 0
+            else 1
+            if len(afflist) <= 3
+            else 0
+            if len(afflist) <= 5
+            else -1  # Suspiciously too many affiliations
+            for afflist in aff.values()
+        )
+        results.append((score, -i, aff))
 
     results.sort(reverse=True)
     return results[0][-1]

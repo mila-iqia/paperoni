@@ -347,12 +347,12 @@ def superscripts(x: Line):
         )
 
 
-def possible_superscripts(sup):
+def possible_superscripts(sup, lenient=True):
     if "," in sup:
         for entry in sup.split(","):
             yield from possible_superscripts(entry)
     yield sup
-    if len(sup) > 1:
+    if len(sup) > 1 and lenient:
         for char in sup:
             if char.strip():
                 yield char
@@ -362,11 +362,11 @@ def normalize(x):
     return unicodedata.normalize("NFKC", x).lower()
 
 
-def classify_superscripts(doc):
+def classify_superscripts(doc, lenient=True):
     befores = defaultdict(list)
     afters = defaultdict(list)
     for ss in superscripts(doc):
-        for sup in possible_superscripts(ss.superscript):
+        for sup in possible_superscripts(ss.superscript, lenient=lenient):
             if ss.before.strip():
                 befores[sup].append(normalize(ss.before))
             if ss.after.strip():
