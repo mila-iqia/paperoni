@@ -9,19 +9,19 @@ from hrepr import H
 from starbear import ClientWrap, Queue, bear
 
 from ..config import load_config
-from .common import regenerator, search_interface
+from .common import mila_template, regenerator, search_interface
 from .render import validation_html
 
 here = Path(__file__).parent
 
 
 @bear
-async def app(page):
+@mila_template
+async def app(page, box):
     """Validate papers."""
     seeFlagged = False
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
-    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
     area = H.div["area"]().autoid()
 
     async def toggleSeeFlagged(form=None):
@@ -29,7 +29,7 @@ async def app(page):
         seeFlagged = not seeFlagged
         await q.put(form)
 
-    page.print(
+    box.print(
         H.form(
             H.input(name="title", placeholder="Title", oninput=debounced),
             H.input(name="author", placeholder="Author", oninput=debounced),
@@ -56,7 +56,7 @@ async def app(page):
             ),
         ),
     )
-    page.print(area)
+    box.print(area)
 
     def getChangedButton(result):
         for flag in result.paper_flag:

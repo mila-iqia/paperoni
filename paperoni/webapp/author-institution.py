@@ -16,17 +16,17 @@ from ..config import load_config
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
 from ..utils import tag_uuid
-from .common import regenerator
+from .common import mila_template, regenerator
 
 here = Path(__file__).parent
 
 
 @bear
-async def app(page):
+@mila_template
+async def app(page, box):
     """Edit/update the list of researchers."""
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
-    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
     roles = [
         "associate",
         "core",
@@ -69,7 +69,7 @@ async def app(page):
         H.div(id="mid-div")["mid"](),
         H.div(id="down-div")["down"](form),
     ).autoid()
-    page.print(area)
+    box.print(area)
     dataAuthors = {}
 
     def regen(event=None):

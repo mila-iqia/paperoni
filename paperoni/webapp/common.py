@@ -1,5 +1,6 @@
 import asyncio
 import traceback
+from functools import wraps
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -198,3 +199,21 @@ def search_interface(event=None, db=None):
             traceback.print_exception(e)
 
     return regen(event=event)
+
+
+def mila_template(fn):
+    @wraps(fn)
+    async def app(page):
+        page["head"].print(
+            H.link(rel="stylesheet", href=here / "app-style.css")
+        )
+        page.print(
+            H.div["header"](
+                H.div["title"](),
+                H.img(src=here / "logo.png"),
+            )
+        )
+        page.print(target := H.div().autoid())
+        return await fn(page, page[target])
+
+    return app

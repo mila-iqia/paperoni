@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+
 /* General */
 
 body {
@@ -5,7 +7,31 @@ body {
     margin-top: 10px;
     width: 1000px;
     font-size: 16px;
+    font-family: "Work Sans";
 }
+
+/* Header */
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #662E7D;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.header img {
+    height: 40px;
+    padding-right: 20px;
+}
+
+.header .title {
+    height: 100%;
+    font-size: 30px;
+}
+
 
 /* General interface */
 

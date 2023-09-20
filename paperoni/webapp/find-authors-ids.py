@@ -17,6 +17,7 @@ from ..db import schema as sch
 from ..display import html
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
+from .common import mila_template
 
 here = Path(__file__).parent
 
@@ -126,10 +127,9 @@ async def prepare(
 
 
 @bear
-async def app(page):
+@mila_template
+async def app(page, box):
     """Include/Exclude author Ids."""
-    page["head"].print(H.link(rel="stylesheet", href=here / "app-style.css"))
-
     author_name = page.query_params.get("author")
     scraper = page.query_params.get("scraper")
 
@@ -291,7 +291,7 @@ async def app(page):
                     author_name_area,
                     papers_area,
                 )(id="area" + link)
-                page.print(area)
+                box.print(area)
                 linked = is_linked(link, scraper, author_name)
                 if linked != False:
                     is_excluded = link in no_ids
@@ -316,7 +316,7 @@ async def app(page):
             aid = str("#a" + link)
             page[aid].print(valDiv)
         if num_results == 0:
-            page.print(H.div["authorarea"]("No results found")(id="noresults"))
+            box.print(H.div["authorarea"]("No results found")(id="noresults"))
         print(num_results)
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
@@ -342,8 +342,8 @@ async def app(page):
                     ),
                     label="Select a venue",
                 )
-                page.print("Venues : ")
-                page.print(dropdown)
+                box.print("Venues : ")
+                box.print(dropdown)
             await build_page(scraper)
 
             # Keep the app running
