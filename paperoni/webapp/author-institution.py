@@ -16,37 +16,9 @@ from ..config import load_config
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
 from ..utils import tag_uuid
+from .common import regenerator
 
 here = Path(__file__).parent
-
-
-async def regenerator(queue, regen, reset):
-    gen = regen()
-    done = False
-    while True:
-        if done:
-            inp = await queue.get()
-        else:
-            try:
-                inp = await asyncio.wait_for(queue.get(), 0.01)
-            except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
-                inp = None
-
-        if inp is not None:
-            new_gen = regen(inp)
-            if new_gen is not None:
-                done = False
-                gen = new_gen
-                reset()
-                continue
-
-        try:
-            element = next(gen)
-        except StopIteration:
-            done = True
-            continue
-
-        yield element
 
 
 @bear
@@ -263,6 +235,7 @@ async def app(page):
                 queue=q,
                 regen=regen,
                 reset=page["#mid-div"].clear,
+                db=db,
             )
             async for result in regen:
                 htmlAuthor(result)
