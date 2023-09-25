@@ -209,8 +209,11 @@ def mila_template(fn):
         )
         page.print(
             H.div["header"](
-                H.div["title"](),
-                H.img(src=here / "logo.png"),
+                H.div["title"](id="title"),
+                H.div(
+                    H.img(src=here / "logo.png"),
+                    H.a["logout"]("Logout", href="/_/logout"),
+                ),
             )
         )
         page.print(target := H.div().autoid())
