@@ -4,12 +4,68 @@ from functools import wraps
 from pathlib import Path
 from urllib.parse import urlencode
 
+import yaml
 from hrepr import H
-from starbear import ClientWrap
+from starbear import ClientWrap, Queue
 
 from ..cli_helper import search
 
 here = Path(__file__).parent
+
+
+class NormalFile:
+    def __init__(self, pth, validate=None):
+        self.path = Path(pth).expanduser()
+        self.validate = validate
+
+    def read(self):
+        return self.path.read_text()
+
+    def write(self, new_text, dry=False):
+        if self.validate:
+            if not self.validate(new_text):
+                raise Exception(f"Content is invalid")
+        if not dry:
+            self.path.write_text(new_text)
+
+
+class YAMLFile(NormalFile):
+    def __init__(self, pth):
+        super().__init__(pth, yaml.safe_load)
+
+
+class FileEditor:
+    def __init__(self, file):
+        self.file = file
+
+    async def run(self, page):
+        q = Queue()
+        submit = ClientWrap(q, form=True)
+        debounced = ClientWrap(q, debounce=0.3, form=True)
+
+        page.print(
+            H.form["update-file"](
+                H.textarea(
+                    self.file.read(), name="new-content", oninput=debounced
+                ),
+                actionarea := H.div().autoid(),
+                onsubmit=submit,
+            ),
+        )
+
+        async for event in q:
+            submitting = event["$submit"]
+            try:
+                self.file.write(event["new-content"], dry=not submitting)
+            except Exception as exc:
+                page[actionarea].set(
+                    H.div["error"](f"{type(exc).__name__}: {exc}")
+                )
+            else:
+                if submitting:
+                    page[actionarea].set("Saved")
+                else:
+                    page[actionarea].set(H.button("Update", name="update"))
 
 
 class GUI:
