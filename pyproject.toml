@@ -16,7 +16,7 @@ coleo = {extras = ["yaml"], version = "^0.3.2"}
 eventlet = "^0.33.1"
 giving = "^0.4.1"
 lxml = "^4.9.1"
-openreview-py = "^1.5.2"
+openreview-py = "^1.5.2,<1.28.0"
 ovld = "^0.3.2"
 pydantic = "^1.9.1"
 questionary = "^1.10.0"
