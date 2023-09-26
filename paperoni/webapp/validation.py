@@ -24,6 +24,11 @@ async def app(page, box):
     debounced = ClientWrap(q, debounce=0.3, form=True)
     area = H.div["area"]().autoid()
 
+    page["#title"].print(
+        "Validate papers",
+        H.a["ball"]("?", href="/help#validation"),
+    )
+
     async def toggleSeeFlagged(form=None):
         nonlocal seeFlagged
         seeFlagged = not seeFlagged

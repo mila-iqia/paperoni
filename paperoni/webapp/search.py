@@ -22,7 +22,10 @@ async def app(page, box):
     q = Queue()
     area = H.div["area"]().autoid()
 
-    page[".title"].print("Search for papers")
+    page["#title"].print(
+        "Search for papers",
+        H.a["ball"]("?", href="/help#search"),
+    )
 
     with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
         with cfg.database as db:
