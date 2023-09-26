@@ -16,7 +16,7 @@ here = Path(__file__).parent
 
 
 @bear
-@mila_template(title="Validate papers", help="/help#validation")
+@mila_template(help="/help#validation")
 async def app(page, box):
     """Validate papers."""
     seeFlagged = False

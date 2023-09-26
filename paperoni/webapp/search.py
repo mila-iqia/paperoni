@@ -16,7 +16,7 @@ here = Path(__file__).parent
 
 
 @bear
-@mila_template(title="Search for papers", help="/help#search")
+@mila_template(help="/help#search")
 async def app(page, box):
     """Search for papers."""
     q = Queue()

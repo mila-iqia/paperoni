@@ -301,9 +301,11 @@ class Index(LoneBear):
 
 
 @keyword_decorator
-def mila_template(fn, title="", help=None):
+def mila_template(fn, title=None, help=None):
     @wraps(fn)
     async def app(page):
+        actual_title = getattr(fn, "__doc__", None) or title or ""
+        actual_title = actual_title.removesuffix(".")
         page["head"].print(
             H.link(rel="stylesheet", href=here / "app-style.css")
         )
@@ -311,7 +313,9 @@ def mila_template(fn, title="", help=None):
             template(
                 here / "header.html",
                 title=H.div(
-                    title, " ", H.a["ball"]("?", href=help) if help else ""
+                    actual_title,
+                    " ",
+                    H.a["ball"]("?", href=help) if help else "",
                 ),
             )
         )

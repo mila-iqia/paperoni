@@ -9,7 +9,7 @@ from ..common import mila_template
 
 
 @bear
-@mila_template(title="Restart the server", help="/help#restart")
+@mila_template(help="/help#restart")
 async def app(page, box):
     """Restart the server."""
     q = Queue()
