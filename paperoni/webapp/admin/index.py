@@ -1,3 +1,3 @@
-from grizzlaxy import Index, here
+from ..common import Index
 
-ROUTES = Index(here() / ".." / "index-template.html")
+ROUTES = Index()

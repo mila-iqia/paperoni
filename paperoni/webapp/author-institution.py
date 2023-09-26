@@ -22,7 +22,7 @@ here = Path(__file__).parent
 
 
 @bear
-@mila_template
+@mila_template(title="List of researchers", help="/help#author-institution")
 async def app(page, box):
     """Edit/update the list of researchers."""
     q = Queue()

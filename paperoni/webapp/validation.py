@@ -16,18 +16,13 @@ here = Path(__file__).parent
 
 
 @bear
-@mila_template
+@mila_template(title="Validate papers", help="/help#validation")
 async def app(page, box):
     """Validate papers."""
     seeFlagged = False
     q = Queue()
     debounced = ClientWrap(q, debounce=0.3, form=True)
     area = H.div["area"]().autoid()
-
-    page["#title"].print(
-        "Validate papers",
-        H.a["ball"]("?", href="/help#validation"),
-    )
 
     async def toggleSeeFlagged(form=None):
         nonlocal seeFlagged

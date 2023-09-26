@@ -127,7 +127,7 @@ async def prepare(
 
 
 @bear
-@mila_template
+@mila_template(title="Find author IDs", help="/help#find-author-ids")
 async def app(page, box):
     """Include/Exclude author Ids."""
     author_name = page.query_params.get("author")

@@ -5,10 +5,13 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 import yaml
+from grizzlaxy.index import render
 from hrepr import H
-from starbear import ClientWrap, Queue
+from starbear import ClientWrap, Queue, template as _template
+from starbear.serve import LoneBear
 
 from ..cli_helper import search
+from ..utils import keyword_decorator
 
 here = Path(__file__).parent
 
@@ -257,18 +260,58 @@ def search_interface(event=None, db=None):
     return regen(event=event)
 
 
-def mila_template(fn):
+def template(path, location=None, **kw):
+    location = location or path.parent
+    return _template(
+        path,
+        _asset=lambda name: location / name,
+        _embed=lambda name: template(
+            location / name,
+            location=location,
+            **kw,
+        ),
+        **kw,
+    )
+
+
+# TODO: This is a copy of grizzlaxy.index.Index to avoid updating grizzlaxy during
+# my time off -- OB
+class Index(LoneBear):
+    hidden = True
+
+    def __init__(self, template=here / "mila-template.html"):
+        super().__init__(self.run)
+        self.location = template.parent if isinstance(template, Path) else None
+        self.template = template
+
+    async def run(self, request):
+        scope = request.scope
+        app = scope["app"]
+        root_path = scope["root_path"]
+        content = render("/", app.map, restrict=root_path)
+        if content is None:
+            content = render(
+                "/", app.map, restrict="/".join(root_path.split("/")[:-1])
+            )
+        return template(
+            self.template,
+            body=H.div(content or "", id="index"),
+            title="Application index",
+        )
+
+
+@keyword_decorator
+def mila_template(fn, title="", help=None):
     @wraps(fn)
     async def app(page):
         page["head"].print(
             H.link(rel="stylesheet", href=here / "app-style.css")
         )
         page.print(
-            H.div["header"](
-                H.div["title"](id="title"),
-                H.div(
-                    H.img(src=here / "logo.png"),
-                    H.a["logout"]("Logout", href="/_/logout"),
+            template(
+                here / "header.html",
+                title=H.div(
+                    title, " ", H.a["ball"]("?", href=help) if help else ""
                 ),
             )
         )

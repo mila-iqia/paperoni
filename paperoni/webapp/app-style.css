@@ -12,10 +12,18 @@ body {
 
 /* Header */
 
-.header {
+.navh {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.navv {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.header {
     justify-content: space-between;
     border-bottom: 3px solid #662E7D;
     margin-bottom: 10px;
@@ -23,6 +31,8 @@ body {
 }
 
 .header img {
+    display: inline-block;
+    vertical-align: center;
     height: 40px;
     padding-right: 20px;
 }
