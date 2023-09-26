@@ -314,13 +314,6 @@ position: relative;
     background-color: rgb(85, 85, 85);
 }
 
-#seeFlagged{
-    float: right;
-    text-align: center;
-    width: 300px;
-    margin: 5px 10px 5px 10px;
-}
-
 .copy-link {
     padding: 5px;
     border-radius: 5px;
