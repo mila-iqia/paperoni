@@ -161,6 +161,7 @@ def search(
     excerpt=None,
     allow_download=False,
     flags=[],
+    filters=[],
     db=None,
 ):
     def proceed(db):
@@ -183,7 +184,8 @@ def search(
                 if ranges is None:
                     continue
                 paper.excerpt = ranges
-            yield paper
+            if all(f(paper) for f in filters):
+                yield paper
 
     if db is None:
         cfg = get_config()

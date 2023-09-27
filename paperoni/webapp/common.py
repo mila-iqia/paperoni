@@ -130,87 +130,156 @@ class GUI:
         yield from []
 
 
+class SearchElement:
+    def __init__(self, name, description, default=None, type="text"):
+        self.name = name
+        self.description = description
+        self.default = self.value = default
+        self.type = type
+
+    def set_value(self, value):
+        self.value = value
+
+    def update_keywords(self, kw):
+        kw[self.name] = self.value
+
+    def element(self, queue):
+        return H.div["form-input"](
+            H.label({"for": f"input-{self.name}"})(self.description),
+            H.input(
+                name=self.name,
+                type=self.type,
+                oninput=queue,
+                value=self.value or False,
+            ),
+        )
+
+
+class CheckboxElement(SearchElement):
+    def __init__(self, name, description, default=False):
+        super().__init__(
+            name=name, description=description, default=default, type="checkbox"
+        )
+
+    def element(self, queue):
+        return H.div["form-flag"](
+            H.input(
+                name=self.name,
+                type="checkbox",
+                oninput=queue,
+                checked=self.value,
+            ),
+            H.label({"for": f"input-{self.name}"})(self.description),
+        )
+
+
+class FlagElement(CheckboxElement):
+    def __init__(self, name, description, flag, default=False):
+        super().__init__(name=name, description=description, default=default)
+        self.flag = flag
+
+    def set_value(self, value):
+        self.value = bool(value)
+
+    def update_keywords(self, kw):
+        if self.value:
+            flags = kw.setdefault("flags", [])
+            flags.append(self.flag)
+
+
+class FilterElement(CheckboxElement):
+    def __init__(self, name, description, filter, default=False):
+        super().__init__(name=name, description=description, default=default)
+        self.filter = filter
+
+    def set_value(self, value):
+        self.value = bool(value)
+
+    def update_keywords(self, kw):
+        if self.value:
+            flags = kw.setdefault("filters", [])
+            flags.append(self.filter)
+
+
 class SearchGUI(GUI):
     def __init__(self, page, db, queue, params, defaults):
-        search_defaults = {
-            "title": None,
-            "author": None,
-            "venue": None,
-            "date-start": None,
-            "date-end": None,
-            "excerpt": None,
-            "not-processed": False,
-            "valid": False,
-            "invalid": False,
-        }
+        self.elements = {}
+        self.search_defaults = {}
+        self.add_elements(
+            SearchElement(
+                name="title",
+                description="Title",
+                default=None,
+            ),
+            SearchElement(
+                name="author",
+                description="Author",
+                default=None,
+            ),
+            SearchElement(
+                name="venue",
+                description="Venue",
+                default=None,
+            ),
+            SearchElement(
+                name="excerpt",
+                description="Excerpt",
+                default=None,
+            ),
+            SearchElement(
+                name="start",
+                description="Start date",
+                default=None,
+                type="date",
+            ),
+            SearchElement(
+                name="end",
+                description="End date",
+                default=None,
+                type="date",
+            ),
+            FlagElement(
+                name="valid",
+                description="Valid",
+                flag="validation",
+                default=False,
+            ),
+            FlagElement(
+                name="invalid",
+                description="Invalid",
+                flag="!validation",
+                default=False,
+            ),
+        )
         super().__init__(
             page=page,
             db=db,
             queue=queue,
             params=params,
-            defaults=search_defaults | defaults,
+            defaults=self.search_defaults | defaults,
         )
+
+    def add_elements(self, *elements):
+        for el in elements:
+            self.elements[el.name] = el
+            self.search_defaults[el.name] = el.default
 
     def regen(self):
-        flags = []
-        if bool(self.params["not-processed"]):
-            flags.append("~validation")
-        if bool(self.params["valid"]):
-            flags.append("validation")
-        if bool(self.params["invalid"]):
-            flags.append("!validation")
-
-        results = search(
-            title=self.params["title"],
-            author=self.params["author"],
-            venue=self.params["venue"],
-            start=self.params["date-start"],
-            end=self.params["date-end"],
-            excerpt=self.params["excerpt"],
-            allow_download=False,
-            flags=flags,
-            db=self.db,
-        )
+        kw = {}
+        for k, el in self.elements.items():
+            el.set_value(self.params[k])
+            el.update_keywords(kw)
+        results = search(**kw, allow_download=False, db=self.db)
         try:
             yield from results
         except Exception as e:
             traceback.print_exception(e)
 
     def __hrepr__(self, H, hrepr):
-        def _input(name, description, type="text"):
-            return H.div["form-input"](
-                H.label({"for": f"input-{name}"})(description),
-                H.input(
-                    name=name,
-                    type=type,
-                    oninput=self.debounced,
-                    value=self.params.get(name, False) or False,
-                ),
-            )
-
-        def _flag(name, description):
-            return H.div["form-flag"](
-                H.input(
-                    name=name,
-                    type="checkbox",
-                    oninput=self.debounced,
-                    checked=bool(self.params.get(name, False)),
-                ),
-                H.label({"for": f"input-{name}"})(description),
-            )
-
-        return H.form["search-form"](
-            _input("title", "Title"),
-            _input("author", "Author"),
-            _input("venue", "Venue"),
-            _input("excerpt", "Excerpt"),
-            _input("date-start", "Start date", type="date"),
-            _input("date-end", "End date", type="date"),
-            _flag("not-processed", "Not processed"),
-            _flag("valid", "Valid"),
-            _flag("invalid", "Invalid"),
-            self.link_area,
-        )
+        inputs = [el.element(self.debounced) for el in self.elements.values()]
+        for k, v in self.params.items():
+            self.elements[k].set_value(v)
+        return H.form["search-form"](*inputs, self.link_area)
 
 
 async def regenerator(queue, regen, reset, db):
