@@ -1,7 +1,3 @@
-"""Simple validation app.
-Run with `uvicorn apps.validation:app`
-"""
-
 import asyncio
 from collections import Counter
 from pathlib import Path

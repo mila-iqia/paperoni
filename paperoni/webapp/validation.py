@@ -1,7 +1,3 @@
-"""Simple validation app.
-Run with `uvicorn apps.validation:app`
-"""
-
 from pathlib import Path
 
 from hrepr import H

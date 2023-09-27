@@ -1,7 +1,3 @@
-"""Simple search app.
-Run with `uvicorn apps.search:app`
-"""
-
 from pathlib import Path
 
 from hrepr import H

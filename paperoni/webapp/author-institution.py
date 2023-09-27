@@ -1,9 +1,3 @@
-"""Simple search app.
-Run with `uvicorn apps.search:app`
-"""
-
-import asyncio
-import os
 from datetime import datetime
 from hashlib import md5
 from pathlib import Path
