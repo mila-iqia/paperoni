@@ -1,9 +1,10 @@
 from pathlib import Path
 
+from aiostream import stream
 from hrepr import H
-from starbear import ClientWrap, Queue, bear
+from starbear import Queue, bear
 
-from .common import config, mila_template, regenerator, search_interface
+from .common import SearchGUI, config, mila_template
 from .render import validation_html
 
 here = Path(__file__).parent
@@ -13,160 +14,79 @@ here = Path(__file__).parent
 @mila_template(help="/help#validation")
 async def app(page, box):
     """Validate papers."""
-    seeFlagged = False
     q = Queue()
-    debounced = ClientWrap(q, debounce=0.3, form=True)
+    action_q = Queue().wrap(form=True)
     area = H.div["area"]().autoid()
-
-    async def toggleSeeFlagged(form=None):
-        nonlocal seeFlagged
-        seeFlagged = not seeFlagged
-        await q.put(form)
-
-    box.print(
-        H.form(
-            H.input(name="title", placeholder="Title", oninput=debounced),
-            H.input(name="author", placeholder="Author", oninput=debounced),
-            H.input(name="venue", placeholder="Venue", oninput=debounced),
-            H.br,
-            "Start Date",
-            H.input(
-                type="date", id="start", name="date-start", oninput=debounced
-            )["calendar"],
-            H.br,
-            "End Date",
-            H.input(
-                type="date", id="start", name="date-end", oninput=debounced
-            )["calendar"],
-            H.div(id="seeFlagged")["seeFlagged"](
-                "See Flagged Papers",
-                H.input(
-                    type="checkbox",
-                    id="seeFlagged",
-                    name="seeFlagged",
-                    value="seeFlagged",
-                    oninput=ClientWrap(toggleSeeFlagged, form=True),
-                ),
-            ),
-        ),
-    )
-    box.print(area)
-
-    def getChangedButton(result):
-        for flag in result.paper_flag:
-            if flag.flag_name == "validation" and flag.flag == 1:
-                return H.button["button", "invalidate"](
-                    "Invalidate",
-                    onclick=(
-                        lambda event, paper=result: changeValidation(paper, 0)
-                    ),
-                )
-            elif flag.flag_name == "validation" and flag.flag == 0:
-                return H.button["button"](
-                    "Validate",
-                    onclick=(
-                        lambda event, paper=result: changeValidation(paper, 1)
-                    ),
-                )
-        return None
-
-    def changeValidation(paper, val):
-        db.remove_flags(paper, "validation")
-        db.insert_flag(paper, "validation", val)
-        deleteid = "#p" + paper.paper_id.hex()
-        page[deleteid].clear()
-        # Update the paper html
-        page[deleteid].print(
-            H.div(
-                validation_html(paper),
-                H.button["button"](
-                    "Undo",
-                    onclick=(lambda event, paper=paper: unValidate(paper)),
-                ),
-                getChangedButton(paper),
-                get_flags(paper),
-            )
-        )
-
-    def validate_button(paper, val):
-        db.insert_flag(paper, "validation", val)
-        deleteid = "#p" + paper.paper_id.hex()
-        page[deleteid].delete()
-
-    def unValidate(paper):
-        db.remove_flags(paper, "validation")
-        deleteid = "#p" + paper.paper_id.hex()
-        page[deleteid].delete()
-
-    def has_paper_validation(result):
-        if type(result).__name__ == "Paper":
-            return db.has_flag(result, "validation")
-        return False
-
-    def get_flags(paper):
-        flagTab = []
-        for flag in paper.paper_flag:
-            if flag.flag == 1:
-                flagTab.append(
-                    H.div["flag"](str(flag.flag_name) + " : Validated")
-                )
-            else:
-                flagTab.append(
-                    H.div["flag"](str(flag.flag_name) + " : Invalidated")
-                )
-        return flagTab
+    papers = {}
 
     with config().database as db:
-        seeFlagged = False
-        regen = regenerator(
-            queue=q,
-            regen=search_interface,
-            reset=page[area].clear,
-            db=db,
+        gui = SearchGUI(
+            page,
+            db,
+            q,
+            dict(page.query_params),
+            defaults={"no-validation": True},
         )
-        async for result in regen:
-            if seeFlagged:
-                if has_paper_validation(result):
-                    div = validation_html(result)
-                    divFlags = get_flags(result)
-                    buttonChange = getChangedButton(result)
-                    valDiv = H.div["validationDiv"](
-                        div,
-                        H.button["button"](
-                            "Undo",
-                            onclick=(
-                                lambda event, paper=result: unValidate(paper)
-                            ),
-                        ),
-                        buttonChange,
-                        divFlags,
-                    )(id="p" + result.paper_id.hex())
-                    page[area].print(valDiv)
+        box.print(gui)
+        box.print(area)
+
+        async for result in stream.merge(
+            action_q, gui.loop(reset=box[area].clear)
+        ):
+            if isinstance(result, dict):
+                for k, v in result.items():
+                    if k.startswith("v-"):
+                        paper_id = k.removeprefix("v-")
+                        paper = papers[paper_id]
+                        match v:
+                            case "valid":
+                                db.insert_flag(paper, "validation", 1)
+                            case "invalid":
+                                db.insert_flag(paper, "validation", 0)
+                            case "unknown":
+                                db.remove_flags(paper, "validation")
+
             else:
-                if not has_paper_validation(result):
-                    div = validation_html(result)
-                    divFlags = get_flags(result)
-                    valDiv = H.div["validationDiv"](
-                        div,
-                        H.button["button"](
-                            "Validate",
-                            onclick=(
-                                lambda event, paper=result: validate_button(
-                                    paper, 1
-                                )
+                div = validation_html(result)
+                pid = result.paper_id.hex()
+                papers[pid] = result
+                existing_flag = db.get_flag(result, "validation")
+                val_div = H.div(
+                    div,
+                    H.form["form-validation"](
+                        H.label["validation-button"](
+                            H.input(
+                                type="radio",
+                                name=f"v-{pid}",
+                                value="valid",
+                                checked=existing_flag == 1,
+                                onchange=action_q,
                             ),
+                            "Yes",
                         ),
-                        H.button["button", "invalidate"](
-                            "Invalidate",
-                            onclick=(
-                                lambda event, paper=result: validate_button(
-                                    paper, 0
-                                )
+                        H.label["validation-button"](
+                            H.input(
+                                type="radio",
+                                name=f"v-{pid}",
+                                value="invalid",
+                                checked=existing_flag == 0,
+                                onchange=action_q,
                             ),
+                            "No",
                         ),
-                        divFlags,
-                    )(id="p" + result.paper_id.hex())
-                    page[area].print(valDiv)
+                        H.label["validation-button"](
+                            H.input(
+                                type="radio",
+                                name=f"v-{pid}",
+                                value="unknown",
+                                checked=existing_flag is None,
+                                onchange=action_q,
+                            ),
+                            "Unknown",
+                        ),
+                    ),
+                )
+                box[area].print(val_div)
 
 
 ROUTES = app

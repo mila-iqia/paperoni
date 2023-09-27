@@ -142,6 +142,34 @@ input[type="text"], input[type="date"] {
     width: 30px;
 }
 
+.validation-button {
+    display: inline-block;
+    position: relative;
+    margin: 10px;
+    width: 150px;
+    text-align: center;
+}
+input[type="radio"] {
+    appearance: none;
+    position: absolute;
+    left: -0.5em;
+    top: -0.5em;
+    width: 150px;
+    height: 2em;
+    background: lightgrey;
+    border-radius: 5px;
+    z-index: -10;
+}
+input[type="radio"][value="valid"]:checked {
+    background: lightgreen;
+}
+input[type="radio"][value="invalid"]:checked {
+    background: lightcoral;
+}
+input[type="radio"][value="unknown"]:checked {
+    background: lightsalmon;
+}
+
 /* Papers */
 
 .paper {

@@ -505,10 +505,13 @@ class Database(OvldBase):
         self.session.commit()
 
     def has_flag(self, paper, flagname):
+        return self.get_flag(paper, flagname) is not None
+
+    def get_flag(self, paper, flagname):
         for flag in paper.paper_flag:
             if flag.flag_name == flagname:
-                return True
-        return False
+                return flag.flag
+        return None
 
     def insert_author(self, author_id, name, quality):
         ins_stmt = f"""

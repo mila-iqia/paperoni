@@ -297,9 +297,9 @@ class SearchGUI(GUI):
             traceback.print_exception(e)
 
     def __hrepr__(self, H, hrepr):
-        inputs = [el.element(self.debounced) for el in self.elements.values()]
         for k, v in self.params.items():
             self.elements[k].set_value(v)
+        inputs = [el.element(self.debounced) for el in self.elements.values()]
         return H.div(
             H.form["search-form"](*inputs),
             H.div["search-extra"](
