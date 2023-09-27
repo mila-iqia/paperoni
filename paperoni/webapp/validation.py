@@ -2,14 +2,12 @@
 Run with `uvicorn apps.validation:app`
 """
 
-import os
 from pathlib import Path
 
 from hrepr import H
 from starbear import ClientWrap, Queue, bear
 
-from ..config import load_config
-from .common import mila_template, regenerator, search_interface
+from .common import config, mila_template, regenerator, search_interface
 from .render import validation_html
 
 here = Path(__file__).parent
@@ -122,60 +120,57 @@ async def app(page, box):
                 )
         return flagTab
 
-    with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
-        with cfg.database as db:
-            seeFlagged = False
-            regen = regenerator(
-                queue=q,
-                regen=search_interface,
-                reset=page[area].clear,
-                db=db,
-            )
-            async for result in regen:
-                if seeFlagged:
-                    if has_paper_validation(result):
-                        div = validation_html(result)
-                        divFlags = get_flags(result)
-                        buttonChange = getChangedButton(result)
-                        valDiv = H.div["validationDiv"](
-                            div,
-                            H.button["button"](
-                                "Undo",
-                                onclick=(
-                                    lambda event, paper=result: unValidate(
-                                        paper
-                                    )
-                                ),
+    with config().database as db:
+        seeFlagged = False
+        regen = regenerator(
+            queue=q,
+            regen=search_interface,
+            reset=page[area].clear,
+            db=db,
+        )
+        async for result in regen:
+            if seeFlagged:
+                if has_paper_validation(result):
+                    div = validation_html(result)
+                    divFlags = get_flags(result)
+                    buttonChange = getChangedButton(result)
+                    valDiv = H.div["validationDiv"](
+                        div,
+                        H.button["button"](
+                            "Undo",
+                            onclick=(
+                                lambda event, paper=result: unValidate(paper)
                             ),
-                            buttonChange,
-                            divFlags,
-                        )(id="p" + result.paper_id.hex())
-                        page[area].print(valDiv)
-                else:
-                    if not has_paper_validation(result):
-                        div = validation_html(result)
-                        divFlags = get_flags(result)
-                        valDiv = H.div["validationDiv"](
-                            div,
-                            H.button["button"](
-                                "Validate",
-                                onclick=(
-                                    lambda event, paper=result: validate_button(
-                                        paper, 1
-                                    )
-                                ),
+                        ),
+                        buttonChange,
+                        divFlags,
+                    )(id="p" + result.paper_id.hex())
+                    page[area].print(valDiv)
+            else:
+                if not has_paper_validation(result):
+                    div = validation_html(result)
+                    divFlags = get_flags(result)
+                    valDiv = H.div["validationDiv"](
+                        div,
+                        H.button["button"](
+                            "Validate",
+                            onclick=(
+                                lambda event, paper=result: validate_button(
+                                    paper, 1
+                                )
                             ),
-                            H.button["button", "invalidate"](
-                                "Invalidate",
-                                onclick=(
-                                    lambda event, paper=result: validate_button(
-                                        paper, 0
-                                    )
-                                ),
+                        ),
+                        H.button["button", "invalidate"](
+                            "Invalidate",
+                            onclick=(
+                                lambda event, paper=result: validate_button(
+                                    paper, 0
+                                )
                             ),
-                            divFlags,
-                        )(id="p" + result.paper_id.hex())
-                        page[area].print(valDiv)
+                        ),
+                        divFlags,
+                    )(id="p" + result.paper_id.hex())
+                    page[area].print(valDiv)
 
 
 ROUTES = app

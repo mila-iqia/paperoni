@@ -12,11 +12,10 @@ from hrepr import H
 from sqlalchemy import select
 from starbear import ClientWrap, Queue, bear
 
-from ..config import load_config
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
 from ..utils import tag_uuid
-from .common import mila_template, regenerator
+from .common import config, mila_template, regenerator
 
 here = Path(__file__).parent
 
@@ -229,16 +228,15 @@ async def app(page, box):
         for (r,) in results:
             yield r
 
-    with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
-        with cfg.database as db:
-            regen = regenerator(
-                queue=q,
-                regen=regen,
-                reset=page["#mid-div"].clear,
-                db=db,
-            )
-            async for result in regen:
-                htmlAuthor(result)
+    with config().database as db:
+        regen = regenerator(
+            queue=q,
+            regen=regen,
+            reset=page["#mid-div"].clear,
+            db=db,
+        )
+        async for result in regen:
+            htmlAuthor(result)
 
 
 ROUTES = app

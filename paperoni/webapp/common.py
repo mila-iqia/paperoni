@@ -1,4 +1,5 @@
 import asyncio
+import os
 import traceback
 from functools import wraps
 from pathlib import Path
@@ -11,6 +12,7 @@ from starbear import ClientWrap, Queue, template as _template
 from starbear.serve import LoneBear
 
 from ..cli_helper import search
+from ..config import config as config_var, load_config
 from ..utils import keyword_decorator
 
 here = Path(__file__).parent
@@ -258,6 +260,17 @@ def search_interface(event=None, db=None):
             traceback.print_exception(e)
 
     return regen(event=event)
+
+
+_config = None
+
+
+def config():
+    global _config
+    if _config is None:
+        _config = load_config(os.environ["PAPERONI_CONFIG"]).__enter__()
+        config_var.set(_config)
+    return _config
 
 
 def template(path, location=None, **kw):

@@ -3,7 +3,6 @@ Run with `uvicorn apps.validation:app`
 """
 
 import asyncio
-import os
 from collections import Counter
 from pathlib import Path
 
@@ -12,12 +11,11 @@ from hrepr import H
 from sqlalchemy import select
 from starbear import bear
 
-from ..config import load_config
 from ..db import schema as sch
 from ..display import html
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
-from .common import mila_template
+from .common import config, mila_template
 
 here = Path(__file__).parent
 
@@ -319,36 +317,35 @@ async def app(page, box):
             box.print(H.div["authorarea"]("No results found")(id="noresults"))
         print(num_results)
 
-    with load_config(os.environ["PAPERONI_CONFIG"]) as cfg:
-        with cfg.database as db:
-            reaserchers = get_authors(author_name)
-            author_id = reaserchers[0].author_id
-            tabIDS = []
+    with config().database as db:
+        researchers = get_authors(author_name)
+        author_id = researchers[0].author_id
+        tabIDS = []
+        current_query_name = ss.author_with_papers
+        if scraper == "semantic_scholar":
             current_query_name = ss.author_with_papers
-            if scraper == "semantic_scholar":
-                current_query_name = ss.author_with_papers
-            elif scraper == "openreview":
-                or_scraper = OpenReviewPaperScraper(cfg, db)
-                all_venues = or_scraper._venues_from_wildcard("*")
-                current_query_name = query_name
+        elif scraper == "openreview":
+            or_scraper = OpenReviewPaperScraper(cfg, db)
+            all_venues = or_scraper._venues_from_wildcard("*")
+            current_query_name = query_name
 
-                optionTab = []
-                for venue in all_venues:
-                    optionTab.append(H.option[venue](venue))
-                dropdown = H.select["venuedropdown"](
-                    optionTab,
-                    onchange=(
-                        lambda event, author_id=author_id: select_venue(event)
-                    ),
-                    label="Select a venue",
-                )
-                box.print("Venues : ")
-                box.print(dropdown)
-            await build_page(scraper)
+            optionTab = []
+            for venue in all_venues:
+                optionTab.append(H.option[venue](venue))
+            dropdown = H.select["venuedropdown"](
+                optionTab,
+                onchange=(
+                    lambda event, author_id=author_id: select_venue(event)
+                ),
+                label="Select a venue",
+            )
+            box.print("Venues : ")
+            box.print(dropdown)
+        await build_page(scraper)
 
-            # Keep the app running
-            while True:
-                await asyncio.sleep(1)
+        # Keep the app running
+        while True:
+            await asyncio.sleep(1)
 
 
 ROUTES = app

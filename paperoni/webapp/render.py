@@ -1,8 +1,8 @@
 from hrepr import H
 
-from ..config import get_config
 from ..display import expand_links
 from ..model import DatePrecision
+from .common import config
 from .utils import Confidence
 
 
@@ -49,7 +49,7 @@ def author_html(auth):
 
 
 def validation_html(paper, maxauth=50):
-    low_confidence = getattr(get_config().tweaks, "low_confidence_authors")
+    low_confidence = getattr(config().tweaks, "low_confidence_authors")
     c = Confidence(
         institution_name=r".*\bmila\b.*|.*montr.al institute.*learning algorithm.*",
         boost_link_type="wpid_en",
