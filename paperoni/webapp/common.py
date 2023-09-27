@@ -139,6 +139,9 @@ class SearchGUI(GUI):
             "date-start": None,
             "date-end": None,
             "excerpt": None,
+            "not-processed": False,
+            "valid": False,
+            "invalid": False,
         }
         super().__init__(
             page=page,
@@ -149,6 +152,14 @@ class SearchGUI(GUI):
         )
 
     def regen(self):
+        flags = []
+        if bool(self.params["not-processed"]):
+            flags.append("~validation")
+        if bool(self.params["valid"]):
+            flags.append("validation")
+        if bool(self.params["invalid"]):
+            flags.append("!validation")
+
         results = search(
             title=self.params["title"],
             author=self.params["author"],
@@ -157,6 +168,7 @@ class SearchGUI(GUI):
             end=self.params["date-end"],
             excerpt=self.params["excerpt"],
             allow_download=False,
+            flags=flags,
             db=self.db,
         )
         try:
@@ -176,6 +188,17 @@ class SearchGUI(GUI):
                 ),
             )
 
+        def _flag(name, description):
+            return H.div["form-flag"](
+                H.input(
+                    name=name,
+                    type="checkbox",
+                    oninput=self.debounced,
+                    checked=bool(self.params.get(name, False)),
+                ),
+                H.label({"for": f"input-{name}"})(description),
+            )
+
         return H.form["search-form"](
             _input("title", "Title"),
             _input("author", "Author"),
@@ -183,6 +206,9 @@ class SearchGUI(GUI):
             _input("excerpt", "Excerpt"),
             _input("date-start", "Start date", type="date"),
             _input("date-end", "End date", type="date"),
+            _flag("not-processed", "Not processed"),
+            _flag("valid", "Valid"),
+            _flag("invalid", "Invalid"),
             self.link_area,
         )
 

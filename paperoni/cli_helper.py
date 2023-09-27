@@ -56,6 +56,7 @@ def search_stmt(
     start=None,
     end=None,
     year=0,
+    flags=[],
 ):
     start, end = _timespan(start, end, year, timestamp=True)
 
@@ -97,6 +98,36 @@ def search_stmt(
         stmt = stmt.join(sch.Paper.paper_link).filter(
             likefmt(sch.PaperLink.link, link)
         )
+    if flags:
+        stmt = stmt.join(sch.Paper.paper_flag)
+        for flag in flags:
+            if flag.startswith("*"):
+                # Flag has a value
+                flag = flag.removeprefix("*")
+                stmt = stmt.filter(sch.PaperFlag.flag_name == flag)
+            elif flag.startswith("~"):
+                # Flag does not have a value
+                # BUT: does not work, unfortunately
+                flag = flag.removeprefix("~")
+                has_flag = (
+                    select(sch.Paper.paper_id)
+                    .join(sch.Paper.paper_flag)
+                    .filter(sch.PaperFlag.flag_name == flag)
+                )
+                stmt = stmt.filter(sch.Paper.paper_id.not_in(has_flag))
+            elif flag.startswith("!"):
+                # Flag has value 0
+                flag = flag.removeprefix("!")
+                stmt = stmt.filter(
+                    (sch.PaperFlag.flag_name == flag)
+                    & (sch.PaperFlag.flag == 0)
+                )
+            else:
+                # Flag has value 1
+                stmt = stmt.filter(
+                    (sch.PaperFlag.flag_name == flag)
+                    & (sch.PaperFlag.flag == 1)
+                )
     stmt = stmt.group_by(sch.Paper.paper_id)
     return stmt
 
@@ -129,19 +160,21 @@ def search(
     year=0,
     excerpt=None,
     allow_download=False,
+    flags=[],
     db=None,
 ):
     def proceed(db):
         stmt = search_stmt(
-            title,
-            author,
-            author_link,
-            venue,
-            venue_link,
-            link,
-            start,
-            end,
-            year,
+            title=title,
+            author=author,
+            author_link=author_link,
+            venue=venue,
+            venue_link=venue_link,
+            link=link,
+            start=start,
+            end=end,
+            year=year,
+            flags=flags,
         )
 
         for (paper,) in db.session.execute(stmt):
@@ -172,6 +205,8 @@ def query_papers(
     end: Option = None,
     year: Option & int = 0,
     excerpt: Option & str = None,
+    # [action: append]
+    flag: Option & str = [],
     # [negate]
     allow_download: Option & bool = True,
 ):
@@ -186,5 +221,6 @@ def query_papers(
         end=end,
         year=year,
         excerpt=excerpt,
+        flags=flag,
         allow_download=allow_download,
     )

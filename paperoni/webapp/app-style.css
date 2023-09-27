@@ -101,6 +101,13 @@ input[type="text"], input[type="date"] {
     margin-bottom: 10px;
     box-sizing: border-box;
 }
+.form-flag {
+    width: 150px;
+}
+.form-flag {
+    padding: 5px;
+    margin-right: 10px;
+}
 
 /* Papers */
 
