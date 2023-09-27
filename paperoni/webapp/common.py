@@ -134,6 +134,10 @@ class GUI:
                 self.page[self.count_area, ".count"].set(str(count))
                 element = next(gen)
                 count += 1
+                if count > self.elements["limit"].value:
+                    done = True
+                    self.page[self.wait_area].set("~")
+                    continue
             except StopIteration:
                 done = True
                 self.page[self.wait_area].set("✓")
@@ -146,14 +150,20 @@ class GUI:
 
 
 class SearchElement:
-    def __init__(self, name, description, default=None, type="text"):
+    def __init__(
+        self, name, description, default=None, type="text", convert=None
+    ):
         self.name = name
         self.description = description
         self.default = self.value = default
         self.type = type
+        self.convert = convert
 
     def set_value(self, value):
-        self.value = value
+        if self.convert is None:
+            self.value = value
+        else:
+            self.value = self.convert(value)
 
     def update_keywords(self, kw):
         kw[self.name] = self.value
@@ -168,6 +178,14 @@ class SearchElement:
                 value=self.value or False,
             ),
         )
+
+
+class HiddenElement(SearchElement):
+    def update_keywords(self, kw):
+        pass
+
+    def element(self, queue):
+        return ""
 
 
 class CheckboxElement(SearchElement):
@@ -270,6 +288,12 @@ class SearchGUI(GUI):
                 description="Not processed",
                 filter=filters.no_validation_flag,
                 default=False,
+            ),
+            HiddenElement(
+                name="limit",
+                description="Maximum number of results",
+                default=1000,
+                convert=int,
             ),
         )
         super().__init__(
