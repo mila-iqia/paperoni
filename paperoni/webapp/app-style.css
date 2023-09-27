@@ -81,8 +81,21 @@ body {
 
 /* General interface */
 
-input {
-    width: 100%;
+.search-form {
+    display: flex;
+    flex-flow: row wrap;
+}
+.form-input {
+    width: 50%;
+}
+.form-input label {
+    display: inline-block;
+    width: 100px;
+}
+.form-input input[type="date"], .form-input input[type="text"] {
+    width: calc(100% - 120px);
+}
+input[type="text"], input[type="date"] {
     padding: 5px;
     margin-top: 10px;
     margin-bottom: 10px;

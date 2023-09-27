@@ -165,7 +165,7 @@ class SearchGUI(GUI):
             traceback.print_exception(e)
 
     def __hrepr__(self, H, hrepr):
-        def _input(name, description, type=False):
+        def _input(name, description, type="text"):
             return H.div["form-input"](
                 H.label({"for": f"input-{name}"})(description),
                 H.input(
