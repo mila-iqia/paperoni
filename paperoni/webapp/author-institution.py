@@ -72,14 +72,14 @@ async def app(page, box):
     box.print(area)
     dataAuthors = {}
 
-    def regen(event=None):
+    def regen(event=None, db=None):
         name = None
         if event is not None:
             name = event["name"]
         if event is not None and event["$submit"] == True:
             name = None
             addAuthor(event)
-        return generate(name)
+        return generate(name, db=db)
 
     def addAuthor(event):
         name = event["name"]
@@ -218,7 +218,7 @@ async def app(page, box):
             ),
         )
 
-    def generate(name=None):
+    def generate(name=None, db=None):
         stmt = select(sch.AuthorInstitution)
         stmt = stmt.join(sch.Author)
         stmt = stmt.order_by(sch.Author.name)
