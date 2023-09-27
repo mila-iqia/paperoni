@@ -14,6 +14,7 @@ from starbear.serve import LoneBear
 from ..cli_helper import search
 from ..config import config as config_var, load_config
 from ..utils import keyword_decorator
+from . import filters
 
 here = Path(__file__).parent
 
@@ -248,6 +249,12 @@ class SearchGUI(GUI):
                 name="invalid",
                 description="Invalid",
                 flag="!validation",
+                default=False,
+            ),
+            FilterElement(
+                name="no-validation",
+                description="Not processed",
+                filter=filters.no_validation_flag,
                 default=False,
             ),
         )
