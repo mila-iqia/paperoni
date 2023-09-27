@@ -108,6 +108,39 @@ input[type="text"], input[type="date"] {
     padding: 5px;
     margin-right: 10px;
 }
+.search-extra {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+.copy-link {
+    padding: 5px;
+    border-radius: 5px;
+    background: #eea;
+    cursor: pointer;
+}
+.copiable {
+    display: none;
+}
+.count-area {
+    margin-right: 20px;
+}
+.count-area .count {
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+}
+.wait-area {
+    display: inline-block;
+    text-align: center;
+    height: 30px;
+    width: 50px;
+    font-size: 20px;
+}
+.wait-area img {
+    height: 30px;
+    width: 30px;
+}
 
 /* Papers */
 
@@ -342,17 +375,6 @@ position: relative;
 
 .notavailable{
     background-color: rgb(85, 85, 85);
-}
-
-.copy-link {
-    padding: 5px;
-    border-radius: 5px;
-    background: #eea;
-    cursor: pointer;
-}
-
-.copiable {
-    display: none;
 }
 
 form.update-file textarea {

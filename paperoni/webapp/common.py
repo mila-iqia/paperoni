@@ -81,6 +81,10 @@ class GUI:
         self.queue = queue
         self.params = defaults | params
         self.debounced = ClientWrap(queue, debounce=0.3, form=True)
+        self.wait_area = H.div["wait-area"]().autoid()
+        self.count_area = H.div["count-area"](
+            H.span["count"]("0"), " found"
+        ).autoid()
         self.link_area = H.div["copy-link"](
             "📋 Copy link",
             H.span["copiable"](self.link()),
@@ -98,8 +102,16 @@ class GUI:
         return f"?{encoded}"
 
     async def loop(self, reset):
-        gen = self.regen()
-        done = False
+        def _soft_restart(new_gen):
+            nonlocal done, count, gen
+            gen = new_gen
+            done = False
+            count = 0
+            self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
+
+        gen = None
+        _soft_restart(self.regen())
+
         while True:
             if done:
                 inp = await self.queue.get()
@@ -113,16 +125,18 @@ class GUI:
                 self.params = inp
                 new_gen = self.regen()
                 if new_gen is not None:
-                    done = False
-                    gen = new_gen
+                    _soft_restart(new_gen)
                     self.page[self.link_area, ".copiable"].set(self.link())
                     reset()
                     continue
 
             try:
+                self.page[self.count_area, ".count"].set(str(count))
                 element = next(gen)
+                count += 1
             except StopIteration:
                 done = True
+                self.page[self.wait_area].set("✓")
                 continue
 
             yield element
@@ -286,7 +300,14 @@ class SearchGUI(GUI):
         inputs = [el.element(self.debounced) for el in self.elements.values()]
         for k, v in self.params.items():
             self.elements[k].set_value(v)
-        return H.form["search-form"](*inputs, self.link_area)
+        return H.div(
+            H.form["search-form"](*inputs),
+            H.div["search-extra"](
+                self.wait_area,
+                self.count_area,
+                self.link_area,
+            ),
+        )
 
 
 async def regenerator(queue, regen, reset, db):
