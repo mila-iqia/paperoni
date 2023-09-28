@@ -56,6 +56,7 @@ def search_stmt(
     start=None,
     end=None,
     year=0,
+    sort=None,
     flags=[],
 ):
     start, end = _timespan(start, end, year, timestamp=True)
@@ -80,7 +81,7 @@ def search_stmt(
         stmt = stmt.join(sch.Author.author_link).filter(
             sch.AuthorLink.type == atyp, sch.AuthorLink.link == alnk
         )
-    if venue or venue_link or start or end:
+    if venue or venue_link or start or end or (sort and "date" in sort):
         stmt = stmt.join(sch.Paper.release).join(sch.Release.venue)
     if venue:
         venues = [venue] if not isinstance(venue, list) else venue
@@ -129,6 +130,22 @@ def search_stmt(
                     & (sch.PaperFlag.flag == 1)
                 )
     stmt = stmt.group_by(sch.Paper.paper_id)
+
+    sort_column = None
+    if sort is not None:
+        desc = False
+        if sort.startswith("-"):
+            sort = sort[1:]
+            desc = True
+        match sort:
+            case "date":
+                sort_column = sch.Venue.date
+            case _:
+                raise Exception(f"Unknown sort: {sort}")
+        if desc:
+            sort_column = sort_column.desc()
+        stmt = stmt.order_by(sort_column)
+
     return stmt
 
 
@@ -162,6 +179,7 @@ def search(
     allow_download=False,
     flags=[],
     filters=[],
+    sort=None,
     db=None,
 ):
     def proceed(db):
@@ -176,6 +194,7 @@ def search(
             end=end,
             year=year,
             flags=flags,
+            sort=sort,
         )
 
         for (paper,) in db.session.execute(stmt):
@@ -207,6 +226,7 @@ def query_papers(
     end: Option = None,
     year: Option & int = 0,
     excerpt: Option & str = None,
+    sort: Option & str = None,
     # [action: append]
     flag: Option & str = [],
     # [negate]
@@ -223,6 +243,7 @@ def query_papers(
         end=end,
         year=year,
         excerpt=excerpt,
-        flags=flag,
         allow_download=allow_download,
+        flags=flag,
+        sort=sort,
     )

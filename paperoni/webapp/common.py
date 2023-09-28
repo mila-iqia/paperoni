@@ -151,13 +151,20 @@ class GUI:
 
 class SearchElement:
     def __init__(
-        self, name, description, default=None, type="text", convert=None
+        self,
+        name,
+        description,
+        default=None,
+        type="text",
+        convert=None,
+        hidden=False,
     ):
         self.name = name
         self.description = description
         self.default = self.value = default
         self.type = type
         self.convert = convert
+        self.hidden = hidden
 
     def set_value(self, value):
         if self.convert is None:
@@ -180,7 +187,7 @@ class SearchElement:
         )
 
 
-class HiddenElement(SearchElement):
+class ExtraElement(SearchElement):
     def update_keywords(self, kw):
         pass
 
@@ -289,11 +296,17 @@ class SearchGUI(GUI):
                 filter=filters.no_validation_flag,
                 default=False,
             ),
-            HiddenElement(
+            ExtraElement(
                 name="limit",
                 description="Maximum number of results",
                 default=1000,
                 convert=int,
+            ),
+            SearchElement(
+                name="sort",
+                description="Sorting method",
+                default="-date",
+                hidden=True,
             ),
         )
         super().__init__(
@@ -312,8 +325,9 @@ class SearchGUI(GUI):
     def regen(self):
         kw = {}
         for k, el in self.elements.items():
-            el.set_value(self.params[k])
-            el.update_keywords(kw)
+            if k in self.params:
+                el.set_value(self.params[k])
+                el.update_keywords(kw)
         results = search(**kw, allow_download=False, db=self.db)
         try:
             yield from results
@@ -323,7 +337,11 @@ class SearchGUI(GUI):
     def __hrepr__(self, H, hrepr):
         for k, v in self.params.items():
             self.elements[k].set_value(v)
-        inputs = [el.element(self.debounced) for el in self.elements.values()]
+        inputs = [
+            el.element(self.debounced)
+            for el in self.elements.values()
+            if not el.hidden
+        ]
         return H.div(
             H.form["search-form"](*inputs),
             H.div["search-extra"](

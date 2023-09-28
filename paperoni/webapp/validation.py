@@ -40,8 +40,10 @@ async def app(page, box):
                         paper = papers[paper_id]
                         match v:
                             case "valid":
+                                db.remove_flags(paper, "validation")
                                 db.insert_flag(paper, "validation", 1)
                             case "invalid":
+                                db.remove_flags(paper, "validation")
                                 db.insert_flag(paper, "validation", 0)
                             case "unknown":
                                 db.remove_flags(paper, "validation")
