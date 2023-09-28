@@ -94,12 +94,15 @@ class GUI:
                 "arguments": [H.self()],
             },
         )
+        self.json_report_area = H.div["report-link"]().autoid()
+        self.csv_report_area = H.div["report-link"]().autoid()
 
-    def link(self):
+    def link(self, page="", **extra):
+        params = {**self.params, **extra}
         encoded = urlencode(
-            {p: v for p, v in self.params.items() if "$" not in p and v}
+            {p: v for p, v in params.items() if "$" not in p and v}
         )
-        return f"?{encoded}"
+        return f"{page}?{encoded}"
 
     async def loop(self, reset):
         def _soft_restart(new_gen):
@@ -107,6 +110,19 @@ class GUI:
             gen = new_gen
             done = False
             count = 0
+            self.page[self.json_report_area].set(
+                H.a(
+                    "JSON",
+                    href=self.link(page="/report", limit=None, format="json"),
+                )
+            )
+            self.page[self.csv_report_area].set(
+                H.a(
+                    "CSV",
+                    href=self.link(page="/report", limit=None, format="csv"),
+                )
+            )
+            self.page[self.link_area, ".copiable"].set(self.link())
             self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
 
         gen = None
@@ -122,11 +138,10 @@ class GUI:
                     inp = None
 
             if inp is not None:
-                self.params = inp
+                self.params = self.params | inp
                 new_gen = self.regen()
                 if new_gen is not None:
                     _soft_restart(new_gen)
-                    self.page[self.link_area, ".copiable"].set(self.link())
                     reset()
                     continue
 
@@ -389,6 +404,8 @@ class SearchGUI(GUI):
                 self.wait_area,
                 self.count_area,
                 self.link_area,
+                self.json_report_area,
+                self.csv_report_area,
                 H.button(
                     "Restart search",
                     name="restart",

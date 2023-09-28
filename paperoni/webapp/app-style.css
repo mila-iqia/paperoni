@@ -117,15 +117,25 @@ input[type="text"], input[type="date"] {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
+    margin-top: 5px;
 }
 .search-extra > * {
     margin-right: 10px;
 }
-.copy-link {
+.copy-link, .report-link {
     padding: 5px;
     border-radius: 5px;
-    background: #eea;
     cursor: pointer;
+}
+.copy-link {
+    background: #eea;
+}
+.report-link {
+    background: violet;
+}
+.report-link a {
+    color: white;
+    text-decoration: none;
 }
 .copiable {
     display: none;
