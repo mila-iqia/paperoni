@@ -336,18 +336,24 @@ class SearchGUI(GUI):
 
     def __hrepr__(self, H, hrepr):
         for k, v in self.params.items():
-            self.elements[k].set_value(v)
+            if k in self.elements:
+                self.elements[k].set_value(v)
         inputs = [
             el.element(self.debounced)
             for el in self.elements.values()
             if not el.hidden
         ]
-        return H.div(
-            H.form["search-form"](*inputs),
+        return H.form["search-form"](
+            H.div["main-inputs"](*inputs),
             H.div["search-extra"](
                 self.wait_area,
                 self.count_area,
                 self.link_area,
+                H.button(
+                    "Restart search",
+                    name="restart",
+                    onclick=self.queue.wrap(form=True),
+                ),
             ),
         )
 

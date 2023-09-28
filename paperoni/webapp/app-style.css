@@ -81,7 +81,7 @@ body {
 
 /* General interface */
 
-.search-form {
+.search-form .main-inputs {
     display: flex;
     flex-flow: row wrap;
 }
@@ -113,6 +113,9 @@ input[type="text"], input[type="date"] {
     flex-flow: row wrap;
     align-items: center;
 }
+.search-extra > * {
+    margin-right: 10px;
+}
 .copy-link {
     padding: 5px;
     border-radius: 5px;
@@ -121,9 +124,6 @@ input[type="text"], input[type="date"] {
 }
 .copiable {
     display: none;
-}
-.count-area {
-    margin-right: 20px;
 }
 .count-area .count {
     display: inline-block;
