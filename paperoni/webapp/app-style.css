@@ -256,6 +256,17 @@ input[type="text"], input[type="date"] {
     font-size: 13px;
 }
 
+.paper .excerpt::before {
+    content: "Excerpt: ";
+    font-weight: bold;
+}
+
+.paper .excerpt {
+    padding: 5px;
+    margin: 5px;
+    background: #eea;
+}
+
 .venue > * {
     margin-right: 5px;
 }

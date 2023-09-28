@@ -497,7 +497,7 @@ def config():
     global _config
     if _config is None:
         _config = load_config(os.environ["PAPERONI_CONFIG"]).__enter__()
-        config_var.set(_config)
+    config_var.set(_config)
     return _config
 
 
