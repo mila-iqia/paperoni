@@ -1,7 +1,6 @@
 import logging
 import re
 from datetime import datetime
-import sys
 
 
 # TODO: move this to starbear and starbear.utils.StarbearHandler
@@ -13,11 +12,16 @@ class StarbearHandler(logging.StreamHandler):
     }
     ATTRS = ["name", "time", "proc", "user"]
 
+    def __init__(self, user=None, **kwargs):
+        super().__init__(**kwargs)
+        self.user = user
+
     def format(self, record):
         defaults = {
             **{attr:None for attr in self.ATTRS},
             "name": record.name,
             "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "user": self.user
         }
         attrs = (getattr(record, attr, defaults[attr]) for attr in self.ATTRS)
         color = self.COLORS.get(record.levelname, "95")
@@ -35,8 +39,16 @@ class StarbearHandler(logging.StreamHandler):
 
 
 db_logger = logging.getLogger("paperoni.database")
-db_logger.setLevel(level=logging.INFO)
-db_logger.addHandler(StarbearHandler(sys.stderr))
+
+
+def update_logger_handler(logger, user=None):
+    for handler in logger.handlers:
+        if isinstance(handler, StarbearHandler):
+            if user:
+                handler.user = user
+            break
+    else:
+        logger.addHandler(StarbearHandler(user))
 
 
 class Confidence:
