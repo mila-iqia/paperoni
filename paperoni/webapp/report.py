@@ -111,6 +111,7 @@ formatters = {
 
 
 async def report(request):
+    """Generate a JSON or CSV report."""
     fmt = request.query_params.get("format", "json")
     formatter = formatters.get(fmt, None)
     if formatter is None:
@@ -127,5 +128,7 @@ async def report(request):
         },
     )
 
+
+report.hidden = True
 
 ROUTES = report
