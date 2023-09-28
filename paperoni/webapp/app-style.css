@@ -108,6 +108,11 @@ input[type="text"], input[type="date"] {
     padding: 5px;
     margin-right: 10px;
 }
+.form-radios {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
 .search-extra {
     display: flex;
     flex-flow: row wrap;
@@ -149,7 +154,7 @@ input[type="text"], input[type="date"] {
     width: 150px;
     text-align: center;
 }
-input[type="radio"] {
+.validation-button input[type="radio"] {
     appearance: none;
     position: absolute;
     left: -0.5em;
@@ -160,13 +165,13 @@ input[type="radio"] {
     border-radius: 5px;
     z-index: -10;
 }
-input[type="radio"][value="valid"]:checked {
+.validation-button input[type="radio"][value="valid"]:checked {
     background: lightgreen;
 }
-input[type="radio"][value="invalid"]:checked {
+.validation-button input[type="radio"][value="invalid"]:checked {
     background: lightcoral;
 }
-input[type="radio"][value="unknown"]:checked {
+.validation-button input[type="radio"][value="unknown"]:checked {
     background: lightsalmon;
 }
 

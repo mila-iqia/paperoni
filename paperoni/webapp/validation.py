@@ -25,7 +25,7 @@ async def app(page, box):
             db,
             q,
             dict(page.query_params),
-            defaults={"no-validation": True, "limit": 100},
+            defaults={"validation": "not-processed", "limit": 100},
         )
         box.print(gui)
         box.print(area)

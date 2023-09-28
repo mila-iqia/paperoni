@@ -237,8 +237,44 @@ class FilterElement(CheckboxElement):
 
     def update_keywords(self, kw):
         if self.value:
-            flags = kw.setdefault("filters", [])
-            flags.append(self.filter)
+            filters = kw.setdefault("filters", [])
+            filters.append(self.filter)
+
+
+class RadioElement(SearchElement):
+    def __init__(self, name, choices, default):
+        super().__init__(name=name, description=None, default=default)
+        self.choices = choices
+
+    def set_value(self, value):
+        self.value = value
+
+    def update_keywords(self, kw):
+        choice = self.choices[self.value]
+        match choice["flag"]:
+            case str(x):
+                flags = kw.setdefault("flags", [])
+                flags.append(x)
+            case None:
+                pass
+            case x:
+                filters = kw.setdefault("filters", [])
+                filters.append(x)
+
+    def element(self, queue):
+        return H.div["form-radios"](
+            H.label(
+                H.input(
+                    type="radio",
+                    name=self.name,
+                    value=value,
+                    checked=value == self.value,
+                    onchange=queue,
+                ),
+                choice["description"],
+            )
+            for value, choice in self.choices.items()
+        )
 
 
 class SearchGUI(GUI):
@@ -278,23 +314,27 @@ class SearchGUI(GUI):
                 default=None,
                 type="date",
             ),
-            FlagElement(
-                name="valid",
-                description="Valid",
-                flag="validation",
-                default=False,
-            ),
-            FlagElement(
-                name="invalid",
-                description="Invalid",
-                flag="!validation",
-                default=False,
-            ),
-            FilterElement(
-                name="no-validation",
-                description="Not processed",
-                filter=filters.no_validation_flag,
-                default=False,
+            RadioElement(
+                name="validation",
+                choices={
+                    "validated": {
+                        "description": "Validated",
+                        "flag": "validation",
+                    },
+                    "invalidated": {
+                        "description": "Invalidated",
+                        "flag": "!validation",
+                    },
+                    "not-processed": {
+                        "description": "Not processed",
+                        "flag": filters.no_validation_flag,
+                    },
+                    "all": {
+                        "description": "All",
+                        "flag": None,
+                    },
+                },
+                default="all",
             ),
             ExtraElement(
                 name="limit",
