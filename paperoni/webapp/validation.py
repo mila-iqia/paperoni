@@ -6,6 +6,7 @@ from starbear import Queue, bear
 
 from .common import SearchGUI, config, mila_template
 from .render import validation_html
+from .utils import db_logger
 
 here = Path(__file__).parent
 
@@ -38,13 +39,26 @@ async def app(page, box):
                     if k.startswith("v-"):
                         paper_id = k.removeprefix("v-")
                         paper = papers[paper_id]
+                        action = None
                         match v:
                             case "valid":
                                 db.insert_flag(paper, "validation", 1)
+                                action = f"{v}ed"
                             case "invalid":
                                 db.insert_flag(paper, "validation", 0)
+                                action = f"{v}ed"
                             case "unknown":
                                 db.remove_flags(paper, "validation")
+                                action = f"{v}ed"
+                        if action is not None:
+                            user = (
+                                page.session.get( "user", {}).get("email", None)
+                            )
+                            db_logger.info(
+                                f"Paper {paper.title} ({paper.paper_id}) "
+                                f"{action} by user",
+                                extra={"user": user}
+                            )
 
             else:
                 div = validation_html(result)
