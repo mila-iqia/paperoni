@@ -224,15 +224,19 @@ input[type="text"], input[type="date"] {
 }
 
 .paper.excellent .content  {
-    border-color: orange;
+    border-color: limegreen;
 }
 
 .paper.good .content  {
-    border-color: green;
+    border-color: blue;
 }
 
 .paper.ok .content  {
-    border-color: blue;
+    border-color: orange;
+}
+
+.paper.poor .content  {
+    border-color: orangered;
 }
 
 .paper.unknown .content  {
@@ -241,7 +245,7 @@ input[type="text"], input[type="date"] {
 }
 
 .paper .author.excellent {
-    background: gold;
+    background: limegreen;
 }
 
 .paper .author.good {

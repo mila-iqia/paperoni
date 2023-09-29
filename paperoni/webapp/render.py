@@ -22,8 +22,10 @@ def _paper_score_class(score):
         return "excellent"
     elif score >= 5:
         return "good"
-    elif score > 0:
+    elif score >= 2:
         return "ok"
+    elif score == 1:
+        return "poor"
     else:
         return "unknown"
 
