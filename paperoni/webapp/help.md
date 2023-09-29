@@ -84,49 +84,8 @@ The configuration is defined as YAML. The `version_tag` field represents the tag
 
 When the server restarts, it checks out the version of the code represented by the `version_tag` key in `config.yaml`.
 
+# Troubleshooting
 
+### The page is completely blank
 
-<!-- <div>
-    <h2 id="search">Search</h2>
-
-    <p>TODO.</p>
-
-    <h2 id="validation">Validation</h2>
-
-    <p>The validation interface allows the classification of papers that are considered
-    to be Mila papers.</p>
-
-    <p><b>Select Yes</b> if:</p>
-
-    <ul>
-        <li>At least one author has listed a Mila affiliation.</li>
-    </ul>
-
-    <p>TODO.</p>
-
-    <h2 id="admin">Admin</h2>
-
-    The following features are for administrators only.
-
-    <h3 id="permissions">Permissions</h2>
-
-    <p>
-    Permissions are defined as JSON. Each key must be a path or subpath
-    of the application. The value associated must be a list of emails
-    that have access to that path. An email may contain the character "*"
-    as a wildcard, for example <code>"*@mila.quebec"</code> matches every
-    user that has a <code>mila.quebec</code> email.
-    </p>
-
-    <h3 id="config">Config</h2>
-
-    The configuration is defined as YAML. The <code>version_tag</code> field
-    represents the tag on the Paperoni GitHub repository to use for this app.
-    To update the software, you can change this value and then restart the
-    server by going on <a href="/admin/restart">/admin/restart</a>.
-
-    <h3 id="restart">Restart</h2>
-
-    When the server restarts, it checks out the version of the code represented
-    by the <code>version_tag</code> key in <code>config.yaml</code>.
-</div> -->
+It is likely you pressed the back button on the browser, or came back to the tab after a long time. Try refreshing the page.
