@@ -31,6 +31,7 @@ starbear = ">=0.0.9"
 html5lib = "^1.1"
 aiostream = "^0.5.0"
 sentry-sdk = {extras = ["starlette"], version = "^1.31.0"}
+markdown = "^3.4.4"
 
 [tool.poetry.dev-dependencies]
 black = ">= 19.10b0"
