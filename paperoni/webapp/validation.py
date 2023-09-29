@@ -29,6 +29,16 @@ async def app(page, box):
             defaults={"validation": "not-processed", "limit": 100},
         )
         box.print(gui)
+        box.print(
+            H.div["helpbox"](
+                H.span["ball"]("?"),
+                " Please view ",
+                H.a(
+                    "the help section", href="/help#validation", target="_blank"
+                ),
+                " for instructions as to how to use this functionality.",
+            )
+        )
         box.print(area)
 
         async for result in stream.merge(

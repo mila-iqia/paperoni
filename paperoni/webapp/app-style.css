@@ -55,6 +55,12 @@ body {
     text-decoration: none;
 }
 
+.helpbox {
+    padding: 10px;
+    margin: 10px;
+    background: #ee6;
+}
+
 /* Index */
 
 #index table {
