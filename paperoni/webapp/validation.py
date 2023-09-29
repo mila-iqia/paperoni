@@ -6,6 +6,7 @@ from starbear import Queue, bear
 
 from .common import SearchGUI, config, mila_template
 from .render import validation_html
+from .utils import db_logger
 
 here = Path(__file__).parent
 
@@ -47,6 +48,13 @@ async def app(page, box):
                                 db.insert_flag(paper, "validation", 0)
                             case "unknown":
                                 db.remove_flags(paper, "validation")
+
+                        user = page.session.get("user", {}).get("email", None)
+                        db_logger.info(
+                            f"User set validation='{v}' on paper {paper.title} "
+                            f"({paper.paper_id.hex()})",
+                            extra={"user":user}
+                        )
 
             else:
                 div = validation_html(result)

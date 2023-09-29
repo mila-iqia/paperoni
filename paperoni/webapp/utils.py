@@ -1,5 +1,45 @@
+import logging
 import re
 from datetime import datetime
+
+
+# TODO: move this to starbear and starbear.utils.StarbearHandler
+class StarbearHandler(logging.StreamHandler):
+    COLORS = {
+        "INFO": "32",
+        "WARNING": "33",
+        "ERROR": "31",
+    }
+    ATTRS = ["name", "time", "proc", "user"]
+
+    def __init__(self, user=None, **kwargs):
+        super().__init__(**kwargs)
+        self.user = user
+
+    def format(self, record):
+        defaults = {
+            **{attr:None for attr in self.ATTRS},
+            "name": record.name,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "user": self.user
+        }
+        attrs = (getattr(record, attr, defaults[attr]) for attr in self.ATTRS)
+        color = self.COLORS.get(record.levelname, "95")
+        prefix = f"\033[{color}m{record.levelname}\033[0m:   {''.join(map(self._brack, attrs))}"
+        if "\n" in record.msg:
+            lines = [f"\033[{color}m>\033[0m {line}" for line in record.msg.split("\n")]
+            lines = "\n".join(lines)
+            return f"{prefix}\n{lines}"
+        else:
+            return f"{prefix} {record.msg}"
+
+    @staticmethod
+    def _brack(s):
+        return f"[\033[36m{s}\033[0m]" if s else ""
+
+
+db_logger = logging.getLogger("paperoni.database")
+db_logger.addHandler(StarbearHandler())
 
 
 class Confidence:
