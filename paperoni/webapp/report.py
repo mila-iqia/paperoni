@@ -18,7 +18,7 @@ class PaperFormatter:
         return paper.title
 
     def destination(self):
-        now = datetime.now().strftime("%Y-%M-%D")
+        now = datetime.now().strftime("%Y-%m-%d")
         return f"paperoni-{now}"
 
     async def generate(self, params):
