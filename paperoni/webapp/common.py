@@ -351,6 +351,12 @@ class SearchGUI(GUI):
                 },
                 default="all",
             ),
+            FilterElement(
+                name="peer-reviewed",
+                description="Peer-reviewed",
+                default=False,
+                filter=filters.peer_reviewed,
+            ),
             ExtraElement(
                 name="limit",
                 description="Maximum number of results",

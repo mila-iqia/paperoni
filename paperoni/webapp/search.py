@@ -17,7 +17,13 @@ async def app(page, box):
     area = H.div["area"]().autoid()
 
     with config().database as db:
-        gui = SearchGUI(page, db, q, dict(page.query_params), defaults={})
+        gui = SearchGUI(
+            page,
+            db,
+            q,
+            dict(page.query_params),
+            defaults={"validation": "validated"},
+        )
         box.print(gui)
         box.print(area)
 
