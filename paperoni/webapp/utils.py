@@ -18,16 +18,19 @@ class StarbearHandler(logging.StreamHandler):
 
     def format(self, record):
         defaults = {
-            **{attr:None for attr in self.ATTRS},
+            **{attr: None for attr in self.ATTRS},
             "name": record.name,
             "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "user": self.user
+            "user": self.user,
         }
         attrs = (getattr(record, attr, defaults[attr]) for attr in self.ATTRS)
         color = self.COLORS.get(record.levelname, "95")
         prefix = f"\033[{color}m{record.levelname}\033[0m:   {''.join(map(self._brack, attrs))}"
         if "\n" in record.msg:
-            lines = [f"\033[{color}m>\033[0m {line}" for line in record.msg.split("\n")]
+            lines = [
+                f"\033[{color}m>\033[0m {line}"
+                for line in record.msg.split("\n")
+            ]
             lines = "\n".join(lines)
             return f"{prefix}\n{lines}"
         else:

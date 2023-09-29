@@ -33,7 +33,6 @@ from ..model import (
 from ..utils import get_uuid_tag, is_canonical_uuid, squash_text, tag_uuid
 from . import schema as sch
 
-
 logger = logging.getLogger("paperoni.database")
 logger.setLevel(level=logging.INFO)
 

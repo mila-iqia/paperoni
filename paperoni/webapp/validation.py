@@ -53,7 +53,7 @@ async def app(page, box):
                         db_logger.info(
                             f"User set validation='{v}' on paper {paper.title} "
                             f"({paper.paper_id.hex()})",
-                            extra={"user":user}
+                            extra={"user": user},
                         )
 
             else:
