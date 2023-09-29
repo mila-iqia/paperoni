@@ -39,16 +39,7 @@ class StarbearHandler(logging.StreamHandler):
 
 
 db_logger = logging.getLogger("paperoni.database")
-
-
-def update_logger_handler(logger, user=None):
-    for handler in logger.handlers:
-        if isinstance(handler, StarbearHandler):
-            if user:
-                handler.user = user
-            break
-    else:
-        logger.addHandler(StarbearHandler(user))
+db_logger.addHandler(StarbearHandler())
 
 
 class Confidence:

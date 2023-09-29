@@ -498,10 +498,6 @@ class Database(OvldBase):
         self.session.execute(ins_stmt)
         self.session.commit()
 
-        logger.info(
-            f"Paper {paper.title} ({paper.paper_id.hex()}) flagged {flag_name}={val}"
-        )
-
     def remove_flags(self, paper, flag_name):
         pf = sch.PaperFlag(
             paper_id=paper.paper_id,
@@ -512,10 +508,6 @@ class Database(OvldBase):
         """
         self.session.execute(del_stmt)
         self.session.commit()
-
-        logger.info(
-            f"Paper {paper.title} ({paper.paper_id.hex()}) unflagged {flag_name}"
-        )
 
     def has_flag(self, paper, flagname):
         return self.get_flag(paper, flagname) is not None
