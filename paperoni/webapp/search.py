@@ -28,7 +28,7 @@ async def app(page, box):
         box.print(area)
 
         async for result in gui.loop(reset=box[area].clear):
-            div = paper_html(result)
+            div = paper_html(result, excerpt=gui.params["excerpt"])
             box[area].print(div)
 
 

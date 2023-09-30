@@ -202,6 +202,9 @@ def search(
                 ranges = find_excerpt(paper, excerpt, allow_download)
                 if ranges is None:
                     continue
+                if not hasattr(paper, "excerpts"):
+                    paper.excerpts = {}
+                paper.excerpts[excerpt] = ranges
                 paper.excerpt = ranges
             if all(f(paper) for f in filters):
                 yield paper
