@@ -130,12 +130,11 @@ def paper_html(paper, maxauth=50, excerpt=None):
     more = nauth - maxauth if nauth > maxauth else 0
     pdfs = [lnk for k, lnk in expand_links(paper.links) if "pdf" in lnk]
 
-    excerpt_node = ""
-    if excerpt:
-        excerpts = getattr(paper, "excerpts", {})
-        if excerpt in excerpts:
-            before, matching, after = excerpts[excerpt]
-            excerpt_node = H.div["excerpt"](before, H.b(matching), after)
+    if hasattr(paper, "excerpt"):
+        before, matching, after = paper.excerpt
+        excerpt = H.div["excerpt"](before, H.b(matching), after)
+    else:
+        excerpt = ""
 
     return H.div["paper"](
         H.div["content"](
@@ -158,6 +157,6 @@ def paper_html(paper, maxauth=50, excerpt=None):
                 for typ, link in expand_links(paper.links)
                 if link.startswith("http")
             ),
-            excerpt_node,
+            excerpt,
         ),
     )

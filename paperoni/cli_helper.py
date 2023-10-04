@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 
 from coleo import Option, tooled
+from requests_cache import Any
 from sqlalchemy import or_, select
 
 from .config import get_config
@@ -165,6 +166,22 @@ def find_excerpt(paper, excerpt, allow_download=True):
     )
 
 
+# TODO: move this to an utils file
+# SQLAlchemy seams to reuse search results. Wrap that object to allow extentions
+# of the object data without leaking them to other search results
+class ExtendAttr():
+    def __init__(self, search_result) -> None:
+        self._search_result = search_result
+
+    def __getattribute__(self, __name: str) -> Any:
+        try:
+            attr = super().__getattribute__(__name)
+        except AttributeError:
+            search_result = super().__getattribute__("_search_result")
+            attr = search_result.__getattribute__(__name)
+        return attr
+
+
 def search(
     title=None,
     author=None,
@@ -198,13 +215,11 @@ def search(
         )
 
         for (paper,) in db.session.execute(stmt):
+            paper = ExtendAttr(paper)
             if excerpt:
                 ranges = find_excerpt(paper, excerpt, allow_download)
                 if ranges is None:
                     continue
-                if not hasattr(paper, "excerpts"):
-                    paper.excerpts = {}
-                paper.excerpts[excerpt] = ranges
                 paper.excerpt = ranges
             if all(f(paper) for f in filters):
                 yield paper
