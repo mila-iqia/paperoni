@@ -191,6 +191,13 @@ input[type="text"], input[type="date"] {
     background: lightsalmon;
 }
 
+.validation-button input[type="radio"][class="log-button"] {
+    height: 3.5em;
+}
+.validation-button input[type="radio"][class="log-button"]:checked {
+    background: lightgreen;
+}
+
 /* Papers */
 
 .paper {
@@ -442,6 +449,12 @@ position: relative;
 }
 
 form.update-file textarea {
+    display: block;
+    width: 100%;
+    height: 500px;
+}
+
+div.log-stream textarea {
     display: block;
     width: 100%;
     height: 500px;
