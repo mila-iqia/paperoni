@@ -1,5 +1,7 @@
 import asyncio
+import html
 import os
+import subprocess
 import traceback
 from functools import wraps
 from pathlib import Path
@@ -72,6 +74,78 @@ class FileEditor:
                     page[actionarea].set("Saved")
                 else:
                     page[actionarea].set(H.button("Update", name="update"))
+
+
+class LogsViewer:
+    def __init__(self, services):
+        self.services = services
+
+    async def run(self, page):
+        q = Queue()
+        debounced = ClientWrap(q, debounce=0.3, form=True)
+        active_service = next(iter(self.services), None)
+
+        page.print(
+            H.form["logs-radio"](
+                *(
+                    H.label["validation-button"](
+                        H.input(
+                            type="radio",
+                            name=f"v-logs-radio",
+                            value=s,
+                            checked=active_service == s,
+                            onchange=debounced,
+                            **{"class":"log-button"},
+                        ),
+                        s,
+                    )
+                    for s in self.services
+                )
+            )
+        )
+
+        page.print(
+            H.div["log-stream"](
+                log_stream := H.textarea(
+                    "".join(
+                        self.__class__.journal(active_service, 10000)
+                        if active_service else []
+                    ),
+                    name="log-stream",
+                    readonly=True,
+                ).autoid(),
+            ),
+        )
+        page[log_stream].do("this.scrollTop = this.scrollTopMax")
+
+        async for event in q:
+            for k, v in event.items():
+                if k.startswith("v-"):
+                    page[log_stream].clear()
+                    blocks = []
+                    for i, l in enumerate(self.__class__.journal(v, 10000)):
+                        blocks.append(html.escape(l))
+                        if i % 2000 == 0:
+                            page[log_stream].print_html("".join(blocks))
+                            page[log_stream].do("this.scrollTop = this.scrollTopMax")
+                            blocks = ["\n"]
+                    if blocks[1:]:
+                        page[log_stream].print_html("".join(blocks))
+                        page[log_stream].do("this.scrollTop = this.scrollTopMax")
+
+
+    @staticmethod
+    def journal(service, tail=-1):
+        with subprocess.Popen([
+                "journalctl",
+                *(("-n", str(tail)) if tail > 0 else tuple()),
+                "-qu", service,
+                # TODO: make viewer follow the journal logs
+                # "--follow",
+                # "--no-tail",
+                ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as process:
+            for l in process.stdout:
+                yield l.decode("utf-8")
 
 
 class GUI:
