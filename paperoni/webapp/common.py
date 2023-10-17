@@ -83,23 +83,26 @@ class LogsViewer:
     async def run(self, page):
         q = Queue()
         debounced = ClientWrap(q, debounce=0.3, form=True)
-        active_service = next(iter(self.services), None)
 
+        radio_buttons = [
+            H.input(
+                type="radio",
+                name=f"v-logs-radio",
+                value=s,
+                checked=False,
+                onchange=debounced,
+                **{"class":"log-button"},
+            ).autoid()
+            for s in self.services
+        ]
         page.print(
             H.form["logs-radio"](
                 *(
                     H.label["validation-button"](
-                        H.input(
-                            type="radio",
-                            name=f"v-logs-radio",
-                            value=s,
-                            checked=active_service == s,
-                            onchange=debounced,
-                            **{"class":"log-button"},
-                        ),
-                        s,
+                        r_b,
+                        r_b.attributes["value"],
                     )
-                    for s in self.services
+                    for r_b in radio_buttons
                 )
             )
         )
@@ -107,16 +110,16 @@ class LogsViewer:
         page.print(
             H.div["log-stream"](
                 log_stream := H.textarea(
-                    "".join(
-                        self.__class__.journal(active_service, 10000)
-                        if active_service else []
-                    ),
+                    "",
                     name="log-stream",
                     readonly=True,
                 ).autoid(),
             ),
         )
-        page[log_stream].do("this.scrollTop = this.scrollTopMax")
+
+        for r_b in radio_buttons:
+            page[r_b].do("this.click()")
+            break
 
         async for event in q:
             for k, v in event.items():
@@ -129,6 +132,7 @@ class LogsViewer:
                             page[log_stream].print_html("".join(blocks))
                             page[log_stream].do("this.scrollTop = this.scrollTopMax")
                             blocks = ["\n"]
+                            await asyncio.sleep(0.1)
                     if blocks[1:]:
                         page[log_stream].print_html("".join(blocks))
                         page[log_stream].do("this.scrollTop = this.scrollTopMax")
