@@ -3,3 +3,8 @@ paths:
   history: history
   cache: cache
   requests_cache: requests-cache
+sentry:
+  use: false
+  dsn: ""
+  traces_sample_rate: 1.0
+  environment: dev
