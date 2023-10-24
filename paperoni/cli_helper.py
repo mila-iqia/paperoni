@@ -199,6 +199,9 @@ def search(
     sort=None,
     db=None,
 ):
+    if venue and not isinstance(venue, list):
+        venue = venue.split(";")
+
     def proceed(db):
         stmt = search_stmt(
             title=title,
