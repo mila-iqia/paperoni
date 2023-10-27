@@ -173,6 +173,11 @@ class ExtendAttr():
     def __init__(self, search_result) -> None:
         self._search_result = search_result
 
+    # TODO: make this class fake it's type so it works with the Ovld package
+    @property
+    def __class__(self):
+        return self._search_result.__class__
+
     def __getattribute__(self, __name: str) -> Any:
         try:
             attr = super().__getattribute__(__name)
@@ -250,6 +255,7 @@ def query_papers(
     # [negate]
     allow_download: Option & bool = True,
 ):
+    excerpt = r"[^\w](Milaâ?|Quebec AI Institute|Montreal Institute for Learning Algorithms|QuÃ©bec AI Institute UniversitÃ© de MontrÃ©al)[^\w]"
     yield from search(
         title=title,
         author=author,

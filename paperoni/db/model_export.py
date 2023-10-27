@@ -1,5 +1,6 @@
 from ovld import ovld
 
+from ..cli_helper import ExtendAttr
 from .. import model as M
 from . import schema as sch
 
@@ -86,3 +87,8 @@ def export(venue: sch.Venue):
         volume=venue.volume,
         quality=venue.quality,
     )
+
+
+@ovld
+def export(extattr: ExtendAttr):
+    return export(extattr._search_result)
