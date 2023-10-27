@@ -1,6 +1,9 @@
+import os
 import logging
 import re
 from datetime import datetime
+import functools
+from hrepr import H
 
 
 # TODO: move this to starbear and starbear.utils.StarbearHandler
@@ -128,3 +131,67 @@ class Confidence:
         ]
         total_score = sum(x for _, x in author_scores)
         return total_score, author_scores
+
+
+UNAVAILABLE_TITLE = "Server temporarily unavailable, please retry later"
+UNAVAILABLE_CONTENT = (
+    "Server is temporarily unavailable, please retry in few minutes."
+)
+
+
+def scraper_is_running() -> bool:
+    """Return True if Paperoni scraping service is running."""
+    status = (
+        os.popen("systemctl is-active paperoni-scraper.service").read().strip()
+    )
+    return status != "inactive"
+
+
+def redirect_index_if_scraping(method):
+    """Decorator to display temporarily unavailable page on Index.__call__() if scraping is running."""
+    from .common import template
+
+    @functools.wraps(method)
+    async def wrapper(self, *args, **kwargs):
+        if scraper_is_running():
+            return template(
+                self.template,
+                body=H.div(UNAVAILABLE_CONTENT, id="index"),
+                title=UNAVAILABLE_TITLE,
+            )
+        else:
+            return await method(self, *args, **kwargs)
+
+    return wrapper
+
+
+def redirect_request_if_scraping(fn):
+    """Decorator to display temporarily unavailable page on run(request) if scraping is running."""
+    from .common import template, here
+
+    @functools.wraps(fn)
+    async def wrapper(request):
+        if scraper_is_running():
+            return template(
+                here / "mila-template.html",
+                title=UNAVAILABLE_TITLE,
+                body=H.div(UNAVAILABLE_CONTENT),
+            )
+        else:
+            return await fn(request)
+
+    return wrapper
+
+
+def redirect_page_if_scraping(fn):
+    """Decorator to display temporarily unavailable page on app(page, ...) if scraping is running."""
+
+    @functools.wraps(fn)
+    async def wrapper(page, *args, **kwargs):
+        if scraper_is_running():
+            page["head"].print(H.title(UNAVAILABLE_TITLE))
+            page.print(UNAVAILABLE_CONTENT)
+        else:
+            await fn(page, *args, **kwargs)
+
+    return wrapper
