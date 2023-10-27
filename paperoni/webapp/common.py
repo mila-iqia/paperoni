@@ -16,6 +16,7 @@ from starbear.serve import LoneBear
 from ..cli_helper import search
 from ..config import config as config_var, load_config
 from ..utils import keyword_decorator
+from .utils import redirect_index_if_scraping, redirect_page_if_scraping
 from . import filters
 
 here = Path(__file__).parent
@@ -595,11 +596,6 @@ def template(path, location=None, **kw):
     )
 
 
-def scraper_is_running():
-    status = os.popen("systemctl is-active paperoni-scraper.service").read().strip()
-    return status
-
-
 # TODO: This is a copy of grizzlaxy.index.Index to avoid updating grizzlaxy during
 # my time off -- OB
 class Index(LoneBear):
@@ -610,13 +606,11 @@ class Index(LoneBear):
         self.location = template.parent if isinstance(template, Path) else None
         self.template = template
 
+    @redirect_index_if_scraping
     async def run(self, request):
         scope = request.scope
         app = scope["app"]
         root_path = scope["root_path"]
-
-        print("GOTO", repr(root_path), scraper_is_running())
-
         content = render("/", app.map, restrict=root_path)
         if content is None:
             content = render(
@@ -651,4 +645,4 @@ def mila_template(fn, title=None, help=None):
         page.print(target := H.div().autoid())
         return await fn(page, page[target])
 
-    return app
+    return redirect_page_if_scraping(app)
