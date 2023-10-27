@@ -7,6 +7,7 @@ from blessed import Terminal
 from hrepr import H
 from ovld import ovld
 
+from .cli_helper import ExtendAttr
 from .db import schema as sch
 from .model import Author, DatePrecision, Paper, Venue, from_dict
 
@@ -91,7 +92,7 @@ def display(d: dict):
 
 
 @ovld
-def display(paper: Union[Paper, sch.Paper]):
+def display(paper: Union[Paper, sch.Paper], excerpt=None):
     """Print the paper in long form on the terminal.
 
     Long form includes abstract, affiliations, keywords, number of
@@ -119,7 +120,9 @@ def display(paper: Union[Paper, sch.Paper]):
         print(f"  {T.bold_green(typ)} {link}")
     print_field("Citations", paper.citation_count)
     if hasattr(paper, "excerpt"):
-        before, match, after = paper.excerpt
+        excerpt = paper.excerpt
+    if excerpt:
+        before, match, after = excerpt
         print_field("Excerpt", before + T.bold_red(match) + after)
 
 
@@ -155,6 +158,13 @@ def display(venue: Venue):
     print_field("Links", "")
     for typ, link in expand_links(venue.links):
         print(f"  {T.bold_green(typ):20} {link}")
+
+
+@ovld
+def display(extattr: ExtendAttr):
+    attrs = {**extattr.__dict__}
+    del attrs["_search_result"]
+    return display(extattr._search_result, **attrs)
 
 
 def join(elems, sep=", ", lastsep=None):
