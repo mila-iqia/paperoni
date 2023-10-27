@@ -625,44 +625,6 @@ def scraper_is_running():
     return status
 
 
-def _wrap(fn):
-    from starlette.responses import PlainTextResponse
-    import functools
-    assert callable(fn), fn
-    if str(type(fn)) == "<class 'function'>":
-        print("!function!")
-
-        @functools.wraps(fn)
-        async def wrapper(*args, **kwargs):
-            print("called function")
-            if scraper_is_running():
-                response = PlainTextResponse("Working", 403)
-                await response(*args, **kwargs)
-            else:
-                await fn(*args, **kwargs)
-        return wrapper
-    else:
-        print("!callable!")
-        call = fn.__call__
-        async def wrapper(*args, **kwargs):
-            print("called callable")
-            if scraper_is_running():
-                response = PlainTextResponse("Working", 403)
-                await response(*args, **kwargs)
-            else:
-                await call(*args, **kwargs)
-        fn.__call__ = wrapper
-        return fn
-
-
-def _middleware(d: dict):
-    for k, v in list(d.items()):
-        if isinstance(v, dict):
-            _middleware(v)
-        else:
-            d[k] = _wrap(v)
-
-
 # TODO: This is a copy of grizzlaxy.index.Index to avoid updating grizzlaxy during
 # my time off -- OB
 class Index(LoneBear):
@@ -678,11 +640,7 @@ class Index(LoneBear):
         app = scope["app"]
         root_path = scope["root_path"]
 
-        _middleware(app.map)
         print("GOTO", repr(root_path), scraper_is_running())
-        import pprint
-        pprint.pprint(app.map)
-        from starbear.serve import MotherBear
 
         content = render("/", app.map, restrict=root_path)
         if content is None:
