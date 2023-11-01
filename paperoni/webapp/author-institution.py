@@ -4,14 +4,22 @@ from pathlib import Path
 
 from hrepr import H
 from sqlalchemy import select
-from starbear import ClientWrap, Queue, bear
+from starbear import Queue, bear
 
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
 from ..utils import tag_uuid
-from .common import config, mila_template, regenerator
+from .common import GUI2, SearchElement, SelectElement, config, mila_template
 
 here = Path(__file__).parent
+
+
+def get_type_links(author, type):
+    num_links = 0
+    for i in author.links:
+        if i.type == type:
+            num_links += 1
+    return num_links
 
 
 @bear
@@ -19,7 +27,6 @@ here = Path(__file__).parent
 async def app(page, box):
     """Edit/update the list of researchers."""
     q = Queue()
-    debounced = ClientWrap(q, debounce=0.3, form=True)
     roles = [
         "associate",
         "core",
@@ -30,55 +37,49 @@ async def app(page, box):
         "industry-core",
         "industry-associate",
     ]
-    form = H.form(id="addform", autocomplete="off")["addform"](
-        H.input(
-            id="formname", name="name", placeholder="Name", oninput=debounced
-        )["authorinput"],
-        "Role",
-        H.select(name="role")["roleinput"](
-            [H.option(value=role)(role) for role in roles]
-        ),
-        "Start date",
-        H.input(type="date", id="start", name="date-start")[
-            "calender", "authorinput"
+    gui = GUI2(
+        elements=[
+            SearchElement(
+                name="name",
+                description="Name",
+                default=None,
+            ),
+            SelectElement(
+                name="role",
+                description="Role",
+                options=roles,
+                default=None,
+            ),
+            SearchElement(
+                name="start",
+                description="Start date",
+                default=None,
+                type="date",
+            ),
+            SearchElement(
+                name="end",
+                description="End date",
+                default=None,
+                type="date",
+            ),
         ],
-        "End date",
-        H.input(type="date", id="end", name="date-end")[
-            "calender", "authorinput"
-        ],
-        H.br,
-        H.button("Add")["button"],
-        onsubmit=debounced,
+        queue=q,
+        button_label="Add/Edit",
     )
-    area = H.div["area-authorlink"](
-        H.div["up"](
-            H.div["column"]("Nom"),
-            H.div["column"]("Role"),
-            H.div["column"]("Start"),
-            H.div["column"]("End"),
-            H.div["column"](" Semantic Scholar Ids"),
-            H.div["column"](" Openreview Ids"),
-        ),
-        H.div(id="mid-div")["mid"](),
+    form = gui.form()
+
+    area = H.div(
+        table := H.div().autoid(),
         H.div(id="down-div")["down"](form),
-    ).autoid()
+    )
     box.print(area)
     dataAuthors = {}
-
-    def regen(event=None):
-        name = None
-        if event is not None:
-            name = event["name"]
-        if event is not None and event["$submit"] == True:
-            name = None
-            addAuthor(event)
-        return generate(name)
 
     def addAuthor(event):
         name = event["name"]
         role = event["role"]
-        start_date = event["date-start"]
-        end_date = event["date-end"]
+        start_date = event["start"]
+        end_date = event["end"]
         page["#errormessage"].delete()
         if not (name == "" or role == "" or start_date == ""):
             uaRole = Role(
@@ -116,8 +117,8 @@ async def app(page, box):
             db.acquire(ua)
 
             # Reset the form
-            page["#addform"].clear()
-            page["#down-div"].print(form)
+            gui.clear()
+            page["#down-div"].set(gui.form())
 
         else:
             page["#down-div"].print(
@@ -132,46 +133,17 @@ async def app(page, box):
         if dataAuthors[id]["end"] != "":
             enddate = dataAuthors[id]["end"].strftime("%Y-%m-%d")
 
-        filledForm = H.form(id="addform", autocomplete="off")["addform"](
-            H.input(
-                id="formname",
-                name="name",
-                placeholder="Name",
-                value=dataAuthors[id]["nom"],
-                oninput=debounced,
-            )["authorinput"],
-            "Role",
-            H.select(name="role")["roleinput"](
-                [
-                    H.option(value=role, selected="selected")(role)
-                    if role == dataAuthors[id]["role"]
-                    else H.option(value=role)(role)
-                    for role in roles
-                ]
-            ),
-            "Start date",
-            H.input(
-                type="date", id="start", name="date-start", value=startdate
-            )["calender", "authorinput"],
-            "End date",
-            H.input(type="date", id="end", name="date-end", value=enddate)[
-                "calender", "authorinput"
-            ],
-            H.br,
-            H.button("Add")["button"],
-            onsubmit=debounced,
+        gui.set_params(
+            {
+                "name": dataAuthors[id]["nom"],
+                "role": dataAuthors[id]["role"],
+                "start": startdate,
+                "end": enddate,
+            }
         )
-        page["#addform"].clear()
-        page["#down-div"].print(filledForm)
+        page["#down-div"].set(gui.form())
 
-    def get_type_links(author, type):
-        num_links = 0
-        for i in author.links:
-            if i.type == type:
-                num_links += 1
-        return num_links
-
-    def htmlAuthor(result):
+    def author_html(result):
         author = result.author
         date_start = ""
         date_end = ""
@@ -186,29 +158,44 @@ async def app(page, box):
             "start": date_start,
             "end": date_end,
         }
-        page["#mid-div"].print(
-            H.div(onclick=lambda event, id=id: clickAuthor(id))[
-                "author-column"
-            ](
-                H.div(id="authorname")["column-mid"](
-                    H.span(id="autspan")(author.name)
+        return H.tr(onclick=lambda event, id=id: clickAuthor(id))(
+            H.td(author.name),
+            H.td(result.role),
+            H.td(date_start),
+            H.td(date_end),
+            H.td(
+                H.div(
+                    get_type_links(author, "semantic_scholar"),
+                    "⧉",
+                    onclick="window.open('http://localhost:8000/find-authors-ids?scraper=semantic_scholar&author="
+                    + str(author.name)
+                    + "');",
+                )
+            ),
+            H.td(
+                H.div(
+                    get_type_links(author, "openreview"),
+                    "⧉",
+                    onclick="window.open('http://localhost:8000/find-authors-ids?scraper=openreview&author="
+                    + str(author.name)
+                    + "');",
                 ),
-                H.div["column-mid"](H.span["align-mid"](result.role)),
-                H.div["column-mid"](H.span["align-mid"](date_start)),
-                H.div["column-mid"](H.span["align-mid"](date_end)),
             ),
-            H.div["column-mid-link"](
-                get_type_links(author, "semantic_scholar"),
-                onclick="window.open('http://localhost:8000/find-authors-ids?scrapper=semantic_scholar&author="
-                + str(author.name)
-                + "');",
+        )
+
+    def make_table(results):
+        return H.table["researchers"](
+            H.thead(
+                H.tr(
+                    H.th("Name"),
+                    H.th("Role"),
+                    H.th("Start"),
+                    H.th("End"),
+                    H.th("Semantic Scholar Ids"),
+                    H.th("Openreview Ids"),
+                )
             ),
-            H.div["column-mid-link"](
-                get_type_links(author, "openreview"),
-                onclick="window.open('http://localhost:8000/find-authors-ids?scraper=openreview&author="
-                + str(author.name)
-                + "');",
-            ),
+            H.tbody([author_html(result) for result in results]),
         )
 
     def generate(name=None):
@@ -223,14 +210,13 @@ async def app(page, box):
             yield r
 
     with config().database as db:
-        regen = regenerator(
-            queue=q,
-            regen=regen,
-            reset=page["#mid-div"].clear,
-            db=db,
-        )
-        async for result in regen:
-            htmlAuthor(result)
+        page[table].set(make_table(list(generate(None))))
+        async for event in q:
+            name = event["name"]
+            if event is not None and event["$submit"] == True:
+                name = None
+                addAuthor(event)
+            page[table].set(make_table(list(generate(name))))
 
 
 ROUTES = app
