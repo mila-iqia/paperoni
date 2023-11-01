@@ -148,6 +148,58 @@ class LogsViewer:
                 yield l.decode("utf-8")
 
 
+class GUI2:
+    def __init__(
+        self,
+        elements,
+        defaults={},
+        params={},
+        queue=None,
+        button_label="Submit",
+    ):
+        self.button_label = button_label
+        self.queue = queue or Queue()
+        self.debounced = ClientWrap(self.queue, debounce=0.3, form=True)
+        self.defaults = {}
+        self.elements = {}
+        self.add_elements(elements)
+        self.defaults |= defaults
+        self.params = self.defaults | params
+
+    def add_elements(self, elements):
+        for el in elements:
+            self.elements[el.name] = el
+            self.defaults[el.name] = el.default
+
+    def form_footer(self):
+        return H.button(self.button_label)
+
+    def set_params(self, params):
+        self.clear()
+        self.params.update(params)
+
+    def clear(self):
+        self.params = {p: None for p in self.params.keys()}
+
+    def form(self):
+        for k, v in self.params.items():
+            if k in self.elements:
+                self.elements[k].set_value(v)
+        inputs = [
+            el.element(self.debounced)
+            for el in self.elements.values()
+            if not el.hidden
+        ]
+        return H.form["search-form"](
+            H.div["main-inputs"](*inputs),
+            H.div["search-extra"](self.form_footer()),
+            onsubmit=self.debounced,
+        )
+
+    def __hrepr__(self, H, hrepr):
+        return self.form()
+
+
 class GUI:
     def __init__(self, page, db, queue, params, defaults):
         self.page = page
@@ -299,6 +351,31 @@ class CheckboxElement(SearchElement):
                 checked=self.value,
             ),
             H.label({"for": f"input-{self.name}"})(self.description),
+        )
+
+
+class SelectElement(SearchElement):
+    def __init__(self, name, description, options, default=False):
+        self.options = options
+        super().__init__(
+            name=name, description=description, default=default, type="select"
+        )
+
+    def element(self, queue):
+        return H.div["form-input"](
+            H.label({"for": f"input-{self.name}"})(self.description),
+            H.select(
+                [
+                    H.option(
+                        opt,
+                        value=opt,
+                        selected="selected" if opt == self.value else False,
+                    )
+                    for opt in self.options
+                ],
+                name=self.name,
+                oninput=queue,
+            ),
         )
 
 
