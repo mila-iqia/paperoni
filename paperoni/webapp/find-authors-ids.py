@@ -1,17 +1,16 @@
-import asyncio
 from collections import Counter
 from pathlib import Path
 
 from giving import give
 from hrepr import H
 from sqlalchemy import select
-from starbear import bear
+from starbear import Queue, bear
 
 from ..db import schema as sch
-from ..display import html
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
 from .common import config, mila_template
+from .render import paper_html
 
 here = Path(__file__).parent
 
@@ -126,31 +125,7 @@ async def app(page, box):
     """Include/Exclude author Ids."""
     author_name = page.query_params.get("author")
     scraper = page.query_params.get("scraper")
-
-    def confirm_id(auth, confirmed, auth_id):
-        link = auth.links[0].link
-        type = auth.links[0].type
-        clear_link = filter_link(link)  # Just for html
-
-        id_linked = is_linked(link, type, author_name)
-        if not confirmed:
-            type = "!" + auth.links[0].type
-
-        if not id_linked:
-            db.insert_author_link(auth_id, type, link)
-        elif id_linked.type != type:
-            db.update_author_type(auth_id, type, link)
-
-        # Modify the page
-        page["#authoridbuttonarea" + clear_link].clear()
-        page["#authoridbuttonarea" + clear_link].print_html(
-            get_buttons(auth, auth_id, confirmed)
-        )
-        page["#idstatus" + clear_link].clear()
-        if confirmed:
-            page["#idstatus" + clear_link].print("ID Included")
-        else:
-            page["#idstatus" + clear_link].print("ID Excluded")
+    action_q = Queue().wrap(form=True)
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
     def is_linked(link, type, author_name):
@@ -182,34 +157,40 @@ async def app(page, box):
             print("Error : ", e)
         return authors
 
-    def get_buttons(auth, author_id, included=None):
-        includeButton = H.button["button"](
-            "Include ID",
-            onclick=(
-                lambda event, auth=auth, author_id=author_id: confirm_id(
-                    auth, 1, author_id
-                )
+    def get_buttons(link, author_id, included=None):
+        radio = H.form["form-validation"](
+            H.label["validation-button"](
+                H.input(
+                    type="radio",
+                    name=f"v-{link}",
+                    value="valid",
+                    checked=included == 1,
+                    onchange=action_q,
+                ),
+                "Yes",
+            ),
+            H.label["validation-button"](
+                H.input(
+                    type="radio",
+                    name=f"v-{link}",
+                    value="invalid",
+                    checked=included == 0,
+                    onchange=action_q,
+                ),
+                "No",
+            ),
+            H.label["validation-button"](
+                H.input(
+                    type="radio",
+                    name=f"v-{link}",
+                    value="unknown",
+                    checked=included is None,
+                    onchange=action_q,
+                ),
+                "Unknown",
             ),
         )
-        excludeButton = H.button["button", "invalidate"](
-            "Exclude ID",
-            onclick=(
-                lambda event, auth=auth, author_id=author_id: confirm_id(
-                    auth, 0, author_id
-                )
-            ),
-        )
-        if included is not None:
-            if included:
-                includeButton = H.button["button", "notavailable"](
-                    "Include ID",
-                )
-            else:
-                excludeButton = H.button["button", "notavailable"](
-                    "Exclude ID",
-                )
-        buttons = [includeButton, excludeButton]
-        return buttons
+        return radio
 
     def filter_link(link):  # For html elements
         filtered_link = link.replace("~", "")
@@ -247,7 +228,7 @@ async def app(page, box):
             tabIDS.remove(i)
         page["#noresults"].delete()
         results = prepare(
-            researchers=reaserchers,
+            researchers=researchers,
             idtype=scraper,
             query_name=current_query_name,
         )
@@ -287,25 +268,15 @@ async def app(page, box):
                 )(id="area" + link)
                 box.print(area)
                 linked = is_linked(link, scraper, author_name)
-                if linked != False:
-                    is_excluded = link in no_ids
-                    page["#authoridbuttonarea" + link].print_html(
-                        get_buttons(
-                            auth,
-                            author_id,
-                            not is_excluded,
-                        )
+                page["#authoridbuttonarea" + link].print_html(
+                    get_buttons(
+                        link,
+                        author_id,
+                        None if linked is False else (link not in no_ids),
                     )
-                    if is_excluded:
-                        page["#idstatus" + link].print("ID Excluded")
-                    else:
-                        page["#idstatus" + link].print("ID Included")
-                else:
-                    page["#authoridbuttonarea" + link].print_html(
-                        get_buttons(auth, author_id)
-                    )
+                )
 
-            div = html(result)
+            div = paper_html(result)
             valDiv = H.div["validationDiv"](div)
             aid = str("#a" + link)
             page[aid].print(valDiv)
@@ -321,7 +292,7 @@ async def app(page, box):
         if scraper == "semantic_scholar":
             current_query_name = ss.author_with_papers
         elif scraper == "openreview":
-            or_scraper = OpenReviewPaperScraper(cfg, db)
+            or_scraper = OpenReviewPaperScraper(config(), db)
             all_venues = or_scraper._venues_from_wildcard("*")
             current_query_name = query_name
 
@@ -339,9 +310,23 @@ async def app(page, box):
             box.print(dropdown)
         await build_page(scraper)
 
-        # Keep the app running
-        while True:
-            await asyncio.sleep(1)
+        async for result in action_q:
+            for k, v in result.items():
+                if k.startswith("v-"):
+                    link = k.removeprefix("v-")
+                    match v:
+                        case "valid":
+                            db.insert_author_link(
+                                author_id, scraper, link, validity=1
+                            )
+                        case "invalid":
+                            db.insert_author_link(
+                                author_id, scraper, link, validity=0
+                            )
+                        case "unknown":
+                            db.insert_author_link(
+                                author_id, scraper, link, validity=None
+                            )
 
 
 ROUTES = app
