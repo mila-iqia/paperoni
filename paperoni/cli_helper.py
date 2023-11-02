@@ -169,7 +169,7 @@ def find_excerpt(paper, excerpt, allow_download=True):
 # TODO: move this to an utils file
 # SQLAlchemy seams to reuse search results. Wrap that object to allow extentions
 # of the object data without leaking them to other search results
-class ExtendAttr():
+class ExtendAttr:
     def __init__(self, search_result) -> None:
         self._search_result = search_result
 
