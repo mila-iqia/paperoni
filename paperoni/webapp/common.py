@@ -95,7 +95,7 @@ class LogsViewer:
                             value=s,
                             checked=active_service == s,
                             onchange=debounced,
-                            **{"class":"log-button"},
+                            **{"class": "log-button"},
                         ),
                         s,
                     )
@@ -109,7 +109,8 @@ class LogsViewer:
                 log_stream := H.textarea(
                     "".join(
                         self.__class__.journal(active_service, 10000)
-                        if active_service else []
+                        if active_service
+                        else []
                     ),
                     name="log-stream",
                     readonly=True,
@@ -127,23 +128,31 @@ class LogsViewer:
                         blocks.append(html.escape(l))
                         if i % 2000 == 0:
                             page[log_stream].print_html("".join(blocks))
-                            page[log_stream].do("this.scrollTop = this.scrollTopMax")
+                            page[log_stream].do(
+                                "this.scrollTop = this.scrollTopMax"
+                            )
                             blocks = ["\n"]
                     if blocks[1:]:
                         page[log_stream].print_html("".join(blocks))
-                        page[log_stream].do("this.scrollTop = this.scrollTopMax")
-
+                        page[log_stream].do(
+                            "this.scrollTop = this.scrollTopMax"
+                        )
 
     @staticmethod
     def journal(service, tail=-1):
-        with subprocess.Popen([
+        with subprocess.Popen(
+            [
                 "journalctl",
                 *(("-n", str(tail)) if tail > 0 else tuple()),
-                "-qu", service,
+                "-qu",
+                service,
                 # TODO: make viewer follow the journal logs
                 # "--follow",
                 # "--no-tail",
-                ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as process:
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        ) as process:
             for l in process.stdout:
                 yield l.decode("utf-8")
 
