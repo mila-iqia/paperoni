@@ -157,148 +157,6 @@ class LogsViewer:
                 yield l.decode("utf-8")
 
 
-class GUI2:
-    def __init__(
-        self,
-        elements,
-        defaults={},
-        params={},
-        queue=None,
-        button_label="Submit",
-    ):
-        self.button_label = button_label
-        self.queue = queue or Queue()
-        self.debounced = ClientWrap(self.queue, debounce=0.3, form=True)
-        self.defaults = {}
-        self.elements = {}
-        self.add_elements(elements)
-        self.defaults |= defaults
-        self.params = self.defaults | params
-
-    def add_elements(self, elements):
-        for el in elements:
-            self.elements[el.name] = el
-            self.defaults[el.name] = el.default
-
-    def form_footer(self):
-        return H.button(self.button_label)
-
-    def set_params(self, params):
-        self.clear()
-        self.params.update(params)
-
-    def clear(self):
-        self.params = {p: None for p in self.params.keys()}
-
-    def form(self):
-        for k, v in self.params.items():
-            if k in self.elements:
-                self.elements[k].set_value(v)
-        inputs = [
-            el.element(self.debounced)
-            for el in self.elements.values()
-            if not el.hidden
-        ]
-        return H.form["search-form"](
-            H.div["main-inputs"](*inputs),
-            H.div["search-extra"](self.form_footer()),
-            onsubmit=self.debounced,
-        )
-
-    def __hrepr__(self, H, hrepr):
-        return self.form()
-
-
-class GUI:
-    def __init__(self, page, db, queue, params, defaults):
-        self.page = page
-        self.db = db
-        self.queue = queue
-        self.params = defaults | params
-        self.debounced = ClientWrap(queue, debounce=0.3, form=True)
-        self.wait_area = H.div["wait-area"]().autoid()
-        self.count_area = H.div["count-area"](
-            H.span["count"]("0"), " found"
-        ).autoid()
-        self.link_area = H.div["copy-link"](
-            "📋 Copy link",
-            H.span["copiable"](self.link()),
-            __constructor={
-                "module": Path(here / "lib.js"),
-                "symbol": "clip",
-                "arguments": [H.self()],
-            },
-        )
-        self.json_report_area = H.div["report-link"]().autoid()
-        self.csv_report_area = H.div["report-link"]().autoid()
-
-    def link(self, page="", **extra):
-        params = {**self.params, **extra}
-        encoded = urlencode(
-            {p: v for p, v in params.items() if "$" not in p and v}
-        )
-        return f"{page}?{encoded}"
-
-    async def loop(self, reset):
-        def _soft_restart(new_gen):
-            nonlocal done, count, gen
-            gen = new_gen
-            done = False
-            count = 0
-            self.page[self.json_report_area].set(
-                H.a(
-                    "JSON",
-                    href=self.link(page="/report", limit=None, format="json"),
-                )
-            )
-            self.page[self.csv_report_area].set(
-                H.a(
-                    "CSV",
-                    href=self.link(page="/report", limit=None, format="csv"),
-                )
-            )
-            self.page[self.link_area, ".copiable"].set(self.link())
-            self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
-
-        gen = None
-        _soft_restart(self.regen())
-
-        while True:
-            if done:
-                inp = await self.queue.get()
-            else:
-                try:
-                    inp = await asyncio.wait_for(self.queue.get(), 0.01)
-                except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
-                    inp = None
-
-            if inp is not None:
-                self.params = self.params | inp
-                new_gen = self.regen()
-                if new_gen is not None:
-                    _soft_restart(new_gen)
-                    reset()
-                    continue
-
-            try:
-                self.page[self.count_area, ".count"].set(str(count))
-                element = next(gen)
-                count += 1
-                if count > self.elements["limit"].value:
-                    done = True
-                    self.page[self.wait_area].set("~")
-                    continue
-            except StopIteration:
-                done = True
-                self.page[self.wait_area].set("✓")
-                continue
-
-            yield element
-
-    def regen(self):
-        yield from []
-
-
 class SearchElement:
     def __init__(
         self,
@@ -452,11 +310,155 @@ class RadioElement(SearchElement):
         )
 
 
-class SearchGUI(GUI):
-    def __init__(self, page, db, queue, params, defaults):
+class BaseGUI:
+    def __init__(
+        self,
+        elements,
+        defaults={},
+        params={},
+        queue=None,
+        button_label="Submit",
+    ):
+        self.button_label = button_label
+        self.queue = queue or Queue()
+        self.debounced = ClientWrap(self.queue, debounce=0.3, form=True)
+        self.defaults = {}
         self.elements = {}
-        self.search_defaults = {}
-        self.add_elements(
+        self.add_elements(elements)
+        self.defaults |= defaults
+        self.params = self.defaults | params
+
+    def add_elements(self, elements):
+        for el in elements:
+            self.elements[el.name] = el
+            self.defaults[el.name] = el.default
+
+    def link(self, page="", **extra):
+        params = {**self.params, **extra}
+        encoded = urlencode(
+            {p: v for p, v in params.items() if "$" not in p and v}
+        )
+        return f"{page}?{encoded}"
+
+    def form_footer(self):
+        return H.button(self.button_label)
+
+    def set_params(self, params):
+        self.clear()
+        self.params.update(params)
+
+    def clear(self):
+        self.params = {p: None for p in self.params.keys()}
+
+    def form(self):
+        for k, v in self.params.items():
+            if k in self.elements:
+                self.elements[k].set_value(v)
+        inputs = [
+            el.element(self.debounced)
+            for el in self.elements.values()
+            if not el.hidden
+        ]
+        return H.form["search-form"](
+            H.div["main-inputs"](*inputs),
+            H.div["search-extra"](self.form_footer()),
+            onsubmit=self.debounced,
+        )
+
+    def __hrepr__(self, H, hrepr):
+        return self.form()
+
+
+class RegenGUI(BaseGUI):
+    def __init__(self, elements, page, db, queue, params, defaults):
+        super().__init__(
+            elements=elements,
+            queue=queue,
+            params=params,
+            defaults=defaults,
+            button_label=None,
+        )
+        self.page = page
+        self.db = db
+        self.wait_area = H.div["wait-area"]().autoid()
+        self.count_area = H.div["count-area"](
+            H.span["count"]("0"), " found"
+        ).autoid()
+        self.link_area = H.div["copy-link"](
+            "📋 Copy link",
+            H.span["copiable"](self.link()),
+            __constructor={
+                "module": Path(here / "lib.js"),
+                "symbol": "clip",
+                "arguments": [H.self()],
+            },
+        )
+        self.json_report_area = H.div["report-link"]().autoid()
+        self.csv_report_area = H.div["report-link"]().autoid()
+
+    async def loop(self, reset):
+        def _soft_restart(new_gen):
+            nonlocal done, count, gen
+            gen = new_gen
+            done = False
+            count = 0
+            self.page[self.json_report_area].set(
+                H.a(
+                    "JSON",
+                    href=self.link(page="/report", limit=None, format="json"),
+                )
+            )
+            self.page[self.csv_report_area].set(
+                H.a(
+                    "CSV",
+                    href=self.link(page="/report", limit=None, format="csv"),
+                )
+            )
+            self.page[self.link_area, ".copiable"].set(self.link())
+            self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
+
+        gen = None
+        _soft_restart(self.regen())
+
+        while True:
+            if done:
+                inp = await self.queue.get()
+            else:
+                try:
+                    inp = await asyncio.wait_for(self.queue.get(), 0.01)
+                except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
+                    inp = None
+
+            if inp is not None:
+                self.params = self.params | inp
+                new_gen = self.regen()
+                if new_gen is not None:
+                    _soft_restart(new_gen)
+                    reset()
+                    continue
+
+            try:
+                self.page[self.count_area, ".count"].set(str(count))
+                element = next(gen)
+                count += 1
+                if count > self.elements["limit"].value:
+                    done = True
+                    self.page[self.wait_area].set("~")
+                    continue
+            except StopIteration:
+                done = True
+                self.page[self.wait_area].set("✓")
+                continue
+
+            yield element
+
+    def regen(self):
+        yield from []
+
+
+class SearchGUI(RegenGUI):
+    def __init__(self, page, db, queue, params, defaults):
+        elements = [
             SearchElement(
                 name="title",
                 description="Title",
@@ -529,19 +531,15 @@ class SearchGUI(GUI):
                 default="-date",
                 hidden=True,
             ),
-        )
+        ]
         super().__init__(
+            elements=elements,
             page=page,
             db=db,
             queue=queue,
             params=params,
-            defaults=self.search_defaults | defaults,
+            defaults=defaults,
         )
-
-    def add_elements(self, *elements):
-        for el in elements:
-            self.elements[el.name] = el
-            self.search_defaults[el.name] = el.default
 
     def regen(self):
         kw = {}
@@ -555,30 +553,19 @@ class SearchGUI(GUI):
         except Exception as e:
             traceback.print_exception(e)
 
-    def __hrepr__(self, H, hrepr):
-        for k, v in self.params.items():
-            if k in self.elements:
-                self.elements[k].set_value(v)
-        inputs = [
-            el.element(self.debounced)
-            for el in self.elements.values()
-            if not el.hidden
-        ]
-        return H.form["search-form"](
-            H.div["main-inputs"](*inputs),
-            H.div["search-extra"](
-                self.wait_area,
-                self.count_area,
-                self.link_area,
-                self.json_report_area,
-                self.csv_report_area,
-                H.button(
-                    "Restart search",
-                    name="restart",
-                    onclick=self.queue.wrap(form=True),
-                ),
+    def form_footer(self):
+        return [
+            self.wait_area,
+            self.count_area,
+            self.link_area,
+            self.json_report_area,
+            self.csv_report_area,
+            H.button(
+                "Restart search",
+                name="restart",
+                onclick=self.queue.wrap(form=True),
             ),
-        )
+        ]
 
 
 async def regenerator(queue, regen, reset, db):
