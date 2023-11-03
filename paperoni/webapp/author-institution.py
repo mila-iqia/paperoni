@@ -9,7 +9,13 @@ from starbear import Queue, bear
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
 from ..utils import tag_uuid
-from .common import GUI2, SearchElement, SelectElement, config, mila_template
+from .common import (
+    BaseGUI,
+    SearchElement,
+    SelectElement,
+    config,
+    mila_template,
+)
 
 here = Path(__file__).parent
 
@@ -37,7 +43,7 @@ async def app(page, box):
         "industry-core",
         "industry-associate",
     ]
-    gui = GUI2(
+    gui = BaseGUI(
         elements=[
             SearchElement(
                 name="name",
