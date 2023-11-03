@@ -220,23 +220,6 @@ class PDF:
         return f"{self.link.type}:{self.link.link}"
 
 
-triggers = {
-    "Mila": (10, InstitutionCategory.academia),
-    "MILA": (10, InstitutionCategory.academia),
-    "Université": (6, InstitutionCategory.academia),
-    "Universite": (6, InstitutionCategory.academia),
-    "University": (6, InstitutionCategory.academia),
-    "Polytechnique": (6, InstitutionCategory.academia),
-    "Institute": (6, InstitutionCategory.unknown),
-    "Department": (6, InstitutionCategory.unknown),
-    "Research": (4, InstitutionCategory.unknown),
-    "Montréal": (2, InstitutionCategory.academia),
-    "Québec": (2, InstitutionCategory.academia),
-    "Montreal": (2, InstitutionCategory.academia),
-    "Quebec": (2, InstitutionCategory.academia),
-}
-
-
 def recognize_known_institution(entry, institutions):
     normalized = unicodedata.normalize("NFKC", entry.strip().strip(","))
     if normalized and normalized in institutions:
@@ -245,19 +228,25 @@ def recognize_known_institution(entry, institutions):
 
 
 def recognize_unknown_institution(entry):
-    if (
-        entry
-        and any((trigger := t) in entry for t in triggers)
-        and "@" not in entry
-    ):
-        return Institution(
-            name=entry, aliases=[], category=triggers[trigger][1]
-        )
+    patterns = getattr(config.get(), "institution_patterns", None)
+    if not patterns or not entry or "@" in entry:
+        return None
+    for defn in patterns:
+        pattern = defn["pattern"]
+        category = defn["category"]
+        m = re.match(pattern=pattern, string=entry, flags=re.IGNORECASE)
+        if m:
+            return Institution(
+                name=entry,
+                aliases=[],
+                category=getattr(InstitutionCategory, category),
+            )
     else:
         return None
 
 
 def recognize_institutions(lines, institutions):
+    lines = list(lines)
     affiliations = []
     for line in lines:
         if line.startswith(","):

@@ -23,9 +23,12 @@ paths:
   cache: cache
   requests_cache: requests-cache
   permanent_requests_cache: permanent-requests-cache
+institution_patterns:
+  - pattern: ".*\\buniversit(y|é)\\b.*"
+    category: "academia"
 ```
 
-All paths are relative to the configuration file.
+All paths are relative to the configuration file. Insitution patterns are regular expressions used to recognize affiliations when parsing PDFs (along with other heuristics).
 
 Make sure to set the `$PAPERONI_CONFIG` environment variable to the path to that file.
 
