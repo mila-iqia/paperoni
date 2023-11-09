@@ -17,8 +17,7 @@ def sort_releases(releases):
 @ovld
 def export(paper: sch.Paper):
     return {
-        "__type__": "Paper",
-        "id": paper.paper_id.hex(),
+        "paper_id": paper.paper_id.hex(),
         "title": paper.title,
         "abstract": paper.abstract,
         "authors": [export(author) for author in paper.authors],
@@ -45,7 +44,7 @@ def export(paper_author: sch.PaperAuthor):
 @ovld
 def export(institution: sch.Institution):
     return {
-        "id": institution.institution_id.hex(),
+        "institution_id": institution.institution_id.hex(),
         "name": institution.name,
         "category": institution.category,
     }
@@ -54,7 +53,7 @@ def export(institution: sch.Institution):
 @ovld
 def export(author: sch.Author):
     return {
-        "id": author.author_id.hex(),
+        "author_id": author.author_id.hex(),
         "name": author.name,
         "links": [export(lnk) for lnk in author.links],
     }
@@ -77,23 +76,29 @@ def export(topic: sch.Topic):
 
 @ovld
 def export(release: sch.Release, peer_reviewed: bool):
-    venue = release.venue
+    return {
+        "venue": export(release.venue),
+        "peer_reviewed": peer_reviewed,
+        "status": release.status,
+        "pages": release.pages,
+    }
+
+
+@ovld
+def export(venue: sch.Venue):
     return {
         "venue_id": venue.venue_id.hex(),
         "name": venue.name,
         "type": venue.type,
-        "peer_reviewed": peer_reviewed,
-        "date": DatePrecision.format(
-            date=venue.date, precision=venue.date_precision
-        ),
-        "date_timestamp": venue.date,
-        "date_precision": venue.date_precision,
-        "status": release.status,
+        "date": {
+            "text": DatePrecision.format(
+                date=venue.date, precision=venue.date_precision
+            ),
+            "timestamp": venue.date,
+            "precision": venue.date_precision,
+        },
         "links": [export(lnk) for lnk in venue.links],
-        "aliases": [a.alias for a in venue.venue_alias],
-        "open": venue.open,
         "publisher": venue.publisher,
         "series": venue.series or "",
         "volume": venue.volume,
-        "pages": release.pages,
     }

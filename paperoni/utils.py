@@ -318,7 +318,7 @@ def peer_reviewed_release(release):
     name = release.venue.name.lower()
     return (
         release.status not in ("submitted", "preprint")
-        and name
+        and name.strip() != ""
         and name != "n/a"
         and "workshop" not in name
         and "rxiv" not in name
