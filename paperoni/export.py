@@ -1,7 +1,7 @@
 from ovld import ovld
 
 from .db import schema as sch
-from .display import expand_links
+from .display import expand_links_dict
 from .model import DatePrecision
 from .utils import peer_reviewed_release
 
@@ -25,10 +25,7 @@ def export(paper: sch.Paper):
             export(*release) for release in sort_releases(paper.releases)
         ],
         "topics": [export(topic) for topic in paper.topics],
-        "links": [
-            {"type": type, "url": url}
-            for type, url in expand_links(paper.links)
-        ],
+        "links": expand_links_dict(paper.links),
         "citation_count": 0,
     }
 
