@@ -1,5 +1,6 @@
 from ovld import ovld
 
+from .cli_helper import ExtendAttr
 from .db import schema as sch
 from .display import expand_links_dict
 from .model import DatePrecision
@@ -12,6 +13,14 @@ def sort_releases(releases):
     ]
     releases.sort(key=lambda entry: -int(entry[1]))
     return releases
+
+
+@ovld
+def export(paper: ExtendAttr):
+    return {
+        **export(paper._search_result),
+        "excerpt": getattr(paper, "excerpt", None),
+    }
 
 
 @ovld

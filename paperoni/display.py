@@ -7,6 +7,7 @@ from blessed import Terminal
 from hrepr import H
 from ovld import ovld
 
+from .cli_helper import ExtendAttr
 from .db import schema as sch
 from .model import Author, DatePrecision, Paper, Venue, from_dict
 
@@ -104,7 +105,7 @@ def display(d: dict):
 
 
 @ovld
-def display(paper: Union[Paper, sch.Paper]):
+def display(paper: Union[Paper, sch.Paper, ExtendAttr]):
     """Print the paper in long form on the terminal.
 
     Long form includes abstract, affiliations, keywords, number of

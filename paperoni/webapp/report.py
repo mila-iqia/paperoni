@@ -49,8 +49,6 @@ class JSONFormatter(PaperFormatter):
         return f"{dest}.json"
 
     def process(self, paper):
-        if isinstance(paper, ExtendAttr):
-            paper = paper._search_result
         return json.dumps(export(paper))
 
 
