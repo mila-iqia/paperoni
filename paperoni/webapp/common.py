@@ -189,6 +189,7 @@ class SearchElement:
             H.input(
                 name=self.name,
                 type=self.type,
+                autocomplete="off",
                 oninput=queue,
                 value=self.value or False,
             ),
