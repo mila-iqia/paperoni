@@ -115,6 +115,10 @@ input[type="text"], input[type="date"], select {
     margin-right: 10px;
 }
 .form-radios {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: center;
     padding: 5px;
     border: 1px solid black;
     border-radius: 5px;

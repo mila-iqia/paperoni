@@ -492,6 +492,11 @@ class SearchGUI(RegenGUI):
                 default=None,
                 type="date",
             ),
+            SearchElement(
+                name="affiliation",
+                description="Affiliation",
+                default=None,
+            ),
             RadioElement(
                 name="validation",
                 choices={

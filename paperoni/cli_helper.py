@@ -51,6 +51,7 @@ def search_stmt(
     title=None,
     author=None,
     author_link=None,
+    affiliation=None,
     venue=None,
     venue_link=None,
     link=None,
@@ -81,6 +82,13 @@ def search_stmt(
         atyp, alnk = author_link.split(":")
         stmt = stmt.join(sch.Author.author_link).filter(
             sch.AuthorLink.type == atyp, sch.AuthorLink.link == alnk
+        )
+    if affiliation:
+        stmt = (
+            stmt.join(sch.Paper.paper_author_institution)
+            .join(sch.PaperAuthorInstitution.institution)
+            .join(sch.Institution.institution_alias)
+            .filter(likefmt(sch.InstitutionAlias.alias, affiliation))
         )
     if venue or venue_link or start or end or (sort and "date" in sort):
         stmt = stmt.join(sch.Paper.release).join(sch.Release.venue)
@@ -186,6 +194,7 @@ def search(
     title=None,
     author=None,
     author_link=None,
+    affiliation=None,
     venue=None,
     venue_link=None,
     link=None,
@@ -204,6 +213,7 @@ def search(
             title=title,
             author=author,
             author_link=author_link,
+            affiliation=affiliation,
             venue=venue,
             venue_link=venue_link,
             link=link,
@@ -237,6 +247,7 @@ def query_papers(
     title: Option = None,
     author: Option = None,
     author_link: Option = None,
+    affiliation: Option = None,
     venue: Option = None,
     venue_link: Option = None,
     link: Option = None,
@@ -254,6 +265,7 @@ def query_papers(
         title=title,
         author=author,
         author_link=author_link,
+        affiliation=affiliation,
         venue=venue,
         venue_link=venue_link,
         link=link,
