@@ -336,6 +336,16 @@ table.researchers td {
     color: purple;
 }
 
+.paper .topic {
+    display: inline-block;
+    font-size: 11px;
+    margin: 1px;
+    margin-right: 5px;
+    padding: 2px;
+    background: #ddf;
+    border-radius: 2px;
+}
+
 .extra {
     font-size: 14px;
 }
