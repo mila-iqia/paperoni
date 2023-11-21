@@ -481,6 +481,16 @@ class SearchGUI(RegenGUI):
                 default=None,
             ),
             SearchElement(
+                name="affiliation",
+                description="Affiliation",
+                default=None,
+            ),
+            SearchElement(
+                name="topic",
+                description="Topic",
+                default=None,
+            ),
+            SearchElement(
                 name="start",
                 description="Start date",
                 default=None,
@@ -491,11 +501,6 @@ class SearchGUI(RegenGUI):
                 description="End date",
                 default=None,
                 type="date",
-            ),
-            SearchElement(
-                name="affiliation",
-                description="Affiliation",
-                default=None,
             ),
             RadioElement(
                 name="validation",

@@ -58,6 +58,7 @@ def search_stmt(
     start=None,
     end=None,
     year=0,
+    topic=None,
     sort=None,
     flags=[],
 ):
@@ -104,6 +105,10 @@ def search_stmt(
         stmt = stmt.filter(sch.Venue.date >= start)
     if end:
         stmt = stmt.filter(sch.Venue.date <= end)
+    if topic:
+        stmt = stmt.join(sch.Paper.topic).filter(
+            likefmt(sch.Topic.topic, topic)
+        )
     if link:
         stmt = stmt.join(sch.Paper.paper_link).filter(
             likefmt(sch.PaperLink.link, link)
@@ -201,6 +206,7 @@ def search(
     start=None,
     end=None,
     year=0,
+    topic=None,
     excerpt=None,
     allow_download=False,
     flags=[],
@@ -219,6 +225,7 @@ def search(
             link=link,
             start=start,
             end=end,
+            topic=topic,
             year=year,
             flags=flags,
             sort=sort,
@@ -254,6 +261,7 @@ def query_papers(
     start: Option = None,
     end: Option = None,
     year: Option & int = 0,
+    topic: Option = None,
     excerpt: Option & str = None,
     sort: Option & str = None,
     # [action: append]
@@ -272,6 +280,7 @@ def query_papers(
         start=start,
         end=end,
         year=year,
+        topic=topic,
         excerpt=excerpt,
         allow_download=allow_download,
         flags=flag,

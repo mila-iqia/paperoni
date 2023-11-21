@@ -80,6 +80,12 @@ def validation_html(paper, maxauth=50):
 
     total_score, author_scores = c.paper_score(paper)
 
+    if hasattr(paper, "excerpt"):
+        before, matching, after = paper.excerpt
+        excerpt = H.div["excerpt"](before, H.b(matching), after)
+    else:
+        excerpt = ""
+
     return H.div["paper", "validation", _paper_score_class(total_score)](
         H.div["band"](int(total_score)),
         H.div["content"](
@@ -96,6 +102,7 @@ def validation_html(paper, maxauth=50):
                 f"... ({more} more)" if more else "",
             ),
             venues,
+            H.div["topics"](H.div["topic"](t.name) for t in paper.topics),
             H.div["extra"](
                 H.a["link"](
                     _domain(link) if typ == "html" else typ.replace("_", "-"),
@@ -105,11 +112,12 @@ def validation_html(paper, maxauth=50):
                 for typ, link in expand_links(paper.links)
                 if link.startswith("http")
             ),
+            excerpt,
         ),
     )
 
 
-def paper_html(paper, maxauth=50, excerpt=None):
+def paper_html(paper, maxauth=50):
     def _domain(lnk):
         return lnk.split("/")[2]
 
@@ -148,6 +156,7 @@ def paper_html(paper, maxauth=50, excerpt=None):
                 f"... ({more} more)" if more else "",
             ),
             venues,
+            H.div["topics"](H.div["topic"](t.name) for t in paper.topics),
             H.div["extra"](
                 H.a["link"](
                     _domain(link) if typ == "html" else typ.replace("_", "-"),
