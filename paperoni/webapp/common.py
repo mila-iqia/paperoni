@@ -371,7 +371,9 @@ class BaseGUI:
 
 
 class RegenGUI(BaseGUI):
-    def __init__(self, elements, page, db, queue, params, defaults):
+    def __init__(
+        self, elements, page, db, queue, params, defaults, batch_size=10
+    ):
         super().__init__(
             elements=elements,
             queue=queue,
@@ -379,11 +381,15 @@ class RegenGUI(BaseGUI):
             defaults=defaults,
             button_label=None,
         )
+        self.batch_size = batch_size
         self.page = page
         self.db = db
         self.wait_area = H.div["wait-area"]().autoid()
         self.count_area = H.div["count-area"](
-            H.span["count"]("0"), " found"
+            H.span["shown"]("0"),
+            " shown / ",
+            H.span["count"]("0"),
+            " found",
         ).autoid()
         self.link_area = H.div["copy-link"](
             "📋 Copy link",
@@ -399,9 +405,10 @@ class RegenGUI(BaseGUI):
 
     async def loop(self, reset):
         def _soft_restart(new_gen):
-            nonlocal done, count, gen
+            nonlocal done, done_showing, count, gen
             gen = new_gen
             done = False
+            done_showing = False
             count = 0
             self.page[self.json_report_area].set(
                 H.a(
@@ -415,9 +422,12 @@ class RegenGUI(BaseGUI):
                     href=self.link(page="/report", limit=None, format="csv"),
                 )
             )
+            self.page[self.count_area, ".count"].set("0")
+            self.page[self.count_area, ".shown"].set("0")
             self.page[self.link_area, ".copiable"].set(self.link())
             self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
 
+        done = done_showing = False
         gen = None
         _soft_restart(self.regen())
 
@@ -438,20 +448,31 @@ class RegenGUI(BaseGUI):
                     reset()
                     continue
 
+            elements = []
             try:
-                self.page[self.count_area, ".count"].set(str(count))
-                element = next(gen)
-                count += 1
-                if count > self.elements["limit"].value:
-                    done = True
-                    self.page[self.wait_area].set("~")
-                    continue
+                for _ in range(self.batch_size):
+                    elements.append(next(gen))
             except StopIteration:
                 done = True
-                self.page[self.wait_area].set("✓")
-                continue
 
-            yield element
+            count += len(elements)
+            self.page[self.count_area, ".count"].set(str(count))
+
+            if count > self.elements["limit"].value:
+                done_showing = True
+
+            if not done_showing:
+                self.page[self.count_area, ".shown"].set(str(count))
+
+            if done:
+                self.page[self.wait_area].set("✓")
+
+            if not done_showing:
+                for element in elements:
+                    yield element
+
+            if done:
+                done_showing = True
 
     def regen(self):
         yield from []

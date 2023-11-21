@@ -150,9 +150,11 @@ input[type="text"], input[type="date"], select {
 .copiable {
     display: none;
 }
-.count-area .count {
+.count-area .count,
+.count-area .shown
+{
     display: inline-block;
-    width: 40px;
+    width: 50px;
     text-align: right;
 }
 .wait-area {
