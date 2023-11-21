@@ -372,7 +372,15 @@ class BaseGUI:
 
 class RegenGUI(BaseGUI):
     def __init__(
-        self, elements, page, db, queue, params, defaults, batch_size=10
+        self,
+        elements,
+        page,
+        db,
+        queue,
+        params,
+        defaults,
+        first_batch_size=50,
+        steady_batch_size=10,
     ):
         super().__init__(
             elements=elements,
@@ -381,7 +389,8 @@ class RegenGUI(BaseGUI):
             defaults=defaults,
             button_label=None,
         )
-        self.batch_size = batch_size
+        self.first_batch_size = first_batch_size
+        self.steady_batch_size = steady_batch_size
         self.page = page
         self.db = db
         self.wait_area = H.div["wait-area"]().autoid()
@@ -405,10 +414,11 @@ class RegenGUI(BaseGUI):
 
     async def loop(self, reset):
         def _soft_restart(new_gen):
-            nonlocal done, done_showing, count, gen
+            nonlocal batch_size, done, done_showing, count, gen
             gen = new_gen
             done = False
             done_showing = False
+            batch_size = self.first_batch_size
             count = 0
             self.page[self.json_report_area].set(
                 H.a(
@@ -428,6 +438,7 @@ class RegenGUI(BaseGUI):
             self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
 
         done = done_showing = False
+        batch_size = 0  # set by _soft_restart
         gen = None
         _soft_restart(self.regen())
 
@@ -450,10 +461,12 @@ class RegenGUI(BaseGUI):
 
             elements = []
             try:
-                for _ in range(self.batch_size):
+                for _ in range(batch_size):
                     elements.append(next(gen))
             except StopIteration:
                 done = True
+
+            batch_size = self.steady_batch_size
 
             count += len(elements)
             self.page[self.count_area, ".count"].set(str(count))
