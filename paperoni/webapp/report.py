@@ -1,9 +1,11 @@
+import json
 from datetime import datetime
 
 from starlette.responses import JSONResponse, StreamingResponse
 
-from ..db.model_export import export
+from ..cli_helper import ExtendAttr
 from ..display import expand_links
+from ..export import export
 from .common import SearchGUI, config
 
 
@@ -47,7 +49,7 @@ class JSONFormatter(PaperFormatter):
         return f"{dest}.json"
 
     def process(self, paper):
-        return export(paper).tagged_json()
+        return json.dumps(export(paper))
 
 
 class CSVFormatter(PaperFormatter):

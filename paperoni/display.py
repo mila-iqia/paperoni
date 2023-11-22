@@ -7,6 +7,7 @@ from blessed import Terminal
 from hrepr import H
 from ovld import ovld
 
+from .cli_helper import ExtendAttr
 from .db import schema as sch
 from .model import Author, DatePrecision, Paper, Venue, from_dict
 
@@ -50,7 +51,7 @@ def print_field(title, contents, bold=False):
     print(title, contents)
 
 
-def expand_links(links):
+def expand_links_dict(links):
     pref = [
         "doi.abstract",
         "mlr.abstract",
@@ -76,13 +77,26 @@ def expand_links(links):
     for link in links:
         if link.type in link_generators:
             results.extend(
-                (f"{link.type}.{kind}", url.format(link.link))
+                {
+                    "type": f"{link.type}.{kind}",
+                    "link": link.link,
+                    "url": url.format(link.link),
+                }
                 for kind, url in link_generators[link.type].items()
             )
         else:
-            results.append((link.type, link.link))
-    results.sort(key=lambda pair: pref.index(pair[0]) if pair[0] in pref else 1)
+            results.append({"type": link.type, "link": link.link})
+    results.sort(
+        key=lambda dct: pref.index(dct["type"]) if dct["type"] in pref else 1
+    )
     return results
+
+
+def expand_links(links):
+    return [
+        (x["type"], x.get("url", None) or x["link"])
+        for x in expand_links_dict(links)
+    ]
 
 
 @ovld
@@ -91,7 +105,7 @@ def display(d: dict):
 
 
 @ovld
-def display(paper: Union[Paper, sch.Paper]):
+def display(paper: Union[Paper, sch.Paper, ExtendAttr]):
     """Print the paper in long form on the terminal.
 
     Long form includes abstract, affiliations, keywords, number of
