@@ -414,10 +414,9 @@ class RegenGUI(BaseGUI):
 
     async def loop(self, reset):
         def _soft_restart(new_gen):
-            nonlocal batch_size, done, done_showing, count, gen
+            nonlocal batch_size, done, count, gen
             gen = new_gen
             done = False
-            done_showing = False
             batch_size = self.first_batch_size
             count = 0
             self.page[self.json_report_area].set(
@@ -437,7 +436,7 @@ class RegenGUI(BaseGUI):
             self.page[self.link_area, ".copiable"].set(self.link())
             self.page[self.wait_area].set(H.img(src=here / "three-dots.svg"))
 
-        done = done_showing = False
+        done = False
         batch_size = 0  # set by _soft_restart
         gen = None
         _soft_restart(self.regen())
@@ -459,33 +458,34 @@ class RegenGUI(BaseGUI):
                     reset()
                     continue
 
-            elements = []
+            to_yield = []
             try:
                 for _ in range(batch_size):
-                    elements.append(next(gen))
+                    to_yield.append(next(gen))
             except StopIteration:
                 done = True
 
             batch_size = self.steady_batch_size
 
-            count += len(elements)
+            old_count = count
+            count += len(to_yield)
             self.page[self.count_area, ".count"].set(str(count))
 
-            if count > self.elements["limit"].value:
-                done_showing = True
+            diff = count - self.elements["limit"].value
+            if diff > 0:
+                # Throw away the excess
+                to_yield = to_yield[:-diff]
 
-            if not done_showing:
-                self.page[self.count_area, ".shown"].set(str(count))
+            if to_yield:
+                self.page[self.count_area, ".shown"].set(
+                    str(old_count + len(to_yield))
+                )
 
             if done:
                 self.page[self.wait_area].set("✓")
 
-            if not done_showing:
-                for element in elements:
-                    yield element
-
-            if done:
-                done_showing = True
+            for x in to_yield:
+                yield x
 
     def regen(self):
         yield from []
