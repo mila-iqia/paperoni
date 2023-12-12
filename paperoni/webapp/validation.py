@@ -2,7 +2,8 @@ from pathlib import Path
 
 from aiostream import stream
 from hrepr import H
-from starbear import Queue, bear
+from starbear import Queue, Reference, bear
+from starbear.constructors import FormData
 
 from .common import SearchGUI, config, mila_template
 from .render import validation_html
@@ -16,9 +17,8 @@ here = Path(__file__).parent
 async def app(page, box):
     """Validate papers."""
     q = Queue()
-    action_q = Queue().wrap(form=True)
-    area = H.div["area"]().autoid()
-    papers = {}
+    action_q = Queue().wrap(form=True, refs=True)
+    area = H.div["area"](onchange=action_q).autoid()
 
     with config().database as db:
         gui = SearchGUI(
@@ -44,32 +44,28 @@ async def app(page, box):
         async for result in stream.merge(
             action_q, gui.loop(reset=box[area].clear)
         ):
-            if isinstance(result, dict):
-                for k, v in result.items():
-                    if k.startswith("v-"):
-                        paper_id = k.removeprefix("v-")
-                        paper = papers[paper_id]
-                        match v:
-                            case "valid":
-                                db.remove_flags(paper, "validation")
-                                db.insert_flag(paper, "validation", 1)
-                            case "invalid":
-                                db.remove_flags(paper, "validation")
-                                db.insert_flag(paper, "validation", 0)
-                            case "unknown":
-                                db.remove_flags(paper, "validation")
+            if isinstance(result, FormData):
+                paper = result.ref
+                v = result["validation"]
+                match v:
+                    case "valid":
+                        db.remove_flags(paper, "validation")
+                        db.insert_flag(paper, "validation", 1)
+                    case "invalid":
+                        db.remove_flags(paper, "validation")
+                        db.insert_flag(paper, "validation", 0)
+                    case "unknown":
+                        db.remove_flags(paper, "validation")
 
-                        user = page.session.get("user", {}).get("email", None)
-                        db_logger.info(
-                            f"User set validation='{v}' on paper {paper.title} "
-                            f"({paper.paper_id.hex()})",
-                            extra={"user": user},
-                        )
+                user = page.session.get("user", {}).get("email", None)
+                db_logger.info(
+                    f"User set validation='{v}' on paper {paper.title} "
+                    f"({paper.paper_id.hex()})",
+                    extra={"user": user},
+                )
 
             else:
                 div = validation_html(result)
-                pid = result.paper_id.hex()
-                papers[pid] = result
                 existing_flag = db.get_flag(result, "validation")
                 val_div = H.div(
                     div,
@@ -77,34 +73,32 @@ async def app(page, box):
                         H.label["validation-button"](
                             H.input(
                                 type="radio",
-                                name=f"v-{pid}",
+                                name="validation",
                                 value="valid",
                                 checked=existing_flag == 1,
-                                onchange=action_q,
                             ),
                             "Yes",
                         ),
                         H.label["validation-button"](
                             H.input(
                                 type="radio",
-                                name=f"v-{pid}",
+                                name="validation",
                                 value="invalid",
                                 checked=existing_flag == 0,
-                                onchange=action_q,
                             ),
                             "No",
                         ),
                         H.label["validation-button"](
                             H.input(
                                 type="radio",
-                                name=f"v-{pid}",
+                                name="validation",
                                 value="unknown",
                                 checked=existing_flag is None,
-                                onchange=action_q,
                             ),
                             "Unknown",
                         ),
                     ),
+                    __ref=Reference(result),
                 )
                 box[area].print(val_div)
 
