@@ -373,8 +373,8 @@ table.researchers td {
     outline: 1px solid #555;
 }
 
-.down {
-    margin-top: 20px;
+.top-gui {
+    margin-bottom: 20px;
     padding-bottom: 1px;
     outline: 1px solid #555;
 }
