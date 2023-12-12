@@ -268,7 +268,7 @@ async def app(page, box):
                 )(id="area" + link)
                 box.print(area)
                 linked = is_linked(link, scraper, author_name)
-                page["#authoridbuttonarea" + link].print_html(
+                page["#authoridbuttonarea" + link].print(
                     get_buttons(
                         link,
                         author_id,
