@@ -16,6 +16,7 @@ from starbear.serve import LoneBear
 from ..cli_helper import search
 from ..config import config as config_var, load_config
 from ..utils import keyword_decorator
+from .utils import redirect_index_if_scraping, redirect_page_if_scraping
 from . import filters
 
 here = Path(__file__).parent
@@ -723,6 +724,7 @@ class Index(LoneBear):
         self.location = template.parent if isinstance(template, Path) else None
         self.template = template
 
+    @redirect_index_if_scraping
     async def run(self, request):
         scope = request.scope
         app = scope["app"]
@@ -761,4 +763,4 @@ def mila_template(fn, title=None, help=None):
         page.print(target := H.div().autoid())
         return await fn(page, page[target])
 
-    return app
+    return redirect_page_if_scraping(app)
