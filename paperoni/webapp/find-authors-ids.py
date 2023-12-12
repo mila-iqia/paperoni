@@ -329,4 +329,6 @@ async def app(page, box):
                             )
 
 
+app.hidden = True
+
 ROUTES = app
