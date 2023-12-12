@@ -745,9 +745,7 @@ def mila_template(fn, title=None, help=None):
     async def app(page):
         actual_title = getattr(fn, "__doc__", None) or title or ""
         actual_title = actual_title.removesuffix(".")
-        page["head"].print(
-            H.link(rel="stylesheet", href=here / "app-style.css")
-        )
+        page.add_resource(here / "app-style.css")
         page.print(
             template(
                 here / "header.html",
