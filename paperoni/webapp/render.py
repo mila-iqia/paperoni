@@ -51,7 +51,9 @@ def author_html(auth):
 
 
 def validation_html(paper, maxauth=50):
-    low_confidence = getattr(config().tweaks, "low_confidence_authors")
+    # It seems config.tweaks is a dictionary, not an object.
+    # So, we must get "low_confidence_authors" as a key, not as an attribute.
+    low_confidence = config().tweaks.get("low_confidence_authors", ())
     c = Confidence(
         institution_name=r".*\bmila\b.*|.*montr.al institute.*learning algorithm.*",
         boost_link_type="wpid_en",
