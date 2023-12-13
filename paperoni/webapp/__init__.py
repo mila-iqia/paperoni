@@ -2,6 +2,12 @@ import logging
 
 from .common import config
 
+
+def _get_level(level_name: str) -> int:
+    level = logging.getLevelName(level_name)
+    return level if isinstance(level, int) else logging.INFO
+
+
 cfg = config()
 
 if hasattr(cfg, "sentry") and cfg.sentry.use:
@@ -16,8 +22,8 @@ if hasattr(cfg, "sentry") and cfg.sentry.use:
         environment=cfg.sentry.environment,
         integrations=[
             LoggingIntegration(
-                level=logging.INFO,
-                event_level=logging.INFO
+                level=_get_level(cfg.sentry.log_level),
+                event_level=_get_level(cfg.sentry.event_log_level)
             )
         ]
     )

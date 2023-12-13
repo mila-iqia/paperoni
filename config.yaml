@@ -8,3 +8,5 @@ sentry:
   dsn: ""
   traces_sample_rate: 1.0
   environment: dev
+  log_level: INFO
+  event_log_level: INFO
