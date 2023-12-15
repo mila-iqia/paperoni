@@ -596,6 +596,7 @@ class SearchGUI(RegenGUI):
         try:
             yield from results
         except Exception as e:
+            self.page.error(message="An error occurred.", exception=e)
             traceback.print_exception(e)
 
     def form_footer(self):
