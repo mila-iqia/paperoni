@@ -41,9 +41,13 @@ async def app(page, box):
         )
         box.print(area)
 
-        async for result in stream.merge(
-            action_q, gui.loop(reset=box[area].clear)
-        ):
+        paper_hold = []
+
+        def reset():
+            box[area].clear()
+            paper_hold.clear()
+
+        async for result in stream.merge(action_q, gui.loop(reset=reset)):
             if isinstance(result, FormData):
                 paper = result.ref
                 v = result["validation"]
@@ -65,6 +69,7 @@ async def app(page, box):
                 )
 
             else:
+                paper_hold.append(result)
                 div = validation_html(result)
                 existing_flag = db.get_flag(result, "validation")
                 val_div = H.div(
