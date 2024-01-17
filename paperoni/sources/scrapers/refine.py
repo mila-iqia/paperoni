@@ -262,18 +262,34 @@ def refine_doi_with_crossref(db, paper, link):
             return None
     data = SimpleNamespace(**data["message"])
 
-    if evt := getattr(data, "event", None):
-        if "start" in evt:
-            date_parts = evt["start"]["date-parts"][0]
-        else:
+    if getattr(data, "event", None) or getattr(data, "container-title", None):
+        date_parts = None
+
+        if evt := getattr(data, "event", None):
+            venue_name = evt["name"]
+            venue_type = VenueType.conference
+            if "start" in evt:
+                date_parts = evt["start"]["date-parts"][0]
+
+        if venue := getattr(data, "container-title", None):
+            venue_name = venue[0]
+            if data.type == "journal-article":
+                venue_type = VenueType.journal
+            else:
+                venue_type = VenueType.conference
+
+        if not date_parts:
             for field in (
                 "published-print",
                 "published",
+                "issued",
                 "published-online",
                 "created",
             ):
                 if dateholder := getattr(data, field, None):
                     date_parts = dateholder["date-parts"][0]
+                    break
+
         precision = [
             DatePrecision.year,
             DatePrecision.month,
@@ -283,9 +299,9 @@ def refine_doi_with_crossref(db, paper, link):
         release = Release(
             venue=Venue(
                 aliases=[],
-                name=evt["name"],
-                type=VenueType.conference,
-                series=evt["name"],
+                name=venue_name,
+                type=venue_type,
+                series=venue_name,
                 links=[],
                 open=False,
                 peer_reviewed=False,
