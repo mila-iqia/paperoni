@@ -5,6 +5,7 @@ import re
 import traceback
 import urllib
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import datetime
 from functools import reduce
 from operator import itemgetter
@@ -48,9 +49,24 @@ ua = UserAgent()
 refiners = defaultdict(list)
 
 
+@dataclass
+class Refiner:
+    type: str
+    fn: object
+    priority: float
+    needs_paper: bool
+
+
 @keyword_decorator
-def refiner(fn, *, type, priority):
-    refiners[type].append((priority, fn))
+def refiner(fn, *, type, priority, needs_paper=False):
+    refiners[type].append(
+        Refiner(
+            type=type,
+            priority=priority,
+            fn=fn,
+            needs_paper=needs_paper,
+        )
+    )
     return fn
 
 
@@ -623,25 +639,25 @@ def _pdf_refiner(db, paper, link):
     )
 
 
-@refiner(type="arxiv", priority=7)
+@refiner(type="arxiv", priority=7, needs_paper=True)
 def refine_with_arxiv(db, paper, link):
     with covguard():
         return _pdf_refiner(db=db, paper=paper, link=link)
 
 
-@refiner(type="doi", priority=6)
+@refiner(type="doi", priority=6, needs_paper=True)
 def refine_with_pdf_url_from_crossref(db, paper, link):
     with covguard():
         return _pdf_refiner(db=db, paper=paper, link=link)
 
 
-@refiner(type="openreview", priority=5)
+@refiner(type="openreview", priority=5, needs_paper=True)
 def refine_with_openreview(db, paper, link):
     with covguard():
         return _pdf_refiner(db=db, paper=paper, link=link)
 
 
-@refiner(type="pdf", priority=5)
+@refiner(type="pdf", priority=5, needs_paper=True)
 def refine_with_pdf_link(db, paper, link):
     with covguard():
         return _pdf_refiner(db=db, paper=paper, link=link)
@@ -652,17 +668,19 @@ class Refiner(BaseScraper):
         _refiners = []
         for link in links:
             _refiners.extend(
-                [(p, link, r) for (p, r) in refiners.get(link.type, [])]
+                [(refiner, link) for refiner in refiners.get(link.type, [])]
             )
-        _refiners.sort(reverse=True, key=lambda data: data[0])
-        for _, link, refiner in _refiners:
+        _refiners.sort(reverse=True, key=lambda data: data[0].priority)
+        for refiner, link in _refiners:
             with Doing(refine=f"{link.type}:{link.link}"):
                 yield link, refiner
 
     def _refine(self, paper, links):
         for link, refiner in self._iterate_refiners(links):
+            if paper is None and refiner.needs_paper:
+                continue
             try:
-                if result := refiner(self.db, paper, link):
+                if result := refiner.fn(self.db, paper, link):
                     yield refiner, result
             except Exception as e:
                 with covguard():
@@ -687,7 +705,7 @@ class Refiner(BaseScraper):
         for _, result in rest:
             already_has_affs = any(auth.affiliations for auth in merged.authors)
             merged = Paper(
-                title=paper.title,
+                title=paper.title if paper else (merged.title or result.title),
                 abstract=merged.abstract or result.abstract,
                 authors=merged.authors if already_has_affs else result.authors,
                 links=uniq([*merged.links, *result.links]),
@@ -711,9 +729,16 @@ class Refiner(BaseScraper):
             .join(sch.PaperLink)
             .filter(sch.PaperLink.type == type, sch.PaperLink.link == link)
         )
-        [[paper], *_] = self.db.session.execute(pq)
+        try:
+            [[paper], *_] = self.db.session.execute(pq)
+        except ValueError:
+            paper = None
 
-        for _, entry in self.refine(paper, merge=not separate):
+        for _, entry in self.refine(
+            paper,
+            merge=not separate,
+            links=paper.links if paper else [Link(type=type, link=link)],
+        ):
             yield entry
 
     @tooled
