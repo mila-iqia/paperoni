@@ -484,6 +484,69 @@ def refine_with_pubmedcentral(db, paper, link):
     )
 
 
+@refiner(type="dblp", priority=90)
+@covguard_fn
+def refine_with_dblp(db, paper, link):
+    if "/corr/" in link.link:
+        return None
+
+    data = readpage(
+        f"https://dblp.uni-trier.de/rec/{link.link}.xml", format="xml"
+    )
+    ee = data.find("ee")
+    extra_links = []
+    if ee and ee.text.startswith("https://doi.org/"):
+        doi = ee.text.replace("https://doi.org/", "")
+        extra_links = [Link(type="doi", link=doi)]
+    elif ee:
+        extra_links = [Link(type="html", link=ee.text)]
+    return Paper(
+        title=data.find("title").text,
+        abstract="",
+        authors=[
+            PaperAuthor(
+                author=Author(
+                    name=author.text,
+                    roles=[],
+                    aliases=[],
+                    links=(
+                        [Link(type="orcid", link=orcid)]
+                        if (orcid := author.attrs.get("orcid", None))
+                        else []
+                    ),
+                ),
+                affiliations=[],
+            )
+            for author in data.select("author")
+        ],
+        links=[Link(type=link.type, link=link.link), *extra_links],
+        releases=[
+            Release(
+                venue=Venue(
+                    name=(
+                        jname := (
+                            data.find("booktitle") or data.find("journal")
+                        ).text
+                    ),
+                    series=jname,
+                    type=VenueType.journal,
+                    date=datetime(
+                        year=int(data.find("year").text), month=1, day=1
+                    ),
+                    date_precision=DatePrecision.year,
+                    publisher=None,
+                    links=[],
+                    aliases=[],
+                ),
+                status="published",
+                pages=(pg := data.find("pages")) and pg.text,
+            )
+        ],
+        topics=[],
+        quality=(0,),
+    )
+
+
 # @refiner(type="doi", priority=111)
 # def refine_with_springer(db, paper, link):
 #     doi = link.link
