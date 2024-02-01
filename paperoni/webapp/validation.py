@@ -2,7 +2,7 @@ from pathlib import Path
 
 from aiostream import stream
 from hrepr import H
-from starbear import Queue, Reference, bear
+from starbear import Queue, Reference
 from starbear.constructors import FormData
 
 from .common import SearchGUI, config, mila_template
@@ -12,7 +12,6 @@ from .utils import db_logger
 here = Path(__file__).parent
 
 
-@bear
 @mila_template(help="/help#validation")
 async def app(page, box):
     """Validate papers."""

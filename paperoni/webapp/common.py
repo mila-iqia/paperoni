@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 import yaml
 from grizzlaxy.index import render
 from hrepr import H
-from starbear import ClientWrap, Queue, template as _template
+from starbear import ClientWrap, Queue, bear, template as _template
 from starbear.serve import LoneBear
 
 from ..cli_helper import search
@@ -630,11 +630,6 @@ def template(path, location=None, **kw):
     return _template(
         path,
         _asset=lambda name: location / name,
-        _embed=lambda name: template(
-            location / name,
-            location=location,
-            **kw,
-        ),
         **kw,
     )
 
@@ -667,11 +662,12 @@ class Index(LoneBear):
 
 @keyword_decorator
 def mila_template(fn, title=None, help=None):
+    actual_title = getattr(fn, "__doc__", None) or title or ""
+    actual_title = actual_title.removesuffix(".")
+
     @wraps(fn)
     async def app(page):
-        actual_title = getattr(fn, "__doc__", None) or title or ""
-        actual_title = actual_title.removesuffix(".")
-        page.add_resource(here / "app-style.css")
+        page.add_resources(here / "app-style.css")
         page.print(
             template(
                 here / "header.html",
@@ -685,4 +681,4 @@ def mila_template(fn, title=None, help=None):
         page.print(target := H.div().autoid())
         return await fn(page, page[target])
 
-    return app
+    return bear(app, template_params={"title": actual_title})

@@ -4,7 +4,7 @@ from pathlib import Path
 from giving import give
 from hrepr import H
 from sqlalchemy import select
-from starbear import Queue, bear
+from starbear import Queue
 
 from ..db import schema as sch
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
@@ -119,7 +119,6 @@ async def prepare(
                 yield author, p, no_ids
 
 
-@bear
 @mila_template(title="Find author IDs", help="/help#find-author-ids")
 async def app(page, box):
     """Include/Exclude author Ids."""

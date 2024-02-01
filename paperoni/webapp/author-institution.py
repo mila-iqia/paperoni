@@ -4,7 +4,7 @@ from pathlib import Path
 
 from hrepr import H
 from sqlalchemy import select
-from starbear import Queue, bear
+from starbear import Queue
 
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
@@ -28,7 +28,6 @@ def get_type_links(author, type):
     return num_links
 
 
-@bear
 @mila_template(title="List of researchers", help="/help#author-institution")
 async def app(page, box):
     """Edit/update the list of researchers."""

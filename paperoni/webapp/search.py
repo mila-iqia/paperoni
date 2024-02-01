@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from hrepr import H
-from starbear import Queue, bear
+from starbear import Queue
 
 from .common import SearchGUI, config, mila_template
 from .render import paper_html
@@ -9,7 +9,6 @@ from .render import paper_html
 here = Path(__file__).parent
 
 
-@bear
 @mila_template(help="/help#search")
 async def app(page, box):
     """Search for papers."""
