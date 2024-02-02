@@ -48,9 +48,8 @@ async def app(page, box):
 
         async for result in stream.merge(action_q, gui.loop(reset=reset)):
             if isinstance(result, FormData):
-                paper = result.ref
-                v = result["validation"]
-                match v:
+                paper = result.obj
+                match result.tag:
                     case "valid":
                         db.remove_flags(paper, "validation")
                         db.insert_flag(paper, "validation", 1)
@@ -60,9 +59,13 @@ async def app(page, box):
                     case "unknown":
                         db.remove_flags(paper, "validation")
 
+                page[result.ref].do(
+                    f"this.setAttribute('status', '{result.tag}')"
+                )
+
                 user = page.session.get("user", {}).get("email", None)
                 db_logger.info(
-                    f"User set validation='{v}' on paper {paper.title} "
+                    f"User set validation='{result.tag}' on paper {paper.title} "
                     f"({paper.paper_id.hex()})",
                     extra={"user": user},
                 )
@@ -71,39 +74,35 @@ async def app(page, box):
                 paper_hold.append(result)
                 div = validation_html(result)
                 existing_flag = db.get_flag(result, "validation")
-                val_div = H.div(
+
+                match existing_flag:
+                    case 0:
+                        existing_status = "invalid"
+                    case 1:
+                        existing_status = "valid"
+                    case _:
+                        existing_status = "unknown"
+
+                val_div = H.div["validation-buttons"](
                     div,
-                    H.form["form-validation"](
-                        H.label["validation-button"](
-                            H.input(
-                                type="radio",
-                                name="validation",
-                                value="valid",
-                                checked=existing_flag == 1,
-                            ),
+                    H.div(
+                        H.button["valid"](
                             "Yes",
+                            onclick=action_q.tag("valid"),
                         ),
-                        H.label["validation-button"](
-                            H.input(
-                                type="radio",
-                                name="validation",
-                                value="invalid",
-                                checked=existing_flag == 0,
-                            ),
+                        H.button["invalid"](
                             "No",
+                            onclick=action_q.tag("invalid"),
                         ),
-                        H.label["validation-button"](
-                            H.input(
-                                type="radio",
-                                name="validation",
-                                value="unknown",
-                                checked=existing_flag is None,
-                            ),
+                        H.button["unknown"](
                             "Unknown",
+                            onclick=action_q.tag("unknown"),
                         ),
                     ),
+                    status=existing_status,
                     __ref=Reference(result),
                 )
+
                 box[area].print(val_div)
 
 
