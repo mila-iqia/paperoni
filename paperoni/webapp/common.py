@@ -62,15 +62,14 @@ class FileEditor:
         )
 
         async for event in q:
-            submitting = event["$submit"]
             try:
-                self.file.write(event["new-content"], dry=not submitting)
+                self.file.write(event["new-content"], dry=not event.submit)
             except Exception as exc:
                 page[actionarea].set(
                     H.div["error"](f"{type(exc).__name__}: {exc}")
                 )
             else:
-                if submitting:
+                if event.submit:
                     page[actionarea].set("Saved")
                 else:
                     page[actionarea].set(H.button("Update", name="update"))
