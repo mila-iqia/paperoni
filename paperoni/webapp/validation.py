@@ -3,7 +3,7 @@ from pathlib import Path
 from aiostream import stream
 from hrepr import H
 from starbear import Queue, Reference
-from starbear.constructors import FormData
+from starbear.constructors import BrowserEvent
 
 from .common import SearchGUI, config, mila_template
 from .render import validation_html
@@ -16,7 +16,7 @@ here = Path(__file__).parent
 async def app(page, box):
     """Validate papers."""
     q = Queue()
-    action_q = Queue().wrap(form=True, refs=True)
+    action_q = Queue().wrap(refs=True)
     area = H.div["area"](onchange=action_q).autoid()
 
     with config().database as db:
@@ -40,6 +40,8 @@ async def app(page, box):
         )
         box.print(area)
 
+        # This list holds the papers that are in the interface so that they are not
+        # garbage-collected.
         paper_hold = []
 
         def reset():
@@ -47,7 +49,7 @@ async def app(page, box):
             paper_hold.clear()
 
         async for result in stream.merge(action_q, gui.loop(reset=reset)):
-            if isinstance(result, FormData):
+            if isinstance(result, BrowserEvent):
                 paper = result.obj
                 match result.tag:
                     case "valid":
@@ -59,6 +61,8 @@ async def app(page, box):
                     case "unknown":
                         db.remove_flags(paper, "validation")
 
+                # Communicate feedback to the browser. Indexing a page with result.ref
+                # selects the element that has the matching --ref attribute.
                 page[result.ref].do(
                     f"this.setAttribute('status', '{result.tag}')"
                 )
@@ -88,6 +92,9 @@ async def app(page, box):
                     H.div(
                         H.button["valid"](
                             "Yes",
+                            # Events put into action_q.tag("valid") will have
+                            # event.tag == "valid", this is how we know which button
+                            # was pressed.
                             onclick=action_q.tag("valid"),
                         ),
                         H.button["invalid"](
@@ -99,7 +106,13 @@ async def app(page, box):
                             onclick=action_q.tag("unknown"),
                         ),
                     ),
+                    # This property is used for styling, see the stylesheet
                     status=existing_status,
+                    # This embeds an identifier in the --ref attribute of this div.
+                    # Any event fired from inside the div will have the hierarchy of
+                    # these references in event.refs, and the closest object in
+                    # event.obj. This means we can recover the result object from
+                    # the button presses.
                     __ref=Reference(result),
                 )
 
