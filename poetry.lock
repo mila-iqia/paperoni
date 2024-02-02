@@ -48,6 +48,62 @@ test = ["anyio[trio]", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypo
 trio = ["trio (>=0.23)"]
 
 [[package]]
+name = "apischema"
+version = "0.18.1"
+description = "JSON (de)serialization, GraphQL and JSON schema generation using Python typing."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "apischema-0.18.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:4201e481cc4b15ad3f8c855540ad72d810641b5b766953db170405c852c26e9a"},
+    {file = "apischema-0.18.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a62348374a42c47e311fa3a8945b3c54bf4b52029eda2c819be0a1b63280b04d"},
+    {file = "apischema-0.18.1-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:2df9072431ee1231bd7baa888c19f8e0be42f220e0b6bb59ae71b058959fd75c"},
+    {file = "apischema-0.18.1-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:69470927a530a3cf6ef12d491501acb0d44cf655479c3ec394d3346a1bed5e78"},
+    {file = "apischema-0.18.1-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:efffadd579713945404f974322b54ca66f9cbd2a6d9f7e81956ac55305c3cf94"},
+    {file = "apischema-0.18.1-cp310-cp310-win32.whl", hash = "sha256:855f49d44d9068583daef1f11048bba7cc56b45ade2e07cb9dcd82ec1f29c58d"},
+    {file = "apischema-0.18.1-cp310-cp310-win_amd64.whl", hash = "sha256:6ec576a421fdb28dfed027133564e60df1b266a0d481b99ad11bfe6fa9bfb607"},
+    {file = "apischema-0.18.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:9533867f4385e2656158a9e76fdc877bd0cf86fd7bb595d7ca0ff8bb7bf3611d"},
+    {file = "apischema-0.18.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0d4afb686f94ed13a84ae6507eaf4b55958433fff9f96e511dbae8ac8a39c47b"},
+    {file = "apischema-0.18.1-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a9da90ce1e9e1b0970f62e6dac57a72667745d5f8a159a2c91e6f9905d286581"},
+    {file = "apischema-0.18.1-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:e0adb93fb0de2266e95cf4f4eab772a0cef1b1bec7b8e626eb2c63456920e6af"},
+    {file = "apischema-0.18.1-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:0ed5569080a6028470232d9d86c05b3d963532c5e585cb0e31715d5f38738a16"},
+    {file = "apischema-0.18.1-cp311-cp311-win32.whl", hash = "sha256:d2a5e965d427b8b42960dbf14c3820f88efe83634d5027d0e749c029f6e65117"},
+    {file = "apischema-0.18.1-cp311-cp311-win_amd64.whl", hash = "sha256:f1bbb9cc3c74151de2e9314cfe6192f218ed9a7f95e324a2e034d70512268b22"},
+    {file = "apischema-0.18.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:220aa56974f765dc100e875c66c688ff57bad3ae48d0aeaee4fb1ec90c5cd0fd"},
+    {file = "apischema-0.18.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:653492010d22acdcbe2240f0ceb3ca59de1b6d34640895e03fda15f944e216d8"},
+    {file = "apischema-0.18.1-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:56a8acc8da59cf7a1052b5aec71d2f8ed6137b54aa1492709acb2c47f0547107"},
+    {file = "apischema-0.18.1-cp312-cp312-musllinux_1_1_i686.whl", hash = "sha256:d466ccc31cbc95b381037ed5b9e82e034f921eb28f8057263aefc2817678036f"},
+    {file = "apischema-0.18.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:4b005d5a4baba32eccec5bb0fbd616f9fd26b6a5fb4f15e9a8bb53a948adade0"},
+    {file = "apischema-0.18.1-cp312-cp312-win32.whl", hash = "sha256:bd06fc6a52d461bd6540409cb25c1d51aae23b22fcd10b1fb002a3f7f1f15d0f"},
+    {file = "apischema-0.18.1-cp312-cp312-win_amd64.whl", hash = "sha256:429f13d9e35379bf8187c41a3c05562f8149358128382a90e415c63db528d6a2"},
+    {file = "apischema-0.18.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:6a30e42eacfba0ed34a36a722e9b82cb49252c24e0a83ccc5b6dc504b39f4265"},
+    {file = "apischema-0.18.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:aa188ee00d12090e68e3ef3cc553540fd467702518cc3b329b2f22fa83a21a23"},
+    {file = "apischema-0.18.1-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:d2a5824afe3406b9d328a26a82365ddcced6a4c5577b2341890063ba5739ca30"},
+    {file = "apischema-0.18.1-cp37-cp37m-musllinux_1_1_i686.whl", hash = "sha256:3e6ec44c1e8bb03c3e24f52265b176a50d0947cbc3662c9a0cfe1746ce975eba"},
+    {file = "apischema-0.18.1-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:35f247ba29660661c6fa5c73007a326dda1d6c8b0c2d5b17bc05c3054e1fec50"},
+    {file = "apischema-0.18.1-cp37-cp37m-win32.whl", hash = "sha256:832a692d6062db43cda09aea36c2dd98bdc2405e63db639200a2aeefcad76528"},
+    {file = "apischema-0.18.1-cp37-cp37m-win_amd64.whl", hash = "sha256:b3e5b0758f6cef5d76b8df1dfbbd23e961f7ec407141752ee434973b0d24e588"},
+    {file = "apischema-0.18.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:131fd604b91a61ef163f33f9dc420acd13960103422a09f9d24950ca59356bb9"},
+    {file = "apischema-0.18.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b5e8967186c7858f1ebd790ea3dd07bad6e6c6bb0eb173b96159491f847d193e"},
+    {file = "apischema-0.18.1-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3ba704e30ae29a4ddf89619e83380b42fc38d0b6a10dc5683fae7502da26e4d8"},
+    {file = "apischema-0.18.1-cp38-cp38-musllinux_1_1_i686.whl", hash = "sha256:ce731cadf5374c7a243a1bd7b942246ecd9a1fed47fab455d15eaef1770511a6"},
+    {file = "apischema-0.18.1-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:e0bcd088854a040b28ccfa9792637f432335c42bace144e0e0d7da7cf71eff20"},
+    {file = "apischema-0.18.1-cp38-cp38-win32.whl", hash = "sha256:d6d93afc3343762ea7c13931cc8932f3122915a28bc0961779ae3aaf842bb572"},
+    {file = "apischema-0.18.1-cp38-cp38-win_amd64.whl", hash = "sha256:cfa7ca98e8efa73351b55c57ec301ac9cd1743a6c3361482c31ae97d9db7aebc"},
+    {file = "apischema-0.18.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:c8dd466ca0e0c4927dbdef1ca9ee1107d93b015589eed8521144a8ef4f465362"},
+    {file = "apischema-0.18.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0ba3ee6dd9f06f5b6fefdfeaeab8735d76318c1d09c8e7eab1f8225e1ddeebda"},
+    {file = "apischema-0.18.1-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:dfc8665978a2082af4574fe23ae3ce834f3989a109b7e876230f773764df4420"},
+    {file = "apischema-0.18.1-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:8e023d9bf9aa2d8004aedcac4cc5e66f0693953f8a37143f5054605441e336bb"},
+    {file = "apischema-0.18.1-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:ce4afd900ac7a7110f19595616ab2151ca24e4249b9a7df2cc7a3b70addcef77"},
+    {file = "apischema-0.18.1-cp39-cp39-win32.whl", hash = "sha256:a475345391e8adb91ef53459f21d3330accc63f24e98a5de589703e5f49910c8"},
+    {file = "apischema-0.18.1-cp39-cp39-win_amd64.whl", hash = "sha256:fb7a67f78fe225c463b9336d95aec02e412729aa910ae8c760d23ef867d3190d"},
+    {file = "apischema-0.18.1.tar.gz", hash = "sha256:355dc4dea7389f5b25f5326c26f06eebee8107efda7e82db8f09ee122cdf0c98"},
+]
+
+[package.extras]
+examples = ["attrs", "bson", "docstring-parser", "graphql-core (>=3.0.0)", "orjson", "pydantic", "pytest", "sqlalchemy"]
+graphql = ["graphql-core (>=3.0.0)"]
+
+[[package]]
 name = "appdirs"
 version = "1.4.4"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
@@ -719,6 +775,21 @@ files = [
 ]
 
 [[package]]
+name = "gifnoc"
+version = "0.1.2"
+description = "Handle configuration for multiple libraries"
+optional = false
+python-versions = ">=3.9,<4.0"
+files = [
+    {file = "gifnoc-0.1.2-py3-none-any.whl", hash = "sha256:e980451039cb5d248e41100fc56f32ee4d8b88e311bfd28b1d36d10351431c9c"},
+    {file = "gifnoc-0.1.2.tar.gz", hash = "sha256:1b24662834cf60a270e9688d738126d9503b2035aba1c0ce455767085fdc7880"},
+]
+
+[package.dependencies]
+apischema = ">=0.18.1,<0.19.0"
+ovld = ">=0.3.2,<0.4.0"
+
+[[package]]
 name = "giving"
 version = "0.4.2"
 description = "Reactive logging"
@@ -807,17 +878,18 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "grizzlaxy"
-version = "0.1.0"
+version = "0.2.1"
 description = "Create an app from a galaxy of starbears"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "grizzlaxy-0.1.0-py3-none-any.whl", hash = "sha256:dec6cf53598784c4c8ba796bf6427a7a6f44f2f1c1234576fb2b6412e3a00b8d"},
-    {file = "grizzlaxy-0.1.0.tar.gz", hash = "sha256:399c540c1f6c41cf3748b7babcae0ea39ad7bf98c270d784a5388559f036e276"},
+    {file = "grizzlaxy-0.2.1-py3-none-any.whl", hash = "sha256:4ed866709e94adc0a0590511cfa090524720f69d762ccf2b5cccb1d223e54ac1"},
+    {file = "grizzlaxy-0.2.1.tar.gz", hash = "sha256:cb9d35f463e3f9cfed1adf0609ff6da1d9f82c0560e7db3b082b7570c8807e0d"},
 ]
 
 [package.dependencies]
 authlib = ">=1.2.0,<2.0.0"
+gifnoc = ">=0.1.2,<0.2.0"
 httpx = ">=0.24.1,<0.25.0"
 itsdangerous = ">=2.1.2,<3.0.0"
 jurigged = ">=0.5.5,<0.6.0"
@@ -2221,4 +2293,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "4b4136b0afa53df43fc2fa99b15afe2317fb9bd2be96902bdd8769e1886b6231"
+content-hash = "0b393de2bce0dd51c34c7134781e3414ceb084ea1a85f67787fa838486d22bd4"
