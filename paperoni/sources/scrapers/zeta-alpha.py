@@ -1,6 +1,5 @@
 from coleo import Option, tooled
 
-from ...config import config
 from ...model import (
     Author,
     DatePrecision,

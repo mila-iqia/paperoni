@@ -1,86 +1,62 @@
 from contextlib import contextmanager
-from contextvars import ContextVar
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
-from types import SimpleNamespace
-from typing import Union
 
+import gifnoc
 import requests_cache
-from coleo import config as configuration
-from ovld import ovld
-
-config = ContextVar("paperoni_config")
 
 
-@ovld
-def make_configuration(self, config_dir: Path, keyname: str, d: dict):
-    match keyname:
-        case "paths":
-            return SimpleNamespace(
-                **{k: self(config_dir, k, Path(v)) for k, v in d.items()}
-            )
-        case _:
-            return SimpleNamespace(
-                **{k: self(config_dir, k, v) for k, v in d.items()}
-            )
+@dataclass
+class PaperoniPaths:
+    database: Path = None
+    history: Path = None
+    cache: Path = None
+    requests_cache: Path = None
+    permanent_requests_cache: Path = None
 
 
-@ovld
-def make_configuration(self, config_dir: Path, keyname: str, p: Path):
-    p = p.expanduser()
-    if not p.is_absolute():
-        p = config_dir / p
-    return p
+@dataclass
+class PaperoniTokens:
+    xplore: str = None
+    elsevier: str = None
+    springer: str = None
+    zeta_alpha: str = None
 
 
-@ovld
-def make_configuration(self, config_dir: Path, keyname: str, o: object):
-    return o
+@dataclass
+class SentryConfiguration:
+    use: bool
+    dsn: str
+    traces_sample_rate: float
+    environment: str
 
 
-@ovld
-def make_configuration(self, config_path: Union[str, Path]):
-    config_path = Path(config_path).expanduser().absolute()
-    x = configuration(str(config_path))
-    return Configuration(self(config_path.parent, "", x))
+@dataclass
+class PaperoniTweaks:
+    low_confidence_authors: list[str]
 
 
-class Configuration:
-    def __init__(self, ns):
-        self.tokens = {}
-        self.tweaks = {}
-        self.__dict__.update(ns.__dict__)
+@dataclass
+class InstitutionPattern:
+    pattern: str
+    category: str
+
+
+@dataclass
+class PaperoniConfig:
+    paths: PaperoniPaths
+    tag: str = None
+    tokens: PaperoniTokens = None
+    sentry: SentryConfiguration = None
+    tweaks: dict = None
+    institution_patterns: list[InstitutionPattern] = None
+    history_tag: str | None = None
+    writable: bool = True
+
+    def __post_init__(self):
         self._database = None
         self._history_file = None
-
-    @contextmanager
-    def permanent_request_cache(self):
-        if rq := getattr(self.paths, "permanent_requests_cache", None):
-            # enabled() cannot be nested with itself (which we may want to do to
-            # use different parameters in each call), but with disabled()
-            # in-between, the finalization of disabled() will put back the
-            # previous session cache, so it's a kind of workaround
-            with requests_cache.disabled():
-                with requests_cache.enabled(rq):
-                    yield
-        else:
-            yield
-
-    def install(self):
-        """Set up relevant features globally, as defined in this config.
-
-        * Import requests_cache and set up with cache path ``paths.requests_cache``.
-        """
-        if rq := getattr(self.paths, "requests_cache", None):
-            requests_cache.install_cache(rq, expire_after=timedelta(days=6))
-
-    def uninstall(self):
-        """Undo what has been done in self.install().
-
-        * Disable requests_cache.
-        """
-        if getattr(self.paths, "requests_cache", None):
-            requests_cache.uninstall_cache()
 
     @property
     def database(self):
@@ -102,18 +78,46 @@ class Configuration:
             hroot = self.paths.history
             hroot.mkdir(parents=True, exist_ok=True)
             now = datetime.now().strftime("%Y-%m-%d-%s")
-            tag = getattr(self, "tag", "")
-            tag = tag and f"-{tag}"
+            tag = self.history_tag and f"-{self.history_tag}"
             hfile = hroot / f"{now}{tag}.jsonl"
             self._history_file = hfile
         return self._history_file
 
+    @contextmanager
+    def permanent_request_cache(self):
+        if rq := self.paths.permanent_requests_cache:
+            # enabled() cannot be nested with itself (which we may want to do to
+            # use different parameters in each call), but with disabled()
+            # in-between, the finalization of disabled() will put back the
+            # previous session cache, so it's a kind of workaround
+            with requests_cache.disabled():
+                with requests_cache.enabled(rq):
+                    yield
+        else:
+            yield
+
     def get_token(self, service):
         return getattr(self.tokens, service, None)
 
+    def __enter__(self):
+        """Set up relevant features globally, as defined in this config.
+
+        * Import requests_cache and set up with cache path ``paths.requests_cache``.
+        """
+        if rq := self.paths.requests_cache:
+            requests_cache.install_cache(rq, expire_after=timedelta(days=6))
+
+    def __exit__(self, exct, excv, tb):
+        """Undo what has been done in __enter__.
+
+        * Disable requests_cache.
+        """
+        if self.paths.requests_cache:
+            requests_cache.uninstall_cache()
+
 
 @contextmanager
-def load_config(config_path: str | Path, **extra) -> Configuration:
+def load_config(*sources, tag=None):
     """Load the configuration located at the given path.
 
     Any path defined in the configuration file is relative to the
@@ -123,19 +127,13 @@ def load_config(config_path: str | Path, **extra) -> Configuration:
         config_path: Path to the configuration
         extras: Key/value pairs to set in the config (overrides it)
     """
-    config_path = Path(config_path).expanduser().absolute()
-    x = configuration(str(config_path))
-    x.update(extra)
-    c = Configuration(make_configuration(config_path.parent, "", x))
-    c.install()
-    token = config.set(c)
+    override = {"paperoni": {"history_tag": tag}} if tag else {}
 
-    try:
-        yield c
-    finally:
-        config.reset(token)
-        c.uninstall()
+    with gifnoc.overlay(*sources, override) as gcfg:
+        yield gcfg.paperoni
 
 
-def get_config():
-    return config.get()
+papconf = gifnoc.define(
+    field="paperoni",
+    model=PaperoniConfig,
+)

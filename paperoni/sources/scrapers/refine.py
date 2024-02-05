@@ -16,7 +16,7 @@ from fake_useragent import UserAgent
 from ovld import ovld
 from sqlalchemy import select
 
-from ...config import config
+from ...config import papconf
 from ...db import schema as sch
 from ...model import (
     Author,
@@ -93,9 +93,7 @@ def _extract_date_from_xml(node):
             "date_precision": (
                 DatePrecision.day
                 if d
-                else DatePrecision.month
-                if m
-                else DatePrecision.year
+                else DatePrecision.month if m else DatePrecision.year
             ),
         }
         return date
@@ -195,7 +193,7 @@ def refine_doi_with_ieeexplore(db, paper, link):
     if not doi.startswith("10.1109/"):
         return None
 
-    apikey = config.get().get_token("xplore")
+    apikey = papconf.get_token("xplore")
     if not apikey:  # pragma: no cover
         # TODO: log
         return None
@@ -566,7 +564,7 @@ def refine_with_dblp(db, paper, link):
 # @refiner(type="doi", priority=111)
 # def refine_with_springer(db, paper, link):
 #     doi = link.link
-#     apikey = config.get().get_token("springer")
+#     apikey = papconf.get_token("springer")
 #     # apikey = os.environ.get("SPRINGER_API_KEY", None)
 #     if not apikey or not doi.startswith("10.1007/"):
 #         return None

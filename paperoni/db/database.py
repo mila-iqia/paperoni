@@ -12,7 +12,7 @@ from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
 from tqdm import tqdm
 
-from ..config import config
+from ..config import papconf
 from ..model import (
     Author,
     AuthorMerge,
@@ -319,7 +319,7 @@ class Database(OvldBase):
         if not xs:
             return
         if history_file is True:
-            history_file = config.get().history_file
+            history_file = papconf.history_file
         xs = list(xs)
         with self:
             for x in tqdm(xs):
@@ -356,7 +356,7 @@ class Database(OvldBase):
                 assert False
 
     def replay(self, history=None, before=None, after=None):
-        history = history or config.get().paths.history
+        history = history or papconf.paths.history
         history_files = []
         self._accumulate_history_files(history, before, after, history_files)
         for history_file in history_files:

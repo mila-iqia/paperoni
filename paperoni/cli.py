@@ -7,12 +7,13 @@ from fnmatch import fnmatch
 from functools import partial
 from typing import Union
 
+import gifnoc
 from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
 from .cli_helper import query_papers
-from .config import config as _config, load_config
+from .config import load_config
 from .db import merge as mergers, schema as sch
 from .display import (
     JSONDisplayer,
@@ -28,30 +29,28 @@ from .utils import EquivalenceGroups
 
 @contextmanager
 @tooled
-def set_config(**extra):
+def set_config(tag=None):
     # Configuration file
-    config: Option = None
+    # [action: append]
+    config: Option = []
 
-    try:
-        yield _config.get()
-        return
-    except LookupError:
-        pass
+    assert not gifnoc.is_loaded()
 
-    if config is None:
-        config = os.getenv("PAPERONI_CONFIG")
-
-    if not config:
+    if config:
+        sources = config
+    elif envcfg := os.getenv("PAPERONI_CONFIG"):
+        sources = [envcfg]
+    else:
         exit("No configuration could be found.")
 
-    with load_config(config, **extra) as cfg:
+    with load_config(*sources, tag=tag) as cfg:
         yield cfg
 
 
 @contextmanager
 @tooled
-def set_database(**extra):
-    with set_config(**extra) as config:
+def set_database(tag=None):
+    with set_config(tag) as config:
         with config.database as db:
             yield db
 

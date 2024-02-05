@@ -10,7 +10,7 @@ from coleo import Option, tooled
 
 from paperoni.display import display
 
-from ...config import config
+from ...config import papconf
 from ...model import (
     Author,
     DatePrecision,
@@ -459,7 +459,7 @@ class OpenReviewVenueScraper(OpenReviewScraperBase):
         pattern: Option = "*",
     ):
         members = self._venues_from_wildcard(pattern)
-        with config.get().permanent_request_cache():
+        with papconf.permanent_request_cache():
             # Reset client because we are using a different requests.Session
             self.set_client()
             yield from self._query_venues(members)
