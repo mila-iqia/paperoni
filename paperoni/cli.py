@@ -39,7 +39,7 @@ def set_config(tag=None):
     if config:
         sources = config
     elif envcfg := os.getenv("PAPERONI_CONFIG"):
-        sources = [envcfg]
+        sources = envcfg.split(",")
     else:
         exit("No configuration could be found.")
 
