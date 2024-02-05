@@ -5,7 +5,8 @@ from hrepr import H
 from starbear import Queue, Reference
 from starbear.constructors import BrowserEvent
 
-from .common import SearchGUI, config, mila_template
+from ..config import papconf
+from .common import SearchGUI, mila_template
 from .render import validation_html
 from .utils import db_logger
 
@@ -19,7 +20,7 @@ async def app(page, box):
     action_q = Queue().wrap(refs=True)
     area = H.div["area"].autoid()
 
-    with config().database as db:
+    with papconf.database as db:
         gui = SearchGUI(
             page,
             db,

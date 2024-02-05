@@ -6,10 +6,11 @@ from hrepr import H
 from sqlalchemy import select
 from starbear import Queue, Reference
 
+from ..config import papconf
 from ..db import schema as sch
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
-from .common import config, mila_template
+from .common import mila_template
 from .render import paper_html
 
 here = Path(__file__).parent
@@ -238,7 +239,7 @@ async def app(page, box):
             box.print(H.div["authorarea"]("No results found")(id="noresults"))
         print(num_results)
 
-    with config().database as db:
+    with papconf.database as db:
         author_query = select(sch.Author).filter(
             sch.Author.author_id == author_id
         )
@@ -248,7 +249,7 @@ async def app(page, box):
         if scraper == "semantic_scholar":
             current_query_name = ss.author_with_papers
         elif scraper == "openreview":
-            or_scraper = OpenReviewPaperScraper(config(), db)
+            or_scraper = OpenReviewPaperScraper(papconf, db)
             all_venues = or_scraper._venues_from_wildcard("*")
             current_query_name = query_name
 
