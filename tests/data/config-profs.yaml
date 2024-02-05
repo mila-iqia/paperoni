@@ -1,6 +1,7 @@
-paths:
-  database: profs.db
-  history: history
-  cache: ../../_test_cache/cache
-  requests_cache: ../../_test_cache/requests-cache
-writable: true
+paperoni:
+  paths:
+    database: profs.db
+    history: history
+    cache: ../../_test_cache/cache
+    requests_cache: ../../_test_cache/requests-cache
+  writable: true

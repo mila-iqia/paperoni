@@ -1,6 +1,7 @@
-paths:
-  database: refine.db
-  history: history
-  cache: ../../_test_cache/cache
-  requests_cache: ../../_test_cache/requests-cache
-writable: false
+paperoni:
+  paths:
+    database: refine.db
+    history: history
+    cache: ../../_test_cache/cache
+    requests_cache: ../../_test_cache/requests-cache
+  writable: false
