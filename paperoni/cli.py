@@ -40,6 +40,8 @@ def set_config(tag=None):
         sources = config
     elif envcfg := os.getenv("PAPERONI_CONFIG"):
         sources = envcfg.split(",")
+    elif envcfg := os.getenv("GIFNOC_FILE"):
+        sources = envcfg.split(",")
     else:
         exit("No configuration could be found.")
 
