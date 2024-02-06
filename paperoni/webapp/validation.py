@@ -17,7 +17,7 @@ async def app(page, box):
     """Validate papers."""
     q = Queue()
     action_q = Queue().wrap(refs=True)
-    area = H.div["area"](onchange=action_q).autoid()
+    area = H.div["area"].autoid()
 
     with config().database as db:
         gui = SearchGUI(
