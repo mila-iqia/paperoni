@@ -4,7 +4,7 @@ from pathlib import Path
 
 from hrepr import H
 from sqlalchemy import select
-from starbear import Queue, bear
+from starbear import Queue
 
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
@@ -28,7 +28,6 @@ def get_type_links(author, type):
     return num_links
 
 
-@bear
 @mila_template(title="List of researchers", help="/help#author-institution")
 async def app(page, box):
     """Edit/update the list of researchers."""
@@ -75,8 +74,8 @@ async def app(page, box):
     form = gui.form()
 
     area = H.div(
+        H.div(id="gui-div")["top-gui"](form),
         table := H.div().autoid(),
-        H.div(id="down-div")["down"](form),
     )
     box.print(area)
     dataAuthors = {}
@@ -124,10 +123,10 @@ async def app(page, box):
 
             # Reset the form
             gui.clear()
-            page["#down-div"].set(gui.form())
+            page["#gui-div"].set(gui.form())
 
         else:
-            page["#down-div"].print(
+            page["#gui-div"].print(
                 H.span(id="errormessage")(
                     "Error : Name, Role and Start date is required"
                 )
@@ -147,7 +146,7 @@ async def app(page, box):
                 "end": enddate,
             }
         )
-        page["#down-div"].set(gui.form())
+        page["#gui-div"].set(gui.form())
 
     def author_html(result):
         author = result.author
@@ -219,7 +218,7 @@ async def app(page, box):
         page[table].set(make_table(list(generate(None))))
         async for event in q:
             name = event["name"]
-            if event is not None and event["$submit"] == True:
+            if event is not None and event.submit == True:
                 name = None
                 addAuthor(event)
             page[table].set(make_table(list(generate(name))))

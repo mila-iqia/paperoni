@@ -169,6 +169,36 @@ input[type="text"], input[type="date"], select {
     width: 30px;
 }
 
+
+.validation-buttons button {
+    background: lightgrey;
+    width: 120px;
+    text-align: center;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.validation-buttons button:hover {
+    font-weight: bold;
+}
+
+.validation-buttons[status="valid"] button.valid {
+    background: lightgreen;
+}
+
+.validation-buttons[status="invalid"] button.invalid {
+    background: lightcoral;
+}
+
+.validation-buttons[status="unknown"] button.unknown {
+    background: lightsalmon;
+}
+
+
 .validation-button {
     display: inline-block;
     position: relative;
@@ -186,15 +216,6 @@ input[type="text"], input[type="date"], select {
     background: lightgrey;
     border-radius: 5px;
     z-index: -10;
-}
-.validation-button input[type="radio"][value="valid"]:checked {
-    background: lightgreen;
-}
-.validation-button input[type="radio"][value="invalid"]:checked {
-    background: lightcoral;
-}
-.validation-button input[type="radio"][value="unknown"]:checked {
-    background: lightsalmon;
 }
 
 .validation-button input[type="radio"][class="log-button"] {
@@ -373,8 +394,8 @@ table.researchers td {
     outline: 1px solid #555;
 }
 
-.down {
-    margin-top: 20px;
+.top-gui {
+    margin-bottom: 20px;
     padding-bottom: 1px;
     outline: 1px solid #555;
 }

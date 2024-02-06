@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 import yaml
 from grizzlaxy.index import render
 from hrepr import H
-from starbear import ClientWrap, Queue, template as _template
+from starbear import ClientWrap, Queue, bear, template as _template
 from starbear.serve import LoneBear
 
 from ..cli_helper import search
@@ -62,15 +62,14 @@ class FileEditor:
         )
 
         async for event in q:
-            submitting = event["$submit"]
             try:
-                self.file.write(event["new-content"], dry=not submitting)
+                self.file.write(event["new-content"], dry=not event.submit)
             except Exception as exc:
                 page[actionarea].set(
                     H.div["error"](f"{type(exc).__name__}: {exc}")
                 )
             else:
-                if submitting:
+                if event.submit:
                     page[actionarea].set("Saved")
                 else:
                     page[actionarea].set(H.button("Update", name="update"))
@@ -596,6 +595,7 @@ class SearchGUI(RegenGUI):
         try:
             yield from results
         except Exception as e:
+            self.page.error(message="An error occurred.", exception=e)
             traceback.print_exception(e)
 
     def form_footer(self):
@@ -611,81 +611,6 @@ class SearchGUI(RegenGUI):
                 onclick=self.queue.wrap(form=True),
             ),
         ]
-
-
-async def regenerator(queue, regen, reset, db):
-    gen = regen(db=db)
-    done = False
-    while True:
-        if done:
-            inp = await queue.get()
-        else:
-            try:
-                inp = await asyncio.wait_for(queue.get(), 0.01)
-            except (asyncio.QueueEmpty, asyncio.exceptions.TimeoutError):
-                inp = None
-
-        if inp is not None:
-            new_gen = regen(inp, db)
-            if new_gen is not None:
-                done = False
-                gen = new_gen
-                reset()
-                continue
-
-        try:
-            element = next(gen)
-        except StopIteration:
-            done = True
-            continue
-
-        yield element
-
-
-def search_interface(event=None, db=None):
-    def regen(event=None):
-        title, author, venue, date_start, date_end, excerpt = (
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
-        if event is not None and event:
-            if "title" in event.keys():
-                title = event["title"]
-            if (
-                "value" in event.keys()
-            ):  # If the name of the input (event key) is not specified, the default value will be the title
-                title = event["value"]
-            if "author" in event.keys():
-                author = event["author"]
-            if "venue" in event.keys():
-                venue = event["venue"]
-            if "date-start" in event.keys():
-                date_start = event["date-start"]
-            if "date-end" in event.keys():
-                date_end = event["date-end"]
-            if "excerpt" in event.keys():
-                excerpt = event["excerpt"]
-
-        results = search(
-            title=title,
-            author=author,
-            venue=venue,
-            start=date_start,
-            end=date_end,
-            excerpt=excerpt,
-            allow_download=False,
-            db=db,
-        )
-        try:
-            yield from results
-        except Exception as e:
-            traceback.print_exception(e)
-
-    return regen(event=event)
 
 
 _config = None
@@ -704,11 +629,6 @@ def template(path, location=None, **kw):
     return _template(
         path,
         _asset=lambda name: location / name,
-        _embed=lambda name: template(
-            location / name,
-            location=location,
-            **kw,
-        ),
         **kw,
     )
 
@@ -741,13 +661,12 @@ class Index(LoneBear):
 
 @keyword_decorator
 def mila_template(fn, title=None, help=None):
+    actual_title = getattr(fn, "__doc__", None) or title or ""
+    actual_title = actual_title.removesuffix(".")
+
     @wraps(fn)
     async def app(page):
-        actual_title = getattr(fn, "__doc__", None) or title or ""
-        actual_title = actual_title.removesuffix(".")
-        page["head"].print(
-            H.link(rel="stylesheet", href=here / "app-style.css")
-        )
+        page.add_resources(here / "app-style.css")
         page.print(
             template(
                 here / "header.html",
@@ -761,4 +680,4 @@ def mila_template(fn, title=None, help=None):
         page.print(target := H.div().autoid())
         return await fn(page, page[target])
 
-    return app
+    return bear(app, template_params={"title": actual_title})

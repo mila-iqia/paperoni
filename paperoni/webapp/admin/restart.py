@@ -3,12 +3,11 @@ import os
 import signal
 
 from hrepr import H
-from starbear import Queue, bear
+from starbear import Queue
 
 from ..common import mila_template
 
 
-@bear
 @mila_template(help="/help#restart")
 async def app(page, box):
     """Restart the server."""
