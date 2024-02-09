@@ -27,36 +27,6 @@ def _fill_rids(rids, researchers, idtype):
                 rids[link.link] = researcher.name
 
 
-def _getname(x):
-    return x.name
-
-
-def filter_researchers(
-    researchers, names=None, before=None, after=None, getname=_getname
-):
-    if names is not None:
-        names = [n.lower() for n in names]
-        researchers = [r for r in researchers if getname(r).lower() in names]
-
-    researchers.sort(key=getname)
-
-    if before is not None:
-        researchers = [
-            r
-            for r in researchers
-            if getname(r)[: len(before)].lower() < before.lower()
-        ]
-
-    if after is not None:
-        researchers = [
-            r
-            for r in researchers
-            if getname(r)[: len(after)].lower() > after.lower()
-        ]
-
-    return researchers
-
-
 async def prepare(
     researchers,
     idtype,
@@ -122,20 +92,19 @@ async def prepare(
 @mila_template(title="Find author IDs", help="/help#find-author-ids")
 async def app(page, box):
     """Include/Exclude author Ids."""
-    author_name = page.query_params.get("author")
+    author_id = bytes.fromhex(page.query_params.get("author_id"))
     scraper = page.query_params.get("scraper")
     action_q = Queue().wrap(form=True)
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
-    def is_linked(link, type, author_name):
-        already_linked = get_links(type, author_name)
+    def is_linked(link, type, author):
+        already_linked = get_links(type, author)
         for links in already_linked:
             if link in links.link:
                 return links
         return False
 
-    def get_links(type, author_name):
-        author = get_authors(author_name)[0]
+    def get_links(type, author):
         links = []
         for link in author.links:
             strippedtype = (
@@ -144,17 +113,6 @@ async def app(page, box):
             if strippedtype == type:
                 links.append(link)
         return links
-
-    def get_authors(name):
-        authors = []
-        stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
-        try:
-            results = list(db.session.execute(stmt))
-            for (r,) in results:
-                authors.append(r)
-        except Exception as e:
-            print("Error : ", e)
-        return authors
 
     def get_buttons(link, author_id, included=None):
         radio = H.form["form-validation"](
@@ -227,7 +185,7 @@ async def app(page, box):
             tabIDS.remove(i)
         page["#noresults"].delete()
         results = prepare(
-            researchers=researchers,
+            researchers=[the_author],
             idtype=scraper,
             query_name=current_query_name,
         )
@@ -266,7 +224,7 @@ async def app(page, box):
                     papers_area,
                 )(id="area" + link)
                 box.print(area)
-                linked = is_linked(link, scraper, author_name)
+                linked = is_linked(link, scraper, the_author)
                 page["#authoridbuttonarea" + link].print(
                     get_buttons(
                         link,
@@ -284,8 +242,10 @@ async def app(page, box):
         print(num_results)
 
     with config().database as db:
-        researchers = get_authors(author_name)
-        author_id = researchers[0].author_id
+        author_query = select(sch.Author).filter(
+            sch.Author.author_id == author_id
+        )
+        the_author = list(db.session.execute(author_query))[0][0]
         tabIDS = []
         current_query_name = ss.author_with_papers
         if scraper == "semantic_scholar":
