@@ -4,7 +4,7 @@ from pathlib import Path
 from giving import give
 from hrepr import H
 from sqlalchemy import select
-from starbear import Queue
+from starbear import Queue, Reference
 
 from ..db import schema as sch
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
@@ -25,36 +25,6 @@ def _fill_rids(rids, researchers, idtype):
             )
             if strippedtype == idtype:
                 rids[link.link] = researcher.name
-
-
-def _getname(x):
-    return x.name
-
-
-def filter_researchers(
-    researchers, names=None, before=None, after=None, getname=_getname
-):
-    if names is not None:
-        names = [n.lower() for n in names]
-        researchers = [r for r in researchers if getname(r).lower() in names]
-
-    researchers.sort(key=getname)
-
-    if before is not None:
-        researchers = [
-            r
-            for r in researchers
-            if getname(r)[: len(before)].lower() < before.lower()
-        ]
-
-    if after is not None:
-        researchers = [
-            r
-            for r in researchers
-            if getname(r)[: len(after)].lower() > after.lower()
-        ]
-
-    return researchers
 
 
 async def prepare(
@@ -122,20 +92,19 @@ async def prepare(
 @mila_template(title="Find author IDs", help="/help#find-author-ids")
 async def app(page, box):
     """Include/Exclude author Ids."""
-    author_name = page.query_params.get("author")
+    author_id = bytes.fromhex(page.query_params.get("author_id"))
     scraper = page.query_params.get("scraper")
-    action_q = Queue().wrap(form=True)
+    action_q = Queue().wrap(refs=True)
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
-    def is_linked(link, type, author_name):
-        already_linked = get_links(type, author_name)
+    def is_linked(link, type, author):
+        already_linked = get_links(type, author)
         for links in already_linked:
             if link in links.link:
                 return links
         return False
 
-    def get_links(type, author_name):
-        author = get_authors(author_name)[0]
+    def get_links(type, author):
         links = []
         for link in author.links:
             strippedtype = (
@@ -145,51 +114,38 @@ async def app(page, box):
                 links.append(link)
         return links
 
-    def get_authors(name):
-        authors = []
-        stmt = select(sch.Author).filter(sch.Author.name.like(f"%{name}%"))
-        try:
-            results = list(db.session.execute(stmt))
-            for (r,) in results:
-                authors.append(r)
-        except Exception as e:
-            print("Error : ", e)
-        return authors
+    def get_buttons(link, included=None):
+        match included:
+            case 0:
+                existing_status = "invalid"
+            case 1:
+                existing_status = "valid"
+            case _:
+                existing_status = "unknown"
 
-    def get_buttons(link, author_id, included=None):
-        radio = H.form["form-validation"](
-            H.label["validation-button"](
-                H.input(
-                    type="radio",
-                    name=f"v-{link}",
-                    value="valid",
-                    checked=included == 1,
-                    onchange=action_q,
+        val_div = H.div["validation-buttons"](
+            H.div(
+                H.button["valid"](
+                    "Yes",
+                    # Events put into action_q.tag("valid") will have
+                    # event.tag == "valid", this is how we know which button
+                    # was pressed.
+                    onclick=action_q.tag("valid"),
                 ),
-                "Yes",
-            ),
-            H.label["validation-button"](
-                H.input(
-                    type="radio",
-                    name=f"v-{link}",
-                    value="invalid",
-                    checked=included == 0,
-                    onchange=action_q,
+                H.button["invalid"](
+                    "No",
+                    onclick=action_q.tag("invalid"),
                 ),
-                "No",
-            ),
-            H.label["validation-button"](
-                H.input(
-                    type="radio",
-                    name=f"v-{link}",
-                    value="unknown",
-                    checked=included is None,
-                    onchange=action_q,
+                H.button["unknown"](
+                    "Unknown",
+                    onclick=action_q.tag("unknown"),
                 ),
-                "Unknown",
             ),
+            # This property is used for styling, see the stylesheet
+            status=existing_status,
+            __ref=Reference(link),
         )
-        return radio
+        return val_div
 
     def filter_link(link):  # For html elements
         filtered_link = link.replace("~", "")
@@ -227,7 +183,7 @@ async def app(page, box):
             tabIDS.remove(i)
         page["#noresults"].delete()
         results = prepare(
-            researchers=researchers,
+            researchers=[the_author],
             idtype=scraper,
             query_name=current_query_name,
         )
@@ -266,11 +222,10 @@ async def app(page, box):
                     papers_area,
                 )(id="area" + link)
                 box.print(area)
-                linked = is_linked(link, scraper, author_name)
+                linked = is_linked(link, scraper, the_author)
                 page["#authoridbuttonarea" + link].print(
                     get_buttons(
                         link,
-                        author_id,
                         None if linked is False else (link not in no_ids),
                     )
                 )
@@ -284,8 +239,10 @@ async def app(page, box):
         print(num_results)
 
     with config().database as db:
-        researchers = get_authors(author_name)
-        author_id = researchers[0].author_id
+        author_query = select(sch.Author).filter(
+            sch.Author.author_id == author_id
+        )
+        the_author = list(db.session.execute(author_query))[0][0]
         tabIDS = []
         current_query_name = ss.author_with_papers
         if scraper == "semantic_scholar":
@@ -310,22 +267,18 @@ async def app(page, box):
         await build_page(scraper)
 
         async for result in action_q:
-            for k, v in result.items():
-                if k.startswith("v-"):
-                    link = k.removeprefix("v-")
-                    match v:
-                        case "valid":
-                            db.insert_author_link(
-                                author_id, scraper, link, validity=1
-                            )
-                        case "invalid":
-                            db.insert_author_link(
-                                author_id, scraper, link, validity=0
-                            )
-                        case "unknown":
-                            db.insert_author_link(
-                                author_id, scraper, link, validity=None
-                            )
+            link = result.obj
+            match result.tag:
+                case "valid":
+                    db.insert_author_link(author_id, scraper, link, validity=1)
+                case "invalid":
+                    db.insert_author_link(author_id, scraper, link, validity=0)
+                case "unknown":
+                    db.insert_author_link(
+                        author_id, scraper, link, validity=None
+                    )
+
+            page[result.ref].do(f"this.setAttribute('status', '{result.tag}')")
 
 
 app.hidden = True
