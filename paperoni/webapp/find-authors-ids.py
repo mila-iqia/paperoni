@@ -4,7 +4,7 @@ from pathlib import Path
 from giving import give
 from hrepr import H
 from sqlalchemy import select
-from starbear import Queue
+from starbear import Queue, Reference
 
 from ..db import schema as sch
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
@@ -94,7 +94,7 @@ async def app(page, box):
     """Include/Exclude author Ids."""
     author_id = bytes.fromhex(page.query_params.get("author_id"))
     scraper = page.query_params.get("scraper")
-    action_q = Queue().wrap(form=True)
+    action_q = Queue().wrap(refs=True)
 
     # Verify if the link is already linked to the author, included or excluded, with the same type.
     def is_linked(link, type, author):
@@ -114,40 +114,38 @@ async def app(page, box):
                 links.append(link)
         return links
 
-    def get_buttons(link, author_id, included=None):
-        radio = H.form["form-validation"](
-            H.label["validation-button"](
-                H.input(
-                    type="radio",
-                    name=f"v-{link}",
-                    value="valid",
-                    checked=included == 1,
-                    onchange=action_q,
+    def get_buttons(link, included=None):
+        match included:
+            case 0:
+                existing_status = "invalid"
+            case 1:
+                existing_status = "valid"
+            case _:
+                existing_status = "unknown"
+
+        val_div = H.div["validation-buttons"](
+            H.div(
+                H.button["valid"](
+                    "Yes",
+                    # Events put into action_q.tag("valid") will have
+                    # event.tag == "valid", this is how we know which button
+                    # was pressed.
+                    onclick=action_q.tag("valid"),
                 ),
-                "Yes",
-            ),
-            H.label["validation-button"](
-                H.input(
-                    type="radio",
-                    name=f"v-{link}",
-                    value="invalid",
-                    checked=included == 0,
-                    onchange=action_q,
+                H.button["invalid"](
+                    "No",
+                    onclick=action_q.tag("invalid"),
                 ),
-                "No",
-            ),
-            H.label["validation-button"](
-                H.input(
-                    type="radio",
-                    name=f"v-{link}",
-                    value="unknown",
-                    checked=included is None,
-                    onchange=action_q,
+                H.button["unknown"](
+                    "Unknown",
+                    onclick=action_q.tag("unknown"),
                 ),
-                "Unknown",
             ),
+            # This property is used for styling, see the stylesheet
+            status=existing_status,
+            __ref=Reference(link),
         )
-        return radio
+        return val_div
 
     def filter_link(link):  # For html elements
         filtered_link = link.replace("~", "")
@@ -228,7 +226,6 @@ async def app(page, box):
                 page["#authoridbuttonarea" + link].print(
                     get_buttons(
                         link,
-                        author_id,
                         None if linked is False else (link not in no_ids),
                     )
                 )
@@ -270,22 +267,18 @@ async def app(page, box):
         await build_page(scraper)
 
         async for result in action_q:
-            for k, v in result.items():
-                if k.startswith("v-"):
-                    link = k.removeprefix("v-")
-                    match v:
-                        case "valid":
-                            db.insert_author_link(
-                                author_id, scraper, link, validity=1
-                            )
-                        case "invalid":
-                            db.insert_author_link(
-                                author_id, scraper, link, validity=0
-                            )
-                        case "unknown":
-                            db.insert_author_link(
-                                author_id, scraper, link, validity=None
-                            )
+            link = result.obj
+            match result.tag:
+                case "valid":
+                    db.insert_author_link(author_id, scraper, link, validity=1)
+                case "invalid":
+                    db.insert_author_link(author_id, scraper, link, validity=0)
+                case "unknown":
+                    db.insert_author_link(
+                        author_id, scraper, link, validity=None
+                    )
+
+            page[result.ref].do(f"this.setAttribute('status', '{result.tag}')")
 
 
 app.hidden = True
