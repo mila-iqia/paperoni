@@ -34,6 +34,12 @@ def export(paper: sch.Paper):
         ],
         "topics": [export(topic) for topic in paper.topics],
         "links": expand_links_dict(paper.links),
+        "flags": [export(flag) for flag in paper.paper_flag],
+        "validated": any(
+            flag.flag
+            for flag in paper.paper_flag
+            if flag.flag_name == "validation"
+        ),
         "citation_count": 0,
     }
 
@@ -76,6 +82,14 @@ def export(link: (sch.PaperLink, sch.AuthorLink, sch.VenueLink)):
 def export(topic: sch.Topic):
     return {
         "name": topic.name,
+    }
+
+
+@ovld
+def export(flag: sch.PaperFlag):
+    return {
+        "name": flag.flag_name,
+        "value": flag.flag,
     }
 
 
