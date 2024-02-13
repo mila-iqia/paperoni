@@ -63,6 +63,7 @@ def _paper_long_fields(parent=None, extras=()):
         "citationCount",
         "influentialCitationCount",
         "isOpenAccess",
+        "openAccessPdf",
         "fieldsOfStudy",
         *extras,
     )
@@ -245,6 +246,16 @@ class SemanticScholarQueryManager:
                     type=external_ids_mapping.get(t := typ.lower(), t), link=ref
                 )
             )
+        if data["openAccessPdf"]:
+            url = data["openAccessPdf"]["url"]
+            url = url.replace("://arxiv.org", "://export.arxiv.org")
+            links.append(
+                Link(
+                    type="pdf",
+                    link=url,
+                )
+            )
+
         authors = list(map(self._wrap_paper_author, data["authors"]))
 
         if "ArXiv" in data["externalIds"]:
