@@ -2,9 +2,8 @@ from ovld import ovld
 
 from .cli_helper import ExtendAttr
 from .db import schema as sch
-from .display import expand_links_dict
 from .model import DatePrecision
-from .utils import peer_reviewed_release
+from .utils import expand_links_dict, peer_reviewed_release
 
 
 def sort_releases(releases):

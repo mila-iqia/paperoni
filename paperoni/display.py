@@ -1,3 +1,4 @@
+import json
 import shutil
 import textwrap
 from pathlib import Path
@@ -9,38 +10,12 @@ from ovld import ovld
 
 from .cli_helper import ExtendAttr
 from .db import schema as sch
+from .export import export
 from .model import Author, DatePrecision, Paper, Venue, from_dict
+from .utils import expand_links_dict
 
 T = Terminal()
 tw = shutil.get_terminal_size((80, 20)).columns
-
-
-link_generators = {
-    "arxiv": {
-        "abstract": "https://arxiv.org/abs/{}",
-        "pdf": "https://arxiv.org/pdf/{}.pdf",
-    },
-    "pubmed": {
-        "abstract": "https://pubmed.ncbi.nlm.nih.gov/{}",
-    },
-    "pmc": {
-        "abstract": "https://www.ncbi.nlm.nih.gov/pmc/articles/{}",
-    },
-    "doi": {
-        "abstract": "https://doi.org/{}",
-    },
-    "openreview": {
-        "abstract": "https://openreview.net/forum?id={}",
-        "pdf": "https://openreview.net/pdf?id={}",
-    },
-    "mlr": {
-        "abstract": "https://proceedings.mlr.press/v{}.html",
-    },
-    "dblp": {"abstract": "https://dblp.uni-trier.de/rec/{}"},
-    "semantic_scholar": {
-        "abstract": "https://www.semanticscholar.org/paper/{}"
-    },
-}
 
 
 def print_field(title, contents, bold=False):
@@ -49,47 +24,6 @@ def print_field(title, contents, bold=False):
     title = T.bold_cyan(f"{title}:")
     contents = T.bold(contents) if bold else contents
     print(title, contents)
-
-
-def expand_links_dict(links):
-    pref = [
-        "doi.abstract",
-        "mlr.abstract",
-        "mlr.pdf",
-        "openreview.abstract",
-        "openreview.pdf",
-        "arxiv.abstract",
-        "arxiv.pdf",
-        "pubmed.abstract",
-        "pmc.abstract",
-        "dblp.abstract",
-        "pdf",
-        "html",
-        "semantic_scholar.abstract",
-        "corpusid",
-        "mag",
-        "xml",
-        "patent",
-        "unknown",
-        "unknown_",
-    ]
-    results = []
-    for link in links:
-        if link.type in link_generators:
-            results.extend(
-                {
-                    "type": f"{link.type}.{kind}",
-                    "link": link.link,
-                    "url": url.format(link.link),
-                }
-                for kind, url in link_generators[link.type].items()
-            )
-        else:
-            results.append({"type": link.type, "link": link.link})
-    results.sort(
-        key=lambda dct: pref.index(dct["type"]) if dct["type"] in pref else 1
-    )
-    return results
 
 
 def expand_links(links):
@@ -330,3 +264,17 @@ class HTMLDisplayer:
         page = open(Path(__file__).parent / "default.html").read()
         page = page.replace("{{papers}}", "\n".join(map(str, self.entries)))
         print(page)
+
+
+class JSONDisplayer:
+    def __init__(self):
+        self.entries = []
+
+    def __call__(self, obj):
+        self.entries.append(export(obj))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        print(json.dumps(self.entries, indent=4))

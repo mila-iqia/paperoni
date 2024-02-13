@@ -14,7 +14,13 @@ from sqlalchemy import select
 from .cli_helper import query_papers
 from .config import config as _config, load_config
 from .db import merge as mergers, schema as sch
-from .display import HTMLDisplayer, TerminalDisplayer, TerminalPrinter, display
+from .display import (
+    JSONDisplayer,
+    HTMLDisplayer,
+    TerminalDisplayer,
+    TerminalPrinter,
+    display,
+)
 from .sources.helpers import filter_researchers, prepare_interface
 from .sources.scrapers import load_scrapers
 from .utils import EquivalenceGroups
@@ -284,6 +290,7 @@ formatters = {
     "full": TerminalDisplayer,
     "title": partial(TerminalPrinter, lambda x: x.title),
     "html": HTMLDisplayer,
+    "json": JSONDisplayer,
 }
 
 
