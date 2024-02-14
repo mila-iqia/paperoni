@@ -3,15 +3,7 @@ from ovld import ovld
 from .cli_helper import ExtendAttr
 from .db import schema as sch
 from .model import DatePrecision
-from .utils import expand_links_dict, peer_reviewed_release
-
-
-def sort_releases(releases):
-    releases = [
-        (release, peer_reviewed_release(release)) for release in releases
-    ]
-    releases.sort(key=lambda entry: -int(entry[1]))
-    return releases
+from .utils import expand_links_dict, sort_releases
 
 
 @ovld

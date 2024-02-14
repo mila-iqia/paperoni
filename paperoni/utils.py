@@ -325,6 +325,14 @@ def peer_reviewed_release(release):
     )
 
 
+def sort_releases(releases):
+    releases = [
+        (release, peer_reviewed_release(release)) for release in releases
+    ]
+    releases.sort(key=lambda entry: -int(entry[1]))
+    return releases
+
+
 link_generators = {
     "arxiv": {
         "abstract": "https://arxiv.org/abs/{}",
