@@ -296,10 +296,10 @@ def refine_doi_with_crossref(db, paper, link):
 
         if not date_parts:
             for field in (
+                "published-online",
                 "published-print",
                 "published",
                 "issued",
-                "published-online",
                 "created",
             ):
                 if dateholder := getattr(data, field, None):
