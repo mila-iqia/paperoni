@@ -16,6 +16,7 @@ from ...model import (
     Venue,
     VenueType,
 )
+from ...config import config
 from ...utils import QueryError
 from ..acquire import HTTPSAcquirer
 from ..helpers import (
@@ -62,6 +63,7 @@ def _paper_long_fields(parent=None, extras=()):
         "citationCount",
         "influentialCitationCount",
         "isOpenAccess",
+        "openAccessPdf",
         "fieldsOfStudy",
         *extras,
     )
@@ -182,12 +184,16 @@ class SemanticScholarQueryManager:
     def __init__(self):
         self.conn = HTTPSAcquirer(
             "api.semanticscholar.org",
-            delay=5 * 60 / 100,  # 100 requests per 5 minutes
+            delay=1.5,  # Wait 1.5 seconds between requests
             format="json",
         )
 
     def _evaluate(self, path: str, **params):
-        jdata = self.conn.get(f"/graph/v1/{path}", params=params)
+        jdata = self.conn.get(
+            f"/graph/v1/{path}",
+            params=params,
+            headers={"x-api-key": config.get().get_token("semantic_scholar")},
+        )
         if jdata is None or "error" in jdata:  # pragma: no cover
             raise QueryError(jdata["error"] if jdata else "Received bad JSON")
         return jdata
@@ -209,6 +215,9 @@ class SemanticScholarQueryManager:
         while next_offset is not None and next_offset < limit:
             results = self._evaluate(path, offset=next_offset, **params)
             next_offset = results.get("next", None)
+            if "data" not in results:
+                print("Could not get data:", results["message"])
+                return
             for entry in results["data"]:
                 yield entry
 
@@ -237,6 +246,16 @@ class SemanticScholarQueryManager:
                     type=external_ids_mapping.get(t := typ.lower(), t), link=ref
                 )
             )
+        if data["openAccessPdf"]:
+            url = data["openAccessPdf"]["url"]
+            url = url.replace("://arxiv.org", "://export.arxiv.org")
+            links.append(
+                Link(
+                    type="pdf",
+                    link=url,
+                )
+            )
+
         authors = list(map(self._wrap_paper_author, data["authors"]))
 
         if "ArXiv" in data["externalIds"]:

@@ -2,17 +2,8 @@ from ovld import ovld
 
 from .cli_helper import ExtendAttr
 from .db import schema as sch
-from .display import expand_links_dict
 from .model import DatePrecision
-from .utils import peer_reviewed_release
-
-
-def sort_releases(releases):
-    releases = [
-        (release, peer_reviewed_release(release)) for release in releases
-    ]
-    releases.sort(key=lambda entry: -int(entry[1]))
-    return releases
+from .utils import expand_links_dict, sort_releases
 
 
 @ovld
@@ -35,6 +26,12 @@ def export(paper: sch.Paper):
         ],
         "topics": [export(topic) for topic in paper.topics],
         "links": expand_links_dict(paper.links),
+        "flags": [export(flag) for flag in paper.paper_flag],
+        "validated": any(
+            flag.flag
+            for flag in paper.paper_flag
+            if flag.flag_name == "validation"
+        ),
         "citation_count": 0,
     }
 
@@ -77,6 +74,14 @@ def export(link: (sch.PaperLink, sch.AuthorLink, sch.VenueLink)):
 def export(topic: sch.Topic):
     return {
         "name": topic.name,
+    }
+
+
+@ovld
+def export(flag: sch.PaperFlag):
+    return {
+        "name": flag.flag_name,
+        "value": flag.flag,
     }
 
 

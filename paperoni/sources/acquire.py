@@ -60,11 +60,11 @@ class HTTPSAcquirer(RateLimitedAcquirer):
         self.base_url = url
         self.format = format
 
-    def get_now(self, url, params=None):
+    def get_now(self, url, params=None, headers={}):
         if params:
             params = urllib.parse.urlencode(params)
             url = f"https://{self.base_url}{url}?{params}"
-        return readpage(url, format=self.format)
+        return readpage(url, format=self.format, headers=headers)
 
 
 def readpage(url, format=None, **kwargs):

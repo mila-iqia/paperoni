@@ -72,6 +72,8 @@ class OpenReviewScraperBase(BaseScraper):
             params["offset"] = next_offset
             notes = self.client.get_all_notes(**params)
             for note in notes:
+                if "authors" not in note.content:
+                    continue
                 if "venueid" not in note.content or note.content["venueid"][
                     "value"
                 ].startswith("dblp.org"):
@@ -121,7 +123,7 @@ class OpenReviewScraperBase(BaseScraper):
                     note.content["venue"]["value"]
                 )
                 date = datetime.fromtimestamp(
-                    (note.tcdate or note.pdate or note.odate or note.tmdate)
+                    (note.pdate or note.odate or note.tcdate or note.tmdate)
                     // 1000
                 )
                 date -= timedelta(
@@ -158,6 +160,7 @@ class OpenReviewScraperBase(BaseScraper):
                                     )
                                 ],
                                 aliases=[],
+                                quality=(0.5,),
                             ),
                             status=venue_data.get("status", "published"),
                             pages=None,

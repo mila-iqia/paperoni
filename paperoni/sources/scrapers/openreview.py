@@ -117,7 +117,8 @@ class OpenReviewScraperBase(BaseScraper):
                     Link(type="git", link=note.content["code"])
 
                 venue_data = parse_openreview_venue(note.content["venue"])
-                date = datetime.fromtimestamp(note.tcdate // 1000)
+                tstamp = note.pdate or note.odate or note.tcdate
+                date = datetime.fromtimestamp(tstamp // 1000)
                 date -= timedelta(
                     hours=date.hour, minutes=date.minute, seconds=date.second
                 )
@@ -152,6 +153,7 @@ class OpenReviewScraperBase(BaseScraper):
                                     )
                                 ],
                                 aliases=[],
+                                quality=(0.5,),
                             ),
                             status=venue_data.get("status", "published"),
                             pages=None,

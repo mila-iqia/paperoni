@@ -3,9 +3,9 @@ from datetime import datetime
 
 from starlette.responses import JSONResponse, StreamingResponse
 
-from ..cli_helper import ExtendAttr
 from ..display import expand_links
 from ..export import export
+from ..utils import sort_releases
 from .common import SearchGUI, config
 
 
@@ -84,11 +84,7 @@ class CSVFormatter(PaperFormatter):
         return f"{dest}.csv"
 
     def process(self, paper):
-        rels = [
-            rel
-            for rel in paper.releases
-            if rel.status not in ("submitted", "preprint")
-        ] or paper.releases
+        rels = [release for release, peer_reviewed in sort_releases(paper.releases)]
         lnks = expand_links(paper.links)
         pdfs = [url for ty, url in lnks if ty.endswith("pdf")]
         row = {
