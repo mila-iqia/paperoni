@@ -184,7 +184,7 @@ class SemanticScholarQueryManager:
     def __init__(self):
         self.conn = HTTPSAcquirer(
             "api.semanticscholar.org",
-            delay=1,
+            delay=1.5,  # Wait 1.5 seconds between requests
             format="json",
         )
 
