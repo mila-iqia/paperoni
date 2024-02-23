@@ -1,0 +1,32 @@
+paperoni_name: paperoni
+paperoni_user: paperoni
+
+paperoni_host: "0.0.0.0"
+paperoni_port: 80
+
+paperoni_repo: null
+paperoni_tag: null
+
+paperoni_ssl_enabled: false
+paperoni_ssl_cert: null
+paperoni_ssl_key: null
+
+paperoni_oauth_enabled: false
+paperoni_google_client_id: null
+paperoni_google_client_secret: null
+
+paperoni_sentry_enabled: false
+paperoni_sentry_dsn: null
+paperoni_sentry_traces_sample_rate: null
+paperoni_sentry_environment: null
+
+paperoni_token_semantic_scholar: null
+paperoni_token_xplore: null
+paperoni_token_elsevier: null
+paperoni_token_springer: null
+paperoni_token_zeta_alpha: null
+
+paperoni_low_confidence_authors: []
+paperoni_default_permissions: []
+paperoni_scrape_schedule: "Mon, 02:00"
+paperoni_cleanup_schedule: "Mon, 12:00"
