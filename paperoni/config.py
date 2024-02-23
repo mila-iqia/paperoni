@@ -25,14 +25,6 @@ class PaperoniTokens:
 
 
 @dataclass
-class SentryConfiguration:
-    use: bool
-    dsn: str
-    traces_sample_rate: float
-    environment: str
-
-
-@dataclass
 class PaperoniTweaks:
     low_confidence_authors: list[str]
 
@@ -48,7 +40,6 @@ class PaperoniConfig:
     paths: PaperoniPaths
     tag: str = None
     tokens: PaperoniTokens = None
-    sentry: SentryConfiguration = None
     tweaks: dict = None
     institution_patterns: list[InstitutionPattern] = None
     history_tag: str | None = None
