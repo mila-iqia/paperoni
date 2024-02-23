@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Olivier Breuleux
+  description: Install paperoni
+  company: Mila
+  role_name: paperoni-service
+  namespace: mila
+  license: MIT
+  min_ansible_version: 2.15
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+  dependencies:
+    - src: https://github.com/mila-iqia/ansible-role-pyservice
+      scm: git
+      version: v0.2.1
+      name: pyservice
