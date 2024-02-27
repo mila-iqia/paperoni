@@ -4,6 +4,7 @@ app_name: "{{ paperoni_name }}"
 app_user: "{{ paperoni_user }}"
 app_repo: "{{ paperoni_repo }}"
 app_tag: "{{ paperoni_tag }}"
+app_data_dir: "{{ paperoni_data_dir}}"
 
 app_module: paperoni
 
