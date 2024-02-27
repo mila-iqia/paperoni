@@ -18,6 +18,7 @@ class PaperoniPaths:
 
 @dataclass
 class PaperoniTokens:
+    semantic_scholar: str = None
     xplore: str = None
     elsevier: str = None
     springer: str = None
