@@ -6,7 +6,7 @@ paperoni:
     requests_cache: "{{ app_data_dir }}/requests-cache"
     permanent_requests_cache: "{{ app_data_dir }}/permanent-requests-cache"
   tweaks:
-    low_confidence_authors: {{ paperoni_low_confidence_authors | to_yaml }}
+    low_confidence_authors: {{ paperoni_low_confidence_authors | to_json }}
   tokens:
     semantic_scholar: {{ paperoni_token_semantic_scholar }}
     xplore: {{ paperoni_token_xplore }}
@@ -19,13 +19,13 @@ grizzlaxy:
   port: {{ paperoni_port }}
   host: "{{ paperoni_host }}"
   ssl:
-    enabled: {{ paperoni_ssl_enabled }}
+    enabled: {{ paperoni_ssl_enabled | to_json }}
     keyfile: "cert/cert-key.pem"
     certfile: "cert/cert.pem"
   oauth:
-    enabled: {{ paperoni_oauth_enabled }}
+    enabled: {{ paperoni_oauth_enabled | to_json }}
     permissions: "{{ app_data_dir }}/permissions.json"
-    default_permissions: {{ paperoni_default_permissions | to_yaml }}
+    default_permissions: {{ paperoni_default_permissions | to_json }}
     name: google
     server_metadata_url: "https://accounts.google.com/.well-known/openid-configuration"
     client_kwargs:
@@ -35,7 +35,7 @@ grizzlaxy:
       GOOGLE_CLIENT_ID: "{{ paperoni_google_client_id }}"
       GOOGLE_CLIENT_SECRET: "{{ paperoni_google_client_secret }}"
   sentry:
-    enabled: {{ paperoni_sentry_enabled }}
-    dsn: {{ paperoni_sentry_dsn }}
-    traces_sample_rate: {{ paperoni_sentry_traces_sample_rate }}
-    environment: {{ paperoni_sentry_environment }}
+    enabled: {{ paperoni_sentry_enabled | to_json }}
+    dsn: {{ paperoni_sentry_dsn | to_json }}
+    traces_sample_rate: {{ paperoni_sentry_traces_sample_rate | to_json }}
+    environment: {{ paperoni_sentry_environment | to_json }}

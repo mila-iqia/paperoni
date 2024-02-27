@@ -1,6 +1,8 @@
 paperoni_name: paperoni
 paperoni_user: paperoni
 
+paperoni_data_dir: "{{ app_root }}/data"
+
 paperoni_host: "0.0.0.0"
 paperoni_port: 80
 
@@ -16,9 +18,9 @@ paperoni_google_client_id: null
 paperoni_google_client_secret: null
 
 paperoni_sentry_enabled: false
-paperoni_sentry_dsn: null
-paperoni_sentry_traces_sample_rate: null
-paperoni_sentry_environment: null
+paperoni_sentry_dsn: ""
+paperoni_sentry_traces_sample_rate: 1.0
+paperoni_sentry_environment: "dev"
 
 paperoni_token_semantic_scholar: null
 paperoni_token_xplore: null
