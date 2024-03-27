@@ -4,6 +4,7 @@ from datetime import datetime
 
 from coleo import Option, tooled
 
+from ...config import papconf
 from ...model import (
     Author,
     DatePrecision,
@@ -16,7 +17,6 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...config import config
 from ...utils import QueryError
 from ..acquire import HTTPSAcquirer
 from ..helpers import (
@@ -192,7 +192,7 @@ class SemanticScholarQueryManager:
         jdata = self.conn.get(
             f"/graph/v1/{path}",
             params=params,
-            headers={"x-api-key": config.get().get_token("semantic_scholar")},
+            headers={"x-api-key": papconf.get_token("semantic_scholar")},
         )
         if jdata is None or "error" in jdata:  # pragma: no cover
             raise QueryError(jdata["error"] if jdata else "Received bad JSON")

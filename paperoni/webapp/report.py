@@ -3,10 +3,11 @@ from datetime import datetime
 
 from starlette.responses import JSONResponse, StreamingResponse
 
+from ..config import papconf
 from ..display import expand_links
 from ..export import export
 from ..utils import sort_releases
-from .common import SearchGUI, config
+from .common import SearchGUI
 
 
 class PaperFormatter:
@@ -24,7 +25,7 @@ class PaperFormatter:
         return f"paperoni-{now}"
 
     async def generate(self, params):
-        with config().database as db:
+        with papconf.database as db:
             fake_gui = SearchGUI(
                 page=None,
                 db=db,
@@ -84,7 +85,9 @@ class CSVFormatter(PaperFormatter):
         return f"{dest}.csv"
 
     def process(self, paper):
-        rels = [release for release, peer_reviewed in sort_releases(paper.releases)]
+        rels = [
+            release for release, peer_reviewed in sort_releases(paper.releases)
+        ]
         lnks = expand_links(paper.links)
         pdfs = [url for ty, url in lnks if ty.endswith("pdf")]
         row = {

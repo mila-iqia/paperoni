@@ -199,16 +199,24 @@ def html(paper: Union[Paper, sch.Paper]):
             ),
             f"... ({more} more)" if more else "",
         ),
-        H.div["affiliations"](
-            (H.sup["author-affiliation"](idx), H.span["affiliation"](aff), " ")
-            for aff, idx in affiliations.items()
-        )
-        if show_affiliations
-        else "",
+        (
+            H.div["affiliations"](
+                (
+                    H.sup["author-affiliation"](idx),
+                    H.span["affiliation"](aff),
+                    " ",
+                )
+                for aff, idx in affiliations.items()
+            )
+            if show_affiliations
+            else ""
+        ),
         venues,
-        H.div["keywords"](join(x.name for x in paper.topics))
-        if show_keywords
-        else "",
+        (
+            H.div["keywords"](join(x.name for x in paper.topics))
+            if show_keywords
+            else ""
+        ),
         H.div["extra"](
             H.a["link"](
                 _domain(link) if typ == "html" else typ.replace("_", "-"),
@@ -218,9 +226,11 @@ def html(paper: Union[Paper, sch.Paper]):
             for typ, link in expand_links(paper.links)
             if link.startswith("http")
         ),
-        H.div(paper.citation_count, " citations")
-        if paper.citation_count and show_citation_count
-        else "",
+        (
+            H.div(paper.citation_count, " citations")
+            if paper.citation_count and show_citation_count
+            else ""
+        ),
     )
 
 

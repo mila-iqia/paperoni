@@ -6,16 +6,11 @@ from hrepr import H
 from sqlalchemy import select
 from starbear import Queue
 
+from ..config import papconf
 from ..db import schema as sch
 from ..model import Institution, Role, UniqueAuthor
 from ..utils import tag_uuid
-from .common import (
-    BaseGUI,
-    SearchElement,
-    SelectElement,
-    config,
-    mila_template,
-)
+from .common import BaseGUI, SearchElement, SelectElement, mila_template
 
 here = Path(__file__).parent
 
@@ -214,7 +209,7 @@ async def app(page, box):
         for (r,) in results:
             yield r
 
-    with config().database as db:
+    with papconf.database as db:
         page[table].set(make_table(list(generate(None))))
         async for event in q:
             name = event["name"]

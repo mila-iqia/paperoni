@@ -5,7 +5,7 @@ from coleo import Option, tooled
 from requests_cache import Any
 from sqlalchemy import or_, select
 
-from .config import get_config
+from .config import papconf
 from .db import schema as sch
 from .paper_utils import fulltext
 
@@ -242,8 +242,7 @@ def search(
                 yield paper
 
     if db is None:
-        cfg = get_config()
-        with cfg.database as db:
+        with papconf.database as db:
             yield from proceed(db)
     else:
         yield from proceed(db)

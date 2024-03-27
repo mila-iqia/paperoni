@@ -1,6 +1,5 @@
 import asyncio
 import html
-import os
 import subprocess
 import traceback
 from functools import wraps
@@ -14,7 +13,6 @@ from starbear import ClientWrap, Queue, bear, template as _template
 from starbear.serve import LoneBear
 
 from ..cli_helper import search
-from ..config import config as config_var, load_config
 from ..utils import keyword_decorator
 from . import filters
 
@@ -611,17 +609,6 @@ class SearchGUI(RegenGUI):
                 onclick=self.queue.wrap(form=True),
             ),
         ]
-
-
-_config = None
-
-
-def config():
-    global _config
-    if _config is None:
-        _config = load_config(os.environ["PAPERONI_CONFIG"]).__enter__()
-    config_var.set(_config)
-    return _config
 
 
 def template(path, location=None, **kw):

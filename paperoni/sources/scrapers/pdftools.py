@@ -2,7 +2,6 @@ import json
 import re
 import subprocess
 import unicodedata
-from pathlib import Path
 from types import SimpleNamespace
 
 import requests
@@ -10,7 +9,7 @@ import requests_cache
 from eventlet.timeout import Timeout
 from tqdm import tqdm
 
-from ...config import config
+from ...config import papconf
 from ...model import Institution, InstitutionCategory
 from ..acquire import readpage
 from .pdfanal import (
@@ -59,13 +58,13 @@ class PDF:
         if not lnk.endswith(".pdf"):
             lnk = f"{lnk}.pdf"
 
-        self.pdf_path = Path(config.get().paths.cache) / link.type / lnk
+        self.pdf_path = papconf.paths.cache / link.type / lnk
 
         if len(str(self.pdf_path)) > 255:
             # Weird stuff happens if this is true, so we just ignore it I guess?
-            self.pdf_path = (
-                self.data_path
-            ) = self.text_path = self.meta_path = None
+            self.pdf_path = self.data_path = self.text_path = self.meta_path = (
+                None
+            )
             self.meta = {"failure": "bad_path"}
         else:
             self.data_path = self.pdf_path.with_suffix(".data")
@@ -228,7 +227,7 @@ def recognize_known_institution(entry, institutions):
 
 
 def recognize_unknown_institution(entry):
-    patterns = getattr(config.get(), "institution_patterns", None)
+    patterns = papconf.institution_patterns
     if not patterns or not entry or "@" in entry:
         return None
     for defn in patterns:
@@ -369,13 +368,11 @@ def find_fulltext_affiliations(paper, doc, institutions):
             for _, (_, author, aliases) in authors
         }
         score = sum(
-            0
-            if len(afflist) == 0
-            else 1
-            if len(afflist) <= 3
-            else 0
-            if len(afflist) <= 5
-            else -1  # Suspiciously too many affiliations
+            (
+                0
+                if len(afflist) == 0
+                else 1 if len(afflist) <= 3 else 0 if len(afflist) <= 5 else -1
+            )  # Suspiciously too many affiliations
             for afflist in aff.values()
         )
         results.append((score, -i, aff))

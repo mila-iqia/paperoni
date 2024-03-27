@@ -3,7 +3,8 @@ from pathlib import Path
 from hrepr import H
 from starbear import Queue
 
-from .common import SearchGUI, config, mila_template
+from ..config import papconf
+from .common import SearchGUI, mila_template
 from .render import paper_html
 
 here = Path(__file__).parent
@@ -15,7 +16,7 @@ async def app(page, box):
     q = Queue()
     area = H.div["area"]().autoid()
 
-    with config().database as db:
+    with papconf.database as db:
         gui = SearchGUI(
             page,
             db,

@@ -1,6 +1,5 @@
 from coleo import Option, tooled
 
-from ...config import config
 from ...model import (
     Author,
     DatePrecision,
@@ -143,8 +142,7 @@ class ZetaAlphaScraper(BaseScraper):
             yield self._json_to_paper(entry)
 
     @tooled
-    def acquire(self):
-        ...
+    def acquire(self): ...
 
     @tooled
     def prepare(self):
