@@ -221,19 +221,23 @@ def refine_doi_with_ieeexplore(db, paper, link):
                     name=author["full_name"],
                     roles=[],
                     aliases=[],
-                    links=[Link(type="xplore", link=author["id"])]
-                    if "id" in author
-                    else [],
+                    links=(
+                        [Link(type="xplore", link=author["id"])]
+                        if "id" in author
+                        else []
+                    ),
                 ),
-                affiliations=[
-                    Institution(
-                        name=author["affiliation"],
-                        category=InstitutionCategory.unknown,
-                        aliases=[],
-                    )
-                ]
-                if "affiliation" in author
-                else [],
+                affiliations=(
+                    [
+                        Institution(
+                            name=author["affiliation"],
+                            category=InstitutionCategory.unknown,
+                            aliases=[],
+                        )
+                    ]
+                    if "affiliation" in author
+                    else []
+                ),
             )
             for author in sorted(
                 data["authors"]["authors"], key=itemgetter("author_order")
@@ -615,13 +619,15 @@ def _pdf_refiner(db, paper, link):
                     quality=author.quality,
                 ),
                 affiliations=[
-                    aff
-                    if isinstance(aff, Institution)
-                    else UniqueInstitution(
-                        institution_id=aff.institution_id,
-                        name=aff.name,
-                        category=aff.category,
-                        aliases=[],
+                    (
+                        aff
+                        if isinstance(aff, Institution)
+                        else UniqueInstitution(
+                            institution_id=aff.institution_id,
+                            name=aff.name,
+                            category=aff.category,
+                            aliases=[],
+                        )
                     )
                     for aff in sorted(
                         affiliations, key=lambda x: getattr(x, "name", None)

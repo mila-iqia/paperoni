@@ -7,7 +7,6 @@ from fnmatch import fnmatch
 from functools import partial
 from typing import Union
 
-import gifnoc
 from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
@@ -16,8 +15,8 @@ from .cli_helper import query_papers
 from .config import load_config
 from .db import merge as mergers, schema as sch
 from .display import (
-    JSONDisplayer,
     HTMLDisplayer,
+    JSONDisplayer,
     TerminalDisplayer,
     TerminalPrinter,
     display,

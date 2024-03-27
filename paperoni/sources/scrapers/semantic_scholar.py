@@ -4,6 +4,7 @@ from datetime import datetime
 
 from coleo import Option, tooled
 
+from ...config import papconf
 from ...model import (
     Author,
     DatePrecision,
@@ -16,7 +17,6 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...config import papconf
 from ...utils import QueryError
 from ..acquire import HTTPSAcquirer
 from ..helpers import (

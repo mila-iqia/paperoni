@@ -85,7 +85,9 @@ class CSVFormatter(PaperFormatter):
         return f"{dest}.csv"
 
     def process(self, paper):
-        rels = [release for release, peer_reviewed in sort_releases(paper.releases)]
+        rels = [
+            release for release, peer_reviewed in sort_releases(paper.releases)
+        ]
         lnks = expand_links(paper.links)
         pdfs = [url for ty, url in lnks if ty.endswith("pdf")]
         row = {

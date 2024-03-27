@@ -129,9 +129,11 @@ def prepare(
                     affiliations=[],
                     roles=[],
                     aliases=[] if negate else aliases,
-                    links=[Link(type=f"!{idtype}", link=new_id)]
-                    if negate
-                    else author.links,
+                    links=(
+                        [Link(type=f"!{idtype}", link=new_id)]
+                        if negate
+                        else author.links
+                    ),
                 )
                 if not negate:
                     _fill_rids(rids, [auth], idtype)
