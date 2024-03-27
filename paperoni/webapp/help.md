@@ -80,9 +80,9 @@ Notes:
 
 The configuration is defined as YAML. The `version_tag` field represents the tag on the Paperoni GitHub repository to use for this app. To update the software, you can change this value and then restart the server by going on [/admin/restart](/admin/restart).
 
-## Restart {: #restart}
+## Operations {: #operations}
 
-When the server restarts, it checks out the version of the code represented by the `version_tag` key in `config.yaml`.
+**Restart:** When the server restarts, it checks out the version of the code represented by the `version_tag` key in `config.yaml`.
 
 # Troubleshooting
 
