@@ -34,8 +34,6 @@ def set_config(tag=None):
     # [action: append]
     config: Option = []
 
-    assert not gifnoc.is_loaded()
-
     if config:
         sources = config
     elif envcfg := os.getenv("PAPERONI_CONFIG"):

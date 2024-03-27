@@ -71,7 +71,7 @@ fastapi==0.109.2
     # via sse-starlette
 future==0.18.3
     # via openreview-py
-gifnoc==0.1.3
+gifnoc==0.2.1
     # via
     #   grizzlaxy
     #   paperoni (pyproject.toml)
@@ -81,7 +81,7 @@ giving==0.4.2
     #   ptera
 greenlet==3.0.3
     # via eventlet
-grizzlaxy==0.2.1
+grizzlaxy==0.3.1
     # via paperoni (pyproject.toml)
 h11==0.14.0
     # via
@@ -172,7 +172,7 @@ sqlalchemy==1.4.51
     # via paperoni (pyproject.toml)
 sse-starlette==1.8.2
     # via grizzlaxy
-starbear==0.1.1
+starbear==0.1.2
     # via
     #   grizzlaxy
     #   paperoni (pyproject.toml)
