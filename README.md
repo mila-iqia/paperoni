@@ -17,20 +17,21 @@ pip install -e .
 Create a YAML configuration file named `config.yaml` in the directory where you want to put the data with the following content:
 
 ```yaml
-paths:
-  database: papers.db
-  history: history
-  cache: cache
-  requests_cache: requests-cache
-  permanent_requests_cache: permanent-requests-cache
-institution_patterns:
-  - pattern: ".*\\buniversit(y|é)\\b.*"
-    category: "academia"
+paperoni:
+  paths:
+    database: papers.db
+    history: history
+    cache: cache
+    requests_cache: requests-cache
+    permanent_requests_cache: permanent-requests-cache
+  institution_patterns:
+    - pattern: ".*\\buniversit(y|é)\\b.*"
+      category: "academia"
 ```
 
 All paths are relative to the configuration file. Insitution patterns are regular expressions used to recognize affiliations when parsing PDFs (along with other heuristics).
 
-Make sure to set the `$PAPERONI_CONFIG` environment variable to the path to that file.
+Make sure to set the `$GIFNOC_FILE` environment variable to the path to that file.
 
 
 ## Start the web app
@@ -40,6 +41,16 @@ To start the web app on port 8888, execute the following command:
 ```bash
 grizzlaxy -m paperoni.webapp --port 8888
 ```
+
+You can also add this section to the configuration file (same file as the paperoni config):
+
+```yaml
+grizzlaxy:
+  module: paperoni.webapp
+  port: 8888
+```
+
+And then you would just need to run `grizzlaxy` or `grizzlaxy --config config-file.yaml`.
 
 Once papers are in the system, the app can be used to validate them or perform searches. There are some steps to follow in order to populate the database:
 
