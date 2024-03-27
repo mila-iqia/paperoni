@@ -43,3 +43,29 @@ all:
     paperoni_scrape_schedule: "Mon, 02:00"
     paperoni_cleanup_schedule: "Mon, 12:00"
 ```
+
+
+## Playbook
+
+Simple recipe for installation and reinstallation:
+
+```
+- hosts: paperoni-machine
+  tasks:
+  - name: Install
+    become: true
+    import_role:
+      name: paperoni_service
+```
+
+And here's one that will deactivate the services (i.e. data scraping and server):
+
+```
+- hosts: paperoni-machine
+  tasks:
+  - name: Deactivate
+    become: true
+    import_role:
+      name: paperoni_service
+      tasks_from: deactivate
+```
