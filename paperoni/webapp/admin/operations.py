@@ -7,6 +7,7 @@ from starbear import Queue
 
 from ...config import papconf
 from ..common import mila_template
+from ...config import papconf
 
 
 @mila_template(help="/help#operations")
