@@ -21,6 +21,7 @@ from .display import (
     TerminalPrinter,
     display,
 )
+from .mila_upload import misc
 from .sources.helpers import filter_researchers, prepare_interface
 from .sources.scrapers import load_scrapers
 from .utils import EquivalenceGroups
@@ -443,6 +444,7 @@ commands = {
     "search": search,
     "sql": sql,
     "report": report,
+    "misc": misc,
 }
 
 
