@@ -63,6 +63,8 @@ class UploadOptions:
     force_validation: bool = False
     # Only dump the paper data
     only_dump: bool = False
+    # Search parameters
+    search: Search = field(default_factory=Search)
 
     def auth(self):
         return self.user and HTTPBasicAuth(
@@ -70,14 +72,8 @@ class UploadOptions:
         )
 
 
-search_params = gifnoc.define(
-    field="paperoni.cli.search",
-    model=Search,
-)
-
-
 upload_options = gifnoc.define(
-    field="paperoni.upload_options",
+    field="paperoni_upload_options",
     model=UploadOptions,
 )
 
@@ -101,7 +97,7 @@ def misc():
 
     with gifnoc.cli(
         options=Command(
-            mount="paperoni.cli.search",
+            mount="paperoni_upload_options.search",
             auto=True,
             options={".year": GOption(aliases=["-y"])},
         ),
@@ -110,7 +106,7 @@ def misc():
         if not upload_options.url and not upload_options.only_dump:
             exit("No URL to upload to.")
 
-        papers = search(**vars(search_params._obj()))
+        papers = search(**vars(upload_options.search))
         exported = export_all(papers)
         if upload_options.force_validation:
             for p in exported:
