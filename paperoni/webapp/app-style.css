@@ -486,3 +486,29 @@ div.log-stream textarea {
     width: 100%;
     height: 500px;
 }
+
+form.sql-edit {
+    margin-left: 0px;
+}
+
+form.sql-edit textarea {
+    display: block;
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+}
+
+table.sql-results {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.sql-results th, td {
+    padding-right: 5px;
+}
+
+table.sql-results th {
+    text-align: left;
+    color: white;
+    background: black;
+}
