@@ -17,8 +17,8 @@ async def app(page, box):
     box.print(H.p(H.button("Restart server", onclick=q.tag("restart"))))
     box.print(H.p(H.a("Download database", href=papconf.paths.database)))
 
-    async for _ in q:
-        match q.tag:
+    async for event in q:
+        match event.tag:
             case "restart":
                 box.set("Restarting. Try to refresh in a few seconds.")
                 await asyncio.sleep(
@@ -29,8 +29,6 @@ async def app(page, box):
                 except Exception as exc:
                     box.print(H.div["error"]("An error occurred"))
                     box.print(H.div["error"](exc))
-            case "download":
-                pass
 
 
 ROUTES = app
