@@ -13,6 +13,14 @@ paperoni:
     elsevier: {{ paperoni_token_elsevier }}
     springer: {{ paperoni_token_springer }}
     zeta_alpha: {{ paperoni_token_zeta_alpha }}
+  upload_options:
+    url: {{ paperoni_upload_url | to_json }}
+    user: {{ paperoni_upload_user | to_json }}
+    password: {{ paperoni_upload_password | to_json }}
+    token: {{ paperoni_upload_token | to_json }}
+    verify_certificate: {{ paperoni_upload_verify_certificate | to_json }}
+    force_validation: false
+    only_dump: false
 
 grizzlaxy:
   module: paperoni.webapp

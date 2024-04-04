@@ -5,6 +5,7 @@ from pathlib import Path
 
 import gifnoc
 import requests_cache
+from gifnoc import Extensible
 
 
 @dataclass
@@ -41,7 +42,7 @@ class PaperoniConfig:
     paths: PaperoniPaths
     tag: str = None
     tokens: PaperoniTokens = None
-    tweaks: dict = None
+    tweaks: dict[str, list[str]] = None
     institution_patterns: list[InstitutionPattern] = None
     history_tag: str | None = None
     services: list[str] = None
@@ -128,5 +129,5 @@ def load_config(*sources, tag=None):
 
 papconf = gifnoc.define(
     field="paperoni",
-    model=PaperoniConfig,
+    model=Extensible[PaperoniConfig],
 )

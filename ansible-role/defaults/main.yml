@@ -28,7 +28,14 @@ paperoni_token_elsevier: null
 paperoni_token_springer: null
 paperoni_token_zeta_alpha: null
 
+paperoni_upload_url: null
+paperoni_upload_user: null
+paperoni_upload_password: null
+paperoni_upload_token: null
+paperoni_upload_verify_certificate: true
+
 paperoni_low_confidence_authors: []
 paperoni_default_permissions: []
 paperoni_scrape_schedule: "Mon, 02:00"
 paperoni_cleanup_schedule: "Mon, 12:00"
+paperoni_upload_schedule: "Mon, 12:00"

@@ -8,7 +8,7 @@ from starbear import Queue
 
 from ..config import papconf
 from ..db import schema as sch
-from ..model import Institution, Role, UniqueAuthor
+from ..model import Institution, Link, Role, UniqueAuthor
 from ..utils import tag_uuid
 from .common import BaseGUI, SearchElement, SelectElement, mila_template
 
@@ -62,6 +62,11 @@ async def app(page, box):
                 default=None,
                 type="date",
             ),
+            SearchElement(
+                name="milamail",
+                description="Mila mail",
+                default=None,
+            ),
         ],
         queue=q,
         button_label="Add/Edit",
@@ -80,8 +85,26 @@ async def app(page, box):
         role = event["role"]
         start_date = event["start"]
         end_date = event["end"]
+        email = event["milamail"]
         page["#errormessage"].delete()
         if not (name == "" or role == "" or start_date == ""):
+            links = []
+            if email != "":
+                if "@" not in email:
+                    page["#gui-div"].print(
+                        H.span(id="errormessage")(
+                            "Error: email address should contain a @"
+                        )
+                    )
+                    return
+                else:
+                    links.append(
+                        Link(
+                            link=email,
+                            type="email.mila",
+                        )
+                    )
+
             uaRole = Role(
                 institution=Institution(
                     category="academia",
@@ -102,11 +125,9 @@ async def app(page, box):
                     start_date=(d := start_date) and f"{d} 00:00",
                     end_date=(d := end_date) and f"{d} 00:00",
                 )
-
+            auid = tag_uuid(md5(name.encode("utf8")).digest(), "canonical")
             ua = UniqueAuthor(
-                author_id=tag_uuid(
-                    md5(name.encode("utf8")).digest(), "canonical"
-                ),
+                author_id=auid,
                 name=name,
                 aliases=[],
                 affiliations=[],
@@ -114,6 +135,10 @@ async def app(page, box):
                 links=[],
                 quality=(1.0,),
             )
+            for lnk in links:
+                db.insert_author_link(
+                    auid, lnk.type, lnk.link, validity=1, exclusive=True
+                )
             db.acquire(ua)
 
             # Reset the form
@@ -139,6 +164,7 @@ async def app(page, box):
                 "role": dataAuthors[id]["role"],
                 "start": startdate,
                 "end": enddate,
+                "milamail": dataAuthors[id]["milamail"],
             }
         )
         page["#gui-div"].set(gui.form())
@@ -152,17 +178,23 @@ async def app(page, box):
         if result.end_date is not None:
             date_end = datetime.fromtimestamp(result.end_date).date()
         id = len(dataAuthors)
+        email_links = [
+            lnk.link for lnk in author.links if lnk.type == "email.mila"
+        ]
+        email = email_links[0] if email_links else ""
         dataAuthors[id] = {
             "nom": author.name,
             "role": result.role,
             "start": date_start,
             "end": date_end,
+            "milamail": email,
         }
         return H.tr(onclick=lambda event, id=id: clickAuthor(id))(
             H.td(author.name),
             H.td(result.role),
             H.td(date_start),
             H.td(date_end),
+            H.td["column-email"](email),
             H.td(
                 H.div(
                     get_type_links(author, "semantic_scholar"),
@@ -191,8 +223,9 @@ async def app(page, box):
                     H.th("Role"),
                     H.th("Start"),
                     H.th("End"),
-                    H.th("Semantic Scholar Ids"),
-                    H.th("Openreview Ids"),
+                    H.th("Email"),
+                    H.th("SS Ids"),
+                    H.th("OR Ids"),
                 )
             ),
             H.tbody([author_html(result) for result in results]),
@@ -210,13 +243,15 @@ async def app(page, box):
             yield r
 
     with papconf.database as db:
-        page[table].set(make_table(list(generate(None))))
+        table_content = make_table(list(generate(None)))
+        page[table].set(table_content)
         async for event in q:
             name = event["name"]
             if event is not None and event.submit == True:
                 name = None
                 addAuthor(event)
-            page[table].set(make_table(list(generate(name))))
+            table_content = make_table(list(generate(name)))
+            page[table].set(table_content)
 
 
 ROUTES = app

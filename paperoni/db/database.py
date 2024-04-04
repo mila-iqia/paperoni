@@ -538,16 +538,25 @@ class Database(OvldBase):
         self.session.execute(ins_stmt)
         self.session.commit()
 
-    def insert_author_link(self, author_id, type, link, validity=1):
+    def insert_author_link(
+        self, author_id, type, link, validity=1, exclusive=False
+    ):
         author_link = sch.AuthorLink(
             author_id=author_id,
         )
 
-        del_stmt = f"""
-        DELETE FROM {author_link.__tablename__}
-        WHERE author_id = X'{author_id.hex()}' AND (type = "{type}" OR type = "!{type}") AND link = "{link}"
-        """
-        self.session.execute(del_stmt)
+        if exclusive:
+            del_stmt = f"""
+            DELETE FROM {author_link.__tablename__}
+            WHERE author_id = X'{author_id.hex()}' AND type = "{type}"
+            """
+            self.session.execute(del_stmt)
+        else:
+            del_stmt = f"""
+            DELETE FROM {author_link.__tablename__}
+            WHERE author_id = X'{author_id.hex()}' AND (type = "{type}" OR type = "!{type}") AND link = "{link}"
+            """
+            self.session.execute(del_stmt)
 
         if validity is not None:
             type = f"!{type}" if not validity else type

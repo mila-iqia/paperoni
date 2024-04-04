@@ -22,6 +22,10 @@ app_timers:
     description: Cleanup paperoni cache
     command: "{{ paprun }} {{ app_dir }}/scripts/cleanup.sh"
     schedule: "{{ paperoni_cleanup_schedule }}"
+  - name: upload
+    description: Upload papers to Mila website
+    command: "{{ paprun }} {{ app_dir }}/scripts/update.sh"
+    schedule: "{{ paperoni_update_schedule }}"
 
 app_files:
   - dest: "{{ app_config_dir }}/cert/cert.pem"
