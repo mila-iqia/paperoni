@@ -1,0 +1,26 @@
+---
+- name: Install
+  import_role:
+    name: pyservice
+    tasks_from: setup
+
+- name: Template config
+  become: true
+  ansible.builtin.template:
+    src: "config.yaml"
+    dest: "{{ app_config }}"
+    owner: "{{ app_user }}"
+    mode: "0600"
+
+- name: Copy scripts
+  become: true
+  ansible.builtin.copy:
+    src: "scripts"
+    dest: "{{ app_dir }}"
+    owner: "{{ app_user }}"
+    mode: "u+rx,g+rx"
+
+- name: Activate
+  import_role:
+    name: pyservice
+    tasks_from: activate

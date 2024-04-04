@@ -1,0 +1,32 @@
+paprun: "env GIFNOC_FILE={{ app_config }} GIFNOC_MODULE=paperoni.config"
+
+app_name: "{{ paperoni_name }}"
+app_user: "{{ paperoni_user }}"
+app_repo: "{{ paperoni_repo }}"
+app_tag: "{{ paperoni_tag }}"
+app_data_dir: "{{ paperoni_data_dir}}"
+
+app_module: paperoni
+
+app_services:
+  - name: web
+    description: Web server
+    command: "{{ paprun }} grizzlaxy"
+
+app_timers:
+  - name: scrape
+    description: Scrape papers
+    command: "{{ paprun }} {{ app_dir }}/scripts/scrape.sh"
+    schedule: "{{ paperoni_scrape_schedule }}"
+  - name: cleanup
+    description: Cleanup paperoni cache
+    command: "{{ paprun }} {{ app_dir }}/scripts/cleanup.sh"
+    schedule: "{{ paperoni_cleanup_schedule }}"
+
+app_files:
+  - dest: "{{ app_config_dir }}/cert/cert.pem"
+    content: "{{ paperoni_ssl_cert }}"
+    mode: "0600"
+  - dest: "{{ app_config_dir }}/cert/cert-key.pem"
+    content: "{{ paperoni_ssl_key }}"
+    mode: "0600"
