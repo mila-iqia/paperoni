@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import gifnoc
-from gifnoc import Extensible
 import requests_cache
+from gifnoc import Extensible
 
 
 @dataclass

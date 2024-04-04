@@ -904,13 +904,13 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "grizzlaxy"
-version = "0.3.2"
+version = "0.3.3"
 description = "Create an app from a galaxy of starbears"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "grizzlaxy-0.3.2-py3-none-any.whl", hash = "sha256:f9b34ee61162ad94d48ba1b96c6ea33722d729bbf22d997b56ff75b3f0c244ca"},
-    {file = "grizzlaxy-0.3.2.tar.gz", hash = "sha256:540af0bebfdd1fb13af77b87ec480268956c14e7e15df3a0c1dec6bed319980b"},
+    {file = "grizzlaxy-0.3.3-py3-none-any.whl", hash = "sha256:821799b334379d5105b8dfcb4a561bd156330cae3623d4fa4d637b47906ba43a"},
+    {file = "grizzlaxy-0.3.3.tar.gz", hash = "sha256:f68e4f46943d66bafd511307a8ab9ace3b11e0d9a81f8f8b22d8764514437e1a"},
 ]
 
 [package.dependencies]
@@ -2420,4 +2420,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0c591bd90d530d22c840fa73e341e4deb38a0b2080cbcfc6f5565d3e1bd65d95"
+content-hash = "cde43af1b898a21e94fce287f6fe0f8730ceecb4017b8d61012537f8c7c19d18"

@@ -1,5 +1,5 @@
-from hrepr import H
 import sqlalchemy
+from hrepr import H
 from starbear import Queue
 
 from ...config import papconf
