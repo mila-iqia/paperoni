@@ -40,8 +40,15 @@ all:
     paperoni_token_springer: <SPRINGER API KEY (SECRET!)>
     paperoni_token_zeta_alpha: <ZETA_ALPHA API KEY (SECRET!)>
 
+    paperoni_upload_url: <URL TO UPLOAD TO (or null)>
+    paperoni_upload_user: <USER FOR BASIC AUTH>
+    paperoni_upload_password: <PASSWORD FOR BASIC AUTH (SECRET!)>
+    paperoni_upload_token: <TOKEN (SECRET!)>
+    paperoni_upload_verify_certificate: <WHETHER TO VERIFY THE CERTIFICATE>
+
     paperoni_scrape_schedule: "Mon, 02:00"
     paperoni_cleanup_schedule: "Mon, 12:00"
+    paperoni_upload_schedule: "Mon, 12:00"
 ```
 
 
