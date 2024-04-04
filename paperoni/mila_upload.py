@@ -73,7 +73,7 @@ class UploadOptions:
 
 
 upload_options = gifnoc.define(
-    field="paperoni_upload_options",
+    field="paperoni.upload_options",
     model=UploadOptions,
 )
 
@@ -97,7 +97,7 @@ def misc():
 
     with gifnoc.cli(
         options=Command(
-            mount="paperoni_upload_options.search",
+            mount="paperoni.upload_options.search",
             auto=True,
             options={".year": GOption(aliases=["-y"])},
         ),
