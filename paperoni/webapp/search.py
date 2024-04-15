@@ -22,7 +22,7 @@ async def app(page, box):
             db,
             q,
             dict(page.query_params),
-            defaults={"validation": "validated"},
+            defaults={"validation": "validated", "limit": 100},
         )
         box.print(gui)
         box.print(area)
