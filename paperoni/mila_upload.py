@@ -127,4 +127,4 @@ def misc():
                 verify=upload_options.verify_certificate,
             )
             print("Response code:", response.status_code)
-            print("Response JSON:", response.json())
+            print("Response:", response.text)

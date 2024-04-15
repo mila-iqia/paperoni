@@ -42,7 +42,7 @@ class PaperoniConfig:
     paths: PaperoniPaths
     tag: str = None
     tokens: PaperoniTokens = None
-    tweaks: dict[str, list[str]] = None
+    tweaks: PaperoniTweaks = None
     institution_patterns: list[InstitutionPattern] = None
     history_tag: str | None = None
     services: list[str] = None
