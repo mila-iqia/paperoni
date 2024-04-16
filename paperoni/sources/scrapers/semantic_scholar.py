@@ -1,6 +1,7 @@
 import re
 import time
 from datetime import datetime
+from functools import partial
 
 from coleo import Option, tooled
 
@@ -17,7 +18,7 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...utils import QueryError
+from ...utils import QueryError, best_name, quality_int
 from ..acquire import HTTPSAcquirer
 from ..helpers import (
     filter_researchers_interface,
@@ -227,15 +228,18 @@ class SemanticScholarQueryManager:
             author=self._wrap_author(data),
         )
 
-    def _wrap_author(self, data):
+    def _wrap_author(self, data, quality=(0.1,)):
         lnk = (aid := data["authorId"]) and Link(
             type="semantic_scholar", link=aid
         )
+        aliases = set(data.get("aliases", None) or [])
+        aliases.add(data["name"])
         return Author(
-            name=data["name"],
-            aliases=data.get("aliases", None) or [],
+            name=best_name(aliases),
+            aliases=aliases,
             links=[lnk] if lnk else [],
             roles=[],
+            quality=quality,
         )
 
     def _wrap_paper(self, data):
@@ -338,12 +342,22 @@ class SemanticScholarQueryManager:
             f"paper/{paper_id}/citations", fields=fields, **params
         )
 
-    def author(self, name, fields=AUTHOR_FIELDS, **params):  # pragma: no cover
-        name = name.replace("-", " ")
-        authors = self._list(
-            f"author/search", query=name, fields=fields, **params
-        )
-        yield from map(self._wrap_author, authors)
+    def author(
+        self, name=None, author_id=None, fields=AUTHOR_FIELDS, **params
+    ):  # pragma: no cover
+        wrap_author = partial(self._wrap_author, quality=(0.8,))
+        if name:
+            name = name.replace("-", " ")
+            authors = self._list(
+                "author/search", query=name, fields=fields, **params
+            )
+            yield from map(wrap_author, authors)
+        else:
+            yield wrap_author(
+                self._evaluate(
+                    f"author/{author_id}", fields=",".join(fields), **params
+                )
+            )
 
     def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
         name = name.replace("-", " ")

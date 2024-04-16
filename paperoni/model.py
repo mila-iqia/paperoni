@@ -11,7 +11,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, create_model
 
-from .utils import tag_uuid
+from .utils import quality_int, tag_uuid
 
 
 class VenueType(str, Enum):
@@ -153,14 +153,7 @@ class BaseWithQuality(Base):
     quality: tuple[float, ...] | int = Field(default_factory=lambda: (0.0,))
 
     def quality_int(self):
-        if isinstance(self.quality, int):
-            return self.quality
-        qual = self.quality + (0,) * (4 - len(self.quality))
-        result = 0
-        for x in qual:
-            result <<= 8
-            result |= int(x * 255) & 255
-        return result
+        return quality_int(self.quality)
 
 
 class Paper(BaseWithQuality):

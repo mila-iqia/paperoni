@@ -402,6 +402,27 @@ def expand_links_dict(links):
     return results
 
 
+def quality_int(quality_tuple):
+    if isinstance(quality_tuple, int):
+        return quality_tuple
+    qual = quality_tuple + (0,) * (4 - len(quality_tuple))
+    result = 0
+    for x in qual:
+        result <<= 8
+        result |= int(x * 255) & 255
+    return result
+
+
+def best_name(names):
+    def penalty(name):
+        return (
+            re.match(string=name, pattern=r"^\w[. ]") is not None,
+            abs(20 - len(name)),
+        )
+
+    return min(names, key=penalty)
+
+
 ####################
 # Proxying objects #
 ####################
