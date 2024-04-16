@@ -30,7 +30,7 @@ class NormalFile:
     def write(self, new_text, dry=False):
         if self.validate:
             if not self.validate(new_text):
-                raise Exception(f"Content is invalid")
+                raise Exception("Content is invalid")
         if not dry:
             self.path.write_text(new_text)
 
@@ -88,7 +88,7 @@ class LogsViewer:
                     H.label["validation-button"](
                         H.input(
                             type="radio",
-                            name=f"v-logs-radio",
+                            name="v-logs-radio",
                             value=s,
                             checked=active_service == s,
                             onchange=debounced,

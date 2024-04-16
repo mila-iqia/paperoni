@@ -247,7 +247,7 @@ async def app(page, box):
         page[table].set(table_content)
         async for event in q:
             name = event["name"]
-            if event is not None and event.submit == True:
+            if event is not None and event.submit is True:
                 name = None
                 addAuthor(event)
             table_content = make_table(list(generate(name)))

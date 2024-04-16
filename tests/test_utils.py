@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from giving import given
 
-from paperoni.model import DatePrecision, PaperMerge
+from paperoni.model import DatePrecision
 from paperoni.utils import (
     Doing,
     EquivalenceGroups,
@@ -151,9 +151,9 @@ def test_canonicalize_links():
         return {"type": x, "link": y}
 
     results = canonicalize_links(
-        [to_dict(given) for _, expected, given in test_links]
+        [to_dict(provided) for _, expected, provided in test_links]
     )
-    for _, expected, given in test_links:
+    for _, expected, provided in test_links:
         assert to_dict(expected) in results
 
 

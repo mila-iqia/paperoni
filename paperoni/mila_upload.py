@@ -83,7 +83,7 @@ def export_all(papers):
     for p in papers:
         try:
             results.append(export(p))
-        except Exception as exc:
+        except Exception:
             print_exc()
     return results
 

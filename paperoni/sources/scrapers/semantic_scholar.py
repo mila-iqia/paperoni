@@ -348,7 +348,7 @@ class SemanticScholarQueryManager:
     def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
         name = name.replace("-", " ")
         authors = self._list(
-            f"author/search", query=name, fields=fields, **params
+            "author/search", query=name, fields=fields, **params
         )
         for author in authors:
             yield (
