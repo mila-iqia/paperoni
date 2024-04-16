@@ -450,4 +450,46 @@ class SemanticScholarScraper(BaseScraper):
         )
 
 
-__scrapers__ = {"semantic_scholar": SemanticScholarScraper}
+class SemanticScholarAuthorScraper(BaseScraper):
+    @tooled
+    def query(
+        self,
+        # Author to query
+        # [alias: -a]
+        author: Option = None,
+        # Author ID to query
+        author_id: Option = None,
+    ):
+        ss = SemanticScholarQueryManager()
+        if author:
+            yield from ss.author(name=author, fields=_author_fields())
+        else:
+            yield from ss.author(author_id=author_id, fields=_author_fields())
+
+    @tooled
+    def acquire(self):
+        limit: Option & int = 100
+
+        Q = quality_int((0.8,))
+        query = f"""
+            SELECT name, link FROM author
+                JOIN author_link ON author.author_id = author_link.author_id
+            WHERE author_link.type = 'semantic_scholar'
+                AND author.quality < {Q}
+            LIMIT {limit}
+        """
+        with self.db:
+            results = self.db.session.execute(query)
+            ss = SemanticScholarQueryManager()
+            for _, ssid in results:
+                yield from ss.author(author_id=ssid, fields=_author_fields())
+
+    @tooled
+    def prepare(self):
+        pass
+
+
+__scrapers__ = {
+    "semantic_scholar": SemanticScholarScraper,
+    "semantic_scholar_author": SemanticScholarAuthorScraper,
+}
