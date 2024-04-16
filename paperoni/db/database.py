@@ -56,7 +56,7 @@ class Database(OvldBase):
         with self:
             self.canonical = {
                 entry.hashid: entry.canonical
-                for entry, in self.session.execute(select(sch.CanonicalId))
+                for (entry,) in self.session.execute(select(sch.CanonicalId))
             }
 
     def __enter__(self):

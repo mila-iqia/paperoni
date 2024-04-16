@@ -93,7 +93,9 @@ def _extract_date_from_xml(node):
             "date_precision": (
                 DatePrecision.day
                 if d
-                else DatePrecision.month if m else DatePrecision.year
+                else DatePrecision.month
+                if m
+                else DatePrecision.year
             ),
         }
         return date

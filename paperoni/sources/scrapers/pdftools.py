@@ -371,7 +371,11 @@ def find_fulltext_affiliations(paper, doc, institutions):
             (
                 0
                 if len(afflist) == 0
-                else 1 if len(afflist) <= 3 else 0 if len(afflist) <= 5 else -1
+                else 1
+                if len(afflist) <= 3
+                else 0
+                if len(afflist) <= 5
+                else -1
             )  # Suspiciously too many affiliations
             for afflist in aff.values()
         )
