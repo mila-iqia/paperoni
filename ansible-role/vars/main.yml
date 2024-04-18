@@ -1,4 +1,5 @@
-paprun: "env GIFNOC_FILE={{ app_config }} GIFNOC_MODULE=paperoni.config"
+paperoni_overrides: "{{ app_data_dir }}/overrides.yaml"
+paprun: "env GIFNOC_FILE={{ app_config }},{{ paperoni_overrides }} GIFNOC_MODULE=paperoni.config"
 
 app_name: "{{ paperoni_name }}"
 app_user: "{{ paperoni_user }}"
@@ -28,6 +29,9 @@ app_timers:
     schedule: "{{ paperoni_upload_schedule }}"
 
 app_files:
+  - dest: "{{ app_data_dir }}/overrides.yaml"
+    content: ""
+    mode: "0600"
   - dest: "{{ app_config_dir }}/cert/cert.pem"
     content: "{{ paperoni_ssl_cert }}"
     mode: "0600"
