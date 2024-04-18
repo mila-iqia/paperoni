@@ -1,5 +1,4 @@
 import re
-import time
 from datetime import datetime
 from functools import partial
 
@@ -183,11 +182,7 @@ class SemanticScholarQueryManager:
     )
 
     def __init__(self):
-        self.conn = HTTPSAcquirer(
-            "api.semanticscholar.org",
-            delay=1.5,  # Wait 1.5 seconds between requests
-            format="json",
-        )
+        self.conn = HTTPSAcquirer("api.semanticscholar.org", format="json")
 
     def _evaluate(self, path: str, **params):
         jdata = self.conn.get(
@@ -435,7 +430,6 @@ class SemanticScholarScraper(BaseScraper):
 
         for ssid, auq in todo.items():
             print(f"Fetch papers for {auq.author.name} (ID={ssid})")
-            time.sleep(5)
             yield from ss.author_papers(ssid, block_size=1000)
 
     @tooled
@@ -482,7 +476,13 @@ class SemanticScholarAuthorScraper(BaseScraper):
             results = self.db.session.execute(query)
             ss = SemanticScholarQueryManager()
             for _, ssid in results:
-                yield from ss.author(author_id=ssid, fields=_author_fields())
+                print(f"Getting more information about author ID: {ssid}")
+                try:
+                    yield from ss.author(
+                        author_id=ssid, fields=_author_fields()
+                    )
+                except QueryError as exc:
+                    print("QueryError", exc)
 
     @tooled
     def prepare(self):
