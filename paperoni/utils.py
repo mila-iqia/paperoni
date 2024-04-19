@@ -1,5 +1,6 @@
 import functools
 import inspect
+import itertools
 import re
 import unicodedata
 from collections import defaultdict
@@ -9,6 +10,7 @@ from datetime import datetime
 from difflib import SequenceMatcher
 
 from giving import give
+from unidecode import unidecode
 
 _uuid_tags = ["transient", "canonical"]
 
@@ -413,14 +415,37 @@ def quality_int(quality_tuple):
     return result
 
 
-def best_name(names):
+def consistent(aliases):
+    def bag(name):
+        name = unidecode(name).replace(".", "")
+        bag = set(name.split(" "))
+        return bag | {word[0] for word in bag}
+
+    def consistent_pair(name1, name2):
+        b1 = bag(name1)
+        b2 = bag(name2)
+        b1x = b1 - b2
+        b2x = b2 - b1
+        consistent = not (b1x and b2x)
+        return consistent
+
+    return all(
+        consistent_pair(n1, n2)
+        for n1, n2 in itertools.product(aliases, aliases)
+    )
+
+
+def best_name(main_name, aliases):
+    if not consistent(aliases):
+        return main_name
+
     def penalty(name):
         return (
             re.match(string=name, pattern=r"^\w[. ]") is not None,
             abs(20 - len(name)),
         )
 
-    return min(names, key=penalty)
+    return min(aliases, key=penalty)
 
 
 ####################

@@ -230,7 +230,7 @@ class SemanticScholarQueryManager:
         aliases = set(data.get("aliases", None) or [])
         aliases.add(data["name"])
         return Author(
-            name=best_name(aliases),
+            name=best_name(data["name"], aliases),
             aliases=aliases,
             links=[lnk] if lnk else [],
             roles=[],
