@@ -102,15 +102,9 @@ def canonicalize_links(links: dict[str, str]) -> dict[str, str]:
 
 
 def similarity(s1, s2):
-    s1 = asciiify(s1)
-    s2 = asciiify(s2)
-    caps1 = re.sub(string=s1, pattern="[a-z. -]", repl="")
-    caps2 = re.sub(string=s2, pattern="[a-z. -]", repl="")
-    capsr = SequenceMatcher(a=caps1, b=caps2).ratio()
-    s1 = re.sub(string=s1, pattern="[. -]", repl="")
-    s2 = re.sub(string=s2, pattern="[. -]", repl="")
-    sr = SequenceMatcher(a=s1, b=s2).ratio()
-    return capsr * sr
+    s1 = plainify(s1)
+    s2 = plainify(s2)
+    return SequenceMatcher(a=s1, b=s2).ratio()
 
 
 def associate(names1, names2):
@@ -126,7 +120,7 @@ def associate(names1, names2):
     for sim, i, j in matrix:
         if i not in to_process1 or j not in to_process2:
             continue
-        elif sim >= 0.5:
+        elif sim >= 0.7 or (sim >= 0.4 and consistent([names1[i], names2[j]])):
             to_process1.discard(i)
             to_process2.discard(j)
             results.append((i, j))
@@ -423,20 +417,28 @@ def quality_int(quality_tuple):
     return result
 
 
-def consistent(aliases):
+def plainify(name):
+    name = unidecode(name).lower()
+    name = re.sub(string=name, pattern="[()-]", repl=" ")
+    name = re.sub(string=name, pattern="['.]", repl="")
+    return name
+
+
+def consistent_pair(name1, name2):
     def bag(name):
-        name = unidecode(name).replace(".", "")
-        bag = set(name.split(" "))
+        name = plainify(name)
+        bag = set(name.split())
         return bag | {word[0] for word in bag}
 
-    def consistent_pair(name1, name2):
-        b1 = bag(name1)
-        b2 = bag(name2)
-        b1x = b1 - b2
-        b2x = b2 - b1
-        consistent = not (b1x and b2x)
-        return consistent
+    b1 = bag(name1)
+    b2 = bag(name2)
+    b1x = b1 - b2
+    b2x = b2 - b1
+    consistent = not (b1x and b2x)
+    return consistent
 
+
+def consistent(aliases):
     return all(
         consistent_pair(n1, n2)
         for n1, n2 in itertools.product(aliases, aliases)
