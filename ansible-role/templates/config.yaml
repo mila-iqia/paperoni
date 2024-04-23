@@ -21,6 +21,11 @@ paperoni:
     verify_certificate: {{ paperoni_upload_verify_certificate | to_json }}
     force_validation: false
     only_dump: false
+  services:
+    - "paperoni-web"
+    - "paperoni-scrape"
+    - "paperoni-cleanup"
+    - "paperoni-upload"
 
 grizzlaxy:
   module: paperoni.webapp
@@ -47,3 +52,5 @@ grizzlaxy:
     dsn: {{ paperoni_sentry_dsn | to_json }}
     traces_sample_rate: {{ paperoni_sentry_traces_sample_rate | to_json }}
     environment: {{ paperoni_sentry_environment | to_json }}
+    log_level: ERROR
+    event_log_level: ERROR
