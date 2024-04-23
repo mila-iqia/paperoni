@@ -273,6 +273,9 @@ class SemanticScholarQueryManager:
             )
 
         else:
+            is_preprint = (
+                "rxiv" in data.get("venue", data.get("journal", "")).lower()
+            )
             release = Release(
                 venue=Venue(
                     type=venue_type_mapping[
@@ -287,7 +290,7 @@ class SemanticScholarQueryManager:
                     aliases=[],
                     links=[],
                 ),
-                status="published",
+                status="preprint" if is_preprint else "published",
                 pages=None,
             )
 
