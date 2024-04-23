@@ -1,7 +1,5 @@
-from collections import Counter
 from pathlib import Path
 
-from giving import give
 from hrepr import H
 from sqlalchemy import select
 from starbear import Queue, Reference
@@ -10,6 +8,7 @@ from ..config import papconf
 from ..db import schema as sch
 from ..sources.scrapers.openreview import OpenReviewPaperScraper
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
+from ..utils import similarity
 from .common import mila_template
 from .render import paper_html
 
@@ -18,76 +17,29 @@ here = Path(__file__).parent
 ss = SemanticScholarQueryManager()
 
 
-def _fill_rids(rids, researchers, idtype):
-    for researcher in researchers:
-        for link in researcher.links:
-            strippedtype = (
-                link.type[1:] if link.type.startswith("!") else link.type
-            )
-            if strippedtype == idtype:
-                rids[link.link] = researcher.name
-
-
 async def prepare(
     researchers,
-    idtype,
     query_name,
     minimum=None,
 ):
-    rids = {}
-    _fill_rids(rids, researchers, idtype)
-
-    def _ids(x, typ):
-        return [link.link for link in x.links if link.type == typ]
-
     for auq in researchers:
         aname = auq.name
-        no_ids = [
-            link.link
-            for link in auq.links
-            if (link.type.startswith("!") and link.type[1:] == idtype)
-        ]
-
-        def find_common(papers):
-            common = Counter()
-            for p in papers:
-                for a in p.authors:
-                    for l in a.author.links:
-                        if l.type == idtype and l.link in rids:
-                            common[rids[l.link]] += 1
-            return sum(common.values()), common
-
         data = [
-            (author, *find_common(papers), papers)
+            (author, similarity(aname, author.name), papers)
             for author, papers in query_name(aname)
             if not minimum or len(papers) > minimum
         ]
         data.sort(key=lambda ap: (-ap[1], -len(ap[-1])))
-        for author, _, common, papers in data:
+        for author, _, papers in data:
             if not papers:  # pragma: no cover
                 continue
-
-            (new_id,) = _ids(author, idtype)
-
-            aliases = {*author.aliases, author.name} - {aname}
-
             papers = [
                 (p.releases[0].venue.date.year, i, p)
                 for i, p in enumerate(papers)
             ]
             papers.sort(reverse=True)
-            give(
-                author=author,
-                author_name=aname,
-                id=new_id,
-                npapers=len(papers),
-                common=dict(sorted(common.items(), key=lambda x: -x[1])),
-                aliases=aliases,
-                start_year=papers[-1][0],
-                end_year=papers[0][0],
-            )
             for _, _, p in papers:
-                yield author, p, no_ids
+                yield author, p
 
 
 @mila_template(title="Find author IDs", help="/help#find-author-ids")
@@ -97,23 +49,16 @@ async def app(page, box):
     scraper = page.query_params.get("scraper")
     action_q = Queue().wrap(refs=True)
 
-    # Verify if the link is already linked to the author, included or excluded, with the same type.
-    def is_linked(link, type, author):
-        already_linked = get_links(type, author)
-        for links in already_linked:
-            if link in links.link:
-                return links
-        return False
-
     def get_links(type, author):
-        links = []
-        for link in author.links:
-            strippedtype = (
-                link.type[1:] if link.type.startswith("!") else link.type
-            )
-            if strippedtype == type:
-                links.append(link)
-        return links
+        q = """
+        SELECT scrape_id, active FROM author_scrape_ids
+        WHERE scraper = :scraper
+        AND author_id = :author_id
+        """
+        results = db.session.execute(
+            q, {"author_id": author.author_id, "scraper": type}
+        )
+        return dict(list(results))
 
     def get_buttons(link, included=None):
         match included:
@@ -185,11 +130,10 @@ async def app(page, box):
         page["#noresults"].delete()
         results = prepare(
             researchers=[the_author],
-            idtype=scraper,
             query_name=current_query_name,
         )
         num_results = 0
-        async for auth, result, no_ids in results:
+        async for auth, result in results:
             num_results += 1
             link = filter_link(auth.links[0].link)
             olink = auth.links[0].link
@@ -223,12 +167,10 @@ async def app(page, box):
                     papers_area,
                 )(id="area" + link)
                 box.print(area)
-                linked = is_linked(link, scraper, the_author)
+                existing_links = get_links(scraper, the_author)
+                status = existing_links.get(link, 0)
                 page["#authoridbuttonarea" + link].print(
-                    get_buttons(
-                        link,
-                        None if linked is False else (link not in no_ids),
-                    )
+                    get_buttons(link, {-1: False, 0: None, 1: True}[status])
                 )
 
             div = paper_html(result)
@@ -271,12 +213,16 @@ async def app(page, box):
             link = result.obj
             match result.tag:
                 case "valid":
-                    db.insert_author_link(author_id, scraper, link, validity=1)
+                    db.insert_author_scrape(
+                        author_id, scraper, link, validity=1
+                    )
                 case "invalid":
-                    db.insert_author_link(author_id, scraper, link, validity=0)
+                    db.insert_author_scrape(
+                        author_id, scraper, link, validity=-1
+                    )
                 case "unknown":
-                    db.insert_author_link(
-                        author_id, scraper, link, validity=None
+                    db.insert_author_scrape(
+                        author_id, scraper, link, validity=0
                     )
 
             page[result.ref].do(f"this.setAttribute('status', '{result.tag}')")

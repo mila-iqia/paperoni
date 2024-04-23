@@ -17,6 +17,7 @@ from ...model import (
     Institution,
     InstitutionCategory,
     Link,
+    Meta,
     Paper,
     PaperAuthor,
     Release,
@@ -27,7 +28,12 @@ from ...model import (
     VenueType,
 )
 from ...utils import Doing, covguard, extract_date
-from ..helpers import prepare_interface, prompt_controller
+from ..helpers import (
+    filter_papers,
+    filter_researchers_interface,
+    prepare_interface,
+    prompt_controller,
+)
 from .base import BaseScraper
 
 
@@ -111,6 +117,7 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 links=_links,
                                 roles=[],
+                                quality=(0.75,),
                             ),
                         )
                     )

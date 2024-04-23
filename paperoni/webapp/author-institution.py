@@ -15,14 +15,6 @@ from .common import BaseGUI, SearchElement, SelectElement, mila_template
 here = Path(__file__).parent
 
 
-def get_type_links(author, type):
-    num_links = 0
-    for i in author.links:
-        if i.type == type:
-            num_links += 1
-    return num_links
-
-
 @mila_template(title="List of researchers", help="/help#author-institution")
 async def app(page, box):
     """Edit/update the list of researchers."""
@@ -168,6 +160,19 @@ async def app(page, box):
             }
         )
         page["#gui-div"].set(gui.form())
+
+    def get_type_links(author, type):
+        q = """
+            SELECT count(*)
+            FROM author_scrape_ids
+            WHERE author_id = :aid
+              AND scraper = :type
+              AND active = 1
+        """
+        ((cnt,),) = db.session.execute(
+            q, params={"aid": author.author_id, "type": type}
+        )
+        return cnt
 
     def author_html(result):
         author = result.author

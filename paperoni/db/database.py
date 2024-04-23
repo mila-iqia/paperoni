@@ -567,3 +567,21 @@ class Database(OvldBase):
             self.session.execute(ins_stmt)
 
         self.session.commit()
+
+    def insert_author_scrape(self, author_id, scraper, scrape_id, validity=1):
+        template = """
+        INSERT OR REPLACE INTO author_scrape_ids
+        (scraper, author_id, scrape_id, active)
+        VALUES
+        (:scraper, :author_id, :scrape_id, :active)
+        """
+        self.session.execute(
+            template,
+            {
+                "author_id": author_id,
+                "scraper": scraper,
+                "scrape_id": scrape_id,
+                "active": validity,
+            },
+        )
+        self.session.commit()

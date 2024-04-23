@@ -13,6 +13,29 @@ class BaseScraper:
         self.db = db
 
     @tooled
+    def generate_ids(self, scraper, cutoff: Option & int = 30 * 6):
+        if cutoff and isinstance(cutoff, int):
+            cutoff = datetime.now() - timedelta(days=cutoff)
+        q = """
+        SELECT author.name,
+               group_concat(scrape_id,";;;;;"),
+               min(author_institution.start_date),
+               max(IFNULL(author_institution.end_date, 10000000000))
+            FROM author_scrape_ids
+            JOIN author ON author.author_id = author_scrape_ids.author_id
+            JOIN author_institution ON author.author_id = author_institution.author_id
+        WHERE scraper = :scraper AND active = 1
+        GROUP BY author.author_id
+        """
+        results = self.db.session.execute(q, {"scraper": scraper})
+        for name, ids, start, end in results:
+            ids = set(ids.split(";;;;;"))
+            start = max(cutoff, datetime.fromtimestamp(start))
+            end = end and datetime.fromtimestamp(end)
+            if start < end:
+                yield name, ids, start, end
+
+    @tooled
     def generate_paper_queries(self, cutoff: Option & int = -30 * 6):
         if cutoff and isinstance(cutoff, int):
             cutoff = datetime.now() - timedelta(days=-cutoff)

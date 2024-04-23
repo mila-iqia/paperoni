@@ -131,6 +131,22 @@ class DatePrecision(int, Enum):
             case _:  # pragma: no cover
                 assert False
 
+    @staticmethod
+    def pin(date, precision):
+        if isinstance(date, (int, float)):
+            date = datetime.fromtimestamp(date)
+        if isinstance(date, str):
+            date = datetime.fromisoformat(date)
+        match DatePrecision(precision):
+            case DatePrecision.year | DatePrecision.unknown:
+                return datetime(year=date.year, month=1, day=1)
+            case DatePrecision.month:
+                return datetime(year=date.year, month=date.month, day=1)
+            case DatePrecision.day:
+                return datetime(year=date.year, month=date.month, day=date.day)
+            case _:  # pragma: no cover
+                assert False
+
 
 class SimpleBase(BaseModel):
     def tagged_dict(self):

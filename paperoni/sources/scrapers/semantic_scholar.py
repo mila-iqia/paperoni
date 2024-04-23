@@ -20,6 +20,7 @@ from ...model import (
 from ...utils import QueryError, best_name, quality_int
 from ..acquire import HTTPSAcquirer
 from ..helpers import (
+    filter_papers,
     filter_researchers_interface,
     prepare_interface,
     prompt_controller,
@@ -343,7 +344,7 @@ class SemanticScholarQueryManager:
     def author(
         self, name=None, author_id=None, fields=AUTHOR_FIELDS, **params
     ):  # pragma: no cover
-        wrap_author = partial(self._wrap_author, quality=(0.8,))
+        wrap_author = partial(self._wrap_author, quality=(0.5,))
         if name:
             name = name.replace("-", " ")
             authors = self._list(
@@ -411,18 +412,10 @@ class SemanticScholarScraper(BaseScraper):
 
     @tooled
     def acquire(self):
-        queries = self.generate_paper_queries()
-
-        todo = {}
-
+        queries = self.generate_ids(scraper="semantic_scholar")
         queries = filter_researchers_interface(
-            queries, getname=lambda q: q.author.name
+            list(queries), getname=lambda row: row[0]
         )
-
-        for auq in queries:
-            for link in auq.author.links:
-                if link.type == "semantic_scholar":
-                    todo[link.link] = auq
 
         ss = SemanticScholarQueryManager()
 
@@ -431,9 +424,14 @@ class SemanticScholarScraper(BaseScraper):
             date=datetime.now(),
         )
 
-        for ssid, auq in todo.items():
-            print(f"Fetch papers for {auq.author.name} (ID={ssid})")
-            yield from ss.author_papers(ssid, block_size=1000)
+        for name, ids, start, end in queries:
+            for ssid in ids:
+                print(f"Fetch papers for {name} (ID={ssid})")
+                yield from filter_papers(
+                    papers=ss.author_papers(ssid, block_size=1000),
+                    start=start,
+                    end=end,
+                )
 
     @tooled
     def prepare(self, controller=prompt_controller):
@@ -467,7 +465,7 @@ class SemanticScholarAuthorScraper(BaseScraper):
     def acquire(self):
         limit: Option & int = 100
 
-        Q = quality_int((0.8,))
+        Q = quality_int((0.4,))
         query = f"""
             SELECT name, link FROM author
                 JOIN author_link ON author.author_id = author_link.author_id
