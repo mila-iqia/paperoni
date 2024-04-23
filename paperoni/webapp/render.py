@@ -3,6 +3,7 @@ from hrepr import H
 from ..config import papconf
 from ..display import expand_links
 from ..model import DatePrecision
+from ..utils import sort_releases
 from .utils import Confidence
 
 
@@ -62,7 +63,7 @@ def validation_html(paper, maxauth=50):
         return lnk.split("/")[2]
 
     venues = H.div["venues"]
-    for release in paper.releases:
+    for release, _ in sort_releases(paper.releases):
         v = release.venue
         venues = venues(
             H.div["venue"](
@@ -122,7 +123,7 @@ def paper_html(paper, maxauth=50):
         return lnk.split("/")[2]
 
     venues = H.div["venues"]
-    for release in paper.releases:
+    for release, _ in sort_releases(paper.releases):
         v = release.venue
         venues = venues(
             H.div["venue"](

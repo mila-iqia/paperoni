@@ -38,7 +38,7 @@ def venue_to_series(venueid):
 def parse_openreview_venue(venue):
     extractors = {
         r"\b(2[0-9]{3})\b": "year",
-        r"\b(submitted|poster|oral|spotlight)\b": "status",
+        r"\b(submitted|poster|oral|spotlight|rejected)\b": "status",
     }
     results = {}
     for regexp, field in extractors.items():
@@ -46,6 +46,8 @@ def parse_openreview_venue(venue):
             results[field] = m.groups()[0].lower()
             start, end = m.span()
             venue = venue[:start] + venue[end:]
+    if results.get("status", None) == "submitted":
+        results["status"] = "rejected"
     results["venue"] = re.sub(pattern=r"[ ]+", repl=" ", string=venue).strip()
     return results
 

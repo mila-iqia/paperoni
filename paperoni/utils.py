@@ -316,22 +316,30 @@ def keyword_decorator(deco):
 ###################
 
 
-def peer_reviewed_release(release):
+def status_order(release):
     name = release.venue.name.lower()
-    return (
-        release.status not in ("submitted", "preprint")
-        and name.strip() != ""
-        and name != "n/a"
-        and "workshop" not in name
-        and "rxiv" not in name
-    )
+    if release.status in ("submitted", "rejected"):
+        return -2
+    elif (
+        release.status == "preprint"
+        or not name.strip()
+        or name == "n/a"
+        or "rxiv" in name
+    ):
+        return -1
+    elif "workshop" in name:
+        return 0
+    else:
+        return 1
+
+
+def peer_reviewed_release(release):
+    return status_order(release) > 0
 
 
 def sort_releases(releases):
-    releases = [
-        (release, peer_reviewed_release(release)) for release in releases
-    ]
-    releases.sort(key=lambda entry: -int(entry[1]))
+    releases = [(release, status_order(release)) for release in releases]
+    releases.sort(key=lambda entry: -entry[1])
     return releases
 
 
