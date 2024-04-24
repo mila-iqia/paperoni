@@ -231,8 +231,8 @@ def recognize_unknown_institution(entry):
     if not patterns or not entry or "@" in entry:
         return None
     for defn in patterns:
-        pattern = defn["pattern"]
-        category = defn["category"]
+        pattern = defn.pattern
+        category = defn.category
         m = re.match(pattern=pattern, string=entry, flags=re.IGNORECASE)
         if m:
             return Institution(
@@ -304,6 +304,8 @@ def find_fulltext_affiliation_under_name(doc, extra_margin):
 def initialize(name):
     def i(part):
         return f"{part[0]}[a-z]*"
+
+    name = re.sub(string=name, pattern=r"[(){}\[\]]", repl="")
 
     parts = name.split()
     if len(parts) <= 1:

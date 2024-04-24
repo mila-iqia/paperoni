@@ -196,7 +196,7 @@ def extract_date(txt: str) -> dict | None:
         rf"([0-9]{{4}}) ({month}) ([0-9]{{1,2}})": ("y", "m", "d"),
         # 2020 Jan
         rf"([0-9]{{4}}) ({month})": ("y", "m"),
-        r"([0-9]{{4}})": ("y",),
+        r"([0-9]{4})": ("y",),
     }
 
     for pattern, parts in patterns.items():

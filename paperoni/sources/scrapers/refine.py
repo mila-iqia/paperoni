@@ -69,12 +69,6 @@ def refiner(fn, *, type, priority, needs_paper=False):
     return fn
 
 
-def _only_if_affiliations(paper):
-    if paper and any(auth.affiliations for auth in paper.authors):
-        return paper
-    return None
-
-
 def _extract_date_from_xml(node):
     if node is None:
         return None
@@ -150,7 +144,7 @@ def _paper_from_jats(soup, links):
                     aliases=[],
                     links=[],
                     roles=[],
-                    quality=(0,),
+                    quality=(0.75,),
                 ),
                 affiliations=[
                     find_affiliation(aff)
@@ -173,13 +167,16 @@ def _paper_from_jats(soup, links):
                     series=jname,
                     type=VenueType.journal,
                     **date,
-                    publisher=soup.select_one(
-                        "journal-meta publisher-name"
-                    ).text,
+                    publisher=(
+                        journal := soup.select_one(
+                            "journal-meta publisher-name"
+                        )
+                    )
+                    and journal.text,
                     links=[],
                     aliases=[],
                 ),
-                status="published",
+                status="preprint" if "rxiv" in jname.lower() else "published",
                 pages=None,
             )
         ],
@@ -227,6 +224,7 @@ def refine_doi_with_ieeexplore(db, paper, link):
                         if "id" in author
                         else []
                     ),
+                    quality=(0.75,),
                 ),
                 affiliations=(
                     [
@@ -349,6 +347,7 @@ def refine_doi_with_crossref(db, paper, link):
                         roles=[],
                         aliases=[],
                         links=[],
+                        quality=(0.75,),
                     ),
                     affiliations=[
                         Institution(
@@ -533,6 +532,7 @@ def refine_with_dblp(db, paper, link):
                         if (orcid := author.attrs.get("orcid", None))
                         else []
                     ),
+                    quality=(0,),
                 ),
                 affiliations=[],
             )

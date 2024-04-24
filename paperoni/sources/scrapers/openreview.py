@@ -403,24 +403,29 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             )
 
         else:
-            queries = self.generate_paper_queries()
+            queries = self.generate_ids(scraper="openreview")
+            queries = filter_researchers_interface(
+                list(queries), getname=lambda row: row[0]
+            )
 
-            todo = {}
+            yield Meta(
+                scraper="openreview",
+                date=datetime.now(),
+            )
 
-            for auq in queries:
-                for link in auq.author.links:
-                    if link.type == "openreview":
-                        todo[link.link] = auq
-
-            for author_id, auq in todo.items():
-                print(f"Fetch papers for {auq.author.name} (id={author_id})")
-                time.sleep(5)
-                params = {
-                    "content": {"authorids": [author_id]},
-                    "mintcdate": int(auq.start_date.timestamp() * 1000),
-                }
-                for paper in self._query(params):
-                    yield paper
+            for name, ids, start, end in queries:
+                for author_id in ids:
+                    print(f"Fetch papers for {name} (ID={author_id})")
+                    params = {
+                        "content": {"authorids": [author_id]},
+                        "mintcdate": int(start.timestamp() * 1000),
+                    }
+                    yield from filter_papers(
+                        papers=self._query(params),
+                        start=start,
+                        end=end,
+                    )
+                    time.sleep(5)
 
     @tooled
     def prepare(self, controller=prompt_controller):

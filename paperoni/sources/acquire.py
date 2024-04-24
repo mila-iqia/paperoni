@@ -28,7 +28,10 @@ class HTTPSAcquirer:
 
 def readpage(url, format=None, **kwargs):
     resp = requests.get(url, **kwargs)
-    content = resp.text
+    if resp.encoding == resp.apparent_encoding:
+        content = resp.text
+    else:
+        content = resp.content.decode(resp.apparent_encoding)
 
     match format:
         case "json":
@@ -41,7 +44,7 @@ def readpage(url, format=None, **kwargs):
             content = re.sub(string=content, pattern=r"[\x80-\xff]", repl="")
             return yaml.safe_load(content)
         case "xml":
-            return BeautifulSoup(content, features="xml")
+            return BeautifulSoup(resp.content, features="xml")
         case "html":
             return BeautifulSoup(content, features="lxml")
         case _:
