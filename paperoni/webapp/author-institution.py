@@ -204,7 +204,7 @@ async def app(page, box):
                 H.div(
                     get_type_links(author, "semantic_scholar"),
                     "⧉",
-                    onclick="window.open('/find-authors-ids?scraper=semantic_scholar&author_id="
+                    onclick="window.open('/find-authors-ids?cutoff=2022-06-01&scraper=semantic_scholar&author_id="
                     + author.author_id.hex()
                     + "');",
                 )
@@ -213,7 +213,7 @@ async def app(page, box):
                 H.div(
                     get_type_links(author, "openreview"),
                     "⧉",
-                    onclick="window.open('/find-authors-ids?scraper=openreview&author_id="
+                    onclick="window.open('/find-authors-ids?cutoff=2022-06-01&scraper=openreview&author_id="
                     + author.author_id.hex()
                     + "');",
                 ),

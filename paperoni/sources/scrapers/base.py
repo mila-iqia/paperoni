@@ -13,7 +13,12 @@ class BaseScraper:
         self.db = db
 
     @tooled
-    def generate_ids(self, scraper, cutoff: Option & int = 30 * 6):
+    def generate_ids(
+        self,
+        scraper,
+        extend_back: Option & int = 30 * 12,
+        cutoff: Option & int = 30 * 6,
+    ):
         if cutoff and isinstance(cutoff, int):
             cutoff = datetime.now() - timedelta(days=cutoff)
         q = """
@@ -30,6 +35,7 @@ class BaseScraper:
         results = self.db.session.execute(q, {"scraper": scraper})
         for name, ids, start, end in results:
             ids = set(ids.split(";;;;;"))
+            start -= timedelta(days=extend_back).total_seconds()
             start = max(cutoff, datetime.fromtimestamp(start))
             end = end and datetime.fromtimestamp(end)
             if start < end:

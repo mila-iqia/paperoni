@@ -23,6 +23,8 @@ class HTTPSAcquirer:
         if params:
             params = urllib.parse.urlencode(params)
             url = f"https://{self.base_url}{url}?{params}"
+        else:
+            url = f"https://{self.base_url}{url}"
         return readpage(url, format=self.format, headers=headers)
 
 

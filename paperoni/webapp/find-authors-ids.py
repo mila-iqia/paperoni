@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 
 from hrepr import H
@@ -20,6 +21,7 @@ ss = SemanticScholarQueryManager()
 async def prepare(
     researchers,
     query_name,
+    cutoff=None,
     minimum=None,
 ):
     for auq in researchers:
@@ -34,8 +36,9 @@ async def prepare(
             if not papers:  # pragma: no cover
                 continue
             papers = [
-                (p.releases[0].venue.date.year, i, p)
+                (date.year, i, p)
                 for i, p in enumerate(papers)
+                if cutoff is None or (date := p.releases[0].venue.date) > cutoff
             ]
             papers.sort(reverse=True)
             for _, _, p in papers:
@@ -46,6 +49,9 @@ async def prepare(
 async def app(page, box):
     """Include/Exclude author Ids."""
     author_id = bytes.fromhex(page.query_params.get("author_id"))
+    cutoff = page.query_params.get("cutoff")
+    cutoff = cutoff and datetime.strptime(cutoff, "%Y-%m-%d")
+
     scraper = page.query_params.get("scraper")
     action_q = Queue().wrap(refs=True)
 
@@ -131,6 +137,7 @@ async def app(page, box):
         results = prepare(
             researchers=[the_author],
             query_name=current_query_name,
+            cutoff=cutoff,
         )
         num_results = 0
         async for auth, result in results:
