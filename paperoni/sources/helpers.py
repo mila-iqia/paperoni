@@ -1,11 +1,12 @@
 from collections import Counter
+from datetime import timedelta
 
 import questionary as qn
 from coleo import Option, tooled
 from giving import give
 
 from ..display import display
-from ..model import Link, UniqueAuthor
+from ..model import DatePrecision, Link, UniqueAuthor
 
 
 def prompt_controller(author, paper):
@@ -20,6 +21,26 @@ def prompt_controller(author, paper):
 
 def _getname(x):
     return x.name
+
+
+def filter_papers(papers, start, end, slack=timedelta(days=365 * 2)):
+    # Add some slack after the end
+    end = end + slack
+    for paper in papers:
+        if paper.releases:
+            date = paper.releases[0].venue.date
+            precision = paper.releases[0].venue.date_precision
+            s = DatePrecision.pin(start, precision)
+            e = DatePrecision.pin(end, precision)
+            if s <= date <= e:
+                include = True
+            else:
+                include = False
+        else:
+            include = True
+
+        if include:
+            yield paper
 
 
 def filter_researchers(

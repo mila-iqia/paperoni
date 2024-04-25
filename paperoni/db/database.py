@@ -56,7 +56,7 @@ class Database(OvldBase):
         with self:
             self.canonical = {
                 entry.hashid: entry.canonical
-                for entry, in self.session.execute(select(sch.CanonicalId))
+                for (entry,) in self.session.execute(select(sch.CanonicalId))
             }
 
     def __enter__(self):
@@ -158,6 +158,14 @@ class Database(OvldBase):
                 link=link.link,
             )
             self.session.merge(lnk)
+
+        for flag in paper.flags:
+            flg = sch.PaperFlag(
+                paper_id=pp.paper_id,
+                flag_name=flag.flag_name,
+                flag=flag.flag,
+            )
+            self.session.merge(flg)
 
         return pp.paper_id
 
@@ -490,7 +498,7 @@ class Database(OvldBase):
             paper_id=paper.paper_id,
         )
         ins_stmt = f"""
-        INSERT INTO {pf.__tablename__}
+        INSERT OR REPLACE INTO {pf.__tablename__}
         VALUES (X'{paper.paper_id.hex()}',"{flag_name}",{val})
         """
 
@@ -566,4 +574,22 @@ class Database(OvldBase):
             """
             self.session.execute(ins_stmt)
 
+        self.session.commit()
+
+    def insert_author_scrape(self, author_id, scraper, scrape_id, validity=1):
+        template = """
+        INSERT OR REPLACE INTO author_scrape_ids
+        (scraper, author_id, scrape_id, active)
+        VALUES
+        (:scraper, :author_id, :scrape_id, :active)
+        """
+        self.session.execute(
+            template,
+            {
+                "author_id": author_id,
+                "scraper": scraper,
+                "scrape_id": scrape_id,
+                "active": validity,
+            },
+        )
         self.session.commit()

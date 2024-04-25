@@ -1,6 +1,6 @@
 import re
-import time
 from datetime import datetime
+from functools import partial
 
 from coleo import Option, tooled
 
@@ -17,9 +17,10 @@ from ...model import (
     Venue,
     VenueType,
 )
-from ...utils import QueryError
+from ...utils import QueryError, best_name, quality_int
 from ..acquire import HTTPSAcquirer
 from ..helpers import (
+    filter_papers,
     filter_researchers_interface,
     prepare_interface,
     prompt_controller,
@@ -182,11 +183,7 @@ class SemanticScholarQueryManager:
     )
 
     def __init__(self):
-        self.conn = HTTPSAcquirer(
-            "api.semanticscholar.org",
-            delay=1.5,  # Wait 1.5 seconds between requests
-            format="json",
-        )
+        self.conn = HTTPSAcquirer("api.semanticscholar.org", format="json")
 
     def _evaluate(self, path: str, **params):
         jdata = self.conn.get(
@@ -227,15 +224,18 @@ class SemanticScholarQueryManager:
             author=self._wrap_author(data),
         )
 
-    def _wrap_author(self, data):
+    def _wrap_author(self, data, quality=(0.1,)):
         lnk = (aid := data["authorId"]) and Link(
             type="semantic_scholar", link=aid
         )
+        aliases = set(data.get("aliases", None) or [])
+        aliases.add(data["name"])
         return Author(
-            name=data["name"],
-            aliases=data.get("aliases", None) or [],
+            name=best_name(data["name"], aliases),
+            aliases=aliases,
             links=[lnk] if lnk else [],
             roles=[],
+            quality=quality,
         )
 
     def _wrap_paper(self, data):
@@ -274,6 +274,9 @@ class SemanticScholarQueryManager:
             )
 
         else:
+            is_preprint = (
+                "rxiv" in data.get("venue", data.get("journal", "")).lower()
+            )
             release = Release(
                 venue=Venue(
                     type=venue_type_mapping[
@@ -288,7 +291,7 @@ class SemanticScholarQueryManager:
                     aliases=[],
                     links=[],
                 ),
-                status="published",
+                status="preprint" if is_preprint else "published",
                 pages=None,
             )
 
@@ -314,8 +317,9 @@ class SemanticScholarQueryManager:
         yield from map(self._wrap_paper, papers)
 
     def paper(self, paper_id, fields=PAPER_FIELDS):  # pragma: no cover
-        (paper,) = self._list(f"paper/{paper_id}", fields=fields)
-        return paper
+        return self._wrap_paper(
+            self._evaluate(f"paper/{paper_id}", fields=",".join(fields))
+        )
 
     def paper_authors(
         self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params
@@ -338,17 +342,27 @@ class SemanticScholarQueryManager:
             f"paper/{paper_id}/citations", fields=fields, **params
         )
 
-    def author(self, name, fields=AUTHOR_FIELDS, **params):  # pragma: no cover
-        name = name.replace("-", " ")
-        authors = self._list(
-            f"author/search", query=name, fields=fields, **params
-        )
-        yield from map(self._wrap_author, authors)
+    def author(
+        self, name=None, author_id=None, fields=AUTHOR_FIELDS, **params
+    ):  # pragma: no cover
+        wrap_author = partial(self._wrap_author, quality=(0.5,))
+        if name:
+            name = name.replace("-", " ")
+            authors = self._list(
+                "author/search", query=name, fields=fields, **params
+            )
+            yield from map(wrap_author, authors)
+        else:
+            yield wrap_author(
+                self._evaluate(
+                    f"author/{author_id}", fields=",".join(fields), **params
+                )
+            )
 
     def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
         name = name.replace("-", " ")
         authors = self._list(
-            f"author/search", query=name, fields=fields, **params
+            "author/search", query=name, fields=fields, **params
         )
         for author in authors:
             yield (
@@ -399,18 +413,10 @@ class SemanticScholarScraper(BaseScraper):
 
     @tooled
     def acquire(self):
-        queries = self.generate_paper_queries()
-
-        todo = {}
-
+        queries = self.generate_ids(scraper="semantic_scholar")
         queries = filter_researchers_interface(
-            queries, getname=lambda q: q.author.name
+            list(queries), getname=lambda row: row[0]
         )
-
-        for auq in queries:
-            for link in auq.author.links:
-                if link.type == "semantic_scholar":
-                    todo[link.link] = auq
 
         ss = SemanticScholarQueryManager()
 
@@ -419,10 +425,14 @@ class SemanticScholarScraper(BaseScraper):
             date=datetime.now(),
         )
 
-        for ssid, auq in todo.items():
-            print(f"Fetch papers for {auq.author.name} (ID={ssid})")
-            time.sleep(5)
-            yield from ss.author_papers(ssid, block_size=1000)
+        for name, ids, start, end in queries:
+            for ssid in ids:
+                print(f"Fetch papers for {name} (ID={ssid})")
+                yield from filter_papers(
+                    papers=ss.author_papers(ssid, block_size=1000),
+                    start=start,
+                    end=end,
+                )
 
     @tooled
     def prepare(self, controller=prompt_controller):
@@ -436,4 +446,54 @@ class SemanticScholarScraper(BaseScraper):
         )
 
 
-__scrapers__ = {"semantic_scholar": SemanticScholarScraper}
+class SemanticScholarAuthorScraper(BaseScraper):
+    @tooled
+    def query(
+        self,
+        # Author to query
+        # [alias: -a]
+        author: Option = None,
+        # Author ID to query
+        author_id: Option = None,
+    ):
+        ss = SemanticScholarQueryManager()
+        if author:
+            yield from ss.author(name=author, fields=_author_fields())
+        else:
+            yield from ss.author(author_id=author_id, fields=_author_fields())
+
+    @tooled
+    def acquire(self):
+        limit: Option & int = 1_000_000
+
+        Q = quality_int((0.4,))
+        query = f"""
+            SELECT name, link FROM author
+                JOIN author_link ON author.author_id = author_link.author_id
+            WHERE author_link.type = 'semantic_scholar'
+                AND author.quality < {Q}
+            LIMIT {limit}
+        """
+        with self.db:
+            results = self.db.session.execute(query)
+            ss = SemanticScholarQueryManager()
+            for _, ssid in results:
+                print(f"Getting more information about author ID: {ssid}")
+                try:
+                    yield from ss.author(
+                        author_id=ssid, fields=_author_fields()
+                    )
+                except QueryError as exc:
+                    print("QueryError", exc)
+                except KeyError as exc:
+                    print("KeyError", exc)
+
+    @tooled
+    def prepare(self):
+        pass
+
+
+__scrapers__ = {
+    "semantic_scholar": SemanticScholarScraper,
+    "semantic_scholar_author": SemanticScholarAuthorScraper,
+}

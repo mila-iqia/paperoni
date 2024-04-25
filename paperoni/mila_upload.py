@@ -1,6 +1,8 @@
 import json
+import time
 from dataclasses import dataclass, field
 from datetime import date
+from itertools import count
 from traceback import print_exc
 
 import gifnoc
@@ -34,7 +36,7 @@ class Search:
     # Search for papers published prior to this date
     end: date = None
     # Search for papers published in that year
-    year: int = 0
+    year: int = None
     # Search for papers with this topic
     topic: str = None
     # Match part of the paper's full text
@@ -63,6 +65,10 @@ class UploadOptions:
     force_validation: bool = False
     # Only dump the paper data
     only_dump: bool = False
+    # Number of papers to upload at a time
+    block_size: int = 1000
+    # Number of seconds to wait between two uploads
+    block_pause: float = 10
     # Search parameters
     search: Search = field(default_factory=Search)
 
@@ -78,12 +84,12 @@ upload_options = gifnoc.define(
 )
 
 
-def export_all(papers):
+def export_all(papers, limit):
     results = []
-    for p in papers:
+    for _, p in zip(range(limit), papers):
         try:
             results.append(export(p))
-        except Exception as exc:
+        except Exception:
             print_exc()
     return results
 
@@ -107,24 +113,30 @@ def misc():
             exit("No URL to upload to.")
 
         papers = search(**vars(upload_options.search))
-        exported = export_all(papers)
-        if upload_options.force_validation:
-            for p in exported:
-                p["flags"].append({"name": "validation", "value": 1})
-                p["validated"] = True
-        if upload_options.only_dump:
-            serialized = json.dumps(exported, indent=4)
-            print(serialized)
-        else:
-            print(len(exported), "papers will be uploaded.")
-            response = requests.post(
-                url=upload_options.url,
-                json=exported,
-                auth=upload_options.auth(),
-                headers={
-                    "X-API-Token": upload_options.token,
-                },
-                verify=upload_options.verify_certificate,
-            )
-            print("Response code:", response.status_code)
-            print("Response:", response.text)
+
+        for i in count():
+            exported = export_all(papers, limit=upload_options.block_size)
+            if not exported:
+                break
+            if i > 0 and upload_options.block_pause:
+                time.sleep(upload_options.block_pause)
+            if upload_options.force_validation:
+                for p in exported:
+                    p["flags"].append({"name": "validation", "value": 1})
+                    p["validated"] = True
+            if upload_options.only_dump:
+                serialized = json.dumps(exported, indent=4)
+                print(serialized)
+            else:
+                print(len(exported), "papers will be uploaded.")
+                response = requests.post(
+                    url=upload_options.url,
+                    json=exported,
+                    auth=upload_options.auth(),
+                    headers={
+                        "X-API-Token": upload_options.token,
+                    },
+                    verify=upload_options.verify_certificate,
+                )
+                print("Response code:", response.status_code)
+                print("Response:", response.text)

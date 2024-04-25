@@ -231,8 +231,8 @@ def recognize_unknown_institution(entry):
     if not patterns or not entry or "@" in entry:
         return None
     for defn in patterns:
-        pattern = defn["pattern"]
-        category = defn["category"]
+        pattern = defn.pattern
+        category = defn.category
         m = re.match(pattern=pattern, string=entry, flags=re.IGNORECASE)
         if m:
             return Institution(
@@ -305,6 +305,8 @@ def initialize(name):
     def i(part):
         return f"{part[0]}[a-z]*"
 
+    name = re.sub(string=name, pattern=r"[(){}\[\]]", repl="")
+
     parts = name.split()
     if len(parts) <= 1:
         return name
@@ -371,7 +373,11 @@ def find_fulltext_affiliations(paper, doc, institutions):
             (
                 0
                 if len(afflist) == 0
-                else 1 if len(afflist) <= 3 else 0 if len(afflist) <= 5 else -1
+                else 1
+                if len(afflist) <= 3
+                else 0
+                if len(afflist) <= 5
+                else -1
             )  # Suspiciously too many affiliations
             for afflist in aff.values()
         )

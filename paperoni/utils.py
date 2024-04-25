@@ -1,5 +1,6 @@
 import functools
 import inspect
+import itertools
 import re
 import unicodedata
 from collections import defaultdict
@@ -9,6 +10,7 @@ from datetime import datetime
 from difflib import SequenceMatcher
 
 from giving import give
+from unidecode import unidecode
 
 _uuid_tags = ["transient", "canonical"]
 
@@ -100,15 +102,9 @@ def canonicalize_links(links: dict[str, str]) -> dict[str, str]:
 
 
 def similarity(s1, s2):
-    s1 = asciiify(s1)
-    s2 = asciiify(s2)
-    caps1 = re.sub(string=s1, pattern="[a-z. -]", repl="")
-    caps2 = re.sub(string=s2, pattern="[a-z. -]", repl="")
-    capsr = SequenceMatcher(a=caps1, b=caps2).ratio()
-    s1 = re.sub(string=s1, pattern="[. -]", repl="")
-    s2 = re.sub(string=s2, pattern="[. -]", repl="")
-    sr = SequenceMatcher(a=s1, b=s2).ratio()
-    return capsr * sr
+    s1 = plainify(s1)
+    s2 = plainify(s2)
+    return SequenceMatcher(a=s1, b=s2).ratio()
 
 
 def associate(names1, names2):
@@ -124,7 +120,7 @@ def associate(names1, names2):
     for sim, i, j in matrix:
         if i not in to_process1 or j not in to_process2:
             continue
-        elif sim >= 0.5:
+        elif sim >= 0.7 or (sim >= 0.4 and consistent([names1[i], names2[j]])):
             to_process1.discard(i)
             to_process2.discard(j)
             results.append((i, j))
@@ -200,7 +196,7 @@ def extract_date(txt: str) -> dict | None:
         rf"([0-9]{{4}}) ({month}) ([0-9]{{1,2}})": ("y", "m", "d"),
         # 2020 Jan
         rf"([0-9]{{4}}) ({month})": ("y", "m"),
-        rf"([0-9]{{4}})": ("y",),
+        r"([0-9]{4})": ("y",),
     }
 
     for pattern, parts in patterns.items():
@@ -314,22 +310,30 @@ def keyword_decorator(deco):
 ###################
 
 
-def peer_reviewed_release(release):
+def status_order(release):
     name = release.venue.name.lower()
-    return (
-        release.status not in ("submitted", "preprint")
-        and name.strip() != ""
-        and name != "n/a"
-        and "workshop" not in name
-        and "rxiv" not in name
-    )
+    if release.status in ("submitted", "withdrawn", "rejected"):
+        return -2
+    elif (
+        release.status == "preprint"
+        or not name.strip()
+        or name == "n/a"
+        or "rxiv" in name
+    ):
+        return -1
+    elif "workshop" in name:
+        return 0
+    else:
+        return 1
+
+
+def peer_reviewed_release(release):
+    return status_order(release) > 0
 
 
 def sort_releases(releases):
-    releases = [
-        (release, peer_reviewed_release(release)) for release in releases
-    ]
-    releases.sort(key=lambda entry: -int(entry[1]))
+    releases = [(release, status_order(release)) for release in releases]
+    releases.sort(key=lambda entry: -entry[1])
     return releases
 
 
@@ -400,6 +404,58 @@ def expand_links_dict(links):
         key=lambda dct: pref.index(dct["type"]) if dct["type"] in pref else 1
     )
     return results
+
+
+def quality_int(quality_tuple):
+    if isinstance(quality_tuple, int):
+        return quality_tuple
+    qual = quality_tuple + (0,) * (4 - len(quality_tuple))
+    result = 0
+    for x in qual:
+        result <<= 8
+        result |= int(x * 255) & 255
+    return result
+
+
+def plainify(name):
+    name = unidecode(name).lower()
+    name = re.sub(string=name, pattern="[()-]", repl=" ")
+    name = re.sub(string=name, pattern="['.]", repl="")
+    return name
+
+
+def consistent_pair(name1, name2):
+    def bag(name):
+        name = plainify(name)
+        bag = set(name.split())
+        return bag | {word[0] for word in bag}
+
+    b1 = bag(name1)
+    b2 = bag(name2)
+    b1x = b1 - b2
+    b2x = b2 - b1
+    consistent = not (b1x and b2x)
+    return consistent
+
+
+def consistent(aliases):
+    return all(
+        consistent_pair(n1, n2)
+        for n1, n2 in itertools.product(aliases, aliases)
+    )
+
+
+def best_name(main_name, aliases):
+    if not consistent(aliases):
+        return main_name
+
+    def penalty(name):
+        return (
+            re.match(string=name, pattern=r"^\w[. ]") is not None,
+            abs(20 - len(name)),
+        )
+
+    return min(aliases, key=penalty)
 
 
 ####################

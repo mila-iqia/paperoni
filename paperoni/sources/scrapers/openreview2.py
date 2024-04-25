@@ -17,6 +17,7 @@ from ...model import (
     Institution,
     InstitutionCategory,
     Link,
+    Meta,
     Paper,
     PaperAuthor,
     Release,
@@ -27,7 +28,12 @@ from ...model import (
     VenueType,
 )
 from ...utils import Doing, covguard, extract_date
-from ..helpers import prepare_interface, prompt_controller
+from ..helpers import (
+    filter_papers,
+    filter_researchers_interface,
+    prepare_interface,
+    prompt_controller,
+)
 from .base import BaseScraper
 
 
@@ -38,7 +44,7 @@ def venue_to_series(venueid):
 def parse_openreview_venue(venue):
     extractors = {
         r"\b(2[0-9]{3})\b": "year",
-        r"\b(submitted|poster|oral|spotlight)\b": "status",
+        r"\b(submitted|accepted|accept|notable|poster|oral|spotlight|withdrawn|rejected)\b": "status",
     }
     results = {}
     for regexp, field in extractors.items():
@@ -46,6 +52,8 @@ def parse_openreview_venue(venue):
             results[field] = m.groups()[0].lower()
             start, end = m.span()
             venue = venue[:start] + venue[end:]
+    if results.get("status", None) == "submitted":
+        results["status"] = "rejected"
     results["venue"] = re.sub(pattern=r"[ ]+", repl=" ", string=venue).strip()
     return results
 
@@ -72,11 +80,11 @@ class OpenReviewScraperBase(BaseScraper):
             params["offset"] = next_offset
             notes = self.client.get_all_notes(**params)
             for note in notes:
-                if "authors" not in note.content:
+                vid_container = note.content.get("venueid", None)
+                vid = vid_container and vid_container["value"]
+                if not vid or vid.startswith("dblp.org"):
                     continue
-                if "venueid" not in note.content or note.content["venueid"][
-                    "value"
-                ].startswith("dblp.org"):
+                if "authors" not in note.content:
                     continue
                 authors = []
                 if len(note.content["authors"]["value"]) == len(
@@ -112,6 +120,7 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 links=_links,
                                 roles=[],
+                                quality=(0.75,),
                             ),
                         )
                     )
@@ -122,6 +131,9 @@ class OpenReviewScraperBase(BaseScraper):
                 venue_data = parse_openreview_venue(
                     note.content["venue"]["value"]
                 )
+                if "status" not in venue_data and note.pdate:
+                    venue_data["status"] = "published"
+
                 date = datetime.fromtimestamp(
                     (note.pdate or note.odate or note.tcdate or note.tmdate)
                     // 1000
@@ -137,8 +149,6 @@ class OpenReviewScraperBase(BaseScraper):
                         date = datetime(year, 1, 1)
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
-
-                vid = note.content["venueid"]["value"]
 
                 yield Paper(
                     title=note.content["title"]["value"],
@@ -162,7 +172,7 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 quality=(0.5,),
                             ),
-                            status=venue_data.get("status", "published"),
+                            status=venue_data.get("status", "unknown"),
                             pages=None,
                         )
                     ],
@@ -176,7 +186,7 @@ class OpenReviewScraperBase(BaseScraper):
                     citation_count=None,
                 )
             next_offset += len(notes)
-            if not notes:
+            if not notes or "id" in params:
                 break
         total += next_offset
 
@@ -343,6 +353,9 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
         # Author ID to query
         # [alias: --aid]
         author_id: Option = [],
+        # Paper ID to query
+        # [alias: --pid]
+        paper_id: Option = [],
         # Title of the paper
         # [alias: -t]
         # [nargs: +]
@@ -364,6 +377,13 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             "offset": 0,
         }
 
+        if paper_id:
+            params = {
+                **params,
+                "id": paper_id,
+            }
+            if not venue:
+                venue = [None]
         if author_id:
             params = {
                 **params,
@@ -393,24 +413,29 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             )
 
         else:
-            queries = self.generate_paper_queries()
+            queries = self.generate_ids(scraper="openreview")
+            queries = filter_researchers_interface(
+                list(queries), getname=lambda row: row[0]
+            )
 
-            todo = {}
+            yield Meta(
+                scraper="openreview",
+                date=datetime.now(),
+            )
 
-            for auq in queries:
-                for link in auq.author.links:
-                    if link.type == "openreview":
-                        todo[link.link] = auq
-
-            for author_id, auq in todo.items():
-                print(f"Fetch papers for {auq.author.name} (id={author_id})")
-                time.sleep(5)
-                params = {
-                    "content": {"authorids": [author_id]},
-                    "mintcdate": int(auq.start_date.timestamp() * 1000),
-                }
-                for paper in self._query(params):
-                    yield paper
+            for name, ids, start, end in queries:
+                for author_id in ids:
+                    print(f"Fetch papers for {name} (ID={author_id})")
+                    params = {
+                        "content": {"authorids": [author_id]},
+                        "mintcdate": int(start.timestamp() * 1000),
+                    }
+                    yield from filter_papers(
+                        papers=self._query(params),
+                        start=start,
+                        end=end,
+                    )
+                    time.sleep(5)
 
     @tooled
     def prepare(self, controller=prompt_controller):

@@ -241,6 +241,18 @@ CREATE TABLE IF NOT EXISTS canonical_id (
 	canonical BLOB
 );
 
+
+-- IDs scraped by semantic scholar, openreview, etc.
+CREATE TABLE IF NOT EXISTS author_scrape_ids (
+	scraper TEXT NOT NULL,
+	author_id BLOB REFERENCES author(author_id),
+	scrape_id TEXT NOT NULL,
+	active INTEGER NOT NULL DEFAULT 0,
+	CHECK (active in (-1, 0, 1)),
+	PRIMARY KEY (scraper, scrape_id)
+);
+
+
 -- Scrapers can store arbitrary data here
 CREATE TABLE IF NOT EXISTS scraper_data (
 	scraper TEXT NOT NULL,

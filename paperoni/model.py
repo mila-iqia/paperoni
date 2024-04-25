@@ -11,7 +11,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, create_model
 
-from .utils import tag_uuid
+from .utils import quality_int, tag_uuid
 
 
 class VenueType(str, Enum):
@@ -131,6 +131,22 @@ class DatePrecision(int, Enum):
             case _:  # pragma: no cover
                 assert False
 
+    @staticmethod
+    def pin(date, precision):
+        if isinstance(date, (int, float)):
+            date = datetime.fromtimestamp(date)
+        if isinstance(date, str):
+            date = datetime.fromisoformat(date)
+        match DatePrecision(precision):
+            case DatePrecision.year | DatePrecision.unknown:
+                return datetime(year=date.year, month=1, day=1)
+            case DatePrecision.month:
+                return datetime(year=date.year, month=date.month, day=1)
+            case DatePrecision.day:
+                return datetime(year=date.year, month=date.month, day=date.day)
+            case _:  # pragma: no cover
+                assert False
+
 
 class SimpleBase(BaseModel):
     def tagged_dict(self):
@@ -148,19 +164,15 @@ class Base(SimpleBase):
         hsh = md5(self.json().encode("utf8"))
         return tag_uuid(hsh.digest(), "transient")
 
+    def __hrepr__(self, H, hrepr):
+        return hrepr(vars(self))
+
 
 class BaseWithQuality(Base):
     quality: tuple[float, ...] | int = Field(default_factory=lambda: (0.0,))
 
     def quality_int(self):
-        if isinstance(self.quality, int):
-            return self.quality
-        qual = self.quality + (0,) * (4 - len(self.quality))
-        result = 0
-        for x in qual:
-            result <<= 8
-            result |= int(x * 255) & 255
-        return result
+        return quality_int(self.quality)
 
 
 class Paper(BaseWithQuality):
@@ -171,6 +183,7 @@ class Paper(BaseWithQuality):
     topics: list[Topic]
     links: list[Link]
     citation_count: Optional[int]
+    flags: list[Flag] = Field(default_factory=list)
 
 
 class PaperAuthor(Base):
@@ -218,6 +231,11 @@ class Topic(Base):
 class Link(Base):
     type: str
     link: str
+
+
+class Flag(Base):
+    flag_name: str
+    flag: bool
 
 
 class Role(Base):

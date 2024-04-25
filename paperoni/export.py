@@ -86,10 +86,10 @@ def export(flag: sch.PaperFlag):
 
 
 @ovld
-def export(release: sch.Release, peer_reviewed: bool):
+def export(release: sch.Release, peer_reviewed: int):
     return {
         "venue": export(release.venue),
-        "peer_reviewed": peer_reviewed,
+        "peer_reviewed": peer_reviewed > 0,
         "status": release.status,
         "pages": release.pages,
     }

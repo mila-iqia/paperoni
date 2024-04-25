@@ -23,6 +23,8 @@ attrs==23.2.0
     #   requests-cache
 authlib==1.3.0
     # via grizzlaxy
+backoff==2.2.1
+    # via paperoni (pyproject.toml)
 beautifulsoup4==4.12.3
     # via paperoni (pyproject.toml)
 blessed==1.20.0
@@ -71,7 +73,7 @@ fastapi==0.109.2
     # via sse-starlette
 future==0.18.3
     # via openreview-py
-gifnoc==0.3.0
+gifnoc==0.3.2
     # via
     #   grizzlaxy
     #   paperoni (pyproject.toml)
@@ -112,7 +114,7 @@ markdown==3.5.2
     # via paperoni (pyproject.toml)
 openreview-py==1.27.3
     # via paperoni (pyproject.toml)
-ovld==0.3.2
+ovld==0.3.5
     # via
     #   gifnoc
     #   grizzlaxy
@@ -137,6 +139,8 @@ pyjwt==2.8.0
     # via openreview-py
 pylatexenc==2.10
     # via openreview-py
+python-multipart==0.0.9
+    # via paperoni (pyproject.toml)
 pyyaml==6.0.1
     # via coleo
 questionary==1.10.0
@@ -197,6 +201,8 @@ typing-extensions==4.9.0
     #   pydantic
     #   reactivex
     #   uvicorn
+unidecode==1.3.8
+    # via paperoni (pyproject.toml)
 url-normalize==1.4.3
     # via requests-cache
 urllib3==2.2.0

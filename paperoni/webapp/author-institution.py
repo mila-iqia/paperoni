@@ -15,14 +15,6 @@ from .common import BaseGUI, SearchElement, SelectElement, mila_template
 here = Path(__file__).parent
 
 
-def get_type_links(author, type):
-    num_links = 0
-    for i in author.links:
-        if i.type == type:
-            num_links += 1
-    return num_links
-
-
 @mila_template(title="List of researchers", help="/help#author-institution")
 async def app(page, box):
     """Edit/update the list of researchers."""
@@ -169,6 +161,19 @@ async def app(page, box):
         )
         page["#gui-div"].set(gui.form())
 
+    def get_type_links(author, type):
+        q = """
+            SELECT count(*)
+            FROM author_scrape_ids
+            WHERE author_id = :aid
+              AND scraper = :type
+              AND active = 1
+        """
+        ((cnt,),) = db.session.execute(
+            q, params={"aid": author.author_id, "type": type}
+        )
+        return cnt
+
     def author_html(result):
         author = result.author
         date_start = ""
@@ -199,7 +204,7 @@ async def app(page, box):
                 H.div(
                     get_type_links(author, "semantic_scholar"),
                     "⧉",
-                    onclick="window.open('/find-authors-ids?scraper=semantic_scholar&author_id="
+                    onclick="window.open('/find-authors-ids?cutoff=2022-06-01&scraper=semantic_scholar&author_id="
                     + author.author_id.hex()
                     + "');",
                 )
@@ -208,7 +213,7 @@ async def app(page, box):
                 H.div(
                     get_type_links(author, "openreview"),
                     "⧉",
-                    onclick="window.open('/find-authors-ids?scraper=openreview&author_id="
+                    onclick="window.open('/find-authors-ids?cutoff=2022-06-01&scraper=openreview&author_id="
                     + author.author_id.hex()
                     + "');",
                 ),
@@ -247,7 +252,7 @@ async def app(page, box):
         page[table].set(table_content)
         async for event in q:
             name = event["name"]
-            if event is not None and event.submit == True:
+            if event is not None and event.submit is True:
                 name = None
                 addAuthor(event)
             table_content = make_table(list(generate(name)))
