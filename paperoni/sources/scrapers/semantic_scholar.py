@@ -317,8 +317,9 @@ class SemanticScholarQueryManager:
         yield from map(self._wrap_paper, papers)
 
     def paper(self, paper_id, fields=PAPER_FIELDS):  # pragma: no cover
-        (paper,) = self._list(f"paper/{paper_id}", fields=fields)
-        return paper
+        return self._wrap_paper(
+            self._evaluate(f"paper/{paper_id}", fields=",".join(fields))
+        )
 
     def paper_authors(
         self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params
@@ -463,7 +464,7 @@ class SemanticScholarAuthorScraper(BaseScraper):
 
     @tooled
     def acquire(self):
-        limit: Option & int = 100
+        limit: Option & int = 1_000_000
 
         Q = quality_int((0.4,))
         query = f"""
@@ -484,6 +485,8 @@ class SemanticScholarAuthorScraper(BaseScraper):
                     )
                 except QueryError as exc:
                     print("QueryError", exc)
+                except KeyError as exc:
+                    print("KeyError", exc)
 
     @tooled
     def prepare(self):
