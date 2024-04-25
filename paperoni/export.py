@@ -16,22 +16,22 @@ def export(paper: ExtendAttr):
 
 @ovld
 def export(paper: sch.Paper):
+    releases = sort_releases(paper.releases)
+    status = paper.releases and paper.releases[0].status
+    bad_status = status in ("rejected", "submitted", "withdrawn")
+    valid = (not bad_status) and any(
+        flag.flag for flag in paper.paper_flag if flag.flag_name == "validation"
+    )
     return {
         "paper_id": paper.paper_id.hex(),
         "title": paper.title,
         "abstract": paper.abstract,
         "authors": [export(author) for author in paper.authors],
-        "releases": [
-            export(*release) for release in sort_releases(paper.releases)
-        ],
+        "releases": [export(*release) for release in releases],
         "topics": [export(topic) for topic in paper.topics],
         "links": expand_links_dict(paper.links),
         "flags": [export(flag) for flag in paper.paper_flag],
-        "validated": any(
-            flag.flag
-            for flag in paper.paper_flag
-            if flag.flag_name == "validation"
-        ),
+        "validated": valid,
         "citation_count": 0,
     }
 
