@@ -11,6 +11,7 @@ from ..sources.scrapers.openreview2 import (
     OpenReviewScraperBase as OpenReviewScraperBase2,
 )
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
+from ..utils import QueryError
 from .common import mila_template
 
 here = Path(__file__).parent
@@ -54,7 +55,10 @@ async def app(page, box):
                 if ref:
                     box[results].print(H.div(f"Trying to acquire: {typ}:{ref}"))
                     if typ == "semantic_scholar":
-                        paper = ss.paper(paper_id=ref)
+                        try:
+                            paper = ss.paper(paper_id=ref)
+                        except QueryError:
+                            paper = None
                     elif typ == "openreview":
                         paper = None
                         try:
