@@ -498,7 +498,7 @@ class Database(OvldBase):
             paper_id=paper.paper_id,
         )
         ins_stmt = f"""
-        INSERT INTO {pf.__tablename__}
+        INSERT OR REPLACE INTO {pf.__tablename__}
         VALUES (X'{paper.paper_id.hex()}',"{flag_name}",{val})
         """
 
