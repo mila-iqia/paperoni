@@ -176,7 +176,7 @@ class OpenReviewScraperBase(BaseScraper):
                     citation_count=None,
                 )
             next_offset += len(notes)
-            if not notes:
+            if not notes or "id" in params:
                 break
         total += next_offset
 

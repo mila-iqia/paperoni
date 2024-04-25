@@ -186,7 +186,7 @@ class OpenReviewScraperBase(BaseScraper):
                     citation_count=None,
                 )
             next_offset += len(notes)
-            if not notes:
+            if not notes or "id" in params:
                 break
         total += next_offset
 
@@ -353,6 +353,9 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
         # Author ID to query
         # [alias: --aid]
         author_id: Option = [],
+        # Paper ID to query
+        # [alias: --pid]
+        paper_id: Option = [],
         # Title of the paper
         # [alias: -t]
         # [nargs: +]
@@ -374,6 +377,13 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             "offset": 0,
         }
 
+        if paper_id:
+            params = {
+                **params,
+                "id": paper_id,
+            }
+            if not venue:
+                venue = [None]
         if author_id:
             params = {
                 **params,

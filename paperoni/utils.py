@@ -312,7 +312,7 @@ def keyword_decorator(deco):
 
 def status_order(release):
     name = release.venue.name.lower()
-    if release.status in ("submitted", "rejected"):
+    if release.status in ("submitted", "withdrawn", "rejected"):
         return -2
     elif (
         release.status == "preprint"

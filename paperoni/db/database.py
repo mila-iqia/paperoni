@@ -159,6 +159,14 @@ class Database(OvldBase):
             )
             self.session.merge(lnk)
 
+        for flag in paper.flags:
+            flg = sch.PaperFlag(
+                paper_id=pp.paper_id,
+                flag_name=flag.flag_name,
+                flag=flag.flag,
+            )
+            self.session.merge(flg)
+
         return pp.paper_id
 
     def _acquire(self, author: Author):

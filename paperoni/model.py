@@ -164,6 +164,9 @@ class Base(SimpleBase):
         hsh = md5(self.json().encode("utf8"))
         return tag_uuid(hsh.digest(), "transient")
 
+    def __hrepr__(self, H, hrepr):
+        return hrepr(vars(self))
+
 
 class BaseWithQuality(Base):
     quality: tuple[float, ...] | int = Field(default_factory=lambda: (0.0,))
@@ -180,6 +183,7 @@ class Paper(BaseWithQuality):
     topics: list[Topic]
     links: list[Link]
     citation_count: Optional[int]
+    flags: list[Flag] = Field(default_factory=list)
 
 
 class PaperAuthor(Base):
@@ -227,6 +231,11 @@ class Topic(Base):
 class Link(Base):
     type: str
     link: str
+
+
+class Flag(Base):
+    flag_name: str
+    flag: bool
 
 
 class Role(Base):
