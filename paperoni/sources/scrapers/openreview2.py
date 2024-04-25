@@ -44,7 +44,7 @@ def venue_to_series(venueid):
 def parse_openreview_venue(venue):
     extractors = {
         r"\b(2[0-9]{3})\b": "year",
-        r"\b(submitted|poster|oral|spotlight|rejected)\b": "status",
+        r"\b(submitted|accepted|accept|notable|poster|oral|spotlight|withdrawn|rejected)\b": "status",
     }
     results = {}
     for regexp, field in extractors.items():
@@ -80,11 +80,11 @@ class OpenReviewScraperBase(BaseScraper):
             params["offset"] = next_offset
             notes = self.client.get_all_notes(**params)
             for note in notes:
-                if "authors" not in note.content:
+                vid_container = note.content.get("venueid", None)
+                vid = vid_container and vid_container["value"]
+                if not vid or vid.startswith("dblp.org"):
                     continue
-                if "venueid" not in note.content or note.content["venueid"][
-                    "value"
-                ].startswith("dblp.org"):
+                if "authors" not in note.content:
                     continue
                 authors = []
                 if len(note.content["authors"]["value"]) == len(
@@ -131,6 +131,9 @@ class OpenReviewScraperBase(BaseScraper):
                 venue_data = parse_openreview_venue(
                     note.content["venue"]["value"]
                 )
+                if "status" not in venue_data and note.pdate:
+                    venue_data["status"] = "published"
+
                 date = datetime.fromtimestamp(
                     (note.pdate or note.odate or note.tcdate or note.tmdate)
                     // 1000
@@ -146,8 +149,6 @@ class OpenReviewScraperBase(BaseScraper):
                         date = datetime(year, 1, 1)
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
-
-                vid = note.content["venueid"]["value"]
 
                 yield Paper(
                     title=note.content["title"]["value"],
@@ -171,7 +172,7 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 quality=(0.5,),
                             ),
-                            status=venue_data.get("status", "published"),
+                            status=venue_data.get("status", "unknown"),
                             pages=None,
                         )
                     ],

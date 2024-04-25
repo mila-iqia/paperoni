@@ -44,7 +44,7 @@ def venue_to_series(venueid):
 def parse_openreview_venue(venue):
     extractors = {
         r"\b(2[0-9]{3})\b": "year",
-        r"\b(submitted|poster|oral|spotlight|rejected)\b": "status",
+        r"\b(submitted|accepted|accept|notable|poster|oral|spotlight|withdrawn|rejected)\b": "status",
     }
     results = {}
     for regexp, field in extractors.items():
@@ -80,9 +80,8 @@ class OpenReviewScraperBase(BaseScraper):
             params["offset"] = next_offset
             notes = self.client.get_all_notes(**params)
             for note in notes:
-                if "venueid" not in note.content or note.content[
-                    "venueid"
-                ].startswith("dblp.org"):
+                vid = note.content.get("venueid", None)
+                if not vid or vid.startswith("dblp.org"):
                     continue
                 authors = []
                 if len(note.content["authors"]) == len(
@@ -126,6 +125,9 @@ class OpenReviewScraperBase(BaseScraper):
                     Link(type="git", link=note.content["code"])
 
                 venue_data = parse_openreview_venue(note.content["venue"])
+                if "status" not in venue_data and note.pdate:
+                    venue_data["status"] = "published"
+
                 tstamp = note.pdate or note.odate or note.tcdate
                 date = datetime.fromtimestamp(tstamp // 1000)
                 date -= timedelta(
@@ -139,8 +141,6 @@ class OpenReviewScraperBase(BaseScraper):
                         date = datetime(year, 1, 1)
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
-
-                vid = note.content["venueid"]
 
                 yield Paper(
                     title=note.content["title"],
@@ -164,7 +164,7 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 quality=(0.5,),
                             ),
-                            status=venue_data.get("status", "published"),
+                            status=venue_data.get("status", "unknown"),
                             pages=None,
                         )
                     ],
