@@ -139,6 +139,8 @@ pyjwt==2.8.0
     # via openreview-py
 pylatexenc==2.10
     # via openreview-py
+python-multipart==0.0.9
+    # via paperoni (pyproject.toml)
 pyyaml==6.0.1
     # via coleo
 questionary==1.10.0
