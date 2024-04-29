@@ -1,5 +1,6 @@
 import asyncio
 import os
+import shutil
 import signal
 from tempfile import mkstemp
 
@@ -73,7 +74,8 @@ async def database_upload(request):
                 if not contents:
                     break
                 dest.write(contents)
-        os.rename(tmpfile, papconf.paths.database)
+        os.remove(papconf.paths.database)
+        shutil.move(tmpfile, papconf.paths.database)
         return PlainTextResponse(
             "Uploaded. You might want to restart the server."
         )
