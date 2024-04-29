@@ -108,6 +108,9 @@ def similarity(s1, s2):
 
 
 def associate(names1, names2):
+    if names1 == names2:
+        return [(i, i) for i in range(len(names1))]
+
     matrix = [
         (similarity(n1, n2), i, j)
         for i, n1 in enumerate(names1)
