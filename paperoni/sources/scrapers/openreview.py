@@ -83,7 +83,11 @@ class OpenReviewScraperBase(BaseScraper):
         vid = self.get_content_field(note, "venueid")
         if not vid:
             vid = note.invitation.split("/-/")[0]
-        if not vid or vid.startswith("dblp.org") or vid == "OpenReview.net/Archive":
+        if (
+            not vid
+            or vid.startswith("dblp.org")
+            or vid == "OpenReview.net/Archive"
+        ):
             return None
         return vid
 
@@ -123,27 +127,42 @@ class OpenReviewScraperBase(BaseScraper):
         ]
         ranked_results = []
         for reply in reversed(note.details["replies"]):
-            invitations = [reply["invitation"]] if self.api_version == 1 else reply["invitations"]
+            invitations = (
+                [reply["invitation"]]
+                if self.api_version == 1
+                else reply["invitations"]
+            )
             for rank, rx, field in heuristics:
-                if any(re.match(string=inv, pattern=rx, flags=re.IGNORECASE) for inv in invitations):
+                if any(
+                    re.match(string=inv, pattern=rx, flags=re.IGNORECASE)
+                    for inv in invitations
+                ):
                     if field.startswith("="):
                         ranked_results.append((rank, field[1:]))
                         break
                     elif field in reply["content"]:
-                        ranked_results.append((rank, self.get_content_field(reply, field)))
+                        ranked_results.append(
+                            (rank, self.get_content_field(reply, field))
+                        )
                         break
 
         if ranked_results:
             ranked_results.sort()
-            decisions = {decision for rank, decision in ranked_results if rank == ranked_results[0][0]}
+            decisions = {
+                decision
+                for rank, decision in ranked_results
+                if rank == ranked_results[0][0]
+            }
             if len(decisions) == 1:
                 decision = decisions.pop()
                 return self.refine_decision(decision) or decision
 
-        if (from_venue := self.refine_decision(self.get_content_field(note, "venue", ""))):
+        if from_venue := self.refine_decision(
+            self.get_content_field(note, "venue", "")
+        ):
             return from_venue
 
-        if (from_vid := self.refine_decision(self.get_venue_id(note))):
+        if from_vid := self.refine_decision(self.get_venue_id(note)):
             return from_vid
 
         if note.pdate:
@@ -188,9 +207,7 @@ class OpenReviewScraperBase(BaseScraper):
                 ):
                     authors_ids = note_authorids
                 else:
-                    authors_ids = (
-                        None for _ in range(len(note_authors))
-                    )
+                    authors_ids = (None for _ in range(len(note_authors)))
                 for name, author_id in zip(note_authors, authors_ids):
                     _links = []
                     if author_id:
