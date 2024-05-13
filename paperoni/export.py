@@ -18,7 +18,7 @@ def export(paper: ExtendAttr):
 def export(paper: sch.Paper):
     releases = sort_releases(paper.releases)
     status = paper.releases and paper.releases[0].status
-    bad_status = status in ("rejected", "submitted", "withdrawn")
+    bad_status = status in ("rejected", "submitted", "withdrawn", "unknown")
     valid = (not bad_status) and any(
         flag.flag for flag in paper.paper_flag if flag.flag_name == "validation"
     )
