@@ -17,7 +17,7 @@ class BaseScraper:
         self,
         scraper,
         extend_back: Option & int = 30 * 12,
-        cutoff: Option & int = 30 * 6,
+        cutoff: Option & int = 30 * 12 * 15,
     ):
         if cutoff and isinstance(cutoff, int):
             cutoff = datetime.now() - timedelta(days=cutoff)
