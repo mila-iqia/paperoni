@@ -7,9 +7,6 @@ from starbear import Queue
 from ..config import papconf
 from ..model import Flag
 from ..sources.scrapers.openreview import OpenReviewScraperBase
-from ..sources.scrapers.openreview2 import (
-    OpenReviewScraperBase as OpenReviewScraperBase2,
-)
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
 from ..utils import QueryError
 from .common import mila_template
@@ -36,8 +33,8 @@ async def app(page, box):
 
     with papconf.database as db:
         ss = SemanticScholarQueryManager()
-        orv = OpenReviewScraperBase(config=papconf, db=db)
-        orv2 = OpenReviewScraperBase2(config=papconf, db=db)
+        orv = OpenReviewScraperBase(config=papconf, db=db, api_version=1)
+        orv2 = OpenReviewScraperBase(config=papconf, db=db, api_version=2)
 
         async for event in q:
             box[results].clear()
