@@ -69,14 +69,92 @@ class OpenReviewScraperBase(BaseScraper):
         self.client = openreview.Client(baseurl=f"https://{api}.openreview.net")
 
     def get_content_field(self, note, key, default=None):
-        if key not in note.content:
+        content = note["content"] if isinstance(note, dict) else note.content
+        if key not in content:
             return default
-        v = note.content[key]
+        v = content[key]
         match self.api_version:
             case 1:
                 return v
             case 2:
                 return v["value"]
+
+    def get_venue_id(self, note):
+        vid = self.get_content_field(note, "venueid")
+        if not vid:
+            vid = note.invitation.split("/-/")[0]
+        if not vid or vid.startswith("dblp.org") or vid == "OpenReview.net/Archive":
+            return None
+        return vid
+
+    def refine_decision(self, text):
+        text = text.lower()
+        patterns = {
+            "notable": "notable",
+            "poster": "poster",
+            "oral": "oral",
+            "spotlight": "spotlight",
+            "withdraw": "withdrawn",
+            "withdrawn": "withdrawn",
+            "accepted": "accepted",
+            "accept": "accepted",
+            "reject": "rejected",
+            "rejected": "rejected",
+            "submitted": "rejected",
+        }
+        for key, decision in patterns.items():
+            if key in text:
+                return decision
+        return None
+
+    def figure_out_the_fking_decision(self, note):
+        # heuristics = [(rank, invitation_regexp, content_field), ...]
+        # rank: prioritize matching entries with a lower rank
+        # invitation_regexp: pattern that the reply's invitation should match
+        # field: field in which to find the decision, or if starting with =, the decision itself
+        heuristics = [
+            (5, ".*withdrawn?[^/]*$", "=withdrawn"),
+            (10, ".*/decision$", "decision"),
+            (20, ".*decision[^/]*$", "decision"),
+            (30, ".*accept[^/]*$", "decision"),
+            (40, ".*", "decision"),
+            (40, ".*", "Decision"),
+            (50, ".*meta_?review[^/]*$", "recommendation"),
+        ]
+        ranked_results = []
+        for reply in reversed(note.details["replies"]):
+            invitations = [reply["invitation"]] if self.api_version == 1 else reply["invitations"]
+            for rank, rx, field in heuristics:
+                if any(re.match(string=inv, pattern=rx, flags=re.IGNORECASE) for inv in invitations):
+                    if field.startswith("="):
+                        ranked_results.append((rank, field[1:]))
+                        break
+                    elif field in reply["content"]:
+                        ranked_results.append((rank, self.get_content_field(reply, field)))
+                        break
+
+        if ranked_results:
+            ranked_results.sort()
+            decisions = {decision for rank, decision in ranked_results if rank == ranked_results[0][0]}
+            if len(decisions) == 1:
+                decision = decisions.pop()
+                return self.refine_decision(decision) or decision
+
+        if (from_venue := self.refine_decision(self.get_content_field(note, "venue", ""))):
+            return from_venue
+
+        if (from_vid := self.refine_decision(self.get_venue_id(note))):
+            return from_vid
+
+        if note.pdate:
+            return "published"
+
+        btx = note.content.get("_bibtex", "")
+        if btx.startswith("@inproceedings") and note.id in btx:
+            return "accepted"
+
+        # welp. whatever.
+        return None
 
     @staticmethod
     def _map_venue_type(venueid):
@@ -90,12 +168,12 @@ class OpenReviewScraperBase(BaseScraper):
         next_offset = 0
         while total < limit:
             params["offset"] = next_offset
-            notes = self.client.get_all_notes(**params)
+            notes = self.client.get_all_notes(**params, details="replies")
             for note in notes:
-                vid = self.get_content_field(note, "venueid")
-                if "authors" not in note.content:
+                vid = self.get_venue_id(note)
+                if not vid:
                     continue
-                if not vid or vid.startswith("dblp.org"):
+                if "authors" not in note.content:
                     continue
 
                 authors = []
@@ -138,7 +216,10 @@ class OpenReviewScraperBase(BaseScraper):
                 if "code" in note.content:
                     Link(type="git", link=self.get_content_field(note, "code"))
 
-                venue_data = parse_openreview_venue(self.get_content_field(note, "venue"))
+                venue = self.get_content_field(note, "venue") or note.invitation
+                venue_data = parse_openreview_venue(venue)
+                decision = self.figure_out_the_fking_decision(note) or "unknown"
+
                 if "status" not in venue_data and note.pdate:
                     venue_data["status"] = "published"
 
@@ -178,7 +259,7 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 quality=(0.5,),
                             ),
-                            status=venue_data.get("status", "unknown"),
+                            status=decision,
                             pages=None,
                         )
                     ],
@@ -583,10 +664,10 @@ class OpenReviewProfileScraperV2(OpenReviewProfileScraper):
 
 
 __scrapers__ = {
-    "xopenreview": OpenReviewPaperScraperV1,
-    "xopenreview-venues": OpenReviewVenueScraperV1,
-    "xopenreview-profiles": OpenReviewProfileScraperV1,
-    "xopenreview2": OpenReviewPaperScraperV2,
-    "xopenreview2-venues": OpenReviewVenueScraperV2,
-    "xopenreview2-profiles": OpenReviewProfileScraperV2,
+    "openreview": OpenReviewPaperScraperV1,
+    "openreview-venues": OpenReviewVenueScraperV1,
+    "openreview-profiles": OpenReviewProfileScraperV1,
+    "openreview2": OpenReviewPaperScraperV2,
+    "openreview2-venues": OpenReviewVenueScraperV2,
+    "openreview2-profiles": OpenReviewProfileScraperV2,
 }
