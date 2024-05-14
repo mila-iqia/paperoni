@@ -81,14 +81,15 @@ class ScraperWrapper:
         dry: Option & bool = False
 
         with set_config(tag=f"acquire_{self.name}") as config:
-            with config.database as db:
-                data = list(self.scraper(config, db).acquire())
             if dry:
-                for paper in data:
-                    print("=" * 80)
-                    display(paper)
+                with config.database as db:
+                    for paper in self.scraper(config, db).acquire():
+                        print("=" * 80)
+                        display(paper)
             else:
-                config.database.import_all(data)
+                with config.database as db:
+                    data = list(self.scraper(config, db).acquire())
+                    config.database.import_all(data)
 
     @tooled
     def prepare(self):

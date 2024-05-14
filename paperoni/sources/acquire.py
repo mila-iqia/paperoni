@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 import urllib
 
 import backoff
@@ -28,12 +29,25 @@ class HTTPSAcquirer:
         return readpage(url, format=self.format, headers=headers)
 
 
-def readpage(url, format=None, **kwargs):
-    resp = requests.get(url, **kwargs)
-    if resp.encoding == resp.apparent_encoding:
-        content = resp.text
+def readpage(url, format=None, cache_into=None, **kwargs):
+    if cache_into and cache_into.exists():
+        content = cache_into.read_text()
+
     else:
-        content = resp.content.decode(resp.apparent_encoding)
+        resp = requests.get(url, **kwargs)
+        resp.raise_for_status()
+        if resp.encoding == resp.apparent_encoding:
+            content = resp.text
+        else:
+            try:
+                content = resp.content.decode(resp.apparent_encoding)
+            except UnicodeDecodeError as exc:
+                print(f"{url} is not valid Unicode:", exc, file=sys.stderr)
+                content = resp.content
+
+        if cache_into:
+            cache_into.parent.mkdir(parents=True, exist_ok=True)
+            cache_into.write_text(content)
 
     match format:
         case "json":
@@ -42,8 +56,13 @@ def readpage(url, format=None, **kwargs):
             except json.JSONDecodeError:
                 return None
         case "yaml":
-            # Remove illegal characters
-            content = re.sub(string=content, pattern=r"[\x80-\xff]", repl="")
+            # Some sources are polluted with invalid control/special characters,
+            # probably because they were improperly encoded
+            content = re.sub(
+                string=content,
+                pattern="[\x00-\x09]|[\x0b-\x0f]|[\x80-\x9f]",
+                repl="",
+            )
             return yaml.safe_load(content)
         case "xml":
             return BeautifulSoup(resp.content, features="xml")
