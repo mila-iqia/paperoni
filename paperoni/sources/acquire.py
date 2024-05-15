@@ -1,6 +1,5 @@
 import json
 import re
-import sys
 import urllib
 
 import backoff
@@ -39,11 +38,9 @@ def readpage(url, format=None, cache_into=None, **kwargs):
         if resp.encoding == resp.apparent_encoding:
             content = resp.text
         else:
-            try:
-                content = resp.content.decode(resp.apparent_encoding)
-            except UnicodeDecodeError as exc:
-                print(f"{url} is not valid Unicode:", exc, file=sys.stderr)
-                content = resp.content
+            content = resp.content.decode(
+                resp.apparent_encoding, errors="ignore"
+            )
 
         if cache_into:
             cache_into.parent.mkdir(parents=True, exist_ok=True)
