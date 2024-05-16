@@ -1,16 +1,13 @@
-import time
 from datetime import datetime
 from traceback import print_exc
 
 import bibtexparser
-from coleo import Option, tooled
 
 from ...config import papconf
 from ...model import (
     Author,
     DatePrecision,
     Link,
-    Meta,
     Paper,
     PaperAuthor,
     Release,
@@ -19,10 +16,11 @@ from ...model import (
 )
 from ...utils import asciiify
 from ..acquire import readpage
-from .base import BaseScraper
+from .base import ProceedingsScraper
 
 
-class JMRLScraper(BaseScraper):
+class JMRLScraper(ProceedingsScraper):
+    scraper_name = "jmlr"
     urlbase = "https://jmlr.org"
 
     def get_paper(self, links):
@@ -106,67 +104,12 @@ class JMRLScraper(BaseScraper):
             if paper:
                 yield paper
 
-    @tooled
-    def query(
-        self,
-        # Volume(s) to query
-        # [alias: -v]
-        # [action: append]
-        volume: Option = None,
-        # Name(s) to query
-        # [alias: --name]
-        # [action: append]
-        name: Option = None,
-        # Whether to cache the download
-        # [negate]
-        cache: Option & bool = True,
-    ):
-        names = name and {asciiify(n).lower() for n in name}
-        for i, vol in enumerate(volume):
-            if i > 0:
-                time.sleep(1)
-            results = self.get_volume(vol, names, cache)
-            for paper in results:
-                if not paper:
-                    continue
-                if names is None or any(
-                    asciiify(auth.author.name).lower() in names
-                    for auth in paper.authors
-                ):
-                    yield paper
-
-    @tooled
-    def acquire(self):
-        main = readpage(
-            f"{self.urlbase}/papers",
-            format="html",
+    def list_volumes(self):
+        return self.extract_volumes(
+            index=f"{self.urlbase}/papers",
+            selector="a",
+            filter=lambda url: url.startswith("v"),
         )
-        volumes = [
-            url
-            for lnk in main.select("a")
-            if (url := lnk.attrs["href"]).startswith("v")
-        ]
-        q = """
-        SELECT DISTINCT alias from author
-               JOIN author_alias as aa ON author.author_id = aa.author_id
-               JOIN author_institution as ai ON ai.author_id = author.author_id
-               JOIN institution as it ON it.institution_id = ai.institution_id
-            WHERE it.name = "Mila";
-        """
-        names = [name for (name,) in self.db.session.execute(q)]
-
-        yield Meta(
-            scraper="jmlr",
-            date=datetime.now(),
-        )
-        yield from self.query(
-            volume=volumes,
-            name=names,
-        )
-
-    @tooled
-    def prepare(self):
-        pass
 
 
 __scrapers__ = {

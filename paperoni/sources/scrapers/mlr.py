@@ -8,7 +8,6 @@ from paperoni.model import (
     Author,
     DatePrecision,
     Link,
-    Meta,
     Paper,
     PaperAuthor,
     Release,
@@ -19,7 +18,7 @@ from paperoni.model import (
 from ...config import papconf
 from ...utils import asciiify
 from ..acquire import readpage
-from .base import BaseScraper
+from .base import ProceedingsScraper
 
 
 def parse_paper(entry):
@@ -68,20 +67,23 @@ def parse_paper(entry):
     return p
 
 
-class MLRScraper(BaseScraper):
+class MLRScraper(ProceedingsScraper):
+    scraper_name = "mlr"
+
     def get_volume(self, volume, cache=False):
         print(f"Fetching PMLR {volume}")
         try:
-            return readpage(
+            papers = readpage(
                 f"https://proceedings.mlr.press/{volume}/assets/bib/citeproc.yaml",
                 format="yaml",
                 cache_into=cache
                 and papconf.paths.cache
                 and papconf.paths.cache / "mlr" / f"{volume}",
             )
+            for paper in papers:
+                yield parse_paper(paper)
         except Exception:
             print_exc()
-            return []
 
     @tooled
     def query(
@@ -103,46 +105,22 @@ class MLRScraper(BaseScraper):
             if i > 0:
                 time.sleep(1)
             results = self.get_volume(vol, cache)
-            for entry in results:
-                paper = parse_paper(entry)
-                if not paper:
-                    continue
-                if names is None or any(
-                    asciiify(auth.author.name).lower() in names
-                    for auth in paper.authors
+            for paper in results:
+                if (
+                    paper
+                    and names is None
+                    or any(
+                        asciiify(auth.author.name).lower() in names
+                        for auth in paper.authors
+                    )
                 ):
                     yield paper
 
-    @tooled
-    def acquire(self):
-        main = readpage(
-            "https://proceedings.mlr.press",
-            format="html",
+    def list_volumes(self):
+        return self.extract_volumes(
+            index="https://proceedings.mlr.press",
+            selector=".proceedings-list a",
         )
-        volumes = [
-            lnk.attrs["href"] for lnk in main.select(".proceedings-list a")
-        ]
-        q = """
-        SELECT DISTINCT alias from author
-               JOIN author_alias as aa ON author.author_id = aa.author_id
-               JOIN author_institution as ai ON ai.author_id = author.author_id
-               JOIN institution as it ON it.institution_id = ai.institution_id
-            WHERE it.name = "Mila";
-        """
-        names = [name for (name,) in self.db.session.execute(q)]
-
-        yield Meta(
-            scraper="mlr",
-            date=datetime.now(),
-        )
-        yield from self.query(
-            volume=volumes,
-            name=names,
-        )
-
-    @tooled
-    def prepare(self):
-        pass
 
 
 __scrapers__ = {

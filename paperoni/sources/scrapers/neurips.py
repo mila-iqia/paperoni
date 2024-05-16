@@ -1,9 +1,7 @@
-import time
 from datetime import datetime
 from traceback import print_exc
 
 import bibtexparser
-from coleo import Option, tooled
 from requests import HTTPError
 
 from ...config import papconf
@@ -13,7 +11,6 @@ from ...model import (
     Institution,
     InstitutionCategory,
     Link,
-    Meta,
     Paper,
     PaperAuthor,
     Release,
@@ -22,10 +19,11 @@ from ...model import (
 )
 from ...utils import asciiify
 from ..acquire import readpage
-from .base import BaseScraper
+from .base import ProceedingsScraper
 
 
-class NeurIPSScraper(BaseScraper):
+class NeurIPSScraper(ProceedingsScraper):
+    scraper_name = "neurips"
     urlbase = "https://proceedings.neurips.cc"
 
     def get_paper_json(self, volume, hsh, html, conference_title):
@@ -176,66 +174,12 @@ class NeurIPSScraper(BaseScraper):
                 if paper:
                     yield paper
 
-    @tooled
-    def query(
-        self,
-        # Volume(s) to query
-        # [alias: -v]
-        # [action: append]
-        volume: Option = None,
-        # Name(s) to query
-        # [alias: --name]
-        # [action: append]
-        name: Option = None,
-        # Whether to cache the download
-        # [negate]
-        cache: Option & bool = True,
-    ):
-        names = name and {asciiify(n).lower() for n in name}
-        for i, vol in enumerate(volume):
-            if i > 0:
-                time.sleep(1)
-            results = self.get_volume(vol, names, cache)
-            for paper in results:
-                if not paper:
-                    continue
-                if names is None or any(
-                    asciiify(auth.author.name).lower() in names
-                    for auth in paper.authors
-                ):
-                    yield paper
-
-    @tooled
-    def acquire(self):
-        main = readpage(
-            self.urlbase,
-            format="html",
+    def list_volumes(self):
+        return self.extract_volumes(
+            index=self.urlbase,
+            selector=".col-sm ul li a",
+            map=lambda url: url.split("/")[-1],
         )
-        volumes = [
-            lnk.attrs["href"].split("/")[-1]
-            for lnk in main.select(".col-sm ul li a")
-        ]
-        q = """
-        SELECT DISTINCT alias from author
-               JOIN author_alias as aa ON author.author_id = aa.author_id
-               JOIN author_institution as ai ON ai.author_id = author.author_id
-               JOIN institution as it ON it.institution_id = ai.institution_id
-            WHERE it.name = "Mila";
-        """
-        names = [name for (name,) in self.db.session.execute(q)]
-
-        yield Meta(
-            scraper="neurips",
-            date=datetime.now(),
-        )
-        yield from self.query(
-            volume=volumes,
-            name=names,
-        )
-
-    @tooled
-    def prepare(self):
-        pass
 
 
 __scrapers__ = {

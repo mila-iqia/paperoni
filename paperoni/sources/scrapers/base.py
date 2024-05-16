@@ -1,7 +1,11 @@
+import time
 from datetime import datetime, timedelta
 
 from coleo import Option, tooled
 from sqlalchemy import select
+
+from paperoni.sources.acquire import readpage
+from paperoni.utils import asciiify
 
 from ... import model as M
 from ...db import schema as sch
@@ -85,3 +89,75 @@ class BaseScraper:
         for pq in self.generate_paper_queries():
             authors[pq.author.author_id] = pq.author
         return [author for author in authors.values()]
+
+
+class ProceedingsScraper(BaseScraper):
+    @tooled
+    def query(
+        self,
+        # Volume(s) to query
+        # [alias: -v]
+        # [action: append]
+        volume: Option = None,
+        # Name(s) to query
+        # [alias: --name]
+        # [action: append]
+        name: Option = None,
+        # Whether to cache the download
+        # [negate]
+        cache: Option & bool = True,
+    ):
+        names = name and {asciiify(n).lower() for n in name}
+        for i, vol in enumerate(volume):
+            if i > 0:
+                time.sleep(1)
+            results = self.get_volume(vol, names, cache)
+            for paper in results:
+                if not paper:
+                    continue
+                if names is None or any(
+                    asciiify(auth.author.name).lower() in names
+                    for auth in paper.authors
+                ):
+                    yield paper
+
+    def extract_volumes(self, index, selector, map=None, filter=None):
+        main = readpage(index, format="html")
+        urls = [lnk.attrs["href"] for lnk in main.select(selector)]
+        return [
+            map(url) if map else url
+            for url in urls
+            if filter is None or filter(url)
+        ]
+
+    def list_names(self, institution="Mila"):
+        q = """
+        SELECT DISTINCT alias from author
+               JOIN author_alias as aa ON author.author_id = aa.author_id
+               JOIN author_institution as ai ON ai.author_id = author.author_id
+               JOIN institution as it ON it.institution_id = ai.institution_id
+            WHERE it.name = :institution;
+        """
+        return [
+            name
+            for (name,) in self.db.session.execute(
+                q, {"institution": institution}
+            )
+        ]
+
+    @tooled
+    def acquire(self):
+        volumes = self.list_volumes()
+        names = self.list_names()
+        yield M.Meta(
+            scraper=self.scraper_name,
+            date=datetime.now(),
+        )
+        yield from self.query(
+            volume=volumes,
+            name=names,
+        )
+
+    @tooled
+    def prepare(self):
+        pass
