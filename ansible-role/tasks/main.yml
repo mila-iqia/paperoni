@@ -12,14 +12,6 @@
     owner: "{{ app_user }}"
     mode: "0600"
 
-- name: Copy scripts
-  become: true
-  ansible.builtin.copy:
-    src: "scripts"
-    dest: "{{ app_dir }}"
-    owner: "{{ app_user }}"
-    mode: "u+rx,g+rx"
-
 - name: Activate
   import_role:
     name: pyservice

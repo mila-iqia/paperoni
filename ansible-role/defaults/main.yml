@@ -12,6 +12,7 @@ paperoni_tag: null
 paperoni_ssl_enabled: false
 paperoni_ssl_cert: null
 paperoni_ssl_key: null
+paperoni_overrides: {}
 
 paperoni_oauth_enabled: false
 paperoni_google_client_id: null

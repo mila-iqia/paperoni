@@ -5,6 +5,9 @@ paperoni acquire semantic_scholar
 paperoni acquire semantic_scholar_author
 paperoni acquire openreview
 paperoni acquire openreview2
+paperoni acquire mlr
+paperoni acquire neurips
+paperoni acquire jmlr
 paperoni acquire refine --limit 500
 
 # Merge duplicates
