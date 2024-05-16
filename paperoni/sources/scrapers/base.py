@@ -20,7 +20,7 @@ class BaseScraper:
     def generate_ids(
         self,
         scraper,
-        extend_back: Option & int = 30 * 12,
+        extend_back: Option & int = 30 * 18,
         cutoff: Option & int = 30 * 12 * 15,
     ):
         if cutoff and isinstance(cutoff, int):
