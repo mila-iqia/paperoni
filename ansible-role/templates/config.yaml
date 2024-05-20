@@ -22,10 +22,14 @@ paperoni:
     force_validation: false
     only_dump: false
   services:
-    - "paperoni-web"
-    - "paperoni-scrape"
-    - "paperoni-cleanup"
-    - "paperoni-upload"
+    paperoni-web:
+      enabled: true
+    paperoni-scrape:
+      enabled: true
+    paperoni-cleanup:
+      enabled: true
+    paperoni-upload:
+      enabled: true
 
 grizzlaxy:
   module: paperoni.webapp

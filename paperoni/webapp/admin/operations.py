@@ -21,14 +21,15 @@ async def app(page, box):
 
     box.print(H.p(H.button("Restart server", onclick=q.tag("restart"))))
     # box.print(H.p(H.button("Upload to website", onclick=q.tag("web-upload"))))
-    for service in reversed(papconf.services or []):
+    for service_name, service in (papconf.services or {}).items():
+        status = "" if service.enabled else " (disabled)"
         box.print(
             H.p(
                 H.button(
-                    f"Run service: {service}",
-                    onclick=q.tag(f"service:{service}"),
+                    f"Run service: {service_name}{status}",
+                    onclick=q.tag(f"service:{service_name}"),
                 ),
-                id=service,
+                id=service_name,
             )
         )
     box.print(H.p(H.a("Download database", href=papconf.paths.database)))

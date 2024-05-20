@@ -38,6 +38,11 @@ class InstitutionPattern:
 
 
 @dataclass
+class ServiceConfig:
+    enabled: bool
+
+
+@dataclass
 class PaperoniConfig:
     paths: PaperoniPaths
     tag: str = None
@@ -45,7 +50,7 @@ class PaperoniConfig:
     tweaks: PaperoniTweaks = None
     institution_patterns: list[InstitutionPattern] = None
     history_tag: str | None = None
-    services: list[str] = None
+    services: dict[str, ServiceConfig] = None
     writable: bool = True
 
     def __post_init__(self):
