@@ -20,7 +20,7 @@ async def app(page, box):
     q = Queue()
 
     box.print(H.p(H.button("Restart server", onclick=q.tag("restart"))))
-    box.print(H.p(H.button("Upload to website", onclick=q.tag("web-upload"))))
+    # box.print(H.p(H.button("Upload to website", onclick=q.tag("web-upload"))))
     for service in reversed(papconf.services or []):
         box.print(
             H.p(
@@ -58,21 +58,21 @@ async def app(page, box):
                 except Exception as exc:
                     box.print(H.div["error"]("An error occurred"))
                     box.print(H.div["error"](exc))
-            case "web-upload":
-                box.print(H.div("Running web upload..."))
-                proc = await asyncio.create_subprocess_shell(
-                    "paperoni misc upload",
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
-                stdout, stderr = await proc.communicate()
-                if stdout:
-                    box.print(H.div("<stdout>"))
-                    box.print(H.pre(stdout.decode("utf8")))
-                if stderr:
-                    box.print(H.div("<stderr>"))
-                    box.print(H.pre(stderr.decode("utf8")))
-                box.print(H.div("Done with web upload!"))
+            # case "web-upload":
+            #     box.print(H.div("Running web upload..."))
+            #     proc = await asyncio.create_subprocess_shell(
+            #         "paperoni misc upload",
+            #         stdout=asyncio.subprocess.PIPE,
+            #         stderr=asyncio.subprocess.PIPE,
+            #     )
+            #     stdout, stderr = await proc.communicate()
+            #     if stdout:
+            #         box.print(H.div("<stdout>"))
+            #         box.print(H.pre(stdout.decode("utf8")))
+            #     if stderr:
+            #         box.print(H.div("<stderr>"))
+            #         box.print(H.pre(stderr.decode("utf8")))
+            #     box.print(H.div("Done with web upload!"))
             case service:
                 service = service.split("service:")[-1]
                 try:
