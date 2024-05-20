@@ -75,7 +75,7 @@ fastapi==0.109.2
     # via sse-starlette
 future==0.18.3
     # via openreview-py
-gifnoc==0.3.2
+gifnoc==0.3.3
     # via
     #   grizzlaxy
     #   paperoni (pyproject.toml)
