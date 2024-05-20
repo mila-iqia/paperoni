@@ -406,7 +406,9 @@ def expand_links_dict(links):
         else:
             results.append({"type": link.type, "link": link.link})
     results.sort(
-        key=lambda dct: pref.index(dct["type"]) if dct["type"] in pref else 1_000
+        key=lambda dct: pref.index(dct["type"])
+        if dct["type"] in pref
+        else 1_000
     )
     return results
 
