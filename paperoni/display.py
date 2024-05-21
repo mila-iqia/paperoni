@@ -11,7 +11,7 @@ from ovld import ovld
 from .cli_helper import ExtendAttr
 from .db import schema as sch
 from .export import export
-from .model import Author, DatePrecision, Paper, Venue, from_dict
+from .model import Author, DatePrecision, Meta, Paper, Venue, from_dict
 from .utils import expand_links_dict
 
 T = Terminal()
@@ -103,6 +103,12 @@ def display(venue: Venue):
     print_field("Links", "")
     for typ, link in expand_links(venue.links):
         print(f"  {T.bold_green(typ):20} {link}")
+
+
+@ovld
+def display(meta: Meta):
+    """Print meta db entry to the terminal."""
+    print(meta.scraper, meta.date)
 
 
 def join(elems, sep=", ", lastsep=None):

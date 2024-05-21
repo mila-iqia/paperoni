@@ -59,12 +59,121 @@ def parse_openreview_venue(venue):
 
 
 class OpenReviewScraperBase(BaseScraper):
-    def __init__(self, config, db):
+    def __init__(self, config, db, api_version):
         super().__init__(config=config, db=db)
+        self.api_version = api_version
         self.set_client()
 
     def set_client(self):
-        self.client = openreview.Client(baseurl="https://api.openreview.net")
+        api = {1: "api", 2: "api2"}[self.api_version]
+        self.client = openreview.Client(baseurl=f"https://{api}.openreview.net")
+
+    def get_content_field(self, note, key, default=None):
+        content = note["content"] if isinstance(note, dict) else note.content
+        if key not in content:
+            return default
+        v = content[key]
+        match self.api_version:
+            case 1:
+                return v
+            case 2:
+                return v["value"]
+
+    def get_venue_id(self, note):
+        vid = self.get_content_field(note, "venueid")
+        if not vid:
+            vid = note.invitation.split("/-/")[0]
+        if (
+            not vid
+            or vid.startswith("dblp.org")
+            or vid == "OpenReview.net/Archive"
+        ):
+            return None
+        return vid
+
+    def refine_decision(self, text):
+        text = text.lower()
+        patterns = {
+            "notable": "notable",
+            "poster": "poster",
+            "oral": "oral",
+            "spotlight": "spotlight",
+            "withdraw": "withdrawn",
+            "withdrawn": "withdrawn",
+            "accepted": "accepted",
+            "accept": "accepted",
+            "reject": "rejected",
+            "rejected": "rejected",
+            "submitted": "rejected",
+        }
+        for key, decision in patterns.items():
+            if key in text:
+                return decision
+        return None
+
+    def figure_out_the_fking_decision(self, note):
+        # heuristics = [(rank, invitation_regexp, content_field), ...]
+        # rank: prioritize matching entries with a lower rank
+        # invitation_regexp: pattern that the reply's invitation should match
+        # field: field in which to find the decision, or if starting with =, the decision itself
+        heuristics = [
+            (5, ".*withdrawn?[^/]*$", "=withdrawn"),
+            (10, ".*/decision$", "decision"),
+            (20, ".*decision[^/]*$", "decision"),
+            (30, ".*accept[^/]*$", "decision"),
+            (40, ".*", "decision"),
+            (40, ".*", "Decision"),
+            (50, ".*meta_?review[^/]*$", "recommendation"),
+        ]
+        ranked_results = []
+        for reply in reversed(note.details["replies"]):
+            invitations = (
+                [reply["invitation"]]
+                if self.api_version == 1
+                else reply["invitations"]
+            )
+            for rank, rx, field in heuristics:
+                if any(
+                    re.match(string=inv, pattern=rx, flags=re.IGNORECASE)
+                    for inv in invitations
+                ):
+                    if field.startswith("="):
+                        ranked_results.append((rank, field[1:]))
+                        break
+                    elif field in reply["content"]:
+                        ranked_results.append(
+                            (rank, self.get_content_field(reply, field))
+                        )
+                        break
+
+        if ranked_results:
+            ranked_results.sort()
+            decisions = {
+                decision
+                for rank, decision in ranked_results
+                if rank == ranked_results[0][0]
+            }
+            if len(decisions) == 1:
+                decision = decisions.pop()
+                return self.refine_decision(decision) or decision
+
+        if from_venue := self.refine_decision(
+            self.get_content_field(note, "venue", "")
+        ):
+            return from_venue
+
+        if from_vid := self.refine_decision(self.get_venue_id(note)):
+            return from_vid
+
+        if note.pdate:
+            return "published"
+
+        btx = note.content.get("_bibtex", "")
+        if btx.startswith("@inproceedings") and note.id in btx:
+            return "accepted"
+
+        # welp. whatever.
+        return None
 
     @staticmethod
     def _map_venue_type(venueid):
@@ -78,28 +187,28 @@ class OpenReviewScraperBase(BaseScraper):
         next_offset = 0
         while total < limit:
             params["offset"] = next_offset
-            notes = self.client.get_all_notes(**params)
+            notes = self.client.get_all_notes(**params, details="replies")
             for note in notes:
-                vid = note.content.get("venueid", None)
-                if not vid or vid.startswith("dblp.org"):
+                vid = self.get_venue_id(note)
+                if not vid:
                     continue
+                if "authors" not in note.content:
+                    continue
+
                 authors = []
-                if len(note.content["authors"]) == len(
-                    note.content.get("authorids", [])
-                ) and all(
+                note_authors = self.get_content_field(note, "authors", [])
+                note_authorids = self.get_content_field(note, "authorids", [])
+
+                if len(note_authors) == len(note_authorids) and all(
                     (
                         aid is None or aid.startswith("~")
-                        for aid in note.content["authorids"]
+                        for aid in note_authorids
                     )
                 ):
-                    authors_ids = note.content["authorids"]
+                    authors_ids = note_authorids
                 else:
-                    authors_ids = (
-                        None for _ in range(len(note.content["authors"]))
-                    )
-                for name, author_id in zip(
-                    note.content["authors"], authors_ids
-                ):
+                    authors_ids = (None for _ in range(len(note_authors)))
+                for name, author_id in zip(note_authors, authors_ids):
                     _links = []
                     if author_id:
                         _links.append(
@@ -122,13 +231,16 @@ class OpenReviewScraperBase(BaseScraper):
                     )
                 _links = [Link(type="openreview", link=note.id)]
                 if "code" in note.content:
-                    Link(type="git", link=note.content["code"])
+                    Link(type="git", link=self.get_content_field(note, "code"))
 
-                venue_data = parse_openreview_venue(note.content["venue"])
+                venue = self.get_content_field(note, "venue") or note.invitation
+                venue_data = parse_openreview_venue(venue)
+                decision = self.figure_out_the_fking_decision(note) or "unknown"
+
                 if "status" not in venue_data and note.pdate:
                     venue_data["status"] = "published"
 
-                tstamp = note.pdate or note.odate or note.tcdate
+                tstamp = note.pdate or note.odate or note.tcdate or note.tmdate
                 date = datetime.fromtimestamp(tstamp // 1000)
                 date -= timedelta(
                     hours=date.hour, minutes=date.minute, seconds=date.second
@@ -143,8 +255,8 @@ class OpenReviewScraperBase(BaseScraper):
                     venue_data["venue"] += f" {year}"
 
                 yield Paper(
-                    title=note.content["title"],
-                    abstract=note.content.get("abstract"),
+                    title=self.get_content_field(note, "title"),
+                    abstract=self.get_content_field(note, "abstract"),
                     authors=authors,
                     releases=[
                         Release(
@@ -164,13 +276,13 @@ class OpenReviewScraperBase(BaseScraper):
                                 aliases=[],
                                 quality=(0.5,),
                             ),
-                            status=venue_data.get("status", "unknown"),
+                            status=decision,
                             pages=None,
                         )
                     ],
                     topics=[
                         Topic(name=kw)
-                        for kw in note.content.get("keywords", [])
+                        for kw in self.get_content_field(note, "keywords", [])
                     ],
                     links=_links,
                     citation_count=None,
@@ -347,6 +459,9 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
         # Author ID to query
         # [alias: --aid]
         author_id: Option = [],
+        # Paper ID to query
+        # [alias: --pid]
+        paper_id: Option = [],
         # Title of the paper
         # [alias: -t]
         # [nargs: +]
@@ -369,6 +484,13 @@ class OpenReviewPaperScraper(OpenReviewScraperBase):
             "offset": 0,
         }
 
+        if paper_id:
+            params = {
+                **params,
+                "id": paper_id,
+            }
+            if not venue:
+                venue = [None]
         if author:
             params = {
                 **params,
@@ -528,8 +650,41 @@ class OpenReviewProfileScraper(OpenReviewScraperBase):
         print("TODO")
 
 
+class OpenReviewPaperScraperV1(OpenReviewPaperScraper):
+    def __init__(self, config, db):
+        super().__init__(config, db, 1)
+
+
+class OpenReviewVenueScraperV1(OpenReviewVenueScraper):
+    def __init__(self, config, db):
+        super().__init__(config, db, 1)
+
+
+class OpenReviewProfileScraperV1(OpenReviewProfileScraper):
+    def __init__(self, config, db):
+        super().__init__(config, db, 1)
+
+
+class OpenReviewPaperScraperV2(OpenReviewPaperScraper):
+    def __init__(self, config, db):
+        super().__init__(config, db, 2)
+
+
+class OpenReviewVenueScraperV2(OpenReviewVenueScraper):
+    def __init__(self, config, db):
+        super().__init__(config, db, 2)
+
+
+class OpenReviewProfileScraperV2(OpenReviewProfileScraper):
+    def __init__(self, config, db):
+        super().__init__(config, db, 2)
+
+
 __scrapers__ = {
-    "openreview": OpenReviewPaperScraper,
-    "openreview-venues": OpenReviewVenueScraper,
-    "openreview-profiles": OpenReviewProfileScraper,
+    "openreview": OpenReviewPaperScraperV1,
+    "openreview-venues": OpenReviewVenueScraperV1,
+    "openreview-profiles": OpenReviewProfileScraperV1,
+    "openreview2": OpenReviewPaperScraperV2,
+    "openreview2-venues": OpenReviewVenueScraperV2,
+    "openreview2-profiles": OpenReviewProfileScraperV2,
 }

@@ -1,4 +1,6 @@
+import time
 from datetime import datetime
+from traceback import print_exc
 
 from coleo import Option, tooled
 
@@ -6,23 +8,25 @@ from paperoni.model import (
     Author,
     DatePrecision,
     Link,
-    Meta,
     Paper,
     PaperAuthor,
     Release,
     Venue,
     VenueType,
 )
-from paperoni.sources.acquire import readpage
 
+from ...config import papconf
+from ...utils import asciiify
 from ..acquire import readpage
-from .base import BaseScraper
+from .base import ProceedingsScraper
 
 
 def parse_paper(entry):
+    if not entry.get("title", None) or not entry.get("author", None):
+        return None
     p = Paper(
         title=entry["title"],
-        abstract=entry["abstract"],
+        abstract=entry.get("abstract", None),
         authors=[
             PaperAuthor(
                 author=Author(
@@ -39,7 +43,7 @@ def parse_paper(entry):
             Release(
                 venue=Venue(
                     name=entry["container-title"],
-                    date=datetime(*entry["issued"]["date-parts"]),
+                    date=datetime(*map(int, entry["issued"]["date-parts"])),
                     date_precision=DatePrecision.day,
                     type=VenueType.unknown,
                     series=entry["container-title"],
@@ -63,36 +67,60 @@ def parse_paper(entry):
     return p
 
 
-class MLRScraper(BaseScraper):
+class MLRScraper(ProceedingsScraper):
+    scraper_name = "mlr"
+
+    def get_volume(self, volume, cache=False):
+        print(f"Fetching PMLR {volume}")
+        try:
+            papers = readpage(
+                f"https://proceedings.mlr.press/{volume}/assets/bib/citeproc.yaml",
+                format="yaml",
+                cache_into=cache
+                and papconf.paths.cache
+                and papconf.paths.cache / "mlr" / f"{volume}",
+            )
+            for paper in papers:
+                yield parse_paper(paper)
+        except Exception:
+            print_exc()
+
     @tooled
     def query(
         self,
-        # Volume to query
+        # Volume(s) to query
         # [alias: -v]
+        # [action: append]
         volume: Option = None,
+        # Name(s) to query
+        # [alias: --name]
+        # [action: append]
+        name: Option = None,
+        # Whether to cache the download
+        # [negate]
+        cache: Option & bool = True,
     ):
-        results = readpage(
-            f"https://proceedings.mlr.press/v{volume}/assets/bib/citeproc.yaml",
-            format="yaml",
+        names = name and {asciiify(n).lower() for n in name}
+        for i, vol in enumerate(volume):
+            if i > 0:
+                time.sleep(1)
+            results = self.get_volume(vol, cache)
+            for paper in results:
+                if (
+                    paper
+                    and names is None
+                    or any(
+                        asciiify(auth.author.name).lower() in names
+                        for auth in paper.authors
+                    )
+                ):
+                    yield paper
+
+    def list_volumes(self):
+        return self.extract_volumes(
+            index="https://proceedings.mlr.press",
+            selector=".proceedings-list a",
         )
-        for entry in results:
-            yield parse_paper(entry)
-
-    @tooled
-    def acquire(self):
-        # Volume to query
-        # [alias: -v]
-        volume: Option = (None,)
-
-        yield Meta(
-            scraper="mlr",
-            date=datetime.now(),
-        )
-        yield from self.query(volume)
-
-    @tooled
-    def prepare(self):
-        pass
 
 
 __scrapers__ = {

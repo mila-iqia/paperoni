@@ -2,6 +2,7 @@ import asyncio
 import os
 import shutil
 import signal
+import subprocess
 from tempfile import mkstemp
 
 from grizzlaxy import simple_route
@@ -20,6 +21,17 @@ async def app(page, box):
 
     box.print(H.p(H.button("Restart server", onclick=q.tag("restart"))))
     box.print(H.p(H.button("Upload to website", onclick=q.tag("web-upload"))))
+    # for service_name, service in (papconf.services or {}).items():
+    #     status = "" if service.enabled else " (disabled)"
+    #     box.print(
+    #         H.p(
+    #             H.button(
+    #                 f"Run service: {service_name}{status}",
+    #                 onclick=q.tag(f"service:{service_name}"),
+    #             ),
+    #             id=service_name,
+    #         )
+    #     )
     box.print(H.p(H.a("Download database", href=papconf.paths.database)))
     box.print(
         H.p(
@@ -62,6 +74,19 @@ async def app(page, box):
                     box.print(H.div("<stderr>"))
                     box.print(H.pre(stderr.decode("utf8")))
                 box.print(H.div("Done with web upload!"))
+            # case service:
+            #     service = service.split("service:")[-1]
+            #     try:
+            #         result = subprocess.run(["systemctl", "start", service])
+            #     except FileNotFoundError:
+            #         page[f"#{service}"].set("systemctl is not available")
+            #         continue
+            #     if result.returncode != 0:
+            #         page[f"#{service}"].set(
+            #             f"There was an error (return code: {result.returncode})"
+            #         )
+            #     else:
+            #         page[f"#{service}"].set(f"Requested {service} to run")
 
 
 @simple_route(methods=["POST"])

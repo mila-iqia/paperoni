@@ -1,5 +1,5 @@
-paperoni_overrides: "{{ app_data_dir }}/overrides.yaml"
-paprun: "env GIFNOC_FILE={{ app_config }},{{ paperoni_overrides }} GIFNOC_MODULE=paperoni.config"
+paperoni_overrides_file: "{{ app_data_dir }}/overrides.yaml"
+paprun: "env GIFNOC_FILE={{ app_config }},{{ paperoni_overrides_file }} GIFNOC_MODULE=paperoni.config"
 
 app_name: "{{ paperoni_name }}"
 app_user: "{{ paperoni_user }}"
@@ -17,20 +17,20 @@ app_services:
 app_timers:
   - name: scrape
     description: Scrape papers
-    command: "{{ paprun }} {{ app_dir }}/scripts/scrape.sh"
+    command: "{{ paprun }} {{ app_code_dir }}/jobs/scrape.sh"
     schedule: "{{ paperoni_scrape_schedule }}"
   - name: cleanup
     description: Cleanup paperoni cache
-    command: "{{ paprun }} {{ app_dir }}/scripts/cleanup.sh"
+    command: "{{ paprun }} {{ app_code_dir }}/jobs/cleanup.sh"
     schedule: "{{ paperoni_cleanup_schedule }}"
   - name: upload
     description: Upload papers to Mila website
-    command: "{{ paprun }} {{ app_dir }}/scripts/upload.sh"
+    command: "{{ paprun }} {{ app_code_dir }}/jobs/upload.sh"
     schedule: "{{ paperoni_upload_schedule }}"
 
 app_files:
-  - dest: "{{ app_data_dir }}/overrides.yaml"
-    content: ""
+  - dest: "{{ paperoni_overrides_file }}"
+    content: "{{ paperoni_overrides | to_nice_yaml }}"
     mode: "0600"
   - dest: "{{ app_config_dir }}/cert/cert.pem"
     content: "{{ paperoni_ssl_cert }}"
