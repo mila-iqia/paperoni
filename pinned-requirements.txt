@@ -85,7 +85,7 @@ giving==0.4.2
     #   ptera
 greenlet==3.0.3
     # via eventlet
-grizzlaxy==0.3.3
+grizzlaxy==0.3.4
     # via paperoni (pyproject.toml)
 h11==0.14.0
     # via
@@ -180,7 +180,7 @@ sqlalchemy==1.4.51
     # via paperoni (pyproject.toml)
 sse-starlette==1.8.2
     # via grizzlaxy
-starbear==0.1.3
+starbear==0.1.6
     # via
     #   grizzlaxy
     #   paperoni (pyproject.toml)
