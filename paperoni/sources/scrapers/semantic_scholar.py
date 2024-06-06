@@ -3,6 +3,7 @@ from datetime import datetime
 from functools import partial
 
 from coleo import Option, tooled
+from requests import HTTPError
 
 from ...config import papconf
 from ...model import (
@@ -97,7 +98,7 @@ def _author_fields(parent=None):
         "externalIds",
         "url",
         "name",
-        "aliases",
+        # "aliases",
         "affiliations",
         "homepage",
         "paperCount",
@@ -224,11 +225,11 @@ class SemanticScholarQueryManager:
             author=self._wrap_author(data),
         )
 
-    def _wrap_author(self, data, quality=(0.1,)):
+    def _wrap_author(self, data, quality=(0.25,)):
         lnk = (aid := data["authorId"]) and Link(
             type="semantic_scholar", link=aid
         )
-        aliases = set(data.get("aliases", None) or [])
+        aliases = set((data.get("externalIds", None) or {}).get("DBLP", []))
         aliases.add(data["name"])
         return Author(
             name=best_name(data["name"], aliases),
@@ -483,6 +484,11 @@ class SemanticScholarAuthorScraper(BaseScraper):
                     yield from ss.author(
                         author_id=ssid, fields=_author_fields()
                     )
+                except HTTPError as exc:
+                    if exc.response.status_code == 404:
+                        print("Author not found, resuming")
+                    else:
+                        raise
                 except QueryError as exc:
                     print("QueryError", exc)
                 except KeyError as exc:

@@ -18,6 +18,8 @@ class HTTPSAcquirer:
     @backoff.on_exception(
         backoff.expo,
         requests.exceptions.RequestException,
+        giveup=lambda exc: exc.response.status_code == 404,
+        max_time=5,
     )
     def get(self, url, params=None, headers={}):
         if params:
