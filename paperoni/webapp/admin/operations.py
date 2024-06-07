@@ -2,7 +2,6 @@ import asyncio
 import os
 import shutil
 import signal
-import subprocess
 from tempfile import mkstemp
 
 from grizzlaxy import simple_route

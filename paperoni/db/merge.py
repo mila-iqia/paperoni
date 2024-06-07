@@ -48,9 +48,9 @@ def _generate_author_merges(db, eqv, ids):
         )[0][0]
         for entry in ids
     ]
-    names1 = [pa.author.name for pa in p1.authors]
+    names1 = [pa.author.name for pa in p1.authors if pa.author]
     for p2 in others:
-        names2 = [pa.author.name for pa in p2.authors]
+        names2 = [pa.author.name for pa in p2.authors if pa.author]
         for i, j in associate(names1, names2):
             if i is None or j is None:
                 continue

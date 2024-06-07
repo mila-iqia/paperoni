@@ -1,4 +1,5 @@
 import time
+import traceback
 from datetime import datetime
 from traceback import print_exc
 
@@ -106,15 +107,17 @@ class MLRScraper(ProceedingsScraper):
                 time.sleep(1)
             results = self.get_volume(vol, cache)
             for paper in results:
-                if (
-                    paper
-                    and names is None
-                    or any(
-                        asciiify(auth.author.name).lower() in names
-                        for auth in paper.authors
-                    )
-                ):
-                    yield paper
+                try:
+                    if paper and (
+                        names is None
+                        or any(
+                            asciiify(auth.author.name).lower() in names
+                            for auth in paper.authors
+                        )
+                    ):
+                        yield paper
+                except Exception as exc:
+                    traceback.print_exception(exc)
 
     def list_volumes(self):
         return self.extract_volumes(

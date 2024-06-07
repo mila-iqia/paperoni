@@ -8,6 +8,7 @@ fi
 
 # Acquire and refine papers
 paperoni acquire semantic_scholar
+paperoni merge author_link
 paperoni acquire semantic_scholar_author
 paperoni acquire openreview
 paperoni acquire openreview2

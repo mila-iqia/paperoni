@@ -225,7 +225,7 @@ class SemanticScholarQueryManager:
             author=self._wrap_author(data),
         )
 
-    def _wrap_author(self, data, quality=(0.25,)):
+    def _wrap_author(self, data, quality=(0.1,)):
         lnk = (aid := data["authorId"]) and Link(
             type="semantic_scholar", link=aid
         )

@@ -101,7 +101,7 @@ class Paper(Base):
 
     @property
     def authors(self):
-        pas = self.paper_author
+        pas = [pa for pa in self.paper_author if pa.author]
         pas.sort(key=lambda pa: pa.author_position)
         return pas
 
