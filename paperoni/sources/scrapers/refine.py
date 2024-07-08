@@ -102,9 +102,11 @@ def _extract_date_from_xml(node):
 
 def _paper_from_jats(soup, links):
     selectors = [
+        'pub-date[pub-type="ppub"]',
         'pub-date[date-type="pub"]',
         'pub-date[date-type="pub"]',
         'pub-date[pub-type="epub"]',
+        "pub-date",
     ]
     date_candidates = [
         result
