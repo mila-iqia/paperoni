@@ -67,7 +67,7 @@ async def app(page, box):
 
     area = H.div(
         H.div(id="gui-div")["top-gui"](form),
-        table := H.div().autoid(),
+        table := H.div(id=True),
     )
     box.print(area)
     dataAuthors = {}

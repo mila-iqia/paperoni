@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 import yaml
 from grizzlaxy.index import render
-from hrepr import H
+from hrepr import H, J, returns
 from starbear import ClientWrap, Queue, bear, template as _template
 from starbear.serve import LoneBear
 
@@ -54,7 +54,7 @@ class FileEditor:
                 H.textarea(
                     self.file.read(), name="new-content", oninput=debounced
                 ),
-                actionarea := H.div().autoid(),
+                actionarea := H.div(id=True),
                 onsubmit=submit,
             ),
         )
@@ -111,10 +111,11 @@ class LogsViewer:
                     ),
                     name="log-stream",
                     readonly=True,
-                ).autoid(),
+                    id=True,
+                ),
             ),
         )
-        page[log_stream].do("this.scrollTop = this.scrollTopMax")
+        page[log_stream].exec("this.scrollTop = this.scrollTopMax")
 
         async for event in q:
             for k, v in event.items():
@@ -125,13 +126,13 @@ class LogsViewer:
                         blocks.append(html.escape(l))
                         if i % 2000 == 0:
                             page[log_stream].print_html("".join(blocks))
-                            page[log_stream].do(
+                            page[log_stream].exec(
                                 "this.scrollTop = this.scrollTopMax"
                             )
                             blocks = ["\n"]
                     if blocks[1:]:
                         page[log_stream].print_html("".join(blocks))
-                        page[log_stream].do(
+                        page[log_stream].exec(
                             "this.scrollTop = this.scrollTopMax"
                         )
 
@@ -390,24 +391,23 @@ class RegenGUI(BaseGUI):
         self.steady_batch_size = steady_batch_size
         self.page = page
         self.db = db
-        self.wait_area = H.div["wait-area"]().autoid()
+        self.wait_area = H.div["wait-area"](id=True)
         self.count_area = H.div["count-area"](
             H.span["shown"]("0"),
             " shown / ",
             H.span["count"]("0"),
             " found",
-        ).autoid()
-        self.link_area = H.div["copy-link"](
-            "📋 Copy link",
-            H.span["copiable"](self.link()),
-            __constructor={
-                "module": Path(here / "lib.js"),
-                "symbol": "clip",
-                "arguments": [H.self()],
-            },
+            id=True
         )
-        self.json_report_area = H.div["report-link"]().autoid()
-        self.csv_report_area = H.div["report-link"]().autoid()
+        self.link_area = J(namespace=here / "lib.js").clip(
+            returns(
+                H.div["copy-link"](
+                    "📋 Copy link", H.span["copiable"](self.link())
+                )
+            )
+        )
+        self.json_report_area = H.div["report-link"](id=True)
+        self.csv_report_area = H.div["report-link"](id=True)
 
     async def loop(self, reset):
         def _soft_restart(new_gen):
@@ -664,7 +664,7 @@ def mila_template(fn, title=None, help=None):
                 ),
             )
         )
-        page.print(target := H.div().autoid())
+        page.print(target := H.div(id=True))
         return await fn(page, page[target])
 
     return bear(app, template_params={"title": actual_title})

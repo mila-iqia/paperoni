@@ -18,7 +18,7 @@ async def app(page, box):
     )
 
     box.print(H.div(form))
-    box.print(result_area := H.div().autoid())
+    box.print(result_area := H.div(id=True))
 
     with papconf.database as db:
         async for event in q:
