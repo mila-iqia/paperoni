@@ -14,7 +14,7 @@ here = Path(__file__).parent
 async def app(page, box):
     """Search for papers."""
     q = Queue()
-    area = H.div["area"]().autoid()
+    area = H.div["area"](id=True)
 
     with papconf.database as db:
         gui = SearchGUI(

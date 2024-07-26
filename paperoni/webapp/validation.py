@@ -18,7 +18,7 @@ async def app(page, box):
     """Validate papers."""
     q = Queue()
     action_q = Queue().wrap(refs=True)
-    area = H.div["area"].autoid()
+    area = H.div["area"](id=True)
 
     with papconf.database as db:
         gui = SearchGUI(
@@ -64,7 +64,7 @@ async def app(page, box):
 
                 # Communicate feedback to the browser. Indexing a page with result.ref
                 # selects the element that has the matching --ref attribute.
-                page[result.ref].do(
+                page[result.ref].exec(
                     f"this.setAttribute('status', '{result.tag}')"
                 )
 

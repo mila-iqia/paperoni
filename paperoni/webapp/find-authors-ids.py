@@ -232,7 +232,9 @@ async def app(page, box):
                         author_id, scraper, link, validity=0
                     )
 
-            page[result.ref].do(f"this.setAttribute('status', '{result.tag}')")
+            page[result.ref].exec(
+                f"this.setAttribute('status', '{result.tag}')"
+            )
 
 
 app.hidden = True

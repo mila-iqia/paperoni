@@ -29,7 +29,7 @@ async def app(page, box):
         onsubmit=q.wrap(form=True),
     )
     box.print(form)
-    box.print(results := H.div().autoid())
+    box.print(results := H.div(id=True))
 
     with papconf.database as db:
         ss = SemanticScholarQueryManager()
