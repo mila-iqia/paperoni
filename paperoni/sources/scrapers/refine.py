@@ -370,6 +370,190 @@ def refine_doi_with_crossref(db, paper, link):
         )
 
 
+@refiner(type="doi", priority=100)
+def refine_doi_with_datacite(db, paper, link):
+    """
+    Refine using DataCite.
+
+    More info:
+    API call tutorial: https://support.datacite.org/docs/api-get-doi
+    API call reference: https://support.datacite.org/reference/get_dois-id
+    DataCite metadata properties: https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/
+    """
+    doi = link.link
+    json_data = readpage(
+        f"https://api.datacite.org/dois/{doi}?publisher=true&affiliation=true",
+        format="json",
+    )
+    if "errors" in json_data:
+        with covguard():
+            return None
+
+    # Mapping to convert DataCite resource type to Paperoni venue type.
+    # May be improved.
+    item_type_to_venue_type = {
+        "Audiovisual": VenueType.unknown,
+        "Book": VenueType.book,
+        "BookChapter": VenueType.book,
+        "Collection": VenueType.unknown,
+        "ComputationalNotebook": VenueType.unknown,
+        "ConferencePaper": VenueType.conference,
+        "ConferenceProceeding": VenueType.conference,
+        "DataPaper": VenueType.unknown,
+        "Dataset": VenueType.unknown,
+        "Dissertation": VenueType.unknown,
+        "Event": VenueType.unknown,
+        "Image": VenueType.unknown,
+        "Instrument": VenueType.unknown,
+        "InteractiveResource": VenueType.unknown,
+        "Journal": VenueType.journal,
+        "JournalArticle": VenueType.journal,
+        "Model": VenueType.unknown,
+        "OutputManagementPlan": VenueType.unknown,
+        "PeerReview": VenueType.review,
+        "PhysicalObject": VenueType.unknown,
+        "Preprint": VenueType.preprint,
+        "Report": VenueType.unknown,
+        "Service": VenueType.unknown,
+        "Software": VenueType.unknown,
+        "Sound": VenueType.unknown,
+        "Standard": VenueType.unknown,
+        "StudyRegistration": VenueType.unknown,
+        "Text": VenueType.unknown,
+        "Workflow": VenueType.unknown,
+        "Other": VenueType.unknown,
+    }
+
+    raw_paper = SimpleNamespace(**json_data["data"]["attributes"])
+
+    # Get paper abstract
+    abstract = None
+    for desc in raw_paper.descriptions:
+        if desc["descriptionType"] == "Abstract":
+            abstract = desc["description"]
+            break
+
+    # Get paper date, used for paper default release
+    for date_info in raw_paper.dates:
+        if date_info["dateType"] == "Available":  # Available, or Issued ?
+            date_string = date_info["date"]
+            date_pieces = date_string.split("-")
+            if len(date_pieces) == 1:
+                date_available = datetime(
+                    year=int(date_pieces[0]), month=1, day=1
+                )
+                date_precision = DatePrecision.year
+            elif len(date_pieces) == 2:
+                date_available = datetime(
+                    year=int(date_pieces[0]), month=int(date_pieces[1]), day=1
+                )
+                date_precision = DatePrecision.month
+            else:
+                date_available = datetime.fromisoformat(date_string)
+                date_precision = DatePrecision.day
+            break
+    else:
+        date_available = datetime(
+            year=raw_paper.publicationYear, month=1, day=1
+        )
+        date_precision = DatePrecision.year
+
+    # Try to get paper default release
+    releases = [
+        Release(
+            venue=Venue(
+                type=item_type_to_venue_type[
+                    raw_paper.types["resourceTypeGeneral"]
+                ],
+                name=raw_paper.publisher["name"],
+                date=date_available,
+                date_precision=date_precision,
+                series="",
+                aliases=[],
+                links=[],
+            ),
+            status="published",
+            pages=None,
+        )
+    ]
+    # Try to get more paper releases
+    for related_item in raw_paper.relatedItems:
+        if (
+            related_item["relationType"] == "IsPublishedIn"
+            and related_item["relatedItemType"] in item_type_to_venue_type
+        ):
+            releases.append(
+                Release(
+                    venue=Venue(
+                        type=item_type_to_venue_type[
+                            related_item["relatedItemType"]
+                        ],
+                        name=related_item["titles"][0]["title"],
+                        series=related_item["issue"],
+                        date=datetime(
+                            year=int(related_item["publicationYear"]),
+                            month=1,
+                            day=1,
+                        ),
+                        date_precision=DatePrecision.year,
+                        volume=related_item["volume"],
+                        publisher=related_item["publisher"],
+                    ),
+                    status="published",
+                    pages=f"{related_item['firstPage']}-{related_item['lastPage']}",
+                )
+            )
+
+    # Get paper default links
+    links = [Link(type="doi", link=doi)]
+    if raw_paper.url:
+        links.append(Link(type="url", link=raw_paper.url))
+    for content_url in raw_paper.contentUrl or ():
+        links.append(Link(type="contentUrl", link=content_url))
+    # Try to get more paper links
+    for related_identifier in raw_paper.relatedIdentifiers:
+        identifier_type = related_identifier["relatedIdentifierType"]
+        relation_type = related_identifier["relationType"]
+        identifier = related_identifier["relatedIdentifier"]
+        # Available identifier types:
+        # ARK arXiv bibcode DOI EAN13 EISSN Handle IGSN ISBN ISSN ISTC LISSN LSID PMID PURL UPC URL URN w3id
+        if identifier_type in {"ARK", "arXiv", "DOI", "PURL", "URL", "w3id"}:
+            links.append(
+                Link(type=f"{relation_type}.{identifier_type}", link=identifier)
+            )
+
+    with covguard():
+        return Paper(
+            title=raw_paper.titles[0]["title"],
+            abstract=abstract,
+            authors=[
+                PaperAuthor(
+                    author=Author(
+                        name=f"{creator['givenName']} {creator['familyName']}",
+                        roles=[],
+                        aliases=[],
+                        links=[],
+                    ),
+                    affiliations=[
+                        Institution(
+                            name=affiliation["name"],
+                            category=InstitutionCategory.unknown,
+                            aliases=[],
+                        )
+                        for affiliation in creator["affiliation"]
+                    ],
+                )
+                for creator in raw_paper.creators
+            ],
+            releases=releases,
+            topics=[
+                Topic(name=subject["subject"]) for subject in raw_paper.subjects
+            ],
+            links=links,
+            citation_count=raw_paper.citationCount,
+        )
+
+
 @refiner(type="doi", priority=190)
 def refine_doi_with_biorxiv(db, paper, link):
     doi = link.link
