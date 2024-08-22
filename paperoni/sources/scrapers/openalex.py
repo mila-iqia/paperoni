@@ -320,7 +320,7 @@ class OpenAlexScraper(BaseScraper):
         elif title:
             filters.append(f"display_name.search:{title}")
         elif exact_title:
-            # No steam, and quotation mark around title, to try to get exact title
+            # No stemming, and quotation mark around title, to try to get exact title
             # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/search-entities#boolean-searches
             filters.append(f'display_name.search.no_stem:"{exact_title}"')
 
