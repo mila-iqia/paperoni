@@ -66,15 +66,37 @@ class OpenAlexQueryManager:
     def works(self, **params):
         yield from map(self._try_wrapping_paper, self._list("works", **params))
 
-    def _list(self, path: str, per_page: int = 25, page: int = 1, **params):
+    def _list(
+        self,
+        path: str,
+        per_page: int = None,
+        page: int = None,
+        verbose=False,
+        **params,
+    ):
+        pagination = page is not None and per_page is not None
+        if page is None:
+            page = 1
+        if per_page is None:
+            per_page = 25
         while True:
             local_params = {"page": page, "per-page": per_page, **params}
             results = self._evaluate(path, **local_params)
             if not results["results"]:
                 # No more results.
                 break
+            if verbose:
+                nb_results = len(results["results"])
+                nb_total = results["meta"]["count"]
+                nb_page = nb_total // per_page + bool(nb_total % per_page)
+                print(
+                    f"[page {page} / {nb_page}, displaying {nb_results} / {nb_total} total results]"
+                )
             for entry in results["results"]:
                 yield entry
+            if pagination:
+                # Display only this page
+                break
             # Next page
             page += 1
 
@@ -277,7 +299,12 @@ class OpenAlexScraper(BaseScraper):
         # [alias: -T]
         # [nargs: +]
         exact_title: Option = [],
+        # Page of results to display (start at 1). Need argument "per_page". By default, all results are displayed.
+        page: Option & int = None,
+        # Number of results to display per page. Need argument "page". By default, all results are displayed.
+        per_page: Option & int = None,
         # If specified, display debug info
+        # [alias: -v]
         verbose: Option & bool = False,
     ):
         # paperoni query openalex --option xyz --flag
@@ -289,12 +316,6 @@ class OpenAlexScraper(BaseScraper):
             title = " ".join(title)
         if isinstance(exact_title, list):
             exact_title = " ".join(exact_title)
-
-        if verbose:
-            print(f"{author=}")
-            print(f"{author_id=}")
-            print(f"{institution=}")
-            print(f"{title=}")
 
         qm = OpenAlexQueryManager()
         filters = []
@@ -336,8 +357,19 @@ class OpenAlexScraper(BaseScraper):
             params["filter"] = ",".join(filters)
             if verbose:
                 print("[filters]", params["filter"])
+        if page is not None and per_page is not None:
+            if page < 1:
+                raise QueryError("page must be >= 1")
+            if per_page < 1 or per_page > 200:
+                raise QueryError("per_page must be >= 1 and <= 200")
+            params["page"] = page
+            params["per_page"] = per_page
+        elif page is not None or per_page is not None:
+            raise QueryError(
+                "Need both page and per_page for pagination, or none of them to display all results"
+            )
 
-        yield from qm.works(**params)
+        yield from qm.works(**params, verbose=verbose)
 
     @tooled
     def prepare(self):
