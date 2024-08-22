@@ -101,20 +101,17 @@ class OpenAlexQueryManager:
             raise Exception(pprint.pformat(data)) from exc
 
     def _wrap_paper(self, data: dict) -> Paper:
+        # Assert consistency in locations
         locations = data["locations"]
         if locations:
-            assert locations
             assert locations[0] == data["primary_location"]
         else:
             assert data["primary_location"] is None
             assert data["best_oa_location"] is None
 
+        # Assert consistency in paper ids
         if data.get("doi"):
             assert data["doi"] == data["ids"]["doi"]
-
-        oa_url = data["open_access"]["oa_url"]
-
-        publication_date = datetime.fromisoformat(data["publication_date"])
 
         # NB: From locations we can collect links that directly lead to paper.
         # We collect them here so that they can also be added to paper "links" field.
@@ -131,6 +128,20 @@ class OpenAlexQueryManager:
                 links_from_locations.append(
                     Link(type="pdf", link=location["pdf_url"])
                 )
+
+        # For releases, we will use only primary location
+        release_locations = []
+        if (
+            data["primary_location"] is not None
+            and data["primary_location"]["source"] is not None
+        ):
+            release_locations = [data["primary_location"]]
+
+        # We will use work publication date with primary location to set release
+        publication_date = datetime.fromisoformat(data["publication_date"])
+
+        # We will save open access url in paper links
+        oa_url = data["open_access"]["oa_url"]
 
         return Paper(
             title=data["display_name"] or "Untilted",
@@ -178,13 +189,10 @@ class OpenAlexQueryManager:
                         type=VENUE_TYPE_MAPPING[location["source"]["type"]],
                         name=location["source"]["display_name"],
                         series="",
-                        # NB: Specific publication date for each location does not seem to be available,
-                        # so, by default, we use available `Work.publication_date`, defined at Work level.
-                        # https://docs.openalex.org/api-entities/works/work-object#publication_date
                         date=publication_date,
                         date_precision=DatePrecision.day,
                         volume=None,
-                        publisher=None,
+                        publisher=location["source"]["host_organization_name"],
                         aliases=[],
                         links=(
                             [
@@ -220,8 +228,7 @@ class OpenAlexQueryManager:
                     ),
                     pages=None,
                 )
-                for location in locations
-                if location["source"]
+                for location in release_locations
             ],
             topics=[
                 Topic(name=data_concept["display_name"])
