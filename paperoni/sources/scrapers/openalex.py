@@ -46,8 +46,9 @@ VENUE_TYPE_MAPPING = {
 
 
 class OpenAlexQueryManager:
-    def __init__(self):
+    def __init__(self, *, mailto=None):
         self.conn = HTTPSAcquirer("api.openalex.org", format="json")
+        self.mailto = mailto
 
     def find_author_id(self, author: str) -> Optional[str]:
         found = self._evaluate(
@@ -90,7 +91,7 @@ class OpenAlexQueryManager:
                 nb_total = results["meta"]["count"]
                 nb_page = nb_total // per_page + bool(nb_total % per_page)
                 print(
-                    f"[page {page} / {nb_page}, displaying {nb_results} / {nb_total} total results]"
+                    f"[page {page} / {nb_page}, {nb_results} results per page, {nb_total} total results]"
                 )
             for entry in results["results"]:
                 yield entry
@@ -101,6 +102,8 @@ class OpenAlexQueryManager:
             page += 1
 
     def _evaluate(self, path: str, **params):
+        if self.mailto:
+            params["mailto"] = self.mailto
         jdata = self.conn.get(f"/{path}", params=params)
         if jdata is None:
             raise QueryError("Received bad JSON")
@@ -317,7 +320,9 @@ class OpenAlexScraper(BaseScraper):
         if isinstance(exact_title, list):
             exact_title = " ".join(exact_title)
 
-        qm = OpenAlexQueryManager()
+        if verbose and self.config.mailto:
+            print("[openalex: using polite pool]")
+        qm = OpenAlexQueryManager(mailto=self.config.mailto)
         filters = []
 
         if author and author_id:

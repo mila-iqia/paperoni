@@ -52,6 +52,8 @@ class PaperoniConfig:
     history_tag: str | None = None
     services: dict[str, ServiceConfig] = None
     writable: bool = True
+    # Optional email to use for polite pool in scrapers (e.g. in OpenAlex)
+    mailto: str | None = None
 
     def __post_init__(self):
         self._database = None
