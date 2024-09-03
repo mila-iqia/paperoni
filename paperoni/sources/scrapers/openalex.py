@@ -19,7 +19,7 @@ from ...model import (
     VenueType,
     DatePrecision,
 )
-from ...utils import QueryError
+from ...utils import QueryError, link_generators as LINK_GENERATORS
 
 # https://docs.openalex.org/api-entities/institutions/institution-object#type
 INSTITUTION_CATEGORY_MAPPING = {
@@ -43,6 +43,31 @@ VENUE_TYPE_MAPPING = {
     "metadata": VenueType.unknown,
     "other": VenueType.unknown,
 }
+
+
+def _get_link(link_type: str, link_value: str) -> Link:
+    if link_type == "pmid":
+        link_type = "pubmed"
+    if link_type in LINK_GENERATORS:
+        # Extract relevant part.
+        # Relevant part should be the part of `link_value` located in same place
+        # as placeholder `{}` in `abstract` path model.
+        # We assume model contains placeholder `{}` only once.
+        abstract_path_model: str = LINK_GENERATORS[link_type]["abstract"]
+        ref_start = abstract_path_model.index("{")
+        nb_chars_after_ref = len(abstract_path_model) - (ref_start + 2)
+
+        assert link_value[:ref_start] == abstract_path_model[:ref_start]
+
+        relevant_part = link_value[
+            ref_start : (
+                -nb_chars_after_ref if nb_chars_after_ref else len(link_value)
+            )
+        ]
+    else:
+        # Keep full link
+        relevant_part = link_value
+    return Link(type=link_type, link=relevant_part)
 
 
 class OpenAlexQueryManager:
@@ -144,14 +169,14 @@ class OpenAlexQueryManager:
         for location in locations:
             if location["landing_page_url"]:
                 links_from_locations.append(
-                    Link(
-                        type="url",
-                        link=location["landing_page_url"],
+                    _get_link(
+                        "url",
+                        location["landing_page_url"],
                     )
                 )
             if location["pdf_url"]:
                 links_from_locations.append(
-                    Link(type="pdf", link=location["pdf_url"])
+                    _get_link("pdf", location["pdf_url"])
                 )
 
         # For releases, we will use only primary location
@@ -180,15 +205,13 @@ class OpenAlexQueryManager:
                         roles=[],
                         aliases=[],
                         links=[
-                            Link(
-                                type="openalex", link=authorship["author"]["id"]
-                            )
+                            _get_link("openalex", authorship["author"]["id"])
                         ]
                         + (
                             [
-                                Link(
-                                    type="orcid",
-                                    link=authorship["author"]["orcid"],
+                                _get_link(
+                                    "orcid",
+                                    authorship["author"]["orcid"],
                                 )
                             ]
                             if authorship["author"]["orcid"] is not None
@@ -221,16 +244,16 @@ class OpenAlexQueryManager:
                         aliases=[],
                         links=(
                             [
-                                Link(
-                                    type="url",
-                                    link=location["landing_page_url"],
+                                _get_link(
+                                    "url",
+                                    location["landing_page_url"],
                                 )
                             ]
                             if location["landing_page_url"]
                             else []
                         )
                         + (
-                            [Link(type="pdf", link=location["pdf_url"])]
+                            [_get_link("pdf", location["pdf_url"])]
                             if location["pdf_url"] is not None
                             else []
                         ),
@@ -259,12 +282,8 @@ class OpenAlexQueryManager:
                 Topic(name=data_concept["display_name"])
                 for data_concept in data["concepts"]
             ],
-            links=[Link(type=typ, link=ref) for typ, ref in data["ids"].items()]
-            + (
-                [Link(type="open-access", link=oa_url)]
-                if oa_url is not None
-                else []
-            )
+            links=[_get_link(typ, ref) for typ, ref in data["ids"].items()]
+            + ([_get_link("open-access", oa_url)] if oa_url is not None else [])
             + links_from_locations,
             citation_count=data["cited_by_count"],
         )
