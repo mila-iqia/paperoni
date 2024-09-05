@@ -365,6 +365,11 @@ link_generators = {
     "semantic_scholar": {
         "abstract": "https://www.semanticscholar.org/paper/{}"
     },
+    "openalex": {
+        "abstract": "https://openalex.org/{}",
+    },
+    # Placeholder to parse ORCID links, although those are not exactly paper links
+    "orcid": {"abstract": "https://orcid.org/{}"},
 }
 
 
