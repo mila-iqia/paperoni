@@ -1,3 +1,3 @@
 from .common import Index
 
-ROUTES = Index()
+__app__ = Index()

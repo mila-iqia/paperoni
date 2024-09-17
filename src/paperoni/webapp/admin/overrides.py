@@ -22,11 +22,8 @@ class ConfigFile:
 
 
 @mila_template(help="/help#overrides")
-async def app(page, box):
+async def __app__(page, box):
     """Update overrides."""
     await FileEditor(
         ConfigFile(papconf.paths.database.parent / "overrides.yaml")
     ).run(box)
-
-
-ROUTES = app

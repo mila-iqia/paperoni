@@ -15,7 +15,7 @@ here = Path(__file__).parent
 
 
 @mila_template(title="Add papers", help="/help#add-papers")
-async def app(page, box):
+async def __app__(page, box):
     """Add papers using their Semantic Scholar ID."""
     q = Queue()
 
@@ -78,6 +78,3 @@ async def app(page, box):
                         box[results].print(
                             H.div(f"Could not acquire: {typ}:{ref}")
                         )
-
-
-ROUTES = app

@@ -4,9 +4,9 @@ import shutil
 import signal
 from tempfile import mkstemp
 
-from grizzlaxy import simple_route
 from hrepr import H
 from starbear import Queue
+from starbear.server.misc import simple_route
 from starlette.responses import PlainTextResponse
 
 from ...config import papconf
@@ -108,7 +108,7 @@ async def database_upload(request):
 database_upload.hidden = True
 
 
-ROUTES = {
+__app__ = {
     "/": app,
     "/database-upload": database_upload,
 }

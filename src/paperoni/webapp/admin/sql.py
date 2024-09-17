@@ -7,7 +7,7 @@ from ..common import mila_template
 
 
 @mila_template(help="/help#sql")
-async def app(page, box):
+async def __app__(page, box):
     """Query and manipulate the database."""
     q = Queue()
 
@@ -47,6 +47,3 @@ async def app(page, box):
             except sqlalchemy.exc.ResourceClosedError:
                 # Happens when we try to iterate over DELETE results
                 page[result_area].set("done")
-
-
-ROUTES = app

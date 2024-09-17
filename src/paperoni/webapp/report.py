@@ -111,7 +111,7 @@ formatters = {
 }
 
 
-async def report(request):
+async def __app__(request):
     """Generate a JSON or CSV report."""
     fmt = request.query_params.get("format", "json")
     formatter = formatters.get(fmt, None)
@@ -130,6 +130,4 @@ async def report(request):
     )
 
 
-report.hidden = True
-
-ROUTES = report
+__app__.hidden = True

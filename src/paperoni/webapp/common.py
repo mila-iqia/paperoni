@@ -7,10 +7,10 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 import yaml
-from grizzlaxy.index import render
 from hrepr import H, J, returns
 from starbear import ClientWrap, Queue, bear, template as _template
-from starbear.serve import LoneBear
+from starbear.core.app import LoneBear
+from starbear.server.index import render
 
 from ..cli_helper import search
 from ..utils import keyword_decorator
@@ -397,7 +397,7 @@ class RegenGUI(BaseGUI):
             " shown / ",
             H.span["count"]("0"),
             " found",
-            id=True
+            id=True,
         )
         self.link_area = J(namespace=here / "lib.js").clip(
             returns(
