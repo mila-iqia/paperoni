@@ -10,7 +10,7 @@ here = Path(__file__).parent
 
 
 @simplebear
-async def help(request):
+async def __app__(request):
     """Help."""
     md = (here / "help.md").read_text()
     content = markdown.markdown(
@@ -21,6 +21,3 @@ async def help(request):
         title="Help",
         body=H.raw(content),
     )
-
-
-ROUTES = help

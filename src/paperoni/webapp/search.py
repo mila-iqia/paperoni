@@ -11,7 +11,7 @@ here = Path(__file__).parent
 
 
 @mila_template(help="/help#search")
-async def app(page, box):
+async def __app__(page, box):
     """Search for papers."""
     q = Queue()
     area = H.div["area"](id=True)
@@ -30,6 +30,3 @@ async def app(page, box):
         async for result in gui.loop(reset=box[area].clear):
             div = paper_html(result)
             box[area].print(div)
-
-
-ROUTES = app

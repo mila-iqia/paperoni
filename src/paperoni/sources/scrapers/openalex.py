@@ -2,24 +2,24 @@ import pprint
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from coleo import tooled, Option
+from coleo import Option, tooled
 
-from .base import BaseScraper
-from ..acquire import HTTPSAcquirer
 from ...model import (
-    Paper,
-    Release,
-    Venue,
-    Link,
     Author,
-    Topic,
-    PaperAuthor,
+    DatePrecision,
     Institution,
     InstitutionCategory,
+    Link,
+    Paper,
+    PaperAuthor,
+    Release,
+    Topic,
+    Venue,
     VenueType,
-    DatePrecision,
 )
 from ...utils import QueryError, link_generators as LINK_GENERATORS
+from ..acquire import HTTPSAcquirer
+from .base import BaseScraper
 
 # https://docs.openalex.org/api-entities/institutions/institution-object#type
 INSTITUTION_CATEGORY_MAPPING = {

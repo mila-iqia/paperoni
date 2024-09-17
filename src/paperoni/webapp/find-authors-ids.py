@@ -46,7 +46,7 @@ async def prepare(
 
 
 @mila_template(title="Find author IDs", help="/help#find-author-ids")
-async def app(page, box):
+async def __app__(page, box):
     """Include/Exclude author Ids."""
     author_id = bytes.fromhex(page.query_params.get("author_id"))
     cutoff = page.query_params.get("cutoff")
@@ -237,6 +237,4 @@ async def app(page, box):
             )
 
 
-app.hidden = True
-
-ROUTES = app
+__app__.hidden = True

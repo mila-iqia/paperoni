@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
+from typing import Any
 
 from coleo import Option, tooled
-from requests_cache import Any
 from sqlalchemy import or_, select
 
 from .config import papconf

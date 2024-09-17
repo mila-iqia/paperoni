@@ -3,7 +3,7 @@ from pathlib import Path
 from aiostream import stream
 from hrepr import H
 from starbear import Queue, Reference
-from starbear.constructors import BrowserEvent
+from starbear.core.constructors import BrowserEvent
 
 from ..config import papconf
 from .common import SearchGUI, mila_template
@@ -14,7 +14,7 @@ here = Path(__file__).parent
 
 
 @mila_template(help="/help#validation")
-async def app(page, box):
+async def __app__(page, box):
     """Validate papers."""
     q = Queue()
     action_q = Queue().wrap(refs=True)
@@ -118,6 +118,3 @@ async def app(page, box):
                 )
 
                 box[area].print(val_div)
-
-
-ROUTES = app

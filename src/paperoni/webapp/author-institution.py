@@ -16,7 +16,7 @@ here = Path(__file__).parent
 
 
 @mila_template(title="List of researchers", help="/help#author-institution")
-async def app(page, box):
+async def __app__(page, box):
     """Edit/update the list of researchers."""
     q = Queue()
     roles = [
@@ -257,6 +257,3 @@ async def app(page, box):
                 addAuthor(event)
             table_content = make_table(list(generate(name)))
             page[table].set(table_content)
-
-
-ROUTES = app
