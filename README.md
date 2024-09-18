@@ -39,18 +39,20 @@ Make sure to set the `$GIFNOC_FILE` environment variable to the path to that fil
 To start the web app on port 8888, execute the following command:
 
 ```bash
-grizzlaxy -m paperoni.webapp --port 8888
+starbear serve -m paperoni.webapp --port 8888
 ```
 
 You can also add this section to the configuration file (same file as the paperoni config):
 
 ```yaml
-grizzlaxy:
-  module: paperoni.webapp
-  port: 8888
+starbear:
+  server:
+    module: paperoni.webapp
+    port: 8888
+    dev: true
 ```
 
-And then you would just need to run `grizzlaxy` or `grizzlaxy --config config-file.yaml`.
+And then you would just need to run `starbear serve` or `starbear serve --config config-file.yaml`.
 
 Once papers are in the system, the app can be used to validate them or perform searches. There are some steps to follow in order to populate the database:
 

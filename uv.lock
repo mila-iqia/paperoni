@@ -811,11 +811,11 @@ wheels = [
 
 [[package]]
 name = "ovld"
-version = "0.4.2"
+version = "0.4.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/91/b0/d73bd946cf6c41f8c387a4c37bd294e2a924387b56d491d061cd96422110/ovld-0.4.2.tar.gz", hash = "sha256:c07bd445daf5f3f7fe5ccb1b31480f183f64a3f2dcd3d04ccad2eecc2c266a1a", size = 1158674 }
+sdist = { url = "https://files.pythonhosted.org/packages/be/9d/acc8ca6de34328c3bda4ebbd87f08d6a0139ce23ac61c72525e6c86428f0/ovld-0.4.3.tar.gz", hash = "sha256:a5e04bad2a8aca1323a0e8af0864358806ce4289aad4378232af4163279ae8c8", size = 1159005 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/11/55/fbcfb954b797dcac9023a11b056081b6c0a3f27651242c09424c14e6dc0d/ovld-0.4.2-py3-none-any.whl", hash = "sha256:fbae54b455cd07e37fc3327d074b5a21f62370208f0cfe76871741c88721f675", size = 28013 },
+    { url = "https://files.pythonhosted.org/packages/7e/68/379e391f9f7563dce6b3df8f966cfff2062f75509d6b9e9cf71b6a1e541f/ovld-0.4.3-py3-none-any.whl", hash = "sha256:33e7ee30f61abb70e989bb872c32485af180658caa847e85c14e43e4b52e815c", size = 28058 },
 ]
 
 [[package]]
@@ -883,7 +883,7 @@ requires-dist = [
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "markdown", specifier = ">=3.7" },
     { name = "openreview-py", specifier = ">=1.43.2" },
-    { name = "ovld", specifier = ">=0.4.2" },
+    { name = "ovld", specifier = ">=0.4.3" },
     { name = "pydantic", specifier = "<2.0.0" },
     { name = "python-multipart", specifier = ">=0.0.9" },
     { name = "questionary", specifier = ">=2.0.1" },
@@ -892,7 +892,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.8.1" },
     { name = "sentry-sdk", extras = ["starlette"], specifier = ">=2.14.0" },
     { name = "sqlalchemy", specifier = "~=1.4" },
-    { name = "starbear", extras = ["server"], specifier = ">=0.2.2" },
+    { name = "starbear", extras = ["server"], specifier = ">=0.2.3" },
     { name = "tqdm", specifier = ">=4.66.5" },
     { name = "unidecode", specifier = ">=1.3.8" },
 ]
@@ -1322,7 +1322,7 @@ wheels = [
 
 [[package]]
 name = "starbear"
-version = "0.2.2"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gifnoc" },
@@ -1332,9 +1332,9 @@ dependencies = [
     { name = "starlette" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e4/78/6d8c52848ee03c4228238c93bbf3ce019f9898e52db8eb2e49c960ab02ab/starbear-0.2.2.tar.gz", hash = "sha256:e17282bbc7118aea3ecc2659c4ae6b9306085a7157f472eb3e540bb5e0201339", size = 1916587 }
+sdist = { url = "https://files.pythonhosted.org/packages/67/e5/952336e291cbb9eed778c881959a83270f05bebda2d338a834a32807ee5c/starbear-0.2.3.tar.gz", hash = "sha256:c815993d280cc88498a02e126845f1902622f8d3087c8d45f580a3d19e015dad", size = 1916605 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/8e/db07f81e0701baf48d1540e68e857824be58de18cf9ed02979185a21b784/starbear-0.2.2-py3-none-any.whl", hash = "sha256:7caa91422e12cd84a125cf03af5fafcd039d512f769466ef8ea85df3a1933075", size = 47536 },
+    { url = "https://files.pythonhosted.org/packages/d4/b6/dc46afcded812419ba47af6fd62551c1590618daedf346478172b180f62b/starbear-0.2.3-py3-none-any.whl", hash = "sha256:a56efbcc5a0a449a09240a14fca18d0aa1c97ba195c9a0f20ca484543ccd9773", size = 47574 },
 ]
 
 [package.optional-dependencies]
