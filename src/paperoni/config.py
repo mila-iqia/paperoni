@@ -13,6 +13,7 @@ class PaperoniPaths:
     database: Path = None
     history: Path = None
     cache: Path = None
+    fulltext: Path = None
     requests_cache: Path = None
     permanent_requests_cache: Path = None
 

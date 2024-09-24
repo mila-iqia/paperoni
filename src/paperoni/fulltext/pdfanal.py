@@ -383,6 +383,39 @@ def classify_superscripts(doc, lenient=True):
 ########################
 
 
+def to_plain(xml_content: str):
+    xml_content = unicodedata.normalize("NFKC", xml_content)
+    soup = bs4.BeautifulSoup(xml_content, "html.parser")
+    plain = []
+    for i, page in enumerate(soup.select("page")):
+        h = float(page["height"])
+        width = float(page["width"])
+        for block in page.select("block"):
+            for line in block.select("line"):
+                words = Block(
+                    parts=[
+                        Word(
+                            text=w.text,
+                            ymin=float(w["ymin"]) / h + i,
+                            ymax=float(w["ymax"]) / h + i,
+                            xmin=float(w["xmin"]) / width,
+                            xmax=float(w["xmax"]) / width,
+                        )
+                        for w in line.select("word")
+                    ]
+                )
+                mark_superscripts(words)
+                plain.append(
+                    " ".join(
+                        f"^{{{w.text}}}" if w.superscript else w.text
+                        for w in words.parts
+                    )
+                )
+            plain.append("")
+        plain.append("-----")
+    return "\n".join(plain)
+
+
 @ovld
 def display(x: Document):
     for line in x.parts:

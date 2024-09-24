@@ -7,6 +7,7 @@ from sqlalchemy import or_, select
 
 from .config import papconf
 from .db import schema as sch
+from .fulltext.download import PDF, CachePolicies
 from .paper_utils import fulltext
 
 
@@ -285,3 +286,52 @@ def query_papers(
         flags=flag,
         sort=sort,
     )
+
+
+def download_paper(paper):
+    pdf = PDF(
+        identifier=paper.paper_id.hex(),
+        title=paper.title,
+        refs=[f"{lnk.type}:{lnk.link}" for lnk in paper.links],
+        cache_policy=CachePolicies.USE,
+    )
+    if pdf.get():
+        print(f"Successfully downloaded PDF for '{paper.title}'")
+    else:
+        print(f"ERROR: Could not download PDF for '{paper.title}'")
+
+
+@tooled
+def download_papers(
+    title: Option = None,
+    author: Option = None,
+    author_link: Option = None,
+    affiliation: Option = None,
+    venue: Option = None,
+    venue_link: Option = None,
+    link: Option = None,
+    start: Option = None,
+    end: Option = None,
+    year: Option & int = 0,
+    topic: Option = None,
+    sort: Option & str = None,
+    # [action: append]
+    flag: Option & str = [],
+):
+    papers = search(
+        title=title,
+        author=author,
+        author_link=author_link,
+        affiliation=affiliation,
+        venue=venue,
+        venue_link=venue_link,
+        link=link,
+        start=start,
+        end=end,
+        year=year,
+        topic=topic,
+        flags=flag,
+        sort=sort,
+    )
+    for p in papers:
+        download_paper(p)
