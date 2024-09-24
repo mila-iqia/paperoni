@@ -11,7 +11,7 @@ from coleo import Option, auto_cli, tooled, with_extras
 from ovld import ovld
 from sqlalchemy import select
 
-from .cli_helper import query_papers
+from .cli_helper import download_papers, query_papers
 from .config import load_config
 from .db import merge as mergers, schema as sch
 from .display import (
@@ -343,6 +343,11 @@ class search:
                 display(result)
 
 
+def download():
+    with set_config():
+        download_papers()
+
+
 class report:
     def productivity():
         start, end = timespan()
@@ -450,6 +455,7 @@ commands = {
     "replay": replay,
     "merge": merge,
     "search": search,
+    "download": download,
     "sql": sql,
     "report": report,
     "misc": misc,

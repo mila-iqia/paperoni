@@ -7,15 +7,15 @@ from types import SimpleNamespace
 import requests
 
 from ...config import papconf
-from ...model import Institution, InstitutionCategory
-from ...utils import download
-from ..acquire import readpage
-from .pdfanal import (
+from ...fulltext.pdfanal import (
     classify_superscripts,
     make_document_from_layout,
     normalize,
     undertext,
 )
+from ...model import Institution, InstitutionCategory
+from ...utils import download
+from ..acquire import readpage
 
 
 class PDF:

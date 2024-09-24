@@ -329,6 +329,7 @@ def download(url, filename, **kwargs):
     with requests_cache.disabled():
         print(f"Downloading {url}")
         r = requests.get(url, stream=True, **kwargs)
+        r.raise_for_status()
         total = int(r.headers.get("content-length") or "1024")
         with open(filename, "wb") as f:
             with tqdm(total=total) as progress:
