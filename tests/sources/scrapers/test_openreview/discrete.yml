@@ -29,7 +29,7 @@ authors:
       type: openreview
     name: Dianbo Liu
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -39,7 +39,7 @@ authors:
       type: openreview
     name: Alex Lamb
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -49,7 +49,7 @@ authors:
       type: openreview
     name: Kenji Kawaguchi
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -59,7 +59,7 @@ authors:
       type: openreview
     name: Anirudh Goyal
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -69,7 +69,7 @@ authors:
       type: openreview
     name: Chen Sun
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -79,7 +79,7 @@ authors:
       type: openreview
     name: Michael Curtis Mozer
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -89,9 +89,10 @@ authors:
       type: openreview
     name: Yoshua Bengio
     quality:
-    - 0.0
+    - 0.75
     roles: []
 citation_count: null
+flags: []
 links:
 - link: YSYXmOzlrou
   type: openreview
@@ -102,7 +103,7 @@ releases:
   status: poster
   venue:
     aliases: []
-    date: '2021-05-21T00:00:00'
+    date: '2021-11-09T00:00:00'
     date_precision: 3
     links:
     - link: NeurIPS.cc/2021/Conference
@@ -112,7 +113,7 @@ releases:
     peer_reviewed: false
     publisher: null
     quality:
-    - 0.0
+    - 0.5
     series: NeurIPS.cc/Conference
     type: conference
     volume: NeurIPS 2021

@@ -65,8 +65,14 @@ class OpenReviewScraperBase(BaseScraper):
         self.set_client()
 
     def set_client(self):
-        api = {1: "api", 2: "api2"}[self.api_version]
-        self.client = openreview.Client(baseurl=f"https://{api}.openreview.net")
+        if self.api_version == 1:
+            self.client = openreview.Client(
+                baseurl="https://api.openreview.net"
+            )
+        elif self.api_version == 2:
+            self.client = openreview.api.OpenReviewClient(
+                baseurl="https://api2.openreview.net"
+            )
 
     def get_content_field(self, note, key, default=None):
         content = note["content"] if isinstance(note, dict) else note.content
@@ -186,8 +192,7 @@ class OpenReviewScraperBase(BaseScraper):
     def _query(self, params, total=0, limit=1000000):
         next_offset = 0
         while total < limit:
-            params["offset"] = next_offset
-            notes = self.client.get_all_notes(**params, details="replies")
+            notes = self.client.get_notes(**params, details="replies")
             for note in notes:
                 vid = self.get_venue_id(note)
                 if not vid:

@@ -23,7 +23,7 @@ authors:
       type: openreview
     name: Jiashuo Yu
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -33,7 +33,7 @@ authors:
       type: openreview
     name: Yaohui Wang
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -43,7 +43,7 @@ authors:
       type: openreview
     name: Xinyuan Chen
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -53,7 +53,7 @@ authors:
       type: openreview
     name: Xiao Sun
     quality:
-    - 0.0
+    - 0.75
     roles: []
 - affiliations: []
   author:
@@ -63,9 +63,10 @@ authors:
       type: openreview
     name: Yu Qiao
     quality:
-    - 0.0
+    - 0.75
     roles: []
 citation_count: null
+flags: []
 links:
 - link: es2ykIhttu
   type: openreview
@@ -76,7 +77,7 @@ releases:
   status: poster
   venue:
     aliases: []
-    date: '2023-01-09T00:00:00'
+    date: '2023-04-24T00:00:00'
     date_precision: 3
     links:
     - link: ICML.cc/2023/Conference
@@ -86,7 +87,7 @@ releases:
     peer_reviewed: false
     publisher: null
     quality:
-    - 0.0
+    - 0.5
     series: ICML.cc/Conference
     type: conference
     volume: ICML 2023
