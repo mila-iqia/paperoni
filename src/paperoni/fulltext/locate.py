@@ -90,7 +90,6 @@ def find_download_links(typ: Literal["doi"], link: str):
     url = f"https://api.openalex.org/works/doi:{link}?{mailto}&select=open_access,title"
     try:
         results = readpage(url, format="json")
-        print(json.dumps(results, indent=4))
     except requests.HTTPError:
         return
     oa = results["open_access"]
