@@ -11,7 +11,7 @@ from ovld import ovld
 
 from ..config import papconf
 from ..utils import download
-from .locate import find_download_links, ua
+from .locate import URL, find_download_links, ua
 from .pdfanal import to_plain
 
 
@@ -41,10 +41,9 @@ class ErrorData:
 
 
 @dataclass
-class URLResult:
+class DownloadResult:
     ref: str
-    url: str
-    info: str
+    url: URL
     downloaded: bool = False
     error: Optional[ErrorData] = None
 
@@ -54,7 +53,7 @@ class Metadata:
     identifier: str
     title: str
     success: bool
-    sources: list[URLResult]
+    sources: list[DownloadResult]
 
 
 class PDF:
@@ -103,9 +102,9 @@ class PDF:
         pdf = self.pdf_path
         try:
             download(
-                url=src.url,
+                url=src.url.url,
                 filename=self.pdf_path,
-                headers={"User-Agent": ua.random},
+                headers={"User-Agent": ua.random, **src.url.headers},
             )
             src.downloaded = True
         except Exception as exc:
@@ -147,9 +146,8 @@ class PDF:
         self.initialize_meta()
         for ref in self.refs:
             for url in find_download_links(ref):
-                src = URLResult(
-                    url=url.url,
-                    info=url.info,
+                src = DownloadResult(
+                    url=url,
                     ref=ref,
                     downloaded=False,
                     error=None,

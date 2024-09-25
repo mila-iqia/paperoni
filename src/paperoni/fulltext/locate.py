@@ -1,5 +1,4 @@
-import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 import requests
@@ -16,6 +15,17 @@ ua = UserAgent()
 class URL:
     url: str
     info: str
+    headers: dict[str, str] = field(default_factory=dict)
+
+    def readable(self):
+        hd = requests.head(
+            self.url, headers={"User-Agent": ua.random, **self.headers}
+        )
+        try:
+            hd.raise_for_status()
+        except Exception:
+            return False
+        return True
 
 
 @ovld

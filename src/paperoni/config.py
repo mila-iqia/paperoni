@@ -25,6 +25,7 @@ class PaperoniTokens:
     elsevier: str = None
     springer: str = None
     zeta_alpha: str = None
+    wiley: str = None
 
 
 @dataclass
