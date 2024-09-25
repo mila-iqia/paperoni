@@ -4,7 +4,7 @@ from giving import given
 from pytest import fixture
 
 from paperoni.model import Paper
-from paperoni.sources.scrapers.openreview2 import (
+from paperoni.sources.scrapers.openreview import (
     OpenReviewPaperScraper,
     OpenReviewProfileScraper,
     OpenReviewVenueScraper,
@@ -15,27 +15,27 @@ from .utils import controller_from_generator, isin
 
 @fixture
 def scraper(config_empty):
-    return OpenReviewPaperScraper(config_empty, config_empty.database)
+    return OpenReviewPaperScraper(config_empty, config_empty.database, 2)
 
 
 @fixture
 def vscraper(config_empty):
-    return OpenReviewVenueScraper(config_empty, config_empty.database)
+    return OpenReviewVenueScraper(config_empty, config_empty.database, 2)
 
 
 @fixture
 def pscraper(config_empty):
-    return OpenReviewProfileScraper(config_empty, config_empty.database)
+    return OpenReviewProfileScraper(config_empty, config_empty.database, 2)
 
 
 @fixture
 def scraper_y(config_yoshua):
-    return OpenReviewPaperScraper(config_yoshua, config_yoshua.database)
+    return OpenReviewPaperScraper(config_yoshua, config_yoshua.database, 2)
 
 
 @fixture
 def scraper_p(config_profs):
-    return OpenReviewPaperScraper(config_profs, config_profs.database)
+    return OpenReviewPaperScraper(config_profs, config_profs.database, 2)
 
 
 def test_query_title(scraper, data_regression):

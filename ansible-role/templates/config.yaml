@@ -31,30 +31,36 @@ paperoni:
     paperoni-upload:
       enabled: true
 
-grizzlaxy:
-  module: paperoni.webapp
-  port: {{ paperoni_port }}
-  host: "{{ paperoni_host }}"
-  ssl:
-    enabled: {{ paperoni_ssl_enabled | to_json }}
-    keyfile: "cert/cert-key.pem"
-    certfile: "cert/cert.pem"
-  oauth:
-    enabled: {{ paperoni_oauth_enabled | to_json }}
-    permissions: "{{ app_data_dir }}/permissions.json"
-    default_permissions: {{ paperoni_default_permissions | to_json }}
-    name: google
-    server_metadata_url: "https://accounts.google.com/.well-known/openid-configuration"
-    client_kwargs:
-      scope: "openid email profile"
-      prompt: "select_account"
-    environ:
-      GOOGLE_CLIENT_ID: "{{ paperoni_google_client_id }}"
-      GOOGLE_CLIENT_SECRET: "{{ paperoni_google_client_secret }}"
-  sentry:
-    enabled: {{ paperoni_sentry_enabled | to_json }}
-    dsn: {{ paperoni_sentry_dsn | to_json }}
-    traces_sample_rate: {{ paperoni_sentry_traces_sample_rate | to_json }}
-    environment: {{ paperoni_sentry_environment | to_json }}
-    log_level: ERROR
-    event_log_level: ERROR
+starbear:
+  server:
+    module: paperoni.webapp
+    port: {{ paperoni_port }}
+    host: "{{ paperoni_host }}"
+    ssl:
+      enabled: {{ paperoni_ssl_enabled | to_json }}
+      keyfile: "cert/cert-key.pem"
+      certfile: "cert/cert.pem"
+    plugins:
+      permissions:
+        class: starbear.server.plugins.permissions:Permissions
+        file: "{{ app_data_dir }}/permissions.json"
+        defaults: {{ paperoni_default_permissions | to_json }}
+      oauth:
+        class: starbear.server.plugins.oauth:OAuth
+        enabled: {{ paperoni_oauth_enabled | to_json }}
+        name: google
+        server_metadata_url: "https://accounts.google.com/.well-known/openid-configuration"
+        client_kwargs:
+          scope: "openid email profile"
+          prompt: "select_account"
+        environ:
+          GOOGLE_CLIENT_ID: "{{ paperoni_google_client_id }}"
+          GOOGLE_CLIENT_SECRET: "{{ paperoni_google_client_secret }}"
+      sentry:
+        class: starbear.server.plugins.sentry:Sentry
+        enabled: {{ paperoni_sentry_enabled | to_json }}
+        dsn: {{ paperoni_sentry_dsn | to_json }}
+        traces_sample_rate: {{ paperoni_sentry_traces_sample_rate | to_json }}
+        environment: {{ paperoni_sentry_environment | to_json }}
+        log_level: ERROR
+        event_log_level: ERROR

@@ -1,6 +1,8 @@
+import os
 import shutil
 from pathlib import Path
 
+import yaml
 from pytest import fixture
 
 
@@ -33,11 +35,16 @@ def _ensure_db(cfg):
         shutil.copy(dbfixed, dbpath)
 
 
-def transient_config(name):
+def transient_config(name, include_secrets=False):
     from paperoni.config import load_config
 
-    config_file = Path(__file__).parent / "data" / name
-    with load_config(config_file) as cfg:
+    configs = [Path(__file__).parent / "data" / name]
+    if include_secrets:
+        configs.append(
+            yaml.safe_load(os.environ.get("PAPERONI_CONFIG_SECRETS", {}))
+        )
+
+    with load_config(*configs) as cfg:
         _ensure_db(cfg)
         yield cfg
 
@@ -76,3 +83,8 @@ def config_profs():
 @fixture
 def config_yoshua():
     yield from transient_config("config-yoshua.yaml")
+
+
+@fixture
+def config_with_secrets():
+    yield from transient_config("config-readonly.yaml", include_secrets=True)
