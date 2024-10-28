@@ -63,13 +63,29 @@ def find_download_links(typ: Literal["pdf", "pdf.official"], link: str):
 
 @ovld(priority=100)
 def find_download_links(typ: Literal["doi"], link: str):
+    """Find links from Wiley DOI entry (needs token)."""
+    if key := papconf.tokens.wiley:
+        url = URL(
+            url=f"https://api.wiley.com/onlinelibrary/tdm/v1/articles/{link}",
+            headers={"Wiley-TDM-Client-Token": key},
+            info="doi.wiley",
+        )
+        if url.readable():
+            yield url
+    yield from call_next(typ, link)
+
+
+@ovld(priority=100)
+def find_download_links(typ: Literal["doi"], link: str):
     """Find links from ScienceDirect DOI entry (needs token)."""
     key = papconf.tokens.elsevier
     if key:
-        yield URL(
+        url = URL(
             url=f"https://api.elsevier.com/content/article/doi/{link}?apiKey={key}&httpAccept=application%2Fpdf",
             info="doi.sciencedirect",
         )
+        if url.readable():
+            yield url
     yield from call_next(typ, link)
 
 
