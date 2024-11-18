@@ -7,8 +7,7 @@ from sqlalchemy import or_, select
 
 from .config import papconf
 from .db import schema as sch
-from .fulltext.download import PDF, CachePolicies
-from .paper_utils import fulltext
+from .fulltext.download import PDF, CachePolicies, fulltext
 
 
 @tooled
@@ -165,7 +164,12 @@ def search_stmt(
 
 
 def find_excerpt(paper, excerpt, allow_download=True):
-    text = fulltext(paper, cache_policy="use" if allow_download else "only")
+    text = fulltext(
+        paper,
+        cache_policy=CachePolicies.USE
+        if allow_download
+        else CachePolicies.NO_DOWNLOAD,
+    )
     if text is None:
         return None
     match = re.search(string=text, pattern=excerpt, flags=re.IGNORECASE)

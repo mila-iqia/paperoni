@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import sys
 import traceback
@@ -12,7 +13,7 @@ from ovld import ovld
 from ..config import papconf
 from ..utils import download
 from .locate import URL, find_download_links, ua
-from .pdfanal import to_plain
+from .pdfanal import make_document_from_layout, to_plain
 
 
 @dataclass
@@ -173,7 +174,38 @@ class PDF:
         else:
             return False
 
+    def get_document(self):
+        success = self.get()
+        layout = self.xml_path.read_text() if success else None
+        doc = make_document_from_layout(layout)
+        for line in doc.parts:
+            if line.ymin < 1:
+                # First page
+                if re.search(
+                    pattern="anonymous author",
+                    string=line.text,
+                    flags=re.IGNORECASE,
+                ):
+                    # Throw away the data; a later download might have the author info
+                    print("Anonymous authors; throwing away.")
+                    self.clear(failure="anonymous")
+                    return None
+            else:
+                break
+        return doc
+
     @property
     def fulltext(self):
         success = self.get()
         return self.text_path.read_text() if success else None
+
+
+def fulltext(paper, cache_policy=CachePolicies.USE):
+    links = [f"{lnk.type}:{lnk.link}" for lnk in paper.links]
+    pdf = PDF(
+        identifier=paper.paper_id.hex(),
+        title=paper.title,
+        refs=links,
+        cache_policy=cache_policy,
+    )
+    return pdf.fulltext
