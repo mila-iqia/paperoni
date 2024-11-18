@@ -17,6 +17,7 @@ from sqlalchemy import select
 
 from ...config import papconf
 from ...db import schema as sch
+from ...fulltext.download import PDF
 from ...model import (
     Author,
     DatePrecision,
@@ -42,7 +43,7 @@ from ...utils import (
 )
 from ..acquire import readpage
 from .base import BaseScraper
-from .pdftools import PDF, find_fulltext_affiliations
+from .pdf_affiliations import find_fulltext_affiliations
 
 ua = UserAgent()
 refiners = defaultdict(list)
@@ -774,7 +775,11 @@ _institutions = [None, None]
 
 
 def _pdf_refiner(db, paper, link):
-    doc = PDF(link).get_document()
+    doc = PDF(
+        title=paper.title,
+        identifier=paper.paper_id.hex(),
+        refs=[f"{link.type}:{link.link}"],
+    ).get_document()
     if not doc:
         return None
 
