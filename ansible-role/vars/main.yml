@@ -12,7 +12,7 @@ app_module: paperoni
 app_services:
   - name: web
     description: Web server
-    command: "{{ paprun }} grizzlaxy"
+    command: "{{ paprun }} starbear serve"
 
 app_timers:
   - name: scrape
