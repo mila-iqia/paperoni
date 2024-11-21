@@ -197,8 +197,8 @@ async def __app__(page, box):
         return H.tr(onclick=lambda event, id=id: clickAuthor(id))(
             H.td(author.name),
             H.td(result.role),
-            H.td(date_start),
-            H.td(date_end),
+            H.td(str(date_start)),
+            H.td(str(date_end)),
             H.td["column-email"](email),
             H.td(
                 H.div(

@@ -7,7 +7,7 @@ from starbear import Queue, Reference
 
 from ..config import papconf
 from ..db import schema as sch
-from ..sources.scrapers.openreview import OpenReviewPaperScraper
+from ..sources.scrapers.openreview import OpenReviewPaperScraperV2
 from ..sources.scrapers.semantic_scholar import SemanticScholarQueryManager
 from ..utils import similarity
 from .common import mila_template
@@ -198,7 +198,7 @@ async def __app__(page, box):
         if scraper == "semantic_scholar":
             current_query_name = ss.author_with_papers
         elif scraper == "openreview":
-            or_scraper = OpenReviewPaperScraper(papconf, db)
+            or_scraper = OpenReviewPaperScraperV2(papconf, db)
             all_venues = or_scraper._venues_from_wildcard("*")
             current_query_name = query_name
 
