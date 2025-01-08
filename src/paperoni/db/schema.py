@@ -347,3 +347,13 @@ t_paper_release = Table(
     Column("paper_id", ForeignKey("paper.paper_id"), primary_key=True),
     Column("release_id", ForeignKey("release.release_id"), primary_key=True),
 )
+
+t_author_scrape_ids = Table(
+    "author_scrape_ids",
+    metadata,
+    Column("scraper", Text, nullable=False, primary_key=True),
+    Column("author_id", LargeBinary, ForeignKey("author.author_id")),
+    Column("scrape_id", Text, nullable=False, primary_key=True),
+    Column("active", Integer, nullable=False, server_default=text("0")),
+    CheckConstraint("active in (-1, 0, 1)"),
+)
