@@ -289,6 +289,7 @@ class Database(OvldBase):
                 sch.AuthorInstitution: "author_id",
                 sch.Scraper: "hashid",
                 sch.CanonicalId: "canonical",
+                sch.t_author_scrape_ids: "author_id",
             },
         )
 
