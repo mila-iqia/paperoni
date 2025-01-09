@@ -833,6 +833,7 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/02/4f/35bd8b465dbacb15db9f0b2d17a64a1eff9ea8c93a349cae437eb0c5179c/openreview_py-1.45.0-py2.py3-none-any.whl", hash = "sha256:471d634ce9e4e65f24af80522a3ab5d53c942c31885d70dcdbafcbc466571a17", size = 703475 },
+    { url = "https://files.pythonhosted.org/packages/33/e1/e297cebb024d3b329a7c80dbedcbb95940b009c7c4866c0d2e5661a24427/openreview_py-1.45.0-py3-none-any.whl", hash = "sha256:8c1f5280695579abe21312c77e9471beca501a4197918f8515d20d0642e2c3f0", size = 705325 },
 ]
 
 [[package]]
@@ -918,7 +919,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.8.1" },
     { name = "sentry-sdk", extras = ["starlette"], specifier = ">=2.14.0" },
     { name = "sqlalchemy", specifier = "~=1.4" },
-    { name = "starbear", extras = ["server"], specifier = ">=0.2.3" },
+    { name = "starbear", extras = ["server"], specifier = ">=0.2.5" },
     { name = "tqdm", specifier = ">=4.66.5" },
     { name = "unidecode", specifier = ">=1.3.8" },
 ]
@@ -1349,7 +1350,7 @@ wheels = [
 
 [[package]]
 name = "starbear"
-version = "0.2.4"
+version = "0.2.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gifnoc" },
@@ -1360,9 +1361,9 @@ dependencies = [
     { name = "starlette" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/63/aa/d69743262f19759c9d464f8c32660fe2d1f068d33ec5f97f15cde2772e13/starbear-0.2.4.tar.gz", hash = "sha256:7e8e19caf0de0306101867b22791af17a7207660c26ed77b62e9066aa0b52c06", size = 10289405 }
+sdist = { url = "https://files.pythonhosted.org/packages/6d/66/17d06279b24a30a8915130c92865752e05b011c89ab2baef191c52a56e41/starbear-0.2.5.tar.gz", hash = "sha256:67e63b1e1c8c1283c5720b949a62e9ea698f17e588de7c8274f632aed8d73c8c", size = 10491859 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/ae/bab74827c011533e74ef162a5ec45d0cbbdbe2721009f000d3465d370578/starbear-0.2.4-py3-none-any.whl", hash = "sha256:13da9611e991f5707d545ed56086344dcade76d71cec96be0326427567e18c7e", size = 48082 },
+    { url = "https://files.pythonhosted.org/packages/07/ea/6e61febb5994ff9eb2e1b44a6e39c67ae7feabac2667932b8559528894f1/starbear-0.2.5-py3-none-any.whl", hash = "sha256:1967f4ee980d83f0ebc7b31c97d7ebebb695652de5913b736b3357250a9de8d8", size = 48308 },
 ]
 
 [package.optional-dependencies]
