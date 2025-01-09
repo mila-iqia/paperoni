@@ -512,3 +512,19 @@ table.sql-results th {
     color: white;
     background: black;
 }
+
+.config-editor {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    border: 1px solid black;
+}
+
+.config-editor .editor {
+    flex-grow: 1;
+}
+
+.config-editor .outcome {
+    color: white;
+    background: black;
+}

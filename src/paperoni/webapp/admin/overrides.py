@@ -2,7 +2,7 @@ import gifnoc
 import yaml
 
 from ...config import papconf
-from ..common import FileEditor, mila_template
+from ..common import ConfigEditor, mila_template
 
 
 class ConfigFile:
@@ -24,6 +24,5 @@ class ConfigFile:
 @mila_template(help="/help#overrides")
 async def __app__(page, box):
     """Update overrides."""
-    await FileEditor(
-        ConfigFile(papconf.paths.database.parent / "overrides.yaml")
-    ).run(box)
+    file = ConfigFile(papconf.paths.database.parent / "overrides.yaml")
+    box.print(ConfigEditor(file, language="yaml"))

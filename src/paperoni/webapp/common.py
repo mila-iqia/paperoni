@@ -1,14 +1,12 @@
 import asyncio
-import html
-import subprocess
 import traceback
 from functools import wraps
 from pathlib import Path
 from urllib.parse import urlencode
 
-import yaml
 from hrepr import H, J, returns
 from starbear import ClientWrap, Queue, bear, template as _template
+from starbear.components.editor import Editor
 from starbear.core.app import LoneBear
 from starbear.server.index import render
 
@@ -19,58 +17,45 @@ from . import filters
 here = Path(__file__).parent
 
 
-class NormalFile:
-    def __init__(self, pth, validate=None):
-        self.path = Path(pth).expanduser()
-        self.validate = validate
-
-    def read(self):
-        return self.path.read_text()
-
-    def write(self, new_text, dry=False):
-        if self.validate:
-            if not self.validate(new_text):
-                raise Exception("Content is invalid")
-        if not dry:
-            self.path.write_text(new_text)
-
-
-class YAMLFile(NormalFile):
-    def __init__(self, pth):
-        super().__init__(pth, yaml.safe_load)
-
-
-class FileEditor:
-    def __init__(self, file):
+class ConfigEditor:
+    def __init__(self, file, language="javascript"):
         self.file = file
+        self.language = language
 
-    async def run(self, page):
+    async def __live__(self, element):
         q = Queue()
-        submit = ClientWrap(q, form=True)
-        debounced = ClientWrap(q, debounce=0.3, form=True)
-
-        page.print(
-            H.form["update-file"](
-                H.textarea(
-                    self.file.read(), name="new-content", oninput=debounced
-                ),
-                actionarea := H.div(id=True),
-                onsubmit=submit,
-            ),
+        ed = Editor(
+            value=self.file.read(),
+            language=self.language,
+            onChange=q.tag("edit"),
+            bindings={"CtrlCmd+KeyS": q.tag("submit")},
+        )
+        element.print(
+            H.div["config-editor"](
+                H.div["editor"](ed),
+                result := H.div["outcome"]("Saved").ensure_id(),
+            )
         )
 
         async for event in q:
             try:
-                self.file.write(event["new-content"], dry=not event.submit)
+                if event.tag == "edit" and event["event"] == "change":
+                    new = event["content"]
+                    self.file.write(new, dry=True)
+                    element[result].set(
+                        H.button(
+                            "Update", name="update", onclick=q.tag("submit")
+                        )
+                    )
+                elif event.tag == "submit":
+                    self.file.write(new, dry=False)
+                    element[result].set("Saved")
+                else:
+                    element.print(event)
             except Exception as exc:
-                page[actionarea].set(
+                element[result].set(
                     H.div["error"](f"{type(exc).__name__}: {exc}")
                 )
-            else:
-                if event.submit:
-                    page[actionarea].set("Saved")
-                else:
-                    page[actionarea].set(H.button("Update", name="update"))
 
 
 class SearchElement:
