@@ -16,7 +16,7 @@ dependencies = [
     "requests>=2.32.3",
     "requests-cache>=1.2.1",
     "sqlalchemy~=1.4",
-    "starbear[server]>=0.2.3",
+    "starbear[server]>=0.2.5",
     "eventlet>=0.37.0",
     "tqdm>=4.66.5",
     "pydantic<2.0.0",
