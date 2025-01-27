@@ -40,7 +40,7 @@ class NeurIPSScraper(ProceedingsScraper):
             authors=[
                 PaperAuthor(
                     author=Author(
-                        name=f'{author["given_name"]} {author["family_name"]}',
+                        name=f"{author['given_name']} {author['family_name']}",
                         roles=[],
                         aliases=[],
                         links=[],
@@ -73,7 +73,7 @@ class NeurIPSScraper(ProceedingsScraper):
                         volume=str(entry.get("volume", "")),
                     ),
                     status="published",
-                    pages=f'{entry["page_first"]}--{entry["page_last"]}',
+                    pages=f"{entry['page_first']}--{entry['page_last']}",
                 )
             ],
             topics=[],

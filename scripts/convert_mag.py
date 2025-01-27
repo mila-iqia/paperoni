@@ -29,7 +29,7 @@ def process_paper(paper):
     if "J" in paper:
         j = paper["J"]
         detail = paper.get("V", None) or paper["D"]
-        lnk = f'{j["JId"]}/{detail}'
+        lnk = f"{j['JId']}/{detail}"
         venue = {
             "type": "journal",
             "name": paper.get("BV", None) or j["JN"],
@@ -39,7 +39,7 @@ def process_paper(paper):
         }
     elif "C" in paper:
         c = paper["C"]
-        lnk = f'{c["CId"]}/{paper["Y"]}'
+        lnk = f"{c['CId']}/{paper['Y']}"
         venue = {
             "type": "conference",
             "name": paper.get("BV", None) or c["CN"],
