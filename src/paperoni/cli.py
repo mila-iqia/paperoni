@@ -218,9 +218,9 @@ def run_sql_query(query):
     else:
         plain = True
 
-    assert not (
-        json_output and plain
-    ), "--json and --plain are mutually exclusive"
+    assert not (json_output and plain), (
+        "--json and --plain are mutually exclusive"
+    )
 
     query = date_syntax(query)
 

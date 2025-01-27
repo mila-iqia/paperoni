@@ -118,10 +118,10 @@ def _paper_from_jats(soup, links):
     date = date_candidates and date_candidates[0]
 
     def find_affiliation(aff):
-        node = soup.select_one(f'aff#{aff.attrs["rid"]} institution')
+        node = soup.select_one(f"aff#{aff.attrs['rid']} institution")
         if not node:
             with covguard():
-                node = soup.select_one(f'aff#{aff.attrs["rid"]}')
+                node = soup.select_one(f"aff#{aff.attrs['rid']}")
         name = node.text
         name = re.sub(pattern="^[0-9]+", string=name, repl="")
         return Institution(
