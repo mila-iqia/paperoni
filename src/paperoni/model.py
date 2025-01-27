@@ -10,6 +10,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, create_model
+from pydantic.dataclasses import dataclass
 
 from .utils import quality_int, tag_uuid
 
@@ -191,11 +192,18 @@ class PaperAuthor(Base):
     affiliations: list[Institution]
 
 
+class ScraperID(Base):
+    scraper: str
+    scrape_id: str
+    active: bool
+
+
 class Author(BaseWithQuality):
     name: str
     roles: list[Role]
-    aliases: list[str]
-    links: list[Link]
+    aliases: list[str] = Field(default_factory=list)
+    links: list[Link] = Field(default_factory=list)
+    scraper_ids: list[ScraperID] = Field(default_factory=list)
 
 
 class Institution(Base):
@@ -302,8 +310,12 @@ def ided(cls, pfx):
 
 
 for cls in list(globals().values()):
-    if isinstance(cls, type) and issubclass(cls, BaseModel):
-        cls.update_forward_refs()
+    if (
+        isinstance(cls, type)
+        and issubclass(cls, BaseModel)
+        and cls is not BaseModel
+    ):
+        cls.model_rebuild()
 
 
 UniqueAuthor = ided(Author, "author")

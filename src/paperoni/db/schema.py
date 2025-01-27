@@ -26,6 +26,7 @@ class Author(Base):
         "AuthorInstitution", back_populates="author"
     )
     author_link = relationship("AuthorLink", back_populates="author")
+    author_scrape_ids = relationship("AuthorScrapeIds", back_populates="author")
     paper_author = relationship("PaperAuthor", back_populates="author")
     paper_author_institution = relationship(
         "PaperAuthorInstitution", back_populates="author"
@@ -42,6 +43,10 @@ class Author(Base):
     @property
     def roles(self):
         return [x for x in self.author_institution]
+
+    @property
+    def scrape_ids(self):
+        return [x for x in self.author_scrape_ids]
 
 
 class CanonicalId(Base):
@@ -341,6 +346,18 @@ class VenueLink(Base):
     venue = relationship("Venue", back_populates="venue_link")
 
 
+class AuthorScrapeIds(Base):
+    __tablename__ = "author_scrape_ids"
+    __table_args__ = (CheckConstraint("active in (0, 1)"),)
+
+    scraper = Column(Text, primary_key=True, nullable=False)
+    scrape_id = Column(Text, primary_key=True, nullable=False)
+    active = Column(Integer, nullable=False, server_default=text("0"))
+    author_id = Column(ForeignKey("author.author_id"))
+
+    author = relationship("Author", back_populates="author_scrape_ids")
+
+
 t_paper_release = Table(
     "paper_release",
     metadata,
@@ -356,4 +373,5 @@ t_author_scrape_ids = Table(
     Column("scrape_id", Text, nullable=False, primary_key=True),
     Column("active", Integer, nullable=False, server_default=text("0")),
     CheckConstraint("active in (-1, 0, 1)"),
+    extend_existing=True,
 )
