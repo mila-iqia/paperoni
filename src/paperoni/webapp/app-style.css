@@ -518,6 +518,7 @@ table.sql-results th {
     flex-direction: column;
     height: 80vh;
     border: 1px solid black;
+    border-top: none;
 }
 
 .config-editor .editor {
@@ -527,4 +528,17 @@ table.sql-results th {
 .config-editor .outcome {
     color: white;
     background: black;
+}
+
+.editor-filter {
+    display: flex;
+    border: 1px solid black;
+    border-bottom: none;
+}
+.editor-filter input {
+    flex: 1;
+    font-size: 16px;
+    margin-left: 10px;
+    outline: none;
+    border: none;
 }

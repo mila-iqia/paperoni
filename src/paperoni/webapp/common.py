@@ -17,15 +17,37 @@ from . import filters
 here = Path(__file__).parent
 
 
-class ConfigEditor:
-    def __init__(self, file, language="javascript"):
-        self.file = file
+class ContentEditor:
+    def __init__(self, language, filter="", show_filter=False):
         self.language = language
+        self.filter = filter
+        self.show_filter = show_filter
+
+    def read(self):
+        return ""
+
+    def change(self, new):
+        return True
+
+    def submit(self, new):
+        raise NotImplementedError()
 
     async def __live__(self, element):
         q = Queue()
+        if self.show_filter:
+            element.print(
+                H.div["editor-filter"](
+                    "🔎",
+                    H.input(
+                        value=self.filter,
+                        oninput=q.tag("filter").wrap(debounce=0.25),
+                        autocomplete="off",
+                    ),
+                )
+            )
+
         ed = Editor(
-            value=self.file.read(),
+            value=self.read(),
             language=self.language,
             onChange=q.tag("edit"),
             bindings={"CtrlCmd+KeyS": q.tag("submit")},
@@ -41,21 +63,41 @@ class ConfigEditor:
             try:
                 if event.tag == "edit" and event["event"] == "change":
                     new = event["content"]
-                    self.file.write(new, dry=True)
-                    element[result].set(
-                        H.button(
-                            "Update", name="update", onclick=q.tag("submit")
+                    if self.change(new):
+                        element[result].set(
+                            H.button(
+                                "Update", name="update", onclick=q.tag("submit")
+                            )
                         )
-                    )
+                elif event.tag == "filter":
+                    self.filter = event.value
+                    await element[ed].js.editor.setValue(self.read())
                 elif event.tag == "submit":
-                    self.file.write(new, dry=False)
-                    element[result].set("Saved")
+                    if self.submit(new):
+                        element[result].set("Saved")
                 else:
                     element.print(event)
             except Exception as exc:
                 element[result].set(
                     H.div["error"](f"{type(exc).__name__}: {exc}")
                 )
+
+
+class ConfigEditor(ContentEditor):
+    def __init__(self, file, language="javascript"):
+        self.file = file
+        super().__init__(language)
+
+    def read(self):
+        return self.file.read()
+
+    def change(self, new):
+        self.file.write(new, dry=True)
+        return True
+
+    def submit(self, new):
+        self.file.write(new, dry=False)
+        return True
 
 
 class SearchElement:

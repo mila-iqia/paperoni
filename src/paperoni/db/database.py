@@ -186,6 +186,15 @@ class Database(OvldBase):
             )
             self.session.merge(lnk)
 
+        for sid in author.scraper_ids:
+            lnk = sch.AuthorScrapeIds(
+                author_id=aa.author_id,
+                scraper=sid.scraper,
+                scrape_id=sid.scrape_id,
+                active=sid.active,
+            )
+            self.session.merge(lnk)
+
         for alias in set(author.aliases) | {author.name}:
             aal = sch.AuthorAlias(
                 author_id=aa.author_id,
@@ -462,7 +471,7 @@ class Database(OvldBase):
         canon_stmt = f"""
         UPDATE canonical_id
         SET canonical = {canhex}
-        WHERE {conds('hashid')} OR {conds('canonical')}
+        WHERE {conds("hashid")} OR {conds("canonical")}
         """
         self.session.execute(canon_stmt)
 
@@ -478,7 +487,7 @@ class Database(OvldBase):
         UPDATE {table.name}
         SET {", ".join(updates)}
         FROM (
-            SELECT {', '.join(coalesces)}
+            SELECT {", ".join(coalesces)}
             FROM {table.name} as t0
             {" ".join(joins)}
             WHERE t0.{id_field} = X'{best.id.hex}'
