@@ -10,6 +10,7 @@ from ..config import papconf
 from ..db import schema as sch
 from ..model import (
     Institution,
+    Link,
     Role,
     ScraperID,
     UniqueAuthor,
@@ -75,7 +76,14 @@ class ResearchersPatch(DBPatch):
                     author_id=row.author_id.hex(),
                     name=row.name,
                     aliases=[],
-                    links=[],
+                    links=[
+                        Link(
+                            link=lnk.link,
+                            type=lnk.type,
+                        )
+                        for lnk in row.links
+                        if lnk.type == "email.mila"
+                    ],
                     roles=[
                         Role(
                             role=role.role,
@@ -116,11 +124,16 @@ class ResearchersPatch(DBPatch):
                     )
                 for role in row.roles:
                     db.session.delete(role)
+                for link in row.links:
+                    if link.type == "email.mila":
+                        db.session.delete(link)
+            db.session.commit()
 
     def put(self, data):
         with papconf.database as db:
             for _, author in data.items():
                 db.acquire(author)
+            db.session.commit()
         return True
 
 
