@@ -34,7 +34,7 @@ dependencies = [
     "beautifulsoup4>=4.12.3",
     "blessed>=1.20.0",
     "markdown>=3.7",
-    "pydantic>=1.10.19",
+    "pydantic>=1.10.19,<2.0",
 ]
 
 [project.urls]
