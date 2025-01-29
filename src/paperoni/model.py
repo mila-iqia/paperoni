@@ -315,7 +315,7 @@ for cls in list(globals().values()):
         and issubclass(cls, BaseModel)
         and cls is not BaseModel
     ):
-        cls.model_rebuild()
+        cls.update_forward_refs()
 
 
 UniqueAuthor = ided(Author, "author")
