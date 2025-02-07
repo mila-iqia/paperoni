@@ -86,7 +86,13 @@ class ContentEditor:
 class ConfigEditor(ContentEditor):
     def __init__(self, file, language="javascript"):
         self.file = file
-        if self.file.config.file.suffix == ".yaml":
+
+        # Don't ask. It's a mess.
+        x = file
+        while hasattr(x, "file"):
+            x = x.file
+
+        if x.suffix == ".yaml":
             language = "yaml"
         super().__init__(language)
 
