@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from functools import partial
+from traceback import print_exception
 
 from coleo import Option, tooled
 from requests import HTTPError
@@ -429,11 +430,14 @@ class SemanticScholarScraper(BaseScraper):
         for name, ids, start, end in queries:
             for ssid in ids:
                 print(f"Fetch papers for {name} (ID={ssid})")
-                yield from filter_papers(
-                    papers=ss.author_papers(ssid, block_size=1000),
-                    start=start,
-                    end=end,
-                )
+                try:
+                    yield from filter_papers(
+                        papers=ss.author_papers(ssid, block_size=1000),
+                        start=start,
+                        end=end,
+                    )
+                except Exception as exc:
+                    print_exception(exc)
 
     @tooled
     def prepare(self, controller=prompt_controller):

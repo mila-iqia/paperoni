@@ -192,6 +192,7 @@ class OpenReviewScraperBase(BaseScraper):
     def _query(self, params, total=0, limit=1000000):
         next_offset = 0
         while total < limit:
+            params["offset"] = next_offset
             notes = self.client.get_notes(**params, details="replies")
             for note in notes:
                 vid = self.get_venue_id(note)
@@ -295,7 +296,7 @@ class OpenReviewScraperBase(BaseScraper):
             next_offset += len(notes)
             if not notes or "id" in params:
                 break
-        total += next_offset
+            total += next_offset
 
     def _query_papers_from_venues(
         self, params, venues=None, total=0, limit=1000000
