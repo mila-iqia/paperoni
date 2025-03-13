@@ -7,7 +7,6 @@ from traceback import print_exc
 
 import gifnoc
 import requests
-from coleo import Option
 from gifnoc import Command, Option as GOption
 from requests.auth import HTTPBasicAuth
 
@@ -94,20 +93,14 @@ def export_all(papers, limit):
     return results
 
 
-def misc():
-    # [positional: **]
-    rest: Option = []
-
-    assert rest[0] == "upload"
-    rest = rest[1:]
-
+def command_upload(argv):
     with gifnoc.cli(
         options=Command(
             mount="paperoni.upload_options.search",
             auto=True,
             options={".year": GOption(aliases=["-y"])},
         ),
-        argv=rest,
+        argv=argv,
     ):
         if not upload_options.url and not upload_options.only_dump:
             exit("No URL to upload to.")

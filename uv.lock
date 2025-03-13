@@ -779,6 +779,21 @@ wheels = [
 ]
 
 [[package]]
+name = "mailchimp-marketing"
+version = "3.0.80"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "python-dateutil" },
+    { name = "requests" },
+    { name = "six" },
+    { name = "urllib3" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/22/a0/bf3a0d0c237eee255a02ee9a75fc60cabff2ec8264c4f715c4e647ba2466/mailchimp_marketing-3.0.80-py3-none-any.whl", hash = "sha256:a5bcb3ebd3be60908c65af765f8195724e6fd2d61ecf6da667a794c5bc7b84d3", size = 109565 },
+]
+
+[[package]]
 name = "markdown"
 version = "3.7"
 source = { registry = "https://pypi.org/simple" }
@@ -861,6 +876,7 @@ dependencies = [
     { name = "giving" },
     { name = "html5lib" },
     { name = "lxml" },
+    { name = "mailchimp-marketing" },
     { name = "markdown" },
     { name = "openreview-py" },
     { name = "ovld" },
@@ -898,6 +914,7 @@ requires-dist = [
     { name = "giving", specifier = ">=0.4.3" },
     { name = "html5lib", specifier = ">=1.1" },
     { name = "lxml", specifier = ">=5.3.0" },
+    { name = "mailchimp-marketing", specifier = ">=3.0.80" },
     { name = "markdown", specifier = ">=3.7" },
     { name = "openreview-py", specifier = ">=1.43.2" },
     { name = "ovld", specifier = ">=0.4.3" },
@@ -1124,6 +1141,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/07/40/2e233d49a86e2ba88325bcfdcad77fa56b05ba7ca61b58bc0212330e560a/pytest_regressions-2.7.0.tar.gz", hash = "sha256:4c30064e0923929012c94f5d6f35205be06fd8709c7f0dba0228e05c460af05e", size = 116270 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6d/83/3eaf30c06a1cf8bb58b1e5dba0345d1c747b720e889cbae81750c7659e9f/pytest_regressions-2.7.0-py3-none-any.whl", hash = "sha256:69f5e3f03493cf0ef84d96d23e50a546617c198b1d7746f2e2b9e441cbab4847", size = 24497 },
+]
+
+[[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892 },
 ]
 
 [[package]]

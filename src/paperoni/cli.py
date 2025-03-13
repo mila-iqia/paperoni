@@ -21,7 +21,8 @@ from .display import (
     TerminalPrinter,
     display,
 )
-from .mila_upload import misc
+from .mila_mchimp import command_mchimp
+from .mila_upload import command_upload
 from .sources.helpers import filter_researchers, prepare_interface
 from .sources.scrapers import load_scrapers
 from .utils import EquivalenceGroups
@@ -440,6 +441,22 @@ def merge():
         for method in to_apply:
             method(db, eqv)
         db.import_all(eqv)
+
+
+misc_commands = {
+    "upload": command_upload,
+    "mchimp": command_mchimp,
+}
+
+
+def misc():
+    # [positional: **]
+    rest: Option = []
+
+    cmd = rest[0]
+    args = rest[1:]
+
+    misc_commands[cmd](args)
 
 
 scrapers = load_scrapers()

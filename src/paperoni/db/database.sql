@@ -261,3 +261,15 @@ CREATE TABLE IF NOT EXISTS scraper_data (
 	date UNSIGNED BIG INT NOT NULL,
 	PRIMARY KEY (scraper, tag)
 );
+
+
+-- Serial number tracking what was sent in newsletters
+CREATE TABLE IF NOT EXISTS paper_sent (
+	paper_id BLOB REFERENCES paper(paper_id) ON DELETE CASCADE,
+	-- Serial number under which the paper was sent
+	serial_number INTEGER NOT NULL,
+	-- Paper state that was sent
+	peer_reviewed INTEGER NOT NULL,
+	CHECK (peer_reviewed in (0, 1)),
+	PRIMARY KEY (paper_id, peer_reviewed)
+);
