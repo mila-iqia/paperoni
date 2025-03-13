@@ -311,6 +311,7 @@ class Database(OvldBase):
                 sch.PaperAuthor: "paper_id",
                 sch.PaperLink: "paper_id",
                 sch.PaperFlag: "paper_id",
+                sch.PaperSent: "paper_id",
                 sch.PaperAuthorInstitution: "paper_id",
                 sch.t_paper_release: "paper_id",
                 sch.t_paper_topic: "paper_id",

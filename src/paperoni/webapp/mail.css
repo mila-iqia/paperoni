@@ -1,0 +1,88 @@
+.campaign {
+    border: 1px solid purple;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.campaign-letter {
+    border-left: 3px solid black;
+    padding-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.paper {
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #CEB3D3;
+    border-radius: 5px;
+}
+.extra > * {
+    display: inline;
+    margin-right: 5px;
+    font-size: 14px;
+}
+.title {
+    font-weight: bold;
+}
+.venue {
+    font-weight: bold;
+    /* background-color: #F4F5F1; */
+    color: #662E7D;
+}
+.author {
+    display: inline;
+}
+/* .author-affiliation {
+    font-size: 12px;
+} */
+.topics {
+    font-size: 14px;
+    color: #A0AAB7;
+}
+/* .topic:after {
+    content: ", ";
+}
+.topic:last-child:after {
+    content: "";
+}
+.topic {
+    cursor: pointer;
+}
+.topic:hover {
+    text-decoration: underline;
+} */
+/* .topic-list {
+    font-size: 14px;
+    max-height: 100px;
+    overflow-y: scroll;
+} */
+/* .topic2 {
+    cursor: pointer;
+    display: inline-block;
+    padding: 2px;
+    background: #eee;
+    margin: 2px;
+    border-radius: 2px;
+}
+.topic2:hover {
+    background: #ddd;
+} */
+.link {
+    padding: 2px;
+    border-radius: 2px;
+    /background-color: #eef;
+}
+/* .latest-on {
+    font-weight: bold;
+} */
+.paper .authors {
+    display: block !IMPORTANT;
+}
+#milabib-search-input {
+    margin: 5px;
+    padding: 5px;
+    width: calc(100% - 10px);
+}

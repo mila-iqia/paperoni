@@ -1,3 +1,5 @@
+import math
+
 from sqlalchemy import (
     CheckConstraint,
     Column,
@@ -102,6 +104,7 @@ class Paper(Base):
         "PaperAuthorInstitution", back_populates="paper"
     )
     paper_flag = relationship("PaperFlag", back_populates="paper")
+    paper_sent = relationship("PaperSent", back_populates="paper")
     paper_link = relationship("PaperLink", back_populates="paper")
 
     @property
@@ -121,6 +124,20 @@ class Paper(Base):
     @property
     def topics(self):
         return self.topic
+
+    @property
+    def latest_send(self):
+        sents = list(self.paper_sent)
+        peer_sents = [
+            send.serial_number for send in sents if send.peer_reviewed == 1
+        ]
+        pre_sents = [
+            send.serial_number for send in sents if send.peer_reviewed == 0
+        ]
+        return {
+            "peer_reviewed": max(peer_sents) if peer_sents else math.inf,
+            "preprint": max(pre_sents) if pre_sents else math.inf,
+        }
 
 
 class Scraper(Base):
@@ -293,6 +310,19 @@ class PaperFlag(Base):
     paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
 
     paper = relationship("Paper", back_populates="paper_flag")
+
+
+class PaperSent(Base):
+    __tablename__ = "paper_sent"
+    __table_args__ = (CheckConstraint("peer_reviewed in (0, 1)"),)
+
+    serial_number = Column(Integer, nullable=False)
+    peer_reviewed = Column(
+        Integer, nullable=False, primary_key=True, server_default=text("0")
+    )
+    paper_id = Column(ForeignKey("paper.paper_id"), primary_key=True)
+
+    paper = relationship("Paper", back_populates="paper_sent")
 
 
 class PaperLink(Base):
