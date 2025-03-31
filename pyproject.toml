@@ -23,7 +23,7 @@ dependencies = [
     "questionary>=2.0.1",
     "fake-useragent>=1.5.1",
     "backoff>=2.2.1",
-    "bibtexparser>=1.4.1",
+    "bibtexparser>=2.0.0b8",
     "python-multipart>=0.0.9",
     "sentry-sdk[starlette]>=2.14.0",
     "rich>=13.8.1",
@@ -44,6 +44,7 @@ Repository = "https://github.com/mila-iqia/paperoni"
 
 [project.scripts]
 paperoni = "paperoni.cli:main"
+pap2 = "paperoni.cli2:main"
 
 [tool.uv]
 dev-dependencies = [
