@@ -1,0 +1,17 @@
+__pycache__
+*.egg-info
+dist/
+.pytest_cache
+.coverage*
+tests/example.db
+tests/data/*.db
+tests/data/*.db.fixed
+papers.db
+requests-cache.sqlite
+history/
+_test_cache
+junk/
+new-coverage-*
+papers.db
+requests-cache.sqlite
+.idea

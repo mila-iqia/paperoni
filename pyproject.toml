@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paperoni"
+version = "0.3.0"
+description = "Search for scientific papers"
+authors = [
+    { name = "Olivier Breuleux", email = "breuleux@gmail.com" }
+]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mila-iqia/paperoni"
+Repository = "https://github.com/mila-iqia/paperoni"
+
+[project.scripts]
+paperoni = "paperoni.__main__:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.0",
+    "pytest-regressions>=2.7.0",
+    "ruff>=0.11.3",
+]
+
+[tool.ruff]
+line-length = 90
+
+[tool.ruff.lint]
+extend-select = ["I"]
+ignore = ["E241", "F722", "E501", "E203", "F811", "F821", "E741"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
