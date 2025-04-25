@@ -22,8 +22,7 @@ async def __app__(page, box):
     mcss = here / "mail.css"
     page.add_resources(mcss)
 
-    def refresh():
-        nonlocal result
+    def calc_times():
         fwd = 30
         if end_date:
             _end = datetime.strptime(end_date, "%Y-%m-%d")
@@ -31,10 +30,17 @@ async def __app__(page, box):
         else:
             _end = datetime.now() + timedelta(days=fwd)
             _start = _end - timedelta(days=days + fwd)
+        return _start, _end
 
+    def gen_html(lang):
+        _start, _end = calc_times()
+        return generate_latest_html(_start, _end, serial, lang)
+
+    def refresh():
+        nonlocal result
+        result = gen_html("en")
         targ = page[area]
         targ.clear()
-        result = generate_latest_html(_start, _end, serial)
         targ.print(result.html)
 
     def send():
@@ -66,26 +72,26 @@ async def __app__(page, box):
             line(lbox)
             lbox = page[lbox]
             lbox.print(H.div(H.b(f"{name}"), " -- ", cpg.title))
+            recipients = {"list_id": cpg.list_id}
+            if cpg.segment_id:
+                recipients["segment_opts"] = {
+                    "saved_segment_id": cpg.segment_id,
+                }
+            _start, _end = calc_times()
             resp = mch.campaigns.create(
                 {
                     "type": "regular",
                     "settings": {
                         "title": cpg.title,
-                        "subject_line": "Publications",
+                        "subject_line": f"Mila Publications - {_end.strftime('%Y-%m-%d')}",
                         "preview_text": cpg.preview_text,
                         "from_name": "Mila",
                         "reply_to": cpg.reply_to,
                         "to_name": "*|FNAME|* *|LNAME|*",
                         "inline_css": True,
-                        # "folder_id": opt.folder_id,
                         "template_id": cpg.template_id,
                     },
-                    "recipients": {
-                        "list_id": cpg.list_id,
-                        "segment_opts": {
-                            "saved_segment_id": cpg.segment_id,
-                        },
-                    },
+                    "recipients": recipients,
                 }
             )
             campaigns[name] = (lbox, cpg, resp)
@@ -105,11 +111,10 @@ async def __app__(page, box):
                 )
             )
 
-        # html_to_send = H.div(H.style(mcss.read_text()), result.html)
-        html_to_send = result.html
-
         for name, (lbox, cpg, resp) in campaigns.items():
-            arch = campaigns[cpg.link][1]["archive_url"] if cpg.link else None
+            html_to_send = gen_html(cpg.lang).html
+            arch = campaigns[cpg.link][2]["archive_url"] if cpg.link else None
+            link_text = opt.localization["link"][cpg.lang]
             mch.campaigns.set_content(
                 resp["id"],
                 {
@@ -117,7 +122,7 @@ async def __app__(page, box):
                         "id": cpg.template_id,
                         "sections": {
                             opt.template_main_section: str(html_to_send),
-                            opt.template_link_section: f'<a href="{arch}">{cpg.link_text}</a>'
+                            opt.template_link_section: f'<a href="{arch}">{link_text}</a>'
                             if arch
                             else "",
                         },
@@ -152,7 +157,7 @@ async def __app__(page, box):
         refresh()
 
     with papconf.database as db:
-        days = 7
+        days = mchimp_options.default_window
         max_query = db.session.query(func.max(sch.PaperSent.serial_number))
         try:
             ((max_serial,),) = list(db.session.execute(max_query))

@@ -25,12 +25,12 @@ class Campaign:
     list_id: str
     # Template id
     template_id: int
+    # Language
+    lang: str
     # Segment id
-    segment_id: int
+    segment_id: int | None = None
     # Link
     link: str | None = None
-    # Link text
-    link_text: str | None = None
 
 
 @dataclass
@@ -41,6 +41,8 @@ class MailOptions:
     server: str
     # Campaigns
     campaigns: dict[str, Campaign]
+    # Localization strings
+    localization: dict[str, dict[str, str]]
     # Whether to send a test email
     send_test: bool
     # Recipients for test email
@@ -51,6 +53,8 @@ class MailOptions:
     template_link_section: str
     # Folder id
     folder_id: str
+    # Number of days to look back by default
+    default_window: int
 
 
 mchimp_options = gifnoc.define(
@@ -116,7 +120,7 @@ class GenerationResult:
     preprints: list = field(default_factory=list)
 
 
-def generate_latest_html(start, end, serial):
+def generate_latest_html(start, end, serial, lang):
     query = Search(
         start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d")
     )
@@ -150,9 +154,13 @@ def generate_latest_html(start, end, serial):
             result.preprints.append(paper)
 
     result.html = H.div(
-        H.h2("Peer-reviewed papers") if result.peers else "",
+        H.h2(mchimp_options.localization["peer-reviewed"][lang])
+        if result.peers
+        else "",
         [mail_html(paper) for paper in result.peers],
-        H.h2("Preprints and workshop papers") if result.preprints else "",
+        H.h2(mchimp_options.localization["preprint"][lang])
+        if result.preprints
+        else "",
         [mail_html(paper) for paper in result.preprints],
     )
     return result
