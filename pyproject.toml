@@ -12,7 +12,13 @@ authors = [
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "backoff>=2.2.1",
+    "beautifulsoup4>=4.13.4",
+    "blessed>=1.21.0",
+    "gifnoc>=0.5.0",
+    "requests>=2.32.3",
+]
 
 [project.urls]
 Homepage = "https://github.com/mila-iqia/paperoni"

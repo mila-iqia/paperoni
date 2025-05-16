@@ -1,0 +1,4 @@
+paperoni:
+  discovery:
+    semantic_scholar:
+      class: "paperoni.discovery.semantic_scholar:SemanticScholar"
