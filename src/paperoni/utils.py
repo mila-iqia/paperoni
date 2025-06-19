@@ -1,3 +1,5 @@
+import unicodedata
+
 link_generators = {
     "arxiv": {
         "abstract": "https://arxiv.org/abs/{}",
@@ -70,3 +72,17 @@ def expand_links_dict(links):
         key=lambda dct: pref.index(dct["type"]) if dct["type"] in pref else 1_000
     )
     return results
+
+
+class QueryError(Exception):
+    pass
+
+
+def asciiify(s: str) -> str:
+    """Translate a string to pure ASCII, removing accents and the like.
+
+    Non-ASCII characters that are not accented characters are removed.
+    """
+    norm = unicodedata.normalize("NFD", s)
+    stripped = norm.encode("ASCII", "ignore")
+    return stripped.decode("utf8")

@@ -1,10 +1,12 @@
+import re
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from enum import Enum
+from functools import partial
 
 fromisoformat = date.fromisoformat
 
-dataclass = dataclass(kw_only=True)
+dataclass = partial(dataclass, kw_only=True)
 
 
 class VenueType(str, Enum):
@@ -135,7 +137,7 @@ class DatePrecision(int, Enum):
                 assert False
 
 
-@dataclass
+@dataclass(frozen=True)
 class Link:
     type: str
     link: str

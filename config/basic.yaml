@@ -5,3 +5,5 @@ paperoni:
     openreview:
       class: "paperoni.discovery.openreview:OpenReviewDispatch"
       api_versions: [2, 1]
+    openalex:
+      class: "paperoni.discovery.openalex:OpenAlex"
