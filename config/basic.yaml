@@ -1,4 +1,5 @@
 paperoni:
+  cache_path: ../cache
   discovery:
     semantic_scholar:
       class: "paperoni.discovery.semantic_scholar:SemanticScholar"
@@ -7,3 +8,5 @@ paperoni:
       api_versions: [2, 1]
     openalex:
       class: "paperoni.discovery.openalex:OpenAlex"
+    miniconf:
+      class: "paperoni.discovery.miniconf:MiniConf"

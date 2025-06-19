@@ -46,10 +46,7 @@ def readpage(url, format=None, cache_into=None, **kwargs):
 
     match format:
         case "json":
-            try:
-                return json.loads(content)
-            except json.JSONDecodeError:
-                return None
+            return json.loads(content)
         case "yaml":
             import yaml
 
