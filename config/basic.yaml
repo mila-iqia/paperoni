@@ -12,3 +12,5 @@ paperoni:
       class: "paperoni.discovery.miniconf:MiniConf"
     pmlr:
       class: "paperoni.discovery.pmlr:PMLR"
+    jmlr:
+      class: "paperoni.discovery.jmlr:JMLR"
