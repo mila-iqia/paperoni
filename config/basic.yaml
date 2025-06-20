@@ -10,3 +10,5 @@ paperoni:
       class: "paperoni.discovery.openalex:OpenAlex"
     miniconf:
       class: "paperoni.discovery.miniconf:MiniConf"
+    pmlr:
+      class: "paperoni.discovery.pmlr:PMLR"
