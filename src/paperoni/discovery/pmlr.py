@@ -15,7 +15,7 @@ from ..model.classes import (
     VenueType,
 )
 from ..utils import asciiify
-from .base import Discoverer
+from .base import Discoverer, PaperInfo
 
 
 def parse_paper(entry):
@@ -60,7 +60,15 @@ def parse_paper(entry):
             Link(type="pdf", link=entry["PDF"]),
         ],
     )
-    return p
+
+    # Create unique key based on volume and ID
+    paper_key = f"pmlr:v{entry['volume']}:{entry['id']}"
+
+    return PaperInfo(
+        key=paper_key,
+        acquired=datetime.now(),
+        paper=p,
+    )
 
 
 class PMLR(Discoverer):
@@ -77,16 +85,20 @@ class PMLR(Discoverer):
     ):
         name = name and asciiify(name).lower()
         results = self.get_volume(volume, cache)
-        for paper in results:
+        for paper_info in results:
             try:
-                if paper and (
-                    name is None
-                    or any(
-                        asciiify(auth.author.name).lower() == name
-                        for auth in paper.authors
+                if (
+                    paper_info
+                    and paper_info.paper
+                    and (
+                        name is None
+                        or any(
+                            asciiify(auth.author.name).lower() == name
+                            for auth in paper_info.paper.authors
+                        )
                     )
                 ):
-                    yield paper
+                    yield paper_info
             except Exception as exc:
                 traceback.print_exception(exc)
 

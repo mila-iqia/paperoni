@@ -9,8 +9,8 @@ from gifnoc import add_overlay, cli
 from serieux import Auto, Registered, Tagged, TaggedUnion, serialize, singleton
 
 from .config import discoverers
+from .discovery.base import PaperInfo
 from .display import display, terminal_width
-from .model import Paper
 
 
 class Formatter(Registered):
@@ -20,14 +20,14 @@ class Formatter(Registered):
 @singleton("json")
 class JSONFormatter(Formatter):
     def __call__(self, papers):
-        ser = serialize(list[Paper], list(papers))
+        ser = serialize(list[PaperInfo], list(papers))
         print(json.dumps(ser, indent=4))
 
 
 @singleton("yaml")
 class YAMLFormatter(Formatter):
     def __call__(self, papers):
-        ser = serialize(list[Paper], list(papers))
+        ser = serialize(list[PaperInfo], list(papers))
         print(yaml.safe_dump(ser, sort_keys=False))
 
 
@@ -37,7 +37,7 @@ class TerminalFormatter(Formatter):
         for i, paper in enumerate(papers):
             if i == 0:
                 print("=" * terminal_width)
-            display(paper)
+            display(paper.paper)
             print("=" * terminal_width)
 
 

@@ -20,6 +20,7 @@ dependencies = [
     "requests>=2.32.3",
     "openreview-py>=1.50.0",
     "requests-cache>=1.2.1",
+    "lxml>=6.0.0",
 ]
 
 [project.urls]

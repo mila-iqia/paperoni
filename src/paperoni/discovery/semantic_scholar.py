@@ -14,7 +14,7 @@ from ..model import (
     Venue,
     VenueType,
 )
-from .base import Discoverer, QueryError
+from .base import Discoverer, PaperInfo, QueryError
 
 external_ids_mapping = {
     "pubmedcentral": "pmc",
@@ -229,7 +229,7 @@ class SemanticScholar(Discoverer):
                 pages=None,
             )
 
-        return Paper(
+        paper = Paper(
             links=links,
             authors=authors,
             title=data["title"],
@@ -237,6 +237,15 @@ class SemanticScholar(Discoverer):
             # citation_count=data["citationCount"],
             topics=[Topic(name=field) for field in (data["fieldsOfStudy"] or ())],
             releases=[release],
+        )
+
+        # Create unique key based on Semantic Scholar paper ID
+        paper_key = f"semantic_scholar:{data['paperId']}"
+
+        return PaperInfo(
+            key=paper_key,
+            acquired=datetime.now(),
+            paper=paper,
         )
 
     def search(self, query, fields=SEARCH_FIELDS, **params):

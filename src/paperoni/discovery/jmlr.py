@@ -16,7 +16,7 @@ from ..model.classes import (
     VenueType,
 )
 from ..utils import asciiify
-from .base import Discoverer
+from .base import Discoverer, PaperInfo
 
 
 class JMLR(Discoverer):
@@ -35,16 +35,20 @@ class JMLR(Discoverer):
     ):
         name = name and asciiify(name).lower()
         results = self.get_volume(volume, cache)
-        for paper in results:
+        for paper_info in results:
             try:
-                if paper and (
-                    name is None
-                    or any(
-                        asciiify(auth.author.name).lower() == name
-                        for auth in paper.authors
+                if (
+                    paper_info
+                    and paper_info.paper
+                    and (
+                        name is None
+                        or any(
+                            asciiify(auth.author.name).lower() == name
+                            for auth in paper_info.paper.authors
+                        )
                     )
                 ):
-                    yield paper
+                    yield paper_info
             except Exception as exc:
                 traceback.print_exception(exc)
 
@@ -135,7 +139,15 @@ class JMLR(Discoverer):
                 topics=[],
                 links=links,
             )
-            yield paper
+
+            # Create unique key based on volume and title
+            paper_key = f"jmlr:v{volume}:{title[:50].replace(' ', '_').lower()}"
+
+            yield PaperInfo(
+                key=paper_key,
+                acquired=datetime.now(),
+                paper=paper,
+            )
 
     def extract_volumes(self, index, selector, map=None, filter=None):
         main = readpage(index, format="html")

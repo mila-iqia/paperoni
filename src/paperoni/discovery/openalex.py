@@ -18,7 +18,7 @@ from ..model.classes import (
     VenueType,
 )
 from ..utils import QueryError, link_generators as LINK_GENERATORS
-from .base import Discoverer
+from .base import Discoverer, PaperInfo
 
 # https://docs.openalex.org/api-entities/institutions/institution-object#type
 INSTITUTION_CATEGORY_MAPPING = {
@@ -142,13 +142,13 @@ class OpenAlexQueryManager:
         assert "results" in jdata
         return jdata
 
-    def _try_wrapping_paper(self, data: dict) -> Paper:
+    def _try_wrapping_paper(self, data: dict) -> PaperInfo:
         try:
             return self._wrap_paper(data)
         except Exception as exc:
             raise Exception(pprint.pformat(data)) from exc
 
-    def _wrap_paper(self, data: dict) -> Paper:
+    def _wrap_paper(self, data: dict) -> PaperInfo:
         # Assert consistency in locations
         locations = data["locations"]
         if locations:
@@ -189,7 +189,7 @@ class OpenAlexQueryManager:
         # We will save open access url in paper links
         oa_url = data["open_access"]["oa_url"]
 
-        return Paper(
+        paper = Paper(
             title=data["display_name"] or "Untilted",
             abstract=self._reconstruct_abstract(data["abstract_inverted_index"] or {}),
             authors=[
@@ -272,6 +272,17 @@ class OpenAlexQueryManager:
             links=[_get_link(typ, ref) for typ, ref in data["ids"].items()]
             + ([_get_link("open-access", oa_url)] if oa_url is not None else [])
             + links_from_locations,
+        )
+
+        # Create unique key based on OpenAlex work ID
+        # OpenAlex IDs are in the format "https://openalex.org/W2741809807"
+        openalex_id = data["id"]
+        paper_key = f"openalex:{openalex_id.split('/')[-1]}"
+
+        return PaperInfo(
+            key=paper_key,
+            acquired=datetime.now(),
+            paper=paper,
         )
 
     @classmethod

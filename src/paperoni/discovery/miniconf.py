@@ -1,8 +1,6 @@
 import re
 from datetime import datetime
 
-from paperoni.discovery.base import Discoverer
-
 from ..acquire import readpage
 from ..config import config
 from ..model.classes import (
@@ -18,6 +16,7 @@ from ..model.classes import (
     Venue,
     VenueType,
 )
+from .base import Discoverer, PaperInfo
 
 conference_urls = {
     "neurips": "neurips.cc",
@@ -137,14 +136,18 @@ class MiniConf(Discoverer):
                 links.add(Link(type=media_type, link=uri))
 
         # Create and return Paper object
-        return Paper(
-            title=title,
-            abstract=abstract,
-            authors=authors,
-            releases=[release],
-            topics=topics,
-            links=list(links),
-            flags=[],
+        return PaperInfo(
+            key=f"miniconf:{conference}:{data['uid']}",
+            acquired=datetime.now(),
+            paper=Paper(
+                title=title,
+                abstract=abstract,
+                authors=authors,
+                releases=[release],
+                topics=topics,
+                links=list(links),
+                flags=[],
+            ),
         )
 
     def query(
@@ -238,7 +241,7 @@ class MiniConf(Discoverer):
                 paper = self.convert_paper(
                     paper_data, conference=conference, venue_date=conference_date
                 )
-                if matches(paper):
+                if matches(paper.paper):
                     n += 1
                     yield paper
             except Exception as e:
