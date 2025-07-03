@@ -1,15 +1,37 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import timedelta
+from functools import cached_property
 from pathlib import Path
 
 import gifnoc
+import requests_cache
+from requests import Session
 from serieux import TaggedSubclass
 
 from .discovery.base import Discoverer
 
 
 @dataclass
+class RequesterConfig:
+    cache_path: Path = None
+    expire_after: timedelta = None
+
+    @cached_property
+    def session(self):
+        if self.cache_path is None:
+            return Session()
+        else:
+            exp = self.expire_after
+            if exp is None:
+                exp = requests_cache.NEVER_EXPIRE
+            return requests_cache.CachedSession(self.cache_path, expire_after=exp)
+
+
+@dataclass
 class PaperoniConfig:
     cache_path: Path = None
+    requests: RequesterConfig = field(default_factory=RequesterConfig)
+    discovery: dict[str, TaggedSubclass[Discoverer]] = field(default_factory=dict)
 
 
 config = gifnoc.define(
@@ -17,7 +39,5 @@ config = gifnoc.define(
     PaperoniConfig,
 )
 
-discoverers = gifnoc.define(
-    "paperoni.discovery",
-    dict[str, TaggedSubclass[Discoverer]],
-)
+requests = gifnoc.proxy("paperoni.requests.session")
+discoverers = gifnoc.proxy("paperoni.discovery")

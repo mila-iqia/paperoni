@@ -16,9 +16,10 @@ dependencies = [
     "backoff>=2.2.1",
     "beautifulsoup4>=4.13.4",
     "blessed>=1.21.0",
-    "gifnoc>=0.5.0",
+    "gifnoc>=0.5.3",
     "requests>=2.32.3",
     "openreview-py>=1.50.0",
+    "requests-cache>=1.2.1",
 ]
 
 [project.urls]

@@ -1,5 +1,8 @@
 paperoni:
   cache_path: ../cache
+  requests:
+    cache_path: ${..cache_path}/requests-cache.sql
+    expire_after: 6d
   discovery:
     semantic_scholar:
       class: "paperoni.discovery.semantic_scholar:SemanticScholar"

@@ -3,7 +3,9 @@ import re
 import urllib
 
 import backoff
-import requests
+from requests.exceptions import RequestException
+
+from .config import requests
 
 
 class HTTPSAcquirer:
@@ -15,7 +17,7 @@ class HTTPSAcquirer:
 
     @backoff.on_exception(
         backoff.expo,
-        requests.exceptions.RequestException,
+        RequestException,
         giveup=lambda exc: exc.response.status_code == 404,
         max_time=5,
     )
