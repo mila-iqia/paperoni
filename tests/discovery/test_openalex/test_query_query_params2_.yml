@@ -1,0 +1,379 @@
+"[\n  {\n    \"abstract\": \"A goal of statistical language modeling is to learn the\
+  \ joint probability function of sequences of words. This is intrinsically difficult\
+  \ because of the curse of dimensionality: we propose to fight it with its own weapons.\
+  \ In the proposed approach one learns simultaneously (1) a distributed representation\
+  \ for each word (i.e. a similarity between words) along with (2) the probability\
+  \ function for word sequences, expressed with these representations. Generalization\
+  \ is obtained because a sequence of words that has never been seen before gets high\
+  \ probability if it is made of words that are similar to words forming an already\
+  \ seen sentence. We report on experiments using neural networks for the probability\
+  \ function, showing on two text corpora that the proposed approach very significantly\
+  \ improves on a state-of-the-art trigram model.\",\n    \"authors\": [\n      {\n\
+  \        \"affiliations\": [\n          {\n            \"aliases\": [],\n      \
+  \      \"category\": \"unknown\",\n            \"name\": \"Computer Research Institute\
+  \ of Montr\\u00e9al\"\n          },\n          {\n            \"aliases\": [],\n\
+  \            \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de\
+  \ Montr\\u00e9al\"\n          }\n        ],\n        \"author\": {\n          \"\
+  aliases\": [],\n          \"links\": [\n            {\n              \"link\": \"\
+  0000-0002-9322-3515\",\n              \"type\": \"orcid\"\n            },\n    \
+  \        {\n              \"link\": \"A5086198262\",\n              \"type\": \"\
+  openalex\"\n            }\n          ],\n          \"name\": \"Yoshua Bengio\"\n\
+  \        },\n        \"display_name\": \"Yoshua Bengio\"\n      },\n      {\n  \
+  \      \"affiliations\": [\n          {\n            \"aliases\": [],\n        \
+  \    \"category\": \"unknown\",\n            \"name\": \"Computer Research Institute\
+  \ of Montr\\u00e9al\"\n          },\n          {\n            \"aliases\": [],\n\
+  \            \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de\
+  \ Montr\\u00e9al\"\n          }\n        ],\n        \"author\": {\n          \"\
+  aliases\": [],\n          \"links\": [\n            {\n              \"link\": \"\
+  A5043442242\",\n              \"type\": \"openalex\"\n            }\n          ],\n\
+  \          \"name\": \"R\\u00e9jean Ducharme\"\n        },\n        \"display_name\"\
+  : \"R\\u00e9jean Ducharme\"\n      },\n      {\n        \"affiliations\": [\n  \
+  \        {\n            \"aliases\": [],\n            \"category\": \"unknown\"\
+  ,\n            \"name\": \"Computer Research Institute of Montr\\u00e9al\"\n   \
+  \       },\n          {\n            \"aliases\": [],\n            \"category\"\
+  : \"wat\",\n            \"name\": \"Universit\\u00e9 de Montr\\u00e9al\"\n     \
+  \     }\n        ],\n        \"author\": {\n          \"aliases\": [],\n       \
+  \   \"links\": [\n            {\n              \"link\": \"A5103958886\",\n    \
+  \          \"type\": \"openalex\"\n            }\n          ],\n          \"name\"\
+  : \"Pascal Vincent\"\n        },\n        \"display_name\": \"Pascal Vincent\"\n\
+  \      }\n    ],\n    \"flags\": [],\n    \"links\": [\n      {\n        \"link\"\
+  : \"2140679639\",\n        \"type\": \"mag\"\n      },\n      {\n        \"link\"\
+  : \"W2140679639\",\n        \"type\": \"openalex\"\n      }\n    ],\n    \"releases\"\
+  : [],\n    \"title\": \"A Neural Probabilistic Language Model\",\n    \"topics\"\
+  : [\n      {\n        \"name\": \"Artificial intelligence\"\n      },\n      {\n\
+  \        \"name\": \"Artificial neural network\"\n      },\n      {\n        \"\
+  name\": \"Biology\"\n      },\n      {\n        \"name\": \"Computer science\"\n\
+  \      },\n      {\n        \"name\": \"Curse of dimensionality\"\n      },\n  \
+  \    {\n        \"name\": \"Evolutionary biology\"\n      },\n      {\n        \"\
+  name\": \"Function (biology)\"\n      },\n      {\n        \"name\": \"Generalization\"\
+  \n      },\n      {\n        \"name\": \"Genetics\"\n      },\n      {\n       \
+  \ \"name\": \"Geometry\"\n      },\n      {\n        \"name\": \"Image (mathematics)\"\
+  \n      },\n      {\n        \"name\": \"Language model\"\n      },\n      {\n \
+  \       \"name\": \"Law\"\n      },\n      {\n        \"name\": \"Mathematical analysis\"\
+  \n      },\n      {\n        \"name\": \"Mathematics\"\n      },\n      {\n    \
+  \    \"name\": \"Natural language processing\"\n      },\n      {\n        \"name\"\
+  : \"Political science\"\n      },\n      {\n        \"name\": \"Politics\"\n   \
+  \   },\n      {\n        \"name\": \"Probabilistic logic\"\n      },\n      {\n\
+  \        \"name\": \"Probability distribution\"\n      },\n      {\n        \"name\"\
+  : \"Representation (politics)\"\n      },\n      {\n        \"name\": \"Sentence\"\
+  \n      },\n      {\n        \"name\": \"Sequence (biology)\"\n      },\n      {\n\
+  \        \"name\": \"Similarity (geometry)\"\n      },\n      {\n        \"name\"\
+  : \"Statistical model\"\n      },\n      {\n        \"name\": \"Statistics\"\n \
+  \     },\n      {\n        \"name\": \"Trigram\"\n      },\n      {\n        \"\
+  name\": \"Word (group theory)\"\n      }\n    ]\n  },\n  {\n    \"abstract\": \"\
+  In this paper, we explore the inclusion of latent random variables into the dynamic\
+  \ hidden state of a recurrent neural network (RNN) by combining elements of the\
+  \ variational autoencoder. We argue that through the use of high-level latent random\
+  \ variables, the variational RNN (VRNN)1 can model the kind of variability observed\
+  \ in highly structured sequential data such as natural speech. We empirically evaluate\
+  \ the proposed model against related sequential models on four speech datasets and\
+  \ one handwriting dataset. Our results show the important roles that latent random\
+  \ variables can play in the RNN dynamic hidden state.\",\n    \"authors\": [\n \
+  \     {\n        \"affiliations\": [\n          {\n            \"aliases\": [],\n\
+  \            \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de\
+  \ Montr\\u00e9al\"\n          }\n        ],\n        \"author\": {\n          \"\
+  aliases\": [],\n          \"links\": [\n            {\n              \"link\": \"\
+  0000-0001-6223-0301\",\n              \"type\": \"orcid\"\n            },\n    \
+  \        {\n              \"link\": \"A5112608251\",\n              \"type\": \"\
+  openalex\"\n            }\n          ],\n          \"name\": \"Aaron Courville\"\
+  \n        },\n        \"display_name\": \"Aaron Courville\"\n      },\n      {\n\
+  \        \"affiliations\": [\n          {\n            \"aliases\": [],\n      \
+  \      \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de Montr\\\
+  u00e9al\"\n          }\n        ],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [\n            {\n              \"link\": \"0000-0002-7408-8215\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5044550553\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Jun\\u2010Young Chung\"\n        },\n\
+  \        \"display_name\": \"Jun\\u2010Young Chung\"\n      },\n      {\n      \
+  \  \"affiliations\": [\n          {\n            \"aliases\": [],\n            \"\
+  category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de Montr\\u00e9al\"\
+  \n          }\n        ],\n        \"author\": {\n          \"aliases\": [],\n \
+  \         \"links\": [\n            {\n              \"link\": \"0000-0002-9322-3515\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5086198262\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Yoshua Bengio\"\n        },\n      \
+  \  \"display_name\": \"Yoshua Bengio\"\n      },\n      {\n        \"affiliations\"\
+  : [\n          {\n            \"aliases\": [],\n            \"category\": \"wat\"\
+  ,\n            \"name\": \"Universit\\u00e9 de Montr\\u00e9al\"\n          }\n \
+  \       ],\n        \"author\": {\n          \"aliases\": [],\n          \"links\"\
+  : [\n            {\n              \"link\": \"A5037751863\",\n              \"type\"\
+  : \"openalex\"\n            }\n          ],\n          \"name\": \"Kyle Kastner\"\
+  \n        },\n        \"display_name\": \"Kyle Kastner\"\n      },\n      {\n  \
+  \      \"affiliations\": [\n          {\n            \"aliases\": [],\n        \
+  \    \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de Montr\\\
+  u00e9al\"\n          }\n        ],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [\n            {\n              \"link\": \"A5075751396\"\
+  ,\n              \"type\": \"openalex\"\n            }\n          ],\n         \
+  \ \"name\": \"Kratarth Goel\"\n        },\n        \"display_name\": \"Kratarth\
+  \ Goel\"\n      },\n      {\n        \"affiliations\": [\n          {\n        \
+  \    \"aliases\": [],\n            \"category\": \"wat\",\n            \"name\"\
+  : \"Universit\\u00e9 de Montr\\u00e9al\"\n          }\n        ],\n        \"author\"\
+  : {\n          \"aliases\": [],\n          \"links\": [\n            {\n       \
+  \       \"link\": \"A5113871902\",\n              \"type\": \"openalex\"\n     \
+  \       }\n          ],\n          \"name\": \"Laurent Dinh\"\n        },\n    \
+  \    \"display_name\": \"Laurent Dinh\"\n      }\n    ],\n    \"flags\": [],\n \
+  \   \"links\": [\n      {\n        \"link\": \"10.48550/arxiv.1506.02216\",\n  \
+  \      \"type\": \"doi\"\n      },\n      {\n        \"link\": \"592244745\",\n\
+  \        \"type\": \"mag\"\n      },\n      {\n        \"link\": \"W592244745\"\
+  ,\n        \"type\": \"openalex\"\n      },\n      {\n        \"link\": \"https://api.datacite.org/dois/10.48550/arxiv.1506.02216\"\
+  ,\n        \"type\": \"url\"\n      },\n      {\n        \"link\": \"https://arxiv.org/abs/1506.02216\"\
+  ,\n        \"type\": \"open-access\"\n      },\n      {\n        \"link\": \"https://arxiv.org/abs/1506.02216\"\
+  ,\n        \"type\": \"url\"\n      }\n    ],\n    \"releases\": [\n      {\n  \
+  \      \"pages\": null,\n        \"status\": \"unknown\",\n        \"venue\": {\n\
+  \          \"aliases\": [],\n          \"date\": \"2015-01-01T00:00:00\",\n    \
+  \      \"date_precision\": 3,\n          \"links\": [\n            {\n         \
+  \     \"link\": \"https://arxiv.org/abs/1506.02216\",\n              \"type\": \"\
+  url\"\n            }\n          ],\n          \"name\": \"arXiv (Cornell University)\"\
+  ,\n          \"open\": true,\n          \"peer_reviewed\": false,\n          \"\
+  publisher\": \"Cornell University\",\n          \"series\": \"\",\n          \"\
+  type\": \"unknown\",\n          \"volume\": null\n        }\n      }\n    ],\n \
+  \   \"title\": \"A Recurrent Latent Variable Model for Sequential Data\",\n    \"\
+  topics\": [\n      {\n        \"name\": \"Algorithm\"\n      },\n      {\n     \
+  \   \"name\": \"Artificial intelligence\"\n      },\n      {\n        \"name\":\
+  \ \"Artificial neural network\"\n      },\n      {\n        \"name\": \"Autoencoder\"\
+  \n      },\n      {\n        \"name\": \"Computer science\"\n      },\n      {\n\
+  \        \"name\": \"Hidden variable theory\"\n      },\n      {\n        \"name\"\
+  : \"Latent variable model\"\n      },\n      {\n        \"name\": \"Latent variable\"\
+  \n      },\n      {\n        \"name\": \"Machine learning\"\n      },\n      {\n\
+  \        \"name\": \"Physics\"\n      },\n      {\n        \"name\": \"Quantum mechanics\"\
+  \n      },\n      {\n        \"name\": \"Quantum\"\n      },\n      {\n        \"\
+  name\": \"Recurrent neural network\"\n      },\n      {\n        \"name\": \"Speech\
+  \ recognition\"\n      },\n      {\n        \"name\": \"State (computer science)\"\
+  \n      },\n      {\n        \"name\": \"State variable\"\n      },\n      {\n \
+  \       \"name\": \"Thermodynamics\"\n      }\n    ]\n  },\n  {\n    \"abstract\"\
+  : \"Sequential data often possesses hierarchical structures with complex dependencies\
+  \ between sub-sequences, such as found between the utterances in a dialogue. To\
+  \ model these dependencies in a generative framework, we propose a neural network-based\
+  \ generative architecture, with stochastic latent variables that span a variable\
+  \ number of time steps. We apply the proposed model to the task of dialogue response\
+  \ generation and compare it with other recent neural-network architectures. We evaluate\
+  \ the model performance through a human evaluation study. The experiments demonstrate\
+  \ that our model improves upon recently proposed models and that the latent variables\
+  \ facilitate both the generation of meaningful, long and diverse responses and maintaining\
+  \ dialogue state.\",\n    \"authors\": [\n      {\n        \"affiliations\": [],\n\
+  \        \"author\": {\n          \"aliases\": [],\n          \"links\": [\n   \
+  \         {\n              \"link\": \"A5108137151\",\n              \"type\": \"\
+  openalex\"\n            }\n          ],\n          \"name\": \"Alessandro Sordoni\"\
+  \n        },\n        \"display_name\": \"Alessandro Sordoni\"\n      },\n     \
+  \ {\n        \"affiliations\": [\n          {\n            \"aliases\": [],\n  \
+  \          \"category\": \"wat\",\n            \"name\": \"HEC Montr\\u00e9al\"\n\
+  \          }\n        ],\n        \"author\": {\n          \"aliases\": [],\n  \
+  \        \"links\": [\n            {\n              \"link\": \"0000-0002-6437-9713\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5103126568\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Laurent Charlin\"\n        },\n    \
+  \    \"display_name\": \"Laurent Charlin\"\n      },\n      {\n        \"affiliations\"\
+  : [\n          {\n            \"aliases\": [],\n            \"category\": \"wat\"\
+  ,\n            \"name\": \"McGill University\"\n          }\n        ],\n      \
+  \  \"author\": {\n          \"aliases\": [],\n          \"links\": [\n         \
+  \   {\n              \"link\": \"0000-0003-0747-7250\",\n              \"type\"\
+  : \"orcid\"\n            },\n            {\n              \"link\": \"A5080591144\"\
+  ,\n              \"type\": \"openalex\"\n            }\n          ],\n         \
+  \ \"name\": \"Jo\\u00eblle Pineau\"\n        },\n        \"display_name\": \"Jo\\\
+  u00eblle Pineau\"\n      },\n      {\n        \"affiliations\": [\n          {\n\
+  \            \"aliases\": [],\n            \"category\": \"wat\",\n            \"\
+  name\": \"McGill University\"\n          }\n        ],\n        \"author\": {\n\
+  \          \"aliases\": [],\n          \"links\": [\n            {\n           \
+  \   \"link\": \"A5004295653\",\n              \"type\": \"openalex\"\n         \
+  \   }\n          ],\n          \"name\": \"Ryan Lowe\"\n        },\n        \"display_name\"\
+  : \"Ryan Lowe\"\n      },\n      {\n        \"affiliations\": [\n          {\n \
+  \           \"aliases\": [],\n            \"category\": \"wat\",\n            \"\
+  name\": \"Universit\\u00e9 de Montr\\u00e9al\"\n          }\n        ],\n      \
+  \  \"author\": {\n          \"aliases\": [],\n          \"links\": [\n         \
+  \   {\n              \"link\": \"0000-0001-6223-0301\",\n              \"type\"\
+  : \"orcid\"\n            },\n            {\n              \"link\": \"A5112608251\"\
+  ,\n              \"type\": \"openalex\"\n            }\n          ],\n         \
+  \ \"name\": \"Aaron Courville\"\n        },\n        \"display_name\": \"Aaron Courville\"\
+  \n      },\n      {\n        \"affiliations\": [\n          {\n            \"aliases\"\
+  : [],\n            \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9\
+  \ de Montr\\u00e9al\"\n          }\n        ],\n        \"author\": {\n        \
+  \  \"aliases\": [],\n          \"links\": [\n            {\n              \"link\"\
+  : \"0000-0002-9322-3515\",\n              \"type\": \"orcid\"\n            },\n\
+  \            {\n              \"link\": \"A5086198262\",\n              \"type\"\
+  : \"openalex\"\n            }\n          ],\n          \"name\": \"Yoshua Bengio\"\
+  \n        },\n        \"display_name\": \"Yoshua Bengio\"\n      },\n      {\n \
+  \       \"affiliations\": [\n          {\n            \"aliases\": [],\n       \
+  \     \"category\": \"wat\",\n            \"name\": \"Universit\\u00e9 de Montr\\\
+  u00e9al\"\n          }\n        ],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [\n            {\n              \"link\": \"A5034688833\"\
+  ,\n              \"type\": \"openalex\"\n            }\n          ],\n         \
+  \ \"name\": \"Iulian Vlad Serban\"\n        },\n        \"display_name\": \"Iulian\
+  \ Vlad Serban\"\n      }\n    ],\n    \"flags\": [],\n    \"links\": [\n      {\n\
+  \        \"link\": \"10.1609/aaai.v31i1.10983\",\n        \"type\": \"doi\"\n  \
+  \    },\n      {\n        \"link\": \"3022187094\",\n        \"type\": \"mag\"\n\
+  \      },\n      {\n        \"link\": \"W3022187094\",\n        \"type\": \"openalex\"\
+  \n      },\n      {\n        \"link\": \"http://arxiv.org/abs/1605.06069\",\n  \
+  \      \"type\": \"url\"\n      },\n      {\n        \"link\": \"http://arxiv.org/pdf/1605.06069\"\
+  ,\n        \"type\": \"pdf\"\n      },\n      {\n        \"link\": \"https://doi.org/10.1609/aaai.v31i1.10983\"\
+  ,\n        \"type\": \"url\"\n      },\n      {\n        \"link\": \"https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842\"\
+  ,\n        \"type\": \"open-access\"\n      },\n      {\n        \"link\": \"https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842\"\
+  ,\n        \"type\": \"pdf\"\n      }\n    ],\n    \"releases\": [\n      {\n  \
+  \      \"pages\": null,\n        \"status\": \"published\",\n        \"venue\":\
+  \ {\n          \"aliases\": [],\n          \"date\": \"2017-02-12T00:00:00\",\n\
+  \          \"date_precision\": 3,\n          \"links\": [\n            {\n     \
+  \         \"link\": \"https://doi.org/10.1609/aaai.v31i1.10983\",\n            \
+  \  \"type\": \"url\"\n            },\n            {\n              \"link\": \"\
+  https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842\",\n          \
+  \    \"type\": \"pdf\"\n            }\n          ],\n          \"name\": \"Proceedings\
+  \ of the AAAI Conference on Artificial Intelligence\",\n          \"open\": true,\n\
+  \          \"peer_reviewed\": true,\n          \"publisher\": \"Association for\
+  \ the Advancement of Artificial Intelligence\",\n          \"series\": \"\",\n \
+  \         \"type\": \"conference\",\n          \"volume\": null\n        }\n   \
+  \   }\n    ],\n    \"title\": \"A Hierarchical Latent Variable Encoder-Decoder Model\
+  \ for Generating Dialogues\",\n    \"topics\": [\n      {\n        \"name\": \"\
+  Artificial intelligence\"\n      },\n      {\n        \"name\": \"Artificial neural\
+  \ network\"\n      },\n      {\n        \"name\": \"Computer science\"\n      },\n\
+  \      {\n        \"name\": \"Economics\"\n      },\n      {\n        \"name\":\
+  \ \"Encoder\"\n      },\n      {\n        \"name\": \"Generative grammar\"\n   \
+  \   },\n      {\n        \"name\": \"Generative model\"\n      },\n      {\n   \
+  \     \"name\": \"Latent variable model\"\n      },\n      {\n        \"name\":\
+  \ \"Latent variable\"\n      },\n      {\n        \"name\": \"Machine learning\"\
+  \n      },\n      {\n        \"name\": \"Management\"\n      },\n      {\n     \
+  \   \"name\": \"Mathematical analysis\"\n      },\n      {\n        \"name\": \"\
+  Mathematics\"\n      },\n      {\n        \"name\": \"Operating system\"\n     \
+  \ },\n      {\n        \"name\": \"Task (project management)\"\n      },\n     \
+  \ {\n        \"name\": \"Variable (mathematics)\"\n      }\n    ]\n  },\n  {\n \
+  \   \"abstract\": \"Sequential data often possesses hierarchical structures with\
+  \ complex dependencies between sub-sequences, such as found between the utterances\
+  \ in a dialogue. To model these dependencies in a generative framework, we propose\
+  \ a neural network-based generative architecture, with stochastic latent variables\
+  \ that span a variable number of time steps. We apply the proposed model to the\
+  \ task of dialogue response generation and compare it with other recent neural-network\
+  \ architectures. We evaluate the model performance through a human evaluation study.\
+  \ The experiments demonstrate that our model improves upon recently proposed models\
+  \ and that the latent variables facilitate both the generation of meaningful, long\
+  \ and diverse responses and maintaining dialogue state.\",\n    \"authors\": [\n\
+  \      {\n        \"affiliations\": [],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [\n            {\n              \"link\": \"A5108137151\"\
+  ,\n              \"type\": \"openalex\"\n            }\n          ],\n         \
+  \ \"name\": \"Alessandro Sordoni\"\n        },\n        \"display_name\": \"Alessandro\
+  \ Sordoni\"\n      },\n      {\n        \"affiliations\": [\n          {\n     \
+  \       \"aliases\": [],\n            \"category\": \"wat\",\n            \"name\"\
+  : \"HEC Montr\\u00e9al\"\n          }\n        ],\n        \"author\": {\n     \
+  \     \"aliases\": [],\n          \"links\": [\n            {\n              \"\
+  link\": \"0000-0002-6437-9713\",\n              \"type\": \"orcid\"\n          \
+  \  },\n            {\n              \"link\": \"A5103126568\",\n              \"\
+  type\": \"openalex\"\n            }\n          ],\n          \"name\": \"Laurent\
+  \ Charlin\"\n        },\n        \"display_name\": \"Laurent Charlin\"\n      },\n\
+  \      {\n        \"affiliations\": [\n          {\n            \"aliases\": [],\n\
+  \            \"category\": \"wat\",\n            \"name\": \"McGill University\"\
+  \n          }\n        ],\n        \"author\": {\n          \"aliases\": [],\n \
+  \         \"links\": [\n            {\n              \"link\": \"0000-0003-0747-7250\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5080591144\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Jo\\u00eblle Pineau\"\n        },\n\
+  \        \"display_name\": \"Jo\\u00eblle Pineau\"\n      },\n      {\n        \"\
+  affiliations\": [\n          {\n            \"aliases\": [],\n            \"category\"\
+  : \"wat\",\n            \"name\": \"McGill University\"\n          }\n        ],\n\
+  \        \"author\": {\n          \"aliases\": [],\n          \"links\": [\n   \
+  \         {\n              \"link\": \"A5004295653\",\n              \"type\": \"\
+  openalex\"\n            }\n          ],\n          \"name\": \"Ryan Lowe\"\n   \
+  \     },\n        \"display_name\": \"Ryan Lowe\"\n      },\n      {\n        \"\
+  affiliations\": [\n          {\n            \"aliases\": [],\n            \"category\"\
+  : \"wat\",\n            \"name\": \"Universit\\u00e9 de Montr\\u00e9al\"\n     \
+  \     }\n        ],\n        \"author\": {\n          \"aliases\": [],\n       \
+  \   \"links\": [\n            {\n              \"link\": \"0000-0001-6223-0301\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5112608251\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Aaron Courville\"\n        },\n    \
+  \    \"display_name\": \"Aaron Courville\"\n      },\n      {\n        \"affiliations\"\
+  : [\n          {\n            \"aliases\": [],\n            \"category\": \"wat\"\
+  ,\n            \"name\": \"Universit\\u00e9 de Montr\\u00e9al\"\n          }\n \
+  \       ],\n        \"author\": {\n          \"aliases\": [],\n          \"links\"\
+  : [\n            {\n              \"link\": \"0000-0002-9322-3515\",\n         \
+  \     \"type\": \"orcid\"\n            },\n            {\n              \"link\"\
+  : \"A5086198262\",\n              \"type\": \"openalex\"\n            }\n      \
+  \    ],\n          \"name\": \"Yoshua Bengio\"\n        },\n        \"display_name\"\
+  : \"Yoshua Bengio\"\n      },\n      {\n        \"affiliations\": [\n          {\n\
+  \            \"aliases\": [],\n            \"category\": \"wat\",\n            \"\
+  name\": \"Universit\\u00e9 de Montr\\u00e9al\"\n          }\n        ],\n      \
+  \  \"author\": {\n          \"aliases\": [],\n          \"links\": [\n         \
+  \   {\n              \"link\": \"A5034688833\",\n              \"type\": \"openalex\"\
+  \n            }\n          ],\n          \"name\": \"Iulian Vlad Serban\"\n    \
+  \    },\n        \"display_name\": \"Iulian Vlad Serban\"\n      }\n    ],\n   \
+  \ \"flags\": [],\n    \"links\": [\n      {\n        \"link\": \"2963790827\",\n\
+  \        \"type\": \"mag\"\n      },\n      {\n        \"link\": \"W2963790827\"\
+  ,\n        \"type\": \"openalex\"\n      }\n    ],\n    \"releases\": [],\n    \"\
+  title\": \"A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues\"\
+  ,\n    \"topics\": [\n      {\n        \"name\": \"Artificial intelligence\"\n \
+  \     },\n      {\n        \"name\": \"Artificial neural network\"\n      },\n \
+  \     {\n        \"name\": \"Computer science\"\n      },\n      {\n        \"name\"\
+  : \"Economics\"\n      },\n      {\n        \"name\": \"Encoder\"\n      },\n  \
+  \    {\n        \"name\": \"Generative grammar\"\n      },\n      {\n        \"\
+  name\": \"Generative model\"\n      },\n      {\n        \"name\": \"Latent variable\
+  \ model\"\n      },\n      {\n        \"name\": \"Latent variable\"\n      },\n\
+  \      {\n        \"name\": \"Machine learning\"\n      },\n      {\n        \"\
+  name\": \"Management\"\n      },\n      {\n        \"name\": \"Mathematical analysis\"\
+  \n      },\n      {\n        \"name\": \"Mathematics\"\n      },\n      {\n    \
+  \    \"name\": \"Operating system\"\n      },\n      {\n        \"name\": \"Task\
+  \ (project management)\"\n      },\n      {\n        \"name\": \"Variable (mathematics)\"\
+  \n      }\n    ]\n  },\n  {\n    \"abstract\": \"This paper proposes a new model\
+  \ for extracting an interpretable sentence embedding by introducing self-attention.\
+  \ Instead of using a vector, we use a 2-D matrix to represent the embedding, with\
+  \ each row of the matrix attending on a different part of the sentence. We also\
+  \ propose a self-attention mechanism and a special regularization term for the model.\
+  \ As a side effect, the embedding comes with an easy way of visualizing what specific\
+  \ parts of the sentence are encoded into the embedding. We evaluate our model on\
+  \ 3 different tasks: author profiling, sentiment classification, and textual entailment.\
+  \ Results show that our model yields a significant performance gain compared to\
+  \ other sentence embedding methods in all of the 3 tasks.\",\n    \"authors\": [\n\
+  \      {\n        \"affiliations\": [],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [\n            {\n              \"link\": \"0000-0002-9322-3515\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5086198262\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Yoshua Bengio\"\n        },\n      \
+  \  \"display_name\": \"Yoshua Bengio\"\n      },\n      {\n        \"affiliations\"\
+  : [],\n        \"author\": {\n          \"aliases\": [],\n          \"links\": [\n\
+  \            {\n              \"link\": \"0000-0003-0949-6113\",\n             \
+  \ \"type\": \"orcid\"\n            },\n            {\n              \"link\": \"\
+  A5101583277\",\n              \"type\": \"openalex\"\n            }\n          ],\n\
+  \          \"name\": \"Mo Yu\"\n        },\n        \"display_name\": \"Mo Yu\"\n\
+  \      },\n      {\n        \"affiliations\": [],\n        \"author\": {\n     \
+  \     \"aliases\": [],\n          \"links\": [\n            {\n              \"\
+  link\": \"0009-0006-4028-4935\",\n              \"type\": \"orcid\"\n          \
+  \  },\n            {\n              \"link\": \"A5107249743\",\n              \"\
+  type\": \"openalex\"\n            }\n          ],\n          \"name\": \"Bing Xiang\"\
+  \n        },\n        \"display_name\": \"Bing Xiang\"\n      },\n      {\n    \
+  \    \"affiliations\": [],\n        \"author\": {\n          \"aliases\": [],\n\
+  \          \"links\": [\n            {\n              \"link\": \"0009-0009-7204-0689\"\
+  ,\n              \"type\": \"orcid\"\n            },\n            {\n          \
+  \    \"link\": \"A5024900991\",\n              \"type\": \"openalex\"\n        \
+  \    }\n          ],\n          \"name\": \"Zhouhan Lin\"\n        },\n        \"\
+  display_name\": \"Zhouhan Lin\"\n      },\n      {\n        \"affiliations\": [],\n\
+  \        \"author\": {\n          \"aliases\": [],\n          \"links\": [\n   \
+  \         {\n              \"link\": \"A5041114345\",\n              \"type\": \"\
+  openalex\"\n            }\n          ],\n          \"name\": \"C\\u00edcero Nogueira\
+  \ dos Santos\"\n        },\n        \"display_name\": \"C\\u00edcero Nogueira dos\
+  \ Santos\"\n      },\n      {\n        \"affiliations\": [],\n        \"author\"\
+  : {\n          \"aliases\": [],\n          \"links\": [\n            {\n       \
+  \       \"link\": \"A5066033428\",\n              \"type\": \"openalex\"\n     \
+  \       }\n          ],\n          \"name\": \"Minwei Feng\"\n        },\n     \
+  \   \"display_name\": \"Minwei Feng\"\n      },\n      {\n        \"affiliations\"\
+  : [],\n        \"author\": {\n          \"aliases\": [],\n          \"links\": [\n\
+  \            {\n              \"link\": \"A5107808331\",\n              \"type\"\
+  : \"openalex\"\n            }\n          ],\n          \"name\": \"Bowen Zhou\"\n\
+  \        },\n        \"display_name\": \"Bowen Zhou\"\n      }\n    ],\n    \"flags\"\
+  : [],\n    \"links\": [\n      {\n        \"link\": \"10.48550/arxiv.1703.03130\"\
+  ,\n        \"type\": \"doi\"\n      },\n      {\n        \"link\": \"2597655663\"\
+  ,\n        \"type\": \"mag\"\n      },\n      {\n        \"link\": \"W2597655663\"\
+  ,\n        \"type\": \"openalex\"\n      },\n      {\n        \"link\": \"http://arxiv.org/abs/1703.03130\"\
+  ,\n        \"type\": \"url\"\n      },\n      {\n        \"link\": \"http://arxiv.org/pdf/1703.03130\"\
+  ,\n        \"type\": \"pdf\"\n      },\n      {\n        \"link\": \"https://api.datacite.org/dois/10.48550/arxiv.1703.03130\"\
+  ,\n        \"type\": \"url\"\n      },\n      {\n        \"link\": \"https://arxiv.org/abs/1703.03130\"\
+  ,\n        \"type\": \"open-access\"\n      },\n      {\n        \"link\": \"https://arxiv.org/abs/1703.03130\"\
+  ,\n        \"type\": \"url\"\n      }\n    ],\n    \"releases\": [\n      {\n  \
+  \      \"pages\": null,\n        \"status\": \"unknown\",\n        \"venue\": {\n\
+  \          \"aliases\": [],\n          \"date\": \"2017-01-01T00:00:00\",\n    \
+  \      \"date_precision\": 3,\n          \"links\": [\n            {\n         \
+  \     \"link\": \"https://arxiv.org/abs/1703.03130\",\n              \"type\": \"\
+  url\"\n            }\n          ],\n          \"name\": \"arXiv (Cornell University)\"\
+  ,\n          \"open\": true,\n          \"peer_reviewed\": false,\n          \"\
+  publisher\": \"Cornell University\",\n          \"series\": \"\",\n          \"\
+  type\": \"unknown\",\n          \"volume\": null\n        }\n      }\n    ],\n \
+  \   \"title\": \"A Structured Self-attentive Sentence Embedding\",\n    \"topics\"\
+  : [\n      {\n        \"name\": \"Artificial intelligence\"\n      },\n      {\n\
+  \        \"name\": \"Computer science\"\n      },\n      {\n        \"name\": \"\
+  Embedding\"\n      },\n      {\n        \"name\": \"Logical consequence\"\n    \
+  \  },\n      {\n        \"name\": \"Natural language processing\"\n      },\n  \
+  \    {\n        \"name\": \"Regularization (linguistics)\"\n      },\n      {\n\
+  \        \"name\": \"Sentence\"\n      }\n    ]\n  }\n]"

@@ -1,126 +1,60 @@
-- abstract: null
-  authors:
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Anh Tuan Luu
-    display_name: Anh Tuan Luu
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Chaitanya K. Joshi
-    display_name: Chaitanya K. Joshi
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Thomas Laurent
-    display_name: Thomas Laurent
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Vijay Prakash Dwivedi
-    display_name: Vijay Prakash Dwivedi
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Xavier Bresson
-    display_name: Xavier Bresson
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Yoshua Bengio
-    display_name: Yoshua Bengio
-  flags: []
-  links:
-  - link: https://jmlr.org/papers/v24/22-0567.bib
-    type: bibtex
-  - link: https://jmlr.org/papers/v24/22-0567.html
-    type: abstract.official
-  - link: https://jmlr.org/papers/volume24/22-0567/22-0567.pdf
-    type: pdf.official
-  releases:
-  - pages: 1-48
-    status: published
-    venue:
-      aliases: []
-      date: '2023-01-01'
-      date_precision: 1
-      links: []
-      name: Journal of Machine Learning Research
-      open: false
-      peer_reviewed: true
-      publisher: JMLR
-      series: JMLR
-      type: journal
-      volume: null
-  title: Benchmarking Graph Neural Networks
-  topics: []
-- abstract: null
-  authors:
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Edward J. Hu
-    display_name: Edward J. Hu
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Emmanuel Bengio
-    display_name: Emmanuel Bengio
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Mo Tiwari
-    display_name: Mo Tiwari
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Salem Lahlou
-    display_name: Salem Lahlou
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Tristan Deleu
-    display_name: Tristan Deleu
-  - affiliations: []
-    author:
-      aliases: []
-      links: []
-      name: Yoshua Bengio
-    display_name: Yoshua Bengio
-  flags: []
-  links:
-  - link: https://jmlr.org/papers/v24/22-0364.bib
-    type: bibtex
-  - link: https://jmlr.org/papers/v24/22-0364.html
-    type: abstract.official
-  - link: https://jmlr.org/papers/volume24/22-0364/22-0364.pdf
-    type: pdf.official
-  releases:
-  - pages: 1-55
-    status: published
-    venue:
-      aliases: []
-      date: '2023-01-01'
-      date_precision: 1
-      links: []
-      name: Journal of Machine Learning Research
-      open: false
-      peer_reviewed: true
-      publisher: JMLR
-      series: JMLR
-      type: journal
-      volume: null
-  title: GFlowNet Foundations
-  topics: []
+"[\n  {\n    \"abstract\": null,\n    \"authors\": [\n      {\n        \"affiliations\"\
+  : [],\n        \"author\": {\n          \"aliases\": [],\n          \"links\": [],\n\
+  \          \"name\": \"Anh Tuan Luu\"\n        },\n        \"display_name\": \"\
+  Anh Tuan Luu\"\n      },\n      {\n        \"affiliations\": [],\n        \"author\"\
+  : {\n          \"aliases\": [],\n          \"links\": [],\n          \"name\": \"\
+  Chaitanya K. Joshi\"\n        },\n        \"display_name\": \"Chaitanya K. Joshi\"\
+  \n      },\n      {\n        \"affiliations\": [],\n        \"author\": {\n    \
+  \      \"aliases\": [],\n          \"links\": [],\n          \"name\": \"Thomas\
+  \ Laurent\"\n        },\n        \"display_name\": \"Thomas Laurent\"\n      },\n\
+  \      {\n        \"affiliations\": [],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [],\n          \"name\": \"Vijay Prakash Dwivedi\"\n\
+  \        },\n        \"display_name\": \"Vijay Prakash Dwivedi\"\n      },\n   \
+  \   {\n        \"affiliations\": [],\n        \"author\": {\n          \"aliases\"\
+  : [],\n          \"links\": [],\n          \"name\": \"Xavier Bresson\"\n      \
+  \  },\n        \"display_name\": \"Xavier Bresson\"\n      },\n      {\n       \
+  \ \"affiliations\": [],\n        \"author\": {\n          \"aliases\": [],\n   \
+  \       \"links\": [],\n          \"name\": \"Yoshua Bengio\"\n        },\n    \
+  \    \"display_name\": \"Yoshua Bengio\"\n      }\n    ],\n    \"flags\": [],\n\
+  \    \"links\": [\n      {\n        \"link\": \"https://jmlr.org/papers/v24/22-0567.bib\"\
+  ,\n        \"type\": \"bibtex\"\n      },\n      {\n        \"link\": \"https://jmlr.org/papers/v24/22-0567.html\"\
+  ,\n        \"type\": \"abstract.official\"\n      },\n      {\n        \"link\"\
+  : \"https://jmlr.org/papers/volume24/22-0567/22-0567.pdf\",\n        \"type\": \"\
+  pdf.official\"\n      }\n    ],\n    \"releases\": [\n      {\n        \"pages\"\
+  : \"1-48\",\n        \"status\": \"published\",\n        \"venue\": {\n        \
+  \  \"aliases\": [],\n          \"date\": \"2023-01-01\",\n          \"date_precision\"\
+  : 1,\n          \"links\": [],\n          \"name\": \"Journal of Machine Learning\
+  \ Research\",\n          \"open\": false,\n          \"peer_reviewed\": true,\n\
+  \          \"publisher\": \"JMLR\",\n          \"series\": \"JMLR\",\n         \
+  \ \"type\": \"journal\",\n          \"volume\": null\n        }\n      }\n    ],\n\
+  \    \"title\": \"Benchmarking Graph Neural Networks\",\n    \"topics\": []\n  },\n\
+  \  {\n    \"abstract\": null,\n    \"authors\": [\n      {\n        \"affiliations\"\
+  : [],\n        \"author\": {\n          \"aliases\": [],\n          \"links\": [],\n\
+  \          \"name\": \"Edward J. Hu\"\n        },\n        \"display_name\": \"\
+  Edward J. Hu\"\n      },\n      {\n        \"affiliations\": [],\n        \"author\"\
+  : {\n          \"aliases\": [],\n          \"links\": [],\n          \"name\": \"\
+  Emmanuel Bengio\"\n        },\n        \"display_name\": \"Emmanuel Bengio\"\n \
+  \     },\n      {\n        \"affiliations\": [],\n        \"author\": {\n      \
+  \    \"aliases\": [],\n          \"links\": [],\n          \"name\": \"Mo Tiwari\"\
+  \n        },\n        \"display_name\": \"Mo Tiwari\"\n      },\n      {\n     \
+  \   \"affiliations\": [],\n        \"author\": {\n          \"aliases\": [],\n \
+  \         \"links\": [],\n          \"name\": \"Salem Lahlou\"\n        },\n   \
+  \     \"display_name\": \"Salem Lahlou\"\n      },\n      {\n        \"affiliations\"\
+  : [],\n        \"author\": {\n          \"aliases\": [],\n          \"links\": [],\n\
+  \          \"name\": \"Tristan Deleu\"\n        },\n        \"display_name\": \"\
+  Tristan Deleu\"\n      },\n      {\n        \"affiliations\": [],\n        \"author\"\
+  : {\n          \"aliases\": [],\n          \"links\": [],\n          \"name\": \"\
+  Yoshua Bengio\"\n        },\n        \"display_name\": \"Yoshua Bengio\"\n     \
+  \ }\n    ],\n    \"flags\": [],\n    \"links\": [\n      {\n        \"link\": \"\
+  https://jmlr.org/papers/v24/22-0364.bib\",\n        \"type\": \"bibtex\"\n     \
+  \ },\n      {\n        \"link\": \"https://jmlr.org/papers/v24/22-0364.html\",\n\
+  \        \"type\": \"abstract.official\"\n      },\n      {\n        \"link\": \"\
+  https://jmlr.org/papers/volume24/22-0364/22-0364.pdf\",\n        \"type\": \"pdf.official\"\
+  \n      }\n    ],\n    \"releases\": [\n      {\n        \"pages\": \"1-55\",\n\
+  \        \"status\": \"published\",\n        \"venue\": {\n          \"aliases\"\
+  : [],\n          \"date\": \"2023-01-01\",\n          \"date_precision\": 1,\n \
+  \         \"links\": [],\n          \"name\": \"Journal of Machine Learning Research\"\
+  ,\n          \"open\": false,\n          \"peer_reviewed\": true,\n          \"\
+  publisher\": \"JMLR\",\n          \"series\": \"JMLR\",\n          \"type\": \"\
+  journal\",\n          \"volume\": null\n        }\n      }\n    ],\n    \"title\"\
+  : \"GFlowNet Foundations\",\n    \"topics\": []\n  }\n]"

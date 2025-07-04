@@ -1,10 +1,9 @@
+import json
 from pathlib import Path
 
 import pytest
-from serieux import serialize
 
 from paperoni.discovery.jmlr import JMLR
-from paperoni.model.classes import Paper
 
 from ..utils import sort_keys
 
@@ -26,4 +25,4 @@ def test_query(cache_dir, data_regression):
         key=lambda x: x.title,
     )
 
-    data_regression.check(sort_keys(serialize(list[Paper], papers[:5])))
+    data_regression.check(json.dumps(sort_keys(papers[:5]), indent=2))

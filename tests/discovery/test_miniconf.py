@@ -1,21 +1,12 @@
 import itertools
 import json
 from pathlib import Path
-from typing import Generator
 
 import pytest
-from serieux import serialize
 
 from paperoni.discovery.miniconf import MiniConf, conference_urls
-from paperoni.model.classes import Institution, Paper
 
-from ..utils import sort_keys
-
-
-def _iter_affiliations(paper: Paper) -> Generator[Institution, None, None]:
-    for author in paper.authors:
-        for affiliation in author.affiliations:
-            yield affiliation
+from ..utils import iter_affiliations, sort_keys
 
 
 @pytest.fixture(autouse=True)
@@ -43,12 +34,12 @@ def test_query(cache_dir, data_regression, conference, query_params):
         key=lambda x: x.title,
     )
 
-    match query_params:
+    match next(iter(query_params.keys())):
         case "affiliation":
             assert all(
                 [
                     aff
-                    for aff in _iter_affiliations(paper)
+                    for aff in iter_affiliations(paper)
                     if query_params["affiliation"].lower() in aff.name.lower()
                 ]
                 for paper in papers
@@ -62,5 +53,7 @@ def test_query(cache_dir, data_regression, conference, query_params):
                 ]
                 for paper in papers
             ), f"No paper found for {query_params['author']=}"
+        case _:
+            assert False, f"Unknown query parameter: {query_params=}"
 
-    data_regression.check(sort_keys(serialize(list[Paper], papers[:5])))
+    data_regression.check(json.dumps(sort_keys(papers[:5]), indent=2))
