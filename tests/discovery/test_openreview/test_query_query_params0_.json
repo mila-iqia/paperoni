@@ -7,78 +7,60 @@
         "author": {
           "aliases": [],
           "links": [],
-          "name": "Alexander Moreno"
+          "name": "Andrea Vedaldi"
         },
-        "display_name": "Alexander Moreno"
+        "display_name": "Andrea Vedaldi"
       },
       {
         "affiliations": [],
         "author": {
           "aliases": [],
           "links": [],
-          "name": "Cho Lam"
+          "name": "Benjamin Biggs"
         },
-        "display_name": "Cho Lam"
+        "display_name": "Benjamin Biggs"
       },
       {
         "affiliations": [],
         "author": {
           "aliases": [],
           "links": [],
-          "name": "David Wetter"
+          "name": "Benjamin Graham"
         },
-        "display_name": "David Wetter"
+        "display_name": "Benjamin Graham"
       },
       {
         "affiliations": [],
         "author": {
           "aliases": [],
           "links": [],
-          "name": "Inbal Nahum-Shani"
+          "name": "David Novotny"
         },
-        "display_name": "Inbal Nahum-Shani"
+        "display_name": "David Novotny"
       },
       {
         "affiliations": [],
         "author": {
           "aliases": [],
           "links": [],
-          "name": "James M. Rehg"
+          "name": "Hanbyul Joo"
         },
-        "display_name": "James M. Rehg"
+        "display_name": "Hanbyul Joo"
       },
       {
         "affiliations": [],
         "author": {
           "aliases": [],
           "links": [],
-          "name": "Jamie Yap"
+          "name": "Sébastien Ehrhadt"
         },
-        "display_name": "Jamie Yap"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Walter Dempsey"
-        },
-        "display_name": "Walter Dempsey"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Zhenke Wu"
-        },
-        "display_name": "Zhenke Wu"
+        "display_name": "Sébastien Ehrhadt"
       }
     ],
     "flags": [],
     "links": [
       {
-        "link": "_dTvhW_8IaF",
+        "link": "yI3LXao9Zwj",
         "type": "openreview"
       }
     ],
@@ -106,182 +88,7 @@
         }
       }
     ],
-    "title": "A Robust Functional EM Algorithm for Incomplete Panel Count Data",
-    "topics": []
-  },
-  {
-    "abstract": null,
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Ali Ramezani-Kebrya"
-        },
-        "display_name": "Ali Ramezani-Kebrya"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Dan Alistarh"
-        },
-        "display_name": "Dan Alistarh"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Daniel Roy"
-        },
-        "display_name": "Daniel Roy"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Fartash Faghri"
-        },
-        "display_name": "Fartash Faghri"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Ilia Markov"
-        },
-        "display_name": "Ilia Markov"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Iman Tabrizian"
-        },
-        "display_name": "Iman Tabrizian"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "6d9XmEE0SQe",
-        "type": "openreview"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "unknown",
-        "venue": {
-          "aliases": [],
-          "date": "2020-11-13T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "NeurIPS.cc/2020/Conference",
-              "type": "openreview-venue"
-            }
-          ],
-          "name": "NeurIPS.cc/2020/Conference",
-          "open": false,
-          "peer_reviewed": false,
-          "publisher": null,
-          "series": "NeurIPS.cc/Conference",
-          "type": "conference",
-          "volume": "NeurIPS 2020"
-        }
-      }
-    ],
-    "title": "Adaptive Gradient Quantization for Data-Parallel SGD",
-    "topics": []
-  },
-  {
-    "abstract": null,
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Can Li"
-        },
-        "display_name": "Can Li"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Can Wang"
-        },
-        "display_name": "Can Wang"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Lei Bai"
-        },
-        "display_name": "Lei Bai"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Lina Yao"
-        },
-        "display_name": "Lina Yao"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [],
-          "name": "Xianzhi Wang"
-        },
-        "display_name": "Xianzhi Wang"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "mIfoaB05Ql",
-        "type": "openreview"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "unknown",
-        "venue": {
-          "aliases": [],
-          "date": "2020-11-13T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "NeurIPS.cc/2020/Conference",
-              "type": "openreview-venue"
-            }
-          ],
-          "name": "NeurIPS.cc/2020/Conference",
-          "open": false,
-          "peer_reviewed": false,
-          "publisher": null,
-          "series": "NeurIPS.cc/Conference",
-          "type": "conference",
-          "volume": "NeurIPS 2020"
-        }
-      }
-    ],
-    "title": "Adaptive Graph Convolutional Recurrent Network for Traffic Forecasting",
+    "title": "3D Multi-bodies: Fitting Sets of Plausible 3D Human Models to Ambiguous Image Data",
     "topics": []
   },
   {
@@ -365,6 +172,145 @@
       }
     ],
     "title": "A Combinatorial Perspective on Transfer Learning",
+    "topics": []
+  },
+  {
+    "abstract": null,
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Eric Vanden-Eijnden"
+        },
+        "display_name": "Eric Vanden-Eijnden"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Grant M. Rotskoff"
+        },
+        "display_name": "Grant M. Rotskoff"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Joan Bruna"
+        },
+        "display_name": "Joan Bruna"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Zhengdao Chen"
+        },
+        "display_name": "Zhengdao Chen"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "JrSYyibYFVa",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "unknown",
+        "venue": {
+          "aliases": [],
+          "date": "2020-11-13T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2020/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2020/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2020"
+        }
+      }
+    ],
+    "title": "A Dynamical Central Limit Theorem for Shallow Neural Networks",
+    "topics": []
+  },
+  {
+    "abstract": null,
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Faming Liang"
+        },
+        "display_name": "Faming Liang"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Guang Lin"
+        },
+        "display_name": "Guang Lin"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [],
+          "name": "Wei Deng"
+        },
+        "display_name": "Wei Deng"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "6KHVe4iMtIs",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "unknown",
+        "venue": {
+          "aliases": [],
+          "date": "2020-11-13T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2020/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2020/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2020"
+        }
+      }
+    ],
+    "title": "A Contour Stochastic  Gradient Langevin Dynamics Algorithm for Simulations of Multi-modal Distributions",
     "topics": []
   },
   {

@@ -16,6 +16,7 @@ from ..utils import check_papers, iter_links_ids, iter_releases
         {"paper_id": "gVTkMsaaGI", "venue": "NeurIPS.cc/2024/Conference"},
         {"author": "Yoshua Bengio", "venue": "NeurIPS.cc/2024/Conference"},
         {"author_id": "~Yoshua_Bengio1", "venue": "NeurIPS.cc/2024/Conference"},
+        # TODO: Fix this test. Querying by title returns no results.
         # {
         #     "title": "Amortizing intractable inference in diffusion models for vision, language, and control",
         #     "venue": "NeurIPS.cc/2024/Conference",
@@ -23,7 +24,7 @@ from ..utils import check_papers, iter_links_ids, iter_releases
     ],
 )
 def test_query(file_regression: FileRegressionFixture, query_params: dict[str, str]):
-    query_params = {**query_params, "block_size": 100, "limit": 100}
+    query_params = {**query_params, "block_size": 100, "limit": 1000}
     api_versions = [1, 2]
 
     papers_per_version: dict[int, list[Paper]] = {}
@@ -92,8 +93,7 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
             ), f"Querying by author ID should return the same papers as querying by author name"
         case "title":
             assert all(
-                [query_params["title"].lower() == paper.title.lower()]
-                for paper in papers
+                query_params["title"].lower() == paper.title.lower() for paper in papers
             ), f"No paper found for {query_params['title']=}"
         case _:
             assert False, f"Unknown query parameter: {query_params=}"

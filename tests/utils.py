@@ -3,7 +3,7 @@
 import dataclasses
 import json
 from datetime import date, datetime
-from typing import Any, Generator
+from typing import Any, Generator, Iterable
 
 from pytest_regressions.file_regression import FileRegressionFixture
 
@@ -25,6 +25,13 @@ def iter_links_ids(paper: Paper) -> Generator[str, None, None]:
     for link in paper.links:
         if link.link:
             yield link.link
+
+
+def split_on(string: str, separators: Iterable[str] = (" ", "-", "_")) -> list[str]:
+    splits = [string]
+    for sep in separators:
+        splits = sum([part.split(sep) for part in splits], [])
+    return [part for part in splits if part.strip()]
 
 
 # json.dumps does not sort embedded lists, this custom function should allow to

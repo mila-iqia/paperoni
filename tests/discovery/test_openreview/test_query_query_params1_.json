@@ -1,6 +1,6 @@
 [
   {
-    "abstract": "Circuits based on sum-product structure have become a ubiquitous representation to compactly encode knowledge, from Boolean functions to probability distributions. By imposing constraints on the structure of such circuits, certain inference queries become tractable, such as model counting and most probable configuration. Recent works have explored analyzing probabilistic and causal inference queries\nas compositions of basic operators to derive tractability conditions. In this paper, we take an algebraic perspective for compositional inference, and show that a large class of queries—including marginal MAP, probabilistic answer set programming inference, and causal backdoor adjustment—correspond to a combination of basic operators over semirings: aggregation, product, and elementwise mapping. Using this framework, we uncover simple and general sufficient conditions for tractable composition of these operators, in terms of circuit properties (e.g., marginal determinism, compatibility) and conditions on the elementwise mappings. Applying our analysis, we derive novel tractability conditions for many such compositional queries. Our results unify tractability conditions for existing problems on circuits, while providing a blueprint for analysing novel compositional inference queries.",
+    "abstract": "Current multimodal and multitask foundation models, like 4M or UnifiedIO, show promising results. However, their out-of-the-box abilities to accept diverse inputs and perform diverse tasks are limited by the (usually small) number of modalities and tasks they are trained on. In this paper, we develop a single any-to-any model trained on tens of highly diverse modalities and by performing co-training on large-scale multimodal datasets and text corpora. This includes training on images and text along with several semantic and geometric modalities, feature maps from recent state of the art models like DINOv2 and ImageBind, pseudo labels of specialist models like SAM and 4DHumans, and a range of new modalities that allow for novel ways to interact with the model and steer the generation, for example, image metadata or color palettes.\n\nA crucial step in this process is performing discrete tokenization on various modalities, whether they are image-like, neural network feature maps, vectors, structured data like instance segmentation or human poses, or data that can be represented as text.\n    \nThrough this, we show the possibility of training one model to solve at least 3x more tasks/modalities than existing models and doing so without a loss in performance. In addition, this enables more fine-grained and controllable multimodal generation capabilities and allows studying the distillation of models trained on diverse data and objectives into one unified model.\nWe scale the training to a three billion parameter and different datasets. The multimodal models and training code are open sourced at https://4m.epfl.ch/.",
     "authors": [
       {
         "affiliations": [],
@@ -8,13 +8,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Benjie_Wang1",
+              "link": "~Afshin_Dehghan5",
               "type": "openreview"
             }
           ],
-          "name": "Benjie Wang"
+          "name": "Afshin Dehghan"
         },
-        "display_name": "Benjie Wang"
+        "display_name": "Afshin Dehghan"
       },
       {
         "affiliations": [],
@@ -22,13 +22,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Denis_Mauá1",
+              "link": "~Ali_Garjani1",
               "type": "openreview"
             }
           ],
-          "name": "Denis Mauá"
+          "name": "Ali Garjani"
         },
-        "display_name": "Denis Mauá"
+        "display_name": "Ali Garjani"
       },
       {
         "affiliations": [],
@@ -36,13 +36,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Guy_Van_den_Broeck1",
+              "link": "~Amir_Zamir1",
               "type": "openreview"
             }
           ],
-          "name": "Guy Van den Broeck"
+          "name": "Amir Zamir"
         },
-        "display_name": "Guy Van den Broeck"
+        "display_name": "Amir Zamir"
       },
       {
         "affiliations": [],
@@ -50,19 +50,89 @@
           "aliases": [],
           "links": [
             {
-              "link": "~YooJung_Choi1",
+              "link": "~David_Griffiths1",
               "type": "openreview"
             }
           ],
-          "name": "YooJung Choi"
+          "name": "David Griffiths"
         },
-        "display_name": "YooJung Choi"
+        "display_name": "David Griffiths"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~David_Mizrahi1",
+              "type": "openreview"
+            }
+          ],
+          "name": "David Mizrahi"
+        },
+        "display_name": "David Mizrahi"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Jiaming_Hu2",
+              "type": "openreview"
+            }
+          ],
+          "name": "Jiaming Hu"
+        },
+        "display_name": "Jiaming Hu"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Mingfei_Gao1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Mingfei Gao"
+        },
+        "display_name": "Mingfei Gao"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Oğuzhan_Fatih_Kar1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Oğuzhan Fatih Kar"
+        },
+        "display_name": "Oğuzhan Fatih Kar"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Roman_Bachmann1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Roman Bachmann"
+        },
+        "display_name": "Roman Bachmann"
       }
     ],
     "flags": [],
     "links": [
       {
-        "link": "mXlR1FLFDc",
+        "link": "qRnmLJQHgx",
         "type": "openreview"
       }
     ],
@@ -90,27 +160,33 @@
         }
       }
     ],
-    "title": "A Compositional Atlas for Algebraic Circuits",
+    "title": "4M-21: An Any-to-Any Vision Model for Tens of Tasks and Modalities",
     "topics": [
       {
-        "name": "algebraic"
+        "name": "computer vision"
       },
       {
-        "name": "logic circuits"
+        "name": "foundation models"
       },
       {
-        "name": "probabilistic circuits"
+        "name": "generative models"
       },
       {
-        "name": "probabilistic inference"
+        "name": "multimodal learning"
       },
       {
-        "name": "semiring"
+        "name": "multitask learning"
+      },
+      {
+        "name": "representation learning"
+      },
+      {
+        "name": "transfer learning"
       }
     ]
   },
   {
-    "abstract": "Data-driven algorithm design is a promising, learning-based approach for beyond worst-case analysis of algorithms with tunable parameters. An important open problem is the design of computationally efficient data-driven algorithms for combinatorial algorithm families with multiple parameters. As one fixes the problem instance and varies the parameters, the “dual” loss function typically has a piecewise-decomposable structure, i.e. is well-behaved except at certain sharp transition boundaries. Motivated by prior empirical work, we initiate the study of techniques to develop efficient ERM learning algorithms for data-driven algorithm design by enumerating the pieces of the sum dual loss functions for a collection of problem instances. The running time of our approach scales with the actual number of pieces that appear as opposed to worst case upper bounds on the number of pieces. Our approach involves two novel ingredients – an output-sensitive algorithm for enumerating polytopes induced by a set of hyperplanes using tools from computational geometry, and an execution graph which compactly represents all the states the algorithm could attain for all possible parameter values. We illustrate our techniques by giving algorithms for pricing problems, linkage-based clustering and dynamic-programming based sequence alignment.",
+    "abstract": "Data point selection (DPS) is becoming a critical topic in deep learning due to the ease of acquiring uncurated training data compared to the difficulty of obtaining curated or processed data. \nExisting approaches to DPS are predominantly based on a bi-level optimisation (BLO) formulation, which is demanding in terms of memory and computation, and exhibits some theoretical defects regarding minibatches.\nThus, we propose a novel Bayesian approach to DPS. We view the DPS problem as posterior inference in a novel Bayesian model where the posterior distributions of the instance-wise weights and the main neural network parameters are inferred under a reasonable prior and likelihood model.\nWe employ stochastic gradient Langevin MCMC sampling to learn the main network and instance-wise weights jointly, ensuring convergence even with minibatches. Our update equation is comparable to the widely used SGD and much more efficient than existing BLO-based methods. Through controlled experiments in both the vision and language domains, we present the proof-of-concept. Additionally, we demonstrate that our method scales effectively to large language models and facilitates automated per-task optimization for instruction fine-tuning datasets.",
     "authors": [
       {
         "affiliations": [],
@@ -118,13 +194,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Christopher_Seiler1",
+              "link": "~Brais_Martinez3",
               "type": "openreview"
             }
           ],
-          "name": "Christopher Seiler"
+          "name": "Brais Martinez"
         },
-        "display_name": "Christopher Seiler"
+        "display_name": "Brais Martinez"
       },
       {
         "affiliations": [],
@@ -132,13 +208,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Dravyansh_Sharma1",
+              "link": "~Minyoung_Kim2",
               "type": "openreview"
             }
           ],
-          "name": "Dravyansh Sharma"
+          "name": "Minyoung Kim"
         },
-        "display_name": "Dravyansh Sharma"
+        "display_name": "Minyoung Kim"
       },
       {
         "affiliations": [],
@@ -146,19 +222,47 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Maria_Florina_Balcan1",
+              "link": "~Royson_Lee1",
               "type": "openreview"
             }
           ],
-          "name": "Maria Florina Balcan"
+          "name": "Royson Lee"
         },
-        "display_name": "Maria Florina Balcan"
+        "display_name": "Royson Lee"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Timothy_Hospedales1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Timothy Hospedales"
+        },
+        "display_name": "Timothy Hospedales"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Xinnuo_Xu1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Xinnuo Xu"
+        },
+        "display_name": "Xinnuo Xu"
       }
     ],
     "flags": [],
     "links": [
       {
-        "link": "yW3tlSwusb",
+        "link": "9f5tOXKoMC",
         "type": "openreview"
       }
     ],
@@ -186,18 +290,30 @@
         }
       }
     ],
-    "title": "Accelerating ERM for data-driven algorithm design using output-sensitive techniques",
+    "title": "A Bayesian Approach to Data Point Selection",
     "topics": [
       {
-        "name": "Data-driven Algorithm Design"
+        "name": "Bayesian"
       },
       {
-        "name": "Learning Theory"
+        "name": "Data denoising"
+      },
+      {
+        "name": "Data selection"
+      },
+      {
+        "name": "Data unbalancing"
+      },
+      {
+        "name": "Domain adaptation"
+      },
+      {
+        "name": "LLM"
       }
     ]
   },
   {
-    "abstract": "Learning from AI feedback (LAIF) is a popular paradigm for improving the instruction-following abilities of powerful pre-trained language models. LAIF first performs supervised fine-tuning (SFT) using demonstrations from a teacher model and then further fine-tunes the model with reinforcement learning (RL) or direct preference optimization (DPO), using feedback from a critic model. While recent popular open-source models have demonstrated substantial improvements in performance from the RL step, in this paper we question whether the complexity of this RL step is truly warranted for AI feedback. We show that the improvements of the RL step are virtually entirely due to the widespread practice of using a weaker teacher model (e.g. GPT-3.5) for SFT data collection than the critic (e.g., GPT-4) used for AI feedback generation. Specifically, we show that simple supervised fine-tuning with GPT-4 as the teacher outperforms existing LAIF pipelines. More generally, we find that the gains from LAIF vary substantially across base model families, test-time evaluation protocols, and critic models. Finally, we provide a mechanistic explanation for when SFT may outperform the full two-step LAIF pipeline as well as suggestions for making LAIF maximally useful in practice.",
+    "abstract": "In this paper, we present a novel data-free method for merging neural networks in weight space. Our method optimizes for the permutations of network neurons while ensuring global coherence across all layers, and it outperforms recent layer-local approaches in a set of challenging scenarios. We then generalize the formulation to the $N$-models scenario to enforce cycle consistency of the permutations with guarantees, allowing circular compositions of permutations to be computed without accumulating error along the path. \n    We qualitatively and quantitatively motivate the need for such a constraint, showing its benefits when merging homogeneous sets of models in scenarios spanning varying architectures and datasets. We finally show that, when coupled with activation renormalization, the approach yields the best results in the task.",
     "authors": [
       {
         "affiliations": [],
@@ -205,13 +321,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Archit_Sharma1",
+              "link": "~Daniele_Baieri1",
               "type": "openreview"
             }
           ],
-          "name": "Archit Sharma"
+          "name": "Daniele Baieri"
         },
-        "display_name": "Archit Sharma"
+        "display_name": "Daniele Baieri"
       },
       {
         "affiliations": [],
@@ -219,13 +335,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Chelsea_Finn1",
+              "link": "~Donato_Crisostomi1",
               "type": "openreview"
             }
           ],
-          "name": "Chelsea Finn"
+          "name": "Donato Crisostomi"
         },
-        "display_name": "Chelsea Finn"
+        "display_name": "Donato Crisostomi"
       },
       {
         "affiliations": [],
@@ -233,13 +349,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Eric_Mitchell1",
+              "link": "~Emanuele_Rodolà1",
               "type": "openreview"
             }
           ],
-          "name": "Eric Mitchell"
+          "name": "Emanuele Rodolà"
         },
-        "display_name": "Eric Mitchell"
+        "display_name": "Emanuele Rodolà"
       },
       {
         "affiliations": [],
@@ -247,13 +363,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Kushal_Arora1",
+              "link": "~Florian_Bernard3",
               "type": "openreview"
             }
           ],
-          "name": "Kushal Arora"
+          "name": "Florian Bernard"
         },
-        "display_name": "Kushal Arora"
+        "display_name": "Florian Bernard"
       },
       {
         "affiliations": [],
@@ -261,33 +377,19 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Sedrick_Keh1",
+              "link": "~Marco_Fumero1",
               "type": "openreview"
             }
           ],
-          "name": "Sedrick Keh"
+          "name": "Marco Fumero"
         },
-        "display_name": "Sedrick Keh"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "~Thomas_Kollar1",
-              "type": "openreview"
-            }
-          ],
-          "name": "Thomas Kollar"
-        },
-        "display_name": "Thomas Kollar"
+        "display_name": "Marco Fumero"
       }
     ],
     "flags": [],
     "links": [
       {
-        "link": "FZQYfmsmX9",
+        "link": "iD18l6prA7",
         "type": "openreview"
       }
     ],
@@ -315,24 +417,21 @@
         }
       }
     ],
-    "title": "A Critical Evaluation of AI Feedback for Aligning Large Language Models",
+    "title": "$C^2M^3$: Cycle-Consistent Multi-Model Merging",
     "topics": [
       {
-        "name": "ai feedback"
+        "name": "deep learning"
       },
       {
-        "name": "alignment"
+        "name": "linear mode connectivity"
       },
       {
-        "name": "direct preference optimization"
-      },
-      {
-        "name": "reinforcement learning from human feedback"
+        "name": "model merging"
       }
     ]
   },
   {
-    "abstract": "Rigorously establishing the safety of black-box machine learning models with respect to critical risk measures is important for providing guarantees about the behavior of the model.\nRecently, a notion of a risk controlling prediction set (RCPS) has been introduced by Bates et. al. (JACM '24) for producing prediction sets that are statistically guaranteed to have low risk from machine learning models.\nOur method extends this notion to the sequential setting, where we provide guarantees even when the data is collected adaptively, and ensures the risk guarantee is anytime-valid, i.e., simultaneously holds at all time steps. Further, we propose a framework for constructing RCPSes for active labeling, i.e., allowing one to use a labeling policy that chooses whether to query the true label for each received data point, and ensures the expected proportion data points whose labels are queried are below a predetermined label budget. We also describe how to use predictors (e.g., the machine learning model we are providing risk control guarantees for) to further improve the utility of our RCPSes by estimating the expected risk conditioned on the covariates.\nWe characterize the optimal choices of label policy under a fixed label budget, and predictor, and show a regret result that relates the estimation error of the optimal labeling policy and predictor to the wealth process that underlies our RCPSes.\nLastly, we present practical ways of formulating label policies and we empirically show that our label policies use fewer labels to reach higher utility than naive baseline labeling strategies on both simulations and real data.",
+    "abstract": "Multi-instance point cloud registration aims to estimate the pose of all instances of a model point cloud in the whole scene. Existing methods all adopt the strategy of first obtaining the global correspondence and then clustering to obtain the pose of each instance. However, due to the cluttered and occluded objects in the scene, it is difficult to obtain an accurate correspondence between the model point cloud and all instances in the scene. To this end, we propose a simple yet powerful 3D focusing-and-matching network for multi-instance point cloud registration by learning the multiple pair-wise point cloud registration. Specifically, we first present a 3D multi-object focusing module to locate the center of each object and generate object proposals. By using self-attention and cross-attention to associate the model point cloud with structurally similar objects, we can locate potential matching instances by regressing object centers. Then, we propose a 3D dual-masking instance matching module to estimate the pose between the model point cloud and each object proposal. It performs instance mask and overlap mask masks to accurately predict the pair-wise correspondence. Extensive experiments on two public benchmarks, Scan2CAD and ROBI, show that our method achieves a new state-of-the-art performance on the multi-instance point cloud registration task.",
     "authors": [
       {
         "affiliations": [],
@@ -340,13 +439,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Nikos_Karampatziakis1",
+              "link": "~Bo_Li35",
               "type": "openreview"
             }
           ],
-          "name": "Nikos Karampatziakis"
+          "name": "Bo Li"
         },
-        "display_name": "Nikos Karampatziakis"
+        "display_name": "Bo Li"
       },
       {
         "affiliations": [],
@@ -354,13 +453,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Paul_Mineiro1",
+              "link": "~Le_Hui1",
               "type": "openreview"
             }
           ],
-          "name": "Paul Mineiro"
+          "name": "Le Hui"
         },
-        "display_name": "Paul Mineiro"
+        "display_name": "Le Hui"
       },
       {
         "affiliations": [],
@@ -368,19 +467,47 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Ziyu_Xu2",
+              "link": "~Liyuan_Zhang3",
               "type": "openreview"
             }
           ],
-          "name": "Ziyu Xu"
+          "name": "Liyuan Zhang"
         },
-        "display_name": "Ziyu Xu"
+        "display_name": "Liyuan Zhang"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Yuchao_Dai1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Yuchao Dai"
+        },
+        "display_name": "Yuchao Dai"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~qi_liu18",
+              "type": "openreview"
+            }
+          ],
+          "name": "qi liu"
+        },
+        "display_name": "qi liu"
       }
     ],
     "flags": [],
     "links": [
       {
-        "link": "4ZH48aGD60",
+        "link": "0sJBW05a2W",
         "type": "openreview"
       }
     ],
@@ -408,24 +535,18 @@
         }
       }
     ],
-    "title": "Active, anytime-valid risk controlling prediction sets",
+    "title": "3D Focusing-and-Matching Network for Multi-Instance Point Cloud Registration",
     "topics": [
       {
-        "name": "confidence sequence"
+        "name": "Focus and Matching"
       },
       {
-        "name": "conformal prediction"
-      },
-      {
-        "name": "distribution free"
-      },
-      {
-        "name": "e-process"
+        "name": "Point Cloud Registration"
       }
     ]
   },
   {
-    "abstract": "We study a novel problem to automatically generate video background that tailors to foreground subject motion. It is an important problem for the movie industry and visual effects community, which traditionally requires tedious manual efforts to solve. To this end, we propose ActAnywhere, a video diffusion model that takes as input a sequence of foreground subject segmentation and an image of a novel background and generates a video of the subject interacting in this background. We train our model on a large-scale dataset of 2.4M videos of human-scene interactions. Through extensive evaluation, we show that our model produces videos with realistic foreground-background interaction while strictly following the guidance of the condition image. Our model generalizes to diverse scenarios including non-human subjects, gaming and animation clips, as well as videos with multiple moving subjects. Both quantitative and qualitative comparisons demonstrate that our model significantly outperforms existing methods, which fail to accomplish the studied task. Please visit our project webpage at https://actanywhere.github.io.",
+    "abstract": "Parameter-efficient finetuning (PEFT) methods effectively adapt large language models (LLMs) to diverse downstream tasks, reducing storage and GPU memory demands. Despite these advantages, several applications pose new challenges to PEFT beyond mere parameter efficiency. One notable challenge involves the efficient deployment of LLMs equipped with multiple task- or user-specific adapters, particularly when different adapters are needed for distinct requests within the same batch. Another challenge is the interpretability of LLMs, which is crucial for understanding how LLMs function. Previous studies introduced various approaches to address different challenges. In this paper, we introduce a novel method, RoAd, which employs a straightforward 2D rotation to adapt LLMs and addresses all the above challenges: (1) RoAd is remarkably parameter-efficient, delivering optimal performance on GLUE, eight commonsense reasoning tasks and four arithmetic reasoning tasks with <0.1% trainable parameters; (2) RoAd facilitates the efficient serving of requests requiring different adapters within a batch, with an overhead comparable to element-wise multiplication instead of batch matrix multiplication; (3) RoAd enhances LLM's interpretability through integration within a framework of distributed interchange intervention, demonstrated via composition experiments.",
     "authors": [
       {
         "affiliations": [],
@@ -433,13 +554,13 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Boxiao_Pan1",
+              "link": "~Baohao_Liao1",
               "type": "openreview"
             }
           ],
-          "name": "Boxiao Pan"
+          "name": "Baohao Liao"
         },
-        "display_name": "Boxiao Pan"
+        "display_name": "Baohao Liao"
       },
       {
         "affiliations": [],
@@ -447,89 +568,19 @@
           "aliases": [],
           "links": [
             {
-              "link": "~Chun-Hao_Paul_Huang2",
+              "link": "~Christof_Monz1",
               "type": "openreview"
             }
           ],
-          "name": "Chun-Hao Paul Huang"
+          "name": "Christof Monz"
         },
-        "display_name": "Chun-Hao Paul Huang"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "~Jimei_Yang1",
-              "type": "openreview"
-            }
-          ],
-          "name": "Jimei Yang"
-        },
-        "display_name": "Jimei Yang"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "~Krishna_Kumar_Singh4",
-              "type": "openreview"
-            }
-          ],
-          "name": "Krishna Kumar Singh"
-        },
-        "display_name": "Krishna Kumar Singh"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "~Leonidas_Guibas1",
-              "type": "openreview"
-            }
-          ],
-          "name": "Leonidas Guibas"
-        },
-        "display_name": "Leonidas Guibas"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "~Yang_Zhou10",
-              "type": "openreview"
-            }
-          ],
-          "name": "Yang Zhou"
-        },
-        "display_name": "Yang Zhou"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "~Zhan_Xu1",
-              "type": "openreview"
-            }
-          ],
-          "name": "Zhan Xu"
-        },
-        "display_name": "Zhan Xu"
+        "display_name": "Christof Monz"
       }
     ],
     "flags": [],
     "links": [
       {
-        "link": "ntlFREw59A",
+        "link": "rYjYwuM6yH",
         "type": "openreview"
       }
     ],
@@ -557,19 +608,19 @@
         }
       }
     ],
-    "title": "ActAnywhere: Subject-Aware Video Background Generation",
+    "title": "3-in-1: 2D Rotary Adaptation for Efficient Finetuning, Efficient Batching and Composability",
     "topics": [
       {
-        "name": "Video Background Generation"
+        "name": "batching"
       },
       {
-        "name": "Video Editing"
+        "name": "interpretability"
       },
       {
-        "name": "Video Generation"
+        "name": "orthogonal finetuning"
       },
       {
-        "name": "Video Synthesis"
+        "name": "parameter-efficient finetuning"
       }
     ]
   }
