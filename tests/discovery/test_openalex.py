@@ -1,11 +1,9 @@
-import json
-
 import pytest
 from pytest_regressions.file_regression import FileRegressionFixture
 
 from paperoni.discovery.openalex import OpenAlex, OpenAlexQueryManager, QueryError
 
-from ..utils import iter_affiliations, sort_keys
+from ..utils import check_papers, iter_affiliations
 
 
 @pytest.mark.parametrize(
@@ -72,11 +70,7 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
         case _:
             assert False, f"Unknown query parameter: {query_params=}"
 
-    # Using file_regression and json.dumps to avoid
-    # yaml.representer.RepresenterError on DatePrecision
-    file_regression.check(
-        json.dumps(sort_keys(papers[:5]), indent=2), extension=".json"
-    )
+    check_papers(file_regression, papers)
 
 
 @pytest.mark.parametrize(

@@ -7,7 +7,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila / Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila / Université de Montréal"
           }
         ],
         "author": {
@@ -87,7 +87,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila, Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila, Université de Montréal"
           }
         ],
         "author": {
@@ -298,7 +298,7 @@
     ]
   },
   {
-    "abstract": "Inspired by human conscious planning, we propose Skipper, a model-based reinforcement learning framework utilizing spatio-temporal abstractions to generalize better in novel situations. It automatically decomposes the given task into smaller, more manageable subtasks, and thus enables sparse decision-making and focused computation on the relevant parts of the environment. The decomposition relies on the extraction of an abstracted proxy problem represented as a directed graph, in which vertices and edges are learned end-to-end from hindsight. Our theoretical analyses provide performance guarantees under appropriate assumptions and establish where our approach is expected to be helpful. Generalization-focused experiments validate Skipper\u2019s significant advantage in zero-shot generalization, compared to some existing state-of-the-art hierarchical planning methods.",
+    "abstract": "Inspired by human conscious planning, we propose Skipper, a model-based reinforcement learning framework utilizing spatio-temporal abstractions to generalize better in novel situations. It automatically decomposes the given task into smaller, more manageable subtasks, and thus enables sparse decision-making and focused computation on the relevant parts of the environment. The decomposition relies on the extraction of an abstracted proxy problem represented as a directed graph, in which vertices and edges are learned end-to-end from hindsight. Our theoretical analyses provide performance guarantees under appropriate assumptions and establish where our approach is expected to be helpful. Generalization-focused experiments validate Skipper’s significant advantage in zero-shot generalization, compared to some existing state-of-the-art hierarchical planning methods.",
     "authors": [
       {
         "affiliations": [
@@ -510,7 +510,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila - Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila - Université de Montréal"
           }
         ],
         "author": {
@@ -530,7 +530,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila / Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila / Université de Montréal"
           }
         ],
         "author": {
@@ -610,7 +610,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Universit\u00e9 de Montr\u00e9al"
+            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
           }
         ],
         "author": {

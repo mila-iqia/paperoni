@@ -168,7 +168,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "MPI for Intelligent Systems, T\u00fcbingen & University of Cambridge"
+            "name": "MPI for Intelligent Systems, Tübingen & University of Cambridge"
           }
         ],
         "author": {
@@ -179,9 +179,9 @@
               "type": "profile"
             }
           ],
-          "name": "Julius von K\u00fcgelgen"
+          "name": "Julius von Kügelgen"
         },
-        "display_name": "Julius von K\u00fcgelgen"
+        "display_name": "Julius von Kügelgen"
       },
       {
         "affiliations": [
@@ -208,7 +208,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Universit\u00e9 de Montr\u00e9al, Mila"
+            "name": "Université de Montréal, Mila"
           }
         ],
         "author": {
@@ -219,9 +219,9 @@
               "type": "profile"
             }
           ],
-          "name": "S\u00e9bastien Lachapelle"
+          "name": "Sébastien Lachapelle"
         },
-        "display_name": "S\u00e9bastien Lachapelle"
+        "display_name": "Sébastien Lachapelle"
       },
       {
         "affiliations": [
@@ -323,7 +323,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila - Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila - Université de Montréal"
           }
         ],
         "author": {
@@ -363,7 +363,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Universit\u00e9 de Montr\u00e9al"
+            "name": "Université de Montréal"
           }
         ],
         "author": {
@@ -417,7 +417,7 @@
     ]
   },
   {
-    "abstract": "The dynamical formulation of the optimal transport can be extended through various choices of the underlying geometry (*kinetic energy*), and the regularization of density paths (*potential energy*). These combinations yield different variational problems (*Lagrangians*), encompassing many variations of the optimal transport problem such as the Schr\u00f6dinger bridge, unbalanced optimal transport, and optimal transport with physical constraints, among others. In general, the optimal density path is unknown, and solving these variational problems can be computationally challenging. We propose a novel deep learning based framework approaching all of these problems from a unified perspective. Leveraging the dual formulation of the Lagrangians, our method does not require simulating or backpropagating through the trajectories of the learned dynamics, and does not need access to optimal couplings. We showcase the versatility of the proposed framework by outperforming previous approaches for the single-cell trajectory inference, where incorporating prior knowledge into the dynamics is crucial for correct predictions.",
+    "abstract": "The dynamical formulation of the optimal transport can be extended through various choices of the underlying geometry (*kinetic energy*), and the regularization of density paths (*potential energy*). These combinations yield different variational problems (*Lagrangians*), encompassing many variations of the optimal transport problem such as the Schrödinger bridge, unbalanced optimal transport, and optimal transport with physical constraints, among others. In general, the optimal density path is unknown, and solving these variational problems can be computationally challenging. We propose a novel deep learning based framework approaching all of these problems from a unified perspective. Leveraging the dual formulation of the Lagrangians, our method does not require simulating or backpropagating through the trajectories of the learned dynamics, and does not need access to optimal couplings. We showcase the versatility of the proposed framework by outperforming previous approaches for the single-cell trajectory inference, where incorporating prior knowledge into the dynamics is crucial for correct predictions.",
     "authors": [
       {
         "affiliations": [
@@ -444,7 +444,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Universit\u00e9 de Montr\u00e9al, Mila"
+            "name": "Université de Montréal, Mila"
           }
         ],
         "author": {

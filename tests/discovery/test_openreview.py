@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from pytest_regressions.file_regression import FileRegressionFixture
 
@@ -7,7 +5,7 @@ from paperoni.discovery import openreview
 from paperoni.discovery.openreview import OpenReview, OpenReviewDispatch
 from paperoni.model.classes import Paper
 
-from ..utils import iter_links_ids, iter_releases, sort_keys
+from ..utils import check_papers, iter_links_ids, iter_releases
 
 
 @pytest.mark.parametrize(
@@ -100,8 +98,4 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
         case _:
             assert False, f"Unknown query parameter: {query_params=}"
 
-    # Using file_regression and json.dumps to avoid
-    # yaml.representer.RepresenterError on DatePrecision
-    file_regression.check(
-        json.dumps(sort_keys(papers[:5]), indent=2), extension=".json"
-    )
+    check_papers(file_regression, papers)

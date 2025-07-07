@@ -5,6 +5,8 @@ import json
 from datetime import date, datetime
 from typing import Any, Generator
 
+from pytest_regressions.file_regression import FileRegressionFixture
+
 from paperoni.model.classes import Institution, Paper, Release
 
 
@@ -42,3 +44,12 @@ def sort_keys(obj: dict | list | Any) -> dict | list:
         return obj.isoformat()
     else:
         return obj
+
+
+def check_papers(file_regression: FileRegressionFixture, papers: list[Paper]):
+    # Using file_regression and json.dumps to avoid
+    # yaml.representer.RepresenterError on DatePrecision
+    file_regression.check(
+        json.dumps(sort_keys(papers[:5]), indent=2, ensure_ascii=False),
+        extension=".json",
+    )

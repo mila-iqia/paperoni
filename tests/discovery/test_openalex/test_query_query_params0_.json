@@ -34,9 +34,9 @@
               "type": "openalex"
             }
           ],
-          "name": "Denis Th\u00e9rien"
+          "name": "Denis Thérien"
         },
-        "display_name": "Denis Th\u00e9rien"
+        "display_name": "Denis Thérien"
       },
       {
         "affiliations": [],
@@ -72,9 +72,9 @@
               "type": "openalex"
             }
           ],
-          "name": "\u00c1d\u00e1m Kepecs"
+          "name": "Ádám Kepecs"
         },
-        "display_name": "\u00c1d\u00e1m Kepecs"
+        "display_name": "Ádám Kepecs"
       },
       {
         "affiliations": [
@@ -101,9 +101,9 @@
               "type": "openalex"
             }
           ],
-          "name": "Rafa\u0142 Bogacz"
+          "name": "Rafał Bogacz"
         },
-        "display_name": "Rafa\u0142 Bogacz"
+        "display_name": "Rafał Bogacz"
       },
       {
         "affiliations": [
@@ -212,9 +212,9 @@
               "type": "openalex"
             }
           ],
-          "name": "Jo\u00e3o Sacramento"
+          "name": "João Sacramento"
         },
-        "display_name": "Jo\u00e3o Sacramento"
+        "display_name": "João Sacramento"
       },
       {
         "affiliations": [
@@ -606,7 +606,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Universit\u00e9 de Montr\u00e9al"
+            "name": "Université de Montréal"
           }
         ],
         "author": {
@@ -761,9 +761,9 @@
               "type": "openalex"
             }
           ],
-          "name": "Konrad P. K\u00f6rding"
+          "name": "Konrad P. Körding"
         },
-        "display_name": "Konrad P. K\u00f6rding"
+        "display_name": "Konrad P. Körding"
       }
     ],
     "flags": [],
@@ -1211,7 +1211,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Ludwig-Maximilians-Universit\u00e4t M\u00fcnchen"
+            "name": "Ludwig-Maximilians-Universität München"
           }
         ],
         "author": {
@@ -1300,9 +1300,9 @@
               "type": "openalex"
             }
           ],
-          "name": "Andr\u00e9 F. Marquand"
+          "name": "André F. Marquand"
         },
-        "display_name": "Andr\u00e9 F. Marquand"
+        "display_name": "André F. Marquand"
       },
       {
         "affiliations": [
@@ -1314,7 +1314,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Forschungszentrum J\u00fclich"
+            "name": "Forschungszentrum Jülich"
           }
         ],
         "author": {
@@ -1338,7 +1338,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Heinrich Heine University D\u00fcsseldorf"
+            "name": "Heinrich Heine University Düsseldorf"
           }
         ],
         "author": {
@@ -1592,7 +1592,7 @@
     ]
   },
   {
-    "abstract": "Recurrent neural networks are effective models to process sequences. However, they are unable to learn long-term dependencies because of their inherent sequential nature. As a solution, Vaswani et al. introduced the Transformer, a model solely based on the attention mechanism that is able to relate any two positions of the input sequence, hence modelling arbitrary long dependencies. The Transformer has improved the state-of-the-art across numerous sequence modelling tasks. However, its effectiveness comes at the expense of a quadratic computational and memory complexity with respect to the sequence length, hindering its adoption. Fortunately, the deep learning community has always been interested in improving the models\u2019 efficiency, leading to a plethora of solutions such as parameter sharing, pruning, mixed-precision, and knowledge distillation. Recently, researchers have directly addressed the Transformer\u2019s limitation by designing lower-complexity alternatives such as the Longformer, Reformer, Linformer, and Performer. However, due to the wide range of solutions, it has become challenging for researchers and practitioners to determine which methods to apply in practice to meet the desired tradeoff between capacity, computation, and memory. This survey addresses this issue by investigating popular approaches to make Transformers faster and lighter and by providing a comprehensive explanation of the methods\u2019 strengths, limitations, and underlying assumptions.",
+    "abstract": "Recurrent neural networks are effective models to process sequences. However, they are unable to learn long-term dependencies because of their inherent sequential nature. As a solution, Vaswani et al. introduced the Transformer, a model solely based on the attention mechanism that is able to relate any two positions of the input sequence, hence modelling arbitrary long dependencies. The Transformer has improved the state-of-the-art across numerous sequence modelling tasks. However, its effectiveness comes at the expense of a quadratic computational and memory complexity with respect to the sequence length, hindering its adoption. Fortunately, the deep learning community has always been interested in improving the models’ efficiency, leading to a plethora of solutions such as parameter sharing, pruning, mixed-precision, and knowledge distillation. Recently, researchers have directly addressed the Transformer’s limitation by designing lower-complexity alternatives such as the Longformer, Reformer, Linformer, and Performer. However, due to the wide range of solutions, it has become challenging for researchers and practitioners to determine which methods to apply in practice to meet the desired tradeoff between capacity, computation, and memory. This survey addresses this issue by investigating popular approaches to make Transformers faster and lighter and by providing a comprehensive explanation of the methods’ strengths, limitations, and underlying assumptions.",
     "authors": [
       {
         "affiliations": [
@@ -1614,16 +1614,16 @@
               "type": "openalex"
             }
           ],
-          "name": "Ga\u00e9tan Marceau Caron"
+          "name": "Gaétan Marceau Caron"
         },
-        "display_name": "Ga\u00e9tan Marceau Caron"
+        "display_name": "Gaétan Marceau Caron"
       },
       {
         "affiliations": [
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1647,7 +1647,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1762,24 +1762,24 @@
     ]
   },
   {
-    "abstract": "Ultrasound Localization Microscopy (ULM) can resolve the microvascular bed down to a few micrometers. To achieve such performance, microbubble contrast agents must perfuse the entire microvascular network. Microbubbles are then located individually and tracked over time to sample individual vessels, typically over hundreds of thousands of images. To overcome the fundamental limit of diffraction and achieve a dense reconstruction of the network, low microbubble concentrations must be used, which leads to acquisitions lasting several minutes. Conventional processing pipelines are currently unable to deal with interference from multiple nearby microbubbles, further reducing achievable concentrations. This work overcomes this problem by proposing a Deep Learning approach to recover dense vascular networks from ultrasound acquisitions with high microbubble concentrations. A realistic mouse brain microvascular network, segmented from 2-photon microscopy, was used to train a three-dimensional convolutional neural network (CNN) based on a V-net architecture. Ultrasound data sets from multiple microbubbles flowing through the microvascular network were simulated and used as ground truth to train the 3D CNN to track microbubbles. The 3D-CNN approach was validated in silico using a subset of the data and in vivo in a rat brain. In silico, the CNN reconstructed vascular networks with higher precision (81%) than a conventional ULM framework (70%). In vivo, the CNN could resolve micro vessels as small as 10 \u03bcm with an improvement in resolution when compared against a conventional approach.",
+    "abstract": "Ultrasound Localization Microscopy (ULM) can resolve the microvascular bed down to a few micrometers. To achieve such performance, microbubble contrast agents must perfuse the entire microvascular network. Microbubbles are then located individually and tracked over time to sample individual vessels, typically over hundreds of thousands of images. To overcome the fundamental limit of diffraction and achieve a dense reconstruction of the network, low microbubble concentrations must be used, which leads to acquisitions lasting several minutes. Conventional processing pipelines are currently unable to deal with interference from multiple nearby microbubbles, further reducing achievable concentrations. This work overcomes this problem by proposing a Deep Learning approach to recover dense vascular networks from ultrasound acquisitions with high microbubble concentrations. A realistic mouse brain microvascular network, segmented from 2-photon microscopy, was used to train a three-dimensional convolutional neural network (CNN) based on a V-net architecture. Ultrasound data sets from multiple microbubbles flowing through the microvascular network were simulated and used as ground truth to train the 3D CNN to track microbubbles. The 3D-CNN approach was validated in silico using a subset of the data and in vivo in a rat brain. In silico, the CNN reconstructed vascular networks with higher precision (81%) than a conventional ULM framework (70%). In vivo, the CNN could resolve micro vessels as small as 10 μm with an improvement in resolution when compared against a conventional approach.",
     "authors": [
       {
         "affiliations": [
           {
             "aliases": [],
             "category": "unknown",
-            "name": "CentraleSup\u00e9lec"
+            "name": "CentraleSupélec"
           },
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           },
           {
             "aliases": [],
             "category": "wat",
-            "name": "Universit\u00e9 Paris-Saclay"
+            "name": "Université Paris-Saclay"
           }
         ],
         "author": {
@@ -1794,9 +1794,9 @@
               "type": "openalex"
             }
           ],
-          "name": "L\u00e9o Milecki"
+          "name": "Léo Milecki"
         },
-        "display_name": "L\u00e9o Milecki"
+        "display_name": "Léo Milecki"
       },
       {
         "affiliations": [
@@ -1808,7 +1808,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1837,7 +1837,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1866,7 +1866,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1881,16 +1881,16 @@
               "type": "openalex"
             }
           ],
-          "name": "Fr\u00e9d\u00e9ric Lesage"
+          "name": "Frédéric Lesage"
         },
-        "display_name": "Fr\u00e9d\u00e9ric Lesage"
+        "display_name": "Frédéric Lesage"
       },
       {
         "affiliations": [
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1914,7 +1914,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1938,7 +1938,7 @@
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1953,16 +1953,16 @@
               "type": "openalex"
             }
           ],
-          "name": "Chlo\u00e9 Bourquin"
+          "name": "Chloé Bourquin"
         },
-        "display_name": "Chlo\u00e9 Bourquin"
+        "display_name": "Chloé Bourquin"
       },
       {
         "affiliations": [
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {
@@ -1977,16 +1977,16 @@
               "type": "openalex"
             }
           ],
-          "name": "Jonathan Por\u00e9e"
+          "name": "Jonathan Porée"
         },
-        "display_name": "Jonathan Por\u00e9e"
+        "display_name": "Jonathan Porée"
       },
       {
         "affiliations": [
           {
             "aliases": [],
             "category": "wat",
-            "name": "Polytechnique Montr\u00e9al"
+            "name": "Polytechnique Montréal"
           }
         ],
         "author": {

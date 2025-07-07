@@ -107,7 +107,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila / Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila / Université de Montréal"
           }
         ],
         "author": {
@@ -207,7 +207,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Universit\u00e9 de Montr\u00e9al"
+            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
           }
         ],
         "author": {
@@ -506,7 +506,7 @@
     ]
   },
   {
-    "abstract": "Mitigating the climate crisis requires a rapid transition towards lower-carbon energy. Catalyst materials play a crucial role in the electrochemical reactions involved in numerous industrial processes key to this transition, such as renewable energy storage and electrofuel synthesis. To reduce the energy spent on such activities, we must quickly discover more efficient catalysts to drive electrochemical reactions. Machine learning (ML) holds the potential to efficiently model materials properties from large amounts of data, accelerating electrocatalyst design. The Open Catalyst Project OC20 dataset was constructed to that end. However, ML models trained on OC20 are still neither scalable nor accurate enough for practical applications. In this paper, we propose task-specific innovations applicable to most architectures, enhancing both computational efficiency and accuracy. This includes improvements in (1) the graph creation step, (2) atom representations, (3) the energy prediction head, and (4) the force prediction head. We describe these contributions, referred to as PhAST, and evaluate them thoroughly on multiple architectures. Overall, PhAST improves energy MAE by 4 to 42% while dividing compute time by 3 to 8\u00d7 depending on the targeted task/model. PhAST also enables CPU training, leading to 40\u00d7 speedups in highly parallelized settings. Python package: https://phast.readthedocs.io.",
+    "abstract": "Mitigating the climate crisis requires a rapid transition towards lower-carbon energy. Catalyst materials play a crucial role in the electrochemical reactions involved in numerous industrial processes key to this transition, such as renewable energy storage and electrofuel synthesis. To reduce the energy spent on such activities, we must quickly discover more efficient catalysts to drive electrochemical reactions. Machine learning (ML) holds the potential to efficiently model materials properties from large amounts of data, accelerating electrocatalyst design. The Open Catalyst Project OC20 dataset was constructed to that end. However, ML models trained on OC20 are still neither scalable nor accurate enough for practical applications. In this paper, we propose task-specific innovations applicable to most architectures, enhancing both computational efficiency and accuracy. This includes improvements in (1) the graph creation step, (2) atom representations, (3) the energy prediction head, and (4) the force prediction head. We describe these contributions, referred to as PhAST, and evaluate them thoroughly on multiple architectures. Overall, PhAST improves energy MAE by 4 to 42% while dividing compute time by 3 to 8× depending on the targeted task/model. PhAST also enables CPU training, leading to 40× speedups in highly parallelized settings. Python package: https://phast.readthedocs.io.",
     "authors": [
       {
         "affiliations": [],
@@ -607,7 +607,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila / Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila / Université de Montréal"
           }
         ],
         "author": {
@@ -849,7 +849,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Mila / Universit\u00e9 de Montr\u00e9al"
+            "name": "Mila / Université de Montréal"
           }
         ],
         "author": {
@@ -869,7 +869,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Universit\u00e9 de Montr\u00e9al"
+            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
           }
         ],
         "author": {
@@ -889,7 +889,7 @@
           {
             "aliases": [],
             "category": "unknown",
-            "name": "Universit\u00e9 de Montr\u00e9al and Mila"
+            "name": "Université de Montréal and Mila"
           }
         ],
         "author": {
