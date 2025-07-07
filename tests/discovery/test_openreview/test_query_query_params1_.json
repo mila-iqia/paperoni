@@ -1,0 +1,576 @@
+[
+  {
+    "abstract": "Circuits based on sum-product structure have become a ubiquitous representation to compactly encode knowledge, from Boolean functions to probability distributions. By imposing constraints on the structure of such circuits, certain inference queries become tractable, such as model counting and most probable configuration. Recent works have explored analyzing probabilistic and causal inference queries\nas compositions of basic operators to derive tractability conditions. In this paper, we take an algebraic perspective for compositional inference, and show that a large class of queries\u2014including marginal MAP, probabilistic answer set programming inference, and causal backdoor adjustment\u2014correspond to a combination of basic operators over semirings: aggregation, product, and elementwise mapping. Using this framework, we uncover simple and general sufficient conditions for tractable composition of these operators, in terms of circuit properties (e.g., marginal determinism, compatibility) and conditions on the elementwise mappings. Applying our analysis, we derive novel tractability conditions for many such compositional queries. Our results unify tractability conditions for existing problems on circuits, while providing a blueprint for analysing novel compositional inference queries.",
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Benjie_Wang1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Benjie Wang"
+        },
+        "display_name": "Benjie Wang"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Denis_Mau\u00e11",
+              "type": "openreview"
+            }
+          ],
+          "name": "Denis Mau\u00e1"
+        },
+        "display_name": "Denis Mau\u00e1"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Guy_Van_den_Broeck1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Guy Van den Broeck"
+        },
+        "display_name": "Guy Van den Broeck"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~YooJung_Choi1",
+              "type": "openreview"
+            }
+          ],
+          "name": "YooJung Choi"
+        },
+        "display_name": "YooJung Choi"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "mXlR1FLFDc",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "poster",
+        "venue": {
+          "aliases": [],
+          "date": "2024-09-25T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2024/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2024/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2024"
+        }
+      }
+    ],
+    "title": "A Compositional Atlas for Algebraic Circuits",
+    "topics": [
+      {
+        "name": "algebraic"
+      },
+      {
+        "name": "logic circuits"
+      },
+      {
+        "name": "probabilistic circuits"
+      },
+      {
+        "name": "probabilistic inference"
+      },
+      {
+        "name": "semiring"
+      }
+    ]
+  },
+  {
+    "abstract": "Data-driven algorithm design is a promising, learning-based approach for beyond worst-case analysis of algorithms with tunable parameters. An important open problem is the design of computationally efficient data-driven algorithms for combinatorial algorithm families with multiple parameters. As one fixes the problem instance and varies the parameters, the \u201cdual\u201d loss function typically has a piecewise-decomposable structure, i.e. is well-behaved except at certain sharp transition boundaries. Motivated by prior empirical work, we initiate the study of techniques to develop efficient ERM learning algorithms for data-driven algorithm design by enumerating the pieces of the sum dual loss functions for a collection of problem instances. The running time of our approach scales with the actual number of pieces that appear as opposed to worst case upper bounds on the number of pieces. Our approach involves two novel ingredients \u2013 an output-sensitive algorithm for enumerating polytopes induced by a set of hyperplanes using tools from computational geometry, and an execution graph which compactly represents all the states the algorithm could attain for all possible parameter values. We illustrate our techniques by giving algorithms for pricing problems, linkage-based clustering and dynamic-programming based sequence alignment.",
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Christopher_Seiler1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Christopher Seiler"
+        },
+        "display_name": "Christopher Seiler"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Dravyansh_Sharma1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Dravyansh Sharma"
+        },
+        "display_name": "Dravyansh Sharma"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Maria_Florina_Balcan1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Maria Florina Balcan"
+        },
+        "display_name": "Maria Florina Balcan"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "yW3tlSwusb",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "poster",
+        "venue": {
+          "aliases": [],
+          "date": "2024-09-25T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2024/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2024/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2024"
+        }
+      }
+    ],
+    "title": "Accelerating ERM for data-driven algorithm design using output-sensitive techniques",
+    "topics": [
+      {
+        "name": "Data-driven Algorithm Design"
+      },
+      {
+        "name": "Learning Theory"
+      }
+    ]
+  },
+  {
+    "abstract": "Learning from AI feedback (LAIF) is a popular paradigm for improving the instruction-following abilities of powerful pre-trained language models. LAIF first performs supervised fine-tuning (SFT) using demonstrations from a teacher model and then further fine-tunes the model with reinforcement learning (RL) or direct preference optimization (DPO), using feedback from a critic model. While recent popular open-source models have demonstrated substantial improvements in performance from the RL step, in this paper we question whether the complexity of this RL step is truly warranted for AI feedback. We show that the improvements of the RL step are virtually entirely due to the widespread practice of using a weaker teacher model (e.g. GPT-3.5) for SFT data collection than the critic (e.g., GPT-4) used for AI feedback generation. Specifically, we show that simple supervised fine-tuning with GPT-4 as the teacher outperforms existing LAIF pipelines. More generally, we find that the gains from LAIF vary substantially across base model families, test-time evaluation protocols, and critic models. Finally, we provide a mechanistic explanation for when SFT may outperform the full two-step LAIF pipeline as well as suggestions for making LAIF maximally useful in practice.",
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Archit_Sharma1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Archit Sharma"
+        },
+        "display_name": "Archit Sharma"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Chelsea_Finn1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Chelsea Finn"
+        },
+        "display_name": "Chelsea Finn"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Eric_Mitchell1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Eric Mitchell"
+        },
+        "display_name": "Eric Mitchell"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Kushal_Arora1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Kushal Arora"
+        },
+        "display_name": "Kushal Arora"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Sedrick_Keh1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Sedrick Keh"
+        },
+        "display_name": "Sedrick Keh"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Thomas_Kollar1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Thomas Kollar"
+        },
+        "display_name": "Thomas Kollar"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "FZQYfmsmX9",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "poster",
+        "venue": {
+          "aliases": [],
+          "date": "2024-09-25T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2024/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2024/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2024"
+        }
+      }
+    ],
+    "title": "A Critical Evaluation of AI Feedback for Aligning Large Language Models",
+    "topics": [
+      {
+        "name": "ai feedback"
+      },
+      {
+        "name": "alignment"
+      },
+      {
+        "name": "direct preference optimization"
+      },
+      {
+        "name": "reinforcement learning from human feedback"
+      }
+    ]
+  },
+  {
+    "abstract": "Rigorously establishing the safety of black-box machine learning models with respect to critical risk measures is important for providing guarantees about the behavior of the model.\nRecently, a notion of a risk controlling prediction set (RCPS) has been introduced by Bates et. al. (JACM '24) for producing prediction sets that are statistically guaranteed to have low risk from machine learning models.\nOur method extends this notion to the sequential setting, where we provide guarantees even when the data is collected adaptively, and ensures the risk guarantee is anytime-valid, i.e., simultaneously holds at all time steps. Further, we propose a framework for constructing RCPSes for active labeling, i.e., allowing one to use a labeling policy that chooses whether to query the true label for each received data point, and ensures the expected proportion data points whose labels are queried are below a predetermined label budget. We also describe how to use predictors (e.g., the machine learning model we are providing risk control guarantees for) to further improve the utility of our RCPSes by estimating the expected risk conditioned on the covariates.\nWe characterize the optimal choices of label policy under a fixed label budget, and predictor, and show a regret result that relates the estimation error of the optimal labeling policy and predictor to the wealth process that underlies our RCPSes.\nLastly, we present practical ways of formulating label policies and we empirically show that our label policies use fewer labels to reach higher utility than naive baseline labeling strategies on both simulations and real data.",
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Nikos_Karampatziakis1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Nikos Karampatziakis"
+        },
+        "display_name": "Nikos Karampatziakis"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Paul_Mineiro1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Paul Mineiro"
+        },
+        "display_name": "Paul Mineiro"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Ziyu_Xu2",
+              "type": "openreview"
+            }
+          ],
+          "name": "Ziyu Xu"
+        },
+        "display_name": "Ziyu Xu"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "4ZH48aGD60",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "poster",
+        "venue": {
+          "aliases": [],
+          "date": "2024-09-25T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2024/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2024/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2024"
+        }
+      }
+    ],
+    "title": "Active, anytime-valid risk controlling prediction sets",
+    "topics": [
+      {
+        "name": "confidence sequence"
+      },
+      {
+        "name": "conformal prediction"
+      },
+      {
+        "name": "distribution free"
+      },
+      {
+        "name": "e-process"
+      }
+    ]
+  },
+  {
+    "abstract": "We study a novel problem to automatically generate video background that tailors to foreground subject motion. It is an important problem for the movie industry and visual effects community, which traditionally requires tedious manual efforts to solve. To this end, we propose ActAnywhere, a video diffusion model that takes as input a sequence of foreground subject segmentation and an image of a novel background and generates a video of the subject interacting in this background. We train our model on a large-scale dataset of 2.4M videos of human-scene interactions. Through extensive evaluation, we show that our model produces videos with realistic foreground-background interaction while strictly following the guidance of the condition image. Our model generalizes to diverse scenarios including non-human subjects, gaming and animation clips, as well as videos with multiple moving subjects. Both quantitative and qualitative comparisons demonstrate that our model significantly outperforms existing methods, which fail to accomplish the studied task. Please visit our project webpage at https://actanywhere.github.io.",
+    "authors": [
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Boxiao_Pan1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Boxiao Pan"
+        },
+        "display_name": "Boxiao Pan"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Chun-Hao_Paul_Huang2",
+              "type": "openreview"
+            }
+          ],
+          "name": "Chun-Hao Paul Huang"
+        },
+        "display_name": "Chun-Hao Paul Huang"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Jimei_Yang1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Jimei Yang"
+        },
+        "display_name": "Jimei Yang"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Krishna_Kumar_Singh4",
+              "type": "openreview"
+            }
+          ],
+          "name": "Krishna Kumar Singh"
+        },
+        "display_name": "Krishna Kumar Singh"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Leonidas_Guibas1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Leonidas Guibas"
+        },
+        "display_name": "Leonidas Guibas"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Yang_Zhou10",
+              "type": "openreview"
+            }
+          ],
+          "name": "Yang Zhou"
+        },
+        "display_name": "Yang Zhou"
+      },
+      {
+        "affiliations": [],
+        "author": {
+          "aliases": [],
+          "links": [
+            {
+              "link": "~Zhan_Xu1",
+              "type": "openreview"
+            }
+          ],
+          "name": "Zhan Xu"
+        },
+        "display_name": "Zhan Xu"
+      }
+    ],
+    "flags": [],
+    "links": [
+      {
+        "link": "ntlFREw59A",
+        "type": "openreview"
+      }
+    ],
+    "releases": [
+      {
+        "pages": null,
+        "status": "poster",
+        "venue": {
+          "aliases": [],
+          "date": "2024-09-25T00:00:00",
+          "date_precision": 3,
+          "links": [
+            {
+              "link": "NeurIPS.cc/2024/Conference",
+              "type": "openreview-venue"
+            }
+          ],
+          "name": "NeurIPS.cc/2024/Conference",
+          "open": false,
+          "peer_reviewed": false,
+          "publisher": null,
+          "series": "NeurIPS.cc/Conference",
+          "type": "conference",
+          "volume": "NeurIPS 2024"
+        }
+      }
+    ],
+    "title": "ActAnywhere: Subject-Aware Video Background Generation",
+    "topics": [
+      {
+        "name": "Video Background Generation"
+      },
+      {
+        "name": "Video Editing"
+      },
+      {
+        "name": "Video Generation"
+      },
+      {
+        "name": "Video Synthesis"
+      }
+    ]
+  }
+]

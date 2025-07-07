@@ -5,13 +5,24 @@ import json
 from datetime import date, datetime
 from typing import Any, Generator
 
-from paperoni.model.classes import Institution, Paper
+from paperoni.model.classes import Institution, Paper, Release
 
 
 def iter_affiliations(paper: Paper) -> Generator[Institution, None, None]:
     for author in paper.authors:
         for affiliation in author.affiliations:
             yield affiliation
+
+
+def iter_releases(paper: Paper) -> Generator[Release, None, None]:
+    for release in paper.releases:
+        yield release
+
+
+def iter_links_ids(paper: Paper) -> Generator[str, None, None]:
+    for link in paper.links:
+        if link.link:
+            yield link.link
 
 
 # json.dumps does not sort embedded lists, this custom function should allow to

@@ -525,9 +525,23 @@ class OpenReviewDispatch(Discoverer):
                 block_size=block_size,
                 limit=limit,
             )
+
             has_papers = False
-            for paper in q:
-                has_papers = True
-                yield paper
+
+            exception = None
+            try:
+                for paper in q:
+                    has_papers = True
+                    yield paper
+
+            except openreview.OpenReviewException as e:
+                # Try the next API version while holding the exception
+                exception = e
+                continue
+
             if has_papers:
                 break
+
+        else:
+            if exception is not None:
+                raise exception

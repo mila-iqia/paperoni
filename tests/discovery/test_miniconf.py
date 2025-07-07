@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+from pytest_regressions.file_regression import FileRegressionFixture
 
 from paperoni.discovery.miniconf import MiniConf, conference_urls
 
@@ -26,7 +27,9 @@ def cache_dir(tmpdir):
         conference_urls, [{"affiliation": "mila"}, {"author": "Yoshua Bengio"}]
     ),
 )
-def test_query(cache_dir, data_regression, conference, query_params):
+def test_query(
+    cache_dir, file_regression: FileRegressionFixture, conference, query_params
+):
     discoverer = MiniConf()
 
     papers = sorted(
@@ -56,4 +59,8 @@ def test_query(cache_dir, data_regression, conference, query_params):
         case _:
             assert False, f"Unknown query parameter: {query_params=}"
 
-    data_regression.check(json.dumps(sort_keys(papers[:5]), indent=2))
+    # Using file_regression and json.dumps to avoid
+    # yaml.representer.RepresenterError on DatePrecision
+    file_regression.check(
+        json.dumps(sort_keys(papers[:5]), indent=2), extension=".json"
+    )

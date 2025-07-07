@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
+from pytest_regressions.file_regression import FileRegressionFixture
 
 from paperoni.discovery.jmlr import JMLR
 
@@ -17,7 +18,7 @@ def cache_dir(tmpdir):
     yield _cache_dir
 
 
-def test_query(cache_dir, data_regression):
+def test_query(cache_dir, file_regression: FileRegressionFixture):
     discoverer = JMLR()
 
     papers = sorted(
@@ -25,4 +26,8 @@ def test_query(cache_dir, data_regression):
         key=lambda x: x.title,
     )
 
-    data_regression.check(json.dumps(sort_keys(papers[:5]), indent=2))
+    # Using file_regression and json.dumps to avoid
+    # yaml.representer.RepresenterError on DatePrecision
+    file_regression.check(
+        json.dumps(sort_keys(papers[:5]), indent=2), extension=".json"
+    )
