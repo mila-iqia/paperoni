@@ -9,12 +9,13 @@ from ..model import (
     Link,
     Paper,
     PaperAuthor,
+    PaperInfo,
     Release,
     Topic,
     Venue,
     VenueType,
 )
-from .base import Discoverer, PaperInfo, QueryError
+from .base import Discoverer, QueryError
 
 external_ids_mapping = {
     "pubmedcentral": "pmc",

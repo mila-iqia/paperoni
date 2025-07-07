@@ -12,12 +12,13 @@ from ..model.classes import (
     Link,
     Paper,
     PaperAuthor,
+    PaperInfo,
     Release,
     Topic,
     Venue,
     VenueType,
 )
-from .base import Discoverer, PaperInfo
+from .base import Discoverer
 
 conference_urls = {
     "neurips": "neurips.cc",

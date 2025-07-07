@@ -8,9 +8,9 @@ import yaml
 from gifnoc import add_overlay, cli
 from serieux import Auto, Registered, Tagged, TaggedUnion, serialize, singleton
 
-from .config import discoverers
-from .discovery.base import PaperInfo
+from .config import config, discoverers
 from .display import display, terminal_width
+from .model import PaperInfo
 
 
 class Formatter(Registered):
@@ -60,8 +60,14 @@ def make_cli():
         # Output format
         format: Formatter = TerminalFormatter
 
+        # Top n entries
+        top: int = 0
+
         def run(self):
-            self.format(self.command())
+            papers = self.command()
+            if self.top:
+                papers = config.focuses.top(n=self.top, pinfos=papers)
+            self.format(papers)
 
     @dataclass
     class PaperoniInterface:

@@ -13,12 +13,13 @@ from ..model import (
     Link,
     Paper,
     PaperAuthor,
+    PaperInfo,
     Release,
     Topic,
     Venue,
     VenueType,
 )
-from .base import Discoverer, PaperInfo
+from .base import Discoverer
 
 
 def extract_date(txt: str) -> dict | None:
