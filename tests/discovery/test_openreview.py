@@ -42,9 +42,9 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
             papers_per_version[api_version] = []
 
     if papers_per_version[1] and papers_per_version[2]:
-        assert (
-            False
-        ), f"The same papers are not expected to be in version 1 and 2 at the same time. Papers: {len(papers_per_version[1])=} {len(papers_per_version[2])=}"
+        assert False, (
+            f"The same papers are not expected to be in version 1 and 2 at the same time. Papers: {len(papers_per_version[1])=} {len(papers_per_version[2])=}"
+        )
 
     papers: list[PaperInfo] = sum(papers_per_version.values(), [])
 
@@ -56,7 +56,9 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
             openreview_dispatch.query(**query_params),
             key=lambda x: x.paper.title,
         )
-    ], f"Querying with OpenReview({api_versions=}) should return the same papers as querying with OpenReviewDispatch"
+    ], (
+        f"Querying with OpenReview({api_versions=}) should return the same papers as querying with OpenReviewDispatch"
+    )
 
     match next(iter(query_params.keys())):
         case "venue":
@@ -98,7 +100,9 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
                     ),
                     key=lambda x: x.paper.title,
                 )
-            ], f"Querying by author ID should return the same papers as querying by author name"
+            ], (
+                f"Querying by author ID should return the same papers as querying by author name"
+            )
         case "title":
             assert all(
                 query_params["title"].lower() == paper.paper.title.lower()

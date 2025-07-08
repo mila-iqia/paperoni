@@ -32,7 +32,9 @@ def test_query(file_regression: FileRegressionFixture, conference, query_params)
                     if query_params["affiliation"].lower() in aff.name.lower()
                 ]
                 for paper in papers
-            ), f"Some papers do not contain the affiliation {query_params['affiliation']=}"
+            ), (
+                f"Some papers do not contain the affiliation {query_params['affiliation']=}"
+            )
         case "author":
             assert all(
                 [
