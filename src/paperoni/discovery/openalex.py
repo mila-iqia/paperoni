@@ -313,9 +313,6 @@ class OpenAlex(Discoverer):
         # Title of the paper (mutually exclusive with "exact-title")
         # [alias: -t]
         title: str = None,
-        # Exact title to query (mutually exclusive with "title")
-        # [alias: -T]
-        exact_title: str = None,
         # Page of results to display (start at 1). Need argument "per_page". By default, all results are displayed.
         page: int = None,
         # Number of results to display per page. Need argument "page". By default, all results are displayed.
@@ -354,14 +351,8 @@ class OpenAlex(Discoverer):
                     return
             filters.append(f"institutions.id:{institution_id}")
 
-        if title and exact_title:
-            raise QueryError("Cannot query both title and exact title")
-        elif title:
+        if title:
             filters.append(f"display_name.search:{title}")
-        elif exact_title:
-            # No stemming, and quotation mark around title, to try to get exact title
-            # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/search-entities#boolean-searches
-            filters.append(f'display_name.search.no_stem:"{exact_title}"')
 
         params = {}
         if filters:

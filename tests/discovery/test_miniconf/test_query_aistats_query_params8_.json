@@ -1,607 +1,627 @@
 [
   {
-    "abstract": "Generative Flow Networks (GFNs) have emerged as a powerful tool for sampling discrete objects from unnormalized distributions, offering a scalable alternative to Markov Chain Monte Carlo (MCMC) methods. While GFNs draw inspiration from maximum entropy reinforcement learning (RL), the connection between the two has largely been unclear and seemingly applicable only in specific cases. This paper addresses the connection by constructing an appropriate reward function, thereby establishing an exact relationship between GFNs and maximum entropy RL. This construction allows us to introduce maximum entropy GFNs, which achieve the maximum entropy attainable by GFNs without constraints on the state space, in contrast to GFNs with uniform backward policy. ",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "MIT"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:aistats:24146db4eb48c718b84cae0a0799dcfc",
+    "paper": {
+      "abstract": "Generative Flow Networks (GFNs) have emerged as a powerful tool for sampling discrete objects from unnormalized distributions, offering a scalable alternative to Markov Chain Monte Carlo (MCMC) methods. While GFNs draw inspiration from maximum entropy reinforcement learning (RL), the connection between the two has largely been unclear and seemingly applicable only in specific cases. This paper addresses the connection by constructing an appropriate reward function, thereby establishing an exact relationship between GFNs and maximum entropy RL. This construction allows us to introduce maximum entropy GFNs, which achieve the maximum entropy attainable by GFNs without constraints on the state space, in contrast to GFNs with uniform backward policy. ",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13057?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "MIT"
             }
           ],
-          "name": "Sobhan Mohammadpour"
-        },
-        "display_name": "Sobhan Mohammadpour"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13057?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Sobhan Mohammadpour"
+          },
+          "display_name": "Sobhan Mohammadpour"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13060?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Pierre-Luc Bacon"
-        },
-        "display_name": "Pierre-Luc Bacon"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Univeristy of Montreal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13060?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Pierre-Luc Bacon"
+          },
+          "display_name": "Pierre-Luc Bacon"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13059?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Univeristy of Montreal"
             }
           ],
-          "name": "Emma Frejinger"
-        },
-        "display_name": "Emma Frejinger"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Valence Labs"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13059?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Emma Frejinger"
+          },
+          "display_name": "Emma Frejinger"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13058?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Valence Labs"
             }
           ],
-          "name": "Emmanuel Bengio"
-        },
-        "display_name": "Emmanuel Bengio"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://virtual.aistats.org/virtual/2024/poster/6852",
-        "type": "abstract"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-05-02",
-          "date_precision": 3,
-          "links": [],
-          "name": "AISTATS",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "AISTATS",
-          "type": "conference",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13058?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Emmanuel Bengio"
+          },
+          "display_name": "Emmanuel Bengio"
         }
-      }
-    ],
-    "title": "Maximum entropy GFlowNets with soft Q-learning",
-    "topics": []
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://virtual.aistats.org/virtual/2024/poster/6852",
+          "type": "abstract"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-05-02",
+            "date_precision": 3,
+            "links": [],
+            "name": "AISTATS",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "AISTATS",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Maximum entropy GFlowNets with soft Q-learning",
+      "topics": []
+    },
+    "update_key": null
   },
   {
-    "abstract": "Learning from Preferential Feedback (LfPF) plays an essential role in training  Large Language Models, as well as certain types of interactive learning agents. However, a substantial gap exists between the theory and application of LfPF algorithms. Current results guaranteeing the existence of optimal policies in LfPF problems assume that both the preferences and transition dynamics are determined by a Markov Decision Process. We introduce the Direct Preference Process, a new framework for analyzing LfPF problems in partially-observable, non-Markovian environments. Within this framework, we establish conditions that guarantee the existence of optimal policies by considering the ordinal structure of the preferences. We show that a decision-making problem can have optimal policies -- that are characterized by recursive optimality equations -- even when no reward function can express the learning goal. These findings underline the need  to explore preference-based learning strategies which do not assume that preferences are generated by reward.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "McGill University and Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:aistats:2b8a61594b1f4c4db0902a8a395ced93",
+    "paper": {
+      "abstract": "Tabular data is hard to acquire and is subject to missing values. This paper introduces a novel approach for generating and imputing mixed-type (continuous and categorical) tabular data utilizing score-based diffusion and conditional flow matching. In contrast to prior methods that rely on neural networks to learn the score function or the vector field, we adopt XGBoost, a widely used Gradient-Boosted Tree (GBT) technique. To test our method, we build one of the most extensive benchmarks for tabular data generation and imputation, containing 27 diverse datasets and 9 metrics. Through empirical evaluation across the benchmark, we demonstrate that our approach outperforms deep-learning generation methods in data generation tasks and remains competitive in data imputation. Notably, it can be trained in parallel using CPUs without requiring a GPU. Our Python and R code is available at \\url{https://github.com/SamsungSAILMontreal/ForestDiffusion}.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12874?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Jonathan Colaço Carr"
-        },
-        "display_name": "Jonathan Colaço Carr"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12715?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Kilian Fatras"
+          },
+          "display_name": "Kilian Fatras"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/10253?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Radboud university "
             }
           ],
-          "name": "Doina Precup"
-        },
-        "display_name": "Doina Precup"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12716?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Tal Kachman"
+          },
+          "display_name": "Tal Kachman"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12875?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "SAIT AI Lab Montreal"
             }
           ],
-          "name": "Prakash Panangaden"
-        },
-        "display_name": "Prakash Panangaden"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://virtual.aistats.org/virtual/2024/poster/6765",
-        "type": "abstract"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-05-02",
-          "date_precision": 3,
-          "links": [],
-          "name": "AISTATS",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "AISTATS",
-          "type": "conference",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/11085?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Alexia Jolicoeur-Martineau"
+          },
+          "display_name": "Alexia Jolicoeur-Martineau"
         }
-      }
-    ],
-    "title": "Conditions on Preference Relations that Guarantee the Existence of Optimal Policies",
-    "topics": []
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://virtual.aistats.org/virtual/2024/poster/6683",
+          "type": "abstract"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-05-02",
+            "date_precision": 3,
+            "links": [],
+            "name": "AISTATS",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "AISTATS",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Generating and Imputing Tabular Data via Diffusion and Flow-based Gradient-Boosted Trees",
+      "topics": []
+    },
+    "update_key": null
   },
   {
-    "abstract": "Tabular data is hard to acquire and is subject to missing values. This paper introduces a novel approach for generating and imputing mixed-type (continuous and categorical) tabular data utilizing score-based diffusion and conditional flow matching. In contrast to prior methods that rely on neural networks to learn the score function or the vector field, we adopt XGBoost, a widely used Gradient-Boosted Tree (GBT) technique. To test our method, we build one of the most extensive benchmarks for tabular data generation and imputation, containing 27 diverse datasets and 9 metrics. Through empirical evaluation across the benchmark, we demonstrate that our approach outperforms deep-learning generation methods in data generation tasks and remains competitive in data imputation. Notably, it can be trained in parallel using CPUs without requiring a GPU. Our Python and R code is available at \\url{https://github.com/SamsungSAILMontreal/ForestDiffusion}.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:aistats:49b8b4f95f02e055801da3b4f58e28b7",
+    "paper": {
+      "abstract": "While the practical interest of Recurrent neural networks (RNNs) is attested, much remains to be done to develop a thorough theoretical understanding of their abilities, particularly in what concerns their learning capacities. A powerful framework to tackle this question is the one of PAC-Bayes theory, which allows one to derive bounds providing guarantees on the expected performance of learning models on unseen data. In this paper, we provide an extensive study on the conditions leading to PAC-Bayes bounds for non-linear RNNs that are independent of the length of the data. The derivation of our results relies on a perturbation analysis on the weights of the network. We prove bounds that hold for \\emph{$\\beta$-saturated} and \\emph{DS $\\beta$-saturated} SRNs, classes of RNNs we introduce to formalize saturation regimes of RNNs.The first regime corresponds to the case where the values of the hidden state of the SRN are always close to the boundaries of the activation functions.The second one, closely related to practical observations, only requires that it happens at least once in each component of the hidden state on a sliding window of a given size.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12715?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Hubert Curien Laboratory"
             }
           ],
-          "name": "Kilian Fatras"
-        },
-        "display_name": "Kilian Fatras"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Radboud university "
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12606?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Rémi Eyraud"
+          },
+          "display_name": "Rémi Eyraud"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12716?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill University"
             }
           ],
-          "name": "Tal Kachman"
-        },
-        "display_name": "Tal Kachman"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "SAIT AI Lab Montreal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12605?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Clara Lacroce"
+          },
+          "display_name": "Clara Lacroce"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/11085?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Université de Montréal"
             }
           ],
-          "name": "Alexia Jolicoeur-Martineau"
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/631?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Guillaume Rabusseau"
+          },
+          "display_name": "Guillaume Rabusseau"
         },
-        "display_name": "Alexia Jolicoeur-Martineau"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://virtual.aistats.org/virtual/2024/poster/6683",
-        "type": "abstract"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-05-02",
-          "date_precision": 3,
-          "links": [],
-          "name": "AISTATS",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "AISTATS",
-          "type": "conference",
-          "volume": null
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "University Jean Monnet Laboratoire Hubert Curien"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/11084?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Volodimir Mitarchuk"
+          },
+          "display_name": "Volodimir Mitarchuk"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "University of St-Etienne, Lab. H. Curien"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12608?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Amaury Habrard"
+          },
+          "display_name": "Amaury Habrard"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Unversité Saint-Etienne"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12607?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Rémi Emonet"
+          },
+          "display_name": "Rémi Emonet"
         }
-      }
-    ],
-    "title": "Generating and Imputing Tabular Data via Diffusion and Flow-based Gradient-Boosted Trees",
-    "topics": []
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://virtual.aistats.org/virtual/2024/poster/6633",
+          "type": "abstract"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-05-02",
+            "date_precision": 3,
+            "links": [],
+            "name": "AISTATS",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "AISTATS",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Length independent PAC-Bayes bounds for Simple RNNs",
+      "topics": []
+    },
+    "update_key": null
   },
   {
-    "abstract": "Triangular meshes are widely used to represent three-dimensional objects. As a result, many recent works have addressed the need for geometric deep learning on 3D meshes. However, we observe that the complexities in many of these architectures do not translate to practical performance, and simple deep models for geometric graphs are competitive in practice. Motivated by this observation, we minimally extend the update equations of E(n)-Equivariant Graph Neural Networks (EGNNs) (Satorras et al., 2021) to incorporate mesh face information and further improve it to account for long-range interactions through a hierarchy. The resulting architecture, Equivariant Mesh Neural Network (EMNN), outperforms other, more complicated equivariant methods on mesh tasks, with a fast run-time and no expensive preprocessing. Our implementation is available at \\url{https://github.com/HySonLab/EquiMesh}.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "FPT Software AI Center"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:aistats:cdf1035c34ec380218a8cc9a43d438f9",
+    "paper": {
+      "abstract": "Learning from Preferential Feedback (LfPF) plays an essential role in training  Large Language Models, as well as certain types of interactive learning agents. However, a substantial gap exists between the theory and application of LfPF algorithms. Current results guaranteeing the existence of optimal policies in LfPF problems assume that both the preferences and transition dynamics are determined by a Markov Decision Process. We introduce the Direct Preference Process, a new framework for analyzing LfPF problems in partially-observable, non-Markovian environments. Within this framework, we establish conditions that guarantee the existence of optimal policies by considering the ordinal structure of the preferences. We show that a decision-making problem can have optimal policies -- that are characterized by recursive optimality equations -- even when no reward function can express the learning goal. These findings underline the need  to explore preference-based learning strategies which do not assume that preferences are generated by reward.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13209?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill University and Mila"
             }
           ],
-          "name": "Khang Ngo"
-        },
-        "display_name": "Khang Ngo"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "FPTSoftware"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12874?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Jonathan Colaço Carr"
+          },
+          "display_name": "Jonathan Colaço Carr"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13208?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill University"
             }
           ],
-          "name": "thuan trang"
-        },
-        "display_name": "thuan trang"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Indiana State University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/10253?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Doina Precup"
+          },
+          "display_name": "Doina Precup"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12706?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill University"
             }
           ],
-          "name": "Truong Son Hy"
-        },
-        "display_name": "Truong Son Hy"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "McGill - Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13210?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Daniel Levy"
-        },
-        "display_name": "Daniel Levy"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "McGill - Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13212?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Siamak Ravanbakhsh"
-        },
-        "display_name": "Siamak Ravanbakhsh"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Ton Duc Thang University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://virtual.aistats.org/api/miniconf/users/13211?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Thieu Ngoc Vo"
-        },
-        "display_name": "Thieu Ngoc Vo"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://virtual.aistats.org/virtual/2024/poster/6934",
-        "type": "abstract"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-05-02",
-          "date_precision": 3,
-          "links": [],
-          "name": "AISTATS",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "AISTATS",
-          "type": "conference",
-          "volume": null
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12875?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Prakash Panangaden"
+          },
+          "display_name": "Prakash Panangaden"
         }
-      }
-    ],
-    "title": "E(3)-Equivariant Mesh Neural Networks",
-    "topics": []
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://virtual.aistats.org/virtual/2024/poster/6765",
+          "type": "abstract"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-05-02",
+            "date_precision": 3,
+            "links": [],
+            "name": "AISTATS",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "AISTATS",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Conditions on Preference Relations that Guarantee the Existence of Optimal Policies",
+      "topics": []
+    },
+    "update_key": null
   },
   {
-    "abstract": "While the practical interest of Recurrent neural networks (RNNs) is attested, much remains to be done to develop a thorough theoretical understanding of their abilities, particularly in what concerns their learning capacities. A powerful framework to tackle this question is the one of PAC-Bayes theory, which allows one to derive bounds providing guarantees on the expected performance of learning models on unseen data. In this paper, we provide an extensive study on the conditions leading to PAC-Bayes bounds for non-linear RNNs that are independent of the length of the data. The derivation of our results relies on a perturbation analysis on the weights of the network. We prove bounds that hold for \\emph{$\\beta$-saturated} and \\emph{DS $\\beta$-saturated} SRNs, classes of RNNs we introduce to formalize saturation regimes of RNNs.The first regime corresponds to the case where the values of the hidden state of the SRN are always close to the boundaries of the activation functions.The second one, closely related to practical observations, only requires that it happens at least once in each component of the hidden state on a sliding window of a given size.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Hubert Curien Laboratory"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:aistats:f2fc990265c712c49d51a18a32b39f0c",
+    "paper": {
+      "abstract": "Triangular meshes are widely used to represent three-dimensional objects. As a result, many recent works have addressed the need for geometric deep learning on 3D meshes. However, we observe that the complexities in many of these architectures do not translate to practical performance, and simple deep models for geometric graphs are competitive in practice. Motivated by this observation, we minimally extend the update equations of E(n)-Equivariant Graph Neural Networks (EGNNs) (Satorras et al., 2021) to incorporate mesh face information and further improve it to account for long-range interactions through a hierarchy. The resulting architecture, Equivariant Mesh Neural Network (EMNN), outperforms other, more complicated equivariant methods on mesh tasks, with a fast run-time and no expensive preprocessing. Our implementation is available at \\url{https://github.com/HySonLab/EquiMesh}.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12606?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "FPT Software AI Center"
             }
           ],
-          "name": "Rémi Eyraud"
-        },
-        "display_name": "Rémi Eyraud"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13209?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Khang Ngo"
+          },
+          "display_name": "Khang Ngo"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12605?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "FPTSoftware"
             }
           ],
-          "name": "Clara Lacroce"
-        },
-        "display_name": "Clara Lacroce"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13208?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "thuan trang"
+          },
+          "display_name": "thuan trang"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/631?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Indiana State University"
             }
           ],
-          "name": "Guillaume Rabusseau"
-        },
-        "display_name": "Guillaume Rabusseau"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "University Jean Monnet Laboratoire Hubert Curien"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/12706?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Truong Son Hy"
+          },
+          "display_name": "Truong Son Hy"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/11084?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill - Mila"
             }
           ],
-          "name": "Volodimir Mitarchuk"
-        },
-        "display_name": "Volodimir Mitarchuk"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "University of St-Etienne, Lab. H. Curien"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13210?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Daniel Levy"
+          },
+          "display_name": "Daniel Levy"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12608?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill - Mila"
             }
           ],
-          "name": "Amaury Habrard"
-        },
-        "display_name": "Amaury Habrard"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Unversité Saint-Etienne"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13212?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Siamak Ravanbakhsh"
+          },
+          "display_name": "Siamak Ravanbakhsh"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://virtual.aistats.org/api/miniconf/users/12607?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Ton Duc Thang University"
             }
           ],
-          "name": "Rémi Emonet"
-        },
-        "display_name": "Rémi Emonet"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://virtual.aistats.org/virtual/2024/poster/6633",
-        "type": "abstract"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-05-02",
-          "date_precision": 3,
-          "links": [],
-          "name": "AISTATS",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "AISTATS",
-          "type": "conference",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://virtual.aistats.org/api/miniconf/users/13211?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Thieu Ngoc Vo"
+          },
+          "display_name": "Thieu Ngoc Vo"
         }
-      }
-    ],
-    "title": "Length independent PAC-Bayes bounds for Simple RNNs",
-    "topics": []
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://virtual.aistats.org/virtual/2024/poster/6934",
+          "type": "abstract"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-05-02",
+            "date_precision": 3,
+            "links": [],
+            "name": "AISTATS",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "AISTATS",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "E(3)-Equivariant Mesh Neural Networks",
+      "topics": []
+    },
+    "update_key": null
   }
 ]

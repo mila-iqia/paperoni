@@ -1,1116 +1,1136 @@
 [
   {
-    "abstract": "A goal of statistical language modeling is to learn the joint probability function of sequences of words. This is intrinsically difficult because of the curse of dimensionality: we propose to fight it with its own weapons. In the proposed approach one learns simultaneously (1) a distributed representation for each word (i.e. a similarity between words) along with (2) the probability function for word sequences, expressed with these representations. Generalization is obtained because a sequence of words that has never been seen before gets high probability if it is made of words that are similar to words forming an already seen sentence. We report on experiments using neural networks for the probability function, showing on two text corpora that the proposed approach very significantly improves on a state-of-the-art trigram model.",
-    "authors": [
-      {
-        "affiliations": [
-          {
+    "key": "openalex:W2140679639",
+    "paper": {
+      "abstract": "A goal of statistical language modeling is to learn the joint probability function of sequences of words. This is intrinsically difficult because of the curse of dimensionality: we propose to fight it with its own weapons. In the proposed approach one learns simultaneously (1) a distributed representation for each word (i.e. a similarity between words) along with (2) the probability function for word sequences, expressed with these representations. Generalization is obtained because a sequence of words that has never been seen before gets high probability if it is made of words that are similar to words forming an already seen sentence. We report on experiments using neural networks for the probability function, showing on two text corpora that the proposed approach very significantly improves on a state-of-the-art trigram model.",
+      "authors": [
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Computer Research Institute of Montréal"
+            },
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Computer Research Institute of Montréal"
+            "links": [
+              {
+                "link": "0000-0002-9322-3515",
+                "type": "orcid"
+              },
+              {
+                "link": "A5086198262",
+                "type": "openalex"
+              }
+            ],
+            "name": "Yoshua Bengio"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-9322-3515",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Computer Research Institute of Montréal"
             },
             {
-              "link": "A5086198262",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
             }
           ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Computer Research Institute of Montréal"
+            "links": [
+              {
+                "link": "A5043442242",
+                "type": "openalex"
+              }
+            ],
+            "name": "Réjean Ducharme"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Réjean Ducharme"
+        },
+        {
+          "affiliations": [
             {
-              "link": "A5043442242",
-              "type": "openalex"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Computer Research Institute of Montréal"
+            },
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
             }
           ],
-          "name": "Réjean Ducharme"
-        },
-        "display_name": "Réjean Ducharme"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Computer Research Institute of Montréal"
+            "links": [
+              {
+                "link": "A5103958886",
+                "type": "openalex"
+              }
+            ],
+            "name": "Pascal Vincent"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5103958886",
-              "type": "openalex"
-            }
-          ],
-          "name": "Pascal Vincent"
-        },
-        "display_name": "Pascal Vincent"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "2140679639",
-        "type": "mag"
-      },
-      {
-        "link": "W2140679639",
-        "type": "openalex"
-      }
-    ],
-    "releases": [],
-    "title": "A Neural Probabilistic Language Model",
-    "topics": [
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Artificial neural network"
-      },
-      {
-        "name": "Biology"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Curse of dimensionality"
-      },
-      {
-        "name": "Evolutionary biology"
-      },
-      {
-        "name": "Function (biology)"
-      },
-      {
-        "name": "Generalization"
-      },
-      {
-        "name": "Genetics"
-      },
-      {
-        "name": "Geometry"
-      },
-      {
-        "name": "Image (mathematics)"
-      },
-      {
-        "name": "Language model"
-      },
-      {
-        "name": "Law"
-      },
-      {
-        "name": "Mathematical analysis"
-      },
-      {
-        "name": "Mathematics"
-      },
-      {
-        "name": "Natural language processing"
-      },
-      {
-        "name": "Political science"
-      },
-      {
-        "name": "Politics"
-      },
-      {
-        "name": "Probabilistic logic"
-      },
-      {
-        "name": "Probability distribution"
-      },
-      {
-        "name": "Representation (politics)"
-      },
-      {
-        "name": "Sentence"
-      },
-      {
-        "name": "Sequence (biology)"
-      },
-      {
-        "name": "Similarity (geometry)"
-      },
-      {
-        "name": "Statistical model"
-      },
-      {
-        "name": "Statistics"
-      },
-      {
-        "name": "Trigram"
-      },
-      {
-        "name": "Word (group theory)"
-      }
-    ]
-  },
-  {
-    "abstract": "In this paper, we explore the inclusion of latent random variables into the dynamic hidden state of a recurrent neural network (RNN) by combining elements of the variational autoencoder. We argue that through the use of high-level latent random variables, the variational RNN (VRNN)1 can model the kind of variability observed in highly structured sequential data such as natural speech. We empirically evaluate the proposed model against related sequential models on four speech datasets and one handwriting dataset. Our results show the important roles that latent random variables can play in the RNN dynamic hidden state.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-6223-0301",
-              "type": "orcid"
-            },
-            {
-              "link": "A5112608251",
-              "type": "openalex"
-            }
-          ],
-          "name": "Aaron Courville"
-        },
-        "display_name": "Aaron Courville"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-7408-8215",
-              "type": "orcid"
-            },
-            {
-              "link": "A5044550553",
-              "type": "openalex"
-            }
-          ],
-          "name": "Jun‐Young Chung"
-        },
-        "display_name": "Jun‐Young Chung"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-9322-3515",
-              "type": "orcid"
-            },
-            {
-              "link": "A5086198262",
-              "type": "openalex"
-            }
-          ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5037751863",
-              "type": "openalex"
-            }
-          ],
-          "name": "Kyle Kastner"
-        },
-        "display_name": "Kyle Kastner"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5075751396",
-              "type": "openalex"
-            }
-          ],
-          "name": "Kratarth Goel"
-        },
-        "display_name": "Kratarth Goel"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5113871902",
-              "type": "openalex"
-            }
-          ],
-          "name": "Laurent Dinh"
-        },
-        "display_name": "Laurent Dinh"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.48550/arxiv.1506.02216",
-        "type": "doi"
-      },
-      {
-        "link": "592244745",
-        "type": "mag"
-      },
-      {
-        "link": "W592244745",
-        "type": "openalex"
-      },
-      {
-        "link": "https://api.datacite.org/dois/10.48550/arxiv.1506.02216",
-        "type": "url"
-      },
-      {
-        "link": "https://arxiv.org/abs/1506.02216",
-        "type": "open-access"
-      },
-      {
-        "link": "https://arxiv.org/abs/1506.02216",
-        "type": "url"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "unknown",
-        "venue": {
-          "aliases": [],
-          "date": "2015-01-01T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "https://arxiv.org/abs/1506.02216",
-              "type": "url"
-            }
-          ],
-          "name": "arXiv (Cornell University)",
-          "open": true,
-          "peer_reviewed": false,
-          "publisher": "Cornell University",
-          "series": "",
-          "type": "unknown",
-          "volume": null
+          "display_name": "Pascal Vincent"
         }
-      }
-    ],
-    "title": "A Recurrent Latent Variable Model for Sequential Data",
-    "topics": [
-      {
-        "name": "Algorithm"
-      },
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Artificial neural network"
-      },
-      {
-        "name": "Autoencoder"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Hidden variable theory"
-      },
-      {
-        "name": "Latent variable model"
-      },
-      {
-        "name": "Latent variable"
-      },
-      {
-        "name": "Machine learning"
-      },
-      {
-        "name": "Physics"
-      },
-      {
-        "name": "Quantum mechanics"
-      },
-      {
-        "name": "Quantum"
-      },
-      {
-        "name": "Recurrent neural network"
-      },
-      {
-        "name": "Speech recognition"
-      },
-      {
-        "name": "State (computer science)"
-      },
-      {
-        "name": "State variable"
-      },
-      {
-        "name": "Thermodynamics"
-      }
-    ]
-  },
-  {
-    "abstract": "Sequential data often possesses hierarchical structures with complex dependencies between sub-sequences, such as found between the utterances in a dialogue. To model these dependencies in a generative framework, we propose a neural network-based generative architecture, with stochastic latent variables that span a variable number of time steps. We apply the proposed model to the task of dialogue response generation and compare it with other recent neural-network architectures. We evaluate the model performance through a human evaluation study. The experiments demonstrate that our model improves upon recently proposed models and that the latent variables facilitate both the generation of meaningful, long and diverse responses and maintaining dialogue state.",
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5108137151",
-              "type": "openalex"
-            }
-          ],
-          "name": "Alessandro Sordoni"
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "2140679639",
+          "type": "mag"
         },
-        "display_name": "Alessandro Sordoni"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "HEC Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-6437-9713",
-              "type": "orcid"
-            },
-            {
-              "link": "A5103126568",
-              "type": "openalex"
-            }
-          ],
-          "name": "Laurent Charlin"
-        },
-        "display_name": "Laurent Charlin"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0003-0747-7250",
-              "type": "orcid"
-            },
-            {
-              "link": "A5080591144",
-              "type": "openalex"
-            }
-          ],
-          "name": "Joëlle Pineau"
-        },
-        "display_name": "Joëlle Pineau"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5004295653",
-              "type": "openalex"
-            }
-          ],
-          "name": "Ryan Lowe"
-        },
-        "display_name": "Ryan Lowe"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-6223-0301",
-              "type": "orcid"
-            },
-            {
-              "link": "A5112608251",
-              "type": "openalex"
-            }
-          ],
-          "name": "Aaron Courville"
-        },
-        "display_name": "Aaron Courville"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-9322-3515",
-              "type": "orcid"
-            },
-            {
-              "link": "A5086198262",
-              "type": "openalex"
-            }
-          ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5034688833",
-              "type": "openalex"
-            }
-          ],
-          "name": "Iulian Vlad Serban"
-        },
-        "display_name": "Iulian Vlad Serban"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.1609/aaai.v31i1.10983",
-        "type": "doi"
-      },
-      {
-        "link": "3022187094",
-        "type": "mag"
-      },
-      {
-        "link": "W3022187094",
-        "type": "openalex"
-      },
-      {
-        "link": "http://arxiv.org/abs/1605.06069",
-        "type": "url"
-      },
-      {
-        "link": "http://arxiv.org/pdf/1605.06069",
-        "type": "pdf"
-      },
-      {
-        "link": "https://doi.org/10.1609/aaai.v31i1.10983",
-        "type": "url"
-      },
-      {
-        "link": "https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842",
-        "type": "open-access"
-      },
-      {
-        "link": "https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842",
-        "type": "pdf"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "published",
-        "venue": {
-          "aliases": [],
-          "date": "2017-02-12T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "https://doi.org/10.1609/aaai.v31i1.10983",
-              "type": "url"
-            },
-            {
-              "link": "https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842",
-              "type": "pdf"
-            }
-          ],
-          "name": "Proceedings of the AAAI Conference on Artificial Intelligence",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": "Association for the Advancement of Artificial Intelligence",
-          "series": "",
-          "type": "conference",
-          "volume": null
+        {
+          "link": "W2140679639",
+          "type": "openalex"
         }
-      }
-    ],
-    "title": "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
-    "topics": [
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Artificial neural network"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Economics"
-      },
-      {
-        "name": "Encoder"
-      },
-      {
-        "name": "Generative grammar"
-      },
-      {
-        "name": "Generative model"
-      },
-      {
-        "name": "Latent variable model"
-      },
-      {
-        "name": "Latent variable"
-      },
-      {
-        "name": "Machine learning"
-      },
-      {
-        "name": "Management"
-      },
-      {
-        "name": "Mathematical analysis"
-      },
-      {
-        "name": "Mathematics"
-      },
-      {
-        "name": "Operating system"
-      },
-      {
-        "name": "Task (project management)"
-      },
-      {
-        "name": "Variable (mathematics)"
-      }
-    ]
-  },
-  {
-    "abstract": "Sequential data often possesses hierarchical structures with complex dependencies between sub-sequences, such as found between the utterances in a dialogue. To model these dependencies in a generative framework, we propose a neural network-based generative architecture, with stochastic latent variables that span a variable number of time steps. We apply the proposed model to the task of dialogue response generation and compare it with other recent neural-network architectures. We evaluate the model performance through a human evaluation study. The experiments demonstrate that our model improves upon recently proposed models and that the latent variables facilitate both the generation of meaningful, long and diverse responses and maintaining dialogue state.",
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5108137151",
-              "type": "openalex"
-            }
-          ],
-          "name": "Alessandro Sordoni"
+      ],
+      "releases": [],
+      "title": "A Neural Probabilistic Language Model",
+      "topics": [
+        {
+          "name": "Artificial intelligence"
         },
-        "display_name": "Alessandro Sordoni"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "HEC Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-6437-9713",
-              "type": "orcid"
-            },
-            {
-              "link": "A5103126568",
-              "type": "openalex"
-            }
-          ],
-          "name": "Laurent Charlin"
+        {
+          "name": "Artificial neural network"
         },
-        "display_name": "Laurent Charlin"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0003-0747-7250",
-              "type": "orcid"
-            },
-            {
-              "link": "A5080591144",
-              "type": "openalex"
-            }
-          ],
-          "name": "Joëlle Pineau"
+        {
+          "name": "Biology"
         },
-        "display_name": "Joëlle Pineau"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5004295653",
-              "type": "openalex"
-            }
-          ],
-          "name": "Ryan Lowe"
+        {
+          "name": "Computer science"
         },
-        "display_name": "Ryan Lowe"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-6223-0301",
-              "type": "orcid"
-            },
-            {
-              "link": "A5112608251",
-              "type": "openalex"
-            }
-          ],
-          "name": "Aaron Courville"
+        {
+          "name": "Curse of dimensionality"
         },
-        "display_name": "Aaron Courville"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-9322-3515",
-              "type": "orcid"
-            },
-            {
-              "link": "A5086198262",
-              "type": "openalex"
-            }
-          ],
-          "name": "Yoshua Bengio"
+        {
+          "name": "Evolutionary biology"
         },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5034688833",
-              "type": "openalex"
-            }
-          ],
-          "name": "Iulian Vlad Serban"
+        {
+          "name": "Function (biology)"
         },
-        "display_name": "Iulian Vlad Serban"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "2963790827",
-        "type": "mag"
-      },
-      {
-        "link": "W2963790827",
-        "type": "openalex"
-      }
-    ],
-    "releases": [],
-    "title": "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
-    "topics": [
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Artificial neural network"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Economics"
-      },
-      {
-        "name": "Encoder"
-      },
-      {
-        "name": "Generative grammar"
-      },
-      {
-        "name": "Generative model"
-      },
-      {
-        "name": "Latent variable model"
-      },
-      {
-        "name": "Latent variable"
-      },
-      {
-        "name": "Machine learning"
-      },
-      {
-        "name": "Management"
-      },
-      {
-        "name": "Mathematical analysis"
-      },
-      {
-        "name": "Mathematics"
-      },
-      {
-        "name": "Operating system"
-      },
-      {
-        "name": "Task (project management)"
-      },
-      {
-        "name": "Variable (mathematics)"
-      }
-    ]
-  },
-  {
-    "abstract": "This paper proposes a new model for extracting an interpretable sentence embedding by introducing self-attention. Instead of using a vector, we use a 2-D matrix to represent the embedding, with each row of the matrix attending on a different part of the sentence. We also propose a self-attention mechanism and a special regularization term for the model. As a side effect, the embedding comes with an easy way of visualizing what specific parts of the sentence are encoded into the embedding. We evaluate our model on 3 different tasks: author profiling, sentiment classification, and textual entailment. Results show that our model yields a significant performance gain compared to other sentence embedding methods in all of the 3 tasks.",
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-9322-3515",
-              "type": "orcid"
-            },
-            {
-              "link": "A5086198262",
-              "type": "openalex"
-            }
-          ],
-          "name": "Yoshua Bengio"
+        {
+          "name": "Generalization"
         },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0003-0949-6113",
-              "type": "orcid"
-            },
-            {
-              "link": "A5101583277",
-              "type": "openalex"
-            }
-          ],
-          "name": "Mo Yu"
+        {
+          "name": "Genetics"
         },
-        "display_name": "Mo Yu"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0009-0006-4028-4935",
-              "type": "orcid"
-            },
-            {
-              "link": "A5107249743",
-              "type": "openalex"
-            }
-          ],
-          "name": "Bing Xiang"
+        {
+          "name": "Geometry"
         },
-        "display_name": "Bing Xiang"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0009-0009-7204-0689",
-              "type": "orcid"
-            },
-            {
-              "link": "A5024900991",
-              "type": "openalex"
-            }
-          ],
-          "name": "Zhouhan Lin"
+        {
+          "name": "Image (mathematics)"
         },
-        "display_name": "Zhouhan Lin"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5041114345",
-              "type": "openalex"
-            }
-          ],
-          "name": "Cícero Nogueira dos Santos"
+        {
+          "name": "Language model"
         },
-        "display_name": "Cícero Nogueira dos Santos"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5066033428",
-              "type": "openalex"
-            }
-          ],
-          "name": "Minwei Feng"
+        {
+          "name": "Law"
         },
-        "display_name": "Minwei Feng"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5107808331",
-              "type": "openalex"
-            }
-          ],
-          "name": "Bowen Zhou"
+        {
+          "name": "Mathematical analysis"
         },
-        "display_name": "Bowen Zhou"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.48550/arxiv.1703.03130",
-        "type": "doi"
-      },
-      {
-        "link": "2597655663",
-        "type": "mag"
-      },
-      {
-        "link": "W2597655663",
-        "type": "openalex"
-      },
-      {
-        "link": "http://arxiv.org/abs/1703.03130",
-        "type": "url"
-      },
-      {
-        "link": "http://arxiv.org/pdf/1703.03130",
-        "type": "pdf"
-      },
-      {
-        "link": "https://api.datacite.org/dois/10.48550/arxiv.1703.03130",
-        "type": "url"
-      },
-      {
-        "link": "https://arxiv.org/abs/1703.03130",
-        "type": "open-access"
-      },
-      {
-        "link": "https://arxiv.org/abs/1703.03130",
-        "type": "url"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "unknown",
-        "venue": {
-          "aliases": [],
-          "date": "2017-01-01T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "https://arxiv.org/abs/1703.03130",
-              "type": "url"
-            }
-          ],
-          "name": "arXiv (Cornell University)",
-          "open": true,
-          "peer_reviewed": false,
-          "publisher": "Cornell University",
-          "series": "",
-          "type": "unknown",
-          "volume": null
+        {
+          "name": "Mathematics"
+        },
+        {
+          "name": "Natural language processing"
+        },
+        {
+          "name": "Political science"
+        },
+        {
+          "name": "Politics"
+        },
+        {
+          "name": "Probabilistic logic"
+        },
+        {
+          "name": "Probability distribution"
+        },
+        {
+          "name": "Representation (politics)"
+        },
+        {
+          "name": "Sentence"
+        },
+        {
+          "name": "Sequence (biology)"
+        },
+        {
+          "name": "Similarity (geometry)"
+        },
+        {
+          "name": "Statistical model"
+        },
+        {
+          "name": "Statistics"
+        },
+        {
+          "name": "Trigram"
+        },
+        {
+          "name": "Word (group theory)"
         }
-      }
-    ],
-    "title": "A Structured Self-attentive Sentence Embedding",
-    "topics": [
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Embedding"
-      },
-      {
-        "name": "Logical consequence"
-      },
-      {
-        "name": "Natural language processing"
-      },
-      {
-        "name": "Regularization (linguistics)"
-      },
-      {
-        "name": "Sentence"
-      }
-    ]
+      ]
+    },
+    "update_key": null
+  },
+  {
+    "key": "openalex:W2597655663",
+    "paper": {
+      "abstract": "This paper proposes a new model for extracting an interpretable sentence embedding by introducing self-attention. Instead of using a vector, we use a 2-D matrix to represent the embedding, with each row of the matrix attending on a different part of the sentence. We also propose a self-attention mechanism and a special regularization term for the model. As a side effect, the embedding comes with an easy way of visualizing what specific parts of the sentence are encoded into the embedding. We evaluate our model on 3 different tasks: author profiling, sentiment classification, and textual entailment. Results show that our model yields a significant performance gain compared to other sentence embedding methods in all of the 3 tasks.",
+      "authors": [
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9322-3515",
+                "type": "orcid"
+              },
+              {
+                "link": "A5086198262",
+                "type": "openalex"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0003-0949-6113",
+                "type": "orcid"
+              },
+              {
+                "link": "A5101583277",
+                "type": "openalex"
+              }
+            ],
+            "name": "Mo Yu"
+          },
+          "display_name": "Mo Yu"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0009-0006-4028-4935",
+                "type": "orcid"
+              },
+              {
+                "link": "A5107249743",
+                "type": "openalex"
+              }
+            ],
+            "name": "Bing Xiang"
+          },
+          "display_name": "Bing Xiang"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0009-0009-7204-0689",
+                "type": "orcid"
+              },
+              {
+                "link": "A5024900991",
+                "type": "openalex"
+              }
+            ],
+            "name": "Zhouhan Lin"
+          },
+          "display_name": "Zhouhan Lin"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5041114345",
+                "type": "openalex"
+              }
+            ],
+            "name": "Cícero Nogueira dos Santos"
+          },
+          "display_name": "Cícero Nogueira dos Santos"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5066033428",
+                "type": "openalex"
+              }
+            ],
+            "name": "Minwei Feng"
+          },
+          "display_name": "Minwei Feng"
+        },
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5107808331",
+                "type": "openalex"
+              }
+            ],
+            "name": "Bowen Zhou"
+          },
+          "display_name": "Bowen Zhou"
+        }
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.48550/arxiv.1703.03130",
+          "type": "doi"
+        },
+        {
+          "link": "2597655663",
+          "type": "mag"
+        },
+        {
+          "link": "W2597655663",
+          "type": "openalex"
+        },
+        {
+          "link": "http://arxiv.org/abs/1703.03130",
+          "type": "url"
+        },
+        {
+          "link": "http://arxiv.org/pdf/1703.03130",
+          "type": "pdf"
+        },
+        {
+          "link": "https://api.datacite.org/dois/10.48550/arxiv.1703.03130",
+          "type": "url"
+        },
+        {
+          "link": "https://arxiv.org/abs/1703.03130",
+          "type": "open-access"
+        },
+        {
+          "link": "https://arxiv.org/abs/1703.03130",
+          "type": "url"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "unknown",
+          "venue": {
+            "aliases": [],
+            "date": "2017-01-01T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://arxiv.org/abs/1703.03130",
+                "type": "url"
+              }
+            ],
+            "name": "arXiv (Cornell University)",
+            "open": true,
+            "peer_reviewed": false,
+            "publisher": "Cornell University",
+            "series": "",
+            "type": "unknown",
+            "volume": null
+          }
+        }
+      ],
+      "title": "A Structured Self-attentive Sentence Embedding",
+      "topics": [
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Embedding"
+        },
+        {
+          "name": "Logical consequence"
+        },
+        {
+          "name": "Natural language processing"
+        },
+        {
+          "name": "Regularization (linguistics)"
+        },
+        {
+          "name": "Sentence"
+        }
+      ]
+    },
+    "update_key": null
+  },
+  {
+    "key": "openalex:W2963790827",
+    "paper": {
+      "abstract": "Sequential data often possesses hierarchical structures with complex dependencies between sub-sequences, such as found between the utterances in a dialogue. To model these dependencies in a generative framework, we propose a neural network-based generative architecture, with stochastic latent variables that span a variable number of time steps. We apply the proposed model to the task of dialogue response generation and compare it with other recent neural-network architectures. We evaluate the model performance through a human evaluation study. The experiments demonstrate that our model improves upon recently proposed models and that the latent variables facilitate both the generation of meaningful, long and diverse responses and maintaining dialogue state.",
+      "authors": [
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5108137151",
+                "type": "openalex"
+              }
+            ],
+            "name": "Alessandro Sordoni"
+          },
+          "display_name": "Alessandro Sordoni"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "HEC Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-6437-9713",
+                "type": "orcid"
+              },
+              {
+                "link": "A5103126568",
+                "type": "openalex"
+              }
+            ],
+            "name": "Laurent Charlin"
+          },
+          "display_name": "Laurent Charlin"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "McGill University"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0003-0747-7250",
+                "type": "orcid"
+              },
+              {
+                "link": "A5080591144",
+                "type": "openalex"
+              }
+            ],
+            "name": "Joëlle Pineau"
+          },
+          "display_name": "Joëlle Pineau"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "McGill University"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5004295653",
+                "type": "openalex"
+              }
+            ],
+            "name": "Ryan Lowe"
+          },
+          "display_name": "Ryan Lowe"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-6223-0301",
+                "type": "orcid"
+              },
+              {
+                "link": "A5112608251",
+                "type": "openalex"
+              }
+            ],
+            "name": "Aaron Courville"
+          },
+          "display_name": "Aaron Courville"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9322-3515",
+                "type": "orcid"
+              },
+              {
+                "link": "A5086198262",
+                "type": "openalex"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5034688833",
+                "type": "openalex"
+              }
+            ],
+            "name": "Iulian Vlad Serban"
+          },
+          "display_name": "Iulian Vlad Serban"
+        }
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "2963790827",
+          "type": "mag"
+        },
+        {
+          "link": "W2963790827",
+          "type": "openalex"
+        }
+      ],
+      "releases": [],
+      "title": "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
+      "topics": [
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Artificial neural network"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Economics"
+        },
+        {
+          "name": "Encoder"
+        },
+        {
+          "name": "Generative grammar"
+        },
+        {
+          "name": "Generative model"
+        },
+        {
+          "name": "Latent variable model"
+        },
+        {
+          "name": "Latent variable"
+        },
+        {
+          "name": "Machine learning"
+        },
+        {
+          "name": "Management"
+        },
+        {
+          "name": "Mathematical analysis"
+        },
+        {
+          "name": "Mathematics"
+        },
+        {
+          "name": "Operating system"
+        },
+        {
+          "name": "Task (project management)"
+        },
+        {
+          "name": "Variable (mathematics)"
+        }
+      ]
+    },
+    "update_key": null
+  },
+  {
+    "key": "openalex:W3022187094",
+    "paper": {
+      "abstract": "Sequential data often possesses hierarchical structures with complex dependencies between sub-sequences, such as found between the utterances in a dialogue. To model these dependencies in a generative framework, we propose a neural network-based generative architecture, with stochastic latent variables that span a variable number of time steps. We apply the proposed model to the task of dialogue response generation and compare it with other recent neural-network architectures. We evaluate the model performance through a human evaluation study. The experiments demonstrate that our model improves upon recently proposed models and that the latent variables facilitate both the generation of meaningful, long and diverse responses and maintaining dialogue state.",
+      "authors": [
+        {
+          "affiliations": [],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5108137151",
+                "type": "openalex"
+              }
+            ],
+            "name": "Alessandro Sordoni"
+          },
+          "display_name": "Alessandro Sordoni"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "HEC Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-6437-9713",
+                "type": "orcid"
+              },
+              {
+                "link": "A5103126568",
+                "type": "openalex"
+              }
+            ],
+            "name": "Laurent Charlin"
+          },
+          "display_name": "Laurent Charlin"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "McGill University"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0003-0747-7250",
+                "type": "orcid"
+              },
+              {
+                "link": "A5080591144",
+                "type": "openalex"
+              }
+            ],
+            "name": "Joëlle Pineau"
+          },
+          "display_name": "Joëlle Pineau"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "McGill University"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5004295653",
+                "type": "openalex"
+              }
+            ],
+            "name": "Ryan Lowe"
+          },
+          "display_name": "Ryan Lowe"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-6223-0301",
+                "type": "orcid"
+              },
+              {
+                "link": "A5112608251",
+                "type": "openalex"
+              }
+            ],
+            "name": "Aaron Courville"
+          },
+          "display_name": "Aaron Courville"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9322-3515",
+                "type": "orcid"
+              },
+              {
+                "link": "A5086198262",
+                "type": "openalex"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5034688833",
+                "type": "openalex"
+              }
+            ],
+            "name": "Iulian Vlad Serban"
+          },
+          "display_name": "Iulian Vlad Serban"
+        }
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.1609/aaai.v31i1.10983",
+          "type": "doi"
+        },
+        {
+          "link": "3022187094",
+          "type": "mag"
+        },
+        {
+          "link": "W3022187094",
+          "type": "openalex"
+        },
+        {
+          "link": "http://arxiv.org/abs/1605.06069",
+          "type": "url"
+        },
+        {
+          "link": "http://arxiv.org/pdf/1605.06069",
+          "type": "pdf"
+        },
+        {
+          "link": "https://doi.org/10.1609/aaai.v31i1.10983",
+          "type": "url"
+        },
+        {
+          "link": "https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842",
+          "type": "open-access"
+        },
+        {
+          "link": "https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842",
+          "type": "pdf"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "published",
+          "venue": {
+            "aliases": [],
+            "date": "2017-02-12T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://doi.org/10.1609/aaai.v31i1.10983",
+                "type": "url"
+              },
+              {
+                "link": "https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842",
+                "type": "pdf"
+              }
+            ],
+            "name": "Proceedings of the AAAI Conference on Artificial Intelligence",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": "Association for the Advancement of Artificial Intelligence",
+            "series": "",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
+      "topics": [
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Artificial neural network"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Economics"
+        },
+        {
+          "name": "Encoder"
+        },
+        {
+          "name": "Generative grammar"
+        },
+        {
+          "name": "Generative model"
+        },
+        {
+          "name": "Latent variable model"
+        },
+        {
+          "name": "Latent variable"
+        },
+        {
+          "name": "Machine learning"
+        },
+        {
+          "name": "Management"
+        },
+        {
+          "name": "Mathematical analysis"
+        },
+        {
+          "name": "Mathematics"
+        },
+        {
+          "name": "Operating system"
+        },
+        {
+          "name": "Task (project management)"
+        },
+        {
+          "name": "Variable (mathematics)"
+        }
+      ]
+    },
+    "update_key": null
+  },
+  {
+    "key": "openalex:W592244745",
+    "paper": {
+      "abstract": "In this paper, we explore the inclusion of latent random variables into the dynamic hidden state of a recurrent neural network (RNN) by combining elements of the variational autoencoder. We argue that through the use of high-level latent random variables, the variational RNN (VRNN)1 can model the kind of variability observed in highly structured sequential data such as natural speech. We empirically evaluate the proposed model against related sequential models on four speech datasets and one handwriting dataset. Our results show the important roles that latent random variables can play in the RNN dynamic hidden state.",
+      "authors": [
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-6223-0301",
+                "type": "orcid"
+              },
+              {
+                "link": "A5112608251",
+                "type": "openalex"
+              }
+            ],
+            "name": "Aaron Courville"
+          },
+          "display_name": "Aaron Courville"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-7408-8215",
+                "type": "orcid"
+              },
+              {
+                "link": "A5044550553",
+                "type": "openalex"
+              }
+            ],
+            "name": "Jun‐Young Chung"
+          },
+          "display_name": "Jun‐Young Chung"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9322-3515",
+                "type": "orcid"
+              },
+              {
+                "link": "A5086198262",
+                "type": "openalex"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5037751863",
+                "type": "openalex"
+              }
+            ],
+            "name": "Kyle Kastner"
+          },
+          "display_name": "Kyle Kastner"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5075751396",
+                "type": "openalex"
+              }
+            ],
+            "name": "Kratarth Goel"
+          },
+          "display_name": "Kratarth Goel"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "A5113871902",
+                "type": "openalex"
+              }
+            ],
+            "name": "Laurent Dinh"
+          },
+          "display_name": "Laurent Dinh"
+        }
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.48550/arxiv.1506.02216",
+          "type": "doi"
+        },
+        {
+          "link": "592244745",
+          "type": "mag"
+        },
+        {
+          "link": "W592244745",
+          "type": "openalex"
+        },
+        {
+          "link": "https://api.datacite.org/dois/10.48550/arxiv.1506.02216",
+          "type": "url"
+        },
+        {
+          "link": "https://arxiv.org/abs/1506.02216",
+          "type": "open-access"
+        },
+        {
+          "link": "https://arxiv.org/abs/1506.02216",
+          "type": "url"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "unknown",
+          "venue": {
+            "aliases": [],
+            "date": "2015-01-01T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://arxiv.org/abs/1506.02216",
+                "type": "url"
+              }
+            ],
+            "name": "arXiv (Cornell University)",
+            "open": true,
+            "peer_reviewed": false,
+            "publisher": "Cornell University",
+            "series": "",
+            "type": "unknown",
+            "volume": null
+          }
+        }
+      ],
+      "title": "A Recurrent Latent Variable Model for Sequential Data",
+      "topics": [
+        {
+          "name": "Algorithm"
+        },
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Artificial neural network"
+        },
+        {
+          "name": "Autoencoder"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Hidden variable theory"
+        },
+        {
+          "name": "Latent variable model"
+        },
+        {
+          "name": "Latent variable"
+        },
+        {
+          "name": "Machine learning"
+        },
+        {
+          "name": "Physics"
+        },
+        {
+          "name": "Quantum mechanics"
+        },
+        {
+          "name": "Quantum"
+        },
+        {
+          "name": "Recurrent neural network"
+        },
+        {
+          "name": "Speech recognition"
+        },
+        {
+          "name": "State (computer science)"
+        },
+        {
+          "name": "State variable"
+        },
+        {
+          "name": "Thermodynamics"
+        }
+      ]
+    },
+    "update_key": null
   }
 ]

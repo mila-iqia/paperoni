@@ -7,6 +7,7 @@ from typing import Any, Generator, Iterable
 
 from pytest_regressions.file_regression import FileRegressionFixture
 
+from paperoni.discovery.base import PaperInfo
 from paperoni.model.classes import Institution, Paper, Release
 
 
@@ -53,9 +54,11 @@ def sort_keys(obj: dict | list | Any) -> dict | list:
         return obj
 
 
-def check_papers(file_regression: FileRegressionFixture, papers: list[Paper]):
+def check_papers(file_regression: FileRegressionFixture, papers: list[PaperInfo]):
     # Using file_regression and json.dumps to avoid
     # yaml.representer.RepresenterError on DatePrecision
+    papers = sort_keys(papers[:5])
+    [p.pop("acquired") for p in papers]
     file_regression.check(
         json.dumps(sort_keys(papers[:5]), indent=2, ensure_ascii=False),
         extension=".json",

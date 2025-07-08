@@ -1,2137 +1,2157 @@
 [
   {
-    "abstract": "",
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-3460-7172",
-              "type": "orcid"
-            },
-            {
-              "link": "A5071515642",
-              "type": "openalex"
-            }
-          ],
-          "name": "Archy O. de Berker"
-        },
-        "display_name": "Archy O. de Berker"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-7545-909X",
-              "type": "orcid"
-            },
-            {
-              "link": "A5000703561",
-              "type": "openalex"
-            }
-          ],
-          "name": "Denis Thérien"
-        },
-        "display_name": "Denis Thérien"
-      },
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5043167556",
-              "type": "openalex"
-            }
-          ],
-          "name": "Philippe Beaudoin"
-        },
-        "display_name": "Philippe Beaudoin"
-      },
-      {
-        "affiliations": [
-          {
+    "key": "openalex:W2978368159",
+    "paper": {
+      "abstract": "",
+      "authors": [
+        {
+          "affiliations": [],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Cold Spring Harbor Laboratory"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0003-0049-8120",
-              "type": "orcid"
-            },
-            {
-              "link": "A5049757389",
-              "type": "openalex"
-            }
-          ],
-          "name": "Ádám Kepecs"
-        },
-        "display_name": "Ádám Kepecs"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "MRC Brain Network Dynamics Unit"
+            "links": [
+              {
+                "link": "0000-0002-3460-7172",
+                "type": "orcid"
+              },
+              {
+                "link": "A5071515642",
+                "type": "openalex"
+              }
+            ],
+            "name": "Archy O. de Berker"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "University of Oxford"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-8994-1661",
-              "type": "orcid"
-            },
-            {
-              "link": "A5049095056",
-              "type": "openalex"
-            }
-          ],
-          "name": "Rafał Bogacz"
+          "display_name": "Archy O. de Berker"
         },
-        "display_name": "Rafał Bogacz"
-      },
-      {
-        "affiliations": [
-          {
+        {
+          "affiliations": [],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec Artificial Intelligence Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-9662-2151",
-              "type": "orcid"
-            },
-            {
-              "link": "A5004133705",
-              "type": "openalex"
-            }
-          ],
-          "name": "Blake A. Richards"
-        },
-        "display_name": "Blake A. Richards"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec Artificial Intelligence Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-9322-3515",
-              "type": "orcid"
-            },
-            {
-              "link": "A5086198262",
-              "type": "openalex"
-            }
-          ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Oxford Centre for Computational Neuroscience"
+            "links": [
+              {
+                "link": "0000-0002-7545-909X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5000703561",
+                "type": "openalex"
+              }
+            ],
+            "name": "Denis Thérien"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "University College London"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-8713-9328",
-              "type": "orcid"
-            },
-            {
-              "link": "A5025338734",
-              "type": "openalex"
-            }
-          ],
-          "name": "Peter E. Latham"
+          "display_name": "Denis Thérien"
         },
-        "display_name": "Peter E. Latham"
-      },
-      {
-        "affiliations": [
-          {
+        {
+          "affiliations": [],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "SIB Swiss Institute of Bioinformatics"
+            "links": [
+              {
+                "link": "A5043167556",
+                "type": "openalex"
+              }
+            ],
+            "name": "Philippe Beaudoin"
           },
-          {
+          "display_name": "Philippe Beaudoin"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Cold Spring Harbor Laboratory"
+            }
+          ],
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "ETH Zurich"
+            "links": [
+              {
+                "link": "0000-0003-0049-8120",
+                "type": "orcid"
+              },
+              {
+                "link": "A5049757389",
+                "type": "openalex"
+              }
+            ],
+            "name": "Ádám Kepecs"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "University of Zurich"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Ádám Kepecs"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-2837-9695",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "MRC Brain Network Dynamics Unit"
             },
             {
-              "link": "A5030804320",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Oxford"
             }
           ],
-          "name": "João Sacramento"
-        },
-        "display_name": "João Sacramento"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "The Scarborough Hospital"
+            "links": [
+              {
+                "link": "0000-0002-8994-1661",
+                "type": "orcid"
+              },
+              {
+                "link": "A5049095056",
+                "type": "openalex"
+              }
+            ],
+            "name": "Rafał Bogacz"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "University of Toronto"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Rafał Bogacz"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-2253-7816",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec Artificial Intelligence Institute"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-9662-2151",
+                "type": "orcid"
+              },
+              {
+                "link": "A5004133705",
+                "type": "openalex"
+              }
+            ],
+            "name": "Blake A. Richards"
+          },
+          "display_name": "Blake A. Richards"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec Artificial Intelligence Institute"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9322-3515",
+                "type": "orcid"
+              },
+              {
+                "link": "A5086198262",
+                "type": "openalex"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Oxford Centre for Computational Neuroscience"
             },
             {
-              "link": "A5073293567",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "University College London"
             }
           ],
-          "name": "Colleen J. Gillon"
-        },
-        "display_name": "Colleen J. Gillon"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Canadian Institute for Advanced Research"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-8713-9328",
+                "type": "orcid"
+              },
+              {
+                "link": "A5025338734",
+                "type": "openalex"
+              }
+            ],
+            "name": "Peter E. Latham"
+          },
+          "display_name": "Peter E. Latham"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-8208-5698",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "SIB Swiss Institute of Bioinformatics"
             },
             {
-              "link": "A5028769863",
-              "type": "openalex"
-            }
-          ],
-          "name": "Joel Zylberberg"
-        },
-        "display_name": "Joel Zylberberg"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Columbia University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-7433-9005",
-              "type": "orcid"
+              "aliases": [],
+              "category": "wat",
+              "name": "ETH Zurich"
             },
             {
-              "link": "A5084467223",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Zurich"
             }
           ],
-          "name": "Nikolaus Kriegeskorte"
-        },
-        "display_name": "Nikolaus Kriegeskorte"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Columbia University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-2837-9695",
+                "type": "orcid"
+              },
+              {
+                "link": "A5030804320",
+                "type": "openalex"
+              }
+            ],
+            "name": "João Sacramento"
+          },
+          "display_name": "João Sacramento"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-9904-7471",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "The Scarborough Hospital"
             },
             {
-              "link": "A5006191787",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Toronto"
             }
           ],
-          "name": "Grace W. Lindsay"
-        },
-        "display_name": "Grace W. Lindsay"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Columbia University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-2253-7816",
+                "type": "orcid"
+              },
+              {
+                "link": "A5073293567",
+                "type": "openalex"
+              }
+            ],
+            "name": "Colleen J. Gillon"
+          },
+          "display_name": "Colleen J. Gillon"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-1433-0647",
-              "type": "orcid"
-            },
-            {
-              "link": "A5082132955",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Canadian Institute for Advanced Research"
             }
           ],
-          "name": "Kenneth D. Miller"
-        },
-        "display_name": "Kenneth D. Miller"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "DeepMind (United Kingdom)"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-8208-5698",
+                "type": "orcid"
+              },
+              {
+                "link": "A5028769863",
+                "type": "openalex"
+              }
+            ],
+            "name": "Joel Zylberberg"
+          },
+          "display_name": "Joel Zylberberg"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-8918-486X",
-              "type": "orcid"
-            },
-            {
-              "link": "A5066294254",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Columbia University"
             }
           ],
-          "name": "Timothy Lillicrap"
-        },
-        "display_name": "Timothy Lillicrap"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "DeepMind (United Kingdom)"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-7433-9005",
+                "type": "orcid"
+              },
+              {
+                "link": "A5084467223",
+                "type": "openalex"
+              }
+            ],
+            "name": "Nikolaus Kriegeskorte"
+          },
+          "display_name": "Nikolaus Kriegeskorte"
+        },
+        {
+          "affiliations": [
             {
-              "link": "A5013028446",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Columbia University"
             }
           ],
-          "name": "Greg Wayne"
-        },
-        "display_name": "Greg Wayne"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Foundation for Research and Technology Hellas"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-9904-7471",
+                "type": "orcid"
+              },
+              {
+                "link": "A5006191787",
+                "type": "openalex"
+              }
+            ],
+            "name": "Grace W. Lindsay"
+          },
+          "display_name": "Grace W. Lindsay"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-6152-595X",
-              "type": "orcid"
-            },
-            {
-              "link": "A5088598187",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Columbia University"
             }
           ],
-          "name": "Panayiota Poirazi"
-        },
-        "display_name": "Panayiota Poirazi"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Friedrich Miescher Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-1433-0647",
+                "type": "orcid"
+              },
+              {
+                "link": "A5082132955",
+                "type": "openalex"
+              }
+            ],
+            "name": "Kenneth D. Miller"
+          },
+          "display_name": "Kenneth D. Miller"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0003-1883-644X",
-              "type": "orcid"
-            },
-            {
-              "link": "A5001875800",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "DeepMind (United Kingdom)"
             }
           ],
-          "name": "Friedemann Zenke"
-        },
-        "display_name": "Friedemann Zenke"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Google (United States)"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-8918-486X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5066294254",
+                "type": "openalex"
+              }
+            ],
+            "name": "Timothy Lillicrap"
+          },
+          "display_name": "Timothy Lillicrap"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-9534-7271",
-              "type": "orcid"
-            },
-            {
-              "link": "A5026532071",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "DeepMind (United Kingdom)"
             }
           ],
-          "name": "Danijar Hafner"
-        },
-        "display_name": "Danijar Hafner"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Imperial College London"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "A5013028446",
+                "type": "openalex"
+              }
+            ],
+            "name": "Greg Wayne"
+          },
+          "display_name": "Greg Wayne"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0003-4507-8648",
-              "type": "orcid"
-            },
-            {
-              "link": "A5039497694",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Foundation for Research and Technology Hellas"
             }
           ],
-          "name": "Claudia Clopath"
-        },
-        "display_name": "Claudia Clopath"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "McGill University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-6152-595X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5088598187",
+                "type": "openalex"
+              }
+            ],
+            "name": "Panayiota Poirazi"
+          },
+          "display_name": "Panayiota Poirazi"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-5538-7914",
-              "type": "orcid"
-            },
-            {
-              "link": "A5102792799",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Friedrich Miescher Institute"
             }
           ],
-          "name": "Christopher C. Pack"
-        },
-        "display_name": "Christopher C. Pack"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Netherlands Institute for Neuroscience"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0003-1883-644X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5001875800",
+                "type": "openalex"
+              }
+            ],
+            "name": "Friedemann Zenke"
+          },
+          "display_name": "Friedemann Zenke"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-1625-0034",
-              "type": "orcid"
-            },
-            {
-              "link": "A5008620732",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Google (United States)"
             }
           ],
-          "name": "Pieter R. Roelfsema"
-        },
-        "display_name": "Pieter R. Roelfsema"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Stanford University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-9534-7271",
+                "type": "orcid"
+              },
+              {
+                "link": "A5026532071",
+                "type": "openalex"
+              }
+            ],
+            "name": "Danijar Hafner"
+          },
+          "display_name": "Danijar Hafner"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-6155-4523",
-              "type": "orcid"
-            },
-            {
-              "link": "A5011316863",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Imperial College London"
             }
           ],
-          "name": "Daniel Yamins"
-        },
-        "display_name": "Daniel Yamins"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Stanford University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0003-4507-8648",
+                "type": "orcid"
+              },
+              {
+                "link": "A5039497694",
+                "type": "openalex"
+              }
+            ],
+            "name": "Claudia Clopath"
+          },
+          "display_name": "Claudia Clopath"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-0082-4822",
-              "type": "orcid"
-            },
-            {
-              "link": "A5049137362",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "McGill University"
             }
           ],
-          "name": "Amelia J. Christensen"
-        },
-        "display_name": "Amelia J. Christensen"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Stanford University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-5538-7914",
+                "type": "orcid"
+              },
+              {
+                "link": "A5102792799",
+                "type": "openalex"
+              }
+            ],
+            "name": "Christopher C. Pack"
+          },
+          "display_name": "Christopher C. Pack"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-9264-7551",
-              "type": "orcid"
-            },
-            {
-              "link": "A5056551357",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Netherlands Institute for Neuroscience"
             }
           ],
-          "name": "Surya Ganguli"
-        },
-        "display_name": "Surya Ganguli"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-1625-0034",
+                "type": "orcid"
+              },
+              {
+                "link": "A5008620732",
+                "type": "openalex"
+              }
+            ],
+            "name": "Pieter R. Roelfsema"
+          },
+          "display_name": "Pieter R. Roelfsema"
+        },
+        {
+          "affiliations": [
             {
-              "link": "A5062849992",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Stanford University"
             }
           ],
-          "name": "Benjamin Scellier"
-        },
-        "display_name": "Benjamin Scellier"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Bern"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-6155-4523",
+                "type": "orcid"
+              },
+              {
+                "link": "A5011316863",
+                "type": "openalex"
+              }
+            ],
+            "name": "Daniel Yamins"
+          },
+          "display_name": "Daniel Yamins"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0003-3622-0497",
-              "type": "orcid"
-            },
-            {
-              "link": "A5033106713",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Stanford University"
             }
           ],
-          "name": "Walter Senn"
-        },
-        "display_name": "Walter Senn"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Bristol"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-0082-4822",
+                "type": "orcid"
+              },
+              {
+                "link": "A5049137362",
+                "type": "openalex"
+              }
+            ],
+            "name": "Amelia J. Christensen"
+          },
+          "display_name": "Amelia J. Christensen"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0003-2595-2027",
-              "type": "orcid"
-            },
-            {
-              "link": "A5039460327",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Stanford University"
             }
           ],
-          "name": "Rui Ponte Costa"
-        },
-        "display_name": "Rui Ponte Costa"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Ottawa"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-9264-7551",
+                "type": "orcid"
+              },
+              {
+                "link": "A5056551357",
+                "type": "openalex"
+              }
+            ],
+            "name": "Surya Ganguli"
+          },
+          "display_name": "Surya Ganguli"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-7383-3095",
-              "type": "orcid"
-            },
-            {
-              "link": "A5061468246",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Université de Montréal"
             }
           ],
-          "name": "Richard Naud"
-        },
-        "display_name": "Richard Naud"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Oxford"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "A5062849992",
+                "type": "openalex"
+              }
+            ],
+            "name": "Benjamin Scellier"
+          },
+          "display_name": "Benjamin Scellier"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-9831-8812",
-              "type": "orcid"
-            },
-            {
-              "link": "A5011428379",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Bern"
             }
           ],
-          "name": "Andrew Saxe"
-        },
-        "display_name": "Andrew Saxe"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Pennsylvania"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0003-3622-0497",
+                "type": "orcid"
+              },
+              {
+                "link": "A5033106713",
+                "type": "openalex"
+              }
+            ],
+            "name": "Walter Senn"
+          },
+          "display_name": "Walter Senn"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-8086-0331",
-              "type": "orcid"
-            },
-            {
-              "link": "A5052335069",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Bristol"
             }
           ],
-          "name": "Anna C. Schapiro"
-        },
-        "display_name": "Anna C. Schapiro"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Pennsylvania"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-8408-4499",
-              "type": "orcid"
-            },
-            {
-              "link": "A5072047827",
-              "type": "openalex"
-            }
-          ],
-          "name": "Konrad P. Körding"
+            "links": [
+              {
+                "link": "0000-0003-2595-2027",
+                "type": "orcid"
+              },
+              {
+                "link": "A5039460327",
+                "type": "openalex"
+              }
+            ],
+            "name": "Rui Ponte Costa"
+          },
+          "display_name": "Rui Ponte Costa"
         },
-        "display_name": "Konrad P. Körding"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.1038/s41593-019-0520-2",
-        "type": "doi"
-      },
-      {
-        "link": "2978368159",
-        "type": "mag"
-      },
-      {
-        "link": "31659335",
-        "type": "pubmed"
-      },
-      {
-        "link": "W2978368159",
-        "type": "openalex"
-      },
-      {
-        "link": "http://hdl.handle.net/10044/1/74212",
-        "type": "url"
-      },
-      {
-        "link": "http://hdl.handle.net/20.500.11755/f3a024ff-8e47-4a1e-a4e7-98aaa5536830",
-        "type": "url"
-      },
-      {
-        "link": "http://spiral.imperial.ac.uk/bitstream/10044/1/74212/2/Richards19.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://discovery.ucl.ac.uk/10086844/1/A%20deep%20learning%20framework%20for%20neuroscience%20-%20vFinalv2.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://discovery.ucl.ac.uk/id/eprint/10086844/",
-        "type": "url"
-      },
-      {
-        "link": "https://discovery.ucl.ac.uk/id/eprint/10086844/1/A%20deep%20learning%20framework%20for%20neuroscience%20-%20vFinalv2.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://discovery.ucl.ac.uk/id/eprint/10086844/1/A%20deep%20learning%20framework%20for%20neuroscience%20-%20vFinalv2.pdf",
-        "type": "url"
-      },
-      {
-        "link": "https://doi.org/10.1038/s41593-019-0520-2",
-        "type": "url"
-      },
-      {
-        "link": "https://ora.ox.ac.uk/objects/uuid:874e3cd4-f087-40c5-99fa-f7db3596a2cc",
-        "type": "url"
-      },
-      {
-        "link": "https://ora.ox.ac.uk/objects/uuid:874e3cd4-f087-40c5-99fa-f7db3596a2cc/files/m7e7fe982199b529f68ed1a8e5eda052a",
-        "type": "pdf"
-      },
-      {
-        "link": "https://pubmed.ncbi.nlm.nih.gov/31659335",
-        "type": "url"
-      },
-      {
-        "link": "https://pure.knaw.nl/portal/files/13024854/Richards_et_al.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://pure.knaw.nl/ws/files/13024854/Richards_et_al.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://pure.knaw.nl/ws/files/13024854/Richards_et_al.pdf",
-        "type": "url"
-      },
-      {
-        "link": "https://research-information.bris.ac.uk/en/publications/bd9ca7bd-e421-4a43-aea3-d74de4c89bd0",
-        "type": "url"
-      },
-      {
-        "link": "https://research-information.bris.ac.uk/files/218472922/A_deep_learning_framework_for_neuroscience_vFinal_RC.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://research-information.bris.ac.uk/ws/files/218472922/A_deep_learning_framework_for_neuroscience_vFinal_RC.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://research-information.bris.ac.uk/ws/files/218472922/A_deep_learning_framework_for_neuroscience_vFinal_RC.pdf",
-        "type": "url"
-      },
-      {
-        "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/7115933",
-        "type": "pmcid"
-      },
-      {
-        "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7115933",
-        "type": "open-access"
-      },
-      {
-        "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7115933",
-        "type": "url"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "unknown",
-        "venue": {
-          "aliases": [],
-          "date": "2019-10-28T00:00:00",
-          "date_precision": 3,
-          "links": [
+        {
+          "affiliations": [
             {
-              "link": "https://doi.org/10.1038/s41593-019-0520-2",
-              "type": "url"
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Ottawa"
             }
           ],
-          "name": "Nature Neuroscience",
-          "open": false,
-          "peer_reviewed": false,
-          "publisher": "Nature Portfolio",
-          "series": "",
-          "type": "journal",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-7383-3095",
+                "type": "orcid"
+              },
+              {
+                "link": "A5061468246",
+                "type": "openalex"
+              }
+            ],
+            "name": "Richard Naud"
+          },
+          "display_name": "Richard Naud"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Oxford"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9831-8812",
+                "type": "orcid"
+              },
+              {
+                "link": "A5011428379",
+                "type": "openalex"
+              }
+            ],
+            "name": "Andrew Saxe"
+          },
+          "display_name": "Andrew Saxe"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Pennsylvania"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-8086-0331",
+                "type": "orcid"
+              },
+              {
+                "link": "A5052335069",
+                "type": "openalex"
+              }
+            ],
+            "name": "Anna C. Schapiro"
+          },
+          "display_name": "Anna C. Schapiro"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Pennsylvania"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-8408-4499",
+                "type": "orcid"
+              },
+              {
+                "link": "A5072047827",
+                "type": "openalex"
+              }
+            ],
+            "name": "Konrad P. Körding"
+          },
+          "display_name": "Konrad P. Körding"
         }
-      }
-    ],
-    "title": "A deep learning framework for neuroscience",
-    "topics": [
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Central nervous system"
-      },
-      {
-        "name": "Cognition"
-      },
-      {
-        "name": "Cognitive neuroscience"
-      },
-      {
-        "name": "Cognitive science"
-      },
-      {
-        "name": "Computational neuroscience"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Deep learning"
-      },
-      {
-        "name": "Myelin"
-      },
-      {
-        "name": "Neuroscience"
-      },
-      {
-        "name": "Oligodendrocyte"
-      },
-      {
-        "name": "Perception"
-      },
-      {
-        "name": "Psychology"
-      },
-      {
-        "name": "Systems neuroscience"
-      },
-      {
-        "name": "Variety (cybernetics)"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.1038/s41593-019-0520-2",
+          "type": "doi"
+        },
+        {
+          "link": "2978368159",
+          "type": "mag"
+        },
+        {
+          "link": "31659335",
+          "type": "pubmed"
+        },
+        {
+          "link": "W2978368159",
+          "type": "openalex"
+        },
+        {
+          "link": "http://hdl.handle.net/10044/1/74212",
+          "type": "url"
+        },
+        {
+          "link": "http://hdl.handle.net/20.500.11755/f3a024ff-8e47-4a1e-a4e7-98aaa5536830",
+          "type": "url"
+        },
+        {
+          "link": "http://spiral.imperial.ac.uk/bitstream/10044/1/74212/2/Richards19.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://discovery.ucl.ac.uk/10086844/1/A%20deep%20learning%20framework%20for%20neuroscience%20-%20vFinalv2.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://discovery.ucl.ac.uk/id/eprint/10086844/",
+          "type": "url"
+        },
+        {
+          "link": "https://discovery.ucl.ac.uk/id/eprint/10086844/1/A%20deep%20learning%20framework%20for%20neuroscience%20-%20vFinalv2.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://discovery.ucl.ac.uk/id/eprint/10086844/1/A%20deep%20learning%20framework%20for%20neuroscience%20-%20vFinalv2.pdf",
+          "type": "url"
+        },
+        {
+          "link": "https://doi.org/10.1038/s41593-019-0520-2",
+          "type": "url"
+        },
+        {
+          "link": "https://ora.ox.ac.uk/objects/uuid:874e3cd4-f087-40c5-99fa-f7db3596a2cc",
+          "type": "url"
+        },
+        {
+          "link": "https://ora.ox.ac.uk/objects/uuid:874e3cd4-f087-40c5-99fa-f7db3596a2cc/files/m7e7fe982199b529f68ed1a8e5eda052a",
+          "type": "pdf"
+        },
+        {
+          "link": "https://pubmed.ncbi.nlm.nih.gov/31659335",
+          "type": "url"
+        },
+        {
+          "link": "https://pure.knaw.nl/portal/files/13024854/Richards_et_al.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://pure.knaw.nl/ws/files/13024854/Richards_et_al.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://pure.knaw.nl/ws/files/13024854/Richards_et_al.pdf",
+          "type": "url"
+        },
+        {
+          "link": "https://research-information.bris.ac.uk/en/publications/bd9ca7bd-e421-4a43-aea3-d74de4c89bd0",
+          "type": "url"
+        },
+        {
+          "link": "https://research-information.bris.ac.uk/files/218472922/A_deep_learning_framework_for_neuroscience_vFinal_RC.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://research-information.bris.ac.uk/ws/files/218472922/A_deep_learning_framework_for_neuroscience_vFinal_RC.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://research-information.bris.ac.uk/ws/files/218472922/A_deep_learning_framework_for_neuroscience_vFinal_RC.pdf",
+          "type": "url"
+        },
+        {
+          "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/7115933",
+          "type": "pmcid"
+        },
+        {
+          "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7115933",
+          "type": "open-access"
+        },
+        {
+          "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7115933",
+          "type": "url"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "unknown",
+          "venue": {
+            "aliases": [],
+            "date": "2019-10-28T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://doi.org/10.1038/s41593-019-0520-2",
+                "type": "url"
+              }
+            ],
+            "name": "Nature Neuroscience",
+            "open": false,
+            "peer_reviewed": false,
+            "publisher": "Nature Portfolio",
+            "series": "",
+            "type": "journal",
+            "volume": null
+          }
+        }
+      ],
+      "title": "A deep learning framework for neuroscience",
+      "topics": [
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Central nervous system"
+        },
+        {
+          "name": "Cognition"
+        },
+        {
+          "name": "Cognitive neuroscience"
+        },
+        {
+          "name": "Cognitive science"
+        },
+        {
+          "name": "Computational neuroscience"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Deep learning"
+        },
+        {
+          "name": "Myelin"
+        },
+        {
+          "name": "Neuroscience"
+        },
+        {
+          "name": "Oligodendrocyte"
+        },
+        {
+          "name": "Perception"
+        },
+        {
+          "name": "Psychology"
+        },
+        {
+          "name": "Systems neuroscience"
+        },
+        {
+          "name": "Variety (cybernetics)"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "Data augmentation has recently seen increased interest in NLP due to more work in lowresource domains, new tasks, and the popularity of large-scale neural networks that require large amounts of training data.Despite this recent upsurge, this area is still relatively underexplored, perhaps due to the challenges posed by the discrete nature of language data.In this paper, we present a comprehensive and unifying survey of data augmentation for NLP by summarizing the literature in a structured manner.We first introduce and motivate data augmentation for NLP, and then discuss major methodologically representative approaches.Next, we highlight techniques that are used for popular NLP applications and tasks.We conclude by outlining current challenges and directions for future research.Overall, our paper aims to clarify the landscape of existing literature in data augmentation for NLP and motivate additional work in this area.We also present a GitHub repository with a paper list that will be continuously updated at https://github.com/styfeng/DataAug4NLP.",
-    "authors": [
-      {
-        "affiliations": [
-          {
+    "key": "openalex:W2997410141",
+    "paper": {
+      "abstract": "In human and nonhuman primates, sex differences typically explain much interindividual variability. Male and female behaviors may have played unique roles in the likely coevolution of increasing brain volume and more complex social dynamics. To explore possible divergence in social brain morphology between men and women living in different social environments, we applied probabilistic generative modeling to ~10,000 UK Biobank participants. We observed strong volume effects especially in the limbic system but also in regions of the sensory, intermediate, and higher association networks. Sex-specific brain volume effects in the limbic system were linked to the frequency and intensity of social contact, such as indexed by loneliness, household size, and social support. Across the processing hierarchy of neural networks, different conditions for social interplay may resonate in and be influenced by brain anatomy in sex-dependent ways.",
+      "authors": [
+        {
+          "affiliations": [],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Dartmouth Hospital"
+            "links": [
+              {
+                "link": "A5112444827",
+                "type": "openalex"
+              }
+            ],
+            "name": "Thomas V. Wiecki"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Dartmouth College"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Thomas V. Wiecki"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-2564-8909",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Max Planck Institute of Psychiatry"
             },
             {
-              "link": "A5035399743",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Ludwig-Maximilians-Universität München"
             }
           ],
-          "name": "Soroush Vosoughi"
-        },
-        "display_name": "Soroush Vosoughi"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec Artificial Intelligence Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5027720969",
-              "type": "openalex"
-            }
-          ],
-          "name": "Sarath Chandar"
+            "links": [
+              {
+                "link": "0000-0001-5547-8309",
+                "type": "orcid"
+              },
+              {
+                "link": "A5055311173",
+                "type": "openalex"
+              }
+            ],
+            "name": "Leonhard Schilbach"
+          },
+          "display_name": "Leonhard Schilbach"
         },
-        "display_name": "Sarath Chandar"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Carnegie Mellon University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-3270-7903",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec Artificial Intelligence Institute"
             },
             {
-              "link": "A5060225743",
-              "type": "openalex"
-            }
-          ],
-          "name": "Eduard Hovy"
-        },
-        "display_name": "Eduard Hovy"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Carnegie Mellon University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+              "aliases": [],
+              "category": "unknown",
+              "name": "Montreal Neurological Institute and Hospital"
+            },
             {
-              "link": "A5022752740",
-              "type": "openalex"
-            }
-          ],
-          "name": "Varun Gangal"
-        },
-        "display_name": "Varun Gangal"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Carnegie Mellon University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+              "aliases": [],
+              "category": "wat",
+              "name": "McGill University"
+            },
             {
-              "link": "A5039277252",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "RWTH Aachen University"
             }
           ],
-          "name": "Steven Y. Feng"
-        },
-        "display_name": "Steven Y. Feng"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Carnegie Mellon University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "A5109446354",
+                "type": "openalex"
+              }
+            ],
+            "name": "Danilo Bzdok"
+          },
+          "display_name": "Danilo Bzdok"
+        },
+        {
+          "affiliations": [
             {
-              "link": "A5052956256",
-              "type": "openalex"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Radboud University Medical Center"
+            },
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Wellcome Centre for Human Neuroimaging"
+            },
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "King's College London"
+            },
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Radboud University Nijmegen"
             }
           ],
-          "name": "Teruko Mitamura"
-        },
-        "display_name": "Teruko Mitamura"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Google (United States)"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-5903-203X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5054538140",
+                "type": "openalex"
+              }
+            ],
+            "name": "André F. Marquand"
+          },
+          "display_name": "André F. Marquand"
+        },
+        {
+          "affiliations": [
             {
-              "link": "A5078446912",
-              "type": "openalex"
+              "aliases": [],
+              "category": "unknown",
+              "name": "University Hospital Cologne"
+            },
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Forschungszentrum Jülich"
             }
           ],
-          "name": "Jason Wei"
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-5891-5831",
+                "type": "orcid"
+              },
+              {
+                "link": "A5040807850",
+                "type": "openalex"
+              }
+            ],
+            "name": "Kai Vogeley"
+          },
+          "display_name": "Kai Vogeley"
         },
-        "display_name": "Jason Wei"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.18653/v1/2021.findings-acl.84",
-        "type": "doi"
-      },
-      {
-        "link": "3174828871",
-        "type": "mag"
-      },
-      {
-        "link": "W3174828871",
-        "type": "openalex"
-      },
-      {
-        "link": "https://aclanthology.org/2021.findings-acl.84.pdf",
-        "type": "open-access"
-      },
-      {
-        "link": "https://aclanthology.org/2021.findings-acl.84.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://arxiv.org/abs/2105.03075",
-        "type": "url"
-      },
-      {
-        "link": "https://arxiv.org/pdf/2105.03075",
-        "type": "pdf"
-      },
-      {
-        "link": "https://doi.org/10.18653/v1/2021.findings-acl.84",
-        "type": "url"
-      }
-    ],
-    "releases": [],
-    "title": "A Survey of Data Augmentation Approaches for NLP",
-    "topics": [
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Computer network"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Data science"
-      },
-      {
-        "name": "Information retrieval"
-      },
-      {
-        "name": "Labeled data"
-      },
-      {
-        "name": "Machine learning"
-      },
-      {
-        "name": "Natural language processing"
-      },
-      {
-        "name": "Physics"
-      },
-      {
-        "name": "Popularity"
-      },
-      {
-        "name": "Psychology"
-      },
-      {
-        "name": "Quantum mechanics"
-      },
-      {
-        "name": "Resource (disambiguation)"
-      },
-      {
-        "name": "Scale (ratio)"
-      },
-      {
-        "name": "Social psychology"
-      }
-    ]
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Heinrich Heine University Düsseldorf"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-0358-9020",
+                "type": "orcid"
+              },
+              {
+                "link": "A5025250457",
+                "type": "openalex"
+              }
+            ],
+            "name": "Tobias Kalenscher"
+          },
+          "display_name": "Tobias Kalenscher"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "RWTH Aachen University"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-3829-787X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5037659482",
+                "type": "openalex"
+              }
+            ],
+            "name": "Hannah Kiesow"
+          },
+          "display_name": "Hannah Kiesow"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Oxford"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-9982-9702",
+                "type": "orcid"
+              },
+              {
+                "link": "A5064827570",
+                "type": "openalex"
+              }
+            ],
+            "name": "R. I. M. Dunbar"
+          },
+          "display_name": "R. I. M. Dunbar"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "University of Pennsylvania"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-6495-9040",
+                "type": "orcid"
+              },
+              {
+                "link": "A5004871576",
+                "type": "openalex"
+              }
+            ],
+            "name": "Joseph W. Kable"
+          },
+          "display_name": "Joseph W. Kable"
+        }
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.1126/sciadv.aaz1170",
+          "type": "doi"
+        },
+        {
+          "link": "2997410141",
+          "type": "mag"
+        },
+        {
+          "link": "32206722",
+          "type": "pubmed"
+        },
+        {
+          "link": "W2997410141",
+          "type": "openalex"
+        },
+        {
+          "link": "http://hdl.handle.net/2066/217759",
+          "type": "url"
+        },
+        {
+          "link": "https://doi.org/10.1126/sciadv.aaz1170",
+          "type": "open-access"
+        },
+        {
+          "link": "https://doi.org/10.1126/sciadv.aaz1170",
+          "type": "url"
+        },
+        {
+          "link": "https://europepmc.org/articles/pmc7080454",
+          "type": "url"
+        },
+        {
+          "link": "https://europepmc.org/articles/pmc7080454?pdf=render",
+          "type": "pdf"
+        },
+        {
+          "link": "https://hal.archives-ouvertes.fr/hal-02511540",
+          "type": "url"
+        },
+        {
+          "link": "https://hal.archives-ouvertes.fr/hal-02511540/document",
+          "type": "pdf"
+        },
+        {
+          "link": "https://hal.archives-ouvertes.fr/hal-02511540/document",
+          "type": "url"
+        },
+        {
+          "link": "https://hal.archives-ouvertes.fr/hal-02511540/file/social_sexdiff_R1_with_figures_final_and_SOM.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://hal.archives-ouvertes.fr/hal-02511540/file/social_sexdiff_R1_with_figures_final_and_SOM.pdf",
+          "type": "url"
+        },
+        {
+          "link": "https://hal.science/hal-02511540",
+          "type": "url"
+        },
+        {
+          "link": "https://hal.science/hal-02511540/document",
+          "type": "pdf"
+        },
+        {
+          "link": "https://pubmed.ncbi.nlm.nih.gov/32206722",
+          "type": "url"
+        },
+        {
+          "link": "https://repository.ubn.ru.nl//bitstream/handle/2066/217759/217759.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://repository.ubn.ru.nl//bitstream/handle/2066/217759/217759.pdf",
+          "type": "url"
+        },
+        {
+          "link": "https://repository.ubn.ru.nl/bitstream/handle/2066/217759/1/217759.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/7080454",
+          "type": "pmcid"
+        },
+        {
+          "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7080454",
+          "type": "url"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "published",
+          "venue": {
+            "aliases": [],
+            "date": "2020-03-18T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://doi.org/10.1126/sciadv.aaz1170",
+                "type": "url"
+              }
+            ],
+            "name": "Science Advances",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": "American Association for the Advancement of Science",
+            "series": "",
+            "type": "journal",
+            "volume": null
+          }
+        }
+      ],
+      "title": "10,000 social brains: Sex differentiation in human brain anatomy",
+      "topics": [
+        {
+          "name": "Biology"
+        },
+        {
+          "name": "Brain anatomy"
+        },
+        {
+          "name": "Brain morphometry"
+        },
+        {
+          "name": "Brain size"
+        },
+        {
+          "name": "Central nervous system"
+        },
+        {
+          "name": "Developmental psychology"
+        },
+        {
+          "name": "Limbic system"
+        },
+        {
+          "name": "Loneliness"
+        },
+        {
+          "name": "Magnetic resonance imaging"
+        },
+        {
+          "name": "Medicine"
+        },
+        {
+          "name": "Neuroscience"
+        },
+        {
+          "name": "Psychology"
+        },
+        {
+          "name": "Radiology"
+        },
+        {
+          "name": "Social psychology"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "In human and nonhuman primates, sex differences typically explain much interindividual variability. Male and female behaviors may have played unique roles in the likely coevolution of increasing brain volume and more complex social dynamics. To explore possible divergence in social brain morphology between men and women living in different social environments, we applied probabilistic generative modeling to ~10,000 UK Biobank participants. We observed strong volume effects especially in the limbic system but also in regions of the sensory, intermediate, and higher association networks. Sex-specific brain volume effects in the limbic system were linked to the frequency and intensity of social contact, such as indexed by loneliness, household size, and social support. Across the processing hierarchy of neural networks, different conditions for social interplay may resonate in and be influenced by brain anatomy in sex-dependent ways.",
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "openalex:W3127471220",
+    "paper": {
+      "abstract": "Ultrasound Localization Microscopy (ULM) can resolve the microvascular bed down to a few micrometers. To achieve such performance, microbubble contrast agents must perfuse the entire microvascular network. Microbubbles are then located individually and tracked over time to sample individual vessels, typically over hundreds of thousands of images. To overcome the fundamental limit of diffraction and achieve a dense reconstruction of the network, low microbubble concentrations must be used, which leads to acquisitions lasting several minutes. Conventional processing pipelines are currently unable to deal with interference from multiple nearby microbubbles, further reducing achievable concentrations. This work overcomes this problem by proposing a Deep Learning approach to recover dense vascular networks from ultrasound acquisitions with high microbubble concentrations. A realistic mouse brain microvascular network, segmented from 2-photon microscopy, was used to train a three-dimensional convolutional neural network (CNN) based on a V-net architecture. Ultrasound data sets from multiple microbubbles flowing through the microvascular network were simulated and used as ground truth to train the 3D CNN to track microbubbles. The 3D-CNN approach was validated in silico using a subset of the data and in vivo in a rat brain. In silico, the CNN reconstructed vascular networks with higher precision (81%) than a conventional ULM framework (70%). In vivo, the CNN could resolve micro vessels as small as 10 μm with an improvement in resolution when compared against a conventional approach.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "A5112444827",
-              "type": "openalex"
-            }
-          ],
-          "name": "Thomas V. Wiecki"
-        },
-        "display_name": "Thomas V. Wiecki"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Max Planck Institute of Psychiatry"
-          },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Ludwig-Maximilians-Universität München"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-5547-8309",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "CentraleSupélec"
             },
             {
-              "link": "A5055311173",
-              "type": "openalex"
-            }
-          ],
-          "name": "Leonhard Schilbach"
-        },
-        "display_name": "Leonhard Schilbach"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec Artificial Intelligence Institute"
-          },
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Montreal Neurological Institute and Hospital"
-          },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "McGill University"
-          },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "RWTH Aachen University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "A5109446354",
-              "type": "openalex"
-            }
-          ],
-          "name": "Danilo Bzdok"
-        },
-        "display_name": "Danilo Bzdok"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Radboud University Medical Center"
-          },
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Wellcome Centre for Human Neuroimaging"
-          },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "King's College London"
-          },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Radboud University Nijmegen"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-5903-203X",
-              "type": "orcid"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             },
             {
-              "link": "A5054538140",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Université Paris-Saclay"
             }
           ],
-          "name": "André F. Marquand"
-        },
-        "display_name": "André F. Marquand"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "University Hospital Cologne"
+            "links": [
+              {
+                "link": "0000-0001-5536-8839",
+                "type": "orcid"
+              },
+              {
+                "link": "A5024025086",
+                "type": "openalex"
+              }
+            ],
+            "name": "Léo Milecki"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Forschungszentrum Jülich"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Léo Milecki"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-5891-5831",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec Artificial Intelligence Institute"
             },
             {
-              "link": "A5040807850",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "Kai Vogeley"
-        },
-        "display_name": "Kai Vogeley"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Heinrich Heine University Düsseldorf"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0001-6982-062X",
+                "type": "orcid"
+              },
+              {
+                "link": "A5011602062",
+                "type": "openalex"
+              }
+            ],
+            "name": "Maxime Gasse"
+          },
+          "display_name": "Maxime Gasse"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-0358-9020",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Montreal Heart Institute"
             },
             {
-              "link": "A5025250457",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "Tobias Kalenscher"
-        },
-        "display_name": "Tobias Kalenscher"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "RWTH Aachen University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0003-2057-2199",
+                "type": "orcid"
+              },
+              {
+                "link": "A5063219198",
+                "type": "openalex"
+              }
+            ],
+            "name": "Jean Provost"
+          },
+          "display_name": "Jean Provost"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-3829-787X",
-              "type": "orcid"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Montreal Heart Institute"
             },
             {
-              "link": "A5037659482",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "Hannah Kiesow"
-        },
-        "display_name": "Hannah Kiesow"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Oxford"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0003-3699-1283",
+                "type": "orcid"
+              },
+              {
+                "link": "A5075040052",
+                "type": "openalex"
+              }
+            ],
+            "name": "Frédéric Lesage"
+          },
+          "display_name": "Frédéric Lesage"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-9982-9702",
-              "type": "orcid"
-            },
-            {
-              "link": "A5064827570",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "R. I. M. Dunbar"
-        },
-        "display_name": "R. I. M. Dunbar"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "University of Pennsylvania"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-6495-9040",
-              "type": "orcid"
-            },
-            {
-              "link": "A5004871576",
-              "type": "openalex"
-            }
-          ],
-          "name": "Joseph W. Kable"
+            "links": [
+              {
+                "link": "0000-0001-6797-0448",
+                "type": "orcid"
+              },
+              {
+                "link": "A5079507190",
+                "type": "openalex"
+              }
+            ],
+            "name": "Rafat Damseh"
+          },
+          "display_name": "Rafat Damseh"
         },
-        "display_name": "Joseph W. Kable"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.1126/sciadv.aaz1170",
-        "type": "doi"
-      },
-      {
-        "link": "2997410141",
-        "type": "mag"
-      },
-      {
-        "link": "32206722",
-        "type": "pubmed"
-      },
-      {
-        "link": "W2997410141",
-        "type": "openalex"
-      },
-      {
-        "link": "http://hdl.handle.net/2066/217759",
-        "type": "url"
-      },
-      {
-        "link": "https://doi.org/10.1126/sciadv.aaz1170",
-        "type": "open-access"
-      },
-      {
-        "link": "https://doi.org/10.1126/sciadv.aaz1170",
-        "type": "url"
-      },
-      {
-        "link": "https://europepmc.org/articles/pmc7080454",
-        "type": "url"
-      },
-      {
-        "link": "https://europepmc.org/articles/pmc7080454?pdf=render",
-        "type": "pdf"
-      },
-      {
-        "link": "https://hal.archives-ouvertes.fr/hal-02511540",
-        "type": "url"
-      },
-      {
-        "link": "https://hal.archives-ouvertes.fr/hal-02511540/document",
-        "type": "pdf"
-      },
-      {
-        "link": "https://hal.archives-ouvertes.fr/hal-02511540/document",
-        "type": "url"
-      },
-      {
-        "link": "https://hal.archives-ouvertes.fr/hal-02511540/file/social_sexdiff_R1_with_figures_final_and_SOM.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://hal.archives-ouvertes.fr/hal-02511540/file/social_sexdiff_R1_with_figures_final_and_SOM.pdf",
-        "type": "url"
-      },
-      {
-        "link": "https://hal.science/hal-02511540",
-        "type": "url"
-      },
-      {
-        "link": "https://hal.science/hal-02511540/document",
-        "type": "pdf"
-      },
-      {
-        "link": "https://pubmed.ncbi.nlm.nih.gov/32206722",
-        "type": "url"
-      },
-      {
-        "link": "https://repository.ubn.ru.nl//bitstream/handle/2066/217759/217759.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://repository.ubn.ru.nl//bitstream/handle/2066/217759/217759.pdf",
-        "type": "url"
-      },
-      {
-        "link": "https://repository.ubn.ru.nl/bitstream/handle/2066/217759/1/217759.pdf",
-        "type": "pdf"
-      },
-      {
-        "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/7080454",
-        "type": "pmcid"
-      },
-      {
-        "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7080454",
-        "type": "url"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "published",
-        "venue": {
-          "aliases": [],
-          "date": "2020-03-18T00:00:00",
-          "date_precision": 3,
-          "links": [
+        {
+          "affiliations": [
             {
-              "link": "https://doi.org/10.1126/sciadv.aaz1170",
-              "type": "url"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "Science Advances",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": "American Association for the Advancement of Science",
-          "series": "",
-          "type": "journal",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0001-9534-1796",
+                "type": "orcid"
+              },
+              {
+                "link": "A5018935385",
+                "type": "openalex"
+              }
+            ],
+            "name": "Hatim Belgharbi"
+          },
+          "display_name": "Hatim Belgharbi"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-1360-0692",
+                "type": "orcid"
+              },
+              {
+                "link": "A5066557182",
+                "type": "openalex"
+              }
+            ],
+            "name": "Chloé Bourquin"
+          },
+          "display_name": "Chloé Bourquin"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0002-4179-9264",
+                "type": "orcid"
+              },
+              {
+                "link": "A5070220593",
+                "type": "openalex"
+              }
+            ],
+            "name": "Jonathan Porée"
+          },
+          "display_name": "Jonathan Porée"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "0000-0003-0306-6729",
+                "type": "orcid"
+              },
+              {
+                "link": "A5025218490",
+                "type": "openalex"
+              }
+            ],
+            "name": "Patrick Delafontaine-Martel"
+          },
+          "display_name": "Patrick Delafontaine-Martel"
         }
-      }
-    ],
-    "title": "10,000 social brains: Sex differentiation in human brain anatomy",
-    "topics": [
-      {
-        "name": "Biology"
-      },
-      {
-        "name": "Brain anatomy"
-      },
-      {
-        "name": "Brain morphometry"
-      },
-      {
-        "name": "Brain size"
-      },
-      {
-        "name": "Central nervous system"
-      },
-      {
-        "name": "Developmental psychology"
-      },
-      {
-        "name": "Limbic system"
-      },
-      {
-        "name": "Loneliness"
-      },
-      {
-        "name": "Magnetic resonance imaging"
-      },
-      {
-        "name": "Medicine"
-      },
-      {
-        "name": "Neuroscience"
-      },
-      {
-        "name": "Psychology"
-      },
-      {
-        "name": "Radiology"
-      },
-      {
-        "name": "Social psychology"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.1109/tmi.2021.3056951",
+          "type": "doi"
+        },
+        {
+          "link": "3127471220",
+          "type": "mag"
+        },
+        {
+          "link": "33534705",
+          "type": "pubmed"
+        },
+        {
+          "link": "W3127471220",
+          "type": "openalex"
+        },
+        {
+          "link": "https://api.datacite.org/dois/10.48550/arxiv.2310.08143",
+          "type": "url"
+        },
+        {
+          "link": "https://arxiv.org/abs/2310.08143",
+          "type": "url"
+        },
+        {
+          "link": "https://arxiv.org/pdf/2310.08143",
+          "type": "open-access"
+        },
+        {
+          "link": "https://arxiv.org/pdf/2310.08143",
+          "type": "pdf"
+        },
+        {
+          "link": "https://doi.org/10.1109/tmi.2021.3056951",
+          "type": "url"
+        },
+        {
+          "link": "https://pubmed.ncbi.nlm.nih.gov/33534705",
+          "type": "url"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "unknown",
+          "venue": {
+            "aliases": [],
+            "date": "2021-02-03T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://doi.org/10.1109/tmi.2021.3056951",
+                "type": "url"
+              }
+            ],
+            "name": "IEEE Transactions on Medical Imaging",
+            "open": false,
+            "peer_reviewed": false,
+            "publisher": "Institute of Electrical and Electronics Engineers",
+            "series": "",
+            "type": "journal",
+            "volume": null
+          }
+        }
+      ],
+      "title": "A Deep Learning Framework for Spatiotemporal Ultrasound Localization Microscopy",
+      "topics": [
+        {
+          "name": "Acoustics"
+        },
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Biochemistry"
+        },
+        {
+          "name": "Biomedical engineering"
+        },
+        {
+          "name": "Chemistry"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Computer vision"
+        },
+        {
+          "name": "Convolutional neural network"
+        },
+        {
+          "name": "Deep learning"
+        },
+        {
+          "name": "Gene"
+        },
+        {
+          "name": "Ground truth"
+        },
+        {
+          "name": "In silico"
+        },
+        {
+          "name": "Medicine"
+        },
+        {
+          "name": "Microbubbles"
+        },
+        {
+          "name": "Microscopy"
+        },
+        {
+          "name": "Optics"
+        },
+        {
+          "name": "Pattern recognition (psychology)"
+        },
+        {
+          "name": "Physics"
+        },
+        {
+          "name": "Ultrasound"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "Recurrent neural networks are effective models to process sequences. However, they are unable to learn long-term dependencies because of their inherent sequential nature. As a solution, Vaswani et al. introduced the Transformer, a model solely based on the attention mechanism that is able to relate any two positions of the input sequence, hence modelling arbitrary long dependencies. The Transformer has improved the state-of-the-art across numerous sequence modelling tasks. However, its effectiveness comes at the expense of a quadratic computational and memory complexity with respect to the sequence length, hindering its adoption. Fortunately, the deep learning community has always been interested in improving the models’ efficiency, leading to a plethora of solutions such as parameter sharing, pruning, mixed-precision, and knowledge distillation. Recently, researchers have directly addressed the Transformer’s limitation by designing lower-complexity alternatives such as the Longformer, Reformer, Linformer, and Performer. However, due to the wide range of solutions, it has become challenging for researchers and practitioners to determine which methods to apply in practice to meet the desired tradeoff between capacity, computation, and memory. This survey addresses this issue by investigating popular approaches to make Transformers faster and lighter and by providing a comprehensive explanation of the methods’ strengths, limitations, and underlying assumptions.",
-    "authors": [
-      {
-        "affiliations": [
-          {
+    "key": "openalex:W3145602566",
+    "paper": {
+      "abstract": "Recurrent neural networks are effective models to process sequences. However, they are unable to learn long-term dependencies because of their inherent sequential nature. As a solution, Vaswani et al. introduced the Transformer, a model solely based on the attention mechanism that is able to relate any two positions of the input sequence, hence modelling arbitrary long dependencies. The Transformer has improved the state-of-the-art across numerous sequence modelling tasks. However, its effectiveness comes at the expense of a quadratic computational and memory complexity with respect to the sequence length, hindering its adoption. Fortunately, the deep learning community has always been interested in improving the models’ efficiency, leading to a plethora of solutions such as parameter sharing, pruning, mixed-precision, and knowledge distillation. Recently, researchers have directly addressed the Transformer’s limitation by designing lower-complexity alternatives such as the Longformer, Reformer, Linformer, and Performer. However, due to the wide range of solutions, it has become challenging for researchers and practitioners to determine which methods to apply in practice to meet the desired tradeoff between capacity, computation, and memory. This survey addresses this issue by investigating popular approaches to make Transformers faster and lighter and by providing a comprehensive explanation of the methods’ strengths, limitations, and underlying assumptions.",
+      "authors": [
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec Artificial Intelligence Institute"
+            }
+          ],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec Artificial Intelligence Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0009-0004-7590-7421",
+                "type": "orcid"
+              },
+              {
+                "link": "A5045326673",
+                "type": "openalex"
+              }
+            ],
+            "name": "Gaétan Marceau Caron"
+          },
+          "display_name": "Gaétan Marceau Caron"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0009-0004-7590-7421",
-              "type": "orcid"
-            },
-            {
-              "link": "A5045326673",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "Gaétan Marceau Caron"
-        },
-        "display_name": "Gaétan Marceau Caron"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "0000-0002-1036-0777",
+                "type": "orcid"
+              },
+              {
+                "link": "A5065944848",
+                "type": "openalex"
+              }
+            ],
+            "name": "Quentin Fournier"
+          },
+          "display_name": "Quentin Fournier"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0002-1036-0777",
-              "type": "orcid"
-            },
-            {
-              "link": "A5065944848",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Polytechnique Montréal"
             }
           ],
-          "name": "Quentin Fournier"
-        },
-        "display_name": "Quentin Fournier"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-9876-2921",
-              "type": "orcid"
-            },
-            {
-              "link": "A5038720756",
-              "type": "openalex"
-            }
-          ],
-          "name": "Daniel Aloise"
-        },
-        "display_name": "Daniel Aloise"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.1145/3586074",
-        "type": "doi"
-      },
-      {
-        "link": "3145602566",
-        "type": "mag"
-      },
-      {
-        "link": "W3145602566",
-        "type": "openalex"
-      },
-      {
-        "link": "http://arxiv.org/abs/2103.14636",
-        "type": "url"
-      },
-      {
-        "link": "http://arxiv.org/pdf/2103.14636",
-        "type": "pdf"
-      },
-      {
-        "link": "https://arxiv.org/abs/2103.14636",
-        "type": "url"
-      },
-      {
-        "link": "https://arxiv.org/pdf/2103.14636",
-        "type": "pdf"
-      },
-      {
-        "link": "https://doi.org/10.1145/3586074",
-        "type": "open-access"
-      },
-      {
-        "link": "https://doi.org/10.1145/3586074",
-        "type": "url"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "published",
-        "venue": {
-          "aliases": [],
-          "date": "2023-03-04T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "https://doi.org/10.1145/3586074",
-              "type": "url"
-            }
-          ],
-          "name": "ACM Computing Surveys",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": "Association for Computing Machinery",
-          "series": "",
-          "type": "journal",
-          "volume": null
+            "links": [
+              {
+                "link": "0000-0002-9876-2921",
+                "type": "orcid"
+              },
+              {
+                "link": "A5038720756",
+                "type": "openalex"
+              }
+            ],
+            "name": "Daniel Aloise"
+          },
+          "display_name": "Daniel Aloise"
         }
-      }
-    ],
-    "title": "A Practical Survey on Faster and Lighter Transformers",
-    "topics": [
-      {
-        "name": "Algorithm"
-      },
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Computation"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Machine learning"
-      },
-      {
-        "name": "Physics"
-      },
-      {
-        "name": "Quantum mechanics"
-      },
-      {
-        "name": "Transformer"
-      },
-      {
-        "name": "Voltage"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.1145/3586074",
+          "type": "doi"
+        },
+        {
+          "link": "3145602566",
+          "type": "mag"
+        },
+        {
+          "link": "W3145602566",
+          "type": "openalex"
+        },
+        {
+          "link": "http://arxiv.org/abs/2103.14636",
+          "type": "url"
+        },
+        {
+          "link": "http://arxiv.org/pdf/2103.14636",
+          "type": "pdf"
+        },
+        {
+          "link": "https://arxiv.org/abs/2103.14636",
+          "type": "url"
+        },
+        {
+          "link": "https://arxiv.org/pdf/2103.14636",
+          "type": "pdf"
+        },
+        {
+          "link": "https://doi.org/10.1145/3586074",
+          "type": "open-access"
+        },
+        {
+          "link": "https://doi.org/10.1145/3586074",
+          "type": "url"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "published",
+          "venue": {
+            "aliases": [],
+            "date": "2023-03-04T00:00:00",
+            "date_precision": 3,
+            "links": [
+              {
+                "link": "https://doi.org/10.1145/3586074",
+                "type": "url"
+              }
+            ],
+            "name": "ACM Computing Surveys",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": "Association for Computing Machinery",
+            "series": "",
+            "type": "journal",
+            "volume": null
+          }
+        }
+      ],
+      "title": "A Practical Survey on Faster and Lighter Transformers",
+      "topics": [
+        {
+          "name": "Algorithm"
+        },
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Computation"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Machine learning"
+        },
+        {
+          "name": "Physics"
+        },
+        {
+          "name": "Quantum mechanics"
+        },
+        {
+          "name": "Transformer"
+        },
+        {
+          "name": "Voltage"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "Ultrasound Localization Microscopy (ULM) can resolve the microvascular bed down to a few micrometers. To achieve such performance, microbubble contrast agents must perfuse the entire microvascular network. Microbubbles are then located individually and tracked over time to sample individual vessels, typically over hundreds of thousands of images. To overcome the fundamental limit of diffraction and achieve a dense reconstruction of the network, low microbubble concentrations must be used, which leads to acquisitions lasting several minutes. Conventional processing pipelines are currently unable to deal with interference from multiple nearby microbubbles, further reducing achievable concentrations. This work overcomes this problem by proposing a Deep Learning approach to recover dense vascular networks from ultrasound acquisitions with high microbubble concentrations. A realistic mouse brain microvascular network, segmented from 2-photon microscopy, was used to train a three-dimensional convolutional neural network (CNN) based on a V-net architecture. Ultrasound data sets from multiple microbubbles flowing through the microvascular network were simulated and used as ground truth to train the 3D CNN to track microbubbles. The 3D-CNN approach was validated in silico using a subset of the data and in vivo in a rat brain. In silico, the CNN reconstructed vascular networks with higher precision (81%) than a conventional ULM framework (70%). In vivo, the CNN could resolve micro vessels as small as 10 μm with an improvement in resolution when compared against a conventional approach.",
-    "authors": [
-      {
-        "affiliations": [
-          {
+    "key": "openalex:W3174828871",
+    "paper": {
+      "abstract": "Data augmentation has recently seen increased interest in NLP due to more work in lowresource domains, new tasks, and the popularity of large-scale neural networks that require large amounts of training data.Despite this recent upsurge, this area is still relatively underexplored, perhaps due to the challenges posed by the discrete nature of language data.In this paper, we present a comprehensive and unifying survey of data augmentation for NLP by summarizing the literature in a structured manner.We first introduce and motivate data augmentation for NLP, and then discuss major methodologically representative approaches.Next, we highlight techniques that are used for popular NLP applications and tasks.We conclude by outlining current challenges and directions for future research.Overall, our paper aims to clarify the landscape of existing literature in data augmentation for NLP and motivate additional work in this area.We also present a GitHub repository with a paper list that will be continuously updated at https://github.com/styfeng/DataAug4NLP.",
+      "authors": [
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Dartmouth Hospital"
+            },
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Dartmouth College"
+            }
+          ],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "CentraleSupélec"
+            "links": [
+              {
+                "link": "0000-0002-2564-8909",
+                "type": "orcid"
+              },
+              {
+                "link": "A5035399743",
+                "type": "openalex"
+              }
+            ],
+            "name": "Soroush Vosoughi"
           },
-          {
+          "display_name": "Soroush Vosoughi"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec Artificial Intelligence Institute"
+            }
+          ],
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
+            "links": [
+              {
+                "link": "A5027720969",
+                "type": "openalex"
+              }
+            ],
+            "name": "Sarath Chandar"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Université Paris-Saclay"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Sarath Chandar"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-5536-8839",
-              "type": "orcid"
-            },
-            {
-              "link": "A5024025086",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Carnegie Mellon University"
             }
           ],
-          "name": "Léo Milecki"
-        },
-        "display_name": "Léo Milecki"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec Artificial Intelligence Institute"
+            "links": [
+              {
+                "link": "0000-0002-3270-7903",
+                "type": "orcid"
+              },
+              {
+                "link": "A5060225743",
+                "type": "openalex"
+              }
+            ],
+            "name": "Eduard Hovy"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Eduard Hovy"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-6982-062X",
-              "type": "orcid"
-            },
-            {
-              "link": "A5011602062",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Carnegie Mellon University"
             }
           ],
-          "name": "Maxime Gasse"
-        },
-        "display_name": "Maxime Gasse"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Montreal Heart Institute"
+            "links": [
+              {
+                "link": "A5022752740",
+                "type": "openalex"
+              }
+            ],
+            "name": "Varun Gangal"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+          "display_name": "Varun Gangal"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0003-2057-2199",
-              "type": "orcid"
-            },
-            {
-              "link": "A5063219198",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Carnegie Mellon University"
             }
           ],
-          "name": "Jean Provost"
-        },
-        "display_name": "Jean Provost"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Montreal Heart Institute"
+            "links": [
+              {
+                "link": "A5039277252",
+                "type": "openalex"
+              }
+            ],
+            "name": "Steven Y. Feng"
           },
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0003-3699-1283",
-              "type": "orcid"
-            },
-            {
-              "link": "A5075040052",
-              "type": "openalex"
-            }
-          ],
-          "name": "Frédéric Lesage"
+          "display_name": "Steven Y. Feng"
         },
-        "display_name": "Frédéric Lesage"
-      },
-      {
-        "affiliations": [
-          {
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "wat",
+              "name": "Carnegie Mellon University"
+            }
+          ],
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "A5052956256",
+                "type": "openalex"
+              }
+            ],
+            "name": "Teruko Mitamura"
+          },
+          "display_name": "Teruko Mitamura"
+        },
+        {
+          "affiliations": [
             {
-              "link": "0000-0001-6797-0448",
-              "type": "orcid"
-            },
-            {
-              "link": "A5079507190",
-              "type": "openalex"
+              "aliases": [],
+              "category": "wat",
+              "name": "Google (United States)"
             }
           ],
-          "name": "Rafat Damseh"
-        },
-        "display_name": "Rafat Damseh"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0001-9534-1796",
-              "type": "orcid"
-            },
-            {
-              "link": "A5018935385",
-              "type": "openalex"
-            }
-          ],
-          "name": "Hatim Belgharbi"
-        },
-        "display_name": "Hatim Belgharbi"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-1360-0692",
-              "type": "orcid"
-            },
-            {
-              "link": "A5066557182",
-              "type": "openalex"
-            }
-          ],
-          "name": "Chloé Bourquin"
-        },
-        "display_name": "Chloé Bourquin"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0002-4179-9264",
-              "type": "orcid"
-            },
-            {
-              "link": "A5070220593",
-              "type": "openalex"
-            }
-          ],
-          "name": "Jonathan Porée"
-        },
-        "display_name": "Jonathan Porée"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "wat",
-            "name": "Polytechnique Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "0000-0003-0306-6729",
-              "type": "orcid"
-            },
-            {
-              "link": "A5025218490",
-              "type": "openalex"
-            }
-          ],
-          "name": "Patrick Delafontaine-Martel"
-        },
-        "display_name": "Patrick Delafontaine-Martel"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "10.1109/tmi.2021.3056951",
-        "type": "doi"
-      },
-      {
-        "link": "3127471220",
-        "type": "mag"
-      },
-      {
-        "link": "33534705",
-        "type": "pubmed"
-      },
-      {
-        "link": "W3127471220",
-        "type": "openalex"
-      },
-      {
-        "link": "https://api.datacite.org/dois/10.48550/arxiv.2310.08143",
-        "type": "url"
-      },
-      {
-        "link": "https://arxiv.org/abs/2310.08143",
-        "type": "url"
-      },
-      {
-        "link": "https://arxiv.org/pdf/2310.08143",
-        "type": "open-access"
-      },
-      {
-        "link": "https://arxiv.org/pdf/2310.08143",
-        "type": "pdf"
-      },
-      {
-        "link": "https://doi.org/10.1109/tmi.2021.3056951",
-        "type": "url"
-      },
-      {
-        "link": "https://pubmed.ncbi.nlm.nih.gov/33534705",
-        "type": "url"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "unknown",
-        "venue": {
-          "aliases": [],
-          "date": "2021-02-03T00:00:00",
-          "date_precision": 3,
-          "links": [
-            {
-              "link": "https://doi.org/10.1109/tmi.2021.3056951",
-              "type": "url"
-            }
-          ],
-          "name": "IEEE Transactions on Medical Imaging",
-          "open": false,
-          "peer_reviewed": false,
-          "publisher": "Institute of Electrical and Electronics Engineers",
-          "series": "",
-          "type": "journal",
-          "volume": null
+            "links": [
+              {
+                "link": "A5078446912",
+                "type": "openalex"
+              }
+            ],
+            "name": "Jason Wei"
+          },
+          "display_name": "Jason Wei"
         }
-      }
-    ],
-    "title": "A Deep Learning Framework for Spatiotemporal Ultrasound Localization Microscopy",
-    "topics": [
-      {
-        "name": "Acoustics"
-      },
-      {
-        "name": "Artificial intelligence"
-      },
-      {
-        "name": "Biochemistry"
-      },
-      {
-        "name": "Biomedical engineering"
-      },
-      {
-        "name": "Chemistry"
-      },
-      {
-        "name": "Computer science"
-      },
-      {
-        "name": "Computer vision"
-      },
-      {
-        "name": "Convolutional neural network"
-      },
-      {
-        "name": "Deep learning"
-      },
-      {
-        "name": "Gene"
-      },
-      {
-        "name": "Ground truth"
-      },
-      {
-        "name": "In silico"
-      },
-      {
-        "name": "Medicine"
-      },
-      {
-        "name": "Microbubbles"
-      },
-      {
-        "name": "Microscopy"
-      },
-      {
-        "name": "Optics"
-      },
-      {
-        "name": "Pattern recognition (psychology)"
-      },
-      {
-        "name": "Physics"
-      },
-      {
-        "name": "Ultrasound"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "10.18653/v1/2021.findings-acl.84",
+          "type": "doi"
+        },
+        {
+          "link": "3174828871",
+          "type": "mag"
+        },
+        {
+          "link": "W3174828871",
+          "type": "openalex"
+        },
+        {
+          "link": "https://aclanthology.org/2021.findings-acl.84.pdf",
+          "type": "open-access"
+        },
+        {
+          "link": "https://aclanthology.org/2021.findings-acl.84.pdf",
+          "type": "pdf"
+        },
+        {
+          "link": "https://arxiv.org/abs/2105.03075",
+          "type": "url"
+        },
+        {
+          "link": "https://arxiv.org/pdf/2105.03075",
+          "type": "pdf"
+        },
+        {
+          "link": "https://doi.org/10.18653/v1/2021.findings-acl.84",
+          "type": "url"
+        }
+      ],
+      "releases": [],
+      "title": "A Survey of Data Augmentation Approaches for NLP",
+      "topics": [
+        {
+          "name": "Artificial intelligence"
+        },
+        {
+          "name": "Computer network"
+        },
+        {
+          "name": "Computer science"
+        },
+        {
+          "name": "Data science"
+        },
+        {
+          "name": "Information retrieval"
+        },
+        {
+          "name": "Labeled data"
+        },
+        {
+          "name": "Machine learning"
+        },
+        {
+          "name": "Natural language processing"
+        },
+        {
+          "name": "Physics"
+        },
+        {
+          "name": "Popularity"
+        },
+        {
+          "name": "Psychology"
+        },
+        {
+          "name": "Quantum mechanics"
+        },
+        {
+          "name": "Resource (disambiguation)"
+        },
+        {
+          "name": "Scale (ratio)"
+        },
+        {
+          "name": "Social psychology"
+        }
+      ]
+    },
+    "update_key": null
   }
 ]

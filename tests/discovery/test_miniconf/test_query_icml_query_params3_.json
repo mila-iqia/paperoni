@@ -1,965 +1,985 @@
 [
   {
-    "abstract": "Efficiently generating statistically independent samples from an unnormalized probability distribution, such as equilibrium samples of many-body systems, is a foundational problem in science. In this paper, we propose Iterated Denoising Energy Matching (iDEM), an iterative algorithm that uses a novel stochastic score matching objective leveraging solely the energy function and its gradient---and no data samples---to train a diffusion-based sampler. Specifically, iDEM alternates between (I) sampling regions of high model density from a diffusion-based sampler and (II) using these samples in our stochastic matching objective to further improve the sampler. iDEM is scalable to high dimensions as the inner matching objective, is *simulation-free*, and requires no MCMC samples. Moreover, by leveraging the fast mode mixing behavior of diffusion, iDEM smooths out the energy landscape enabling efficient exploration and learning of an amortized sampler. We evaluate iDEM on a suite of tasks ranging from standard synthetic energy functions to invariant $n$-body particle systems. We show that the proposed approach achieves state-of-the-art performance on all metrics and trains $2-5\\times$ faster, which allows it to be the first method to train using energy on the challenging $55$-particle Lennard-Jones system.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "McGill - Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:icml:1a6727711b84fd1efbb87fc565199d13",
+    "paper": {
+      "abstract": "GFlowNets are probabilistic models that sequentially generate compositional structures through a stochastic policy. Among GFlowNets, temperature-conditional GFlowNets can introduce temperature-based controllability for exploration and exploitation. We propose *Logit-scaling GFlowNets* (Logit-GFN), a novel architectural design that greatly accelerates the training of temperature-conditional GFlowNets. It is based on the idea that previously proposed approaches introduced numerical challenges in the deep network training, since different temperatures may give rise to very different gradient profiles as well as magnitudes of the policy's logits. We find that the challenge is greatly reduced if a learned function of the temperature is used to scale the policy's logits directly. Also, using Logit-GFN, GFlowNets can be improved by having better generalization capabilities in offline learning and mode discovery capabilities in online learning, which is empirically verified in various biological and chemical tasks. Our code is available at https://github.com/dbsxodud-11/logit-gfn",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/8224?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "KAIST / Mila"
             }
           ],
-          "name": "Siamak Ravanbakhsh"
-        },
-        "display_name": "Siamak Ravanbakhsh"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "McGill-Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/51858?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Minsu Kim"
+          },
+          "display_name": "Minsu Kim"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/56442?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "KAIST"
             }
           ],
-          "name": "Tara Akhound-Sadegh"
-        },
-        "display_name": "Tara Akhound-Sadegh"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/73862?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Jinkyoo Park"
+          },
+          "display_name": "Jinkyoo Park"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/24659?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "KAIST"
             }
           ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute, UdeM, Jagiellonian University"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/80934?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Taeyoung Yun"
+          },
+          "display_name": "Taeyoung Yun"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/42889?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "KAIST"
             }
           ],
-          "name": "Marcin Sendera"
-        },
-        "display_name": "Marcin Sendera"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute; DreamFold"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/88493?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Woo Chang Kim"
+          },
+          "display_name": "Woo Chang Kim"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/96459?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Korea Advanced Institute of Science & Technology (KAIST)"
             }
           ],
-          "name": "Chenghao Liu"
-        },
-        "display_name": "Chenghao Liu"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila / Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/83555?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Joohwan Ko"
+          },
+          "display_name": "Joohwan Ko"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/69704?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute"
             }
           ],
-          "name": "Nikolay Malkin"
-        },
-        "display_name": "Nikolay Malkin"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/24659?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/40190?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Sarthak Mittal"
-        },
-        "display_name": "Sarthak Mittal"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/53479?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Dinghuai Zhang"
+          },
+          "display_name": "Dinghuai Zhang"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/73156?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Gauthier Gidel"
-        },
-        "display_name": "Gauthier Gidel"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/78783?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Ling Pan"
+          },
+          "display_name": "Ling Pan"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/92402?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Valence Labs"
             }
           ],
-          "name": "Alexander Tong"
-        },
-        "display_name": "Alexander Tong"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila, Universite de Montreal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://icml.cc/api/miniconf/users/72991?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Jarrid Rector-Brooks"
-        },
-        "display_name": "Jarrid Rector-Brooks"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://icml.cc/api/miniconf/users/123588?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Pablo Lemos"
-        },
-        "display_name": "Pablo Lemos"
-      },
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "University of Oxford Department of Computer Science"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://icml.cc/api/miniconf/users/27183?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Joey Bose"
-        },
-        "display_name": "Joey Bose"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://icml.cc/virtual/2024/poster/33422",
-        "type": "abstract"
-      },
-      {
-        "link": "https://proceedings.mlr.press/v235/akhound-sadegh24a.html",
-        "type": "pdf"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-07-23",
-          "date_precision": 3,
-          "links": [],
-          "name": "ICML",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "ICML",
-          "type": "conference",
-          "volume": null
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/18582?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Emmanuel Bengio"
+          },
+          "display_name": "Emmanuel Bengio"
         }
-      }
-    ],
-    "title": "Iterated Denoising Energy Matching for Sampling from Boltzmann Densities",
-    "topics": [
-      {
-        "name": "Probabilistic Methods->Monte Carlo and Sampling Methods"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://icml.cc/media/icml-2024/Slides/34500.pdf",
+          "type": "slides"
+        },
+        {
+          "link": "https://icml.cc/virtual/2024/poster/34500",
+          "type": "abstract"
+        },
+        {
+          "link": "https://proceedings.mlr.press/v235/kim24s.html",
+          "type": "pdf"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-07-23",
+            "date_precision": 3,
+            "links": [],
+            "name": "ICML",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "ICML",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Learning to Scale Logits for Temperature-Conditional GFlowNets",
+      "topics": [
+        {
+          "name": "Probabilistic Methods"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "GFlowNets are probabilistic models that sequentially generate compositional structures through a stochastic policy. Among GFlowNets, temperature-conditional GFlowNets can introduce temperature-based controllability for exploration and exploitation. We propose *Logit-scaling GFlowNets* (Logit-GFN), a novel architectural design that greatly accelerates the training of temperature-conditional GFlowNets. It is based on the idea that previously proposed approaches introduced numerical challenges in the deep network training, since different temperatures may give rise to very different gradient profiles as well as magnitudes of the policy's logits. We find that the challenge is greatly reduced if a learned function of the temperature is used to scale the policy's logits directly. Also, using Logit-GFN, GFlowNets can be improved by having better generalization capabilities in offline learning and mode discovery capabilities in online learning, which is empirically verified in various biological and chemical tasks. Our code is available at https://github.com/dbsxodud-11/logit-gfn",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "KAIST / Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:icml:63eb58bd4d3486f001438f911a11d323",
+    "paper": {
+      "abstract": "Efficiently generating statistically independent samples from an unnormalized probability distribution, such as equilibrium samples of many-body systems, is a foundational problem in science. In this paper, we propose Iterated Denoising Energy Matching (iDEM), an iterative algorithm that uses a novel stochastic score matching objective leveraging solely the energy function and its gradient---and no data samples---to train a diffusion-based sampler. Specifically, iDEM alternates between (I) sampling regions of high model density from a diffusion-based sampler and (II) using these samples in our stochastic matching objective to further improve the sampler. iDEM is scalable to high dimensions as the inner matching objective, is *simulation-free*, and requires no MCMC samples. Moreover, by leveraging the fast mode mixing behavior of diffusion, iDEM smooths out the energy landscape enabling efficient exploration and learning of an amortized sampler. We evaluate iDEM on a suite of tasks ranging from standard synthetic energy functions to invariant $n$-body particle systems. We show that the proposed approach achieves state-of-the-art performance on all metrics and trains $2-5\\times$ faster, which allows it to be the first method to train using energy on the challenging $55$-particle Lennard-Jones system.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/51858?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill - Mila"
             }
           ],
-          "name": "Minsu Kim"
-        },
-        "display_name": "Minsu Kim"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "KAIST"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/8224?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Siamak Ravanbakhsh"
+          },
+          "display_name": "Siamak Ravanbakhsh"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/73862?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "McGill-Mila"
             }
           ],
-          "name": "Jinkyoo Park"
-        },
-        "display_name": "Jinkyoo Park"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "KAIST"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/56442?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Tara Akhound-Sadegh"
+          },
+          "display_name": "Tara Akhound-Sadegh"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/80934?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute"
             }
           ],
-          "name": "Taeyoung Yun"
-        },
-        "display_name": "Taeyoung Yun"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "KAIST"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/24659?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/88493?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute, UdeM, Jagiellonian University"
             }
           ],
-          "name": "Woo Chang Kim"
-        },
-        "display_name": "Woo Chang Kim"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Korea Advanced Institute of Science & Technology (KAIST)"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/42889?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Marcin Sendera"
+          },
+          "display_name": "Marcin Sendera"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/83555?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute; DreamFold"
             }
           ],
-          "name": "Joohwan Ko"
-        },
-        "display_name": "Joohwan Ko"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/96459?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Chenghao Liu"
+          },
+          "display_name": "Chenghao Liu"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/24659?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila / Université de Montréal"
             }
           ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/69704?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Nikolay Malkin"
+          },
+          "display_name": "Nikolay Malkin"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/53479?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Dinghuai Zhang"
-        },
-        "display_name": "Dinghuai Zhang"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/40190?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Sarthak Mittal"
+          },
+          "display_name": "Sarthak Mittal"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/78783?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Ling Pan"
-        },
-        "display_name": "Ling Pan"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Valence Labs"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/73156?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Gauthier Gidel"
+          },
+          "display_name": "Gauthier Gidel"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/18582?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila"
             }
           ],
-          "name": "Emmanuel Bengio"
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/92402?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Alexander Tong"
+          },
+          "display_name": "Alexander Tong"
         },
-        "display_name": "Emmanuel Bengio"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://icml.cc/media/icml-2024/Slides/34500.pdf",
-        "type": "slides"
-      },
-      {
-        "link": "https://icml.cc/virtual/2024/poster/34500",
-        "type": "abstract"
-      },
-      {
-        "link": "https://proceedings.mlr.press/v235/kim24s.html",
-        "type": "pdf"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-07-23",
-          "date_precision": 3,
-          "links": [],
-          "name": "ICML",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "ICML",
-          "type": "conference",
-          "volume": null
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila, Universite de Montreal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/72991?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Jarrid Rector-Brooks"
+          },
+          "display_name": "Jarrid Rector-Brooks"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/123588?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Pablo Lemos"
+          },
+          "display_name": "Pablo Lemos"
+        },
+        {
+          "affiliations": [
+            {
+              "aliases": [],
+              "category": "unknown",
+              "name": "University of Oxford Department of Computer Science"
+            }
+          ],
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/27183?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Joey Bose"
+          },
+          "display_name": "Joey Bose"
         }
-      }
-    ],
-    "title": "Learning to Scale Logits for Temperature-Conditional GFlowNets",
-    "topics": [
-      {
-        "name": "Probabilistic Methods"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://icml.cc/virtual/2024/poster/33422",
+          "type": "abstract"
+        },
+        {
+          "link": "https://proceedings.mlr.press/v235/akhound-sadegh24a.html",
+          "type": "pdf"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-07-23",
+            "date_precision": 3,
+            "links": [],
+            "name": "ICML",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "ICML",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Iterated Denoising Energy Matching for Sampling from Boltzmann Densities",
+      "topics": [
+        {
+          "name": "Probabilistic Methods->Monte Carlo and Sampling Methods"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "Mitigating the climate crisis requires a rapid transition towards lower-carbon energy. Catalyst materials play a crucial role in the electrochemical reactions involved in numerous industrial processes key to this transition, such as renewable energy storage and electrofuel synthesis. To reduce the energy spent on such activities, we must quickly discover more efficient catalysts to drive electrochemical reactions. Machine learning (ML) holds the potential to efficiently model materials properties from large amounts of data, accelerating electrocatalyst design. The Open Catalyst Project OC20 dataset was constructed to that end. However, ML models trained on OC20 are still neither scalable nor accurate enough for practical applications. In this paper, we propose task-specific innovations applicable to most architectures, enhancing both computational efficiency and accuracy. This includes improvements in (1) the graph creation step, (2) atom representations, (3) the energy prediction head, and (4) the force prediction head. We describe these contributions, referred to as PhAST, and evaluate them thoroughly on multiple architectures. Overall, PhAST improves energy MAE by 4 to 42% while dividing compute time by 3 to 8× depending on the targeted task/model. PhAST also enables CPU training, leading to 40× speedups in highly parallelized settings. Python package: https://phast.readthedocs.io.",
-    "authors": [
-      {
-        "affiliations": [],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:icml:bb1662b7c5f22a0f905fd59e718ca05e",
+    "paper": {
+      "abstract": "We present a performant, general-purpose gradient-guided nested sampling (GGNS) algorithm, combining the state of the art in differentiable programming, Hamiltonian slice sampling, clustering, mode separation, dynamic nested sampling, and parallelization. This unique combination allows GGNS to scale well with dimensionality and perform competitively on a variety of synthetic and real-world problems. We also show the potential of combining nested sampling with generative flow networks to obtain large amounts of high-quality samples from the posterior distribution. This combination leads to faster mode discovery and more accurate estimates of the partition function.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/131173?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute"
             }
           ],
-          "name": "David Rolnick"
-        },
-        "display_name": "David Rolnick"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Entalpic"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/24659?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/131172?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila / Ciela"
             }
           ],
-          "name": "Alexandre Duval"
-        },
-        "display_name": "Alexandre Duval"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Intel Labs"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/94403?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Yashar Hezaveh"
+          },
+          "display_name": "Yashar Hezaveh"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/22053?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila / Université de Montréal"
             }
           ],
-          "name": "Santiago Miret"
-        },
-        "display_name": "Santiago Miret"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/69704?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Nikolay Malkin"
+          },
+          "display_name": "Nikolay Malkin"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/24659?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
             }
           ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/123588?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Pablo Lemos"
+          },
+          "display_name": "Pablo Lemos"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/72990?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Université de Montréal and Mila"
             }
           ],
-          "name": "Alex Hernandez-Garcia"
-        },
-        "display_name": "Alex Hernandez-Garcia"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila / Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/76078?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Laurence Perreault-Levasseur"
+          },
+          "display_name": "Laurence Perreault-Levasseur"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/92292?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "University of Cambridge"
             }
           ],
-          "name": "Victor Schmidt"
-        },
-        "display_name": "Victor Schmidt"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://icml.cc/virtual/2024/poster/35634",
-        "type": "abstract"
-      },
-      {
-        "link": "https://jmlr.org/papers/v25/23-0680.html",
-        "type": "jmlr"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-07-23",
-          "date_precision": 3,
-          "links": [],
-          "name": "ICML",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "ICML",
-          "type": "conference",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/125397?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Will Handley"
+          },
+          "display_name": "Will Handley"
         }
-      }
-    ],
-    "title": "PhAST: Physics-Aware, Scalable, and Task-Specific GNNs for Accelerated Catalyst Design",
-    "topics": [
-      {
-        "name": "Deep Learning->Graph Neural Networks"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://icml.cc/virtual/2024/poster/34356",
+          "type": "abstract"
+        },
+        {
+          "link": "https://proceedings.mlr.press/v235/lemos24a.html",
+          "type": "pdf"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-07-23",
+            "date_precision": 3,
+            "links": [],
+            "name": "ICML",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "ICML",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Improving Gradient-Guided Nested Sampling for Posterior Inference",
+      "topics": [
+        {
+          "name": "Probabilistic Methods->Monte Carlo and Sampling Methods"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "Neural Processes (NPs) are popular meta-learning methods for efficiently modelling predictive uncertainty. Recent state-of-the-art methods, however, leverage expensive attention mechanisms, limiting their applications, particularly in low-resource settings. In this work, we propose Constant Memory Attentive Neural Processes (CMANPs), an NP variant that only requires **constant** memory. To do so, we first propose an efficient update operation for Cross Attention. Leveraging the update operation, we propose Constant Memory Attention Block (CMAB), a novel attention block that (i) is permutation invariant, (ii) computes its output in constant memory, and (iii) performs constant computation updates. Finally, building on CMAB, we detail Constant Memory Attentive Neural Processes. Empirically, we show CMANPs achieve state-of-the-art results on popular NP benchmarks while being significantly more memory efficient than prior methods.",
-    "authors": [
-      {
-        "affiliations": [
-          {
-            "aliases": [],
-            "category": "unknown",
-            "name": "Borealis AI & Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+    "key": "miniconf:icml:cf1f78fe923afe05f7597da2be7a3da8",
+    "paper": {
+      "abstract": "Neural Processes (NPs) are popular meta-learning methods for efficiently modelling predictive uncertainty. Recent state-of-the-art methods, however, leverage expensive attention mechanisms, limiting their applications, particularly in low-resource settings. In this work, we propose Constant Memory Attentive Neural Processes (CMANPs), an NP variant that only requires **constant** memory. To do so, we first propose an efficient update operation for Cross Attention. Leveraging the update operation, we propose Constant Memory Attention Block (CMAB), a novel attention block that (i) is permutation invariant, (ii) computes its output in constant memory, and (iii) performs constant computation updates. Finally, building on CMAB, we detail Constant Memory Attentive Neural Processes. Empirically, we show CMANPs achieve state-of-the-art results on popular NP benchmarks while being significantly more memory efficient than prior methods.",
+      "authors": [
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/55140?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Borealis AI & Mila"
             }
           ],
-          "name": "Leo Feng"
-        },
-        "display_name": "Leo Feng"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Borealis AI"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/55140?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Leo Feng"
+          },
+          "display_name": "Leo Feng"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/25292?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Borealis AI"
             }
           ],
-          "name": "Mohamed Osama Ahmed"
-        },
-        "display_name": "Mohamed Osama Ahmed"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Borealis AI"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/25292?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Mohamed Osama Ahmed"
+          },
+          "display_name": "Mohamed Osama Ahmed"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/72356?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Borealis AI"
             }
           ],
-          "name": "Frederick Tung"
-        },
-        "display_name": "Frederick Tung"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/72356?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Frederick Tung"
+          },
+          "display_name": "Frederick Tung"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/24659?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute"
             }
           ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Oracle Labs"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/24659?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/8111?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Oracle Labs"
             }
           ],
-          "name": "Hossein Hajimirsadeghi"
-        },
-        "display_name": "Hossein Hajimirsadeghi"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://icml.cc/virtual/2024/poster/32689",
-        "type": "abstract"
-      },
-      {
-        "link": "https://proceedings.mlr.press/v235/feng24i.html",
-        "type": "pdf"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-07-23",
-          "date_precision": 3,
-          "links": [],
-          "name": "ICML",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "ICML",
-          "type": "conference",
-          "volume": null
+          "author": {
+            "aliases": [],
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/8111?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Hossein Hajimirsadeghi"
+          },
+          "display_name": "Hossein Hajimirsadeghi"
         }
-      }
-    ],
-    "title": "Memory Efficient Neural Processes via Constant Memory Attention Block",
-    "topics": [
-      {
-        "name": "Deep Learning->Attention Mechanisms"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://icml.cc/virtual/2024/poster/32689",
+          "type": "abstract"
+        },
+        {
+          "link": "https://proceedings.mlr.press/v235/feng24i.html",
+          "type": "pdf"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-07-23",
+            "date_precision": 3,
+            "links": [],
+            "name": "ICML",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "ICML",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "Memory Efficient Neural Processes via Constant Memory Attention Block",
+      "topics": [
+        {
+          "name": "Deep Learning->Attention Mechanisms"
+        }
+      ]
+    },
+    "update_key": null
   },
   {
-    "abstract": "We present a performant, general-purpose gradient-guided nested sampling (GGNS) algorithm, combining the state of the art in differentiable programming, Hamiltonian slice sampling, clustering, mode separation, dynamic nested sampling, and parallelization. This unique combination allows GGNS to scale well with dimensionality and perform competitively on a variety of synthetic and real-world problems. We also show the potential of combining nested sampling with generative flow networks to obtain large amounts of high-quality samples from the posterior distribution. This combination leads to faster mode discovery and more accurate estimates of the partition function.",
-    "authors": [
-      {
-        "affiliations": [
-          {
+    "key": "miniconf:icml:f0935e4cd5920aa6c7c996a5ee53a70f",
+    "paper": {
+      "abstract": "Mitigating the climate crisis requires a rapid transition towards lower-carbon energy. Catalyst materials play a crucial role in the electrochemical reactions involved in numerous industrial processes key to this transition, such as renewable energy storage and electrofuel synthesis. To reduce the energy spent on such activities, we must quickly discover more efficient catalysts to drive electrochemical reactions. Machine learning (ML) holds the potential to efficiently model materials properties from large amounts of data, accelerating electrocatalyst design. The Open Catalyst Project OC20 dataset was constructed to that end. However, ML models trained on OC20 are still neither scalable nor accurate enough for practical applications. In this paper, we propose task-specific innovations applicable to most architectures, enhancing both computational efficiency and accuracy. This includes improvements in (1) the graph creation step, (2) atom representations, (3) the energy prediction head, and (4) the force prediction head. We describe these contributions, referred to as PhAST, and evaluate them thoroughly on multiple architectures. Overall, PhAST improves energy MAE by 4 to 42% while dividing compute time by 3 to 8× depending on the targeted task/model. PhAST also enables CPU training, leading to 40× speedups in highly parallelized settings. Python package: https://phast.readthedocs.io.",
+      "authors": [
+        {
+          "affiliations": [],
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila - Quebec AI Institute"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/131173?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "David Rolnick"
+          },
+          "display_name": "David Rolnick"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/24659?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Entalpic"
             }
           ],
-          "name": "Yoshua Bengio"
-        },
-        "display_name": "Yoshua Bengio"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila / Ciela"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/131172?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Alexandre Duval"
+          },
+          "display_name": "Alexandre Duval"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/94403?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Intel Labs"
             }
           ],
-          "name": "Yashar Hezaveh"
-        },
-        "display_name": "Yashar Hezaveh"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Mila / Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/22053?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Santiago Miret"
+          },
+          "display_name": "Santiago Miret"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/69704?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute"
             }
           ],
-          "name": "Nikolay Malkin"
-        },
-        "display_name": "Nikolay Malkin"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Montreal Institute for Learning Algorithms, University of Montreal, Université de Montréal"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/24659?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Yoshua Bengio"
+          },
+          "display_name": "Yoshua Bengio"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/123588?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila - Quebec AI Institute"
             }
           ],
-          "name": "Pablo Lemos"
-        },
-        "display_name": "Pablo Lemos"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "Université de Montréal and Mila"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/72990?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Alex Hernandez-Garcia"
+          },
+          "display_name": "Alex Hernandez-Garcia"
+        },
+        {
+          "affiliations": [
             {
-              "link": "http://icml.cc/api/miniconf/users/76078?format=json",
-              "type": "profile"
+              "aliases": [],
+              "category": "unknown",
+              "name": "Mila / Université de Montréal"
             }
           ],
-          "name": "Laurence Perreault-Levasseur"
-        },
-        "display_name": "Laurence Perreault-Levasseur"
-      },
-      {
-        "affiliations": [
-          {
+          "author": {
             "aliases": [],
-            "category": "unknown",
-            "name": "University of Cambridge"
-          }
-        ],
-        "author": {
-          "aliases": [],
-          "links": [
-            {
-              "link": "http://icml.cc/api/miniconf/users/125397?format=json",
-              "type": "profile"
-            }
-          ],
-          "name": "Will Handley"
-        },
-        "display_name": "Will Handley"
-      }
-    ],
-    "flags": [],
-    "links": [
-      {
-        "link": "https://icml.cc/virtual/2024/poster/34356",
-        "type": "abstract"
-      },
-      {
-        "link": "https://proceedings.mlr.press/v235/lemos24a.html",
-        "type": "pdf"
-      }
-    ],
-    "releases": [
-      {
-        "pages": null,
-        "status": "Accept (Poster)",
-        "venue": {
-          "aliases": [],
-          "date": "2024-07-23",
-          "date_precision": 3,
-          "links": [],
-          "name": "ICML",
-          "open": true,
-          "peer_reviewed": true,
-          "publisher": null,
-          "series": "ICML",
-          "type": "conference",
-          "volume": null
+            "links": [
+              {
+                "link": "http://icml.cc/api/miniconf/users/92292?format=json",
+                "type": "profile"
+              }
+            ],
+            "name": "Victor Schmidt"
+          },
+          "display_name": "Victor Schmidt"
         }
-      }
-    ],
-    "title": "Improving Gradient-Guided Nested Sampling for Posterior Inference",
-    "topics": [
-      {
-        "name": "Probabilistic Methods->Monte Carlo and Sampling Methods"
-      }
-    ]
+      ],
+      "flags": [],
+      "links": [
+        {
+          "link": "https://icml.cc/virtual/2024/poster/35634",
+          "type": "abstract"
+        },
+        {
+          "link": "https://jmlr.org/papers/v25/23-0680.html",
+          "type": "jmlr"
+        }
+      ],
+      "releases": [
+        {
+          "pages": null,
+          "status": "Accept (Poster)",
+          "venue": {
+            "aliases": [],
+            "date": "2024-07-23",
+            "date_precision": 3,
+            "links": [],
+            "name": "ICML",
+            "open": true,
+            "peer_reviewed": true,
+            "publisher": null,
+            "series": "ICML",
+            "type": "conference",
+            "volume": null
+          }
+        }
+      ],
+      "title": "PhAST: Physics-Aware, Scalable, and Task-Specific GNNs for Accelerated Catalyst Design",
+      "topics": [
+        {
+          "name": "Deep Learning->Graph Neural Networks"
+        }
+      ]
+    },
+    "update_key": null
   }
 ]
