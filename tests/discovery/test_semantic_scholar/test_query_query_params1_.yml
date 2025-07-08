@@ -1,0 +1,237 @@
+- key: semantic_scholar:de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
+  paper:
+    abstract: Visualization has proven to be a powerful and widely-applicable tool
+      for the analysis and interpretation of multivariate data. Most visualization
+      algorithms aim to find a projection from the data space down to a two-dimensional
+      visualization space. However, for complex data sets living in a high-dimensional
+      space, it is unlikely that a single two-dimensional projection can reveal all
+      of the interesting structure. We therefore introduce a hierarchical visualization
+      algorithm which allows the complete data set to be visualized at the top level,
+      with clusters and subclusters of data points visualized at deeper levels. The
+      algorithm is based on a hierarchical mixture of latent variable models, whose
+      parameters are estimated using the expectation-maximization algorithm. We demonstrate
+      the principle of the approach on a toy data set, and we then apply the algorithm
+      to the visualization of a synthetic data set in 12 dimensions obtained from
+      a simulation of multiphase flows in oil pipelines, and to data in 36 dimensions
+      derived from satellite images.
+    authors:
+    - affiliations: []
+      author:
+        aliases:
+        - Charles M. Bishop
+        links:
+        - link: '1792884'
+          type: semantic_scholar
+        name: Charles M. Bishop
+      display_name: Charles M. Bishop
+    - affiliations: []
+      author:
+        aliases:
+        - Michael E. Tipping
+        links:
+        - link: '2831141'
+          type: semantic_scholar
+        name: Michael E. Tipping
+      display_name: Michael E. Tipping
+    flags: []
+    links:
+    - link: de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
+      type: semantic_scholar
+    - link: journals/pami/BishopT98
+      type: dblp
+    - link: '2137483768'
+      type: mag
+    - link: 10.1109/34.667885
+      type: doi
+    - link: '2403387'
+      type: corpusid
+    - link: https://publications.aston.ac.uk/id/eprint/38407/1/IEEE_transactions_on_pattern_analysis_and_machine_intelligence_20%283%29pdf.pdf
+      type: pdf
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '1998-03-01'
+        date_precision: 3
+        links: []
+        name: IEEE Transactions on Pattern Analysis and Machine Intelligence
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: IEEE Transactions on Pattern Analysis and Machine Intelligence
+        type: journal
+        volume: '20'
+    title: A Hierarchical Latent Variable Model for Data Visualization
+    topics:
+    - name: Computer Science
+  update_key: null
+- key: semantic_scholar:a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
+  paper:
+    abstract: Building intelligent agents to generate realistic Weibo comments is
+      challenging. For such realistic Weibo comments, the key criterion is improving
+      diversity while maintaining coherency. Considering that the variability of linguistic
+      comments arises from multi-level sources, including both discourse-level properties
+      and word-level selections, we improve the comment diversity by leveraging such
+      inherent hierarchy. In this paper, we propose a structured latent variable recurrent
+      network, which exploits the hierarchical-structured latent variables with stochastic
+      attention to model the variations of comments. First, we endow both discourse-level
+      and word-level latent variables with hierarchical and temporal dependencies
+      for constructing multi-level hierarchy. Second, we introduce a stochastic attention
+      to infer the key-words of interest in the input post. As a result, diverse comments
+      can be generated with both discourse-level properties and local-word selections.
+      Experiments on open-domain Weibo data show that our model generates more diverse
+      and realistic comments.
+    authors:
+    - affiliations: []
+      author:
+        aliases:
+        - Shijie Yang
+        links:
+        - link: '47569376'
+          type: semantic_scholar
+        name: Shijie Yang
+      display_name: Shijie Yang
+    - affiliations: []
+      author:
+        aliases:
+        - Liang Li
+        links:
+        - link: '73596205'
+          type: semantic_scholar
+        name: Liang Li
+      display_name: Liang Li
+    - affiliations: []
+      author:
+        aliases:
+        - Shuhui Wang
+        links:
+        - link: '47672591'
+          type: semantic_scholar
+        name: Shuhui Wang
+      display_name: Shuhui Wang
+    - affiliations: []
+      author:
+        aliases:
+        - Weigang Zhang
+        links:
+        - link: '2108142645'
+          type: semantic_scholar
+        name: Weigang Zhang
+      display_name: Weigang Zhang
+    - affiliations: []
+      author:
+        aliases:
+        - Qingming Huang
+        links:
+        - link: '2256640224'
+          type: semantic_scholar
+        name: Qingming Huang
+      display_name: Qingming Huang
+    - affiliations: []
+      author:
+        aliases:
+        - Qi Tian
+        links:
+        - link: '2268843158'
+          type: semantic_scholar
+        name: Qi Tian
+      display_name: Qi Tian
+    flags: []
+    links:
+    - link: a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
+      type: semantic_scholar
+    - link: '3034703518'
+      type: mag
+    - link: conf/ijcai/YangLWZH020
+      type: dblp
+    - link: 10.24963/ijcai.2020/548
+      type: doi
+    - link: '220483187'
+      type: corpusid
+    - link: https://doi.org/10.24963/ijcai.2020/548
+      type: pdf
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2020-07-01'
+        date_precision: 3
+        links: []
+        name: International Joint Conference on Artificial Intelligence
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: International Joint Conference on Artificial Intelligence
+        type: journal
+        volume: null
+    title: A Structured Latent Variable Recurrent Network With Stochastic Attention
+      For Generating Weibo Comments
+    topics:
+    - name: Computer Science
+  update_key: null
+- key: semantic_scholar:7fc9d442f9019be17c008974018929135e81b476
+  paper:
+    abstract: ''
+    authors:
+    - affiliations: []
+      author:
+        aliases:
+        - Lizhen Xu
+        links:
+        - link: '2109326299'
+          type: semantic_scholar
+        name: Lizhen Xu
+      display_name: Lizhen Xu
+    - affiliations: []
+      author:
+        aliases:
+        - A. D. Paterson
+        links:
+        - link: '2054130395'
+          type: semantic_scholar
+        name: A. D. Paterson
+      display_name: A. D. Paterson
+    - affiliations: []
+      author:
+        aliases:
+        - Wei Xu
+        links:
+        - link: '50232403'
+          type: semantic_scholar
+        name: Wei Xu
+      display_name: Wei Xu
+    flags: []
+    links:
+    - link: 7fc9d442f9019be17c008974018929135e81b476
+      type: semantic_scholar
+    - link: '2580811848'
+      type: mag
+    - link: 10.1002/gepi.22031
+      type: doi
+    - link: '34003304'
+      type: corpusid
+    - link: '28111783'
+      type: pubmed
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2017-04-01'
+        date_precision: 3
+        links: []
+        name: Genetic Epidemiology
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: Genetic Epidemiology
+        type: journal
+        volume: '41'
+    title: Bayesian latent variable models for hierarchical clustered count outcomes
+      with repeated measures in microbiome studies
+    topics:
+    - name: Mathematics
+    - name: Medicine
+  update_key: null

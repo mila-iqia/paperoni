@@ -1,5 +1,5 @@
 import pytest
-from pytest_regressions.file_regression import FileRegressionFixture
+from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni import config
 from paperoni.discovery import openreview
@@ -14,7 +14,7 @@ from ..utils import check_papers, iter_links_ids, iter_releases
     [
         {"venue": "NeurIPS.cc/2020/Conference"},
         {"venue": "NeurIPS.cc/2024/Conference"},
-        {"paper_id": "gVTkMsaaGI", "venue": "NeurIPS.cc/2024/Conference"},
+        {"paper_id": "gVTkMsaaGI"},
         {"author": "Yoshua Bengio", "venue": "NeurIPS.cc/2024/Conference"},
         {"author_id": "~Yoshua_Bengio1", "venue": "NeurIPS.cc/2024/Conference"},
         {
@@ -23,7 +23,7 @@ from ..utils import check_papers, iter_links_ids, iter_releases
         },
     ],
 )
-def test_query(file_regression: FileRegressionFixture, query_params: dict[str, str]):
+def test_query(data_regression: DataRegressionFixture, query_params: dict[str, str]):
     query_params = {**query_params, "block_size": 100, "limit": 1000}
     openreview_dispatch = config.discoverers["openreview"]
     api_versions: list[int] = openreview_dispatch.api_versions
@@ -62,29 +62,26 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
     match next(iter(query_params.keys())):
         case "venue":
             assert all(
-                [
-                    rel
+                any(
+                    query_params["venue"].lower() == rel.venue.name.lower()
                     for rel in iter_releases(paper.paper)
-                    if query_params["venue"].lower() == rel.venue.name.lower()
-                ]
+                )
                 for paper in papers
             ), f"Some papers do not contain the venue {query_params['venue']=}"
         case "paper_id":
             assert all(
-                [
-                    link_id
+                any(
+                    query_params["paper_id"] == link_id
                     for link_id in iter_links_ids(paper.paper)
-                    if query_params["paper_id"] == link_id
-                ]
+                )
                 for paper in papers
             ), f"Some papers do not contain the paper ID {query_params['paper_id']=}"
         case "author":
             assert all(
-                [
-                    author
+                any(
+                    query_params["author"].lower() in author.author.name.lower()
                     for author in paper.paper.authors
-                    if query_params["author"].lower() in author.author.name.lower()
-                ]
+                )
                 for paper in papers
             ), f"Some papers do not contain the author {query_params['author']=}"
         case "author_id":
@@ -110,4 +107,4 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
         case _:
             assert False, f"Unknown query parameter: {query_params=}"
 
-    check_papers(file_regression, papers)
+    check_papers(data_regression, papers)

@@ -1,0 +1,763 @@
+- key: openalex:W3022187094
+  paper:
+    abstract: Sequential data often possesses hierarchical structures with complex
+      dependencies between sub-sequences, such as found between the utterances in
+      a dialogue. To model these dependencies in a generative framework, we propose
+      a neural network-based generative architecture, with stochastic latent variables
+      that span a variable number of time steps. We apply the proposed model to the
+      task of dialogue response generation and compare it with other recent neural-network
+      architectures. We evaluate the model performance through a human evaluation
+      study. The experiments demonstrate that our model improves upon recently proposed
+      models and that the latent variables facilitate both the generation of meaningful,
+      long and diverse responses and maintaining dialogue state.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5034688833
+          type: openalex
+        name: Iulian Vlad Serban
+      display_name: Iulian Vlad Serban
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: A5108137151
+          type: openalex
+        name: Alessandro Sordoni
+      display_name: Alessandro Sordoni
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: A5004295653
+          type: openalex
+        name: Ryan Lowe
+      display_name: Ryan Lowe
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: HEC Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5103126568
+          type: openalex
+        - link: 0000-0002-6437-9713
+          type: orcid
+        name: Laurent Charlin
+      display_name: Laurent Charlin
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: A5080591144
+          type: openalex
+        - link: 0000-0003-0747-7250
+          type: orcid
+        name: Joëlle Pineau
+      display_name: Joëlle Pineau
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5112608251
+          type: openalex
+        - link: 0000-0001-6223-0301
+          type: orcid
+        name: Aaron Courville
+      display_name: Aaron Courville
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: W3022187094
+      type: openalex
+    - link: 10.1609/aaai.v31i1.10983
+      type: doi
+    - link: '3022187094'
+      type: mag
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
+      type: open-access
+    - link: https://doi.org/10.1609/aaai.v31i1.10983
+      type: url
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
+      type: pdf
+    - link: http://arxiv.org/abs/1605.06069
+      type: url
+    - link: http://arxiv.org/pdf/1605.06069
+      type: pdf
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2017-02-12T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1609/aaai.v31i1.10983
+          type: url
+        - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
+          type: pdf
+        name: Proceedings of the AAAI Conference on Artificial Intelligence
+        open: true
+        peer_reviewed: true
+        publisher: Association for the Advancement of Artificial Intelligence
+        series: ''
+        type: conference
+        volume: null
+    title: A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues
+    topics:
+    - name: Computer science
+    - name: Latent variable
+    - name: Generative grammar
+    - name: Generative model
+    - name: Latent variable model
+    - name: Artificial intelligence
+    - name: Variable (mathematics)
+    - name: Artificial neural network
+    - name: Encoder
+    - name: Task (project management)
+    - name: Machine learning
+    - name: Mathematics
+    - name: Mathematical analysis
+    - name: Management
+    - name: Economics
+    - name: Operating system
+  update_key: null
+- key: openalex:W2963096987
+  paper:
+    abstract: We examine the role of memorization in deep learning, drawing connections
+      to capacity, generalization, and adversarial robustness. While deep networks
+      are capable of memorizing noise data, our results suggest that they tend to
+      prioritize learning simple patterns first. In our experiments, we expose qualitative
+      differences in gradient-based optimization of deep neural networks (DNNs) on
+      noise vs. real data. We also demonstrate that for appropriately tuned explicit
+      regularization (e.g., dropout) we can degrade DNN training performance on noise
+      datasets without compromising generalization on real data. Our analysis suggests
+      that the notions of effective capacity which are dataset independent are unlikely
+      to explain the generalization performance of deep networks when trained with
+      gradient based methods because training data itself plays an important role
+      in determining the degree of memorization.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      - aliases: []
+        category: wat
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5000111662
+          type: openalex
+        name: Devansh Arpit
+      display_name: Devansh Arpit
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Jagiellonian University
+      author:
+        aliases: []
+        links:
+        - link: A5024552077
+          type: openalex
+        - link: 0000-0003-4138-1818
+          type: orcid
+        name: Stanisław Jastrzȩbski
+      display_name: Stanisław Jastrzȩbski
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      - aliases: []
+        category: wat
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5057065873
+          type: openalex
+        name: Nicolas Ballas
+      display_name: Nicolas Ballas
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      - aliases: []
+        category: wat
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5029025914
+          type: openalex
+        - link: 0000-0001-7256-0937
+          type: orcid
+        name: David Krueger
+      display_name: David Krueger
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: A5027310054
+          type: openalex
+        - link: 0000-0002-3257-4661
+          type: orcid
+        name: Emmanuel Bengio
+      display_name: Emmanuel Bengio
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of California, Berkeley
+      author:
+        aliases: []
+        links:
+        - link: A5038305916
+          type: openalex
+        name: Maxinder S Kanwal
+      display_name: Maxinder S Kanwal
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Polytechnique Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5061026145
+          type: openalex
+        - link: 0000-0002-7370-0978
+          type: orcid
+        name: Tegan Maharaj
+      display_name: Tegan Maharaj
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of Bonn
+      author:
+        aliases: []
+        links:
+        - link: A5026151059
+          type: openalex
+        - link: 0000-0002-1916-7033
+          type: orcid
+        name: Asja Fischer
+      display_name: Asja Fischer
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Canadian Institute for Advanced Research
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5112608251
+          type: openalex
+        - link: 0000-0001-6223-0301
+          type: orcid
+        name: Aaron Courville
+      display_name: Aaron Courville
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      - aliases: []
+        category: wat
+        name: Canadian Institute for Advanced Research
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      - aliases: []
+        category: wat
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5051076050
+          type: openalex
+        - link: 0000-0001-6485-6180
+          type: orcid
+        name: Simon Lacoste-Julien
+      display_name: Simon Lacoste-Julien
+    flags: []
+    links:
+    - link: W2963096987
+      type: openalex
+    - link: '2963096987'
+      type: mag
+    - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
+      type: url
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2017-08-06T00:00:00'
+        date_precision: 3
+        links:
+        - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
+          type: url
+        name: International Conference on Machine Learning
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: A closer look at memorization in deep networks
+    topics:
+    - name: Memorization
+    - name: Deep neural networks
+    - name: Computer science
+    - name: Artificial intelligence
+    - name: Generalization
+    - name: Deep learning
+    - name: Robustness (evolution)
+    - name: Regularization (linguistics)
+    - name: Artificial neural network
+    - name: Machine learning
+    - name: Adversarial system
+    - name: Noise (video)
+    - name: Mathematics
+    - name: Cognitive psychology
+    - name: Psychology
+    - name: Mathematical analysis
+    - name: Biochemistry
+    - name: Chemistry
+    - name: Image (mathematics)
+    - name: Gene
+  update_key: null
+- key: openalex:W2267635276
+  paper:
+    abstract: We introduce a method to train Binarized Neural Networks (BNNs) - neural
+      networks with binary weights and activations at run-time. At train-time the
+      binary weights and activations are used for computing the parameter gradients.
+      During the forward pass, BNNs drastically reduce memory size and accesses, and
+      replace most arithmetic operations with bit-wise operations, which is expected
+      to substantially improve power-efficiency. To validate the effectiveness of
+      BNNs, we conducted two sets of experiments on the Torch7 and Theano frameworks.
+      On both, BNNs achieved nearly state-of-the-art results over the MNIST, CIFAR-10
+      and SVHN datasets. We also report our preliminary results on the challenging
+      ImageNet dataset. Last but not least, we wrote a binary matrix multiplication
+      GPU kernel with which it is possible to run our MNIST BNN 7 times faster than
+      with an unoptimized GPU kernel, without suffering any loss in classification
+      accuracy. The code for training and running our BNNs is available on-line.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Technion – Israel Institute of Technology
+      author:
+        aliases: []
+        links:
+        - link: A5087518651
+          type: openalex
+        name: Itay Hubara
+      display_name: Itay Hubara
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5039449234
+          type: openalex
+        name: Matthieu Courbariaux
+      display_name: Matthieu Courbariaux
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Columbia University
+      author:
+        aliases: []
+        links:
+        - link: A5025123281
+          type: openalex
+        - link: 0000-0001-9368-6352
+          type: orcid
+        name: Daniel Soudry
+      display_name: Daniel Soudry
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Technion – Israel Institute of Technology
+      author:
+        aliases: []
+        links:
+        - link: A5025669300
+          type: openalex
+        name: Ran El‐Yaniv
+      display_name: Ran El‐Yaniv
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: W2267635276
+      type: openalex
+    - link: '2267635276'
+      type: mag
+    - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
+      type: url
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2016-02-08T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
+          type: url
+        name: Neural Information Processing Systems
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: Binarized Neural Networks
+    topics:
+    - name: MNIST database
+    - name: Computer science
+    - name: Kernel (algebra)
+    - name: Artificial neural network
+    - name: Multiplication (music)
+    - name: Binary number
+    - name: Code (set theory)
+    - name: Artificial intelligence
+    - name: Deep neural networks
+    - name: Matrix multiplication
+    - name: Binary code
+    - name: Deep learning
+    - name: Machine learning
+    - name: Pattern recognition (psychology)
+    - name: Arithmetic
+    - name: Mathematics
+    - name: Physics
+    - name: Set (abstract data type)
+    - name: Combinatorics
+    - name: Quantum mechanics
+    - name: Quantum
+    - name: Programming language
+  update_key: null
+- key: openalex:W2962883855
+  paper:
+    abstract: We investigate the task of building open domain, conversational dialogue
+      systems based on large dialogue corpora using generative models. Generative
+      models produce system responses that are autonomously generated word-by-word,
+      opening up the possibility for realistic, flexible interactions. In support
+      of this goal, we extend the recently proposed hierarchical recurrent encoder-decoder
+      neural network to the dialogue domain, and demonstrate that this model is competitive
+      with state-of-the-art neural language models and back-off n-gram models. We
+      investigate the limitations of this and similar approaches, and show how its
+      performance can be improved by bootstrapping the learning from a larger question-answer
+      pair corpus and from pretrained word embeddings.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5034688833
+          type: openalex
+        name: Iulian Vlad Serban
+      display_name: Iulian Vlad Serban
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5108137151
+          type: openalex
+        name: Alessandro Sordoni
+      display_name: Alessandro Sordoni
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5112608251
+          type: openalex
+        - link: 0000-0001-6223-0301
+          type: orcid
+        name: Aaron Courville
+      display_name: Aaron Courville
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: A5080591144
+          type: openalex
+        - link: 0000-0003-0747-7250
+          type: orcid
+        name: Joëlle Pineau
+      display_name: Joëlle Pineau
+    flags: []
+    links:
+    - link: W2962883855
+      type: openalex
+    - link: 10.1609/aaai.v30i1.9883
+      type: doi
+    - link: '2962883855'
+      type: mag
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
+      type: open-access
+    - link: https://doi.org/10.1609/aaai.v30i1.9883
+      type: url
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
+      type: pdf
+    - link: http://arxiv.org/abs/1507.04808
+      type: url
+    - link: http://arxiv.org/pdf/1507.04808
+      type: pdf
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2016-03-05T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1609/aaai.v30i1.9883
+          type: url
+        - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
+          type: pdf
+        name: Proceedings of the AAAI Conference on Artificial Intelligence
+        open: true
+        peer_reviewed: true
+        publisher: Association for the Advancement of Artificial Intelligence
+        series: ''
+        type: conference
+        volume: null
+    title: Building End-To-End Dialogue Systems Using Generative Hierarchical Neural
+      Network Models
+    topics:
+    - name: Generative grammar
+    - name: Computer science
+    - name: Bootstrapping (finance)
+    - name: Word (group theory)
+    - name: Artificial intelligence
+    - name: End-to-end principle
+    - name: Artificial neural network
+    - name: Language model
+    - name: Domain (mathematical analysis)
+    - name: Encoder
+    - name: Recurrent neural network
+    - name: Task (project management)
+    - name: Natural language processing
+    - name: Generative model
+    - name: Linguistics
+    - name: Mathematical analysis
+    - name: Philosophy
+    - name: Mathematics
+    - name: Management
+    - name: Financial economics
+    - name: Economics
+    - name: Operating system
+  update_key: null
+- key: openalex:W2218318129
+  paper:
+    abstract: We present in this paper a novel approach for training deterministic
+      auto-encoders. We show that by adding a well chosen penalty term to the classical
+      reconstruction cost function, we can achieve results that equal or surpass those
+      attained by other regularized auto-encoders as well as denoising auto-encoders
+      on a range of datasets. This penalty term corresponds to the Frobenius norm
+      of the Jacobian matrix of the encoder activations with respect to the input.
+      We show that this penalty term results in a localized space contraction which
+      in turn yields robust features on the activation layer. Furthermore, we show
+      how this penalty term is related to both regularized auto-encoders and denoising
+      auto-encoders and how it can be seen as a link between deterministic and non-deterministic
+      auto-encoders. We find empirically that this penalty helps to carve a representation
+      that better captures the local directions of variation dictated by the data,
+      corresponding to a lower-dimensional non-linear manifold, while being more invariant
+      to the vast majority of directions orthogonal to the manifold. Finally, we show
+      that by using the learned features to initialize a MLP, we achieve state of
+      the art classification error on a range of datasets, surpassing other methods
+      of pretraining.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5049800316
+          type: openalex
+        name: Salah Rifai
+      display_name: Salah Rifai
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5103958886
+          type: openalex
+        name: Pascal Vincent
+      display_name: Pascal Vincent
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5077403633
+          type: openalex
+        name: Xavier Muller
+      display_name: Xavier Muller
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5067483843
+          type: openalex
+        - link: 0000-0002-6729-2189
+          type: orcid
+        name: Xavier Glorot
+      display_name: Xavier Glorot
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: W2218318129
+      type: openalex
+    - link: '2218318129'
+      type: mag
+    - link: https://icml.cc/2011/papers/455_icmlpaper.pdf
+      type: url
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2011-06-28T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://icml.cc/2011/papers/455_icmlpaper.pdf
+          type: url
+        name: International Conference on Machine Learning
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: 'Contractive Auto-Encoders: Explicit Invariance During Feature Extraction'
+    topics:
+    - name: Computer science
+    - name: Encoder
+    - name: Jacobian matrix and determinant
+    - name: Autoencoder
+    - name: Algorithm
+    - name: Matrix norm
+    - name: Pattern recognition (psychology)
+    - name: Feature extraction
+    - name: Range (aeronautics)
+    - name: Representation (politics)
+    - name: Term (time)
+    - name: Artificial intelligence
+    - name: Mathematics
+    - name: Mathematical optimization
+    - name: Artificial neural network
+    - name: Eigenvalues and eigenvectors
+    - name: Applied mathematics
+    - name: Physics
+    - name: Materials science
+    - name: Quantum mechanics
+    - name: Politics
+    - name: Political science
+    - name: Law
+    - name: Composite material
+    - name: Operating system
+  update_key: null

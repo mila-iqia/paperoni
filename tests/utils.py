@@ -5,10 +5,11 @@ import json
 from datetime import date, datetime
 from typing import Any, Generator, Iterable
 
-from pytest_regressions.file_regression import FileRegressionFixture
+from pytest_regressions.data_regression import DataRegressionFixture
+from serieux import serialize
 
 from paperoni.discovery.base import PaperInfo
-from paperoni.model.classes import Institution, Paper, Release
+from paperoni.model.classes import Institution, Paper, Release, VenueType
 
 
 def iter_affiliations(paper: Paper) -> Generator[Institution, None, None]:
@@ -54,12 +55,37 @@ def sort_keys(obj: dict | list | Any) -> dict | list:
         return obj
 
 
-def check_papers(file_regression: FileRegressionFixture, papers: list[PaperInfo]):
+def check_papers(data_regression: DataRegressionFixture, papers: list[PaperInfo]):
     # Using file_regression and json.dumps to avoid
     # yaml.representer.RepresenterError on DatePrecision
-    papers = sort_keys(papers[:5])
+    # papers = sort_keys(papers[:5])
+    # [p.pop("acquired") for p in papers]
+    papers = serialize(list[PaperInfo], papers[:5])
     [p.pop("acquired") for p in papers]
-    file_regression.check(
-        json.dumps(sort_keys(papers[:5]), indent=2, ensure_ascii=False),
-        extension=".json",
+    data_regression.check(
+        # json.dumps(papers, indent=2, ensure_ascii=False),
+        papers,
+        # extension=".json",
+    )
+
+
+def iter_conference_papers(papers: list[PaperInfo]) -> Generator[PaperInfo, None, None]:
+    return (
+        paper
+        for paper in papers
+        if any(
+            release.venue.type in {VenueType.conference, VenueType.journal}
+            for release in iter_releases(paper.paper)
+        )
+    )
+
+
+def filter_test_papers(
+    papers: list[PaperInfo], titles: Iterable[str]
+) -> Generator[PaperInfo, None, None]:
+    titles = {title.lower() for title in titles}
+    return (
+        paper
+        for paper in iter_conference_papers(papers)
+        if paper.paper.title.lower() in titles
     )

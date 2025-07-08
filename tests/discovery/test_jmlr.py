@@ -1,4 +1,4 @@
-from pytest_regressions.file_regression import FileRegressionFixture
+from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.jmlr import JMLR
@@ -6,7 +6,7 @@ from paperoni.discovery.jmlr import JMLR
 from ..utils import check_papers
 
 
-def test_query(file_regression: FileRegressionFixture):
+def test_query(data_regression: DataRegressionFixture):
     discoverer = JMLR()
 
     assert "v24" in discoverer.list_volumes()
@@ -18,4 +18,4 @@ def test_query(file_regression: FileRegressionFixture):
 
     assert papers, "No papers found for Yoshua Bengio in v24"
 
-    check_papers(file_regression, papers)
+    check_papers(data_regression, papers)

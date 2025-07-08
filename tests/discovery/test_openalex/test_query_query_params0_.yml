@@ -1,0 +1,759 @@
+- key: openalex:W3163652268
+  paper:
+    abstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture
+      in sequence-to-sequence learning. RNNs, however, are inherently sequential models
+      that do not allow parallelization of their computations. Transformers are emerging
+      as a natural alternative to standard RNNs, replacing recurrent computations
+      with a multi-head attention mechanism.In this paper, we propose the SepFormer,
+      a novel RNN-free Transformer-based neural network for speech separation. The
+      Sep-Former learns short and long-term dependencies with a multi-scale approach
+      that employs transformers. The proposed model achieves state-of-the-art (SOTA)
+      performance on the standard WSJ0-2/3mix datasets. It reaches an SI-SNRi of 22.3
+      dB on WSJ0-2mix and an SI-SNRi of 19.5 dB on WSJ0-3mix. The SepFormer inherits
+      the parallelization advantages of Transformers and achieves a competitive performance
+      even when downsampling the encoded representation by a factor of 8. It is thus
+      significantly faster and it is less memory-demanding than the latest speech
+      separation systems with comparable performance.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5023830739
+          type: openalex
+        - link: 0000-0002-7593-6589
+          type: orcid
+        name: Cem Subakan
+      display_name: Cem Subakan
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5102962935
+          type: openalex
+        - link: 0000-0001-8479-3121
+          type: orcid
+        name: Mirco Ravanelli
+      display_name: Mirco Ravanelli
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Marche Polytechnic University
+      author:
+        aliases: []
+        links:
+        - link: A5047682990
+          type: openalex
+        - link: 0000-0002-5358-1844
+          type: orcid
+        name: Samuele Cornell
+      display_name: Samuele Cornell
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5028787566
+          type: openalex
+        name: Mirko Bronzi
+      display_name: Mirko Bronzi
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of Rochester
+      author:
+        aliases: []
+        links:
+        - link: A5063943539
+          type: openalex
+        name: Jianyuan Zhong
+      display_name: Jianyuan Zhong
+    flags: []
+    links:
+    - link: W3163652268
+      type: openalex
+    - link: 10.1109/icassp39728.2021.9413901
+      type: doi
+    - link: '3163652268'
+      type: mag
+    - link: https://arxiv.org/pdf/2010.13154
+      type: open-access
+    - link: https://doi.org/10.1109/icassp39728.2021.9413901
+      type: url
+    - link: https://arxiv.org/abs/2010.13154
+      type: url
+    - link: https://arxiv.org/pdf/2010.13154
+      type: pdf
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2021-05-13T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1109/icassp39728.2021.9413901
+          type: url
+        name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
+          and Signal Processing (ICASSP)
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: Attention Is All You Need In Speech Separation
+    topics:
+    - name: Computer science
+    - name: Recurrent neural network
+    - name: Transformer
+    - name: Computation
+    - name: Artificial intelligence
+    - name: Upsampling
+    - name: Speech recognition
+    - name: Artificial neural network
+    - name: Algorithm
+    - name: Engineering
+    - name: Voltage
+    - name: Electrical engineering
+    - name: Image (mathematics)
+  update_key: null
+- key: openalex:W3143367551
+  paper:
+    abstract: Learning robust speaker embeddings is a crucial step in speaker diarization.
+      Deep neural networks can accurately capture speaker discriminative characteristics
+      and popular deep embeddings such as x-vectors are nowadays a fundamental component
+      of modern diarization systems. Recently, some improvements over the standard
+      TDNN architecture used for x-vectors have been proposed. The ECAPA-TDNN model,
+      for instance, has shown impressive performance in the speaker verification domain,
+      thanks to a carefully designed neural model. In this work, we extend, for the
+      first time, the use of the ECAPA-TDNN model to speaker diarization. Moreover,
+      we improved its robustness with a powerful augmentation scheme that concatenates
+      several contaminated versions of the same signal within the same training batch.
+      The ECAPA-TDNN model turned out to provide robust speaker embeddings under both
+      close-talking and distant-talking conditions. Our results on the popular AMI
+      meeting corpus show that our system significantly outperforms recently proposed
+      approaches.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Indian Institute of Technology Madras
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5067313233
+          type: openalex
+        - link: 0000-0003-1592-6300
+          type: orcid
+        name: Nauman Dawalatabad
+      display_name: Nauman Dawalatabad
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5040811098
+          type: openalex
+        - link: 0000-0002-3929-5526
+          type: orcid
+        name: Mirco Ravanelli
+      display_name: Mirco Ravanelli
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: A5045901453
+          type: openalex
+        - link: 0000-0002-0563-4251
+          type: orcid
+        name: François Grondin
+      display_name: François Grondin
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Ghent University
+      - aliases: []
+        category: wat
+        name: Université de Sherbrooke
+      author:
+        aliases: []
+        links:
+        - link: A5022199264
+          type: openalex
+        - link: 0000-0001-5990-722X
+          type: orcid
+        name: Jenthe Thienpondt
+      display_name: Jenthe Thienpondt
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Ghent University
+      author:
+        aliases: []
+        links:
+        - link: A5032699386
+          type: openalex
+        name: Brecht Desplanques
+      display_name: Brecht Desplanques
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Samsung (South Korea)
+      author:
+        aliases: []
+        links:
+        - link: A5027377615
+          type: openalex
+        name: Hwidong Na
+      display_name: Hwidong Na
+    flags: []
+    links:
+    - link: W3143367551
+      type: openalex
+    - link: 10.21437/interspeech.2021-941
+      type: doi
+    - link: '3143367551'
+      type: mag
+    - link: https://arxiv.org/pdf/2104.01466
+      type: open-access
+    - link: https://doi.org/10.21437/interspeech.2021-941
+      type: url
+    - link: https://arxiv.org/abs/2104.01466
+      type: url
+    - link: https://arxiv.org/pdf/2104.01466
+      type: pdf
+    - link: https://biblio.ugent.be/publication/8720784/file/8720786
+      type: url
+    - link: https://biblio.ugent.be/publication/8720784/file/8720786
+      type: pdf
+    - link: https://biblio.ugent.be/publication/8720784
+      type: url
+    - link: https://biblio.ugent.be/publication/8720784/file/8720786.pdf
+      type: pdf
+    - link: https://api.datacite.org/dois/10.48550/arxiv.2104.01466
+      type: url
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2021-08-27T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.21437/interspeech.2021-941
+          type: url
+        name: Interspeech 2022
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: ECAPA-TDNN Embeddings for Speaker Diarization
+    topics:
+    - name: Speaker diarisation
+    - name: Computer science
+    - name: Speaker recognition
+    - name: Robustness (evolution)
+    - name: Speech recognition
+    - name: Artificial neural network
+    - name: Discriminative model
+    - name: Artificial intelligence
+    - name: Time delay neural network
+    - name: Pattern recognition (psychology)
+    - name: Biochemistry
+    - name: Chemistry
+    - name: Gene
+  update_key: null
+- key: openalex:W3092206109
+  paper:
+    abstract: 'We present GraphMix, a regularization method for Graph Neural Network
+      based semi-supervised object classification, whereby we propose to train a fully-connected
+      network jointly with the graph neural network via parameter sharing and interpolation-based
+      regularization. Further, we provide a theoretical analysis of how GraphMix improves
+      the generalization bounds of the underlying graph neural network, without making
+      any assumptions about the "aggregation" layer or the depth of the graph neural
+      networks. We experimentally validate this analysis by applying GraphMix to various
+      architectures such as Graph Convolutional Networks, Graph Attention Networks
+      and Graph-U-Net. Despite its simplicity, we demonstrate that GraphMix can consistently
+      improve or closely match state-of-the-art performance using even simpler architectures
+      such as Graph Convolutional Networks, across three established graph benchmarks:
+      Cora, Citeseer and Pubmed citation network datasets, as well as three newly
+      proposed datasets: Cora-Full, Co-author-CS and Co-author-Physics.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5083701330
+          type: openalex
+        - link: 0000-0002-4911-4709
+          type: orcid
+        name: Vikas Verma
+      display_name: Vikas Verma
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5101458727
+          type: openalex
+        - link: 0000-0003-2961-8413
+          type: orcid
+        name: Meng Qu
+      display_name: Meng Qu
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Massachusetts Institute of Technology
+      author:
+        aliases: []
+        links:
+        - link: A5003184366
+          type: openalex
+        - link: 0000-0002-5361-9793
+          type: orcid
+        name: Kenji Kawaguchi
+      display_name: Kenji Kawaguchi
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5030891292
+          type: openalex
+        name: Alex Lamb
+      display_name: Alex Lamb
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Aalto University
+      author:
+        aliases: []
+        links:
+        - link: A5057931031
+          type: openalex
+        - link: 0000-0001-5088-4041
+          type: orcid
+        name: Juho Kannala
+      display_name: Juho Kannala
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5077231313
+          type: openalex
+        - link: 0000-0002-6819-4185
+          type: orcid
+        name: Jian Tang
+      display_name: Jian Tang
+    flags: []
+    links:
+    - link: W3092206109
+      type: openalex
+    - link: 10.1609/aaai.v35i11.17203
+      type: doi
+    - link: '3092206109'
+      type: mag
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
+      type: open-access
+    - link: https://doi.org/10.1609/aaai.v35i11.17203
+      type: url
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
+      type: pdf
+    - link: https://hal.archives-ouvertes.fr/hal-03247184
+      type: url
+    - link: https://hal.science/hal-03247184
+      type: url
+    - link: http://arxiv.org/abs/1909.11715
+      type: url
+    - link: http://arxiv.org/pdf/1909.11715
+      type: pdf
+    - link: https://arxiv.org/abs/1909.11715
+      type: url
+    - link: https://arxiv.org/pdf/1909.11715
+      type: pdf
+    - link: https://api.datacite.org/dois/10.48550/arxiv.1909.11715
+      type: url
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2021-05-18T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1609/aaai.v35i11.17203
+          type: url
+        - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
+          type: pdf
+        name: Proceedings of the AAAI Conference on Artificial Intelligence
+        open: true
+        peer_reviewed: true
+        publisher: Association for the Advancement of Artificial Intelligence
+        series: ''
+        type: conference
+        volume: null
+    title: 'GraphMix: Improved Training of GNNs for Semi-Supervised Learning'
+    topics:
+    - name: Computer science
+    - name: Graph
+    - name: Convolutional neural network
+    - name: Theoretical computer science
+    - name: Artificial intelligence
+    - name: Machine learning
+    - name: Regularization (linguistics)
+    - name: Artificial neural network
+  update_key: null
+- key: openalex:W4319300975
+  paper:
+    abstract: Convolutional neural networks (CNNs) have been the consensus for medical
+      image segmentation tasks. However, they suffer from the limitation in modeling
+      long-range dependencies and spatial correlations due to the nature of convolution
+      operation. Although transformers were first developed to address this issue,
+      they fail to capture low-level features. In contrast, it is demonstrated that
+      both local and global features are crucial for dense prediction, such as segmenting
+      in challenging contexts. In this paper, we propose HiFormer, a novel method
+      that efficiently bridges a CNN and a transformer for medical image segmentation.
+      Specifically, we design two multi-scale feature representations using the seminal
+      Swin Transformer module and a CNN-based encoder. To secure a fine fusion of
+      global and local features obtained from the two aforementioned representations,
+      we propose a Double-Level Fusion (DLF) module in the skip connection of the
+      encoder-decoder structure. Extensive experiments on various medical image segmentation
+      datasets demonstrate the effectiveness of HiFormer over other CNN-based, transformer-based,
+      and hybrid methods in terms of computational complexity, quantitative and qualitative
+      results. Our code is publicly available at GitHub.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Iran University of Science and Technology
+      author:
+        aliases: []
+        links:
+        - link: A5000174202
+          type: openalex
+        - link: 0000-0003-3676-0127
+          type: orcid
+        name: Moein Heidari
+      display_name: Moein Heidari
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Iran University of Science and Technology
+      author:
+        aliases: []
+        links:
+        - link: A5037774043
+          type: openalex
+        - link: 0000-0002-3155-4407
+          type: orcid
+        name: Amirhossein Kazerouni
+      display_name: Amirhossein Kazerouni
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Iran University of Science and Technology
+      author:
+        aliases: []
+        links:
+        - link: A5056039283
+          type: openalex
+        name: Milad Soltany
+      display_name: Milad Soltany
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: RWTH Aachen University
+      author:
+        aliases: []
+        links:
+        - link: A5087512747
+          type: openalex
+        - link: 0000-0002-4772-2161
+          type: orcid
+        name: Reza Azad
+      display_name: Reza Azad
+    - affiliations:
+      - aliases: []
+        category: academia
+        name: Shahid Beheshti University
+      author:
+        aliases: []
+        links:
+        - link: A5015411150
+          type: openalex
+        - link: 0000-0002-2849-1070
+          type: orcid
+        name: Ehsan Khodapanah Aghdam
+      display_name: Ehsan Khodapanah Aghdam
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5009765322
+          type: openalex
+        name: Julien Cohen‐Adad
+      display_name: Julien Cohen‐Adad
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of Regensburg
+      - aliases: []
+        category: unknown
+        name: Fraunhofer Institute for Digital Medicine
+      author:
+        aliases: []
+        links:
+        - link: A5064747056
+          type: openalex
+        - link: 0000-0002-1672-2185
+          type: orcid
+        name: Dorit Merhof
+      display_name: Dorit Merhof
+    flags: []
+    links:
+    - link: W4319300975
+      type: openalex
+    - link: 10.1109/wacv56688.2023.00614
+      type: doi
+    - link: https://arxiv.org/pdf/2207.08518
+      type: open-access
+    - link: https://doi.org/10.1109/wacv56688.2023.00614
+      type: url
+    - link: https://arxiv.org/abs/2207.08518
+      type: url
+    - link: https://arxiv.org/pdf/2207.08518
+      type: pdf
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2023-01-01T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1109/wacv56688.2023.00614
+          type: url
+        name: 2022 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: 'HiFormer: Hierarchical Multi-scale Representations Using Transformers
+      for Medical Image Segmentation'
+    topics:
+    - name: Computer science
+    - name: Encoder
+    - name: Segmentation
+    - name: Artificial intelligence
+    - name: Transformer
+    - name: Convolutional neural network
+    - name: Image segmentation
+    - name: Pattern recognition (psychology)
+    - name: Scale-space segmentation
+    - name: Computer vision
+    - name: Voltage
+    - name: Physics
+    - name: Quantum mechanics
+    - name: Operating system
+  update_key: null
+- key: openalex:W4372260310
+  paper:
+    abstract: 'Contrastive learning has shown remarkable success in the field of multimodal
+      representation learning. In this paper, we propose a pipeline of contrastive
+      language-audio pretraining to develop an audio representation by combining audio
+      data with natural language descriptions. To accomplish this target, we first
+      release LAION-Audio-630K, a large collection of 633,526 audio-text pairs from
+      different data sources. Second, we construct a contrastive language-audio pretraining
+      model by considering different audio encoders and text encoders. We incorporate
+      the feature fusion mechanism and keyword-to-caption augmentation into the model
+      design to further enable the model to process audio inputs of variable lengths
+      and enhance the performance. Third, we perform comprehensive experiments to
+      evaluate our model across three tasks: text-to-audio retrieval, zero-shot audio
+      classification, and supervised audio classification. The results demonstrate
+      that our model achieves superior performance in text-to-audio retrieval task.
+      In audio classification tasks, the model achieves state-of-the-art performance
+      in the zero-shot setting and is able to obtain performance comparable to models''
+      results in the non-zero-shot setting. LAION-Audio-630K <sup xmlns:mml="http://www.w3.org/1998/Math/MathML"
+      xmlns:xlink="http://www.w3.org/1999/xlink">1</sup> and the proposed model <sup
+      xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink">2</sup>
+      are both available to the public.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5102132394
+          type: openalex
+        - link: 0000-0003-4190-974X
+          type: orcid
+        name: Yusong Wu
+      display_name: Yusong Wu
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of California, San Diego
+      author:
+        aliases: []
+        links:
+        - link: A5100451980
+          type: openalex
+        - link: 0000-0001-8357-3741
+          type: orcid
+        name: Ke Chen
+      display_name: Ke Chen
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5100425864
+          type: openalex
+        - link: 0000-0003-1969-2855
+          type: orcid
+        name: Tianyu Zhang
+      display_name: Tianyu Zhang
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec Artificial Intelligence Institute
+      author:
+        aliases: []
+        links:
+        - link: A5103129849
+          type: openalex
+        - link: 0000-0002-9659-3714
+          type: orcid
+        name: Yuchen Hui
+      display_name: Yuchen Hui
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of California, San Diego
+      author:
+        aliases: []
+        links:
+        - link: A5017455302
+          type: openalex
+        - link: 0000-0002-1283-4075
+          type: orcid
+        name: Taylor Berg-Kirkpatrick
+      display_name: Taylor Berg-Kirkpatrick
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: University of California, San Diego
+      author:
+        aliases: []
+        links:
+        - link: A5042278809
+          type: openalex
+        - link: 0000-0003-0222-1125
+          type: orcid
+        name: Shlomo Dubnov
+      display_name: Shlomo Dubnov
+    flags: []
+    links:
+    - link: W4372260310
+      type: openalex
+    - link: 10.1109/icassp49357.2023.10095969
+      type: doi
+    - link: https://doi.org/10.1109/icassp49357.2023.10095969
+      type: open-access
+    - link: https://doi.org/10.1109/icassp49357.2023.10095969
+      type: url
+    - link: https://hal.science/hal-04766539
+      type: url
+    - link: https://hal.science/hal-04766539/document
+      type: pdf
+    - link: https://arxiv.org/abs/2211.06687
+      type: url
+    - link: https://arxiv.org/pdf/2211.06687
+      type: pdf
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2023-05-05T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1109/icassp49357.2023.10095969
+          type: url
+        name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
+          and Signal Processing (ICASSP)
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ''
+        type: conference
+        volume: null
+    title: Large-Scale Contrastive Language-Audio Pretraining with Feature Fusion
+      and Keyword-to-Caption Augmentation
+    topics:
+    - name: Computer science
+    - name: Audio mining
+    - name: Natural language processing
+    - name: Pipeline (software)
+    - name: Speech recognition
+    - name: Artificial intelligence
+    - name: Encoder
+    - name: Construct (python library)
+    - name: Feature (linguistics)
+    - name: Natural language
+    - name: Language model
+    - name: Speech processing
+    - name: Acoustic model
+    - name: Linguistics
+    - name: Programming language
+    - name: Operating system
+    - name: Philosophy
+  update_key: null
