@@ -4,8 +4,7 @@ from pytest_regressions.file_regression import FileRegressionFixture
 from paperoni import config
 from paperoni.discovery import openreview
 from paperoni.discovery.base import PaperInfo
-from paperoni.discovery.openreview import OpenReview, OpenReviewDispatch
-from paperoni.model.classes import Paper
+from paperoni.discovery.openreview import OpenReview
 
 from ..utils import check_papers, iter_links_ids, iter_releases
 
@@ -101,7 +100,7 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
                     key=lambda x: x.paper.title,
                 )
             ], (
-                f"Querying by author ID should return the same papers as querying by author name"
+                "Querying by author ID should return the same papers as querying by author name"
             )
         case "title":
             assert all(

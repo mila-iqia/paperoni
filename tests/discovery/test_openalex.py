@@ -62,7 +62,7 @@ def test_query(file_regression: FileRegressionFixture, query_params: dict[str, s
                     key=lambda x: x.paper.title,
                 )
             ], (
-                f"Querying by author ID should return the same papers as querying by author name"
+                "Querying by author ID should return the same papers as querying by author name"
             )
         case "title":
             # Search on title will return a match for each word in the query

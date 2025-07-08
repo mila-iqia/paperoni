@@ -5,7 +5,6 @@ from pytest_regressions.file_regression import FileRegressionFixture
 
 from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.semantic_scholar import SemanticScholar
-from paperoni.model.classes import Paper
 
 from ..utils import check_papers, split_on
 
