@@ -60,6 +60,21 @@ def test_focus_scoring():
     assert focuses.score(paper_info) == 1.5
 
 
+def test_score_non_ascii_title():
+    focuses = Focuses(
+        [
+            Focus("author", "Alice Smith", 1.0),
+            Focus("author", "Bob Jones", 0.5),
+        ]
+    )
+    author = PaperAuthor(display_name="Alice Smith", author=None)
+    paper = Paper(
+        title="バイオディーゼル燃料【Powered by NICT】",
+        authors=[author],
+    )
+    assert focuses.score(paper) == 0.0
+
+
 def test_focus_serialization():
     focus1 = Focus("author", "Alice Smith", 1.0, drive_discovery=False)
     focus2 = Focus("institution", "MIT", 2.0, drive_discovery=True)

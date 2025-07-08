@@ -86,3 +86,28 @@ def asciiify(s: str) -> str:
     norm = unicodedata.normalize("NFD", s)
     stripped = norm.encode("ASCII", "ignore")
     return stripped.decode("utf8")
+
+
+def mostly_latin(s: str, threshold: float = 0.9) -> bool:
+    """
+    Returns True if at least `threshold` (default 0.9) of the characters in the string
+    are ASCII or accented Latin characters.
+    """
+    ### LLM code
+    if not s:
+        return True
+    total = 0
+    good = 0
+    for c in s:
+        total += 1
+        o = ord(c)
+        if o < 128:
+            good += 1
+        else:
+            # Check if it's an accented Latin character
+            # Normalize and check if it decomposes to a Latin base
+            decomp = unicodedata.normalize("NFD", c)
+            base = decomp[0]
+            if "LATIN" in unicodedata.name(base, ""):
+                good += 1
+    return good / total >= threshold

@@ -3,6 +3,7 @@ from dataclasses import dataclass, field, replace
 
 from ovld import ovld
 
+from ..utils import mostly_latin
 from .classes import Paper, PaperAuthor, PaperInfo
 
 
@@ -63,6 +64,8 @@ class Focuses:
 
     @ovld
     def score(self, p: Paper):
+        if not mostly_latin(p.title):
+            return 0.0
         scores = [self.score(author) for author in p.authors]
         return combine(scores)
 
