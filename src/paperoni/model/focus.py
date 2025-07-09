@@ -1,3 +1,4 @@
+import re
 from bisect import bisect_left
 from dataclasses import dataclass, field, replace
 
@@ -48,7 +49,7 @@ class Focuses:
     focuses: list[Focus] = field(default_factory=list)
 
     def __post_init__(self):
-        self.score_index = {(f.type, f.name): f.score for f in self.focuses}
+        self.score_index = {(f.type, f.name.lower()): f.score for f in self.focuses}
 
     @classmethod
     def serieux_deserialize(cls, obj, ctx, call_next):
@@ -71,9 +72,11 @@ class Focuses:
 
     @ovld
     def score(self, p: PaperAuthor):
-        name_score = self.score_index.get(("author", p.display_name), 0.0)
+        name_score = self.score_index.get(("author", p.display_name.lower()), 0.0)
         iscores = [
-            self.score_index.get(("institution", aff.name), 0.0) for aff in p.affiliations
+            self.score_index.get(("institution", name.lower()), 0.0)
+            for aff in p.affiliations
+            for name in re.split(r" *[,;/-] *", aff.name)
         ]
         return combine([name_score, *iscores])
 
