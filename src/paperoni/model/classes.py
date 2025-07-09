@@ -51,12 +51,12 @@ class DatePrecision(int, Enum):
                 if year < 100:
                     year += 2000
                 return {
-                    "date": f"{year}-01-01 00:00",
+                    "date": datetime(year, 1, 1).date(),
                     "date_precision": DatePrecision.year,
                 }
             case str() as year if re.match("^[0-9]{4}$", date):
                 return {
-                    "date": f"{year}-01-01 00:00",
+                    "date": datetime(year, 1, 1).date(),
                     "date_precision": DatePrecision.year,
                 }
             case str() if m := re.match("^(....)-(..)-(..).*", date):
@@ -70,7 +70,7 @@ class DatePrecision(int, Enum):
                         else:
                             precision = DatePrecision.day
                         return {
-                            "date": f"{year}-{month}-{day} 00:00",
+                            "date": datetime(year, month, day).date(),
                             "date_precision": precision,
                         }
                     case _:  # pragma: no cover
@@ -78,7 +78,7 @@ class DatePrecision(int, Enum):
             case None | "":
                 return (
                     {
-                        "date": "2000-01-01 00:00",
+                        "date": datetime(2000, 1, 1).date(),
                         "date_precision": DatePrecision.unknown,
                     }
                     if infer_precision

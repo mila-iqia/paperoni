@@ -23,26 +23,33 @@ def test_query(data_regression: DataRegressionFixture, conference, query_params)
         key=lambda x: x.paper.title,
     )
 
-    match next(iter(query_params.keys())):
-        case "affiliation":
-            assert all(
-                any(
-                    query_params["affiliation"].lower() in aff.name.lower()
-                    for aff in iter_affiliations(paper.paper)
+    match_found = False
+
+    for param in query_params:
+        match param:
+            case "affiliation":
+                assert all(
+                    any(
+                        query_params["affiliation"].lower() in aff.name.lower()
+                        for aff in iter_affiliations(paper.paper)
+                    )
+                    for paper in papers
+                ), (
+                    f"Some papers do not contain the affiliation {query_params['affiliation']=}"
                 )
-                for paper in papers
-            ), (
-                f"Some papers do not contain the affiliation {query_params['affiliation']=}"
-            )
-        case "author":
-            assert all(
-                any(
-                    query_params["author"].lower() in author.author.name.lower()
-                    for author in paper.paper.authors
-                )
-                for paper in papers
-            ), f"Some papers do not contain the author {query_params['author']=}"
-        case _:
-            assert False, f"Unknown query parameter: {query_params=}"
+                match_found = True
+
+            case "author":
+                assert all(
+                    any(
+                        query_params["author"].lower() in author.author.name.lower()
+                        for author in paper.paper.authors
+                    )
+                    for paper in papers
+                ), f"Some papers do not contain the author {query_params['author']=}"
+                match_found = True
+
+    if not match_found:
+        assert False, f"Unknown query parameters: {query_params=}"
 
     check_papers(data_regression, papers)

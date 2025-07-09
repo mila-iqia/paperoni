@@ -45,47 +45,56 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
 
     assert papers, f"No papers found for {query_params=}"
 
-    match next(iter(query_params.keys())):
-        case "author":
-            name_splits = [part.strip() for part in query_params["author"].split()]
+    match_found = False
 
-            # Generate all permutations of name parts
-            all_permutations = list(permutations(name_splits))
+    for param in query_params:
+        match param:
+            case "author":
+                name_splits = [part.strip() for part in query_params["author"].split()]
 
-            name_variants = []
+                # Generate all permutations of name parts
+                all_permutations = list(permutations(name_splits))
 
-            # For each permutation, add the original and abbreviated versions
-            for perm in all_permutations:
-                perm_list = list(perm)
-                # Add the original permutation
-                name_variants.append(perm_list)
-                # Add abbreviated versions of this permutation
-                for i in range(len(perm_list)):
-                    abbreviated = (
-                        perm_list[:i] + [f"{perm_list[i][0]}."] + perm_list[i + 1 :]
-                    )
-                    name_variants.append(abbreviated)
+                name_variants = []
 
-            name_variants = [" ".join(variant) for variant in name_variants]
+                # For each permutation, add the original and abbreviated versions
+                for perm in all_permutations:
+                    perm_list = list(perm)
+                    # Add the original permutation
+                    name_variants.append(perm_list)
+                    # Add abbreviated versions of this permutation
+                    for i in range(len(perm_list)):
+                        abbreviated = (
+                            perm_list[:i] + [f"{perm_list[i][0]}."] + perm_list[i + 1 :]
+                        )
+                        name_variants.append(abbreviated)
 
-            assert all(
-                any(
+                name_variants = [" ".join(variant) for variant in name_variants]
+
+                assert all(
                     any(
-                        name_variant.lower() in author.author.name.lower()
-                        for name_variant in name_variants
+                        any(
+                            name_variant.lower() in author.author.name.lower()
+                            for name_variant in name_variants
+                        )
+                        for author in paper.paper.authors
                     )
-                    for author in paper.paper.authors
+                    for paper in papers
+                ), f"Some papers do not contain the author {query_params['author']=}"
+                match_found = True
+
+            case "title":
+                assert all(
+                    # Search on title will return a match for each word in the query
+                    set(split_on(query_params["title"].lower()))
+                    & set(split_on(paper.paper.title.lower()))
+                    for paper in papers
+                ), (
+                    f"Some papers' titles do not contain the words {query_params['title']=}"
                 )
-                for paper in papers
-            ), f"Some papers do not contain the author {query_params['author']=}"
-        case "title":
-            assert all(
-                # Search on title will return a match for each word in the query
-                set(split_on(query_params["title"].lower()))
-                & set(split_on(paper.paper.title.lower()))
-                for paper in papers
-            ), f"Some papers' titles do not contain the words {query_params['title']=}"
-        case _:
-            assert False, f"Unknown query parameter: {query_params=}"
+                match_found = True
+
+    if not match_found:
+        assert False, f"Unknown query parameter: {query_params=}"
 
     check_papers(data_regression, papers)

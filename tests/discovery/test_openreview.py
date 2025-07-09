@@ -59,52 +59,67 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
         f"Querying with OpenReview({api_versions=}) should return the same papers as querying with OpenReviewDispatch"
     )
 
-    match next(iter(query_params.keys())):
-        case "venue":
-            assert all(
-                any(
-                    query_params["venue"].lower() == rel.venue.name.lower()
-                    for rel in iter_releases(paper.paper)
+    match_found = False
+
+    for param in query_params:
+        match param:
+            case "venue":
+                assert all(
+                    any(
+                        query_params["venue"].lower() == rel.venue.name.lower()
+                        for rel in iter_releases(paper.paper)
+                    )
+                    for paper in papers
+                ), f"Some papers do not contain the venue {query_params['venue']=}"
+                match_found = True
+
+            case "paper_id":
+                assert all(
+                    any(
+                        query_params["paper_id"] == link_id
+                        for link_id in iter_links_ids(paper.paper)
+                    )
+                    for paper in papers
+                ), f"Some papers do not contain the paper ID {query_params['paper_id']=}"
+                match_found = True
+
+            case "author":
+                assert all(
+                    any(
+                        query_params["author"].lower() in author.author.name.lower()
+                        for author in paper.paper.authors
+                    )
+                    for paper in papers
+                ), f"Some papers do not contain the author {query_params['author']=}"
+                match_found = True
+
+            case "author_id":
+                assert [p.paper for p in papers] == [
+                    p.paper
+                    for p in sorted(
+                        openreview_dispatch.query(
+                            author="Yoshua Bengio",
+                            venue=query_params["venue"],
+                            block_size=100,
+                            limit=100,
+                        ),
+                        key=lambda x: x.paper.title,
+                    )
+                ], (
+                    "Querying by author ID, at least for Yoshua Bengio, should return the same papers as querying by author name"
                 )
-                for paper in papers
-            ), f"Some papers do not contain the venue {query_params['venue']=}"
-        case "paper_id":
-            assert all(
-                any(
-                    query_params["paper_id"] == link_id
-                    for link_id in iter_links_ids(paper.paper)
+                match_found = True
+
+            case "title":
+                assert all(
+                    query_params["title"].lower() == paper.paper.title.lower()
+                    for paper in papers
+                ), (
+                    f"Some papers' titles do not contain the words {query_params['title']=}"
                 )
-                for paper in papers
-            ), f"Some papers do not contain the paper ID {query_params['paper_id']=}"
-        case "author":
-            assert all(
-                any(
-                    query_params["author"].lower() in author.author.name.lower()
-                    for author in paper.paper.authors
-                )
-                for paper in papers
-            ), f"Some papers do not contain the author {query_params['author']=}"
-        case "author_id":
-            assert [p.paper for p in papers] == [
-                p.paper
-                for p in sorted(
-                    openreview_dispatch.query(
-                        author="Yoshua Bengio",
-                        venue=query_params["venue"],
-                        block_size=100,
-                        limit=100,
-                    ),
-                    key=lambda x: x.paper.title,
-                )
-            ], (
-                "Querying by author ID should return the same papers as querying by author name"
-            )
-        case "title":
-            assert all(
-                query_params["title"].lower() == paper.paper.title.lower()
-                for paper in papers
-            ), f"Some papers' titles do not contain the words {query_params['title']=}"
-        case _:
-            assert False, f"Unknown query parameter: {query_params=}"
+                match_found = True
+
+    if not match_found:
+        assert False, f"Unknown query parameters: {query_params=}"
 
     check_papers(data_regression, papers)

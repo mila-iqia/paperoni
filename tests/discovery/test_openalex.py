@@ -46,49 +46,62 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
 
     assert papers, f"No papers found for {query_params=}"
 
-    match next(iter(query_params.keys())):
-        case "institution":
-            assert all(
-                any(
-                    query_params["institution"].lower() in aff.name.lower()
-                    for aff in iter_affiliations(paper.paper)
+    match_found = False
+
+    for param in query_params:
+        match param:
+            case "institution":
+                assert all(
+                    any(
+                        query_params["institution"].lower() in aff.name.lower()
+                        for aff in iter_affiliations(paper.paper)
+                    )
+                    for paper in papers
+                ), (
+                    f"Some papers do not contain the institution {query_params['institution']=}"
                 )
-                for paper in papers
-            ), (
-                f"Some papers do not contain the institution {query_params['institution']=}"
-            )
-        case "author":
-            assert all(
-                any(
-                    query_params["author"].lower() in author.author.name.lower()
-                    for author in paper.paper.authors
-                )
-                for paper in papers
-            ), f"Some papers do not contain the author {query_params['author']=}"
-        case "author_id":
-            assert [p.paper for p in papers] == [
-                p.paper
-                for p in sorted(
-                    filter_test_papers(
-                        discoverer.query(
-                            author="Yoshua Bengio", page=1, per_page=100, limit=100
+                match_found = True
+
+            case "author":
+                assert all(
+                    any(
+                        query_params["author"].lower() in author.author.name.lower()
+                        for author in paper.paper.authors
+                    )
+                    for paper in papers
+                ), f"Some papers do not contain the author {query_params['author']=}"
+                match_found = True
+
+            case "author_id":
+                assert [p.paper for p in papers] == [
+                    p.paper
+                    for p in sorted(
+                        filter_test_papers(
+                            discoverer.query(
+                                author="Yoshua Bengio", page=1, per_page=100, limit=100
+                            ),
+                            PAPERS,
                         ),
-                        PAPERS,
-                    ),
-                    key=lambda x: x.paper.title,
+                        key=lambda x: x.paper.title,
+                    )
+                ], (
+                    "Querying by author ID should return the same papers as querying by author name"
                 )
-            ], (
-                "Querying by author ID should return the same papers as querying by author name"
-            )
-        case "title":
-            # Search on title will return a match for each word in the query
-            assert all(
-                set(split_on(query_params["title"].lower()))
-                & set(split_on(paper.paper.title.lower()))
-                for paper in papers
-            ), f"Some papers' titles do not contain the words {query_params['title']=}"
-        case _:
-            assert False, f"Unknown query parameter: {query_params=}"
+                match_found = True
+
+            case "title":
+                # Search on title will return a match for each word in the query
+                assert all(
+                    set(split_on(query_params["title"].lower()))
+                    & set(split_on(paper.paper.title.lower()))
+                    for paper in papers
+                ), (
+                    f"Some papers' titles do not contain the words {query_params['title']=}"
+                )
+                match_found = True
+
+    if not match_found:
+        assert False, f"Unknown query parameters: {query_params=}"
 
     check_papers(data_regression, papers)
 

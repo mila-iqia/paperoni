@@ -126,7 +126,7 @@ class MiniConf(Discoverer):
         if url := expand_base(data.get("virtualsite_url")):
             links.add(Link(type="abstract", link=url))
         links = sorted(
-            links, key=lambda x: {"pdf": 0, "abstract": 1}.get(x.type, math.inf)
+            links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)
         )
 
         # Add eventmedia links

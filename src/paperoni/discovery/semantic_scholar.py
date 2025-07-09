@@ -93,9 +93,7 @@ def _date_from_data(data):
             "date_precision": DatePrecision.day,
         }
     else:
-        date = DatePrecision.assimilate_date(data["year"])
-        date["date"] = datetime.strptime(date["date"], "%Y-%m-%d %H:%M").date()
-        return date
+        return DatePrecision.assimilate_date(data["year"])
 
 
 # "authors" will have fields "authorId" and "name"
