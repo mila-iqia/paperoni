@@ -512,7 +512,7 @@ class OpenReviewDispatch(Discoverer):
         # Block size for fetching results
         block_size: int = 100,
         # Maximum number of results to return
-        limit: int = 10000,
+        limit: int = 100000,
     ):
         """Query OpenReview"""
         for api_version in self.api_versions:
