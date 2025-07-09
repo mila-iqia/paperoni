@@ -1,4 +1,9 @@
+import itertools
+import re
 import unicodedata
+from difflib import SequenceMatcher
+
+from unidecode import unidecode
 
 link_generators = {
     "arxiv": {
@@ -111,3 +116,35 @@ def mostly_latin(s: str, threshold: float = 0.9) -> bool:
             if "LATIN" in unicodedata.name(base, ""):
                 good += 1
     return good / total >= threshold
+
+
+def plainify(name):
+    name = unidecode(name).lower()
+    name = re.sub(string=name, pattern="[()-]", repl=" ")
+    name = re.sub(string=name, pattern="['.]", repl="")
+    return name
+
+
+def similarity(s1, s2):
+    s1 = plainify(s1)
+    s2 = plainify(s2)
+    return SequenceMatcher(a=s1, b=s2).ratio()
+
+
+def associate(l1, l2, key, threshold=0):
+    el1 = list(enumerate(l1))
+    el2 = list(enumerate(l2))
+    sims = [
+        (value, i1, i2)
+        for (i1, x1), (i2, x2) in itertools.product(el1, el2)
+        if (value := key(x1, x2)) > threshold
+    ]
+    sims.sort(key=lambda tup: -tup[0])
+    mapping = {}
+    n = len(l1)
+    for _, i1, i2 in sims:
+        if i1 not in mapping:
+            mapping[i1] = l2[i2]
+        if len(mapping) == n:
+            break
+    return [(x1, mapping.get(i1, None)) for i1, x1 in el1]

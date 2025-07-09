@@ -1,0 +1,136 @@
+from dataclasses import dataclass
+
+from serieux import deserialize, serialize
+
+from paperoni.model.classes import (
+    Author,
+    Institution,
+    InstitutionCategory,
+    Link,
+    PaperAuthor,
+)
+from paperoni.model.srx import Annotations, AugmentedProxy, merge
+
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+
+@dataclass
+class Person:
+    name: str
+    job: str
+
+
+def qual(x, q):
+    return AugmentedProxy(x, Annotations(quality=q))
+
+
+def test_augment():
+    pt = Point(qual(3, 2.5), 4)
+    ser = serialize(Point, pt)
+    assert ser == {"x": {"$ann": {"quality": 2.5}, "$value": 3}, "y": 4}
+    deser = deserialize(Point, ser)
+    assert deser.x._.quality == 2.5
+
+
+def test_merge():
+    p1 = Person(name=qual("John", 2), job="Carpenter")
+    p2 = Person(name=qual("Johnny", 1), job=qual("Lawyer", 3))
+    p12 = merge(p1, p2)
+    assert p12 == Person(name="John", job="Lawyer")
+
+    p3 = Person(name=qual("NO!", 1.5), job=qual("Philosopher", 4))
+    p123 = merge(p12, p3)
+    assert p123 == Person(name="John", job="Philosopher")
+
+    p4 = qual(Person(name="Gunther", job="Unemployed"), 3)
+    p34 = merge(p3, p4)
+    assert p34 == Person(name="Gunther", job="Philosopher")
+
+
+def test_merge_lists():
+    p1 = Person(name="John", job="Carpenter")
+    p2 = Person(name="John", job=qual("Lawyer", 3))
+    p3 = qual(Person(name="Gunther", job="Unemployed"), 3)
+
+    l1 = [p3, p1]
+    l2 = [p2, p1]
+
+    assert merge(l1, l2) == [p3, p1, p2]
+
+
+def test_merge_author_lists():
+    p1 = PaperAuthor(
+        display_name="John",
+        author=Author(name="John", links=[Link(type="job", link="baker")]),
+    )
+    p2 = PaperAuthor(
+        display_name="John",
+        author=Author(name="John", links=[Link(type="hair", link="yes")]),
+    )
+    p3 = qual(
+        PaperAuthor(display_name="Gunther", author=Author(name="Gunther", links=[])), 3
+    )
+
+    l1 = [p3, p1]
+    l2 = [p2]
+
+    assert merge(l1, l2) == [
+        PaperAuthor(display_name="Gunther", author=Author(name="Gunther", links=[])),
+        PaperAuthor(
+            display_name="John",
+            author=Author(
+                name="John",
+                links=[Link(type="job", link="baker"), Link(type="hair", link="yes")],
+            ),
+        ),
+    ]
+
+
+def test_merge_author_lists_similarity():
+    p1 = PaperAuthor(
+        display_name="J. Smith",
+        author=Author(name="J.", links=[Link(type="job", link="baker")]),
+    )
+    p2 = qual(
+        PaperAuthor(
+            display_name="John Smith",
+            author=Author(name="John Smith", links=[Link(type="hair", link="yes")]),
+        ),
+        2,
+    )
+    p3 = qual(
+        PaperAuthor(display_name="Gunther", author=Author(name="Gunther", links=[])), 3
+    )
+
+    l1 = [p3, p1]
+    l2 = [p2]
+
+    assert merge(l1, l2) == [
+        PaperAuthor(display_name="Gunther", author=Author(name="Gunther", links=[])),
+        PaperAuthor(
+            display_name="John Smith",
+            author=Author(
+                name="John Smith",
+                links=[Link(type="hair", link="yes"), Link(type="job", link="baker")],
+            ),
+        ),
+    ]
+
+
+def test_merge_institution_lists():
+    i1 = Institution(name="MIT")
+    i2 = qual(Institution(name="MIT", category=InstitutionCategory.academia), 2)
+    i3 = qual(Institution(name="Stanford University"), 3)
+
+    l1 = [i3, i1]
+    l2 = [i2]
+
+    merged = merge(l1, l2)
+    assert merged == [
+        Institution(name="Stanford University"),
+        Institution(name="MIT", category=InstitutionCategory.academia),
+    ]
