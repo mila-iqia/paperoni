@@ -5,8 +5,7 @@ from typing import Generator, Iterable
 from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import serialize
 
-from paperoni.discovery.base import PaperInfo
-from paperoni.model.classes import Institution, Paper, Release, VenueType
+from paperoni.model import Institution, Paper, PaperInfo, Release, VenueType
 
 
 def iter_affiliations(paper: Paper) -> Generator[Institution, None, None]:

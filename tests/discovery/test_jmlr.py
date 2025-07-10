@@ -1,7 +1,7 @@
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.jmlr import JMLR
+from paperoni.model import PaperInfo
 
 from ..utils import check_papers
 
