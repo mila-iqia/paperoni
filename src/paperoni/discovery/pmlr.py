@@ -10,12 +10,13 @@ from ..model.classes import (
     Link,
     Paper,
     PaperAuthor,
+    PaperInfo,
     Release,
     Venue,
     VenueType,
 )
 from ..utils import asciiify
-from .base import Discoverer, PaperInfo
+from .base import Discoverer
 
 
 def parse_paper(entry):

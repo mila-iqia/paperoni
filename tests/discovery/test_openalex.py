@@ -1,8 +1,8 @@
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.openalex import OpenAlex, QueryError
+from paperoni.model import PaperInfo
 
 from ..utils import check_papers, filter_test_papers, iter_affiliations, split_on
 

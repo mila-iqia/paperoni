@@ -3,8 +3,8 @@ import itertools
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.miniconf import MiniConf, conference_urls
+from paperoni.model import PaperInfo
 
 from ..utils import check_papers, iter_affiliations
 

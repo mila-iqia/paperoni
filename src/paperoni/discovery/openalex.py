@@ -12,13 +12,14 @@ from ..model.classes import (
     Link,
     Paper,
     PaperAuthor,
+    PaperInfo,
     Release,
     Topic,
     Venue,
     VenueType,
 )
 from ..utils import QueryError, link_generators as LINK_GENERATORS
-from .base import Discoverer, PaperInfo
+from .base import Discoverer
 
 # https://docs.openalex.org/api-entities/institutions/institution-object#type
 INSTITUTION_CATEGORY_MAPPING = {

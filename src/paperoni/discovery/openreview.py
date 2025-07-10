@@ -13,12 +13,13 @@ from ..model import (
     Link,
     Paper,
     PaperAuthor,
+    PaperInfo,
     Release,
     Topic,
     Venue,
     VenueType,
 )
-from .base import Discoverer, PaperInfo
+from .base import Discoverer
 
 
 def extract_date(txt: str) -> dict | None:
@@ -511,7 +512,7 @@ class OpenReviewDispatch(Discoverer):
         # Block size for fetching results
         block_size: int = 100,
         # Maximum number of results to return
-        limit: int = 10000,
+        limit: int = 100000,
     ):
         """Query OpenReview"""
         for api_version in self.api_versions:

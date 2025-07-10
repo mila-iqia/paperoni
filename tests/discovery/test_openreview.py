@@ -3,8 +3,8 @@ from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni import config
 from paperoni.discovery import openreview
-from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.openreview import OpenReview
+from paperoni.model import PaperInfo
 
 from ..utils import check_papers, iter_links_ids, iter_releases
 

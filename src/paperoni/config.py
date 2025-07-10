@@ -9,6 +9,7 @@ from requests import Session
 from serieux import TaggedSubclass
 
 from .discovery.base import Discoverer
+from .model.focus import Focuses
 
 
 @dataclass
@@ -32,6 +33,7 @@ class PaperoniConfig:
     cache_path: Path = None
     requests: RequesterConfig = field(default_factory=RequesterConfig)
     discovery: dict[str, TaggedSubclass[Discoverer]] = field(default_factory=dict)
+    focuses: Focuses = field(default_factory=Focuses)
 
 
 config = gifnoc.define(

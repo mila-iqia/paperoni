@@ -3,8 +3,8 @@ from itertools import permutations
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.discovery.base import PaperInfo
 from paperoni.discovery.semantic_scholar import SemanticScholar
+from paperoni.model import PaperInfo
 
 from ..utils import check_papers, filter_test_papers, split_on
 

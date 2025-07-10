@@ -164,8 +164,8 @@ class Author:
 @dataclass
 class Institution:
     name: str
-    category: InstitutionCategory
-    aliases: list[str]
+    category: InstitutionCategory = InstitutionCategory.unknown
+    aliases: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -177,8 +177,8 @@ class Venue:
     date_precision: DatePrecision
     volume: str = None
     publisher: str = None
-    aliases: list[str]
-    links: list[Link]
+    aliases: list[str] = field(default_factory=list)
+    links: list[Link] = field(default_factory=list)
     open: bool = False
     peer_reviewed: bool = False
 
@@ -194,15 +194,23 @@ class Release:
 class PaperAuthor:
     author: Author
     display_name: str
-    affiliations: list[Institution]
+    affiliations: list[Institution] = field(default_factory=list)
 
 
 @dataclass
 class Paper:
     title: str
     abstract: str = None
-    authors: list[PaperAuthor]
-    releases: list[Release]
-    topics: list[Topic]
-    links: list[Link]
+    authors: list[PaperAuthor] = field(default_factory=list)
+    releases: list[Release] = field(default_factory=list)
+    topics: list[Topic] = field(default_factory=list)
+    links: list[Link] = field(default_factory=list)
     flags: list[Flag] = field(default_factory=list)
+
+
+@dataclass(kw_only=True)
+class PaperInfo:
+    paper: Paper
+    key: str
+    update_key: str = None
+    acquired: datetime = field(default_factory=datetime.now)
