@@ -1,0 +1,151 @@
+- key: openalex:W3022187094
+  paper:
+    abstract: Sequential data often possesses hierarchical structures with complex
+      dependencies between sub-sequences, such as found between the utterances in
+      a dialogue. To model these dependencies in a generative framework, we propose
+      a neural network-based generative architecture, with stochastic latent variables
+      that span a variable number of time steps. We apply the proposed model to the
+      task of dialogue response generation and compare it with other recent neural-network
+      architectures. We evaluate the model performance through a human evaluation
+      study. The experiments demonstrate that our model improves upon recently proposed
+      models and that the latent variables facilitate both the generation of meaningful,
+      long and diverse responses and maintaining dialogue state.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5034688833
+          type: openalex
+        name: Iulian Vlad Serban
+      display_name: Iulian Vlad Serban
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: A5108137151
+          type: openalex
+        name: Alessandro Sordoni
+      display_name: Alessandro Sordoni
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: A5004295653
+          type: openalex
+        name: Ryan Lowe
+      display_name: Ryan Lowe
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: HEC Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5103126568
+          type: openalex
+        - link: 0000-0002-6437-9713
+          type: orcid
+        name: Laurent Charlin
+      display_name: Laurent Charlin
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: A5080591144
+          type: openalex
+        - link: 0000-0003-0747-7250
+          type: orcid
+        name: Joëlle Pineau
+      display_name: Joëlle Pineau
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5112608251
+          type: openalex
+        - link: 0000-0001-6223-0301
+          type: orcid
+        name: Aaron Courville
+      display_name: Aaron Courville
+    - affiliations:
+      - aliases: []
+        category: wat
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: W3022187094
+      type: openalex
+    - link: 10.1609/aaai.v31i1.10983
+      type: doi
+    - link: '3022187094'
+      type: mag
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
+      type: open-access
+    - link: https://doi.org/10.1609/aaai.v31i1.10983
+      type: url
+    - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
+      type: pdf
+    - link: http://arxiv.org/abs/1605.06069
+      type: url
+    - link: http://arxiv.org/pdf/1605.06069
+      type: pdf
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2017-02-12T00:00:00'
+        date_precision: 3
+        links:
+        - link: https://doi.org/10.1609/aaai.v31i1.10983
+          type: url
+        - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
+          type: pdf
+        name: Proceedings of the AAAI Conference on Artificial Intelligence
+        open: true
+        peer_reviewed: true
+        publisher: Association for the Advancement of Artificial Intelligence
+        series: ''
+        type: conference
+        volume: null
+    title: A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues
+    topics:
+    - name: Computer science
+    - name: Latent variable
+    - name: Generative grammar
+    - name: Generative model
+    - name: Latent variable model
+    - name: Artificial intelligence
+    - name: Variable (mathematics)
+    - name: Artificial neural network
+    - name: Encoder
+    - name: Task (project management)
+    - name: Machine learning
+    - name: Mathematics
+    - name: Mathematical analysis
+    - name: Management
+    - name: Economics
+    - name: Operating system
+  update_key: null

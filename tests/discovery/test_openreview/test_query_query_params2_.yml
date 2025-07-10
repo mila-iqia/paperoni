@@ -1,0 +1,176 @@
+- key: openreview:gVTkMsaaGI
+  paper:
+    abstract: 'Diffusion models have emerged as effective distribution estimators
+      in vision, language, and reinforcement learning, but their use as priors in
+      downstream tasks poses an intractable posterior inference problem. This paper
+      studies *amortized* sampling of the posterior over data, $\mathbf{x}\sim p^{\rm
+      post}(\mathbf{x})\propto p(\mathbf{x})r(\mathbf{x})$, in a model that consists
+      of a diffusion generative model prior $p(\mathbf{x})$ and a black-box constraint
+      or likelihood function $r(\mathbf{x})$. We state and prove the asymptotic correctness
+      of a data-free learning objective, *relative trajectory balance*, for training
+      a diffusion model that samples from this posterior, a problem that existing
+      methods solve only approximately or in restricted cases. Relative trajectory
+      balance arises from the generative flow network perspective on diffusion models,
+      which allows the use of deep reinforcement learning techniques to improve mode
+      coverage. Experiments illustrate the broad potential of unbiased inference of
+      arbitrary posteriors under diffusion priors: in vision (classifier guidance),
+      language (infilling under a discrete diffusion LLM), and multimodal data (text-to-image
+      generation). Beyond generative modeling, we apply relative trajectory balance
+      to the problem of continuous control with a score-based behavior prior, achieving
+      state-of-the-art results on benchmarks in offline reinforcement learning. Code
+      is available at [this link](https://github.com/GFNOrg/diffusion-finetuning).'
+    authors:
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Siddarth_Venkatraman1
+          type: openreview
+        name: Siddarth Venkatraman
+      display_name: Siddarth Venkatraman
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Moksh_Jain1
+          type: openreview
+        name: Moksh Jain
+      display_name: Moksh Jain
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Luca_Scimeca1
+          type: openreview
+        name: Luca Scimeca
+      display_name: Luca Scimeca
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Minsu_Kim2
+          type: openreview
+        name: Minsu Kim
+      display_name: Minsu Kim
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Marcin_Sendera1
+          type: openreview
+        name: Marcin Sendera
+      display_name: Marcin Sendera
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Mohsin_Hasan1
+          type: openreview
+        name: Mohsin Hasan
+      display_name: Mohsin Hasan
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Luke_Rowe1
+          type: openreview
+        name: Luke Rowe
+      display_name: Luke Rowe
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Sarthak_Mittal1
+          type: openreview
+        name: Sarthak Mittal
+      display_name: Sarthak Mittal
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Pablo_Lemos1
+          type: openreview
+        name: Pablo Lemos
+      display_name: Pablo Lemos
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Emmanuel_Bengio1
+          type: openreview
+        name: Emmanuel Bengio
+      display_name: Emmanuel Bengio
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Alexandre_Adam1
+          type: openreview
+        name: Alexandre Adam
+      display_name: Alexandre Adam
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Jarrid_Rector-Brooks2
+          type: openreview
+        name: Jarrid Rector-Brooks
+      display_name: Jarrid Rector-Brooks
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Yoshua_Bengio1
+          type: openreview
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Glen_Berseth1
+          type: openreview
+        name: Glen Berseth
+      display_name: Glen Berseth
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: ~Nikolay_Malkin1
+          type: openreview
+        name: Nikolay Malkin
+      display_name: Nikolay Malkin
+    flags: []
+    links:
+    - link: gVTkMsaaGI
+      type: openreview
+    releases:
+    - pages: null
+      status: poster
+      venue:
+        aliases: []
+        date: '2024-09-25T00:00:00'
+        date_precision: 3
+        links:
+        - link: NeurIPS.cc/2024/Conference
+          type: openreview-venue
+        name: NeurIPS.cc/2024/Conference
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: NeurIPS.cc/Conference
+        type: conference
+        volume: NeurIPS 2024
+    title: Amortizing intractable inference in diffusion models for vision, language,
+      and control
+    topics:
+    - name: diffusion
+    - name: inverse problems
+    - name: conditional generation
+    - name: language models
+    - name: infilling
+    - name: discrete diffusion
+    - name: offline RL
+    - name: planning
+    - name: GFlowNet
+  update_key: null

@@ -1,0 +1,538 @@
+- key: miniconf:icml:989652eef28bc49eec908063ba36a854
+  paper:
+    abstract: The dynamical formulation of the optimal transport can be extended through
+      various choices of the underlying geometry (*kinetic energy*), and the regularization
+      of density paths (*potential energy*). These combinations yield different variational
+      problems (*Lagrangians*), encompassing many variations of the optimal transport
+      problem such as the Schrödinger bridge, unbalanced optimal transport, and optimal
+      transport with physical constraints, among others. In general, the optimal density
+      path is unknown, and solving these variational problems can be computationally
+      challenging. We propose a novel deep learning based framework approaching all
+      of these problems from a unified perspective. Leveraging the dual formulation
+      of the Lagrangians, our method does not require simulating or backpropagating
+      through the trajectories of the learned dynamics, and does not need access to
+      optimal couplings. We showcase the versatility of the proposed framework by
+      outperforming previous approaches for the single-cell trajectory inference,
+      where incorporating prior knowledge into the dynamics is crucial for correct
+      predictions.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Université de Montréal, Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/8271?format=json
+          type: profile
+        name: Kirill Neklyudov
+      display_name: Kirill Neklyudov
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Vector Institute
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/88580?format=json
+          type: profile
+        name: Rob Brekelmans
+      display_name: Rob Brekelmans
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/92402?format=json
+          type: profile
+        name: Alexander Tong
+      display_name: Alexander Tong
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Toronto Vector Institute
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/97996?format=json
+          type: profile
+        name: Lazar Atanackovic
+      display_name: Lazar Atanackovic
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Texas, Austin
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/92899?format=json
+          type: profile
+        name: qiang liu
+      display_name: qiang liu
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Toronto
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/37429?format=json
+          type: profile
+        name: Alireza Makhzani
+      display_name: Alireza Makhzani
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/neklyudov24a.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/32732
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: A Computational Framework for Solving Wasserstein Lagrangian Flows
+    topics:
+    - name: Probabilistic Methods
+  update_key: null
+- key: miniconf:icml:a6155b0da06d1ad154ad2d039d1fadf4
+  paper:
+    abstract: This paper contributes a new approach for distributional reinforcement
+      learning which elucidates a clean separation of transition structure and reward
+      in the learning process. Analogous to how the successor representation (SR)
+      describes the expected consequences of behaving according to a given policy,
+      our distributional successor measure (SM) describes the distributional consequences
+      of this behaviour. We formulate the distributional SM as a distribution over
+      distributions and provide theory connecting it with distributional and model-based
+      reinforcement learning. Moreover, we propose an algorithm that learns the distributional
+      SM from data by minimizing a two-level maximum mean discrepancy. Key to our
+      method are a number of algorithmic techniques that are independently valuable
+      for learning generative models of state. As an illustration of the usefulness
+      of the distributional SM, we show that it enables zero-shot risk-sensitive policy
+      evaluation in a way that was not previously possible.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: McGill University, Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/72783?format=json
+          type: profile
+        name: Harley Wiltzer
+      display_name: Harley Wiltzer
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila / McGill
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/121983?format=json
+          type: profile
+        name: Jesse Farebrother
+      display_name: Jesse Farebrother
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Gatsby Unit and Google Deepmind
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/8312?format=json
+          type: profile
+        name: Arthur Gretton
+      display_name: Arthur Gretton
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Google DeepMind
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/15946?format=json
+          type: profile
+        name: Yunhao Tang
+      display_name: Yunhao Tang
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: DeepMind
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/8841?format=json
+          type: profile
+        name: Andre Barreto
+      display_name: Andre Barreto
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Google DeepMind
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/8541?format=json
+          type: profile
+        name: Will Dabney
+      display_name: Will Dabney
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Google DeepMind
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/7528?format=json
+          type: profile
+        name: Marc Bellemare
+      display_name: Marc Bellemare
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Google DeepMind
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/23745?format=json
+          type: profile
+        name: Mark Rowland
+      display_name: Mark Rowland
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/wiltzer24a.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/32627
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Spotlight)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: A Distributional Analogue to the Successor Representation
+    topics:
+    - name: Reinforcement Learning->Everything Else
+  update_key: null
+- key: miniconf:icml:d465f14a648b3d0a1faa6f447e526c60
+  paper:
+    abstract: 'Causal representation learning aims at identifying high-level causal
+      variables from perceptual data. Most methods assume that all latent causal variables
+      are captured in the high-dimensional observations. We instead consider a partially
+      observed setting, in which each measurement only provides information about
+      a subset of the underlying causal state. Prior work has studied this setting
+      with multiple domains or views, each depending on a fixed subset of latents.
+      Here, we focus on learning from unpaired observations from a dataset with an
+      instance-dependent partial observability pattern. Our main contribution is to
+      establish two identifiability results for this setting: one for linear mixing
+      functions without parametric assumptions on the underlying causal model, and
+      one for piecewise linear mixing functions with Gaussian latent causal variables.
+      Based on these insights, we propose two methods for estimating the underlying
+      causal variables by enforcing sparsity in the inferred representation. Experiments
+      on different simulated datasets and established benchmarks highlight the effectiveness
+      of our approach in recovering the ground-truth latents.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Amsterdam
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/125181?format=json
+          type: profile
+        name: Danru Xu
+      display_name: Danru Xu
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: ISTA
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/128685?format=json
+          type: profile
+        name: Dingling Yao
+      display_name: Dingling Yao
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Université de Montréal, Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/62189?format=json
+          type: profile
+        name: Sébastien Lachapelle
+      display_name: Sébastien Lachapelle
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Service Now
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/62187?format=json
+          type: profile
+        name: Perouz Taslakian
+      display_name: Perouz Taslakian
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: MPI for Intelligent Systems, Tübingen & University of Cambridge
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/58738?format=json
+          type: profile
+        name: Julius von Kügelgen
+      display_name: Julius von Kügelgen
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: ISTA
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/103725?format=json
+          type: profile
+        name: Francesco Locatello
+      display_name: Francesco Locatello
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Amsterdam, MIT-IBM Watson AI Lab
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/73085?format=json
+          type: profile
+        name: Sara Magliacane
+      display_name: Sara Magliacane
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/xu24ac.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/34245
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: A Sparsity Principle for Partially Observable Causal Representation Learning
+    topics:
+    - name: Miscellaneous Aspects of Machine Learning->Causality
+  update_key: null
+- key: miniconf:icml:f2c5b1f06bfe59954cb2a56858c2ed98
+  paper:
+    abstract: Second-order Recurrent Neural Networks (2RNNs) extend RNNs by leveraging
+      second-order interactions for sequence modelling. These models are provably
+      more expressive than their first-order counterparts and have connections to
+      well-studied models from formal language theory. However, their large parameter
+      tensor makes computations intractable. To circumvent this issue, one approach
+      known as MIRNN consists in limiting the type of interactions used by the model.
+      Another is to leverage tensor decomposition to diminish the parameter count.
+      In this work, we study the model resulting from parameterizing 2RNNs using the
+      CP decomposition, which we call CPRNN. Intuitively, the rank of the decomposition
+      should reduce expressivity. We analyze how rank and hidden size affect model
+      capacity and show the relationships between RNNs, 2RNNs, MIRNNs, and CPRNNs
+      based on these parameters. We support these results empirically with experiments
+      on the Penn Treebank dataset which demonstrate that, with a fixed parameter
+      budget, CPRNNs outperforms RNNs, 2RNNs, and MIRNNs with the right choice of
+      rank and hidden size.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/125764?format=json
+          type: profile
+        name: Maude Lizaire
+      display_name: Maude Lizaire
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/125766?format=json
+          type: profile
+        name: Michael Rizvi-Martel
+      display_name: Michael Rizvi-Martel
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/106509?format=json
+          type: profile
+        name: Marawan Gamal
+      display_name: Marawan Gamal
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Montreal Institute for Learning Algorithms, University of Montreal,
+          University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/99756?format=json
+          type: profile
+        name: Guillaume Rabusseau
+      display_name: Guillaume Rabusseau
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/lizaire24a.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/34560
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Spotlight)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: A Tensor Decomposition Perspective on Second-order RNNs
+    topics:
+    - name: Deep Learning->Sequential Models, Time series
+  update_key: null
+- key: miniconf:icml:947018640bf36a2bb609d3557a285329
+  paper:
+    abstract: This paper tackles the challenge of detecting unreliable behavior in
+      regression algorithms, which may arise from intrinsic variability (e.g., aleatoric
+      uncertainty) or modeling errors (e.g., model uncertainty). First, we formally
+      introduce the notion of unreliability in regression, i.e., when the output of
+      the regressor exceeds a specified discrepancy (or error). Then, using powerful
+      tools for probabilistic modeling, we estimate the discrepancy density, and we
+      measure its statistical diversity using our proposed metric for statistical
+      dissimilarity. In turn, this allows us to derive a data-driven score that expresses
+      the uncertainty of the regression outcome. We show empirical improvements in
+      error detection for multiple regression tasks, consistently outperforming popular
+      baseline approaches, and contributing to the broader field of uncertainty quantification
+      and safe machine learning systems.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: CentraleSupelec
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/124241?format=json
+          type: profile
+        name: Andres Altieri
+      display_name: Andres Altieri
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: New York University
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/124255?format=json
+          type: profile
+        name: Marco Romanelli
+      display_name: Marco Romanelli
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: TU Wien
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/72237?format=json
+          type: profile
+        name: Georg Pichler
+      display_name: Georg Pichler
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Universite Paris-Saclay
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/124248?format=json
+          type: profile
+        name: Florence Alberge
+      display_name: Florence Alberge
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: ILLS - Mila / CNRS - CentraleSupelec
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/124257?format=json
+          type: profile
+        name: Pablo Piantanida
+      display_name: Pablo Piantanida
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/altieri24a.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/33759
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Spotlight)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: 'Beyond the Norms: Detecting Prediction Errors in Regression Models'
+    topics:
+    - name: Social Aspects->Trustworthy Machine Learning
+  update_key: null

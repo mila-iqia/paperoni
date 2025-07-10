@@ -1,0 +1,21 @@
+from pytest_regressions.data_regression import DataRegressionFixture
+
+from paperoni.discovery.base import PaperInfo
+from paperoni.discovery.jmlr import JMLR
+
+from ..utils import check_papers
+
+
+def test_query(data_regression: DataRegressionFixture):
+    discoverer = JMLR()
+
+    assert "v24" in discoverer.list_volumes()
+
+    papers: list[PaperInfo] = sorted(
+        discoverer.query(volume="v24", name="Yoshua Bengio"),
+        key=lambda x: x.paper.title,
+    )
+
+    assert papers, "No papers found for Yoshua Bengio in v24"
+
+    check_papers(data_regression, papers)

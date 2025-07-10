@@ -1,3 +1,4 @@
+import math
 import re
 from datetime import datetime
 
@@ -43,9 +44,11 @@ class MiniConf(Discoverer):
                 name=author_data.get("fullname", ""),
                 aliases=[],
                 links=[
-                    Link(type="profile", link=author_data["url"])
-                    if author_data.get("url")
-                    else None
+                    (
+                        Link(type="profile", link=author_data["url"])
+                        if author_data.get("url")
+                        else None
+                    )
                 ],
             )
             author.links = [link for link in author.links if link is not None]
@@ -122,6 +125,9 @@ class MiniConf(Discoverer):
             links.add(Link(type="pdf", link=url))
         if url := expand_base(data.get("virtualsite_url")):
             links.add(Link(type="abstract", link=url))
+        links = sorted(
+            links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)
+        )
 
         # Add eventmedia links
         for media in data.get("eventmedia", []):

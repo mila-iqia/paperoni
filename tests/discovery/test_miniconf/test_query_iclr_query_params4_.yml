@@ -1,0 +1,279 @@
+- key: miniconf:iclr:a87ff679a2f3e71d9181a67b7542122c
+  paper:
+    abstract: ''
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Meta (FAIR)
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/60547?format=json
+          type: profile
+        name: Melissa Hall
+      display_name: Melissa Hall
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/21810?format=json
+          type: profile
+        name: Candace Ross
+      display_name: Candace Ross
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: FAIR (Meta Platforms Inc.)
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/97134?format=json
+          type: profile
+        name: Adina Williams
+      display_name: Adina Williams
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: New York University
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/50884?format=json
+          type: profile
+        name: Nicolas Carion
+      display_name: Nicolas Carion
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/61257?format=json
+          type: profile
+        name: Michal Drozdzal
+      display_name: Michal Drozdzal
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/5630?format=json
+          type: profile
+        name: Adriana Romero-Soriano
+      display_name: Adriana Romero-Soriano
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/21751
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: 'DIG In: Evaluating Disparities in Image Generations with Indicators for
+      Geographic Diversity'
+    topics:
+    - name: Social Aspects->Fairness, Equity, Justice and Safety
+  update_key: null
+- key: miniconf:iclr:c9f0f895fb98ab9159f51fd0297e236d
+  paper:
+    abstract: null
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/62087?format=json
+          type: profile
+        name: Jakob Verbeek
+      display_name: Jakob Verbeek
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Apple
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/97144?format=json
+          type: profile
+        name: Enrico Fini
+      display_name: Enrico Fini
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/61257?format=json
+          type: profile
+        name: Michal Drozdzal
+      display_name: Michal Drozdzal
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: FAIR, Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/97163?format=json
+          type: profile
+        name: Pietro Astolfi
+      display_name: Pietro Astolfi
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/5630?format=json
+          type: profile
+        name: Adriana Romero-Soriano
+      display_name: Adriana Romero-Soriano
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/21755
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: Improved baselines for vision-language pre-training
+    topics:
+    - name: Miscellaneous Aspects of Machine Learning->Representation Learning
+  update_key: null
+- key: miniconf:iclr:1ff1de774005f8da13f42943881c655f
+  paper:
+    abstract: 'Deep learning models often fail to generalize well under distribution
+      shifts. Understanding and overcoming these failures have led to a new research
+      field on Out-of-Distribution (OOD) generalization. Despite being extensively
+      studied for static computer vision tasks, OOD generalization has been severely
+      underexplored for time series tasks. To shine a light on this gap, we present
+      WOODS: 10 challenging time series benchmarks covering a diverse range of data
+      modalities, such as videos, brain recordings, and smart device sensory signals.
+      We revise the existing OOD generalization algorithms for time series tasks and
+      evaluate them using our systematic framework. Our experiments show a large room
+      for improvement for empirical risk minimization and OOD generalization algorithms
+      on our datasets, thus underscoring the new challenges posed by time series tasks.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/11746?format=json
+          type: profile
+        name: Irina Rish
+      display_name: Irina Rish
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: FAIR (Meta)
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/17749?format=json
+          type: profile
+        name: Kartik Ahuja
+      display_name: Kartik Ahuja
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Montreal  Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/97159?format=json
+          type: profile
+        name: Mohammad Javad Darvishi Bayazi
+      display_name: Mohammad Javad Darvishi Bayazi
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/97164?format=json
+          type: profile
+        name: Pooneh Mousavi
+      display_name: Pooneh Mousavi
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/93693?format=json
+          type: profile
+        name: Guillaume Dumas
+      display_name: Guillaume Dumas
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/67135?format=json
+          type: profile
+        name: Jean-Christophe Gagnon-Audet
+      display_name: Jean-Christophe Gagnon-Audet
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/21771
+      type: abstract
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: 'WOODS: Benchmarks for Out-of-Distribution Generalization in Time Series'
+    topics:
+    - name: Deep Learning->Sequential Models, Time series
+  update_key: null
