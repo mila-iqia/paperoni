@@ -1,4 +1,5 @@
-- key: miniconf:icml:bb1662b7c5f22a0f905fd59e718ca05e
+- info: {}
+  key: miniconf:icml:bb1662b7c5f22a0f905fd59e718ca05e
   paper:
     abstract: We present a performant, general-purpose gradient-guided nested sampling
       (GGNS) algorithm, combining the state of the art in differentiable programming,
@@ -102,7 +103,8 @@
     topics:
     - name: Probabilistic Methods->Monte Carlo and Sampling Methods
   update_key: null
-- key: miniconf:icml:63eb58bd4d3486f001438f911a11d323
+- info: {}
+  key: miniconf:icml:63eb58bd4d3486f001438f911a11d323
   paper:
     abstract: Efficiently generating statistically independent samples from an unnormalized
       probability distribution, such as equilibrium samples of many-body systems,
@@ -280,7 +282,8 @@
     topics:
     - name: Probabilistic Methods->Monte Carlo and Sampling Methods
   update_key: null
-- key: miniconf:icml:cf1f78fe923afe05f7597da2be7a3da8
+- info: {}
+  key: miniconf:icml:cf1f78fe923afe05f7597da2be7a3da8
   paper:
     abstract: Neural Processes (NPs) are popular meta-learning methods for efficiently
       modelling predictive uncertainty. Recent state-of-the-art methods, however,

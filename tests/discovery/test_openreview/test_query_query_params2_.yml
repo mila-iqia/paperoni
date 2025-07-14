@@ -1,4 +1,5 @@
-- key: openreview:gVTkMsaaGI
+- info: {}
+  key: openreview:gVTkMsaaGI
   paper:
     abstract: 'Diffusion models have emerged as effective distribution estimators
       in vision, language, and reinforcement learning, but their use as priors in

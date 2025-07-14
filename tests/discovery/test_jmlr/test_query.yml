@@ -1,4 +1,5 @@
-- key: jmlr:vv24:benchmarking_graph_neural_networks
+- info: {}
+  key: jmlr:vv24:benchmarking_graph_neural_networks
   paper:
     abstract: null
     authors:
@@ -64,7 +65,8 @@
     title: Benchmarking Graph Neural Networks
     topics: []
   update_key: null
-- key: jmlr:vv24:gflownet_foundations
+- info: {}
+  key: jmlr:vv24:gflownet_foundations
   paper:
     abstract: null
     authors:

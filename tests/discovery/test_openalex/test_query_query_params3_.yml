@@ -1,4 +1,5 @@
-- key: openalex:W3022187094
+- info: {}
+  key: openalex:W3022187094
   paper:
     abstract: Sequential data often possesses hierarchical structures with complex
       dependencies between sub-sequences, such as found between the utterances in

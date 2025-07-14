@@ -1,4 +1,5 @@
-- key: openreview:vieIamY2Gi
+- info: {}
+  key: openreview:vieIamY2Gi
   paper:
     abstract: We study the problem of training diffusion models to sample from a distribution
       with a given unnormalized density or energy function. We benchmark several diffusion-structured

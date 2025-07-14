@@ -1,4 +1,5 @@
-- key: openreview:gVTkMsaaGI
+- info: {}
+  key: openreview:gVTkMsaaGI
   paper:
     abstract: 'Diffusion models have emerged as effective distribution estimators
       in vision, language, and reinforcement learning, but their use as priors in
@@ -174,7 +175,8 @@
     - name: planning
     - name: GFlowNet
   update_key: null
-- key: openreview:vieIamY2Gi
+- info: {}
+  key: openreview:vieIamY2Gi
   paper:
     abstract: We study the problem of training diffusion models to sample from a distribution
       with a given unnormalized density or energy function. We benchmark several diffusion-structured
@@ -288,7 +290,8 @@
     - name: stochastic control
     - name: GFlowNets
   update_key: null
-- key: openreview:D19UyP4HYk
+- info: {}
+  key: openreview:D19UyP4HYk
   paper:
     abstract: '\emph{Metacognitive knowledge} refers to humans'' intuitive knowledge
       of their own thinking and reasoning processes. Today''s best LLMs clearly possess
@@ -418,7 +421,8 @@
     - name: Metacognitive abilities of LLM
     - name: Mathematical Reasoning
   update_key: null
-- key: openreview:hpvJwmzEHX
+- info: {}
+  key: openreview:hpvJwmzEHX
   paper:
     abstract: Generative models hold great promise for small molecule discovery, significantly
       increasing the size of search space compared to traditional in silico screening
@@ -536,7 +540,8 @@
     - name: GFlowNets
     - name: synthesizability
   update_key: null
-- key: openreview:fNakQltI1N
+- info: {}
+  key: openreview:fNakQltI1N
   paper:
     abstract: "Modeling stochastic and irregularly sampled time series is a challenging\
       \ problem found in a wide range of applications, especially in medicine. Neural\

@@ -1,4 +1,5 @@
-- key: miniconf:aistats:a760880003e7ddedfef56acb3b09697f
+- info: {}
+  key: miniconf:aistats:a760880003e7ddedfef56acb3b09697f
   paper:
     abstract: We present simulation-free score and flow matching ([SF]$^2$M), a simulation-free
       objective for inferring stochastic dynamics given unpaired samples drawn from
