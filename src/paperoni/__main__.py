@@ -39,7 +39,7 @@ class TerminalFormatter(Formatter):
         for i, paper in enumerate(papers):
             if i == 0:
                 print("=" * terminal_width)
-            display(paper.paper)
+            display(paper)
             print("=" * terminal_width)
 
 

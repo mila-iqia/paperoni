@@ -4,6 +4,8 @@ from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import partial
 
+from serieux import JSON
+
 fromisoformat = date.fromisoformat
 
 dataclass = partial(dataclass, kw_only=True)
@@ -213,4 +215,5 @@ class PaperInfo:
     paper: Paper
     key: str
     update_key: str = None
+    info: dict[str, JSON] = field(default_factory=dict)
     acquired: datetime = field(default_factory=datetime.now)
