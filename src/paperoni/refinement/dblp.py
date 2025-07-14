@@ -1,8 +1,6 @@
 from datetime import date
 from typing import Literal
 
-from ovld import ovld
-
 from ..acquire import readpage
 from ..model import (
     Author,
@@ -14,11 +12,11 @@ from ..model import (
     Venue,
     VenueType,
 )
-from .fetch import fetch
+from .fetch import register_fetch
 
 
-@ovld
-def fetch(type: Literal["dblp"], link: str):
+@register_fetch
+def dblp(type: Literal["dblp"], link: str):
     if "/corr/" in link:
         return None
 

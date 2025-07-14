@@ -2,9 +2,9 @@ import shutil
 import textwrap
 
 from blessed import Terminal
-from ovld import ovld
+from ovld import ovld, recurse
 
-from .model import Author, DatePrecision, Paper, Venue
+from .model import Author, DatePrecision, Paper, PaperInfo, Venue
 from .utils import expand_links_dict
 
 T = Terminal()
@@ -25,6 +25,15 @@ def expand_links(links):
     return [
         (x["type"], x.get("url", None) or x["link"]) for x in expand_links_dict(links)
     ]
+
+
+@ovld
+def display(pinfo: PaperInfo):
+    recurse(pinfo.paper)
+    if pinfo.info:
+        print_field("Info", "")
+    for field, value in pinfo.info.items():
+        print(f"  {T.bold_green(field)} {value}")
 
 
 @ovld

@@ -2,7 +2,6 @@ from datetime import date
 from types import SimpleNamespace
 from typing import Literal
 
-from ovld import ovld
 from ovld.dependent import StartsWith
 from requests import HTTPError
 
@@ -21,12 +20,12 @@ from ..model import (
     VenueType,
 )
 from ..utils import url_to_id
-from .fetch import fetch
+from .fetch import register_fetch
 from .formats import institution_from_ror, paper_from_jats
 
 
-@ovld
-def fetch(type: Literal["doi"], link: str):
+@register_fetch
+def crossref(type: Literal["doi"], link: str):
     """Fetch from CrossRef."""
 
     doi = link
@@ -138,8 +137,8 @@ def fetch(type: Literal["doi"], link: str):
     )
 
 
-@ovld
-def fetch(type: Literal["doi"], link: str):
+@register_fetch
+def datacite(type: Literal["doi"], link: str):
     """
     Refine using DataCite.
 
@@ -314,9 +313,8 @@ def fetch(type: Literal["doi"], link: str):
     )
 
 
-@ovld
-def fetch(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
-    """BioRXiv"""
+@register_fetch
+def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
     doi = link
     data = readpage(f"https://api.biorxiv.org/details/biorxiv/{doi}", format="json")
     if (
