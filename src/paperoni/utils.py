@@ -78,6 +78,40 @@ def expand_links_dict(links):
     return results
 
 
+url_extractors = {
+    r"https?://[a-z.]*arxiv\.org/(?:abs|pdf)/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://[a-z.]*arxiv-vanity\.com/papers/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://(?:[^/]*)arxiv(?:[^/]*)\.cornell\.edu/abs/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://scirate\.com/arxiv/([0-9]{4}\.[0-9]+).*": "arxiv",
+    r"https?://pubmed\.ncbi\.nlm\.nih\.gov/([^/]*)/": "pubmed",
+    r"https?://www\.ncbi\.nlm\.nih\.gov/pubmed/([^/]*)": "pubmed",
+    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/([^/]*)": "pmc",
+    r"https?://europepmc.org/article/PMC/([^/]*)": "pmc",
+    r"https?://(?:dx\.)?doi\.org/(.*)": "doi",
+    r"https?://(?:www\.)?openreview\.net/(?:pdf\?|forum\?)id=(.*)": "openreview",
+    r"https?://dblp.uni-trier.de/db/([^/]+)/([^/]+)/[^/]+\.html#(.*)": "dblp",
+    r"https?://dblp.uni-trier.de/rec/(.*).html": "dblp",
+    r"https?://ror.org/(.*)": "ror",
+}
+
+
+def url_to_id(url: str) -> tuple[str, str]:
+    """Return an ID from a URL.
+
+    * Given a link to an arxiv abstract or pdf, return ``("arxiv", arxiv_id)``
+    * Given a DOI link, return ``("doi", the_doi)``
+    * etc.
+
+    See the ``url_extractors`` dictionary for the regexps and corresponding ID type.
+    ``url_to_id`` tries each extractor in order.
+    """
+    for pattern, key in url_extractors.items():
+        if m := re.match(pattern, url):
+            lnk = "/".join(m.groups())
+            return (key, lnk)
+    return None
+
+
 class QueryError(Exception):
     pass
 

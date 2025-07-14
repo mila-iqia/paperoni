@@ -11,6 +11,8 @@ from serieux import Auto, Registered, Tagged, TaggedUnion, serialize, singleton
 from .config import config, discoverers
 from .display import display, terminal_width
 from .model import PaperInfo
+from .refinement import fetch_all
+from .utils import url_to_id
 
 
 class Formatter(Registered):
@@ -70,10 +72,27 @@ def make_cli():
             self.format(papers)
 
     @dataclass
+    class Refine:
+        """Refine paper information."""
+
+        # Link to refine (type:link)
+        link: str
+
+        # Output format
+        format: Formatter = TerminalFormatter
+
+        def run(self):
+            if self.link.startswith("http"):
+                type, link = url_to_id(self.link)
+            else:
+                type, link = self.link.split(":")
+            self.format(fetch_all(type, link))
+
+    @dataclass
     class PaperoniInterface:
         """Paper database"""
 
-        command: TaggedUnion[Discover]
+        command: TaggedUnion[Discover, Refine]
 
         def run(self):
             self.command.run()
