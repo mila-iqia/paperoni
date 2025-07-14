@@ -163,6 +163,10 @@ def paper_from_jats(soup, links):
             category=InstitutionCategory.unknown,
         )
 
+    abstract = soup.select_one("abstract") or ""
+    if abstract:
+        abstract = "\n\n".join(p.text for p in abstract.find_all("p"))
+
     return Paper(
         title=soup.find("article-title").text,
         authors=[
@@ -188,7 +192,7 @@ def paper_from_jats(soup, links):
             for author in soup.select('contrib[contrib-type="author"]')
             if author.find("surname")
         ],
-        abstract="",
+        abstract=abstract,
         links=links,
         releases=[
             Release(
