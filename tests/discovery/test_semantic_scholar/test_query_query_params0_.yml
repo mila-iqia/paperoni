@@ -1,4 +1,5 @@
-- key: semantic_scholar:c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
+- info: {}
+  key: semantic_scholar:c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
   paper:
     abstract: 'Learning in nonstationary environments is one of the biggest challenges
       in machine learning. Nonstationarity can be caused by either task drift, i.e.,
@@ -85,7 +86,8 @@
     - name: Computer Science
     - name: Medicine
   update_key: null
-- key: semantic_scholar:b2283234d862b7da0f3fd7034624e3744154da44
+- info: {}
+  key: semantic_scholar:b2283234d862b7da0f3fd7034624e3744154da44
   paper:
     abstract: The COVID‐19 pandemic continues to pose a substantial threat to human
       lives and is likely to do so for years to come. Despite the availability of
@@ -1507,7 +1509,8 @@
     topics:
     - name: Medicine
   update_key: null
-- key: semantic_scholar:9b1e7754b0a508b0ce324167acd1e0381824bd9a
+- info: {}
+  key: semantic_scholar:9b1e7754b0a508b0ce324167acd1e0381824bd9a
   paper:
     abstract: ''
     authors:
@@ -1578,7 +1581,8 @@
     topics:
     - name: Computer Science
   update_key: null
-- key: semantic_scholar:c2c5f451c8109f3fccd233c28c639a70bf409f45
+- info: {}
+  key: semantic_scholar:c2c5f451c8109f3fccd233c28c639a70bf409f45
   paper:
     abstract: One of the most fundamental laws of physics is the principle of least
       action. Motivated by its predictive power, we introduce a neuronal least-action
@@ -1705,7 +1709,8 @@
     - name: Biology
     - name: Medicine
   update_key: null
-- key: semantic_scholar:0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
+- info: {}
+  key: semantic_scholar:0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
   paper:
     abstract: Abstract:Since OpenAI's release of the very large language models Chat-GPT
       and GPT-4, the potential dangers of AI have garnered widespread public attention.

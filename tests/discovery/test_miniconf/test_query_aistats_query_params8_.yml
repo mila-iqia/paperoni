@@ -1,4 +1,5 @@
-- key: miniconf:aistats:cdf1035c34ec380218a8cc9a43d438f9
+- info: {}
+  key: miniconf:aistats:cdf1035c34ec380218a8cc9a43d438f9
   paper:
     abstract: Learning from Preferential Feedback (LfPF) plays an essential role in
       training  Large Language Models, as well as certain types of interactive learning
@@ -71,7 +72,8 @@
       Policies
     topics: []
   update_key: null
-- key: miniconf:aistats:f2fc990265c712c49d51a18a32b39f0c
+- info: {}
+  key: miniconf:aistats:f2fc990265c712c49d51a18a32b39f0c
   paper:
     abstract: Triangular meshes are widely used to represent three-dimensional objects.
       As a result, many recent works have addressed the need for geometric deep learning
@@ -173,7 +175,8 @@
     title: E(3)-Equivariant Mesh Neural Networks
     topics: []
   update_key: null
-- key: miniconf:aistats:2b8a61594b1f4c4db0902a8a395ced93
+- info: {}
+  key: miniconf:aistats:2b8a61594b1f4c4db0902a8a395ced93
   paper:
     abstract: Tabular data is hard to acquire and is subject to missing values. This
       paper introduces a novel approach for generating and imputing mixed-type (continuous
@@ -244,7 +247,8 @@
       Trees
     topics: []
   update_key: null
-- key: miniconf:aistats:49b8b4f95f02e055801da3b4f58e28b7
+- info: {}
+  key: miniconf:aistats:49b8b4f95f02e055801da3b4f58e28b7
   paper:
     abstract: While the practical interest of Recurrent neural networks (RNNs) is
       attested, much remains to be done to develop a thorough theoretical understanding
@@ -350,7 +354,8 @@
     title: Length independent PAC-Bayes bounds for Simple RNNs
     topics: []
   update_key: null
-- key: miniconf:aistats:24146db4eb48c718b84cae0a0799dcfc
+- info: {}
+  key: miniconf:aistats:24146db4eb48c718b84cae0a0799dcfc
   paper:
     abstract: 'Generative Flow Networks (GFNs) have emerged as a powerful tool for
       sampling discrete objects from unnormalized distributions, offering a scalable

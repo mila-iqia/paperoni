@@ -1,4 +1,5 @@
-- key: pmlr:v180:deleu22a
+- info: {}
+  key: pmlr:v180:deleu22a
   paper:
     abstract: In Bayesian structure learning, we are interested in inferring a distribution
       over the directed acyclic graph (DAG) structure of Bayesian networks, from data.
@@ -84,7 +85,8 @@
     title: Bayesian structure learning with generative flow networks
     topics: []
   update_key: null
-- key: pmlr:v180:erraqabi22a
+- info: {}
+  key: pmlr:v180:erraqabi22a
   paper:
     abstract: In reinforcement learning, the graph Laplacian has proved to be a valuable
       tool in the task-agnostic setting, with applications ranging from skill discovery

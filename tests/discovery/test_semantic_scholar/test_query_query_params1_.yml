@@ -1,4 +1,5 @@
-- key: semantic_scholar:de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
+- info: {}
+  key: semantic_scholar:de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
   paper:
     abstract: Visualization has proven to be a powerful and widely-applicable tool
       for the analysis and interpretation of multivariate data. Most visualization
@@ -66,7 +67,8 @@
     topics:
     - name: Computer Science
   update_key: null
-- key: semantic_scholar:a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
+- info: {}
+  key: semantic_scholar:a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
   paper:
     abstract: Building intelligent agents to generate realistic Weibo comments is
       challenging. For such realistic Weibo comments, the key criterion is improving
@@ -171,7 +173,8 @@
     topics:
     - name: Computer Science
   update_key: null
-- key: semantic_scholar:7fc9d442f9019be17c008974018929135e81b476
+- info: {}
+  key: semantic_scholar:7fc9d442f9019be17c008974018929135e81b476
   paper:
     abstract: ''
     authors:

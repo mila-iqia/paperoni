@@ -1,4 +1,5 @@
-- key: openalex:W3163652268
+- info: {}
+  key: openalex:W3163652268
   paper:
     abstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture
       in sequence-to-sequence learning. RNNs, however, are inherently sequential models
@@ -126,7 +127,8 @@
     - name: Electrical engineering
     - name: Image (mathematics)
   update_key: null
-- key: openalex:W3143367551
+- info: {}
+  key: openalex:W3143367551
   paper:
     abstract: Learning robust speaker embeddings is a crucial step in speaker diarization.
       Deep neural networks can accurately capture speaker discriminative characteristics
@@ -279,7 +281,8 @@
     - name: Chemistry
     - name: Gene
   update_key: null
-- key: openalex:W3092206109
+- info: {}
+  key: openalex:W3092206109
   paper:
     abstract: 'We present GraphMix, a regularization method for Graph Neural Network
       based semi-supervised object classification, whereby we propose to train a fully-connected
@@ -442,7 +445,8 @@
     - name: Regularization (linguistics)
     - name: Artificial neural network
   update_key: null
-- key: openalex:W4319300975
+- info: {}
+  key: openalex:W4319300975
   paper:
     abstract: Convolutional neural networks (CNNs) have been the consensus for medical
       image segmentation tasks. However, they suffer from the limitation in modeling
@@ -600,7 +604,8 @@
     - name: Quantum mechanics
     - name: Operating system
   update_key: null
-- key: openalex:W4372260310
+- info: {}
+  key: openalex:W4372260310
   paper:
     abstract: 'Contrastive learning has shown remarkable success in the field of multimodal
       representation learning. In this paper, we propose a pipeline of contrastive

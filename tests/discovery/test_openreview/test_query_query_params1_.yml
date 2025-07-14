@@ -1,4 +1,5 @@
-- key: openreview:iD18l6prA7
+- info: {}
+  key: openreview:iD18l6prA7
   paper:
     abstract: "In this paper, we present a novel data-free method for merging neural\
       \ networks in weight space. Our method optimizes for the permutations of network\
@@ -79,7 +80,8 @@
     - name: linear mode connectivity
     - name: deep learning
   update_key: null
-- key: openreview:rYjYwuM6yH
+- info: {}
+  key: openreview:rYjYwuM6yH
   paper:
     abstract: 'Parameter-efficient finetuning (PEFT) methods effectively adapt large
       language models (LLMs) to diverse downstream tasks, reducing storage and GPU
@@ -145,7 +147,8 @@
     - name: batching
     - name: interpretability
   update_key: null
-- key: openreview:0sJBW05a2W
+- info: {}
+  key: openreview:0sJBW05a2W
   paper:
     abstract: Multi-instance point cloud registration aims to estimate the pose of
       all instances of a model point cloud in the whole scene. Existing methods all
@@ -232,7 +235,8 @@
     - name: Point Cloud Registration
     - name: Focus and Matching
   update_key: null
-- key: openreview:qRnmLJQHgx
+- info: {}
+  key: openreview:qRnmLJQHgx
   paper:
     abstract: "Current multimodal and multitask foundation models, like 4M or UnifiedIO,\
       \ show promising results. However, their out-of-the-box abilities to accept\
@@ -360,7 +364,8 @@
     - name: generative models
     - name: computer vision
   update_key: null
-- key: openreview:9f5tOXKoMC
+- info: {}
+  key: openreview:9f5tOXKoMC
   paper:
     abstract: "Data point selection (DPS) is becoming a critical topic in deep learning\
       \ due to the ease of acquiring uncurated training data compared to the difficulty\
