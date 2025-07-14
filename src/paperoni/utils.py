@@ -1,7 +1,6 @@
 import itertools
 import re
 import unicodedata
-from difflib import SequenceMatcher
 
 from unidecode import unidecode
 
@@ -123,12 +122,6 @@ def plainify(name):
     name = re.sub(string=name, pattern="[()-]", repl=" ")
     name = re.sub(string=name, pattern="['.]", repl="")
     return name
-
-
-def similarity(s1, s2):
-    s1 = plainify(s1)
-    s2 = plainify(s2)
-    return SequenceMatcher(a=s1, b=s2).ratio()
 
 
 def associate(l1, l2, key, threshold=0):

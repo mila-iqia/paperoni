@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 from numbers import Number
 from typing import Any
 
@@ -8,7 +9,7 @@ from serieux import Context, Serieux
 from wrapt import ObjectProxy
 
 from ..model.classes import Institution, PaperAuthor
-from ..utils import associate, similarity
+from ..utils import associate, plainify
 
 
 @dataclass
@@ -118,7 +119,7 @@ def merge(
     x: list, y: list, qx: Number, qy: Number, et: type[PaperAuthor] | type[Institution]
 ):
     results = []
-    ass = associate(x, y, key=sim, threshold=0.5)
+    ass = associate(x, y, key=similarity, threshold=0.5)
     for x1, x2 in ass:
         merged = recurse(x1, x2, qx, qy) if x2 is not None else x1
         results.append(merged)
@@ -131,20 +132,27 @@ def merge(x: list, y: list, qx: Number, qy: Number, et: type[object]):
 
 
 @ovld(priority=1)
-def sim(a: AugmentedProxy, b: object):
+def similarity(a: AugmentedProxy, b: object):
     return recurse(a.__wrapped__, b)
 
 
 @ovld
-def sim(a: object, b: AugmentedProxy):
+def similarity(a: object, b: AugmentedProxy):
     return recurse(a, b.__wrapped__)
 
 
 @ovld
-def sim(a: PaperAuthor, b: PaperAuthor):
+def similarity(a: PaperAuthor, b: PaperAuthor):
     return similarity(a.display_name, b.display_name)
 
 
 @ovld
-def sim(a: Institution, b: Institution):
+def similarity(a: Institution, b: Institution):
     return similarity(a.name, b.name)
+
+
+@ovld
+def similarity(a: str, b: str):
+    a = plainify(a)
+    b = plainify(b)
+    return SequenceMatcher(a=a, b=b).ratio()

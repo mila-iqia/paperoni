@@ -9,7 +9,7 @@ from paperoni.model.classes import (
     Link,
     PaperAuthor,
 )
-from paperoni.model.srx import Annotations, AugmentedProxy, merge
+from paperoni.model.merge import merge, qual, similarity
 
 
 @dataclass
@@ -24,8 +24,13 @@ class Person:
     job: str
 
 
-def qual(x, q):
-    return AugmentedProxy(x, Annotations(quality=q))
+def test_similarity():
+    assert similarity("bonjour", "bonjour") == 1
+    assert similarity("bon jour", "bon-jour.") == 1
+
+
+def test_similarity_2():
+    assert similarity("Hugo Larochelle", "Marc Bellemare") < 0.5
 
 
 def test_augment():
