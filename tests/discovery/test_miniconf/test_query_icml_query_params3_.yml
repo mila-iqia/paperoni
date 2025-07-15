@@ -283,6 +283,150 @@
     - name: Probabilistic Methods->Monte Carlo and Sampling Methods
   update_key: null
 - info: {}
+  key: miniconf:icml:1a6727711b84fd1efbb87fc565199d13
+  paper:
+    abstract: GFlowNets are probabilistic models that sequentially generate compositional
+      structures through a stochastic policy. Among GFlowNets, temperature-conditional
+      GFlowNets can introduce temperature-based controllability for exploration and
+      exploitation. We propose *Logit-scaling GFlowNets* (Logit-GFN), a novel architectural
+      design that greatly accelerates the training of temperature-conditional GFlowNets.
+      It is based on the idea that previously proposed approaches introduced numerical
+      challenges in the deep network training, since different temperatures may give
+      rise to very different gradient profiles as well as magnitudes of the policy's
+      logits. We find that the challenge is greatly reduced if a learned function
+      of the temperature is used to scale the policy's logits directly. Also, using
+      Logit-GFN, GFlowNets can be improved by having better generalization capabilities
+      in offline learning and mode discovery capabilities in online learning, which
+      is empirically verified in various biological and chemical tasks. Our code is
+      available at https://github.com/dbsxodud-11/logit-gfn
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: KAIST / Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/51858?format=json
+          type: profile
+        name: Minsu Kim
+      display_name: Minsu Kim
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Korea Advanced Institute of Science & Technology (KAIST)
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/83555?format=json
+          type: profile
+        name: Joohwan Ko
+      display_name: Joohwan Ko
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: KAIST
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/80934?format=json
+          type: profile
+        name: Taeyoung Yun
+      display_name: Taeyoung Yun
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/53479?format=json
+          type: profile
+        name: Dinghuai Zhang
+      display_name: Dinghuai Zhang
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/78783?format=json
+          type: profile
+        name: Ling Pan
+      display_name: Ling Pan
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: KAIST
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/88493?format=json
+          type: profile
+        name: Woo Chang Kim
+      display_name: Woo Chang Kim
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: KAIST
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/73862?format=json
+          type: profile
+        name: Jinkyoo Park
+      display_name: Jinkyoo Park
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Valence Labs
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/18582?format=json
+          type: profile
+        name: Emmanuel Bengio
+      display_name: Emmanuel Bengio
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec AI Institute
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/24659?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/kim24s.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/34500
+      type: abstract
+    - link: https://icml.cc/media/icml-2024/Slides/34500.pdf
+      type: slides
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: Learning to Scale Logits for Temperature-Conditional GFlowNets
+    topics:
+    - name: Probabilistic Methods
+  update_key: null
+- info: {}
   key: miniconf:icml:cf1f78fe923afe05f7597da2be7a3da8
   paper:
     abstract: Neural Processes (NPs) are popular meta-learning methods for efficiently
@@ -377,4 +521,115 @@
     title: Memory Efficient Neural Processes via Constant Memory Attention Block
     topics:
     - name: Deep Learning->Attention Mechanisms
+  update_key: null
+- info: {}
+  key: miniconf:icml:f0935e4cd5920aa6c7c996a5ee53a70f
+  paper:
+    abstract: 'Mitigating the climate crisis requires a rapid transition towards lower-carbon
+      energy. Catalyst materials play a crucial role in the electrochemical reactions
+      involved in numerous industrial processes key to this transition, such as renewable
+      energy storage and electrofuel synthesis. To reduce the energy spent on such
+      activities, we must quickly discover more efficient catalysts to drive electrochemical
+      reactions. Machine learning (ML) holds the potential to efficiently model materials
+      properties from large amounts of data, accelerating electrocatalyst design.
+      The Open Catalyst Project OC20 dataset was constructed to that end. However,
+      ML models trained on OC20 are still neither scalable nor accurate enough for
+      practical applications. In this paper, we propose task-specific innovations
+      applicable to most architectures, enhancing both computational efficiency and
+      accuracy. This includes improvements in (1) the graph creation step, (2) atom
+      representations, (3) the energy prediction head, and (4) the force prediction
+      head. We describe these contributions, referred to as PhAST, and evaluate them
+      thoroughly on multiple architectures. Overall, PhAST improves energy MAE by
+      4 to 42% while dividing compute time by 3 to 8× depending on the targeted task/model.
+      PhAST also enables CPU training, leading to 40× speedups in highly parallelized
+      settings. Python package: https://phast.readthedocs.io.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Entalpic
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/131172?format=json
+          type: profile
+        name: Alexandre Duval
+      display_name: Alexandre Duval
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila / Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/92292?format=json
+          type: profile
+        name: Victor Schmidt
+      display_name: Victor Schmidt
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Intel Labs
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/22053?format=json
+          type: profile
+        name: Santiago Miret
+      display_name: Santiago Miret
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec AI Institute
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/24659?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Quebec AI Institute
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/72990?format=json
+          type: profile
+        name: Alex Hernandez-Garcia
+      display_name: Alex Hernandez-Garcia
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/131173?format=json
+          type: profile
+        name: David Rolnick
+      display_name: David Rolnick
+    flags: []
+    links:
+    - link: https://icml.cc/virtual/2024/poster/35634
+      type: abstract
+    - link: https://jmlr.org/papers/v25/23-0680.html
+      type: jmlr
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: 'PhAST: Physics-Aware, Scalable, and Task-Specific GNNs for Accelerated
+      Catalyst Design'
+    topics:
+    - name: Deep Learning->Graph Neural Networks
   update_key: null

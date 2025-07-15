@@ -239,6 +239,94 @@
     - name: Reinforcement Learning->Everything Else
   update_key: null
 - info: {}
+  key: miniconf:icml:285da2198b2b496c9d447cc4ac6b0734
+  paper:
+    abstract: Bayesian Persuasion is proposed as a tool for social media platforms
+      to combat the spread of misinformation. Since platforms can use machine learning
+      to predict the popularity and misinformation features of to-be-shared posts,
+      and users are largely motivated to share popular content, platforms can strategically
+      signal this informational advantage to change user beliefs and persuade them
+      not to share misinformation. We characterize the optimal signaling scheme with
+      imperfect predictions as a linear program and give sufficient and necessary
+      conditions on the classifier to ensure optimal platform utility is non-decreasing
+      and continuous. Next, this interaction is considered under a performative model,
+      wherein platform intervention affects the user's future behaviour. The convergence
+      and stability of optimal signaling under this performative process are fully
+      characterized. Lastly, we experimentally validate that our approach significantly
+      reduces misinformation in both the single round and performative setting.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Harvard University
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/124592?format=json
+          type: profile
+        name: Safwan Hossain
+      display_name: Safwan Hossain
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Montreal Institute for Learning Algorithms, University of Montreal,
+          University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/124566?format=json
+          type: profile
+        name: Andjela Mladenovic
+      display_name: Andjela Mladenovic
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Harvard University
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/19475?format=json
+          type: profile
+        name: Yiling Chen
+      display_name: Yiling Chen
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://icml.cc/api/miniconf/users/73156?format=json
+          type: profile
+        name: Gauthier Gidel
+      display_name: Gauthier Gidel
+    flags: []
+    links:
+    - link: https://proceedings.mlr.press/v235/hossain24b.html
+      type: pdf
+    - link: https://icml.cc/virtual/2024/poster/33949
+      type: abstract
+    - link: https://icml.cc/media/icml-2024/Slides/33949_ypaq1v1.pdf
+      type: slides
+    releases:
+    - pages: null
+      status: Accept (Poster)
+      venue:
+        aliases: []
+        date: '2024-07-23'
+        date_precision: 3
+        links: []
+        name: ICML
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICML
+        type: conference
+        volume: null
+    title: A Persuasive Approach to Combating Misinformation
+    topics: []
+  update_key: null
+- info: {}
   key: miniconf:icml:d465f14a648b3d0a1faa6f447e526c60
   paper:
     abstract: 'Causal representation learning aims at identifying high-level causal
@@ -444,100 +532,4 @@
     title: A Tensor Decomposition Perspective on Second-order RNNs
     topics:
     - name: Deep Learning->Sequential Models, Time series
-  update_key: null
-- info: {}
-  key: miniconf:icml:947018640bf36a2bb609d3557a285329
-  paper:
-    abstract: This paper tackles the challenge of detecting unreliable behavior in
-      regression algorithms, which may arise from intrinsic variability (e.g., aleatoric
-      uncertainty) or modeling errors (e.g., model uncertainty). First, we formally
-      introduce the notion of unreliability in regression, i.e., when the output of
-      the regressor exceeds a specified discrepancy (or error). Then, using powerful
-      tools for probabilistic modeling, we estimate the discrepancy density, and we
-      measure its statistical diversity using our proposed metric for statistical
-      dissimilarity. In turn, this allows us to derive a data-driven score that expresses
-      the uncertainty of the regression outcome. We show empirical improvements in
-      error detection for multiple regression tasks, consistently outperforming popular
-      baseline approaches, and contributing to the broader field of uncertainty quantification
-      and safe machine learning systems.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        name: CentraleSupelec
-      author:
-        aliases: []
-        links:
-        - link: http://icml.cc/api/miniconf/users/124241?format=json
-          type: profile
-        name: Andres Altieri
-      display_name: Andres Altieri
-    - affiliations:
-      - aliases: []
-        category: unknown
-        name: New York University
-      author:
-        aliases: []
-        links:
-        - link: http://icml.cc/api/miniconf/users/124255?format=json
-          type: profile
-        name: Marco Romanelli
-      display_name: Marco Romanelli
-    - affiliations:
-      - aliases: []
-        category: unknown
-        name: TU Wien
-      author:
-        aliases: []
-        links:
-        - link: http://icml.cc/api/miniconf/users/72237?format=json
-          type: profile
-        name: Georg Pichler
-      display_name: Georg Pichler
-    - affiliations:
-      - aliases: []
-        category: unknown
-        name: Universite Paris-Saclay
-      author:
-        aliases: []
-        links:
-        - link: http://icml.cc/api/miniconf/users/124248?format=json
-          type: profile
-        name: Florence Alberge
-      display_name: Florence Alberge
-    - affiliations:
-      - aliases: []
-        category: unknown
-        name: ILLS - Mila / CNRS - CentraleSupelec
-      author:
-        aliases: []
-        links:
-        - link: http://icml.cc/api/miniconf/users/124257?format=json
-          type: profile
-        name: Pablo Piantanida
-      display_name: Pablo Piantanida
-    flags: []
-    links:
-    - link: https://proceedings.mlr.press/v235/altieri24a.html
-      type: pdf
-    - link: https://icml.cc/virtual/2024/poster/33759
-      type: abstract
-    releases:
-    - pages: null
-      status: Accept (Spotlight)
-      venue:
-        aliases: []
-        date: '2024-07-23'
-        date_precision: 3
-        links: []
-        name: ICML
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: ICML
-        type: conference
-        volume: null
-    title: 'Beyond the Norms: Detecting Prediction Errors in Regression Models'
-    topics:
-    - name: Social Aspects->Trustworthy Machine Learning
   update_key: null

@@ -1,1 +1,163 @@
-[]
+- info: {}
+  key: miniconf:cvpr:e9dcb63ca828d0e00cd05b445099ed2e
+  paper:
+    abstract: Vision-Language Models (VLMs), such as CLIP, exhibit strong image-text
+      comprehension abilities, facilitating advances in several downstream tasks such
+      as zero-shot image classification, image-text retrieval, and text-to-image generation.
+      However, the compositional reasoning abilities of existing VLMs remains subpar.
+      The root of this limitation lies in the inadequate alignment between the images
+      and captions in the pretraining datasets. Additionally, the current contrastive
+      learning objective fails to focus on fine-grained grounding components like
+      relations, actions, and attributes, resulting in "bag-of-words" representations.
+      We introduce a simple and effective method to improve compositional reasoning
+      in VLMs. Our method better leverages available datasets by refining and expanding
+      the standard image-text contrastive learning framework. Our approach does not
+      require specific annotations and does not incur extra parameters. When integrated
+      with CLIP, our technique yields notable improvement over state-of-the-art baselines
+      across five vision-language compositional benchmarks.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila-Quebec AI Institute
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/127449?format=json
+          type: profile
+        name: Le Zhang
+      display_name: Le Zhang
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/94650?format=json
+          type: profile
+        name: Rabiul Awal
+      display_name: Rabiul Awal
+    - affiliations: []
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/92323?format=json
+          type: profile
+        name: Aishwarya Agrawal
+      display_name: Aishwarya Agrawal
+    flags: []
+    links:
+    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
+      type: pdf
+    - link: https://cvpr.thecvf.com/virtual/2024/poster/29738
+      type: abstract
+    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
+      type: abstract
+    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
+      type: paper_pdf
+    releases:
+    - pages: null
+      status: 'Accept: Poster'
+      venue:
+        aliases: []
+        date: '2024-06-19'
+        date_precision: 3
+        links: []
+        name: CVPR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: CVPR
+        type: conference
+        volume: null
+    title: Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance
+      Visio-Linguistic Compositional Understanding
+    topics: []
+  update_key: null
+- info: {}
+  key: miniconf:cvpr:1170017b40d1ba28394ebc44158dae8a
+  paper:
+    abstract: Foundation models encompass an extensive knowledge base and offer remarkable
+      transferability. However, this knowledge becomes outdated or insufficient over
+      time. The challenge lies in continuously updating foundation models to accommodate
+      novel information while retaining their original capabilities.  Leveraging the
+      fact that foundation models have initial knowledge on various tasks and domains,
+      we propose a novel approach that,  instead of updating all parameters equally,  localizes
+      the updates to a sparse set of parameters relevant to the task being learned.
+      We strike a  balance between efficiency and new task performance, while maintaining
+      the transferability and generalizability of foundation models. We extensively
+      evaluate our method on foundational vision-language models with a diverse spectrum
+      of continual learning tasks. Our method achieves improvements on the accuracy
+      of the newly learned tasks up to 7% while preserving the pretraining knowledge
+      with a negligible decrease of 0.9% on a representative control set accuracy.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: King Abdullah University of Science and Technology
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/131776?format=json
+          type: profile
+        name: Wenxuan Zhang
+      display_name: Wenxuan Zhang
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Concordia University/ MILA
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/131766?format=json
+          type: profile
+        name: Paul Janson
+      display_name: Paul Janson
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Toyota Motor Europe
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/75692?format=json
+          type: profile
+        name: Rahaf Aljundi
+      display_name: Rahaf Aljundi
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: KAUST
+      author:
+        aliases: []
+        links:
+        - link: http://cvpr.thecvf.com/api/miniconf/users/85585?format=json
+          type: profile
+        name: Mohamed Elhoseiny
+      display_name: Mohamed Elhoseiny
+    flags: []
+    links:
+    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
+      type: pdf
+    - link: https://cvpr.thecvf.com/virtual/2024/poster/31810
+      type: abstract
+    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
+      type: abstract
+    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
+      type: paper_pdf
+    releases:
+    - pages: null
+      status: 'Accept: Poster'
+      venue:
+        aliases: []
+        date: '2024-06-19'
+        date_precision: 3
+        links: []
+        name: CVPR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: CVPR
+        type: conference
+        volume: null
+    title: Overcoming Generic Knowledge Loss with Selective Parameter Update
+    topics: []
+  update_key: null
