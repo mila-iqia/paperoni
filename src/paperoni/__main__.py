@@ -11,6 +11,7 @@ from serieux import Auto, Registered, Tagged, TaggedUnion, serialize, singleton
 from .config import config, discoverers
 from .display import display, terminal_width
 from .model import PaperInfo
+from .model.merge import merge_all
 from .refinement import fetch_all
 from .utils import url_to_id
 
@@ -76,17 +77,26 @@ def make_cli():
         """Refine paper information."""
 
         # Link to refine (type:link)
-        link: str
+        # [action: append]
+        link: list[str]
+
+        # Whether to merge the results
+        merge: bool = False
 
         # Output format
         format: Formatter = TerminalFormatter
 
         def run(self):
-            if self.link.startswith("http"):
-                type, link = url_to_id(self.link)
-            else:
-                type, link = self.link.split(":")
-            self.format(fetch_all(type, link))
+            results = []
+            for link in self.link:
+                if link.startswith("http"):
+                    type, link = url_to_id(link)
+                else:
+                    type, link = link.split(":")
+                results.extend(fetch_all(type, link))
+            if self.merge:
+                results = [merge_all(results)]
+            self.format(results)
 
     @dataclass
     class PaperoniInterface:

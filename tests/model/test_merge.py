@@ -9,7 +9,7 @@ from paperoni.model.classes import (
     Link,
     PaperAuthor,
 )
-from paperoni.model.merge import merge, qual, similarity
+from paperoni.model.merge import merge, merge_all, qual, similarity
 
 
 @dataclass
@@ -155,3 +155,12 @@ def test_merge_institution_lists():
         Institution(name="Stanford University"),
         Institution(name="MIT", category=InstitutionCategory.academia),
     ]
+
+
+def test_merge_all():
+    ab = {"a": 1, "b": 2}
+    c = {"c": 3}
+    d = {"d": 4}
+    assert merge_all([]) is None
+    assert merge_all([ab]) == ab
+    assert merge_all([c, ab, d]) == ab | c | d
