@@ -148,20 +148,31 @@ def paper_from_jats(soup, links):
     date_candidates.sort(key=lambda x: -x["date_precision"])
     date = date_candidates and date_candidates[0]
 
-    def find_affiliation(aff):
-        # ror = soup.select_one(f"aff#{aff.attrs['rid']} institution-id[institution-id-type=ROR]")
+    def parse_affiliation(aff):
+        # ror = aff.select_one("institution-id[institution-id-type=ROR]")
         # links = []
         # if ror is not None:
         #     _, ror_id = url_to_id(ror.text)
         #     links.append(Link(type="ror", link=ror_id))
-        nodes = soup.select(f"aff#{aff.attrs['rid']} institution")
+        nodes = aff.select("institution")
+        if aff and not nodes:
+            nodes = [aff]
         parts = [node.text for node in nodes]
         name = "".join(parts)
         name = re.sub(pattern="^[0-9]+", string=name, repl="")
+        assert name
         return Institution(
             name=name,
             category=InstitutionCategory.unknown,
         )
+
+    def find_affiliations(author):
+        aff_nodes = [*author.select("aff")]
+        aff_nodes += [
+            soup.select_one(f"aff#{xaff.attrs['rid']}")
+            for xaff in author.select('xref[ref-type="aff"]')
+        ]
+        return [parse_affiliation(aff_node) for aff_node in aff_nodes if aff_node.text]
 
     abstract = soup.select_one("abstract") or ""
     if abstract:
@@ -185,9 +196,7 @@ def paper_from_jats(soup, links):
                 author=Author(
                     name=dn,
                 ),
-                affiliations=[
-                    find_affiliation(aff) for aff in author.select('xref[ref-type="aff"]')
-                ],
+                affiliations=find_affiliations(author),
             )
             for author in soup.select('contrib[contrib-type="author"]')
             if author.find("surname")
