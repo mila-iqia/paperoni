@@ -157,3 +157,12 @@ def similarity(a: str, b: str):
     a = plainify(a)
     b = plainify(b)
     return SequenceMatcher(a=a, b=b).ratio()
+
+
+def merge_all(entries):
+    if not entries:
+        return None
+    result, *rest = entries
+    for x in rest:
+        result = merge(result, x)
+    return result
