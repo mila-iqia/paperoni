@@ -1,0 +1,59 @@
+abstract: Current efforts of modelling COVID-19 are often based on the standard compartmental
+  models such as SEIR and their variations. As pre-symptomatic and asymptomatic cases
+  can spread the disease between populations through travel, it is important to incorporate
+  mobility between populations into the epidemiological modelling. In this work, we
+  propose to modify the commonly-used SEIR model to account for the dynamic flight
+  network, by estimating the imported cases based on the air traffic volume and the
+  test positive rate. We conduct a case study based on data found in Canada to demonstrate
+  how this modification, called Flight-SEIR, can potentially enable (1) early detection
+  of outbreaks due to imported pre-symptomatic and asymptomatic cases, (2) more accurate
+  estimation of the reproduction number and (3) evaluation of the impact of travel
+  restrictions and the implications of lifting these measures. The proposed Flight-SEIR
+  is essential in navigating through this pandemic and the next ones, given how interconnected
+  our world has become.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Xiaoye Ding
+  display_name: Xiaoye Ding
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Shenyang Huang
+  display_name: Shenyang Huang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Abby Leung
+  display_name: Abby Leung
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Reihaneh Rabbany
+  display_name: Reihaneh Rabbany
+flags: []
+links:
+- link: 10.1007/s41109-021-00378-3
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2021-06-10'
+    date_precision: 3
+    links: []
+    name: Applied Network Science
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: Applied Network Science
+    type: journal
+    volume: null
+title: Incorporating dynamic flight network in SEIR to model mobility between populations
+topics: []

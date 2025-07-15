@@ -1,0 +1,135 @@
+abstract: For most neuroimaging questions the huge range of possible analytic choices
+  leads to the possibility that conclusions from any single analytic approach may
+  be misleading. Examples of possible choices include the motion regression approach
+  used and smoothing and threshold factors applied during the processing pipeline.
+  Although it is possible to perform a multiverse analysis that evaluates all possible
+  analytic choices, this can be computationally challenging and repeated sequential
+  analyses on the same data can compromise inferential and predictive power. Here,
+  we establish how active learning on a low-dimensional space that captures the inter-relationships
+  between analysis approaches can be used to efficiently approximate the whole multiverse
+  of analyses. This approach balances the benefits of a multiverse analysis without
+  the accompanying cost to statistical power, computational power and the integrity
+  of inferences. We illustrate this approach with a functional MRI dataset of functional
+  connectivity across adolescence, demonstrating how a multiverse of graph theoretic
+  and simple pre-processing steps can be efficiently navigated using active learning.
+  Our study shows how this approach can identify the subset of analysis techniques
+  (i.e., pipelines) which are best able to predict participants’ ages, as well as
+  allowing the performance of different approaches to be quantified.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Neuroimaging Sciences, King’s College London
+  author:
+    aliases: []
+    links: []
+    name: Jessica Dafflon
+  display_name: Jessica Dafflon
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Neuroimaging Sciences, King’s College London
+  author:
+    aliases: []
+    links: []
+    name: Pedro F. Da Costa
+  display_name: Pedro F. Da Costa
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Neuroimaging Sciences, King’s College London
+  author:
+    aliases: []
+    links: []
+    name: František Váša
+  display_name: František Váša
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Gatsby Computational Neuroscience, University College London
+  author:
+    aliases: []
+    links: []
+    name: Ricardo Pio Monti
+  display_name: Ricardo Pio Monti
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Biomedical Engineering, McGill University
+  - aliases: []
+    category: unknown
+    name: Mila – Quebec Artificial Intelligence Institute
+  author:
+    aliases: []
+    links: []
+    name: Danilo Bzdok
+  display_name: Danilo Bzdok
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Neuroimaging Sciences, King’s College London
+  author:
+    aliases: []
+    links: []
+    name: Peter J. Hellyer
+  display_name: Peter J. Hellyer
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Neuroimaging Sciences, King’s College London
+  author:
+    aliases: []
+    links: []
+    name: Federico Turkheimer
+  display_name: Federico Turkheimer
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Psychology, Queen’s University, Kingston
+  author:
+    aliases: []
+    links: []
+    name: Jonathan Smallwood
+  display_name: Jonathan Smallwood
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Brain and Cognitive Development, Birkbeck College
+  author:
+    aliases: []
+    links: []
+    name: Emily Jones
+  display_name: Emily Jones
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Centre for Neuroimaging Sciences, King’s College London
+  author:
+    aliases: []
+    links: []
+    name: Robert Leech
+  display_name: Robert Leech
+flags: []
+links:
+- link: 10.1101/2020.10.29.359778
+  type: doi
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2020-10-29'
+    date_precision: 3
+    links: []
+    name: bioRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory
+    series: bioRxiv
+    type: journal
+    volume: null
+title: 'Neuroimaging: into the Multiverse'
+topics:
+- name: Functional connectivity
+- name: multiverse
+- name: optimization

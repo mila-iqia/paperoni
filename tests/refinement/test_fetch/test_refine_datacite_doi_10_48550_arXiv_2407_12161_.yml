@@ -1,0 +1,100 @@
+abstract: 'Understanding the mechanisms behind decisions taken by large foundation
+  models in sequential decision making tasks is critical to ensuring that such systems
+  operate transparently and safely. In this work, we perform exploratory analysis
+  on the Video PreTraining (VPT) Minecraft playing agent, one of the largest open-source
+  vision-based agents. We aim to illuminate its reasoning mechanisms by applying various
+  interpretability techniques. First, we analyze the attention mechanism while the
+  agent solves its training task - crafting a diamond pickaxe. The agent pays attention
+  to the last four frames and several key-frames further back in its six-second memory.
+  This is a possible mechanism for maintaining coherence in a task that takes 3-10
+  minutes, despite the short memory span. Secondly, we perform various interventions,
+  which help us uncover a worrying case of goal misgeneralization: VPT mistakenly
+  identifies a villager wearing brown clothes as a tree trunk when the villager is
+  positioned stationary under green tree leaves, and punches it to death.'
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Karolis Jucys
+  display_name: Karolis Jucys
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: George Adamopoulos
+  display_name: George Adamopoulos
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mehrab Hamidi
+  display_name: Mehrab Hamidi
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Stephanie Milani
+  display_name: Stephanie Milani
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mohammad Reza Samsami
+  display_name: Mohammad Reza Samsami
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Artem Zholus
+  display_name: Artem Zholus
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Sonia Joseph
+  display_name: Sonia Joseph
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Blake Richards
+  display_name: Blake Richards
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Irina Rish
+  display_name: Irina Rish
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Özgür Şimşek
+  display_name: Özgür Şimşek
+flags: []
+links:
+- link: 10.48550/arXiv.2407.12161
+  type: doi
+- link: https://arxiv.org/abs/2407.12161
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-07-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: 'Interpretability in Action: Exploratory Analysis of VPT, a Minecraft Agent'
+topics:
+- name: Artificial Intelligence (cs.AI)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

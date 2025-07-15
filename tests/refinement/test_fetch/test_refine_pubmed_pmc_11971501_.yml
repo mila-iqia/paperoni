@@ -1,0 +1,672 @@
+abstract: The value of preclinical diffusion MRI (dMRI) is substantial. While dMRI
+  enables in vivo non‐invasive characterization of tissue, ex vivo dMRI is increasingly
+  being used to probe tissue microstructure and brain connectivity. Ex vivo dMRI has
+  several experimental advantages including higher SNR and spatial resolution compared
+  to in vivo studies, and enabling more advanced diffusion contrasts for improved
+  microstructure and connectivity characterization. Another major advantage of ex
+  vivo dMRI is the direct comparison with histological data, as a crucial methodological
+  validation. However, there are a number of considerations that must be made when
+  performing ex vivo experiments. The steps from tissue preparation, image acquisition
+  and processing, and interpretation of results are complex, with many decisions that
+  not only differ dramatically from in vivo imaging of small animals, but ultimately
+  affect what questions can be answered using the data. This work represents “Part
+  2” of a three‐part series of recommendations and considerations for preclinical
+  dMRI. We describe best practices for dMRI of ex vivo tissue, with a focus on the
+  value that ex vivo imaging adds to the field of dMRI and considerations in ex vivo
+  image acquisition. We first give general considerations and foundational knowledge
+  that must be considered when designing experiments. We briefly describe differences
+  in specimens and models and discuss why some may be more or less appropriate for
+  different studies. We then give guidelines for ex vivo protocols, including tissue
+  fixation, sample preparation, and MR scanning. In each section, we attempt to provide
+  guidelines and recommendations, but also highlight areas for which no guidelines
+  exist (and why), and where future work should lie. An overarching goal herein is
+  to enhance the rigor and reproducibility of ex vivo dMRI acquisitions and analyses,
+  and thereby advance biomedical knowledge.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University Medical Center
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University
+  author:
+    aliases: []
+    links: []
+    name: Kurt G. Schilling
+  display_name: Kurt G. Schilling
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Vall d'Hebron Barcelona Hospital Campus
+  - aliases: []
+    category: unknown
+    name: University College London
+  author:
+    aliases: []
+    links: []
+    name: Francesco Grussu
+  display_name: Francesco Grussu
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Champalimaud Foundation
+  - aliases: []
+    category: unknown
+    name: King's College London
+  author:
+    aliases: []
+    links: []
+    name: Andrada Ianus
+  display_name: Andrada Ianus
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Aarhus University
+  author:
+    aliases: []
+    links: []
+    name: Brian Hansen
+  display_name: Brian Hansen
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Imperial College London
+  - aliases: []
+    category: unknown
+    name: University of Oxford
+  author:
+    aliases: []
+    links: []
+    name: Amy F. D. Howard
+  display_name: Amy F. D. Howard
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: King's College London
+  - aliases: []
+    category: unknown
+    name: King's College London|
+  author:
+    aliases: []
+    links: []
+    name: Rachel L. C. Barrett
+  display_name: Rachel L. C. Barrett
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Johns Hopkins University School of Medicine
+  author:
+    aliases: []
+    links: []
+    name: Manisha Aggarwal
+  display_name: Manisha Aggarwal
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Maastricht University Medical Center
+  author:
+    aliases: []
+    links: []
+    name: Stijn Michielse
+  display_name: Stijn Michielse
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: The University of Queensland
+  author:
+    aliases: []
+    links: []
+    name: Fatima Nasrallah
+  display_name: Fatima Nasrallah
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: The University of Melbourne
+  author:
+    aliases: []
+    links: []
+    name: Warda Syeda
+  display_name: Warda Syeda
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Indiana University
+  - aliases: []
+    category: unknown
+    name: Indiana University School of Medicine
+  author:
+    aliases: []
+    links: []
+    name: Nian Wang
+  display_name: Nian Wang
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: NYU Grossman School of Medicine
+  author:
+    aliases: []
+    links: []
+    name: Jelle Veraart
+  display_name: Jelle Veraart
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Maastricht University
+  author:
+    aliases: []
+    links: []
+    name: Alard Roebroeck
+  display_name: Alard Roebroeck
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Florida State University
+  - aliases: []
+    category: unknown
+    name: National HIgh Magnetic Field Laboratory
+  author:
+    aliases: []
+    links: []
+    name: Andrew F. Bagdasarian
+  display_name: Andrew F. Bagdasarian
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Max Planck Institute for Human Cognitive and Brain Sciences
+  author:
+    aliases: []
+    links: []
+    name: Cornelius Eichner
+  display_name: Cornelius Eichner
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Southern California
+  author:
+    aliases: []
+    links: []
+    name: Farshid Sepehrband
+  display_name: Farshid Sepehrband
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Minnesota
+  author:
+    aliases: []
+    links: []
+    name: Jan Zimmermann
+  display_name: Jan Zimmermann
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Aix Marseille Univ, CNRS, CRMBM
+  author:
+    aliases: []
+    links: []
+    name: Lucas Soustelle
+  display_name: Lucas Soustelle
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Antwerp
+  - aliases: []
+    category: unknown
+    name: University of Antwerp
+  author:
+    aliases: []
+    links: []
+    name: Christien Bowman
+  display_name: Christien Bowman
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Oxford
+  author:
+    aliases: []
+    links: []
+    name: Benjamin C. Tendler
+  display_name: Benjamin C. Tendler
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Lausanne University Hospital and University of Lausanne
+  author:
+    aliases: []
+    links: []
+    name: Andreea Hertanu
+  display_name: Andreea Hertanu
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Antwerp
+  - aliases: []
+    category: unknown
+    name: University of Antwerp
+  author:
+    aliases: []
+    links: []
+    name: Ben Jeurissen
+  display_name: Ben Jeurissen
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Antwerp
+  - aliases: []
+    category: unknown
+    name: University of Antwerp
+  author:
+    aliases: []
+    links: []
+    name: Marleen Verhoye
+  display_name: Marleen Verhoye
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Weizmann Institute of Science
+  author:
+    aliases: []
+    links: []
+    name: Lucio Frydman
+  display_name: Lucio Frydman
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Université de Genève
+  author:
+    aliases: []
+    links: []
+    name: Yohan van de Looij
+  display_name: Yohan van de Looij
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Florida State University
+  - aliases: []
+    category: unknown
+    name: National HIgh Magnetic Field Laboratory
+  author:
+    aliases: []
+    links: []
+    name: David Hike
+  display_name: David Hike
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Calgary
+  - aliases: []
+    category: unknown
+    name: University of Calgary
+  - aliases: []
+    category: unknown
+    name: University of Calgary
+  author:
+    aliases: []
+    links: []
+    name: Jeff F. Dunn
+  display_name: Jeff F. Dunn
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Oxford
+  author:
+    aliases: []
+    links: []
+    name: Karla Miller
+  display_name: Karla Miller
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University
+  author:
+    aliases: []
+    links: []
+    name: Bennett A. Landman
+  display_name: Bennett A. Landman
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Champalimaud Foundation
+  author:
+    aliases: []
+    links: []
+    name: Noam Shemesh
+  display_name: Noam Shemesh
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University Medical Center
+  author:
+    aliases: []
+    links: []
+    name: Adam Anderson
+  display_name: Adam Anderson
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Medical University of South Carolina
+  author:
+    aliases: []
+    links: []
+    name: Emilie McKinnon
+  display_name: Emilie McKinnon
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: The University of Queensland
+  author:
+    aliases: []
+    links: []
+    name: Shawna Farquharson
+  display_name: Shawna Farquharson
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: King's College London
+  author:
+    aliases: []
+    links: []
+    name: Flavio Dell'Acqua
+  display_name: Flavio Dell'Acqua
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: National Institutes of Health
+  author:
+    aliases: []
+    links: []
+    name: Carlo Pierpaoli
+  display_name: Carlo Pierpaoli
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University College London
+  author:
+    aliases: []
+    links: []
+    name: Ivana Drobnjak
+  display_name: Ivana Drobnjak
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University Medical Center Utrecht
+  author:
+    aliases: []
+    links: []
+    name: Alexander Leemans
+  display_name: Alexander Leemans
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University Medical Center
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University
+  - aliases: []
+    category: unknown
+    name: Vanderbilt University
+  author:
+    aliases: []
+    links: []
+    name: Kevin D. Harkins
+  display_name: Kevin D. Harkins
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Université de Sherbrooke
+  - aliases: []
+    category: unknown
+    name: Imeka Solutions
+  author:
+    aliases: []
+    links: []
+    name: Maxime Descoteaux
+  display_name: Maxime Descoteaux
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of California San Francisco
+  author:
+    aliases: []
+    links: []
+    name: Duan Xu
+  display_name: Duan Xu
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Pennsylvania
+  - aliases: []
+    category: unknown
+    name: Children's Hospital of Philadelphia
+  author:
+    aliases: []
+    links: []
+    name: Hao Huang
+  display_name: Hao Huang
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Inserm U 1127, CNRS UMR 7225, Sorbonne Université
+  - aliases: []
+    category: unknown
+    name: Paris Brain Institute
+  author:
+    aliases: []
+    links: []
+    name: Mathieu D. Santin
+  display_name: Mathieu D. Santin
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Florida State University
+  - aliases: []
+    category: unknown
+    name: National HIgh Magnetic Field Laboratory
+  author:
+    aliases: []
+    links: []
+    name: Samuel C. Grant
+  display_name: Samuel C. Grant
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of California Irvine
+  - aliases: []
+    category: unknown
+    name: University of California Irvine
+  author:
+    aliases: []
+    links: []
+    name: Andre Obenaus
+  display_name: Andre Obenaus
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Weill Cornell Medical College
+  author:
+    aliases: []
+    links: []
+    name: Gene S. Kim
+  display_name: Gene S. Kim
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Zhejiang University
+  author:
+    aliases: []
+    links: []
+    name: Dan Wu
+  display_name: Dan Wu
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: CEA, DRF, JOLIOT, NeuroSpin
+  - aliases: []
+    category: unknown
+    name: Université Paris‐Saclay
+  author:
+    aliases: []
+    links: []
+    name: Denis Le Bihan
+  display_name: Denis Le Bihan
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Florida
+  - aliases: []
+    category: unknown
+    name: University of Florida
+  - aliases: []
+    category: unknown
+    name: National High Magnetic Field Laboratory
+  author:
+    aliases: []
+    links: []
+    name: Stephen J. Blackband
+  display_name: Stephen J. Blackband
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Paris‐Saclay University
+  author:
+    aliases: []
+    links: []
+    name: Luisa Ciobanu
+  display_name: Luisa Ciobanu
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: New York University Grossman School of Medicine
+  author:
+    aliases: []
+    links: []
+    name: Els Fieremans
+  display_name: Els Fieremans
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Zhejiang University
+  - aliases: []
+    category: unknown
+    name: Zhejiang University
+  author:
+    aliases: []
+    links: []
+    name: Ruiliang Bai
+  display_name: Ruiliang Bai
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: University of Oslo
+  author:
+    aliases: []
+    links: []
+    name: Trygve B. Leergaard
+  display_name: Trygve B. Leergaard
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: New York University School of Medicine
+  author:
+    aliases: []
+    links: []
+    name: Jiangyang Zhang
+  display_name: Jiangyang Zhang
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Copenhagen University Hospital Amager & Hvidovre
+  - aliases: []
+    category: unknown
+    name: Technical University of Denmark
+  author:
+    aliases: []
+    links: []
+    name: Tim B. Dyrby
+  display_name: Tim B. Dyrby
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Duke University
+  - aliases: []
+    category: unknown
+    name: Duke University
+  author:
+    aliases: []
+    links: []
+    name: G. Allan Johnson
+  display_name: G. Allan Johnson
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Polytechnique Montreal
+  - aliases: []
+    category: unknown
+    name: University of Montreal
+  - aliases: []
+    category: unknown
+    name: Mila – Quebec AI Institute
+  author:
+    aliases: []
+    links: []
+    name: Julien Cohen‐Adad
+  display_name: Julien Cohen‐Adad
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Medical College of Wisconsin
+  - aliases: []
+    category: unknown
+    name: Clement J Zablocki VA Medical Center
+  author:
+    aliases: []
+    links: []
+    name: Matthew D. Budde
+  display_name: Matthew D. Budde
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Lausanne University Hospital and University of Lausanne
+  - aliases: []
+    category: unknown
+    name: Ecole Polytechnique Fédérale de Lausanne
+  author:
+    aliases: []
+    links: []
+    name: Ileana O. Jelescu
+  display_name: Ileana O. Jelescu
+flags: []
+links:
+- link: '11971501'
+  type: pmc
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-03-04'
+    date_precision: 3
+    links: []
+    name: Magnetic Resonance in Medicine
+    open: false
+    peer_reviewed: false
+    publisher: John Wiley and Sons Inc.
+    series: Magnetic Resonance in Medicine
+    type: journal
+    volume: null
+title: 'Considerations and recommendations from the ISMRM diffusion study group for
+  preclinical diffusion MRI: Part 2—Ex vivo imaging: Added value and acquisition'
+topics:
+- name: acquisition
+- name: best practices
+- name: diffusion MRI
+- name: diffusion tensor
+- name: ex vivo
+- name: microstructure
+- name: open science
+- name: preclinical
+- name: processing
+- name: tractography

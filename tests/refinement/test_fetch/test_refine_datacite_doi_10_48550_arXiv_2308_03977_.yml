@@ -1,0 +1,81 @@
+abstract: 'Synthetic image datasets offer unmatched advantages for designing and evaluating
+  deep neural networks: they make it possible to (i) render as many data samples as
+  needed, (ii) precisely control each scene and yield granular ground truth labels
+  (and captions), (iii) precisely control distribution shifts between training and
+  testing to isolate variables of interest for sound experimentation. Despite such
+  promise, the use of synthetic image data is still limited -- and often played down
+  -- mainly due to their lack of realism. Most works therefore rely on datasets of
+  real images, which have often been scraped from public images on the internet, and
+  may have issues with regards to privacy, bias, and copyright, while offering little
+  control over how objects precisely appear. In this work, we present a path to democratize
+  the use of photorealistic synthetic data: we develop a new generation of interactive
+  environments for representation learning research, that offer both controllability
+  and realism. We use the Unreal Engine, a powerful game engine well known in the
+  entertainment industry, to produce PUG (Photorealistic Unreal Graphics) environments
+  and datasets for representation learning. In this paper, we demonstrate the potential
+  of PUG to enable more rigorous evaluations of vision models.'
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Florian Bordes
+  display_name: Florian Bordes
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Shashank Shekhar
+  display_name: Shashank Shekhar
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mark Ibrahim
+  display_name: Mark Ibrahim
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Diane Bouchacourt
+  display_name: Diane Bouchacourt
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Pascal Vincent
+  display_name: Pascal Vincent
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Ari S. Morcos
+  display_name: Ari S. Morcos
+flags: []
+links:
+- link: 10.48550/arXiv.2308.03977
+  type: doi
+- link: https://arxiv.org/abs/2308.03977
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2023-08-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: 'PUG: Photorealistic and Semantically Controllable Synthetic Data for Representation
+  Learning'
+topics:
+- name: Computer Vision and Pattern Recognition (cs.CV)
+- name: Machine Learning (cs.LG)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

@@ -1,0 +1,127 @@
+abstract: ''
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Alexandre Lacoste
+  display_name: Alexandre Lacoste
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Nils Lehmann
+  display_name: Nils Lehmann
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Pau Rodríguez
+  display_name: Pau Rodríguez
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Evan D. Sherwin
+  display_name: Evan D. Sherwin
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Hannah Kerner
+  display_name: Hannah Kerner
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Björn Lütjens
+  display_name: Björn Lütjens
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jeremy Irvin
+  display_name: Jeremy Irvin
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: David Dao
+  display_name: David Dao
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Hamed Alemohammad
+  display_name: Hamed Alemohammad
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Alexandre Drouin
+  display_name: Alexandre Drouin
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mehmet Gunturkun
+  display_name: Mehmet Gunturkun
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Gabriel Huang
+  display_name: Gabriel Huang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: David Vázquez 0001
+  display_name: David Vázquez 0001
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Dava J. Newman
+  display_name: Dava J. Newman
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Yoshua Bengio
+  display_name: Yoshua Bengio
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Stefano Ermon
+  display_name: Stefano Ermon
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Xiaoxiang Zhu 0001
+  display_name: Xiaoxiang Zhu 0001
+flags: []
+links:
+- link: conf/nips/LacosteLRSKLIDA23
+  type: dblp
+- link: http://papers.nips.cc/paper_files/paper/2023/hash/a0644215d9cff6646fa334dfa5d29c5a-Abstract-Datasets_and_Benchmarks.html
+  type: html
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2023-01-01'
+    date_precision: 1
+    links: []
+    name: NeurIPS
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: NeurIPS
+    type: journal
+    volume: null
+title: 'GEO-Bench: Toward Foundation Models for Earth Monitoring.'
+topics: []

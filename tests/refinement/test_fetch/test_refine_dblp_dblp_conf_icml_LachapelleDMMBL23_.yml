@@ -1,0 +1,68 @@
+abstract: ''
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Sébastien Lachapelle
+  display_name: Sébastien Lachapelle
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Tristan Deleu
+  display_name: Tristan Deleu
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Divyat Mahajan
+  display_name: Divyat Mahajan
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Ioannis Mitliagkas
+  display_name: Ioannis Mitliagkas
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Yoshua Bengio
+  display_name: Yoshua Bengio
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Simon Lacoste-Julien
+  display_name: Simon Lacoste-Julien
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Quentin Bertrand
+  display_name: Quentin Bertrand
+flags: []
+links:
+- link: conf/icml/LachapelleDMMBL23
+  type: dblp
+- link: https://proceedings.mlr.press/v202/lachapelle23a.html
+  type: html
+releases:
+- pages: 18171-18206
+  status: published
+  venue:
+    aliases: []
+    date: '2023-01-01'
+    date_precision: 1
+    links: []
+    name: ICML
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ICML
+    type: journal
+    volume: null
+title: 'Synergies between Disentanglement and Sparsity: Generalization and Identifiability
+  in Multi-Task Learning.'
+topics: []

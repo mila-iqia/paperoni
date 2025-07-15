@@ -1,0 +1,151 @@
+abstract: Cell tracking in chimeric models is essential yet challenging, particularly
+  in developmental biology, regenerative medicine, and transplantation studies. Existing
+  methods, such as fluorescent labeling and genetic barcoding, are technically demanding,
+  costly, and often impractical for dynamic, heterogeneous tissues. To address these
+  limitations, we propose a computational framework that leverages sex as a surrogate
+  marker for cell tracking. Our approach uses a machine learning model trained on
+  single-cell transcriptomic data to predict cell sex with high accuracy, enabling
+  clear distinction between donor (male) and recipient (female) cells in sex-mismatched
+  chimeric models. The model identifies specific genes critical for sex prediction
+  and has been validated using public datasets and experimental flow sorting, confirming
+  the biological relevance of the identified cell populations. Applied to skeletal
+  muscle macrophages, our method revealed distinct transcriptional profiles associated
+  with cellular origins. This pipeline offers a robust, cost-effective solution for
+  cell tracking in chimeric models, advancing research in regenerative medicine and
+  immunology by providing precise insights into cellular origins and therapeutic outcomes.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Mathematics and Statistics, McGill University
+  - aliases: []
+    category: unknown
+    name: Department of Computer Science, Columbia University
+  author:
+    aliases: []
+    links: []
+    name: Huilin Tai
+  display_name: Huilin Tai
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Medicine, Division of Experimental Medicine, McGill University
+  - aliases: []
+    category: unknown
+    name: Suzhou Institute of Systems Medicine, Chinese Academy of Medical Sciences
+      & Peking Union Medical College
+  author:
+    aliases: []
+    links: []
+    name: Qian Li
+  display_name: Qian Li
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Medicine, Division of Experimental Medicine, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Jingtao Wang
+  display_name: Jingtao Wang
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Medicine, Division of Experimental Medicine, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Jiahui Tan
+  display_name: Jiahui Tan
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Medicine, Division of Experimental Medicine, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Ryann Lang
+  display_name: Ryann Lang
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Medicine, Division of Experimental Medicine, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Basil J. Petrof
+  display_name: Basil J. Petrof
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Meakins-Christie Laboratories, Research Institute of McGill University Health
+      Centre
+  - aliases: []
+    category: unknown
+    name: Department of Medicine, Division of Experimental Medicine, McGill University
+  - aliases: []
+    category: unknown
+    name: Quantitative Life Sciences, McGill University
+  - aliases: []
+    category: unknown
+    name: School of Computer Science, McGill University
+  - aliases: []
+    category: unknown
+    name: Mila-Quebec AI Institute, 6666 Rue Saint-Urbain, Montreal
+  author:
+    aliases: []
+    links: []
+    name: Jun Ding
+  display_name: Jun Ding
+flags: []
+links:
+- link: 10.1101/2024.12.02.626449
+  type: doi
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2024-12-05'
+    date_precision: 3
+    links: []
+    name: bioRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory
+    series: bioRxiv
+    type: journal
+    volume: null
+title: 'CellSexID: Sex-Based Computational Tracking of Cellular Origins in Chimeric
+  Models'
+topics:
+- name: Chimera models
+- name: Single-cell
+- name: Sex Prediction
+- name: Cell origin tracking
+- name: Machine learning
+- name: Sex biomarkers

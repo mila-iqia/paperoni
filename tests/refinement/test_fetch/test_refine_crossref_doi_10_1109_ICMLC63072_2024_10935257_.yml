@@ -1,0 +1,51 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Royal Military College of Canada, Electrical and Computer Engineering,Kingston,Canada
+  author:
+    aliases: []
+    links: []
+    name: KIERNAN BRODA-MILIAN
+  display_name: KIERNAN BRODA-MILIAN
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Polytechnique Montreal, Computer and Software Engineering,Quebec,Canada
+  author:
+    aliases: []
+    links: []
+    name: HANANE DAGDOUGUI
+  display_name: HANANE DAGDOUGUI
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Royal Military College of Canada, Electrical and Computer Engineering,Kingston,Canada
+  author:
+    aliases: []
+    links: []
+    name: RANWA AL MALLAH
+  display_name: RANWA AL MALLAH
+flags: []
+links:
+- link: 10.1109/ICMLC63072.2024.10935257
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-09-20'
+    date_precision: 3
+    links: []
+    name: 2024 International Conference on Machine Learning and Cybernetics (ICMLC)
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: 2024 International Conference on Machine Learning and Cybernetics (ICMLC)
+    type: conference
+    volume: null
+title: 'The Bifurcation Method: White-Box Observation Perturbation Attacks on Reinforcement
+  Learning Agents on a Cyber Physical System'
+topics: []

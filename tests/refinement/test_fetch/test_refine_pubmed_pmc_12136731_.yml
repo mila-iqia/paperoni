@@ -1,0 +1,102 @@
+abstract: '
+
+  Epitope-based vaccines are promising therapeutic modalities for infectious diseases
+  and cancer, but identifying immunogenic epitopes is challenging. The vast majority
+  of prediction methods only use amino acid sequence information, and do not incorporate
+  wide-scale structure data and biochemical properties across each peptide-MHC. We
+  present ImmunoStruct, a deep-learning model that integrates sequence, structural,
+  and biochemical information to predict multi-allele class-I peptide-MHC immunogenicity.
+  By leveraging a multimodal dataset of ∼27,000 peptide-MHCs, we demonstrate that
+  ImmunoStruct improves immunogenicity prediction performance and interpretability
+  beyond existing methods, across infectious disease epitopes and cancer neoepitopes.
+  We further show strong alignment with
+
+  in vitro
+
+  assay results for a set of SARS-CoV-2 epitopes, as well as strong performance in
+  peptide-MHC-based cancer patient survival prediction. Overall, this work also presents
+  a new architecture that incorporates equivariant graph processing and multimodal
+  data integration for the long standing task in immunotherapy.
+
+  '
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Smita Krishnaswamy
+  display_name: Smita Krishnaswamy
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Kevin Givechian
+  display_name: Kevin Givechian
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: João Rocha
+  display_name: João Rocha
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Edward Yang
+  display_name: Edward Yang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Chen Liu
+  display_name: Chen Liu
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Kerrie Greene
+  display_name: Kerrie Greene
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Rex Ying
+  display_name: Rex Ying
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Etienne Caron
+  display_name: Etienne Caron
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Akiko Iwasaki
+  display_name: Akiko Iwasaki
+flags: []
+links:
+- link: '12136731'
+  type: pmc
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-05-21'
+    date_precision: 3
+    links: []
+    name: Research Square
+    open: false
+    peer_reviewed: false
+    publisher: American Journal Experts
+    series: Research Square
+    type: journal
+    volume: null
+title: '
+
+  ImmunoStruct: a multimodal neural network framework for immunogenicity prediction
+  from peptide-MHC sequence, structure, and biochemical properties
+
+  '
+topics: []

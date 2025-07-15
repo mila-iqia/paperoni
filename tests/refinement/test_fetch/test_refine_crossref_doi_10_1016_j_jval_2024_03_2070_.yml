@@ -1,0 +1,114 @@
+abstract: null
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: K Gurjar
+  display_name: K Gurjar
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: B Rattanavong
+  display_name: B Rattanavong
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: L Bennetts
+  display_name: L Bennetts
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: J Sahota
+  display_name: J Sahota
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: M Ouerghi
+  display_name: M Ouerghi
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: C Ammendolea
+  display_name: C Ammendolea
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: J Asselah
+  display_name: J Asselah
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: S Bartlett
+  display_name: S Bartlett
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: C Brezden-Masley
+  display_name: C Brezden-Masley
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: J Croke
+  display_name: J Croke
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: T Hijal
+  display_name: T Hijal
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: J Kildea
+  display_name: J Kildea
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: J Papadakos
+  display_name: J Papadakos
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: L Watson
+  display_name: L Watson
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: D Soliman
+  display_name: D Soliman
+flags: []
+links:
+- link: 10.1016/j.jval.2024.03.2070
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-06-01'
+    date_precision: 2
+    links: []
+    name: Value in Health
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: Value in Health
+    type: journal
+    volume: null
+title: 'PCR191 Patient-Centric Assessment of Treatment Experience in Breast Cancer:
+  Development and Validation of a Patient Questionnaire'
+topics: []

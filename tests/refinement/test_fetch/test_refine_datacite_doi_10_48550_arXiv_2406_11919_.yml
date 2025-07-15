@@ -1,0 +1,55 @@
+abstract: In terms of accuracy, Graph Neural Networks (GNNs) are the best architectural
+  choice for the node classification task. Their drawback in real-world deployment
+  is the latency that emerges from the neighbourhood processing operation. One solution
+  to the latency issue is to perform knowledge distillation from a trained GNN to
+  a Multi-Layer Perceptron (MLP), where the MLP processes only the features of the
+  node being classified (and possibly some pre-computed structural information). However,
+  the performance of such MLPs in both transductive and inductive settings remains
+  inconsistent for existing knowledge distillation techniques. We propose to address
+  the performance concerns by using a specially-designed student model instead of
+  an MLP. Our model, named Routing-by-Memory (RbM), is a form of Mixture-of-Experts
+  (MoE), with a design that enforces expert specialization. By encouraging each expert
+  to specialize on a certain region on the hidden representation space, we demonstrate
+  experimentally that it is possible to derive considerably more consistent performance
+  across multiple datasets. Code available at https://github.com/Rufaim/routing-by-memory.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Pavel Rumiantsev
+  display_name: Pavel Rumiantsev
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mark Coates
+  display_name: Mark Coates
+flags: []
+links:
+- link: 10.48550/arXiv.2406.11919
+  type: doi
+- link: https://arxiv.org/abs/2406.11919
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-06-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: Graph Knowledge Distillation to Mixture of Experts
+topics:
+- name: Machine Learning (cs.LG)
+- name: Artificial Intelligence (cs.AI)
+- name: Machine Learning (stat.ML)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

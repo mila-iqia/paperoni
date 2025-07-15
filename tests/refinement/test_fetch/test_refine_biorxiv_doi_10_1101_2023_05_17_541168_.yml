@@ -1,0 +1,443 @@
+abstract: In recent years, large-scale computational models of the cortex have emerged
+  as a powerful way to study the multi-scale mechanisms of neural processing. However,
+  due to computational costs and difficulty of parameterization, detailed biophysical
+  reconstructions have so far been restricted to small volumes of tissue, where the
+  study of macro- and meso-scale interactions that are central to cortical function
+  is not possible. We describe here, and in a companion paper, an approach to address
+  the scaling challenges and provide a model of multiple interacting cortical regions
+  at a subcellular level of detail. The model consists of 4.2 million morphologically
+  detailed neurons in 8 sub-regions and connected with 13.2 billion synapses through
+  local and long-range connectivity. Its anatomical aspects are described in the companion
+  paper; here, we introduce physiological models of neuronal activity and synaptic
+  transmission that integrate a large number of literature sources and were built
+  using previously published algorithms. Biological neuronal diversity was captured
+  in 208 morpho-electrical neuron types, five types of synaptic short-term dynamics,
+  and pathway-specificity of synaptic parameters. A representation of synaptic input
+  from cortical regions not present in the model was added and efficiently calibrated
+  to reference firing rates. The model exhibits a spectrum of dynamical states differing
+  in the degree to which they are internally versus externally driven. We characterized
+  which parts of the spectrum are compatible with available experimental data on layer-specific
+  delays and amplitudes of responses to simple stimuli, and found an in vivo-like
+  regime at the edge of a transition from asynchronous to synchronous spontaneous
+  activity. We developed a rich set of simulation tools to recreate a diverse set
+  of laboratory experiments in silico, providing further validation and demonstrating
+  the utility of the model in a variety of paradigms. Finally, we found that the large
+  spatial scale of the model, that incorporates multiple cortical regions, led to
+  the emergence of multiple independent computational units interacting through long-range
+  synaptic pathways. The model provides a framework for the continued integration
+  of experimental findings, for challenging hypotheses and making testable predictions,
+  and provides a foundation for further simulation-based studies of cortical processing
+  and learning.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: James B. Isbister
+  display_name: James B. Isbister
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: András Ecker
+  display_name: András Ecker
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Christoph Pokorny
+  display_name: Christoph Pokorny
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Sirio Bolaños-Puchet
+  display_name: Sirio Bolaños-Puchet
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Daniela Egas Santander
+  display_name: Daniela Egas Santander
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Alexis Arnaudon
+  display_name: Alexis Arnaudon
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Omar Awile
+  display_name: Omar Awile
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Natali Barros-Zulaica
+  display_name: Natali Barros-Zulaica
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Jorge Blanco Alonso
+  display_name: Jorge Blanco Alonso
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Elvis Boci
+  display_name: Elvis Boci
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  - aliases: []
+    category: unknown
+    name: Department of Basic Neurosciences, University of Geneva
+  author:
+    aliases: []
+    links: []
+    name: Giuseppe Chindemi
+  display_name: Giuseppe Chindemi
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Jean-Denis Courcol
+  display_name: Jean-Denis Courcol
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Tanguy Damart
+  display_name: Tanguy Damart
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Thomas Delemontex
+  display_name: Thomas Delemontex
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Alexander Dietz
+  display_name: Alexander Dietz
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Gianluca Ficarelli
+  display_name: Gianluca Ficarelli
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Mike Gevaert
+  display_name: Mike Gevaert
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Joni Herttuainen
+  display_name: Joni Herttuainen
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Genrich Ivaska
+  display_name: Genrich Ivaska
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Weina Ji
+  display_name: Weina Ji
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Daniel Keller
+  display_name: Daniel Keller
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: James King
+  display_name: James King
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Pramod Kumbhar
+  display_name: Pramod Kumbhar
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Samuel Lapere
+  display_name: Samuel Lapere
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Polina Litvak
+  display_name: Polina Litvak
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Darshan Mandge
+  display_name: Darshan Mandge
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  - aliases: []
+    category: unknown
+    name: Department of Neurosciences, Faculty of Medicine, Université de Montŕeal
+  - aliases: []
+    category: unknown
+    name: CHU Sainte-Justine Research Center
+  author:
+    aliases: []
+    links: []
+    name: Eilif B. Muller
+  display_name: Eilif B. Muller
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Fernando Pereira
+  display_name: Fernando Pereira
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Judit Planas
+  display_name: Judit Planas
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Rajnish Ranjan
+  display_name: Rajnish Ranjan
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Maria Reva
+  display_name: Maria Reva
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Armando Romani
+  display_name: Armando Romani
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Christian Rössert
+  display_name: Christian Rössert
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Felix Schürmann
+  display_name: Felix Schürmann
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Vishal Sood
+  display_name: Vishal Sood
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Aleksandra Teska
+  display_name: Aleksandra Teska
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Anil Tuncel
+  display_name: Anil Tuncel
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Werner Van Geit
+  display_name: Werner Van Geit
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Matthias Wolf
+  display_name: Matthias Wolf
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Henry Markram
+  display_name: Henry Markram
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  - aliases: []
+    category: unknown
+    name: Neural Circuits Laboratory, Newcastle University
+  author:
+    aliases: []
+    links: []
+    name: Srikanth Ramaswamy
+  display_name: Srikanth Ramaswamy
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Michael W. Reimann
+  display_name: Michael W. Reimann
+flags: []
+links:
+- link: 10.1101/2023.05.17.541168
+  type: doi
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2023-05-17'
+    date_precision: 3
+    links: []
+    name: bioRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory
+    series: bioRxiv
+    type: journal
+    volume: null
+title: 'Modeling and Simulation of Neocortical Micro- and Mesocircuitry. Part II:
+  Physiology and Experimentation'
+topics: []

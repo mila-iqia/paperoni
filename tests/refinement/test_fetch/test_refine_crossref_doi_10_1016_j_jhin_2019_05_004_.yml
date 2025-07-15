@@ -1,0 +1,42 @@
+abstract: null
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: B. Leclère
+  display_name: B. Leclère
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: D.L. Buckeridge
+  display_name: D.L. Buckeridge
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: D. Lepelletier
+  display_name: D. Lepelletier
+flags: []
+links:
+- link: 10.1016/j.jhin.2019.05.004
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2019-10-01'
+    date_precision: 2
+    links: []
+    name: Journal of Hospital Infection
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: Journal of Hospital Infection
+    type: journal
+    volume: null
+title: 'Evaluation of a web-based tool for labelling potential hospital outbreaks:
+  a mixed methods study'
+topics: []

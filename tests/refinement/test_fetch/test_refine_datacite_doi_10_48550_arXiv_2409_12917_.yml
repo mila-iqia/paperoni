@@ -1,0 +1,157 @@
+abstract: Self-correction is a highly desirable capability of large language models
+  (LLMs), yet it has consistently been found to be largely ineffective in modern LLMs.
+  Current methods for training self-correction typically depend on either multiple
+  models, a more advanced model, or additional forms of supervision. To address these
+  shortcomings, we develop a multi-turn online reinforcement learning (RL) approach,
+  SCoRe, that significantly improves an LLM's self-correction ability using entirely
+  self-generated data. To build SCoRe, we first show that variants of supervised fine-tuning
+  (SFT) on offline model-generated correction traces are often insufficient for instilling
+  self-correction behavior. In particular, we observe that training via SFT falls
+  prey to either a distribution mismatch between mistakes made by the data-collection
+  policy and the model's own responses, or to behavior collapse, where learning implicitly
+  prefers only a certain mode of correction behavior that is often not effective at
+  self-correction on test problems. SCoRe addresses these challenges by training under
+  the model's own distribution of self-generated correction traces and using appropriate
+  regularization to steer the learning process into learning a self-correction behavior
+  that is effective at test time as opposed to fitting high-reward responses for a
+  given prompt. This regularization process includes an initial phase of multi-turn
+  RL on a base model to generate a policy initialization that is less susceptible
+  to collapse, followed by using a reward bonus to amplify self-correction. With Gemini
+  1.0 Pro and 1.5 Flash models, we find that SCoRe achieves state-of-the-art self-correction
+  performance, improving the base models' self-correction by 15.6% and 9.1% respectively
+  on MATH and HumanEval.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Aviral Kumar
+  display_name: Aviral Kumar
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Vincent Zhuang
+  display_name: Vincent Zhuang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Rishabh Agarwal
+  display_name: Rishabh Agarwal
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Yi Su
+  display_name: Yi Su
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: John D Co-Reyes
+  display_name: John D Co-Reyes
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Avi Singh
+  display_name: Avi Singh
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Kate Baumli
+  display_name: Kate Baumli
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Shariq Iqbal
+  display_name: Shariq Iqbal
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Colton Bishop
+  display_name: Colton Bishop
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Rebecca Roelofs
+  display_name: Rebecca Roelofs
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Lei M Zhang
+  display_name: Lei M Zhang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Kay McKinney
+  display_name: Kay McKinney
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Disha Shrivastava
+  display_name: Disha Shrivastava
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Cosmin Paduraru
+  display_name: Cosmin Paduraru
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: George Tucker
+  display_name: George Tucker
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Doina Precup
+  display_name: Doina Precup
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Feryal Behbahani
+  display_name: Feryal Behbahani
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Aleksandra Faust
+  display_name: Aleksandra Faust
+flags: []
+links:
+- link: 10.48550/arXiv.2409.12917
+  type: doi
+- link: https://arxiv.org/abs/2409.12917
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-09-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: Training Language Models to Self-Correct via Reinforcement Learning
+topics:
+- name: Machine Learning (cs.LG)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

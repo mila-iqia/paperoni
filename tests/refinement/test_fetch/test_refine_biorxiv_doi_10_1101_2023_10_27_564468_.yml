@@ -1,0 +1,73 @@
+abstract: The current mainstream software for peptide-centric tandem mass spectrometry
+  data analysis can be categorized as either database-driven, which rely on a library
+  of mass spectra to identify the peptide associated with novel query spectra, or
+  de novo sequencing-based, which aim to find the entire peptide sequence by relying
+  only on the query mass spectrum. While the first paradigm currently produces state-of-the-art
+  results in peptide identification tasks, it does not inherently make use of information
+  present in the query mass spectrum itself to refine identifications. Meanwhile,
+  de novo approaches attempt to solve a complex problem in one go, without any search
+  space constraints in the general case, leading to comparatively poor results. In
+  this paper, we decompose the de novo problem into putatively easier subproblems,
+  and we show that peptide identification rates of database-driven methods may be
+  improved in terms of peptide identification rate by solving one such subsproblem
+  without requiring a solution for the complete de novo task. We demonstrate this
+  using a de novo peptide length prediction task as the chosen subproblem. As a first
+  prototype, we show that a deep learning-based length prediction model increases
+  peptide identification rates in the ProteomeTools dataset as part of an Pepid-based
+  identification pipeline. Using the predicted information to better rank the candidates,
+  we show that combining ideas from the two paradigms produces clear benefits in this
+  setting. We propose that the next generation of peptide-centric tandem mass spectrometry
+  identification methods should combine elements of these paradigms by mining facts
+  “de novo; about the peptide represented in a spectrum, while simultaneously limiting
+  the search space with a peptide candidates database.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Institute for Research in Immunology and Cancer
+  - aliases: []
+    category: unknown
+    name: DIRO, Université de Montréal
+  author:
+    aliases: []
+    links: []
+    name: Jeremie Zumer
+  display_name: Jeremie Zumer
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Institute for Research in Immunology and Cancer
+  - aliases: []
+    category: unknown
+    name: Department of Biochemistry, Université de Montréal
+  author:
+    aliases: []
+    links: []
+    name: Sebastien Lemieux
+  display_name: Sebastien Lemieux
+flags: []
+links:
+- link: 10.1101/2023.10.27.564468
+  type: doi
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2023-11-01'
+    date_precision: 3
+    links: []
+    name: bioRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory
+    series: bioRxiv
+    type: journal
+    volume: null
+title: Mining Mass Spectra for Peptide Facts
+topics:
+- name: Deep Learning
+- name: Spectrum Scoring
+- name: Peptide Identification
+- name: Proteomics
+- name: ProteomeTools

@@ -1,0 +1,77 @@
+abstract: Density Functional Theory (DFT) allows for predicting all the chemical and
+  physical properties of molecular systems from first principles by finding an approximate
+  solution to the many-body Schrödinger equation. However, the cost of these predictions
+  becomes infeasible when increasing the scale of the energy evaluations, e.g., when
+  calculating the ground-state energy for simulating molecular dynamics. Recent works
+  have demonstrated that, for substantially large datasets of molecular conformations,
+  Deep Learning-based models can predict the outputs of the classical DFT solvers
+  by amortizing the corresponding optimization problems. In this paper, we propose
+  a novel method that reduces the dependency of amortized DFT solvers on large pre-collected
+  datasets by introducing a self-refining training strategy. Namely, we propose an
+  efficient method that simultaneously trains a deep-learning model to predict the
+  DFT outputs and samples molecular conformations that are used as training data for
+  the model. We derive our method as a minimization of the variational upper bound
+  on the KL-divergence measuring the discrepancy between the generated samples and
+  the target Boltzmann distribution defined by the ground state energy. To demonstrate
+  the utility of the proposed scheme, we perform an extensive empirical study comparing
+  it with the models trained on the pre-collected datasets. Finally, we open-source
+  our implementation of the proposed algorithm, optimized with asynchronous training
+  and sampling stages, which enables simultaneous sampling and training. Code is available
+  at https://github.com/majhas/self-refining-dft.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Majdi Hassan
+  display_name: Majdi Hassan
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Cristian Gabellini
+  display_name: Cristian Gabellini
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Hatem Helal
+  display_name: Hatem Helal
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Dominique Beaini
+  display_name: Dominique Beaini
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Kirill Neklyudov
+  display_name: Kirill Neklyudov
+flags: []
+links:
+- link: 10.48550/arXiv.2506.01225
+  type: doi
+- link: https://arxiv.org/abs/2506.01225
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-06-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: Self-Refining Training for Amortized Density Functional Theory
+topics:
+- name: Machine Learning (cs.LG)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'
