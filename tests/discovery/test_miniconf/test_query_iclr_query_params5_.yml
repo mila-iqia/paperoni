@@ -1,1 +1,559 @@
-[]
+- info: {}
+  key: miniconf:iclr:7f53f8c6c730af6aeb52e66eb74d8507
+  paper:
+    abstract: 'Autoregressive large language models (LLMs) compress knowledge from
+      their training data through next-token conditional distributions. This limits
+      tractable querying of this knowledge to start-to-end autoregressive sampling.
+      However, many tasks of interest---including sequence continuation, infilling,
+      and other forms of constrained generation---involve sampling from intractable
+      posterior distributions. We address this limitation by using amortized Bayesian
+      inference to sample from these intractable posteriors. Such amortization is
+      algorithmically achieved by fine-tuning LLMs via diversity-seeking reinforcement
+      learning algorithms: generative flow networks (GFlowNets). We empirically demonstrate
+      that this distribution-matching paradigm of LLM fine-tuning can serve as an
+      effective alternative to maximum-likelihood training and reward-maximizing policy
+      optimization. As an important application, we interpret chain-of-thought reasoning
+      as a latent variable modeling problem and demonstrate that our approach enables
+      data-efficient adaptation of LLMs to tasks that require multi-step rationalization
+      and tool use.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/49551?format=json
+          type: profile
+        name: Edward Hu
+      display_name: Edward Hu
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/19397?format=json
+          type: profile
+        name: Moksh Jain
+      display_name: Moksh Jain
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/32612?format=json
+          type: profile
+        name: Eric Elmoznino
+      display_name: Eric Elmoznino
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Oxford
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/86716?format=json
+          type: profile
+        name: Younesse Kaddar
+      display_name: Younesse Kaddar
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, Quebec AI institute
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/43856?format=json
+          type: profile
+        name: Guillaume Lajoie
+      display_name: Guillaume Lajoie
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6784?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila / Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6671?format=json
+          type: profile
+        name: Nikolay Malkin
+      display_name: Nikolay Malkin
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/18725
+      type: abstract
+    - link: https://openreview.net/forum?id=Ouj6p4ca60
+      type: abstract
+    - link: 2024-Oral--1391-05763559
+      type: openreview
+    - link: Ouj6p4ca60
+      type: openreview
+    - link: https://iclr.cc/media/iclr-2024/Slides/18725.pdf
+      type: slides
+    releases:
+    - pages: null
+      status: Accept (oral)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: Amortizing intractable inference in large language models
+    topics:
+    - name: Deep Learning->Large Language Models
+  update_key: null
+- info: {}
+  key: miniconf:iclr:0c0a7566915f4f24853fc4192689aa7e
+  paper:
+    abstract: Inspired by human conscious planning, we propose Skipper, a model-based
+      reinforcement learning framework utilizing spatio-temporal abstractions to generalize
+      better in novel situations. It automatically decomposes the given task into
+      smaller, more manageable subtasks, and thus enables sparse decision-making and
+      focused computation on the relevant parts of the environment. The decomposition
+      relies on the extraction of an abstracted proxy problem represented as a directed
+      graph, in which vertices and edges are learned end-to-end from hindsight. Our
+      theoretical analyses provide performance guarantees under appropriate assumptions
+      and establish where our approach is expected to be helpful. Generalization-focused
+      experiments validate Skipper’s significant advantage in zero-shot generalization,
+      compared to some existing state-of-the-art hierarchical planning methods.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/47317?format=json
+          type: profile
+        name: Mingde Zhao
+      display_name: Mingde Zhao
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - McGill University
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/16775?format=json
+          type: profile
+        name: Safa Alver
+      display_name: Safa Alver
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Microsoft Research
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/85641?format=json
+          type: profile
+        name: Harm Seijen
+      display_name: Harm Seijen
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: None
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/1547?format=json
+          type: profile
+        name: Romain Laroche
+      display_name: Romain Laroche
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: McGill University
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/10294?format=json
+          type: profile
+        name: Doina Precup
+      display_name: Doina Precup
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6784?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/18208
+      type: abstract
+    - link: https://openreview.net/forum?id=eo9dHwtTFt
+      type: abstract
+    - link: eo9dHwtTFt
+      type: openreview
+    releases:
+    - pages: null
+      status: Accept (poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: Consciousness-Inspired Spatio-Temporal Abstractions for Better Generalization
+      in Reinforcement Learning
+    topics:
+    - name: Reinforcement Learning->Planning
+  update_key: null
+- info: {}
+  key: miniconf:iclr:1d01bd2e16f57892f0954902899f0692
+  paper:
+    abstract: Developing deep learning models that effectively learn object-centric
+      representations, akin to human cognition, remains a challenging task. Existing
+      approaches facilitate object discovery by representing objects as fixed-size
+      vectors, called ``slots'' or ``object files''. While these approaches have shown
+      promise in certain scenarios, they still exhibit certain limitations. First,
+      they rely on architectural priors which can be unreliable and usually require
+      meticulous engineering to identify the correct objects. Second, there has been
+      a notable gap in investigating the practical utility of these representations
+      in downstream tasks. To address the first limitation, we introduce a method
+      that explicitly optimizes the constraint that each object in a scene should
+      be associated with a distinct slot. We formalize this constraint by introducing  consistency
+      objectives which are cyclic in nature. By integrating these consistency objectives
+      into various existing slot-based object-centric methods, we showcase substantial
+      improvements in object-discovery performance. These enhancements consistently
+      hold true across both synthetic and real-world scenes, underscoring the effectiveness
+      and adaptability of the proposed approach. To tackle the second limitation,
+      we apply the learned object-centric representations from the proposed method
+      to two downstream reinforcement learning tasks, demonstrating considerable performance
+      enhancements compared to conventional slot-based and monolithic representation
+      learning methods. Our results suggest that the proposed approach not only improves
+      object discovery, but also provides richer features for downstream tasks.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: MILA-Quebec AI Institute
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/33651?format=json
+          type: profile
+        name: Aniket Rajiv Didolkar
+      display_name: Aniket Rajiv Didolkar
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: MILA, University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/3239?format=json
+          type: profile
+        name: Anirudh Goyal
+      display_name: Anirudh Goyal
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6784?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/18200
+      type: abstract
+    - link: https://openreview.net/forum?id=f1xnBr4WD6
+      type: abstract
+    - link: f1xnBr4WD6
+      type: openreview
+    releases:
+    - pages: null
+      status: Accept (poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: Cycle Consistency Driven Object Discovery
+    topics:
+    - name: Deep Learning->Other Representation Learning
+  update_key: null
+- info: {}
+  key: miniconf:iclr:23ad3e314e2a2b43b4c720507cec0723
+  paper:
+    abstract: 'We present a new algorithm for amortized inference in sparse probabilistic
+      graphical models (PGMs), which we call $\Delta$-amortized inference ($\Delta$-AI).
+      Our approach is based on the observation that when the sampling of variables
+      in a PGM is seen as a sequence of actions taken by an agent, sparsity of the
+      PGM enables local credit assignment in the agent''s policy learning objective.
+      This yields a local constraint that can be turned into a local loss in the style
+      of generative flow networks (GFlowNets) that enables off-policy training but
+      avoids the need to instantiate all the random variables for each parameter update,
+      thus speeding up training considerably. The $\Delta$-AI objective matches the
+      conditional distribution of a variable given its Markov blanket in a tractable
+      learned sampler, which has the structure of a Bayesian network, with the same
+      conditional distribution under the target PGM. As such, the trained sampler
+      recovers marginals and conditional distributions of interest and enables inference
+      of partial subsets of variables. We illustrate $\Delta$-AI''s effectiveness
+      for sampling from synthetic PGMs and training latent variable models with sparse
+      factor structure. Code: https://github.com/GFNOrg/Delta-AI.'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila - Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/74649?format=json
+          type: profile
+        name: Jean-Pierre Falet
+      display_name: Jean-Pierre Falet
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Korea Advanced Institute of Science and Technology
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/14215?format=json
+          type: profile
+        name: Hae Beom Lee
+      display_name: Hae Beom Lee
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila / Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6671?format=json
+          type: profile
+        name: Nikolay Malkin
+      display_name: Nikolay Malkin
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: MIT
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/20233?format=json
+          type: profile
+        name: Chen Sun
+      display_name: Chen Sun
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Montreal Institute for Learning Algorithms, University of Montreal,
+          Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/86944?format=json
+          type: profile
+        name: Dragos Secrieru
+      display_name: Dragos Secrieru
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/29331?format=json
+          type: profile
+        name: Dinghuai Zhang
+      display_name: Dinghuai Zhang
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, Quebec AI institute
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/43856?format=json
+          type: profile
+        name: Guillaume Lajoie
+      display_name: Guillaume Lajoie
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6784?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/18855
+      type: abstract
+    - link: https://openreview.net/forum?id=LemSSn8htt
+      type: abstract
+    - link: LemSSn8htt
+      type: openreview
+    releases:
+    - pages: null
+      status: Accept (poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: 'Delta-AI: Local objectives for amortized inference in sparse graphical
+      models'
+    topics:
+    - name: Probabilistic Methods->Graphical Models
+  update_key: null
+- info: {}
+  key: miniconf:iclr:7d3d5bcad324d3edc08e40738e663554
+  paper:
+    abstract: We tackle the problem of sampling from intractable high-dimensional
+      density functions, a fundamental task that often appears in machine learning
+      and statistics. We extend recent sampling-based approaches that leverage controlled
+      stochastic processes to model approximate samples from these target densities.  The
+      main drawback of these approaches is that the training objective requires full
+      trajectories to compute, resulting in sluggish credit assignment issues due
+      to use of entire trajectories and a learning signal present only at the terminal
+      time.In this work, we present Diffusion Generative Flow Samplers (DGFS), a sampling-based
+      framework where the learning process can be tractably broken down into short
+      partial trajectory segments, via parameterizing an additional ``flow function''.Our
+      method takes inspiration from the theory developed for generative flow networks
+      (GFlowNets), allowing us to make use of intermediate learning signals.Through
+      various challenging experiments, we demonstrate that DGFS achieves more accurate
+      estimates of the normalization constant than closely-related prior methods.
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/29331?format=json
+          type: profile
+        name: Dinghuai Zhang
+      display_name: Dinghuai Zhang
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: FAIR, Meta
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/61624?format=json
+          type: profile
+        name: Ricky T. Q. Chen
+      display_name: Ricky T. Q. Chen
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Dreamfold; Mila - Quebec AI Institute
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/51664?format=json
+          type: profile
+        name: Chenghao Liu
+      display_name: Chenghao Liu
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/28262?format=json
+          type: profile
+        name: Aaron Courville
+      display_name: Aaron Courville
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila, University of Montreal
+      author:
+        aliases: []
+        links:
+        - link: http://iclr.cc/api/miniconf/users/6784?format=json
+          type: profile
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: https://iclr.cc/virtual/2024/poster/18746
+      type: abstract
+    - link: https://openreview.net/forum?id=OIsahq1UYC
+      type: abstract
+    - link: OIsahq1UYC
+      type: openreview
+    releases:
+    - pages: null
+      status: Accept (poster)
+      venue:
+        aliases: []
+        date: '2024-05-07'
+        date_precision: 3
+        links: []
+        name: ICLR
+        open: true
+        peer_reviewed: true
+        publisher: null
+        series: ICLR
+        type: conference
+        volume: null
+    title: 'Diffusion Generative Flow Samplers: Improving learning signals through
+      partial trajectory optimization'
+    topics:
+    - name: Probabilistic Methods->Monte Carlo and Sampling Methods
+  update_key: null
