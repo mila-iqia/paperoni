@@ -1,0 +1,61 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Universit&#x00E9; de Sherbrooke,Canada
+  author:
+    aliases: []
+    links: []
+    name: Cem Subakan
+  display_name: Cem Subakan
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Mila-Quebec AI Institute,Canada
+  author:
+    aliases: []
+    links: []
+    name: Mirco Ravanelli
+  display_name: Mirco Ravanelli
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Universit&#x00E0; Politecnica delle Marche,Italy
+  author:
+    aliases: []
+    links: []
+    name: Samuele Cornell
+  display_name: Samuele Cornell
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Universit&#x00E9; de Sherbrooke,Canada
+  author:
+    aliases: []
+    links: []
+    name: Francois Grondin
+  display_name: Francois Grondin
+flags: []
+links:
+- link: 10.1109/icassp43922.2022.9746662
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-05-23'
+    date_precision: 3
+    links: []
+    name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and
+      Signal Processing (ICASSP)
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
+      and Signal Processing (ICASSP)
+    type: conference
+    volume: null
+title: 'Real-M: Towards Speech Separation on Real Mixtures'
+topics: []

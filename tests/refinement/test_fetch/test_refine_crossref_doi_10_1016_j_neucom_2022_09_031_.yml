@@ -1,0 +1,48 @@
+abstract: null
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Luxin Zhang
+  display_name: Luxin Zhang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Pascal Germain
+  display_name: Pascal Germain
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Yacine Kessaci
+  display_name: Yacine Kessaci
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Christophe Biernacki
+  display_name: Christophe Biernacki
+flags: []
+links:
+- link: 10.1016/j.neucom.2022.09.031
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-10-01'
+    date_precision: 2
+    links: []
+    name: Neurocomputing
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: Neurocomputing
+    type: journal
+    volume: null
+title: Interpretable domain adaptation using unsupervised feature selection on pre-trained
+  source models
+topics: []

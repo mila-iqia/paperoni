@@ -1,0 +1,161 @@
+abstract: 'The measurement tasks involved in evaluating generative AI (GenAI) systems
+  lack sufficient scientific rigor, leading to what has been described as "a tangle
+  of sloppy tests [and] apples-to-oranges comparisons" (Roose, 2024). In this position
+  paper, we argue that the ML community would benefit from learning from and drawing
+  on the social sciences when developing and using measurement instruments for evaluating
+  GenAI systems. Specifically, our position is that evaluating GenAI systems is a
+  social science measurement challenge. We present a four-level framework, grounded
+  in measurement theory from the social sciences, for measuring concepts related to
+  the capabilities, behaviors, and impacts of GenAI systems. This framework has two
+  important implications: First, it can broaden the expertise involved in evaluating
+  GenAI systems by enabling stakeholders with different perspectives to participate
+  in conceptual debates. Second, it brings rigor to both conceptual and operational
+  debates by offering a set of lenses for interrogating validity.'
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Hanna Wallach
+  display_name: Hanna Wallach
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Meera Desai
+  display_name: Meera Desai
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: A. Feder Cooper
+  display_name: A. Feder Cooper
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Angelina Wang
+  display_name: Angelina Wang
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Chad Atalla
+  display_name: Chad Atalla
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Solon Barocas
+  display_name: Solon Barocas
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Su Lin Blodgett
+  display_name: Su Lin Blodgett
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Alexandra Chouldechova
+  display_name: Alexandra Chouldechova
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Emily Corvi
+  display_name: Emily Corvi
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: P. Alex Dow
+  display_name: P. Alex Dow
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jean Garcia-Gathright
+  display_name: Jean Garcia-Gathright
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Alexandra Olteanu
+  display_name: Alexandra Olteanu
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Nicholas Pangakis
+  display_name: Nicholas Pangakis
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Stefanie Reed
+  display_name: Stefanie Reed
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Emily Sheng
+  display_name: Emily Sheng
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Dan Vann
+  display_name: Dan Vann
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jennifer Wortman Vaughan
+  display_name: Jennifer Wortman Vaughan
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Matthew Vogel
+  display_name: Matthew Vogel
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Hannah Washington
+  display_name: Hannah Washington
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Abigail Z. Jacobs
+  display_name: Abigail Z. Jacobs
+flags: []
+links:
+- link: 10.48550/arXiv.2502.00561
+  type: doi
+- link: https://arxiv.org/abs/2502.00561
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-02-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: 'Position: Evaluating Generative AI Systems Is a Social Science Measurement
+  Challenge'
+topics:
+- name: Computers and Society (cs.CY)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

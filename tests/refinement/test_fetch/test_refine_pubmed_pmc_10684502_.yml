@@ -1,0 +1,197 @@
+abstract: Cultural transmission is the domain-general social skill that allows agents
+  to acquire and use information from each other in real-time with high fidelity and
+  recall. It can be thought of as the process that perpetuates fit variants in cultural
+  evolution. In humans, cultural evolution has led to the accumulation and refinement
+  of skills, tools and knowledge across generations. We provide a method for generating
+  cultural transmission in artificially intelligent agents, in the form of few-shot
+  imitation. Our agents succeed at real-time imitation of a human in novel contexts
+  without using any pre-collected human data. We identify a surprisingly simple set
+  of ingredients sufficient for generating cultural transmission and develop an evaluation
+  methodology for rigorously assessing it. This paves the way for cultural evolution
+  to play an algorithmic role in the development of artificial general intelligence.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Avishkar Bhoopchand
+  display_name: Avishkar Bhoopchand
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Bethanie Brownfield
+  display_name: Bethanie Brownfield
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Adrian Collister
+  display_name: Adrian Collister
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Agustin Dal Lago
+  display_name: Agustin Dal Lago
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Ashley Edwards
+  display_name: Ashley Edwards
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Richard Everett
+  display_name: Richard Everett
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Alexandre Fréchette
+  display_name: Alexandre Fréchette
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Yanko Gitahy Oliveira
+  display_name: Yanko Gitahy Oliveira
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Edward Hughes
+  display_name: Edward Hughes
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Kory W. Mathewson
+  display_name: Kory W. Mathewson
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Piermaria Mendolicchio
+  display_name: Piermaria Mendolicchio
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Julia Pawar
+  display_name: Julia Pawar
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Miruna Pȋslar
+  display_name: Miruna Pȋslar
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Alex Platonov
+  display_name: Alex Platonov
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Evan Senter
+  display_name: Evan Senter
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Sukhdeep Singh
+  display_name: Sukhdeep Singh
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Alexander Zacherl
+  display_name: Alexander Zacherl
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: 'Google DeepMind, 6-8 Handyside Street, London, N1C 4UZ UK '
+  author:
+    aliases: []
+    links: []
+    name: Lei M. Zhang
+  display_name: Lei M. Zhang
+flags: []
+links:
+- link: '10684502'
+  type: pmc
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2023-11-28'
+    date_precision: 3
+    links: []
+    name: Nature Communications
+    open: false
+    peer_reviewed: false
+    publisher: Nature Publishing Group UK
+    series: Nature Communications
+    type: journal
+    volume: null
+title: Learning few-shot imitation as cultural transmission
+topics:
+- name: Cultural evolution
+- name: Computer science

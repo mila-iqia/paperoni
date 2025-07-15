@@ -1,0 +1,37 @@
+abstract: ''
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Dinesh Daultani
+  display_name: Dinesh Daultani
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Hugo Larochelle
+  display_name: Hugo Larochelle
+flags: []
+links:
+- link: conf/wacv/DaultaniL24
+  type: dblp
+- link: 10.1109/WACVW60836.2024.00053
+  type: doi
+releases:
+- pages: 440-449
+  status: published
+  venue:
+    aliases: []
+    date: '2024-01-01'
+    date_precision: 1
+    links: []
+    name: WACV (Workshops)
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: WACV (Workshops)
+    type: journal
+    volume: null
+title: Consolidating Separate Degradations Model via Weights Fusion and Distillation.
+topics: []

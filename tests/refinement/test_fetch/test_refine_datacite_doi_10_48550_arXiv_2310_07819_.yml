@@ -1,0 +1,64 @@
+abstract: A common approach to explaining NLP models is to use importance measures
+  that express which tokens are important for a prediction. Unfortunately, such explanations
+  are often wrong despite being persuasive. Therefore, it is essential to measure
+  their faithfulness. One such metric is if tokens are truly important, then masking
+  them should result in worse model performance. However, token masking introduces
+  out-of-distribution issues, and existing solutions that address this are computationally
+  expensive and employ proxy models. Furthermore, other metrics are very limited in
+  scope. This work proposes an inherently faithfulness measurable model that addresses
+  these challenges. This is achieved using a novel fine-tuning method that incorporates
+  masking, such that masking tokens become in-distribution by design. This differs
+  from existing approaches, which are completely model-agnostic but are inapplicable
+  in practice. We demonstrate the generality of our approach by applying it to 16
+  different datasets and validate it using statistical in-distribution tests. The
+  faithfulness is then measured with 9 different importance measures. Because masking
+  is in-distribution, importance measures that themselves use masking become consistently
+  more faithful. Additionally, because the model makes faithfulness cheap to measure,
+  we can optimize explanations towards maximal faithfulness; thus, our model becomes
+  indirectly inherently explainable.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Andreas Madsen
+  display_name: Andreas Madsen
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Siva Reddy
+  display_name: Siva Reddy
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Sarath Chandar
+  display_name: Sarath Chandar
+flags: []
+links:
+- link: 10.48550/arXiv.2310.07819
+  type: doi
+- link: https://arxiv.org/abs/2310.07819
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2023-10-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: Faithfulness Measurable Masked Language Models
+topics:
+- name: Computation and Language (cs.CL)
+- name: Machine Learning (cs.LG)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

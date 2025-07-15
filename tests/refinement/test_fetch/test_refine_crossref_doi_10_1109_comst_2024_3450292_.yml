@@ -1,0 +1,103 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Olfa Ben Yahia
+  display_name: Olfa Ben Yahia
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Zineb Garroussi
+  display_name: Zineb Garroussi
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Olivier Bélanger
+  display_name: Olivier Bélanger
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Brunilde Sansò
+  display_name: Brunilde Sansò
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Jean-François Frigon
+  display_name: Jean-François Frigon
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Satellite Systems, MDA, Sainte-Anne-de-Bellevue, QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Stéphane Martel
+  display_name: Stéphane Martel
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Antoine Lesage-Landry
+  display_name: Antoine Lesage-Landry
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical Engineering, Polytechnique Montr&#x00E9;al, Montreal,
+      QC, Canada
+  author:
+    aliases: []
+    links: []
+    name: Gunes Karabulut Kurt
+  display_name: Gunes Karabulut Kurt
+flags: []
+links:
+- link: 10.1109/comst.2024.3450292
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-06-01'
+    date_precision: 2
+    links: []
+    name: IEEE Communications Surveys &amp; Tutorials
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: IEEE Communications Surveys &amp; Tutorials
+    type: journal
+    volume: null
+title: 'Evolution of High-Throughput Satellite Systems: A Vision of Programmable Regenerative
+  Payload'
+topics: []

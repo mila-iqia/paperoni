@@ -1,0 +1,104 @@
+abstract: The hippocampus has long been regarded as a neural map of physical space,
+  with its neurons categorized as spatially or non-spatially tuned according to their
+  response selectivity. However, growing evidence suggests that this dichotomy oversimplifies
+  the complex roles hippocampal neurons play in integrating spatial and non-spatial
+  information. Through computational modeling and in-vivo electrophysiology in macaques,
+  we show that neurons classified as spatially tuned primarily encode linear combinations
+  of immediate behaviorally relevant factors, while those labeled as non-spatially
+  tuned rely on nonlinear mechanisms to integrate temporally distant experiences.
+  Furthermore, our findings reveal a temporal gradient in the primate CA3 region,
+  where spatial selectivity diminishes as neurons encode increasingly distant past
+  events. Finally, using artificial neural networks, we demonstrate that nonlinear
+  recurrent connections are crucial for capturing the response dynamics of non-spatially
+  tuned neurons, particularly those encoding memory-related information. These findings
+  challenge the traditional dichotomy of spatial versus non-spatial representations
+  and instead suggest a continuum of linear and nonlinear computations that underpin
+  hippocampal function. This framework provides new insights into how the hippocampus
+  bridges perception and memory, informing on its role in episodic memory, spatial
+  navigation, and associative learning.
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Physiology, McGill University
+  - aliases: []
+    category: unknown
+    name: Mila, Université de Montréal
+  author:
+    aliases: []
+    links: []
+    name: Maxime Daigle
+  display_name: Maxime Daigle
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Physiology, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Kaicheng Yan
+  display_name: Kaicheng Yan
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Biology, York University
+  author:
+    aliases: []
+    links: []
+    name: Benjamin Corrigan
+  display_name: Benjamin Corrigan
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Neuroscience, Icahn School of Medicine at Mount Sinai
+  author:
+    aliases: []
+    links: []
+    name: Roberto Gulli
+  display_name: Roberto Gulli
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Physiology and Pharmacology, University of Western Ontario
+  author:
+    aliases: []
+    links: []
+    name: Julio Martinez-Trujillo
+  display_name: Julio Martinez-Trujillo
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Physiology, McGill University
+  - aliases: []
+    category: unknown
+    name: Mila, Université de Montréal
+  - aliases: []
+    category: unknown
+    name: Department of Computer Science, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Pouya Bashivan
+  display_name: Pouya Bashivan
+flags: []
+links:
+- link: 10.1101/2025.06.23.661173
+  type: doi
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2025-06-24'
+    date_precision: 3
+    links: []
+    name: bioRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory
+    series: bioRxiv
+    type: journal
+    volume: null
+title: Spatially and non-spatially tuned hippocampal neurons are linear perceptual
+  and nonlinear memory encoders
+topics: []

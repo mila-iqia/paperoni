@@ -1,0 +1,43 @@
+abstract: ''
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Deeksha M. Arya
+  display_name: Deeksha M. Arya
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jin L. C. Guo
+  display_name: Jin L. C. Guo
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Martin P. Robillard
+  display_name: Martin P. Robillard
+flags: []
+links:
+- link: conf/icse-chase/AryaGR25
+  type: dblp
+- link: 10.1109/CHASE66643.2025.00029
+  type: doi
+releases:
+- pages: 179-190
+  status: published
+  venue:
+    aliases: []
+    date: '2025-01-01'
+    date_precision: 1
+    links: []
+    name: CHASE@ICSE
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: CHASE@ICSE
+    type: journal
+    volume: null
+title: How Programmers Interact with Multimodal Software Documentation.
+topics: []

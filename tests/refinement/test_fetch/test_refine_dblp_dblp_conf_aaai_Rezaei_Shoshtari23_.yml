@@ -1,0 +1,55 @@
+abstract: ''
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Sahand Rezaei-Shoshtari
+  display_name: Sahand Rezaei-Shoshtari
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Charlotte Morissette
+  display_name: Charlotte Morissette
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: François Robert Hogan
+  display_name: François Robert Hogan
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Gregory Dudek
+  display_name: Gregory Dudek
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: David Meger
+  display_name: David Meger
+flags: []
+links:
+- link: conf/aaai/Rezaei-Shoshtari23
+  type: dblp
+- link: 10.1609/aaai.v37i8.26146
+  type: doi
+releases:
+- pages: 9579-9587
+  status: published
+  venue:
+    aliases: []
+    date: '2023-01-01'
+    date_precision: 1
+    links: []
+    name: AAAI
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: AAAI
+    type: journal
+    volume: null
+title: Hypernetworks for Zero-Shot Transfer in Reinforcement Learning.
+topics: []

@@ -1,0 +1,151 @@
+abstract: 'Understanding inequalities in SARS-CoV-2 transmission associated with the
+  social determinants of health could help the development of effective mitigation
+  strategies that are responsive to local transmission dynamics. This study aims to
+  quantify social determinants of geographic concentration of SARS-CoV-2 cases across
+  16 census metropolitan areas (hereafter, cities) in 4 Canadian provinces, British
+  Columbia, Manitoba, Ontario and Quebec.
+
+
+  We used surveillance data on confirmed SARS-CoV-2 cases and census data for social
+  determinants at the level of the dissemination area (DA). We calculated Gini coefficients
+  to determine the overall geographic heterogeneity of confirmed cases of SARS-CoV-2
+  in each city, and calculated Gini covariance coefficients to determine each city’s
+  heterogeneity by each social determinant (income, education, housing density and
+  proportions of visible minorities, recent immigrants and essential workers). We
+  visualized heterogeneity using Lorenz (concentration) curves.
+
+
+  We observed geographic concentration of SARS-CoV-2 cases in cities, as half of the
+  cumulative cases were concentrated in DAs containing 21%–35% of their population,
+  with the greatest geographic heterogeneity in Ontario cities (Gini coefficients
+  0.32–0.47), followed by British Columbia (0.23–0.36), Manitoba (0.32) and Quebec
+  (0.28–0.37). Cases were disproportionately concentrated in areas with lower income
+  and educational attainment, and in areas with a higher proportion of visible minorities,
+  recent immigrants, high-density housing and essential workers. Although a consistent
+  feature across cities was concentration by the proportion of visible minorities,
+  the magnitude of concentration by social determinant varied across cities.
+
+
+  Geographic concentration of SARS-CoV-2 cases was observed in all of the included
+  cities, but the pattern by social determinants varied. Geographically prioritized
+  allocation of resources and services should be tailored to the local drivers of
+  inequalities in transmission in response to the resurgence of SARS-CoV-2.'
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Yiqing Xia
+  display_name: Yiqing Xia
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Huiting Ma
+  display_name: Huiting Ma
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Gary Moloney
+  display_name: Gary Moloney
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Héctor A Velásquez García
+  display_name: Héctor A Velásquez García
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Monica Sirski
+  display_name: Monica Sirski
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Naveed Z Janjua
+  display_name: Naveed Z Janjua
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: David Vickers
+  display_name: David Vickers
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Tyler Williamson
+  display_name: Tyler Williamson
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Alan Katz
+  display_name: Alan Katz
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Kristy Yiu
+  display_name: Kristy Yiu
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Rafal Kustra
+  display_name: Rafal Kustra
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: David L Buckeridge
+  display_name: David L Buckeridge
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Marc Brisson
+  display_name: Marc Brisson
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Stefan D Baral
+  display_name: Stefan D Baral
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Sharmistha Mishra
+  display_name: Sharmistha Mishra
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mathieu Maheu-Giroux
+  display_name: Mathieu Maheu-Giroux
+flags: []
+links:
+- link: '8900797'
+  type: pmc
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-02-14'
+    date_precision: 3
+    links: []
+    name: 'CMAJ : Canadian Medical Association Journal'
+    open: false
+    peer_reviewed: false
+    publisher: CMA Impact Inc.
+    series: 'CMAJ : Canadian Medical Association Journal'
+    type: journal
+    volume: null
+title: 'Geographic concentration of SARS-CoV-2 cases by social determinants of health
+  in metropolitan areas in Canada: a cross-sectional study'
+topics: []

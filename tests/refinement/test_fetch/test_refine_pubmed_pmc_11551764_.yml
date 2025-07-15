@@ -1,0 +1,103 @@
+abstract: 'Neurons are thought to act as parts of assemblies with strong internal
+  excitatory connectivity. Conversely, inhibition is often reduced to blanket inhibition
+  with no targeting specificity. We analyzed the structure of excitation and inhibition
+  in the MICrONS \documentclass[12pt]{minimal}
+
+  \usepackage{amsmath}
+
+  \usepackage{wasysym}
+
+  \usepackage{amsfonts}
+
+  \usepackage{amssymb}
+
+  \usepackage{amsbsy}
+
+  \usepackage{upgreek}
+
+  \usepackage{mathrsfs}
+
+  \setlength{\oddsidemargin}{-69pt}
+
+  \begin{document}
+
+  $mm^{3}$\end{document} dataset, an electron microscopic reconstruction of a piece
+  of cortical tissue. We found that excitation was structured around a feed-forward
+  flow in large non-random neuron motifs with a structure of information flow from
+  a small number of sources to a larger number of potential targets. Inhibitory neurons
+  connected with neurons in specific sequential positions of these motifs, implementing
+  targeted and symmetrical competition between them. None of these trends are detectable
+  in only pairwise connectivity, demonstrating that inhibition is structured by these
+  large motifs. While descriptions of inhibition in cortical circuits range from non-specific
+  blanket-inhibition to targeted, our results describe a form of targeting specificity
+  existing in the higher-order structure of the connectome. These findings have important
+  implications for the role of inhibition in learning and synaptic plasticity.'
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École Polytechnique Fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Michael W Reimann
+  display_name: Michael W Reimann
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École Polytechnique Fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: Daniela Egas Santander
+  display_name: Daniela Egas Santander
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Blue Brain Project, École Polytechnique Fédérale de Lausanne (EPFL)
+  author:
+    aliases: []
+    links: []
+    name: András Ecker
+  display_name: András Ecker
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Neuroscience, Université de Montréal
+  - aliases: []
+    category: unknown
+    name: CHU Ste-Justine Azrieli Research Center
+  - aliases: []
+    category: unknown
+    name: Mila - Quebec Artificial Intelligence Institute
+  author:
+    aliases: []
+    links: []
+    name: Eilif B Muller
+  display_name: Eilif B Muller
+flags: []
+links:
+- link: '11551764'
+  type: pmc
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-11-11'
+    date_precision: 3
+    links: []
+    name: Cerebral Cortex (New York, NY)
+    open: false
+    peer_reviewed: false
+    publisher: Oxford University Press
+    series: Cerebral Cortex (New York, NY)
+    type: journal
+    volume: null
+title: Specific inhibition and disinhibition in the higher-order structure of a cortical
+  connectome
+topics:
+- name: assemblies
+- name: connectomics
+- name: manifold
+- name: inhibitory control

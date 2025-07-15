@@ -1,0 +1,86 @@
+abstract: With the rapid growth of the developer community, the amount of posts on
+  online technical forums has been growing rapidly, which poses difficulties for users
+  to filter useful posts and find important information. Tags provide a concise feature
+  dimension for users to locate their interested posts and for search engines to index
+  the most relevant posts according to the queries. However, most tags are only focused
+  on the technical perspective (e.g., program language, platform, tool). In most cases,
+  forum posts in online developer communities reveal the author's intentions to solve
+  a problem, ask for advice, share information, etc. The modeling of the intentions
+  of posts can provide an extra dimension to the current tag taxonomy. By referencing
+  previous studies and learning from industrial perspectives, we create a refined
+  taxonomy for the intentions of technical forum posts. Through manual labeling and
+  analysis on a sampled post dataset extracted from online forums, we understand the
+  relevance between the constitution of posts (code, error messages) and their intentions.
+  Furthermore, inspired by our manual study, we design a pre-trained transformer-based
+  model to automatically predict post intentions. The best variant of our intention
+  prediction framework, which achieves a Micro F1-score of 0.589, Top 1-3 accuracy
+  of 62.6% to 87.8%, and an average AUC of 0.787, outperforms the state-of-the-art
+  baseline approach. Our characterization and automated classification of forum posts
+  regarding their intentions may help forum maintainers or third-party tool developers
+  improve the organization and retrieval of posts on technical forums. We have released
+  our annotated dataset and codes in our supplementary material package.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Xingfang Wu
+  display_name: Xingfang Wu
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Eric Laufer
+  display_name: Eric Laufer
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Heng Li
+  display_name: Heng Li
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Foutse Khomh
+  display_name: Foutse Khomh
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Santhosh Srinivasan
+  display_name: Santhosh Srinivasan
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jayden Luo
+  display_name: Jayden Luo
+flags: []
+links:
+- link: 10.48550/arXiv.2312.14279
+  type: doi
+- link: https://arxiv.org/abs/2312.14279
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2023-12-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: Characterizing and Classifying Developer Forum Posts with their Intentions
+topics:
+- name: Software Engineering (cs.SE)
+- name: Computation and Language (cs.CL)
+- name: Machine Learning (cs.LG)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'
