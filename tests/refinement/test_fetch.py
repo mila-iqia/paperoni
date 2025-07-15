@@ -66,3 +66,13 @@ def test_refine(func, link, data_regression):
     assert result.authors
     data = serialize(Paper, result)
     data_regression.check(data)
+
+
+@pytest.mark.parametrize(["func", "link"], [
+    (crossref, "doi:10.48550/arXiv.2206.08164"),
+    (dblp, "dblp:conf/corr/icml/LachapelleDMMBL23")
+])
+def test_ignored_links(func, link):
+    typ, link = link.split(":")
+    result = func(typ, link)
+    assert result is None
