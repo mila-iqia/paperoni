@@ -246,7 +246,7 @@ def institution_from_ror(ror_id):
         "archive": InstitutionCategory.academia,
         "nonprofit": InstitutionCategory.unknown,
         "government": InstitutionCategory.unknown,
-        "facility": InstitutionCategory.unknown,
+        "facility": InstitutionCategory.academia,
         "other": InstitutionCategory.unknown,
     }
     for t in data.get("types", []):
@@ -254,7 +254,14 @@ def institution_from_ror(ror_id):
             category = type_map[t]
             break
 
+    aliases = [
+        n["value"]
+        for n in data.get("names", [])
+        if {"alias", "label", "acronym"} & set(n.get("types", []))
+    ]
+
     return Institution(
         name=name,
+        aliases=aliases,
         category=category,
     )
