@@ -1,9 +1,10 @@
 import itertools
+from unittest.mock import patch
 
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.discovery.miniconf import MiniConf, conference_urls
+from paperoni.discovery.miniconf import ErrorPolicy, MiniConf, conference_urls
 from paperoni.model import PaperInfo
 
 from ..utils import check_papers, iter_affiliations
@@ -19,7 +20,9 @@ def test_query(data_regression: DataRegressionFixture, conference, query_params)
     discoverer = MiniConf()
 
     papers: list[PaperInfo] = sorted(
-        discoverer.query(conference, year=2024, **query_params),
+        discoverer.query(
+            conference, year=2024, **query_params, error_policy=ErrorPolicy.RAISE
+        ),
         key=lambda x: x.paper.title,
     )
 
@@ -53,3 +56,19 @@ def test_query(data_regression: DataRegressionFixture, conference, query_params)
         assert False, f"Unknown query parameters: {query_params=}"
 
     check_papers(data_regression, papers)
+
+
+def test_error_policy(capsys):
+    discoverer = MiniConf()
+
+    # patch MiniConf.convert_paper to raise an exception
+    with patch.object(MiniConf, "convert_paper", side_effect=Exception):
+        with pytest.raises(Exception):
+            next(discoverer.query("neurips", year=2024, error_policy=ErrorPolicy.RAISE))
+
+        next(discoverer.query("neurips", year=2024, error_policy=ErrorPolicy.LOG), None)
+
+        out, _ = capsys.readouterr()
+        assert "Error converting paper " in out
+        # assert that there are at least a couple of exceptions
+        assert len(out.split("Error converting paper ")) > 2

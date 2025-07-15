@@ -1,6 +1,7 @@
 import math
 import re
 from datetime import datetime
+from enum import Enum
 
 from ..acquire import readpage
 from ..config import config
@@ -28,6 +29,10 @@ conference_urls = {
     "aistats": "virtual.aistats.org",
     "cvpr": "cvpr.thecvf.com",
 }
+
+class ErrorPolicy(Enum):
+    LOG = "log"
+    RAISE = "raise"
 
 
 class MiniConf(Discoverer):
@@ -171,6 +176,8 @@ class MiniConf(Discoverer):
         limit: int = None,
         # Whether to cache the download
         cache: bool = True,
+        # Whether to raise an error if a paper cannot be converted
+        error_policy: ErrorPolicy = ErrorPolicy.LOG,
     ):
         """Query conference papers as JSON"""
         # Get the base URL for the conference, defaulting to conference.cc if not found
@@ -252,6 +259,8 @@ class MiniConf(Discoverer):
                     n += 1
                     yield paper
             except Exception as e:
+                if error_policy == ErrorPolicy.RAISE:
+                    raise
                 # Log the error but continue processing other papers
                 print(
                     f"Error converting paper '{paper_data.get('name', 'Unknown')}': {e}"
