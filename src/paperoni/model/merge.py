@@ -26,7 +26,7 @@ class AugmentedProxy(ObjectProxy):
     def _(self):
         return self._self_ann
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<{self.__wrapped__!r}>"
 
 
@@ -70,7 +70,6 @@ def merge(x: object, y: object, qx: Number, qy: Number):
 
 @ovld
 def merge(x: object, y: object, qx: Number, qy: Number):
-    print("~", x, y, qx, qy)
     return x if qx > qy else y
 
 
@@ -93,6 +92,8 @@ def merge(x: dict, y: dict, qx: Number, qy: Number):
     for k, v in main.items():
         if k in other:
             results[k] = recurse(v, other[k], qx, qy)
+        else:
+            results[k] = v
     return results
 
 

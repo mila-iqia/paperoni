@@ -41,6 +41,15 @@ def test_augment():
     assert deser.x._.quality == 2.5
 
 
+def test_merge_dicts():
+    d1 = {"a": 1, "b": 2}
+    d2 = {"c": 3}
+
+    assert merge(d1, d2) == {"a": 1, "b": 2, "c": 3}
+    assert merge(d1, qual(d2, -10)) == {"a": 1, "b": 2}
+    assert merge(qual(d1, -10), d2) == {"c": 3}
+
+
 def test_merge():
     p1 = Person(name=qual("John", 2), job="Carpenter")
     p2 = Person(name=qual("Johnny", 1), job=qual("Lawyer", 3))
@@ -65,6 +74,13 @@ def test_merge_lists():
     l2 = [p2, p1]
 
     assert merge(l1, l2) == [p3, p1, p2]
+
+
+def test_merge_lists_empty():
+    l1 = [1, 2]
+    l2 = []
+    assert merge(l1, l2) == l1
+    assert merge(l2, l1) == l1
 
 
 def test_merge_author_lists():
