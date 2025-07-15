@@ -1,3 +1,4 @@
+import re
 from datetime import date
 from types import SimpleNamespace
 from typing import Literal
@@ -29,17 +30,18 @@ def crossref(type: Literal["doi"], link: str):
     """Fetch from CrossRef."""
 
     doi = link
-    if "arXiv" in doi:
+    if "arXiv" in doi:  # pragma: no cover
         # We know it's not indexed here
         return None
 
     data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
 
-    if data["status"] != "ok":
+    if data["status"] != "ok":  # pragma: no cover
         raise Exception("Request failed", data)
 
     data = SimpleNamespace(**data["message"])
 
+    releases = []
     if getattr(data, "event", None) or getattr(data, "container-title", None):
         date_parts = None
 
@@ -91,8 +93,6 @@ def crossref(type: Literal["doi"], link: str):
             pages=None,
         )
         releases = [release]
-    else:
-        releases = []
 
     required_keys = {"given", "family", "affiliation"}
 
@@ -115,6 +115,11 @@ def crossref(type: Literal["doi"], link: str):
                 aliases=[],
             )
 
+    abstract = getattr(data, "abstract", None)
+    if abstract:
+        abstract = re.sub(r"<jats:title>.*</jats:title>", "", abstract)
+        abstract = re.sub(r"</?jats:[^>]+>", "", abstract)
+
     return Paper(
         title=data.title[0],
         authors=[
@@ -130,7 +135,7 @@ def crossref(type: Literal["doi"], link: str):
             for author in data.author
             if not (required_keys - author.keys())
         ],
-        abstract="",
+        abstract=abstract,
         links=[Link(type="doi", link=doi)],
         topics=[],
         releases=releases,
@@ -154,12 +159,13 @@ def datacite(type: Literal["doi"], link: str):
             f"https://api.datacite.org/dois/{doi}?publisher=true&affiliation=true",
             format="json",
         )
-    except HTTPError as exc:
+    except HTTPError as exc:  # pragma: no cover
         if exc.response.status_code == 404:
             return None
         else:
             raise
-    if "errors" in json_data:
+
+    if "errors" in json_data:  # pragma: no cover
         raise Exception("Could not fetch from datacite", json_data)
 
     # Mapping to convert DataCite resource type to Paperoni venue type.
