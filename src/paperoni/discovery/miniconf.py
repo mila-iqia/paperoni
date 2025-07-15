@@ -126,14 +126,10 @@ class MiniConf(Discoverer):
             links.add(Link(type="pdf", link=url))
         if url := expand_base(data.get("virtualsite_url")):
             links.add(Link(type="abstract", link=url))
-        links = sorted(
-            links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)
-        )
 
         # Add eventmedia links
         for media in data.get("eventmedia", []):
             if media.get("uri") and media.get("visible", True):
-                # print(media)
                 media_type = media.get("name", "").lower().replace(" ", "_")
                 uri = media["uri"]
                 if uri.startswith("https://openreview.net/forum?id="):
@@ -141,6 +137,10 @@ class MiniConf(Discoverer):
                 else:
                     uri = expand_base(uri)
                 links.add(Link(type=media_type, link=uri))
+
+        links = sorted(
+            links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)
+        )
 
         # Create and return Paper object
         return PaperInfo(
