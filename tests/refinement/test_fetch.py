@@ -16,6 +16,7 @@ links = [
     (crossref, "doi:10.1109/comst.2024.3450292"),
     (crossref, "doi:10.1109/icassp43922.2022.9746662"),
     (crossref, "doi:10.1109/ICMLC63072.2024.10935257"),
+    (crossref, "doi:10.7554/eLife.79919"),
     # Datacite
     (datacite, "doi:10.48550/arXiv.2206.08164"),
     (datacite, "doi:10.48550/arXiv.2308.03977"),
@@ -26,6 +27,8 @@ links = [
     (datacite, "doi:10.48550/arXiv.2409.12917"),
     (datacite, "doi:10.48550/arXiv.2502.00561"),
     (datacite, "doi:10.48550/arXiv.2506.01225"),
+    (datacite, "doi:10.48550/arXiv.2406.06946"),
+    (datacite, "doi:10.48550/arXiv.2312.12604"),
     # BiorXiv
     (biorxiv, "doi:10.1101/2020.10.29.359778"),
     (biorxiv, "doi:10.1101/2023.05.17.541168"),
@@ -33,6 +36,7 @@ links = [
     (biorxiv, "doi:10.1101/2024.02.13.580150"),
     (biorxiv, "doi:10.1101/2024.12.02.626449"),
     (biorxiv, "doi:10.1101/2025.06.23.661173"),
+    (biorxiv, "doi:10.1101/2023.08.30.23294850"),
     # DBLP
     (dblp, "dblp:conf/icml/LachapelleDMMBL23"),
     (dblp, "dblp:conf/wacv/DaultaniL24"),

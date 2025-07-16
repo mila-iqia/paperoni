@@ -48,6 +48,8 @@ flags: []
 links:
 - link: 10.1101/2024.02.13.580150
   type: doi
+- link: 10.1093/bib/bbae405
+  type: doi
 releases:
 - pages: null
   status: preprint

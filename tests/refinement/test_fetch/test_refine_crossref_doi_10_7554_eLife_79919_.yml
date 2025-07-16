@@ -1,0 +1,80 @@
+abstract: Cell size is controlled to be within a specific range to support physiological
+  function. To control their size, cells use diverse mechanisms ranging from ‘sizers’,
+  in which differences in cell size are compensated for in a single cell division
+  cycle, to ‘adders’, in which a constant amount of cell growth occurs in each cell
+  cycle. This diversity raises the question why a particular cell would implement
+  one rather than another mechanism? To address this question, we performed a series
+  of simulations evolving cell size control networks. The size control mechanism that
+  evolved was influenced by both cell cycle structure and specific selection pressures.
+  Moreover, evolved networks recapitulated known size control properties of naturally
+  occurring networks. If the mechanism is based on a G1 size control and an S/G2/M
+  timer, as found for budding yeast and some human cells, adders likely evolve. But,
+  if the G1 phase is significantly longer than the S/G2/M phase, as is often the case
+  in mammalian cells in vivo, sizers become more likely. Sizers also evolve when the
+  cell cycle structure is inverted so that G1 is a timer, while S/G2/M performs size
+  control, as is the case for the fission yeast S. pombe. For some size control networks,
+  cell size consistently decreases in each cycle until a burst of cell cycle inhibitor
+  drives an extended G1 phase much like the cell division cycle of the green algae
+  Chlamydomonas. That these size control networks evolved such self-organized criticality
+  shows how the evolution of complex systems can drive the emergence of critical processes.
+authors:
+- affiliations:
+  - aliases:
+    - McGill University
+    - Université McGill
+    category: academia
+    name: McGill University
+  author:
+    aliases: []
+    links: []
+    name: Felix Proulx-Giraldeau
+  display_name: Felix Proulx-Giraldeau
+- affiliations:
+  - aliases:
+    - Leland Stanford Junior University
+    - SU
+    - Stanford University
+    - Universidad Stanford
+    category: academia
+    name: Stanford University
+  - aliases: []
+    category: unknown
+    name: Chan Zuckerberg Biohub, San Francisco
+  author:
+    aliases: []
+    links: []
+    name: Jan M Skotheim
+  display_name: Jan M Skotheim
+- affiliations:
+  - aliases:
+    - McGill University
+    - Université McGill
+    category: academia
+    name: McGill University
+  author:
+    aliases: []
+    links: []
+    name: Paul François
+  display_name: Paul François
+flags: []
+links:
+- link: 10.7554/eLife.79919
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-09-30'
+    date_precision: 3
+    links: []
+    name: eLife
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: eLife
+    type: journal
+    volume: null
+title: Evolution of cell size control is canalized towards adders or sizers by cell
+  cycle structure and selective pressures
+topics: []
