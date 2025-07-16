@@ -13,14 +13,18 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
+    "ovld>=0.5.7",
+    "serieux>=0.1.1",
+    "gifnoc>=0.5.3",
     "backoff>=2.2.1",
     "beautifulsoup4>=4.13.4",
     "blessed>=1.21.0",
-    "gifnoc>=0.5.3",
     "requests>=2.32.3",
     "openreview-py>=1.50.0",
     "requests-cache>=1.2.1",
     "lxml>=6.0.0",
+    "wrapt>=1.17.2",
+    "unidecode>=1.4.0",
 ]
 
 [project.urls]
