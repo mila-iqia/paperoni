@@ -1,6 +1,7 @@
 paperoni:
   mailto: publications@mila.quebec
   cache_path: ../cache
+  data_path: data
   requests:
     cache_path: ${..cache_path}/requests-cache.sql
     expire_after: 6d
