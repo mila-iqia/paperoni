@@ -3,9 +3,12 @@ import re
 import urllib
 
 import backoff
+from fake_useragent import UserAgent
 from requests.exceptions import RequestException
 
 from .config import requests
+
+ua = UserAgent()
 
 
 class HTTPSAcquirer:
@@ -27,6 +30,8 @@ class HTTPSAcquirer:
             url = f"https://{self.base_url}{url}?{params}"
         else:
             url = f"https://{self.base_url}{url}"
+        if "User-Agent" not in headers:
+            headers["User-Agent"] = ua.firefox
         return readpage(url, format=self.format, headers=headers)
 
 
