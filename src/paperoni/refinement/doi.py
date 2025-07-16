@@ -7,6 +7,7 @@ from ovld.dependent import StartsWith
 from requests import HTTPError
 
 from ..acquire import readpage
+from ..config import config
 from ..model import (
     Author,
     DatePrecision,
@@ -357,3 +358,93 @@ def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
         links.append(Link(type="doi", link=entry["published"]))
 
     return paper_from_jats(readpage(jats, format="xml"), links=links)
+
+
+@register_fetch
+def unpaywall(type: Literal["doi"], doi: str):
+    try:
+        data = readpage(
+            f"https://api.unpaywall.org/v2/{doi}?email={config.mailto}",
+            format="json",
+        )
+    except HTTPError as exc:  # pragma: no cover
+        if exc.response.status_code == 404:
+            return None
+        else:
+            raise
+
+    date_obj = None
+    date_precision = DatePrecision.year
+
+    date_str = data["published_date"]
+    date_parts = date_str.split("-")
+    if len(date_parts) == 3:
+        date_obj = date(int(date_parts[0]), int(date_parts[1]), int(date_parts[2]))
+        date_precision = DatePrecision.day
+    elif len(date_parts) == 2:
+        # !! COVERAGE UNKNOWN !!
+        date_obj = date(int(date_parts[0]), int(date_parts[1]), 1)
+        date_precision = DatePrecision.month
+    elif len(date_parts) == 1:
+        # !! COVERAGE UNKNOWN !!
+        date_obj = date(int(date_parts[0]), 1, 1)
+        date_precision = DatePrecision.year
+
+    releases = []
+    if data.get("journal_name"):
+        venue = Venue(
+            name=data["journal_name"],
+            type=VenueType.journal,
+            series=data["journal_name"],
+            aliases=[],
+            links=[],
+            open=data.get("journal_is_oa", False),
+            peer_reviewed=True,  # Journals are typically peer reviewed
+            publisher=data.get("publisher"),
+            date=date_obj,
+            date_precision=date_precision,
+        )
+        releases = [
+            Release(
+                venue=venue,
+                status="published",
+                pages=None,
+            )
+        ]
+
+    authors = []
+    for author_data in data.get("z_authors", []):
+        author_name = author_data["raw_author_name"]
+        affiliations = []
+        for aff_str in (author_data.get("raw_affiliation_strings")) or []:
+            affiliations.append(
+                Institution(
+                    name=aff_str,
+                    category=InstitutionCategory.unknown,
+                    aliases=[],
+                )
+            )
+
+        authors.append(
+            PaperAuthor(
+                display_name=author_name,
+                author=Author(name=author_name, aliases=[], links=[]),
+                affiliations=affiliations,
+            )
+        )
+
+    links = [Link(type="doi", link=doi)]
+
+    for oa_loc in data.get("oa_locations", []):
+        pdf_url = oa_loc.get("url_for_pdf")
+        if pdf_url:
+            links.append(Link(type="pdf", link=pdf_url))
+
+    return Paper(
+        title=data["title"],
+        authors=authors,
+        abstract=None,
+        links=links,
+        topics=[],
+        releases=releases,
+    )

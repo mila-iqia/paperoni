@@ -1,0 +1,66 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Medical Evaluation and Epidemiology, Nantes University Hospital,
+      Nantes, France
+  - aliases: []
+    category: unknown
+    name: MiHAR Laboratory, University of Nantes, Nantes, France
+  - aliases: []
+    category: unknown
+    name: Department of Epidemiology and Biostatistics, McGill University, Montreal,
+      Québec, Canada
+  author:
+    aliases: []
+    links: []
+    name: B. Leclère
+  display_name: B. Leclère
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Epidemiology and Biostatistics, McGill University, Montreal,
+      Québec, Canada
+  author:
+    aliases: []
+    links: []
+    name: D.L. Buckeridge
+  display_name: D.L. Buckeridge
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: MiHAR Laboratory, University of Nantes, Nantes, France
+  - aliases: []
+    category: unknown
+    name: Department of Bacteriology and Infection Control, Nantes University Hospital,
+      Nantes, France
+  author:
+    aliases: []
+    links: []
+    name: D. Lepelletier
+  display_name: D. Lepelletier
+flags: []
+links:
+- link: 10.1016/j.jhin.2019.05.004
+  type: doi
+- link: http://www.journalofhospitalinfection.com/article/S0195670119301975/pdf
+  type: pdf
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2019-05-13'
+    date_precision: 3
+    links: []
+    name: Journal of Hospital Infection
+    open: false
+    peer_reviewed: true
+    publisher: Elsevier BV
+    series: Journal of Hospital Infection
+    type: journal
+    volume: null
+title: 'Evaluation of a web-based tool for labelling potential hospital outbreaks:
+  a mixed methods study'
+topics: []

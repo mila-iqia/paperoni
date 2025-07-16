@@ -31,6 +31,7 @@ class RequesterConfig:
 @dataclass
 class PaperoniConfig:
     cache_path: Path = None
+    mailto: str = ""
     requests: RequesterConfig = field(default_factory=RequesterConfig)
     discovery: dict[str, TaggedSubclass[Discoverer]] = field(default_factory=dict)
     focuses: Focuses = field(default_factory=Focuses)

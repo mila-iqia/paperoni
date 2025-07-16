@@ -1,0 +1,120 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Medical Physics Unit Department of Oncology McGill University  Montreal
+      Quebec Canada
+  author:
+    aliases: []
+    links: []
+    name: Alana Thibodeau‐Antonacci
+  display_name: Alana Thibodeau‐Antonacci
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Medical Physics Unit Department of Oncology McGill University  Montreal
+      Quebec Canada
+  author:
+    aliases: []
+    links: []
+    name: Marija Popovic
+  display_name: Marija Popovic
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Radiation Oncology St. Jude Children's Research Hospital  Memphis
+      USA
+  author:
+    aliases: []
+    links: []
+    name: Ozgur Ates
+  display_name: Ozgur Ates
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Radiation Oncology St. Jude Children's Research Hospital  Memphis
+      USA
+  author:
+    aliases: []
+    links: []
+    name: Chia‐Ho Hua
+  display_name: Chia‐Ho Hua
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Radiation Oncology Jewish General Hospital  Montreal Canada
+  author:
+    aliases: []
+    links: []
+    name: James Schneider
+  display_name: James Schneider
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Gerald Bronfman Department of Oncology McGill University  Montreal Quebec
+      Canada
+  author:
+    aliases: []
+    links: []
+    name: Sonia Skamene
+  display_name: Sonia Skamene
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Gerald Bronfman Department of Oncology McGill University  Montreal Quebec
+      Canada
+  author:
+    aliases: []
+    links: []
+    name: Carolyn Freeman
+  display_name: Carolyn Freeman
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Medical Physics Unit Department of Oncology McGill University  Montreal
+      Quebec Canada
+  - aliases: []
+    category: unknown
+    name: Lady Davis Institute for Medical Research Jewish General Hospital  Montreal
+      Quebec Canada
+  author:
+    aliases: []
+    links: []
+    name: Shirin Abbasinejad Enger
+  display_name: Shirin Abbasinejad Enger
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Gerald Bronfman Department of Oncology McGill University  Montreal Quebec
+      Canada
+  author:
+    aliases: []
+    links: []
+    name: James Man Git Tsui
+  display_name: James Man Git Tsui
+flags: []
+links:
+- link: 10.1002/mp.17782
+  type: doi
+- link: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/mp.17782
+  type: pdf
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-04-01'
+    date_precision: 3
+    links: []
+    name: Medical Physics
+    open: false
+    peer_reviewed: true
+    publisher: Wiley
+    series: Medical Physics
+    type: journal
+    volume: null
+title: Trade‐off of different deep learning‐based auto‐segmentation approaches for
+  treatment planning of pediatric craniospinal irradiation autocontouring of OARs
+  for pediatric CSI
+topics: []

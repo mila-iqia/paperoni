@@ -1,0 +1,56 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Physics, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Felix Proulx-Giraldeau
+  display_name: Felix Proulx-Giraldeau
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Biology, Stanford University
+  - aliases: []
+    category: unknown
+    name: Chan Zuckerberg Biohub, San Francisco
+  author:
+    aliases: []
+    links: []
+    name: Jan M Skotheim
+  display_name: Jan M Skotheim
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Physics, McGill University
+  author:
+    aliases: []
+    links: []
+    name: Paul François
+  display_name: Paul François
+flags: []
+links:
+- link: 10.7554/eLife.79919
+  type: doi
+- link: https://cdn.elifesciences.org/articles/79919/elife-79919-v2.pdf
+  type: pdf
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-09-30'
+    date_precision: 3
+    links: []
+    name: eLife
+    open: true
+    peer_reviewed: true
+    publisher: eLife Sciences Publications, Ltd
+    series: eLife
+    type: journal
+    volume: null
+title: Evolution of cell size control is canalized towards adders or sizers by cell
+  cycle structure and selective pressures
+topics: []
