@@ -125,6 +125,7 @@ def _extract_date_from_xml(node):
         }
         return thedate
     else:
+        # !! COVERAGE UNKNOWN !!
         date_node = node.find("string-date")
         if date_node:
             return extract_date(date_node.text)

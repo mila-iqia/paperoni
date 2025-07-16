@@ -34,7 +34,13 @@ def crossref(type: Literal["doi"], link: str):
         # We know it's not indexed here
         return None
 
-    data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
+    try:
+        data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
+    except HTTPError as exc:  # pragma: no cover
+        if exc.response.status_code == 404:
+            return None
+        else:
+            raise
 
     if data["status"] != "ok":  # pragma: no cover
         raise Exception("Request failed", data)
@@ -218,6 +224,7 @@ def datacite(type: Literal["doi"], link: str):
             date_string = date_info["date"]
             date_pieces = date_string.split("-")
             if len(date_pieces) == 1:
+                # !! COVERAGE UNKNOWN !!
                 date_available = date(year=int(date_pieces[0]), month=1, day=1)
                 date_precision = DatePrecision.year
             elif len(date_pieces) == 2:
@@ -226,10 +233,12 @@ def datacite(type: Literal["doi"], link: str):
                 )
                 date_precision = DatePrecision.month
             else:
+                # !! COVERAGE UNKNOWN !!
                 date_available = date.fromisoformat(date_string)
                 date_precision = DatePrecision.day
             break
     else:
+        # !! COVERAGE UNKNOWN !!
         date_available = date(year=raw_paper.publicationYear, month=1, day=1)
         date_precision = DatePrecision.year
 
@@ -251,6 +260,7 @@ def datacite(type: Literal["doi"], link: str):
     ]
     # Try to get more paper releases
     for related_item in raw_paper.relatedItems:
+        # !! COVERAGE UNKNOWN !!
         if (
             related_item["relationType"] == "IsPublishedIn"
             and related_item["relatedItemType"] in item_type_to_venue_type
@@ -280,6 +290,7 @@ def datacite(type: Literal["doi"], link: str):
     if raw_paper.url:
         links.append(Link(type="url", link=raw_paper.url))
     for content_url in raw_paper.contentUrl or ():
+        # !! COVERAGE UNKNOWN !!
         links.append(Link(type="contentUrl", link=content_url))
     # Try to get more paper links
     for related_identifier in raw_paper.relatedIdentifiers:
