@@ -1,0 +1,207 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
+      Center Jülich, Jülich, Germany.
+  - aliases: []
+    category: unknown
+    name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
+      Düsseldorf, Düsseldorf, Germany.
+  - aliases: []
+    category: unknown
+    name: Department of Electrical and Computer Engineering, Centre for Sleep and
+      Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
+      for Health and Institute for Digital Medicine, National University of Singapore,
+      Singapore, Singapore.
+  author:
+    aliases: []
+    links: []
+    name: Jingwei Li
+  display_name: Jingwei Li
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Biomedical Engineering, Montreal Neurological Institute (MNI),
+      McConnell Brain Imaging Institute (BIC), McGill University, Montreal, QC, Canada.
+  - aliases: []
+    category: unknown
+    name: Mila-Quebec Artificial Intelligence Institute, Montreal, QC, Canada.
+  author:
+    aliases: []
+    links: []
+    name: Danilo Bzdok
+  display_name: Danilo Bzdok
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical and Computer Engineering, Centre for Sleep and
+      Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
+      for Health and Institute for Digital Medicine, National University of Singapore,
+      Singapore, Singapore.
+  author:
+    aliases: []
+    links: []
+    name: Jianzhong Chen
+  display_name: Jianzhong Chen
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical and Computer Engineering, Centre for Sleep and
+      Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
+      for Health and Institute for Digital Medicine, National University of Singapore,
+      Singapore, Singapore.
+  author:
+    aliases: []
+    links: []
+    name: Angela Tam
+  display_name: Angela Tam
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical and Computer Engineering, Centre for Sleep and
+      Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
+      for Health and Institute for Digital Medicine, National University of Singapore,
+      Singapore, Singapore.
+  author:
+    aliases: []
+    links: []
+    name: Leon Qi Rong Ooi
+  display_name: Leon Qi Rong Ooi
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Departments of Psychology and Psychiatry, Yale University, New Haven, CT,
+      USA.
+  - aliases: []
+    category: unknown
+    name: Psychiatric and Neurodevelopmental Genetics Unit, Center for Genomic Medicine,
+      Massachusetts General Hospital, Boston, MA, USA.
+  author:
+    aliases: []
+    links: []
+    name: Avram J. Holmes
+  display_name: Avram J. Holmes
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Psychiatric and Neurodevelopmental Genetics Unit, Center for Genomic Medicine,
+      Massachusetts General Hospital, Boston, MA, USA.
+  - aliases: []
+    category: unknown
+    name: Stanley Center for Psychiatric Research, Broad Institute of MIT and Harvard,
+      Cambridge, MA, USA.
+  - aliases: []
+    category: unknown
+    name: Department of Psychiatry, Massachusetts General Hospital, Harvard Medical
+      School, Boston, MA, USA.
+  author:
+    aliases: []
+    links: []
+    name: Tian Ge
+  display_name: Tian Ge
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
+      Center Jülich, Jülich, Germany.
+  - aliases: []
+    category: unknown
+    name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
+      Düsseldorf, Düsseldorf, Germany.
+  author:
+    aliases: []
+    links: []
+    name: Kaustubh R. Patil
+  display_name: Kaustubh R. Patil
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Psychiatry, Dell Medical School, University of Texas at Austin,
+      Austin, TX, USA.
+  - aliases: []
+    category: unknown
+    name: The Mulva Clinic for Neurosciences, Dell Medical School, University of Texas
+      at Austin, Austin, TX, USA.
+  - aliases: []
+    category: unknown
+    name: Institute of Neuroscience, University of Texas at Austin, Austin, TX, USA.
+  - aliases: []
+    category: unknown
+    name: Department of Psychology, University of Texas at Austin, Austin, TX, USA.
+  author:
+    aliases: []
+    links: []
+    name: Mbemba Jabbi
+  display_name: Mbemba Jabbi
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
+      Center Jülich, Jülich, Germany.
+  - aliases: []
+    category: unknown
+    name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
+      Düsseldorf, Düsseldorf, Germany.
+  author:
+    aliases: []
+    links: []
+    name: Simon B. Eickhoff
+  display_name: Simon B. Eickhoff
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Department of Electrical and Computer Engineering, Centre for Sleep and
+      Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
+      for Health and Institute for Digital Medicine, National University of Singapore,
+      Singapore, Singapore.
+  - aliases: []
+    category: unknown
+    name: Integrative Sciences and Engineering Programme (ISEP), National University
+      of Singapore, Singapore, Singapore.
+  author:
+    aliases: []
+    links: []
+    name: B. T. Thomas Yeo
+  display_name: B. T. Thomas Yeo
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
+      Center Jülich, Jülich, Germany.
+  - aliases: []
+    category: unknown
+    name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
+      Düsseldorf, Düsseldorf, Germany.
+  author:
+    aliases: []
+    links: []
+    name: Sarah Genon
+  display_name: Sarah Genon
+flags: []
+links:
+- link: 10.1126/sciadv.abj1812
+  type: doi
+- link: https://www.science.org/history/af398e21-491d-4ed6-b413-c8ca1c03948d/sciadv.abj1812.v1.pdf
+  type: pdf
+- link: https://orbi.uliege.be/bitstream/2268/289493/1/Li_et_al_2022_SA.pdf
+  type: pdf
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2022-03-16'
+    date_precision: 3
+    links: []
+    name: Science Advances
+    open: true
+    peer_reviewed: true
+    publisher: American Association for the Advancement of Science (AAAS)
+    series: Science Advances
+    type: journal
+    volume: null
+title: Cross-ethnicity/race generalization failure of behavioral prediction from resting-state
+  functional connectivity
+topics: []

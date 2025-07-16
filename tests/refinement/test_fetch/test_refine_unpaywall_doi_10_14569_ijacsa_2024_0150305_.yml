@@ -1,0 +1,43 @@
+abstract: null
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Badre Labiad
+  display_name: Badre Labiad
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Abdelaziz Berrado
+  display_name: Abdelaziz Berrado
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Loubna Benabbou
+  display_name: Loubna Benabbou
+flags: []
+links:
+- link: 10.14569/ijacsa.2024.0150305
+  type: doi
+- link: http://thesai.org/Downloads/Volume15No3/Paper_5-Generative_Adversarial_Neural_Networks.pdf
+  type: pdf
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-01-01'
+    date_precision: 3
+    links: []
+    name: International Journal of Advanced Computer Science and Applications
+    open: true
+    peer_reviewed: true
+    publisher: The Science and Information Organization
+    series: International Journal of Advanced Computer Science and Applications
+    type: journal
+    volume: null
+title: Generative Adversarial Neural Networks for Realistic Stock Market Simulations
+topics: []

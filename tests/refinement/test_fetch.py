@@ -3,7 +3,7 @@ from serieux import serialize
 
 from paperoni.model.classes import Paper
 from paperoni.refinement.dblp import dblp
-from paperoni.refinement.doi import biorxiv, crossref, datacite
+from paperoni.refinement.doi import biorxiv, crossref, datacite, unpaywall
 from paperoni.refinement.pubmed import pubmed
 
 links = [
@@ -17,6 +17,13 @@ links = [
     (crossref, "doi:10.1109/icassp43922.2022.9746662"),
     (crossref, "doi:10.1109/ICMLC63072.2024.10935257"),
     (crossref, "doi:10.7554/eLife.79919"),
+    # Unpaywall
+    (unpaywall, "doi:10.1002/mp.17782"),
+    (unpaywall, "doi:10.1007/s41109-021-00378-3"),
+    (unpaywall, "doi:10.1016/j.jhin.2019.05.004"),
+    (unpaywall, "doi:10.1126/sciadv.abj1812"),
+    (unpaywall, "doi:10.7554/eLife.79919"),
+    (unpaywall, "doi:10.14569/ijacsa.2024.0150305"),
     # Datacite
     (datacite, "doi:10.48550/arXiv.2206.08164"),
     (datacite, "doi:10.48550/arXiv.2308.03977"),

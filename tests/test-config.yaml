@@ -1,0 +1,20 @@
+paperoni:
+  mailto: publications@mila.quebec
+  cache_path: ../cache
+  requests:
+    cache_path: ${..cache_path}/requests-cache.sql
+    expire_after: 6d
+  discovery:
+    semantic_scholar:
+      class: "paperoni.discovery.semantic_scholar:SemanticScholar"
+    openreview:
+      class: "paperoni.discovery.openreview:OpenReviewDispatch"
+      api_versions: [2, 1]
+    openalex:
+      class: "paperoni.discovery.openalex:OpenAlex"
+    miniconf:
+      class: "paperoni.discovery.miniconf:MiniConf"
+    pmlr:
+      class: "paperoni.discovery.pmlr:PMLR"
+    jmlr:
+      class: "paperoni.discovery.jmlr:JMLR"

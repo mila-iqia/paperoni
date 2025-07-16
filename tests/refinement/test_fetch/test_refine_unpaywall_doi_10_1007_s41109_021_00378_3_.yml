@@ -1,0 +1,73 @@
+abstract: null
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science, McGill University, Montreal, Canada
+  - aliases: []
+    category: unknown
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  author:
+    aliases: []
+    links: []
+    name: Xiaoye Ding
+  display_name: Xiaoye Ding
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science, McGill University, Montreal, Canada
+  - aliases: []
+    category: unknown
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  author:
+    aliases: []
+    links: []
+    name: Shenyang Huang
+  display_name: Shenyang Huang
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science, McGill University, Montreal, Canada
+  - aliases: []
+    category: unknown
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  author:
+    aliases: []
+    links: []
+    name: Abby Leung
+  display_name: Abby Leung
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: School of Computer Science, McGill University, Montreal, Canada
+  - aliases: []
+    category: unknown
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  author:
+    aliases: []
+    links: []
+    name: Reihaneh Rabbany
+  display_name: Reihaneh Rabbany
+flags: []
+links:
+- link: 10.1007/s41109-021-00378-3
+  type: doi
+- link: https://appliednetsci.springeropen.com/track/pdf/10.1007/s41109-021-00378-3
+  type: pdf
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2021-06-10'
+    date_precision: 3
+    links: []
+    name: Applied Network Science
+    open: true
+    peer_reviewed: true
+    publisher: Springer Science and Business Media LLC
+    series: Applied Network Science
+    type: journal
+    volume: null
+title: Incorporating dynamic flight network in SEIR to model mobility between populations
+topics: []
