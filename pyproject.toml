@@ -27,6 +27,7 @@ dependencies = [
     "unidecode>=1.4.0",
     "fake-useragent>=2.2.0",
     "cloudscraper>=1.2.71",
+    "eventlet>=0.40.1",
 ]
 
 [project.urls]

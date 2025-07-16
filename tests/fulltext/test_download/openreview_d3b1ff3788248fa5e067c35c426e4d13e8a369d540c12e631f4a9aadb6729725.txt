@@ -1,0 +1,11 @@
+identifier: openreview:vieIamY2Gi
+sources:
+- downloaded: true
+  error: null
+  ref: openreview:vieIamY2Gi
+  url:
+    headers: {}
+    info: openreview
+    url: https://openreview.net/pdf?id=vieIamY2Gi
+success: true
+title: Improved off-policy training of diffusion samplers

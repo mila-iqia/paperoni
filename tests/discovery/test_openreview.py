@@ -3,7 +3,7 @@ from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni import config
 from paperoni.discovery import openreview
-from paperoni.discovery.openreview import OpenReview
+from paperoni.discovery.openreview import OpenReview, OpenReviewDispatch
 from paperoni.model import PaperInfo
 
 from ..utils import check_papers, iter_links_ids, iter_releases
@@ -18,14 +18,14 @@ from ..utils import check_papers, iter_links_ids, iter_releases
         {"author": "Yoshua Bengio", "venue": "NeurIPS.cc/2024/Conference"},
         {"author_id": "~Yoshua_Bengio1", "venue": "NeurIPS.cc/2024/Conference"},
         {
-            "title": "Improved off-policy training of diffusion samplers",
             "venue": "NeurIPS.cc/2024/Conference",
+            "title": "Improved off-policy training of diffusion samplers",
         },
     ],
 )
 def test_query(data_regression: DataRegressionFixture, query_params: dict[str, str]):
     query_params = {**query_params, "block_size": 100, "limit": 1000}
-    openreview_dispatch = config.discoverers["openreview"]
+    openreview_dispatch: OpenReviewDispatch = config.discoverers["openreview"]
     api_versions: list[int] = openreview_dispatch.api_versions
 
     papers_per_version: dict[int, list[PaperInfo]] = {}

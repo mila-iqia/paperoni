@@ -12,6 +12,7 @@ from .model.focus import Focuses
 @dataclass
 class PaperoniConfig:
     cache_path: Path = None
+    data_path: Path = None
     mailto: str = ""
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     discovery: dict[str, TaggedSubclass[Discoverer]] = field(default_factory=dict)
