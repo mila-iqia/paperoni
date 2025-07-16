@@ -1,0 +1,102 @@
+abstract: 'Data science approaches personalizing pediatric appendicitis management
+  are hampered by small datasets and unstructured electronic medical records (EMR).
+  Artificial intelligence (AI) chatbots based on large language models (LLMs) can
+  structure free-text EMR data. Here we compare data extraction quality between ChatGPT-4
+  and human data collectors.
+
+
+  To train AI models to grade pediatric appendicitis preoperatively, several data
+  collectors (medical students and research assistants) extracted detailed preoperative
+  and operative data from 2100 children operated for acute appendicitis between 2014-2021.
+  Collectors were trained and certified for the task based on satisfactory Kappa scores.
+  ChatGPT-4 was prompted to structure free text from 103 random anonymized ultrasound
+  and operative records in the dataset using the set variables and coding options,
+  and to estimate the Pediatric Appendicitis Grade (PAG) from the operative report.
+  A pediatric surgeon then adjudicated all data, identifying errors in each method.
+
+
+  Within the 44 ultrasound (42.7%) and 32 operative reports (31.1%) discordant in
+  at least one field, 98% of the errors were found in the manual data extraction.
+  The PAG was erroneously assigned manually in 29 patients (28.2%), and by ChatGPT-4
+  in 3 (2.9%). Across datasets, the use of the AI chatbot was able to avoid misclassification
+  in 59.2% of the records including both reports and extracted data approx. 100x faster
+  than manually.
+
+
+  An AI chatbot significantly outperformed manual data extraction in accuracy for
+  ultrasound and operative reports, and correctly assigned the PAG score. While wider
+  validation is required and data safety concerns must be fully addressed, these novel
+  AI tools show significant promise in improving the accuracy and efficiency of research
+  data collection.
+
+
+  1. What is known about this topic?
+
+
+  AI chatbots have several benefits and implications including healthcare uses.
+
+
+  2. What new information is contained in this article?
+
+
+  AI chatbot was proven to be more accurate when compared to human data extraction.'
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Harvey E. Beardmore Division of Pediatric Surgery, The Montreal Children’s
+      Hospital, McGill University Health Centre
+  author:
+    aliases: []
+    links: []
+    name: Waseem Abu-Ashour
+  display_name: Waseem Abu-Ashour
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Harvey E. Beardmore Division of Pediatric Surgery, The Montreal Children’s
+      Hospital, McGill University Health Centre
+  author:
+    aliases: []
+    links: []
+    name: Sherif Emil
+  display_name: Sherif Emil
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Harvey E. Beardmore Division of Pediatric Surgery, The Montreal Children’s
+      Hospital, McGill University Health Centre
+  author:
+    aliases: []
+    links: []
+    name: Dan Poenaru
+  display_name: Dan Poenaru
+flags: []
+links:
+- link: 10.1101/2023.08.30.23294850
+  type: doi
+- link: 10.1016/j.jpedsurg.2024.01.033
+  type: doi
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2023-09-01'
+    date_precision: 3
+    links: []
+    name: medRxiv
+    open: false
+    peer_reviewed: false
+    publisher: Cold Spring Harbor Laboratory Press
+    series: medRxiv
+    type: journal
+    volume: null
+title: Using Artificial Intelligence To Label Free-Text Operative And Ultrasound Reports
+  For Grading Pediatric Appendicitis
+topics:
+- name: Pediatric appendicitis
+- name: artificial intelligence
+- name: diagnosis
+- name: appendicitis grade
+- name: comparative study

@@ -312,6 +312,7 @@ def datacite(type: Literal["doi"], link: str):
                 ],
             )
             for creator in raw_paper.creators
+            if creator["nameType"] == "Personal"
         ],
         releases=releases,
         topics=[Topic(name=subject["subject"]) for subject in raw_paper.subjects],
@@ -321,17 +322,27 @@ def datacite(type: Literal["doi"], link: str):
 
 @register_fetch
 def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
+    def _get(url):
+        data = readpage(url, format="json")
+        if (
+            not any(msg.get("status", None) == "ok" for msg in data["messages"])
+            or not data["collection"]
+        ):
+            return None
+        return data
+
     doi = link
-    data = readpage(f"https://api.biorxiv.org/details/biorxiv/{doi}", format="json")
-    if (
-        not any(msg.get("status", None) == "ok" for msg in data["messages"])
-        or not data["collection"]
-    ):
-        raise Exception("Could not fetch from BioRXiv")
+    data = _get(f"https://api.biorxiv.org/details/biorxiv/{doi}")
+    if data is None:
+        data = _get(f"https://api.medrxiv.org/details/medrxiv/{doi}")
+    if data is None:  # pragma: no cover
+        raise Exception("Could not fetch from Bio/MedRXiv")
 
-    jats = data["collection"][0]["jatsxml"]
+    entry = data["collection"][0]
+    jats = entry["jatsxml"]
 
-    return paper_from_jats(
-        readpage(jats, format="xml"),
-        links=[Link(type="doi", link=doi)],
-    )
+    links = [Link(type="doi", link=doi)]
+    if entry["published"] != "NA":
+        links.append(Link(type="doi", link=entry["published"]))
+
+    return paper_from_jats(readpage(jats, format="xml"), links=links)

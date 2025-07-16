@@ -1,0 +1,63 @@
+abstract: Efficiently quantifying predictive uncertainty in medical images remains
+  a challenge. While Bayesian neural networks (BNN) offer predictive uncertainty,
+  they require substantial computational resources to train. Although Bayesian approximations
+  such as ensembles have shown promise, they still suffer from high training and inference
+  costs. Existing approaches mainly address the costs of BNN inference post-training,
+  with little focus on improving training efficiency and reducing parameter complexity.
+  This study introduces a training procedure for a sparse (partial) Bayesian network.
+  Our method selectively assigns a subset of parameters as Bayesian by assessing their
+  deterministic saliency through gradient sensitivity analysis. The resulting network
+  combines deterministic and Bayesian parameters, exploiting the advantages of both
+  representations to achieve high task-specific performance and minimize predictive
+  uncertainty. Demonstrated on multi-label ChestMNIST for classification and ISIC,
+  LIDC-IDRI for segmentation, our approach achieves competitive performance and predictive
+  uncertainty estimation by reducing Bayesian parameters by over 95\%, significantly
+  reducing computational expenses compared to fully Bayesian and ensemble methods.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Zeinab Abboud
+  display_name: Zeinab Abboud
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Herve Lombaert
+  display_name: Herve Lombaert
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Samuel Kadoury
+  display_name: Samuel Kadoury
+flags: []
+links:
+- link: 10.48550/arXiv.2406.06946
+  type: doi
+- link: https://arxiv.org/abs/2406.06946
+  type: url
+- link: 10.1007/978-3-031-72117-5_63
+  type: IsVersionOf.DOI
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2024-06-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: unknown
+    volume: null
+title: 'Sparse Bayesian Networks: Efficient Uncertainty Quantification in Medical
+  Image Analysis'
+topics:
+- name: Computer Vision and Pattern Recognition (cs.CV)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'

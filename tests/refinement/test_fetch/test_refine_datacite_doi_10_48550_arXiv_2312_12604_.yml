@@ -1,0 +1,100 @@
+abstract: "Recently, machine and deep learning (ML/DL) algorithms have been increasingly\
+  \ adopted in many software systems. Due to their inductive nature, ensuring the\
+  \ quality of these systems remains a significant challenge for the research community.\
+  \ Unlike traditional software built deductively by writing explicit rules, ML/DL\
+  \ systems infer rules from training data. Recent research in ML/DL quality assurance\
+  \ has adapted concepts from traditional software testing, such as mutation testing,\
+  \ to improve reliability. However, it is unclear if these proposed testing techniques\
+  \ are adopted in practice, or if new testing strategies have emerged from real-world\
+  \ ML deployments. There is little empirical evidence about the testing strategies.\n\
+  \ To fill this gap, we perform the first fine-grained empirical study on ML testing\
+  \ in the wild to identify the ML properties being tested, the testing strategies,\
+  \ and their implementation throughout the ML workflow.\n We conducted a mixed-methods\
+  \ study to understand ML software testing practices. We analyzed test files and\
+  \ cases from 11 open-source ML/DL projects on GitHub. Using open coding, we manually\
+  \ examined the testing strategies, tested ML properties, and implemented testing\
+  \ methods to understand their practical application in building and releasing ML/DL\
+  \ software systems.\n Our findings reveal several key insights: 1.) The most common\
+  \ testing strategies, accounting for less than 40%, are Grey-box and White-box methods,\
+  \ such as Negative Testing, Oracle Approximation and Statistical Testing. 2.) A\
+  \ wide range of 17 ML properties are tested, out of which only 20% to 30% are frequently\
+  \ tested, including Consistency, Correctness}, and Efficiency. 3.) Bias and Fairness\
+  \ is more tested in Recommendation, while Security &amp; Privacy is tested in Computer\
+  \ Vision (CV) systems, Application Platforms, and Natural Language Processing (NLP)\
+  \ systems."
+authors:
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Jack
+  author:
+    aliases: []
+    links: []
+    name: Moses Openja
+  display_name: Moses Openja
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Jack
+  author:
+    aliases: []
+    links: []
+    name: Foutse Khomh
+  display_name: Foutse Khomh
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Jack
+  author:
+    aliases: []
+    links: []
+    name: Armstrong Foundjem
+  display_name: Armstrong Foundjem
+- affiliations:
+  - aliases: []
+    category: unknown
+    name: Jack
+  author:
+    aliases: []
+    links: []
+    name: Zhen Ming
+  display_name: Zhen Ming
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mouna Abidi
+  display_name: Mouna Abidi
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Ahmed E. Hassan
+  display_name: Ahmed E. Hassan
+flags: []
+links:
+- link: 10.48550/arXiv.2312.12604
+  type: doi
+- link: https://arxiv.org/abs/2312.12604
+  type: url
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2023-12-01'
+    date_precision: 2
+    links: []
+    name: arXiv
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: ''
+    type: preprint
+    volume: null
+title: An empirical study of testing machine learning in the wild
+topics:
+- name: Software Engineering (cs.SE)
+- name: Machine Learning (cs.LG)
+- name: 'FOS: Computer and information sciences'
+- name: 'FOS: Computer and information sciences'
