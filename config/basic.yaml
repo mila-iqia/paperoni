@@ -1,5 +1,6 @@
 paperoni:
   cache_path: ../cache
+  data_path: ../data
   mailto: ${secrets.mailto}
   fetch:
     +class: RulesFetcher
