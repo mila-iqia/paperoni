@@ -30,6 +30,7 @@ conference_urls = {
     "cvpr": "cvpr.thecvf.com",
 }
 
+
 class ErrorPolicy(Enum):
     LOG = "log"
     RAISE = "raise"
