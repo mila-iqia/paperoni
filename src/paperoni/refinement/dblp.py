@@ -17,7 +17,7 @@ from .fetch import register_fetch
 
 @register_fetch
 def dblp(type: Literal["dblp"], link: str):
-    if "/corr/" in link:  # pragma: no cover
+    if "/corr/" in link:
         return None
 
     data = readpage(f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml")

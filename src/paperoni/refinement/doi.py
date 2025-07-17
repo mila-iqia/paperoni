@@ -31,7 +31,7 @@ def crossref(type: Literal["doi"], link: str):
     """Fetch from CrossRef."""
 
     doi = link
-    if "arXiv" in doi:  # pragma: no cover
+    if "arXiv" in doi:
         # We know it's not indexed here
         return None
 
