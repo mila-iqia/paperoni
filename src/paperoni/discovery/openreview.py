@@ -128,12 +128,6 @@ def parse_openreview_venue(venue):
     return results
 
 
-# class OpenReviewScraperBase:
-#     def __init__(self, api_version):
-#         self.api_version = api_version
-#         self.set_client()
-
-
 @dataclass
 class OpenReview(Discoverer):
     api_version: int = 1

@@ -1,7 +1,7 @@
 import re
 from datetime import date
 
-from ..acquire import readpage
+from ..config import config
 from ..model import (
     Author,
     DatePrecision,
@@ -227,7 +227,7 @@ def institution_from_ror(ror_id):
     Given a ROR ID (e.g., '025wfj672'), fetch institution info from ROR API and return an Institution object.
     """
     url = f"https://api.ror.org/v2/organizations/{ror_id}"
-    data = readpage(url, format="json")
+    data = config.fetch.read(url, format="json")
 
     name = None
     for n in data.get("names", []):

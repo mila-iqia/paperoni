@@ -3,7 +3,6 @@ import re
 from datetime import datetime
 from enum import Enum
 
-from ..acquire import readpage
 from ..config import config
 from ..model.classes import (
     Author,
@@ -186,7 +185,7 @@ class MiniConf(Discoverer):
         base_url = f"https://{base_url}"
 
         url = f"{base_url}/static/virtual/data/{conference}-{year}-orals-posters.json"
-        data = readpage(
+        data = config.fetch.read(
             url,
             format="json",
             cache_into=cache

@@ -6,7 +6,6 @@ from typing import Literal
 from ovld.dependent import StartsWith
 from requests import HTTPError
 
-from ..acquire import readpage
 from ..config import config
 from ..model import (
     Author,
@@ -36,7 +35,9 @@ def crossref(type: Literal["doi"], link: str):
         return None
 
     try:
-        data = readpage(f"https://api.crossref.org/v1/works/{doi}", format="json")
+        data = config.fetch.read(
+            f"https://api.crossref.org/v1/works/{doi}", format="json"
+        )
     except HTTPError as exc:  # pragma: no cover
         if exc.response.status_code == 404:
             return None
@@ -162,7 +163,7 @@ def datacite(type: Literal["doi"], link: str):
     doi = link
 
     try:
-        json_data = readpage(
+        json_data = config.fetch.read(
             f"https://api.datacite.org/dois/{doi}?publisher=true&affiliation=true",
             format="json",
         )
@@ -335,7 +336,7 @@ def datacite(type: Literal["doi"], link: str):
 @register_fetch
 def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
     def _get(url):
-        data = readpage(url, format="json")
+        data = config.fetch.read(url, format="json")
         if (
             not any(msg.get("status", None) == "ok" for msg in data["messages"])
             or not data["collection"]
@@ -357,13 +358,13 @@ def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
     if entry["published"] != "NA":
         links.append(Link(type="doi", link=entry["published"]))
 
-    return paper_from_jats(readpage(jats, format="xml"), links=links)
+    return paper_from_jats(config.fetch.read(jats, format="xml"), links=links)
 
 
 @register_fetch
 def unpaywall(type: Literal["doi"], doi: str):
     try:
-        data = readpage(
+        data = config.fetch.read(
             f"https://api.unpaywall.org/v2/{doi}?email={config.mailto}",
             format="json",
         )

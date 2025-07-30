@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Literal
 
-from ..acquire import readpage
+from ..config import config
 from ..model import (
     Author,
     DatePrecision,
@@ -20,7 +20,7 @@ def dblp(type: Literal["dblp"], link: str):
     if "/corr/" in link:
         return None
 
-    data = readpage(f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml")
+    data = config.fetch.read(f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml")
     ee = data.find("ee")
     extra_links = []
     if ee and ee.text.startswith("https://doi.org/"):

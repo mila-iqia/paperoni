@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from ..acquire import HTTPSAcquirer
+from ..config import config
 from ..model.classes import (
     Author,
     DatePrecision,
@@ -70,7 +70,6 @@ def _get_link(link_type: str, link_value: str) -> Link:
 
 class OpenAlexQueryManager:
     def __init__(self, *, mailto=None):
-        self.conn = HTTPSAcquirer("api.openalex.org", format="json")
         self.mailto = mailto
 
     def find_author_id(self, author: str) -> Optional[str]:
@@ -130,7 +129,9 @@ class OpenAlexQueryManager:
     def _evaluate(self, path: str, **params):
         if self.mailto:
             params["mailto"] = self.mailto
-        jdata = self.conn.get(f"/{path}", params=params)
+        jdata = config.fetch.read(
+            f"https://api.openalex.org/{path}", params=params, format="json"
+        )
         if jdata is None:
             raise QueryError("Received bad JSON")
         if "message" in jdata:

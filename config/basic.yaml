@@ -1,19 +1,46 @@
 paperoni:
   cache_path: ../cache
-  requests:
-    cache_path: ${..cache_path}/requests-cache.sql
-    expire_after: 6d
+  mailto: ${secrets.mailto}
+  fetch:
+    +class: RulesFetcher
+    rules:
+      "^https://www.biorxiv.org/": scraperapi
+      "^https://api.semanticscholar.org/": cached
+      ".*": standard
+    fetchers:
+      standard:
+        +class: RequestsFetcher
+        user_agent: chrome
+      cached:
+        +class: CachedFetcher
+        cache_path: ${paperoni.cache_path}/requests-cache.sql
+        expire_after: 6d
+        user_agent: chrome
+      banned:
+        +class: BannedFetcher
+      cloudflare:
+        +class: CloudFlareFetcher
+        user_agent: chrome
+      scraperapi:
+        +class: ScraperAPIFetcher
+        cache_path: ${paperoni.cache_path}/scraper-cache.sql
+        expire_after: 100d
+        api_key: ${secrets.tokens.scraperapi}
   discovery:
     semantic_scholar:
-      class: "paperoni.discovery.semantic_scholar:SemanticScholar"
+      +class: "paperoni.discovery.semantic_scholar:SemanticScholar"
+      api_key: ${secrets.tokens.semantic_scholar}
     openreview:
-      class: "paperoni.discovery.openreview:OpenReviewDispatch"
+      +class: "paperoni.discovery.openreview:OpenReviewDispatch"
       api_versions: [2, 1]
     openalex:
-      class: "paperoni.discovery.openalex:OpenAlex"
+      +class: "paperoni.discovery.openalex:OpenAlex"
+      mailto: ${secrets.mailto}
     miniconf:
-      class: "paperoni.discovery.miniconf:MiniConf"
+      +class: "paperoni.discovery.miniconf:MiniConf"
     pmlr:
-      class: "paperoni.discovery.pmlr:PMLR"
+      +class: "paperoni.discovery.pmlr:PMLR"
     jmlr:
-      class: "paperoni.discovery.jmlr:JMLR"
+      +class: "paperoni.discovery.jmlr:JMLR"
+    aclweb:
+      +class: "paperoni.discovery.aclweb:AclWeb"
