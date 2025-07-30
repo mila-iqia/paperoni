@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import partial
 
-from ..acquire import HTTPSAcquirer
+from ..config import config
 from ..model import (
     Author,
     DatePrecision,
@@ -128,14 +128,12 @@ AUTHOR_PAPERS_FIELDS = (
 class SemanticScholar(Discoverer):
     api_key: str = None
 
-    def __post_init__(self):
-        self.conn = HTTPSAcquirer("api.semanticscholar.org", format="json")
-
     def _evaluate(self, path: str, **params):
-        jdata = self.conn.get(
-            f"/graph/v1/{path}",
+        jdata = config.fetch.read_retry(
+            f"https://api.semanticscholar.org/graph/v1/{path}",
             params=params,
-            headers={"x-api-key": self.api_key},
+            headers={"x-api-key": self.api_key and str(self.api_key)},
+            format="json",
         )
         if jdata is None or "error" in jdata:
             raise QueryError(jdata["error"] if jdata else "Received bad JSON")

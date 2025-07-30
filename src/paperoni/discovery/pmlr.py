@@ -2,7 +2,6 @@ import traceback
 from datetime import datetime
 from traceback import print_exc
 
-from ..acquire import readpage
 from ..config import config
 from ..model.classes import (
     Author,
@@ -106,7 +105,7 @@ class PMLR(Discoverer):
     def get_volume(self, volume, cache=False):
         print(f"Fetching PMLR {volume}")
         try:
-            papers = readpage(
+            papers = config.fetch.read(
                 f"https://proceedings.mlr.press/{volume}/assets/bib/citeproc.yaml",
                 format="yaml",
                 cache_into=cache
@@ -119,7 +118,7 @@ class PMLR(Discoverer):
             print_exc()
 
     def extract_volumes(self, index, selector, map=None, filter=None):
-        main = readpage(index, format="html")
+        main = config.fetch.read(index, format="html")
         urls = [lnk.attrs["href"] for lnk in main.select(selector)]
         return [map(url) if map else url for url in urls if filter is None or filter(url)]
 
