@@ -80,19 +80,24 @@ class Focuses:
         ]
         return combine([name_score, *iscores])
 
-    def top(self, pinfos, n):
-        t = Top(n, self.score)
+    def top(self, pinfos, n, skip_zero=True):
+        t = Top(n, self.score, skip_zero=skip_zero)
         t.add_all(pinfos)
         return t
 
 
 class Top(list):
-    def __init__(self, n, key):
+    def __init__(self, n, key, skip_zero=True):
         self.n = n
+        self.key_func = key
         self.key = lambda x: -key(x)
+        self.skip_zero = skip_zero
 
     def add(self, x):
-        ins = bisect_left(self, self.key(x), key=self.key)
+        k = self.key(x)
+        if self.skip_zero and k == 0:
+            return
+        ins = bisect_left(self, k, key=self.key)
         self.insert(ins, x)
         del self[self.n :]
 
