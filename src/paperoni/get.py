@@ -59,8 +59,14 @@ def parse(content: str, format: Literal["txt"]):
 
 
 class Fetcher:
-    def get(self, url, **kwargs):
+    def generic(self, method, url, **kwargs):
         raise NotImplementedError()
+
+    def head(self, url, **kwargs):
+        return self.generic("head", url, **kwargs)
+
+    def get(self, url, **kwargs):
+        return self.generic("get", url, **kwargs)
 
     def download(self, url, filename, **kwargs):
         """Download the given url into the given filename."""
@@ -132,11 +138,11 @@ class RequestsFetcher(Fetcher):
     def session(self):
         return Session()
 
-    def get(self, url, **kwargs):
+    def generic(self, method, url, **kwargs):
         if self.user_agent:
             headers = kwargs.setdefault("headers", {})
             headers["UserAgent"] = headers["User-Agent"] = self.user_agent
-        return self.session.get(url, **kwargs)
+        return getattr(self.session, method)(url, **kwargs)
 
 
 @dataclass
@@ -156,7 +162,7 @@ class CachedFetcher(RequestsFetcher):
 
 @dataclass
 class BannedFetcher(Fetcher):
-    def get(self, url, **kwargs):
+    def generic(self, method, url, **kwargs):
         raise Exception(f"Will not try to fetch {url}")
 
 
@@ -175,7 +181,7 @@ class CloudFlareFetcher(RequestsFetcher):
 class ScraperAPIFetcher(CachedFetcher):
     api_key: str = None
 
-    def get(self, url, **kwargs):
+    def generic(self, method, url, **kwargs):
         assert self.api_key is not None
         payload = {
             "api_key": str(self.api_key),
@@ -183,17 +189,17 @@ class ScraperAPIFetcher(CachedFetcher):
         }
         assert "params" not in kwargs
         kwargs["params"] = payload
-        return super().get("https://api.scraperapi.com/", **kwargs)
+        return super().generic(method, "https://api.scraperapi.com/", **kwargs)
 
 
 @dataclass
 class SequenceFetcher(Fetcher):
     fetchers: list[TaggedSubclass[Fetcher]]
 
-    def get(self, url, **kwargs):
+    def generic(self, method, url, **kwargs):
         for fetcher in self.fetchers:
             try:
-                return fetcher.get(url, **kwargs)
+                return fetcher.generic(method, url, **kwargs)
             except HTTPError as e:
                 if e.response.status_code == 403:
                     continue
@@ -207,9 +213,9 @@ class RulesFetcher(Fetcher):
     rules: dict[re.Pattern, str]
     fetchers: dict[str, TaggedSubclass[Fetcher]]
 
-    def get(self, url, **kwargs):
+    def generic(self, method, url, **kwargs):
         for pattern, fetcher_key in self.rules.items():
             if pattern.search(url):
                 fetcher = self.fetchers[fetcher_key]
-                return fetcher.get(url, **kwargs)
+                return fetcher.generic(method, url, **kwargs)
         raise ValueError(f"No fetcher rule matches URL: {url}")
