@@ -5,7 +5,6 @@ import requests
 from fake_useragent import UserAgent
 from ovld import call_next, ovld
 
-from paperoni.acquire import readpage
 from paperoni.config import config
 
 ua = UserAgent()
@@ -91,7 +90,7 @@ def find_download_links(typ: Literal["doi"], link: str):
 def find_download_links(typ: Literal["doi"], link: str):
     """Find links from CrossRef DOI entry."""
     try:
-        data = readpage(
+        data = config.fetch.read(
             f"https://api.crossref.org/v1/works/{link}",
             format="json",
         )
@@ -113,7 +112,7 @@ def find_download_links(typ: Literal["doi"], link: str):
     mailto = f"mailto={config.mailto}" if config.mailto else ""
     url = f"https://api.openalex.org/works/doi:{link}?{mailto}&select=open_access,title"
     try:
-        results = readpage(url, format="json")
+        results = config.fetch.read(url, format="json")
     except requests.HTTPError:
         return
     oa = results["open_access"]
@@ -125,10 +124,10 @@ def find_download_links(typ: Literal["doi"], link: str):
 @ovld(priority=1)
 def find_download_links(typ: Literal["doi"], link: str):
     """Find links from whatever the DOI handle redirects to."""
-    info = readpage(f"https://doi.org/api/handles/{link}", format="json")
+    info = config.fetch.read(f"https://doi.org/api/handles/{link}", format="json")
     target = [v for v in info["values"] if v["type"] == "URL"][0]["data"]["value"]
     try:
-        soup = readpage(target, format="html", headers={"User-Agent": ua.random})
+        soup = config.fetch.read(target, format="html", headers={"User-Agent": ua.random})
     except requests.HTTPError:
         return None
     possible_selectors = {
