@@ -2,10 +2,6 @@ import itertools
 import re
 import unicodedata
 
-import requests
-import requests_cache
-from eventlet.timeout import Timeout
-from tqdm import tqdm
 from unidecode import unidecode
 
 link_generators = {
@@ -179,33 +175,3 @@ def associate(l1, l2, key, threshold=0):
         if len(mapping) == n:
             break
     return [(x1, mapping.get(i1, None)) for i1, x1 in el1]
-
-
-def download(url, filename, **kwargs):
-    """Download the given url into the given filename."""
-
-    def iter_with_timeout(r: requests.Response, chunk_size: int, timeout: float):
-        it = r.iter_content(chunk_size=chunk_size)
-        try:
-            while True:
-                with Timeout(timeout):
-                    yield next(it)
-        except StopIteration:
-            pass
-        finally:
-            it.close()
-
-    with requests_cache.disabled():
-        print(f"Downloading {url}")
-        r = requests.get(url, stream=True, **kwargs)
-        r.raise_for_status()
-        total = int(r.headers.get("content-length") or "1024")
-        with open(filename, "wb") as f:
-            with tqdm(total=total) as progress:
-                for chunk in iter_with_timeout(
-                    r, chunk_size=max(total // 100, 1), timeout=5
-                ):
-                    f.write(chunk)
-                    f.flush()
-                    progress.update(len(chunk))
-        print(f"Saved {filename}")

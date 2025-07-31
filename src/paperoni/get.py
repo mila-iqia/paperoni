@@ -7,12 +7,15 @@ from pathlib import Path
 from typing import Literal
 
 import backoff
+import requests
 import requests_cache
+from eventlet.timeout import Timeout
 from fake_useragent import UserAgent
 from ovld import ovld
-from requests import Session
+from requests import HTTPError, Session
 from requests.exceptions import RequestException
 from serieux import TaggedSubclass
+from tqdm import tqdm
 
 ua = UserAgent()
 
@@ -58,6 +61,34 @@ def parse(content: str, format: Literal["txt"]):
 class Fetcher:
     def get(self, url, **kwargs):
         raise NotImplementedError()
+
+    def download(self, url, filename, **kwargs):
+        """Download the given url into the given filename."""
+
+        def iter_with_timeout(r: requests.Response, chunk_size: int, timeout: float):
+            it = r.iter_content(chunk_size=chunk_size)
+            try:
+                while True:
+                    with Timeout(timeout):
+                        yield next(it)
+            except StopIteration:
+                pass
+            finally:
+                it.close()
+
+        print(f"Downloading {url}")
+        r = self.get(url, stream=True, **kwargs)
+        r.raise_for_status()
+        total = int(r.headers.get("content-length") or "1024")
+        with open(filename, "wb") as f:
+            with tqdm(total=total) as progress:
+                for chunk in iter_with_timeout(
+                    r, chunk_size=max(total // 100, 1), timeout=5
+                ):
+                    f.write(chunk)
+                    f.flush()
+                    progress.update(len(chunk))
+        print(f"Saved {filename}")
 
     def read(self, url, format=None, cache_into=None, **kwargs):
         if cache_into and cache_into.exists():
@@ -157,17 +188,18 @@ class ScraperAPIFetcher(CachedFetcher):
 
 @dataclass
 class SequenceFetcher(Fetcher):
-    fetchers: list[Fetcher]
+    fetchers: list[TaggedSubclass[Fetcher]]
 
     def get(self, url, **kwargs):
-        exceptions = []
         for fetcher in self.fetchers:
             try:
                 return fetcher.get(url, **kwargs)
-            except Exception as e:
-                exceptions.append(e)
-                continue
-        raise ExceptionGroup("All fetchers failed", exceptions)
+            except HTTPError as e:
+                if e.response.status_code == 403:
+                    continue
+                else:
+                    raise
+        raise Exception(f"No fetcher could get {url}")
 
 
 @dataclass
