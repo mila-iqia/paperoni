@@ -33,6 +33,7 @@ class JMLR(Discoverer):
         # Whether to cache the download
         cache: bool = True,
     ):
+        """Query Journal of Machine Learning Research."""
         name = name and asciiify(name).lower()
         results = self.get_volume(volume, cache)
         for paper_info in results:

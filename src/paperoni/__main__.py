@@ -2,13 +2,14 @@ import argparse
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Union
+from typing import Annotated, Any
 
 import yaml
 from gifnoc import add_overlay, cli
-from serieux import Auto, Registered, Tagged, TaggedUnion, serialize, singleton
+from serieux import Auto, Registered, TaggedUnion, serialize, singleton
+from serieux.features.tagset import FromEntryPoint
 
-from .config import config, discoverers
+from .config import config
 from .display import display, terminal_width
 from .model import PaperInfo
 from .model.merge import merge_all
@@ -44,70 +45,62 @@ class TerminalFormatter(Formatter):
             print("=" * terminal_width)
 
 
-def make_cli():
-    # Explanation:
-    # * Auto[func] creates a virtual type based on the argument names and types of func
-    # * Tagged[T, k] represents type T, but tagged with key k
-    # * So we build a tuple of tagged types that represent the query functions of all
-    #   registered discoverers
-    # * In cli(...), a tagged union represents a subcommand, so each key in the tagged
-    #   types will add a new subcommand with arguments that correspond to the function
-    query_functions = tuple(Tagged[Auto[v.query], k] for k, v in discoverers.items())
+@dataclass
+class Discover:
+    """Discover papers from various sources."""
 
-    @dataclass
-    class Discover:
-        """Discover papers from various sources."""
+    command: Annotated[
+        Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls().query])
+    ]
 
-        command: Union[query_functions]
+    # Output format
+    format: Formatter = TerminalFormatter
 
-        # Output format
-        format: Formatter = TerminalFormatter
+    # Top n entries
+    top: int = 0
 
-        # Top n entries
-        top: int = 0
+    def run(self):
+        papers = self.command()
+        if self.top:
+            papers = config.focuses.top(n=self.top, pinfos=papers)
+        self.format(papers)
 
-        def run(self):
-            papers = self.command()
-            if self.top:
-                papers = config.focuses.top(n=self.top, pinfos=papers)
-            self.format(papers)
 
-    @dataclass
-    class Refine:
-        """Refine paper information."""
+@dataclass
+class Refine:
+    """Refine paper information."""
 
-        # Link to refine (type:link)
-        # [action: append]
-        link: list[str]
+    # Link to refine (type:link)
+    # [action: append]
+    link: list[str]
 
-        # Whether to merge the results
-        merge: bool = False
+    # Whether to merge the results
+    merge: bool = False
 
-        # Output format
-        format: Formatter = TerminalFormatter
+    # Output format
+    format: Formatter = TerminalFormatter
 
-        def run(self):
-            results = []
-            for link in self.link:
-                if link.startswith("http"):
-                    type, link = url_to_id(link)
-                else:
-                    type, link = link.split(":")
-                results.extend(fetch_all(type, link))
-            if self.merge:
-                results = [merge_all(results)]
-            self.format(results)
+    def run(self):
+        results = []
+        for link in self.link:
+            if link.startswith("http"):
+                type, link = url_to_id(link)
+            else:
+                type, link = link.split(":")
+            results.extend(fetch_all(type, link))
+        if self.merge:
+            results = [merge_all(results)]
+        self.format(results)
 
-    @dataclass
-    class PaperoniInterface:
-        """Paper database"""
 
-        command: TaggedUnion[Discover, Refine]
+@dataclass
+class PaperoniInterface:
+    """Paper database"""
 
-        def run(self):
-            self.command.run()
+    command: TaggedUnion[Discover, Refine]
 
-    return PaperoniInterface
+    def run(self):
+        self.command.run()
 
 
 def main():
@@ -116,9 +109,6 @@ def main():
     args, remaining = parser.parse_known_args()
     if args.config:
         add_overlay(Path(args.config))
-
-    PaperoniInterface = make_cli()
-
     command = cli(field="paperoni.cli", type=PaperoniInterface, argv=remaining)
     command.run()
 

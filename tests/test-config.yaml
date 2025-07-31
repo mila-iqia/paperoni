@@ -3,34 +3,20 @@ paperoni:
   cache_path: ../cache
   data_path: data
   fetch:
-    +class: RulesFetcher
+    $class: RulesFetcher
     rules:
       "^https://www.biorxiv.org/": cloudflare
       "^https://api.semanticscholar.org/": cached
       ".*": standard
     fetchers:
       standard:
-        +class: RequestsFetcher
+        $class: RequestsFetcher
         user_agent: chrome
       cached:
-        +class: CachedFetcher
+        $class: CachedFetcher
         cache_path: ${paperoni.cache_path}/new-requests-cache.sql
         expire_after: 6d
         user_agent: chrome
       cloudflare:
-        +class: CloudFlareFetcher
+        $class: CloudFlareFetcher
         user_agent: chrome
-  discovery:
-    semantic_scholar:
-      +class: "paperoni.discovery.semantic_scholar:SemanticScholar"
-    openreview:
-      +class: "paperoni.discovery.openreview:OpenReviewDispatch"
-      api_versions: [2, 1]
-    openalex:
-      +class: "paperoni.discovery.openalex:OpenAlex"
-    miniconf:
-      +class: "paperoni.discovery.miniconf:MiniConf"
-    pmlr:
-      +class: "paperoni.discovery.pmlr:PMLR"
-    jmlr:
-      +class: "paperoni.discovery.jmlr:JMLR"

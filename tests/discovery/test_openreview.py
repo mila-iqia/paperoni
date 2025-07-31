@@ -1,7 +1,6 @@
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni import config
 from paperoni.discovery import openreview
 from paperoni.discovery.openreview import OpenReview, OpenReviewDispatch
 from paperoni.model import PaperInfo
@@ -25,7 +24,7 @@ from ..utils import check_papers, iter_links_ids, iter_releases
 )
 def test_query(data_regression: DataRegressionFixture, query_params: dict[str, str]):
     query_params = {**query_params, "block_size": 100, "limit": 1000}
-    openreview_dispatch: OpenReviewDispatch = config.discoverers["openreview"]
+    openreview_dispatch: OpenReviewDispatch = OpenReviewDispatch()
     api_versions: list[int] = openreview_dispatch.api_versions
 
     papers_per_version: dict[int, list[PaperInfo]] = {}

@@ -1,5 +1,5 @@
 import pprint
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, List, Optional
 
@@ -300,7 +300,7 @@ class OpenAlexQueryManager:
 
 @dataclass
 class OpenAlex(Discoverer):
-    mailto: str = None
+    mailto: str = field(default_factory=lambda: config.mailto)
 
     def query(
         self,
@@ -325,6 +325,7 @@ class OpenAlex(Discoverer):
         # [alias: -v]
         verbose: bool = False,
     ):
+        """Query OpenAlex for works."""
         if verbose and self.mailto:
             print("[openalex: using polite pool]")
         qm = OpenAlexQueryManager(mailto=self.mailto)

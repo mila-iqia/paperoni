@@ -83,6 +83,7 @@ class PMLR(Discoverer):
         # Whether to cache the download
         cache: bool = True,
     ):
+        """Query Proceedings of Machine Learning Research."""
         name = name and asciiify(name).lower()
         results = self.get_volume(volume, cache)
         for paper_info in results:

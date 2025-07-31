@@ -268,7 +268,3 @@ class MiniConf(Discoverer):
                 continue
             if limit and n >= limit:
                 break
-
-
-# https://{{ conference_website }}/static/virtual/data/{{ conference_name }}-{{ year }}-orals-posters.json
-# This goes for neurips, icml, iclr, mlsys, aistats and cvpr (edited)
