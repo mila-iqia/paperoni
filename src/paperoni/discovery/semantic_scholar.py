@@ -1,6 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from functools import partial
+
+import gifnoc
 
 from ..config import config
 from ..model import (
@@ -126,7 +128,7 @@ AUTHOR_PAPERS_FIELDS = (
 
 @dataclass
 class SemanticScholar(Discoverer):
-    api_key: str = None
+    api_key: str = field(default_factory=lambda: ss_config.api_key)
 
     def _evaluate(self, path: str, **params):
         jdata = config.fetch.read_retry(
@@ -323,3 +325,11 @@ class SemanticScholar(Discoverer):
                 author, block_size=block_size, limit=limit
             ):
                 yield from papers
+
+
+@dataclass
+class SemanticScholarConfig:
+    api_key: str = None
+
+
+ss_config = gifnoc.define("paperoni.semantic_scholar", SemanticScholarConfig, defaults={})

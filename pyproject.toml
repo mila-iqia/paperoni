@@ -45,6 +45,14 @@ dev = [
     "ruff>=0.11.3",
 ]
 
+[project.entry-points."paperoni.discovery"]
+semantic_scholar = "paperoni.discovery.semantic_scholar:SemanticScholar"
+openreview = "paperoni.discovery.openreview:OpenReview"
+openalex = "paperoni.discovery.openalex:OpenAlex"
+miniconf = "paperoni.discovery.miniconf:MiniConf"
+pmlr = "paperoni.discovery.pmlr:PMLR"
+jmlr = "paperoni.discovery.jmlr:JMLR"
+
 [tool.ruff]
 line-length = 90
 
