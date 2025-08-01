@@ -5,8 +5,8 @@ paperoni:
   fetch:
     $class: RulesFetcher
     rules:
-      "^https://export.arxiv.org/": standard,
-      "^https://api.crossref.org/": cached,
+      "^https://export.arxiv.org/": standard
+      "^https://api.crossref.org/": cached
       "^https://api.semanticscholar.org/": cached
       "^https://www.biorxiv.org/": sequence
       ".*": sequence
