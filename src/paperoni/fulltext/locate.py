@@ -1,13 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Literal
 
-import requests
-from fake_useragent import UserAgent
 from ovld import call_next, ovld
+from requests import HTTPError
 
-from paperoni.config import config
-
-ua = UserAgent()
+from ..config import config
 
 
 @dataclass
@@ -17,7 +14,7 @@ class URL:
     headers: dict[str, str] = field(default_factory=dict)
 
     def readable(self):
-        hd = requests.head(self.url, headers={"User-Agent": ua.random, **self.headers})
+        hd = config.fetch.head(self.url, headers=self.headers)
         try:
             hd.raise_for_status()
         except Exception:
@@ -26,42 +23,27 @@ class URL:
 
 
 @ovld
-def find_download_links(refs: list):
-    for ref in refs:
-        yield from call_next(ref)
-
-
-@ovld
-def find_download_links(ref: str):
-    typ, link = ref.split(":", 1)
-    yield from call_next(typ, link)
-
-
-@ovld
 def find_download_links(typ: Literal["arxiv"], link: str):
     """Return ArXiv PDF download link."""
     yield URL(url=f"https://export.arxiv.org/pdf/{link}.pdf", info=typ)
-    yield from call_next(typ, link)
 
 
 @ovld
 def find_download_links(typ: Literal["openreview"], link: str):
     """Return OpenReview PDF download link."""
     yield URL(url=f"https://openreview.net/pdf?id={link}", info=typ)
-    yield from call_next(typ, link)
 
 
 @ovld
 def find_download_links(typ: Literal["pdf", "pdf.official"], link: str):
     """Direct link to a PDF."""
     yield URL(url=link, info=typ)
-    yield from call_next(typ, link)
 
 
 @ovld(priority=100)
 def find_download_links(typ: Literal["doi"], link: str):
     """Find links from Wiley DOI entry (needs token)."""
-    if key := config.tokens.wiley:
+    if key := config.api_keys.get("wiley"):
         url = URL(
             url=f"https://api.wiley.com/onlinelibrary/tdm/v1/articles/{link}",
             headers={"Wiley-TDM-Client-Token": key},
@@ -69,13 +51,12 @@ def find_download_links(typ: Literal["doi"], link: str):
         )
         if url.readable():
             yield url
-    yield from call_next(typ, link)
 
 
 @ovld(priority=100)
 def find_download_links(typ: Literal["doi"], link: str):
     """Find links from ScienceDirect DOI entry (needs token)."""
-    key = config.tokens.elsevier
+    key = config.api_keys.get("elsevier")
     if key:
         url = URL(
             url=f"https://api.elsevier.com/content/article/doi/{link}?apiKey={key}&httpAccept=application%2Fpdf",
@@ -83,7 +64,6 @@ def find_download_links(typ: Literal["doi"], link: str):
         )
         if url.readable():
             yield url
-    yield from call_next(typ, link)
 
 
 @ovld(priority=90)
@@ -94,7 +74,7 @@ def find_download_links(typ: Literal["doi"], link: str):
             f"https://api.crossref.org/v1/works/{link}",
             format="json",
         )
-    except requests.HTTPError:
+    except HTTPError:
         return None
     if data is None or data["status"] != "ok":
         return None
@@ -103,7 +83,6 @@ def find_download_links(typ: Literal["doi"], link: str):
         for lnk in data["link"]:
             if lnk["content-type"] == "application/pdf":
                 yield URL(url=lnk["URL"], info="doi.crossref")
-    yield from call_next(typ, link)
 
 
 @ovld(priority=80)
@@ -113,12 +92,11 @@ def find_download_links(typ: Literal["doi"], link: str):
     url = f"https://api.openalex.org/works/doi:{link}?{mailto}&select=open_access,title"
     try:
         results = config.fetch.read(url, format="json")
-    except requests.HTTPError:
+    except HTTPError:
         return
     oa = results["open_access"]
     if oa["is_oa"]:
         yield URL(url=oa["oa_url"], info="doi.openalex")
-    yield from call_next(typ, link)
 
 
 @ovld(priority=1)
@@ -127,8 +105,8 @@ def find_download_links(typ: Literal["doi"], link: str):
     info = config.fetch.read(f"https://doi.org/api/handles/{link}", format="json")
     target = [v for v in info["values"] if v["type"] == "URL"][0]["data"]["value"]
     try:
-        soup = config.fetch.read(target, format="html", headers={"User-Agent": ua.random})
-    except requests.HTTPError:
+        soup = config.fetch.read(target, format="html")
+    except HTTPError:
         return None
     possible_selectors = {
         'meta[name="citation_pdf_url"]': "content",
@@ -139,9 +117,25 @@ def find_download_links(typ: Literal["doi"], link: str):
         tag = soup.select_one(sel)
         if tag and (result := tag.attrs.get(attr, None)):
             yield URL(url=result, info="doi.handler")
+
+
+@ovld
+def locate_all(refs: list):
+    for ref in refs:
+        yield from call_next(ref)
+
+
+@ovld
+def locate_all(ref: str):
+    typ, link = ref.split(":", 1)
     yield from call_next(typ, link)
 
 
-@ovld(priority=-10)
-def find_download_links(typ: str, link: str):
-    yield from []
+@ovld
+def locate_all(typ: str, link: str):
+    seen = set()
+    for f in find_download_links.resolve_all(typ, link):
+        for url in f():
+            if url.url not in seen:
+                seen.add(url.url)
+                yield url

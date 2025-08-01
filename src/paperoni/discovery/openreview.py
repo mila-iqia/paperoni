@@ -1,6 +1,6 @@
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dc_field
 from datetime import datetime, timedelta
 from fnmatch import fnmatch
 from functools import reduce
@@ -489,7 +489,7 @@ class OpenReview(Discoverer):
 
 @dataclass
 class OpenReviewDispatch(Discoverer):
-    api_versions: list = field(default_factory=lambda: [2, 1])
+    api_versions: list = dc_field(default_factory=lambda: [2, 1])
 
     def query(
         self,

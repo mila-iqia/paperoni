@@ -2,13 +2,12 @@ import os
 
 from pytest_regressions.file_regression import FileRegressionFixture
 
-from paperoni import config
 from paperoni.discovery.openreview import OpenReviewDispatch
 from paperoni.fulltext import download
 
 
 def test_download_link_priority(file_regression: FileRegressionFixture):
-    openreview_dispatch: OpenReviewDispatch = config.discoverers["openreview"]
+    openreview_dispatch = OpenReviewDispatch()
     paper = next(
         openreview_dispatch.query(
             venue="NeurIPS.cc/2024/Conference",

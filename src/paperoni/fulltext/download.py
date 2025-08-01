@@ -6,16 +6,12 @@ from pathlib import Path
 from typing import Generator, Optional
 
 import yaml
-
-# from apischema import deserialize, serialize
 from ovld import ovld
 from serieux import deserialize, serialize
 
-from paperoni.config import config
-from paperoni.model.classes import PaperInfo
-
-from ..utils import download
-from .locate import URL, find_download_links, ua
+from ..config import config
+from ..model.classes import PaperInfo
+from .locate import URL, locate_all
 
 
 @dataclass
@@ -104,10 +100,9 @@ class PDF:
 
     def fetch_link(self, src: DownloadResult):
         try:
-            download(
+            config.fetch.download(
                 url=src.url.url,
                 filename=self.pdf_path,
-                headers={"User-Agent": ua.random, **src.url.headers},
             )
             src.downloaded = True
         except Exception as exc:
@@ -119,7 +114,7 @@ class PDF:
     def fetch(self):
         self.directory.mkdir(parents=True, exist_ok=True)
         self.initialize_meta()
-        for url in find_download_links(self.ref):
+        for url in locate_all(self.ref):
             src = DownloadResult(
                 url=url,
                 ref=self.ref,
