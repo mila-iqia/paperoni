@@ -6,6 +6,7 @@ paperoni:
     $class: RulesFetcher
     rules:
       "^https://www.biorxiv.org/": cloudflare
+      "^https://www.medrxiv.org/": cloudflare
       "^https://api.semanticscholar.org/": cached
       ".*": standard
     fetchers:
@@ -14,7 +15,7 @@ paperoni:
         user_agent: chrome
       cached:
         $class: CachedFetcher
-        cache_path: ${paperoni.cache_path}/new-requests-cache.sql
+        cache_path: ${paperoni.cache_path}/requests-cache.sql
         expire_after: 6d
         user_agent: chrome
       cloudflare:
