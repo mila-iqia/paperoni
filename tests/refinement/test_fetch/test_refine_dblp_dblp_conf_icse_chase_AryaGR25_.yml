@@ -22,7 +22,7 @@ flags: []
 links:
 - link: conf/icse-chase/AryaGR25
   type: dblp
-- link: 10.1109/CHASE66643.2025.00029
+- link: 10.1109/chase66643.2025.00029
   type: doi
 releases:
 - pages: 179-190

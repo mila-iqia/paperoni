@@ -7,6 +7,7 @@ from ..model import (
     DatePrecision,
     Institution,
     InstitutionCategory,
+    Link,
     Paper,
     PaperAuthor,
     Release,
@@ -14,6 +15,109 @@ from ..model import (
     Venue,
     VenueType,
 )
+from ..utils import url_to_id
+
+
+def paper_from_crossref(data):
+    releases = []
+    if getattr(data, "event", None) or getattr(data, "container-title", None):
+        date_parts = None
+
+        if evt := getattr(data, "event", None):
+            venue_name = evt["name"]
+            venue_type = VenueType.conference
+            if "start" in evt:
+                date_parts = evt["start"]["date-parts"][0]
+
+        if venue := getattr(data, "container-title", None):
+            venue_name = venue[0]
+            if data.type == "journal-article":
+                venue_type = VenueType.journal
+            else:
+                venue_type = VenueType.conference
+
+        if not date_parts:
+            for field in (
+                "published-online",
+                "published-print",
+                "published",
+                "issued",
+                "created",
+            ):
+                if dateholder := getattr(data, field, None):
+                    date_parts = dateholder["date-parts"][0]
+                    break
+
+        precision = [
+            DatePrecision.year,
+            DatePrecision.month,
+            DatePrecision.day,
+        ][len(date_parts) - 1]
+        date_parts += [1] * (3 - len(date_parts))
+        release = Release(
+            venue=Venue(
+                aliases=[],
+                name=venue_name,
+                type=venue_type,
+                series=venue_name,
+                links=[],
+                open=False,
+                peer_reviewed=False,
+                publisher=None,
+                date_precision=precision,
+                date=date(*date_parts),
+            ),
+            status="published",
+            pages=None,
+        )
+        releases = [release]
+
+    required_keys = {"given", "family", "affiliation"}
+
+    def extract_affiliation(aff):
+        if "id" in aff and isinstance(aff["id"], list):
+            for id_entry in aff["id"]:
+                if (
+                    isinstance(id_entry, dict)
+                    and id_entry.get("id-type") == "ROR"
+                    and "id" in id_entry
+                ):
+                    ror_url = id_entry["id"]
+                    _, ror_id = url_to_id(ror_url)
+                    return institution_from_ror(ror_id)
+
+        else:
+            return Institution(
+                name=aff["name"],
+                category=InstitutionCategory.unknown,
+                aliases=[],
+            )
+
+    abstract = getattr(data, "abstract", None)
+    if abstract:
+        abstract = re.sub(r"<jats:title>.*</jats:title>", "", abstract)
+        abstract = re.sub(r"</?jats:[^>]+>", "", abstract)
+
+    return Paper(
+        title=data.title[0],
+        authors=[
+            PaperAuthor(
+                display_name=(dn := f"{author['given']} {author['family']}"),
+                author=Author(name=dn),
+                affiliations=[
+                    extract_affiliation(aff)
+                    for aff in author["affiliation"]
+                    if "name" in aff
+                ],
+            )
+            for author in data.author
+            if not (required_keys - author.keys())
+        ],
+        abstract=abstract,
+        links=[Link(type="doi", link=data.DOI.lower())],
+        topics=[],
+        releases=releases,
+    )
 
 
 def extract_date(txt: str) -> dict | None:

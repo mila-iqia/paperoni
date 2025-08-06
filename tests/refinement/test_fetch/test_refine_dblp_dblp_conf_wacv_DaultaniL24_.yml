@@ -16,7 +16,7 @@ flags: []
 links:
 - link: conf/wacv/DaultaniL24
   type: dblp
-- link: 10.1109/WACVW60836.2024.00053
+- link: 10.1109/wacvw60836.2024.00053
   type: doi
 releases:
 - pages: 440-449

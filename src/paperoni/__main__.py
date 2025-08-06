@@ -117,7 +117,7 @@ class Refine:
             if link.startswith("http"):
                 type, link = url_to_id(link)
             else:
-                type, link = link.split(":")
+                type, link = link.split(":", 1)
             results.extend(fetch_all(type, link))
         if self.merge:
             results = [merge_all(results)]
