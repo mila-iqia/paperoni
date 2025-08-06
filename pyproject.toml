@@ -52,6 +52,7 @@ openalex = "paperoni.discovery.openalex:OpenAlex"
 miniconf = "paperoni.discovery.miniconf:MiniConf"
 pmlr = "paperoni.discovery.pmlr:PMLR"
 jmlr = "paperoni.discovery.jmlr:JMLR"
+synth = "paperoni.discovery.synth:Synth"
 
 [tool.ruff]
 line-length = 90
