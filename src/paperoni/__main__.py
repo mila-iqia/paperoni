@@ -2,7 +2,7 @@ import argparse
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 import yaml
 from gifnoc import add_overlay, cli
@@ -11,6 +11,8 @@ from serieux.features.tagset import FromEntryPoint
 
 from .config import config
 from .display import display, terminal_width
+from .fulltext.locate import locate_all
+from .fulltext.pdf import CachePolicies, get_pdf
 from .model import PaperInfo
 from .model.merge import merge_all
 from .refinement import fetch_all
@@ -50,7 +52,7 @@ class Discover:
     """Discover papers from various sources."""
 
     command: Annotated[
-        Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls().query])
+        Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
     # Output format
@@ -64,6 +66,35 @@ class Discover:
         if self.top:
             papers = config.focuses.top(n=self.top, pinfos=papers)
         self.format(papers)
+
+
+def locate(
+    # Reference to locate
+    # [positional]
+    ref: str,
+):
+    for url in locate_all(ref):
+        print(f"\033[36m[{url.info}]\033[0m {url.url}")
+
+
+def download(
+    # Reference to locate
+    # [positional]
+    # [nargs: +]
+    ref: list[str],
+    # Cache policy
+    # [alias: -p]
+    cache_policy: Literal["use", "use_best", "no_download", "force"] = "use",
+):
+    p = get_pdf(ref, cache_policy=getattr(CachePolicies, cache_policy.upper()))
+    print("Downloaded into:", p.pdf_path.resolve())
+
+
+@dataclass
+class Fulltext:
+    """Download and process fulltext."""
+
+    run: TaggedUnion[Auto[locate], Auto[download]]
 
 
 @dataclass
@@ -97,7 +128,7 @@ class Refine:
 class PaperoniInterface:
     """Paper database"""
 
-    command: TaggedUnion[Discover, Refine]
+    command: TaggedUnion[Discover, Refine, Fulltext]
 
     def run(self):
         self.command.run()
