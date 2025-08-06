@@ -14,6 +14,7 @@ from ..model.classes import (
     Venue,
     VenueType,
 )
+from ..model.focus import Focuses
 from ..utils import asciiify
 from .base import Discoverer
 
@@ -82,6 +83,8 @@ class PMLR(Discoverer):
         name: str = None,
         # Whether to cache the download
         cache: bool = True,
+        # A list of focuses
+        focuses: Focuses = None,
     ):
         """Query Proceedings of Machine Learning Research."""
         name = name and asciiify(name).lower()
