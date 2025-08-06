@@ -1,0 +1,140 @@
+abstract: The dominant sequence transduction models are based on complex recurrent
+  or convolutional neural networks in an encoder-decoder configuration. The best performing
+  models also connect the encoder and decoder through an attention mechanism. We propose
+  a new simple network architecture, the Transformer, based solely on attention mechanisms,
+  dispensing with recurrence and convolutions entirely. Experiments on two machine
+  translation tasks show these models to be superior in quality while being more parallelizable
+  and requiring significantly less time to train. Our model achieves 28.4 BLEU on
+  the WMT 2014 English-to-German translation task, improving over the existing best
+  results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation
+  task, our model establishes a new single-model state-of-the-art BLEU score of 41.8
+  after training for 3.5 days on eight GPUs, a small fraction of the training costs
+  of the best models from the literature. We show that the Transformer generalizes
+  well to other tasks by applying it successfully to English constituency parsing
+  both with large and limited training data.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5103024730
+      type: openalex
+    - link: 0000-0002-7794-2085
+      type: orcid
+    name: Ashish Vaswani
+  display_name: Ashish Vaswani
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5021878400
+      type: openalex
+    name: Noam Shazeer
+  display_name: Noam Shazeer
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5005777963
+      type: openalex
+    name: Niki Parmar
+  display_name: Niki Parmar
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5022416424
+      type: openalex
+    - link: 0000-0001-5066-7530
+      type: orcid
+    name: Jakob Uszkoreit
+  display_name: Jakob Uszkoreit
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5023448834
+      type: openalex
+    name: Llion Jones
+  display_name: Llion Jones
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5079288315
+      type: openalex
+    - link: 0000-0001-5601-5437
+      type: orcid
+    name: Aidan N. Gomez
+  display_name: Aidan N. Gomez
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5031789995
+      type: openalex
+    - link: 0000-0003-1092-6010
+      type: orcid
+    name: Łukasz Kaiser
+  display_name: Łukasz Kaiser
+- affiliations: []
+  author:
+    aliases: []
+    links:
+    - link: A5045719436
+      type: openalex
+    name: Illia Polosukhin
+  display_name: Illia Polosukhin
+flags: []
+links:
+- link: W4385245566
+  type: openalex
+- link: 10.48550/arxiv.1706.03762
+  type: doi
+- link: https://arxiv.org/abs/1706.03762
+  type: open-access
+- link: https://arxiv.org/abs/1706.03762
+  type: url
+- link: https://api.datacite.org/dois/10.48550/arxiv.1706.03762
+  type: url
+releases:
+- pages: null
+  status: unknown
+  venue:
+    aliases: []
+    date: '2017-01-01T00:00:00'
+    date_precision: 3
+    links:
+    - link: https://arxiv.org/abs/1706.03762
+      type: url
+    name: arXiv (Cornell University)
+    open: true
+    peer_reviewed: false
+    publisher: Cornell University
+    series: ''
+    type: unknown
+    volume: null
+title: Attention Is All You Need
+topics:
+- name: Computer science
+- name: Machine translation
+- name: Transformer
+- name: BLEU
+- name: Encoder
+- name: Artificial intelligence
+- name: Parallelizable manifold
+- name: Parsing
+- name: Natural language processing
+- name: Decoding methods
+- name: Language model
+- name: Task (project management)
+- name: Convolutional neural network
+- name: Speech recognition
+- name: Machine learning
+- name: Algorithm
+- name: Physics
+- name: Management
+- name: Quantum mechanics
+- name: Voltage
+- name: Economics
+- name: Operating system

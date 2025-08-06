@@ -39,7 +39,7 @@ links:
 - link: https://arxiv.org/abs/2406.06946
   type: url
 - link: 10.1007/978-3-031-72117-5_63
-  type: IsVersionOf.DOI
+  type: doi
 releases:
 - pages: null
   status: published

@@ -5,6 +5,7 @@ from paperoni.model.classes import Paper
 from paperoni.refinement.dblp import dblp
 from paperoni.refinement.doi import biorxiv, crossref, datacite, unpaywall
 from paperoni.refinement.pubmed import pubmed
+from paperoni.refinement.title import crossref_title, openalex_title
 
 links = [
     # Crossref
@@ -56,12 +57,23 @@ links = [
     (pubmed, "pmc:12136731"),
     (pubmed, "pmc:11971501"),
     (pubmed, "pmc:10684502"),
+    # OpenAlex, by title
+    (openalex_title, "title:Attention Is All You Need"),
+    (
+        openalex_title,
+        "title:BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+    ),
+    # Crossref, by title
+    (
+        crossref_title,
+        "title:Spatially and non-spatially tuned hippocampal neurons are linear perceptual and nonlinear memory encoders",
+    ),
 ]
 
 
 @pytest.mark.parametrize(["func", "link"], links)
 def test_refine(func, link, data_regression):
-    typ, link = link.split(":")
+    typ, link = link.split(":", 1)
     result = func(typ, link)
     assert result.authors
     data = serialize(Paper, result)
@@ -71,8 +83,14 @@ def test_refine(func, link, data_regression):
 @pytest.mark.parametrize(
     ["func", "link"],
     [
+        # Arxiv not indexed on CrossRef
         (crossref, "doi:10.48550/arXiv.2206.08164"),
+        # DBLP mirrors Arxiv, we're not interested
         (dblp, "dblp:conf/corr/icml/LachapelleDMMBL23"),
+        # We need the title to match exactly, CrossRef does not have this one
+        (crossref_title, "title:Attention is All You Need"),
+        # We need the title to match exactly
+        (openalex_title, "title:Pre-training of Deep Bidirectional"),
     ],
 )
 def test_ignored_links(func, link):

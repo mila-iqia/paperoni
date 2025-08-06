@@ -25,7 +25,7 @@ def dblp(type: Literal["dblp"], link: str):
     extra_links = []
     if ee and ee.text.startswith("https://doi.org/"):
         doi = ee.text.replace("https://doi.org/", "")
-        extra_links = [Link(type="doi", link=doi)]
+        extra_links = [Link(type="doi", link=doi.lower())]
     elif ee:
         extra_links = [Link(type="html", link=ee.text)]
     return Paper(
