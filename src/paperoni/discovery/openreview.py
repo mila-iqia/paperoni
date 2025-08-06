@@ -19,6 +19,7 @@ from ..model import (
     Venue,
     VenueType,
 )
+from ..model.focus import Focus, Focuses
 from .base import Discoverer
 
 
@@ -450,8 +451,22 @@ class OpenReview(Discoverer):
         block_size: int = 100,
         # Maximum number of results to return
         limit: int = 10000,
+        # A list of focuses
+        focuses: Focuses = None,
     ):
         """Query OpenReview"""
+        if focuses:
+            for focus in focuses.focuses:
+                match focus:
+                    case Focus(drive_discovery=False):
+                        continue
+                    case Focus(type="author_openreview", name=aid):
+                        yield from self.query(
+                            author_id=aid,
+                            title=title,
+                        )
+            return
+
         params = {
             "content": {},
             "limit": min(block_size or limit, limit),

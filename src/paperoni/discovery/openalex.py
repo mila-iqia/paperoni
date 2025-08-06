@@ -18,6 +18,7 @@ from ..model.classes import (
     Venue,
     VenueType,
 )
+from ..model.focus import Focus, Focuses
 from ..utils import QueryError, link_generators as LINK_GENERATORS
 from .base import Discoverer
 
@@ -325,8 +326,29 @@ class OpenAlex(Discoverer):
         # If specified, display debug info
         # [alias: -v]
         verbose: bool = False,
+        # A list of focuses
+        focuses: Focuses = None,
     ):
         """Query OpenAlex for works."""
+        if focuses:
+            for focus in focuses.focuses:
+                match focus:
+                    case Focus(drive_discovery=False):
+                        continue
+                    case Focus(type="author", name=name):
+                        yield from self.query(
+                            author=name,
+                            institution=institution,
+                            title=title,
+                        )
+                    case Focus(type="institution", name=name):
+                        yield from self.query(
+                            author=author,
+                            institution=name,
+                            title=title,
+                        )
+            return
+
         if verbose and self.mailto:
             print("[openalex: using polite pool]")
         qm = OpenAlexQueryManager(mailto=self.mailto)

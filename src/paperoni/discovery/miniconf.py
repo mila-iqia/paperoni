@@ -18,6 +18,7 @@ from ..model.classes import (
     Venue,
     VenueType,
 )
+from ..model.focus import Focuses
 from .base import Discoverer
 
 conference_urls = {
@@ -178,6 +179,8 @@ class MiniConf(Discoverer):
         cache: bool = True,
         # Whether to raise an error if a paper cannot be converted
         error_policy: ErrorPolicy = ErrorPolicy.LOG,
+        # A list of focuses
+        focuses: Focuses = None,
     ):
         """Query conference papers as JSON"""
         # Get the base URL for the conference, defaulting to conference.cc if not found

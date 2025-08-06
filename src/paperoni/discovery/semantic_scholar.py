@@ -17,6 +17,7 @@ from ..model import (
     Venue,
     VenueType,
 )
+from ..model.focus import Focus, Focuses
 from .base import Discoverer, QueryError
 
 external_ids_mapping = {
@@ -306,8 +307,21 @@ class SemanticScholar(Discoverer):
         block_size: int = 100,
         # Maximal number of results to return
         limit: int = 10000,
+        # A list of focuses
+        focuses: Focuses = None,
     ):
         """Query semantic scholar"""
+        if focuses:
+            for focus in focuses.focuses:
+                match focus:
+                    case Focus(drive_discovery=False):
+                        continue
+                    case Focus(type="author", name=name):
+                        yield from self.query(
+                            author=name,
+                            title=title,
+                        )
+            return
 
         if isinstance(author, list):
             author = " ".join(author)
