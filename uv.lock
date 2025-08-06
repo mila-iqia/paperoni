@@ -486,7 +486,6 @@ dependencies = [
     { name = "requests-cache" },
     { name = "serieux" },
     { name = "unidecode" },
-    { name = "wrapt" },
 ]
 
 [package.dev-dependencies]
@@ -513,7 +512,6 @@ requires-dist = [
     { name = "requests-cache", specifier = ">=1.2.1" },
     { name = "serieux", specifier = ">=0.2.0" },
     { name = "unidecode", specifier = ">=1.4.0" },
-    { name = "wrapt", specifier = ">=1.17.2" },
 ]
 
 [package.metadata.requires-dev]

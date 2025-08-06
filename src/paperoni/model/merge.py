@@ -1,56 +1,17 @@
-from dataclasses import dataclass
 from difflib import SequenceMatcher
 from numbers import Number
-from typing import Any
 
-from ovld import Dataclass, Medley, call_next, ovld, recurse
-from ovld.dependent import HasKey
-from serieux import Context, Serieux
-from wrapt import ObjectProxy
+from ovld import Dataclass, call_next, ovld, recurse
+from serieux.features.comment import CommentProxy
 
 from ..model.classes import Institution, PaperAuthor
 from ..utils import associate, plainify
 
 
-@dataclass
-class Annotations:
-    quality: float
-
-
-class AugmentedProxy(ObjectProxy):
-    def __init__(self, wrapped, aug):
-        super().__init__(wrapped)
-        self._self_ann = aug
-
-    @property
-    def _(self):
-        return self._self_ann
-
-    def __repr__(self):  # pragma: no cover
-        return f"<{self.__wrapped__!r}>"
-
-
-@Serieux.extend
-class HandleProxy(Medley):
-    @ovld(priority=1)
-    def serialize(self, t: Any, obj: AugmentedProxy, ctx: Context):
-        return {
-            "$ann": recurse(Annotations, obj._self_ann, ctx),
-            "$value": recurse(t, obj.__wrapped__, ctx),
-        }
-
-    @ovld(priority=1)
-    def deserialize(self, t: Any, obj: HasKey["$ann"], ctx: Context):
-        return AugmentedProxy(
-            recurse(t, obj["$value"], ctx),
-            recurse(Annotations, obj["$ann"], ctx),
-        )
-
-
 def qual(x, q):
-    if isinstance(x, AugmentedProxy):
-        x = x.__wrapped__
-    return AugmentedProxy(x, Annotations(quality=q))
+    if isinstance(x, CommentProxy):
+        x = x._obj
+    return CommentProxy(x, q)
 
 
 @ovld
@@ -74,15 +35,15 @@ def merge(x: object, y: object, qx: Number, qy: Number):
 
 
 @ovld(priority=1)
-def merge(x: AugmentedProxy, y: object, qx: Number, qy: Number):
-    qx = x._.quality
-    return qual(recurse(x.__wrapped__, y, qx, qy), max(qx, qy))
+def merge(x: CommentProxy, y: object, qx: Number, qy: Number):
+    qx = x._
+    return qual(recurse(x._obj, y, qx, qy), max(qx, qy))
 
 
 @ovld
-def merge(x: object, y: AugmentedProxy, qx: Number, qy: Number):
-    qy = y._.quality
-    return qual(recurse(x, y.__wrapped__, qx, qy), max(qx, qy))
+def merge(x: object, y: CommentProxy, qx: Number, qy: Number):
+    qy = y._
+    return qual(recurse(x, y._obj, qx, qy), max(qx, qy))
 
 
 @ovld
@@ -110,8 +71,8 @@ def merge(x: list, y: list, qx: Number, qy: Number):
     elif not other:
         return main
     first = x[0]
-    if isinstance(first, AugmentedProxy):
-        first = first.__wrapped__
+    if isinstance(first, CommentProxy):
+        first = first._obj
     return recurse(x, y, qx, qy, type(first))
 
 
@@ -133,13 +94,13 @@ def merge(x: list, y: list, qx: Number, qy: Number, et: type[object]):
 
 
 @ovld(priority=1)
-def similarity(a: AugmentedProxy, b: object):
-    return recurse(a.__wrapped__, b)
+def similarity(a: CommentProxy, b: object):
+    return recurse(a._obj, b)
 
 
 @ovld
-def similarity(a: object, b: AugmentedProxy):
-    return recurse(a, b.__wrapped__)
+def similarity(a: object, b: CommentProxy):
+    return recurse(a, b._obj)
 
 
 @ovld

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from serieux import deserialize, serialize
+from serieux.features.comment import CommentRec
 
 from paperoni.model.classes import (
     Author,
@@ -35,10 +36,10 @@ def test_similarity_2():
 
 def test_augment():
     pt = Point(qual(3, 2.5), 4)
-    ser = serialize(Point, pt)
-    assert ser == {"x": {"$ann": {"quality": 2.5}, "$value": 3}, "y": 4}
-    deser = deserialize(Point, ser)
-    assert deser.x._.quality == 2.5
+    ser = serialize(CommentRec[Point, float], pt)
+    assert ser == {"x": {"$comment": 2.5, "$value": 3}, "y": 4}
+    deser = deserialize(CommentRec[Point, float], ser)
+    assert deser.x._ == 2.5
 
 
 def test_merge_dicts():
