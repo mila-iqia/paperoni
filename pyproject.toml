@@ -23,7 +23,6 @@ dependencies = [
     "openreview-py>=1.50.0",
     "requests-cache>=1.2.1",
     "lxml>=6.0.0",
-    "wrapt>=1.17.2",
     "unidecode>=1.4.0",
     "fake-useragent>=2.2.0",
     "cloudscraper>=1.2.71",
