@@ -300,6 +300,7 @@ class OpenAlexQueryManager:
 
 @dataclass
 class OpenAlex(Discoverer):
+    # Email associated with the query, for politeness
     mailto: str = field(default_factory=lambda: config.mailto)
 
     def query(
