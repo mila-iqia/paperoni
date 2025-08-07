@@ -12,6 +12,7 @@ from .classes import (
     Topic,
     Venue,
     VenueType,
+    rescore,
 )
 
 __all__ = [
@@ -28,4 +29,5 @@ __all__ = [
     "Topic",
     "Venue",
     "VenueType",
+    "rescore",
 ]

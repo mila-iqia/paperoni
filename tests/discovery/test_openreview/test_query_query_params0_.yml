@@ -63,6 +63,7 @@
     title: '3D Multi-bodies: Fitting Sets of Plausible 3D Human Models to Ambiguous
       Image Data'
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:XeqwZIbowL
@@ -122,6 +123,7 @@
         volume: NeurIPS 2020
     title: A Combinatorial Perspective on Transfer Learning
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:PGASukuVc_z
@@ -163,6 +165,7 @@
         volume: NeurIPS 2020
     title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:6KHVe4iMtIs
@@ -211,6 +214,7 @@
     title: A Contour Stochastic  Gradient Langevin Dynamics Algorithm for Simulations
       of Multi-modal Distributions
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:JrSYyibYFVa
@@ -264,4 +268,5 @@
         volume: NeurIPS 2020
     title: A Dynamical Central Limit Theorem for Shallow Neural Networks
     topics: []
+  score: 0.0
   update_key: null

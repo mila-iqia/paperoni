@@ -126,6 +126,7 @@
     - name: Voltage
     - name: Electrical engineering
     - name: Image (mathematics)
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W3143367551
@@ -280,6 +281,7 @@
     - name: Biochemistry
     - name: Chemistry
     - name: Gene
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W3092206109
@@ -444,6 +446,7 @@
     - name: Machine learning
     - name: Regularization (linguistics)
     - name: Artificial neural network
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W4319300975
@@ -603,6 +606,7 @@
     - name: Physics
     - name: Quantum mechanics
     - name: Operating system
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W4372260310
@@ -761,4 +765,5 @@
     - name: Programming language
     - name: Operating system
     - name: Philosophy
+  score: 0.0
   update_key: null

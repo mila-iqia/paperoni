@@ -149,6 +149,7 @@
     - name: Management
     - name: Economics
     - name: Operating system
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W2963096987
@@ -368,6 +369,7 @@
     - name: Chemistry
     - name: Image (mathematics)
     - name: Gene
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W2267635276
@@ -494,6 +496,7 @@
     - name: Quantum mechanics
     - name: Quantum
     - name: Programming language
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W2962883855
@@ -632,6 +635,7 @@
     - name: Financial economics
     - name: Economics
     - name: Operating system
+  score: 0.0
   update_key: null
 - info: {}
   key: openalex:W2218318129
@@ -765,4 +769,5 @@
     - name: Law
     - name: Composite material
     - name: Operating system
+  score: 0.0
   update_key: null

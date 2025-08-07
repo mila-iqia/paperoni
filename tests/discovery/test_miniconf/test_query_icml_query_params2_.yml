@@ -107,6 +107,7 @@
     title: A Computational Framework for Solving Wasserstein Lagrangian Flows
     topics:
     - name: Probabilistic Methods
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:icml:a6155b0da06d1ad154ad2d039d1fadf4
@@ -237,6 +238,7 @@
     title: A Distributional Analogue to the Successor Representation
     topics:
     - name: Reinforcement Learning->Everything Else
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:icml:285da2198b2b496c9d447cc4ac6b0734
@@ -325,6 +327,7 @@
         volume: null
     title: A Persuasive Approach to Combating Misinformation
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:icml:d465f14a648b3d0a1faa6f447e526c60
@@ -446,6 +449,7 @@
     title: A Sparsity Principle for Partially Observable Causal Representation Learning
     topics:
     - name: Miscellaneous Aspects of Machine Learning->Causality
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:icml:f2c5b1f06bfe59954cb2a56858c2ed98
@@ -532,4 +536,5 @@
     title: A Tensor Decomposition Perspective on Second-order RNNs
     topics:
     - name: Deep Learning->Sequential Models, Time series
+  score: 0.0
   update_key: null

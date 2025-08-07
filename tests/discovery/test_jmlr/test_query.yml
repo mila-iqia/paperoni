@@ -64,6 +64,7 @@
         volume: null
     title: Benchmarking Graph Neural Networks
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: jmlr:vv24:gflownet_foundations
@@ -131,4 +132,5 @@
         volume: null
     title: GFlowNet Foundations
     topics: []
+  score: 0.0
   update_key: null

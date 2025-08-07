@@ -217,3 +217,10 @@ class PaperInfo:
     update_key: str = None
     info: dict[str, JSON] = field(default_factory=dict)
     acquired: datetime = field(default_factory=datetime.now)
+    score: float = 0.0
+
+
+def rescore(stream, score):
+    for pinfo in stream:
+        pinfo.score = score
+        yield pinfo

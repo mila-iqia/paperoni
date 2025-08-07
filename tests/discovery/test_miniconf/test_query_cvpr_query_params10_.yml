@@ -71,6 +71,7 @@
     title: Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance
       Visio-Linguistic Compositional Understanding
     topics: []
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:cvpr:1170017b40d1ba28394ebc44158dae8a
@@ -160,4 +161,5 @@
         volume: null
     title: Overcoming Generic Knowledge Loss with Selective Parameter Update
     topics: []
+  score: 0.0
   update_key: null

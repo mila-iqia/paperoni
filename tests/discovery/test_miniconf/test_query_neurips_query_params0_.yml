@@ -99,6 +99,7 @@
     title: A Foundation Model for Zero-shot Logical Query Reasoning
     topics:
     - name: Graph Neural Networks
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:neurips:2f10158c59d8ce7d40687769eb8e0424
@@ -203,6 +204,7 @@
       Learning
     topics:
     - name: Reinforcement Learning->Everything Else
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:neurips:8d97f450424ddf6448b7efe4159d2aa6
@@ -284,6 +286,7 @@
     title: Adaptive Exploration for Data-Efficient General Value Function Evaluations
     topics:
     - name: Reinforcement Learning->Everything Else
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:neurips:6e2d5d50a943a0e0d738377f51011685
@@ -504,6 +507,7 @@
       and control
     topics:
     - name: Generative Models->Diffusion models
+  score: 0.0
   update_key: null
 - info: {}
   key: miniconf:neurips:76a271c64a315732aa56eeb7277a63d4
@@ -600,4 +604,5 @@
       Scale
     topics:
     - name: Theory->Reinforcement Learning and Planning
+  score: 0.0
   update_key: null
