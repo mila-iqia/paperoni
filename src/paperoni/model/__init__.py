@@ -14,6 +14,8 @@ from .classes import (
     VenueType,
     rescore,
 )
+from .focus import Focus, Focuses, Scored, Top
+from .merge import PaperWorkingSet
 
 __all__ = [
     "Author",
@@ -30,4 +32,9 @@ __all__ = [
     "Venue",
     "VenueType",
     "rescore",
+    "PaperWorkingSet",
+    "Focus",
+    "Focuses",
+    "Top",
+    "Scored",
 ]

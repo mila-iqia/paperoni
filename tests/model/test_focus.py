@@ -1,7 +1,7 @@
 from serieux import deserialize, serialize
 
 from paperoni.model.classes import Institution, Paper, PaperAuthor, PaperInfo
-from paperoni.model.focus import Focus, Focuses, Top
+from paperoni.model.focus import Focus, Focuses, Scored, Top
 
 
 def test_focus_scoring():
@@ -117,14 +117,15 @@ def test_focuses_top():
 
     top_2 = focuses.top(papers, 2)
     assert len(top_2) == 2
-    assert top_2[0].paper.title == "Paper from Charlie"
-    assert top_2[1].paper.title == "Paper from Alice"
+    fst, snd = list(top_2)
+    assert fst.value.paper.title == "Paper from Charlie"
+    assert snd.value.paper.title == "Paper from Alice"
 
 
 def _top(n, key, elems):
-    t = Top(n=n, key=key)
-    t.add_all(elems)
-    return t
+    t = Top(n)
+    t.add_all(Scored(key(x), x) for x in elems)
+    return [x.value for x in t]
 
 
 def test_top():
@@ -138,17 +139,41 @@ def test_top():
 
 
 def test_top_incremental():
-    strs = "This is a delightful string".split()
-    t = _top(3, len, strs)
-    assert t == ["delightful", "string", "This"]
-    t.add_all(["footstool"])
-    assert t == ["delightful", "footstool", "string"]
+    ints = [5, 1, 4, 9, 13]
+    t = Top(3)
+    t.add_all(ints)
+    assert list(t) == [13, 9, 5]
+    t.add_all([12, -1])
+    assert list(t) == [13, 12, 9]
 
 
 def test_top_resort():
-    strs = [[x] for x in "This is a delightful string".split()]
-    t = _top(3, (lambda x: len(x[0])), strs)
-    assert t == [["delightful"], ["string"], ["This"]]
-    t[1][0] = "supercalifragilisticexpialidocious"
+    strs = [Scored(len(x), x) for x in "This is a delightful string".split()]
+    t = Top(3, strs)
+    assert [x.value for x in t] == ["delightful", "string", "This"]
+    strs[4].score = 150
+    strs[4].value = "supercalifragilisticexpialidocious"
     t.resort()
-    assert t == [["supercalifragilisticexpialidocious"], ["delightful"], ["This"]]
+    assert [x.value for x in t] == [
+        "supercalifragilisticexpialidocious",
+        "delightful",
+        "This",
+    ]
+
+
+def test_serialization():
+    strs = [Scored(len(x), x) for x in "This is a delightful string".split()]
+    t = Top(3, strs)
+    expected = {
+        "n": 3,
+        "entries": [
+            {"score": 4.0, "value": "This"},
+            {"score": 6.0, "value": "string"},
+            {"score": 10.0, "value": "delightful"},
+        ],
+        "drop_zero": True,
+    }
+    assert serialize(Top[Scored[str]], t) == expected
+    deser = deserialize(Top[Scored[str]], expected)
+    assert isinstance(deser, Top)
+    assert deser == t

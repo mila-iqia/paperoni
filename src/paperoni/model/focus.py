@@ -1,11 +1,12 @@
 import re
-from bisect import bisect_left
 from dataclasses import dataclass, field, replace
+from heapq import heapify, heappush, heappushpop
 
 from ovld import ovld
 
 from ..utils import mostly_latin
 from .classes import Paper, PaperAuthor, PaperInfo
+from .merge import PaperWorkingSet
 
 
 @dataclass
@@ -64,6 +65,10 @@ class Focuses:
         return self.score(p.paper)
 
     @ovld
+    def score(self, p: PaperWorkingSet):
+        return self.score(p.current)
+
+    @ovld
     def score(self, p: Paper):
         if not mostly_latin(p.title):
             return 0.0
@@ -80,30 +85,51 @@ class Focuses:
         ]
         return combine([name_score, *iscores])
 
-    def top(self, pinfos, n, skip_zero=True):
-        t = Top(n, self.score, skip_zero=skip_zero)
-        t.add_all(pinfos)
+    def top(self, pinfos, n, drop_zero=True):
+        t = Top(n, drop_zero=drop_zero)
+        for p in pinfos:
+            scored = Scored(self.score(p), p)
+            t.add(scored)
         return t
 
 
-class Top(list):
-    def __init__(self, n, key, skip_zero=True):
-        self.n = n
-        self.key_func = key
-        self.key = lambda x: -key(x)
-        self.skip_zero = skip_zero
+@dataclass(order=True)
+class Scored[T]:
+    score: float
+    value: T = field(compare=False)
+
+    def __bool__(self):
+        return self.score != 0
+
+
+@dataclass
+class Top[T]:
+    n: int
+    entries: list[T] = field(default_factory=list)
+    drop_zero: bool = True
+
+    def __post_init__(self):
+        xs, self.entries = self.entries, []
+        self.add_all(xs)
 
     def add(self, x):
-        k = self.key(x)
-        if self.skip_zero and k == 0:
+        if self.drop_zero and not x:
             return
-        ins = bisect_left(self, k, key=self.key)
-        self.insert(ins, x)
-        del self[self.n :]
+        if len(self.entries) >= self.n:
+            heappushpop(self.entries, x)
+        else:
+            heappush(self.entries, x)
 
     def add_all(self, elems):
         for elem in elems:
             self.add(elem)
 
     def resort(self):
-        self.sort(key=self.key)
+        self.entries = [e for e in self.entries if e]
+        heapify(self.entries)
+
+    def __len__(self):
+        return len(self.entries)
+
+    def __iter__(self):
+        yield from sorted(self.entries, reverse=True)

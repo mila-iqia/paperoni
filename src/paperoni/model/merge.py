@@ -1,11 +1,22 @@
+from dataclasses import dataclass
 from difflib import SequenceMatcher
 from numbers import Number
 
 from ovld import Dataclass, call_next, ovld, recurse
 from serieux.features.comment import CommentProxy
 
-from ..model.classes import Institution, PaperAuthor
 from ..utils import associate, plainify
+from .classes import Institution, Paper, PaperAuthor, PaperInfo
+
+
+@dataclass
+class PaperWorkingSet:
+    current: Paper
+    collected: list[PaperInfo]
+
+    def add(self, p: PaperInfo):
+        self.collected.append(p)
+        self.current = merge(self.current, p.paper)
 
 
 def qual(x, q):
