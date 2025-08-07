@@ -4,7 +4,7 @@ import textwrap
 from blessed import Terminal
 from ovld import ovld, recurse
 
-from .model import Author, DatePrecision, Paper, PaperInfo, Venue
+from .model import Author, DatePrecision, Paper, PaperInfo, Scored, Venue
 from .utils import expand_links_dict
 
 T = Terminal()
@@ -25,6 +25,11 @@ def expand_links(links):
     return [
         (x["type"], x.get("url", None) or x["link"]) for x in expand_links_dict(links)
     ]
+
+
+@ovld
+def display(s: Scored):
+    recurse(s.value)
 
 
 @ovld
