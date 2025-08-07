@@ -46,7 +46,7 @@ class PDF:
     def __post_init__(self):
         if self.hash is None:
             self.hash = hashlib.sha256(str(self.source).encode()).hexdigest()
-        self.directory = config.data_path / "pdf" / self.hash
+        self.directory = (config.data_path / "pdf" / self.hash).resolve()
         self.meta_path = self.directory / "meta.yaml"
         self.pdf_path = self.directory / "fulltext.pdf"
 
@@ -64,7 +64,7 @@ class PDF:
         dump(PDF, self, dest=self.meta_path)
 
     def clear(self):
-        assert self.directory.resolve().is_relative_to(config.data_path.resolve())
+        assert self.directory.is_relative_to(config.data_path.resolve())
         shutil.rmtree(self.directory, ignore_errors=True)
 
     def fetch(self):
@@ -74,6 +74,14 @@ class PDF:
                 url=self.source.url,
                 filename=self.pdf_path,
             )
+            if not self.pdf_path.exists() or not self.pdf_path.is_file():
+                raise Exception(f"Downloaded file does not exist: {self.pdf_path}")
+            with open(self.pdf_path, "rb") as f:
+                header = f.read(5)
+                if header != b"%PDF-":
+                    raise Exception(
+                        f"File at {self.pdf_path} is not a valid PDF (missing %PDF- header)"
+                    )
             self.success = True
             return self.pdf_path
         except Exception as exc:
