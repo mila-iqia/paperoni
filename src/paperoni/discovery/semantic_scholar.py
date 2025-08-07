@@ -16,8 +16,10 @@ from ..model import (
     Topic,
     Venue,
     VenueType,
+    rescore,
 )
 from ..model.focus import Focus, Focuses
+from ..model.merge import qual
 from .base import Discoverer, QueryError
 
 external_ids_mapping = {
@@ -233,7 +235,7 @@ class SemanticScholar(Discoverer):
 
         paper = Paper(
             links=links,
-            authors=authors,
+            authors=qual(authors, -10.0),
             title=data["title"],
             abstract=data["abstract"] or "",
             # citation_count=data["citationCount"],
@@ -316,11 +318,8 @@ class SemanticScholar(Discoverer):
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
-                    case Focus(type="author", name=name):
-                        yield from self.query(
-                            author=name,
-                            title=title,
-                        )
+                    case Focus(type="author", name=name, score=score):
+                        yield from rescore(self.query(author=name, title=title), score)
             return
 
         if isinstance(author, list):

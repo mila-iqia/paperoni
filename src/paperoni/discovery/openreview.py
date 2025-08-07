@@ -19,6 +19,7 @@ from ..model import (
     Venue,
     VenueType,
 )
+from ..model.classes import rescore
 from ..model.focus import Focus, Focuses
 from .base import Discoverer
 
@@ -460,10 +461,13 @@ class OpenReview(Discoverer):
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
-                    case Focus(type="author_openreview", name=aid):
-                        yield from self.query(
-                            author_id=aid,
-                            title=title,
+                    case Focus(type="author_openreview", name=aid, score=score):
+                        yield from rescore(
+                            self.query(
+                                author_id=aid,
+                                title=title,
+                            ),
+                            score,
                         )
             return
 

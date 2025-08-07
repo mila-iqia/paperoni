@@ -17,6 +17,7 @@ from ..model.classes import (
     Topic,
     Venue,
     VenueType,
+    rescore,
 )
 from ..model.focus import Focus, Focuses
 from ..utils import QueryError, link_generators as LINK_GENERATORS
@@ -341,11 +342,14 @@ class OpenAlex(Discoverer):
                             institution=institution,
                             title=title,
                         )
-                    case Focus(type="institution", name=name):
-                        yield from self.query(
-                            author=author,
-                            institution=name,
-                            title=title,
+                    case Focus(type="institution", name=name, score=score):
+                        yield from rescore(
+                            self.query(
+                                author=author,
+                                institution=name,
+                                title=title,
+                            ),
+                            score,
                         )
             return
 

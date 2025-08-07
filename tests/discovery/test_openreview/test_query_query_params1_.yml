@@ -79,6 +79,7 @@
     - name: model merging
     - name: linear mode connectivity
     - name: deep learning
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:rYjYwuM6yH
@@ -146,6 +147,7 @@
     - name: orthogonal finetuning
     - name: batching
     - name: interpretability
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:0sJBW05a2W
@@ -234,6 +236,7 @@
     topics:
     - name: Point Cloud Registration
     - name: Focus and Matching
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:qRnmLJQHgx
@@ -363,6 +366,7 @@
     - name: foundation models
     - name: generative models
     - name: computer vision
+  score: 0.0
   update_key: null
 - info: {}
   key: openreview:9f5tOXKoMC
@@ -453,4 +457,5 @@
     - name: Data unbalancing
     - name: Data denoising
     - name: Domain adaptation
+  score: 0.0
   update_key: null

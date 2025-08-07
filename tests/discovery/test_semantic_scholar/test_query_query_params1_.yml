@@ -66,6 +66,7 @@
     title: A Hierarchical Latent Variable Model for Data Visualization
     topics:
     - name: Computer Science
+  score: 0.0
   update_key: null
 - info: {}
   key: semantic_scholar:a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
@@ -172,6 +173,7 @@
       For Generating Weibo Comments
     topics:
     - name: Computer Science
+  score: 0.0
   update_key: null
 - info: {}
   key: semantic_scholar:7fc9d442f9019be17c008974018929135e81b476
@@ -237,4 +239,5 @@
     topics:
     - name: Mathematics
     - name: Medicine
+  score: 0.0
   update_key: null

@@ -85,6 +85,7 @@
     topics:
     - name: Computer Science
     - name: Medicine
+  score: 0.0
   update_key: null
 - info: {}
   key: semantic_scholar:b2283234d862b7da0f3fd7034624e3744154da44
@@ -1508,6 +1509,7 @@
     title: A community effort in SARS-CoV-2 drug discovery
     topics:
     - name: Medicine
+  score: 0.0
   update_key: null
 - info: {}
   key: semantic_scholar:9b1e7754b0a508b0ce324167acd1e0381824bd9a
@@ -1580,6 +1582,7 @@
     title: A hybrid coder for hidden Markov models using a recurrent neural networks
     topics:
     - name: Computer Science
+  score: 0.0
   update_key: null
 - info: {}
   key: semantic_scholar:c2c5f451c8109f3fccd233c28c639a70bf409f45
@@ -1708,6 +1711,7 @@
     topics:
     - name: Biology
     - name: Medicine
+  score: 0.0
   update_key: null
 - info: {}
   key: semantic_scholar:0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
@@ -1755,4 +1759,5 @@
         volume: '34'
     title: AI and Catastrophic Risk
     topics: []
+  score: 0.0
   update_key: null
