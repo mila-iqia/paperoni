@@ -653,7 +653,7 @@ releases:
     name: Magnetic Resonance in Medicine
     open: false
     peer_reviewed: false
-    publisher: John Wiley and Sons Inc.
+    publisher: null
     series: Magnetic Resonance in Medicine
     type: journal
     volume: null
