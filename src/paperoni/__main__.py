@@ -6,15 +6,17 @@ from typing import Annotated, Any, Literal
 
 import yaml
 from gifnoc import add_overlay, cli
-from serieux import Auto, Registered, TaggedUnion, serialize, singleton
+from serieux import Auto, Registered, TaggedUnion, deserialize, dump, serialize, singleton
 from serieux.features.tagset import FromEntryPoint
+
+from paperoni.model.focus import Focuses, Scored, Top
 
 from .config import config
 from .display import display, terminal_width
 from .fulltext.locate import locate_all
 from .fulltext.pdf import CachePolicies, get_pdf
 from .model import PaperInfo
-from .model.merge import merge_all
+from .model.merge import PaperWorkingSet, merge_all
 from .refinement import fetch_all
 from .utils import url_to_id
 
@@ -68,31 +70,29 @@ class Discover:
         self.format(papers)
 
 
-def locate(
-    # Reference to locate
-    # [positional]
-    ref: str,
-):
-    for url in locate_all(ref):
-        print(f"\033[36m[{url.info}]\033[0m {url.url}")
-
-
-def download(
-    # Reference to locate
-    # [positional]
-    # [nargs: +]
-    ref: list[str],
-    # Cache policy
-    # [alias: -p]
-    cache_policy: Literal["use", "use_best", "no_download", "force"] = "use",
-):
-    p = get_pdf(ref, cache_policy=getattr(CachePolicies, cache_policy.upper()))
-    print("Downloaded into:", p.pdf_path.resolve())
-
-
 @dataclass
 class Fulltext:
     """Download and process fulltext."""
+
+    def locate(
+        # Reference to locate
+        # [positional]
+        ref: str,
+    ):
+        for url in locate_all(ref):
+            print(f"\033[36m[{url.info}]\033[0m {url.url}")
+
+    def download(
+        # Reference to locate
+        # [positional]
+        # [nargs: +]
+        ref: list[str],
+        # Cache policy
+        # [alias: -p]
+        cache_policy: Literal["use", "use_best", "no_download", "force"] = "use",
+    ):
+        p = get_pdf(ref, cache_policy=getattr(CachePolicies, cache_policy.upper()))
+        print("Downloaded into:", p.pdf_path.resolve())
 
     run: TaggedUnion[Auto[locate], Auto[download]]
 
@@ -125,10 +125,70 @@ class Refine:
 
 
 @dataclass
+class Work:
+    """Discover and work on prospective papers."""
+
+    @dataclass
+    class Get:
+        """Get articles from various sources."""
+
+        command: Annotated[
+            Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
+        ]
+
+        def run(self, work):
+            focuses = deserialize(Focuses, work.focuses)
+            ex = work.exclusions and deserialize(set[str], work.exclusions)
+            if work.state.exists():
+                top = deserialize(Top[Scored[PaperWorkingSet]], work.state)
+            else:
+                top = Top(work.n)
+            for paper in self.command():
+                if ex and paper.key in ex:
+                    continue
+                scored = Scored(focuses.score(paper), PaperWorkingSet.make(paper))
+                top.add(scored)
+            dump(Top[Scored[PaperWorkingSet]], top, dest=work.state)
+
+    @dataclass
+    class View:
+        """View the articles in the workset."""
+
+        # Output format
+        format: Formatter = TerminalFormatter
+
+        def run(self, work):
+            top = deserialize(Top[Scored[PaperWorkingSet]], work.state)
+            papers = list(ws.value.current for ws in top)
+            self.format(papers)
+
+    # Command
+    command: TaggedUnion[Get, View]
+
+    # File containing the working set
+    # [alias: -w]
+    state: Path
+
+    # List of focuses
+    # [alias: -f]
+    focuses: Path
+
+    # Exclusion list
+    # [alias: -x]
+    exclusions: Path = None
+
+    # Number of papers to keep in the working set
+    n: int = 10
+
+    def run(self):
+        self.command.run(self)
+
+
+@dataclass
 class PaperoniInterface:
     """Paper database"""
 
-    command: TaggedUnion[Discover, Refine, Fulltext]
+    command: TaggedUnion[Discover, Refine, Fulltext, Work]
 
     def run(self):
         self.command.run()
