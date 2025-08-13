@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from numbers import Number
 
@@ -11,12 +11,21 @@ from .classes import Institution, Paper, PaperAuthor, PaperInfo
 
 @dataclass
 class PaperWorkingSet:
-    current: Paper
-    collected: list[PaperInfo]
+    current: Paper = None
+    collected: list[PaperInfo] = field(default_factory=list)
+
+    @classmethod
+    def make(cls, p: PaperInfo):
+        self = cls()
+        self.add(p)
+        return self
 
     def add(self, p: PaperInfo):
         self.collected.append(p)
-        self.current = merge(self.current, p.paper)
+        if self.current is None:
+            self.current = p.paper
+        else:
+            self.current = merge(self.current, p.paper)
 
 
 def qual(x, q):
