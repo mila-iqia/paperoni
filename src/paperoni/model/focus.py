@@ -2,6 +2,7 @@ import re
 from dataclasses import dataclass, field, replace
 from heapq import heapify, heappush, heappushpop
 
+from outsight import give
 from ovld import ovld
 
 from ..utils import mostly_latin
@@ -62,7 +63,9 @@ class Focuses:
 
     @ovld
     def score(self, p: PaperInfo):
-        return self.score(p.paper)
+        score = self.score(p.paper)
+        give(score=score)
+        return score
 
     @ovld
     def score(self, p: PaperWorkingSet):
@@ -89,6 +92,7 @@ class Focuses:
         t = Top(n, drop_zero=drop_zero)
         for p in pinfos:
             scored = Scored(self.score(p), p)
+            give(scored=scored)
             t.add(scored)
         return t
 

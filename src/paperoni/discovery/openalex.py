@@ -104,7 +104,7 @@ class OpenAlexQueryManager:
         if page is None:
             page = 1
         if per_page is None:
-            per_page = 25
+            per_page = 100
         while True:
             local_params = {"page": page, "per-page": per_page, **params}
             results = self._evaluate(path, **local_params)

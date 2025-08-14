@@ -11,11 +11,11 @@ import requests
 import requests_cache
 from eventlet.timeout import Timeout
 from fake_useragent import UserAgent
+from outsight import give
 from ovld import ovld
 from requests import HTTPError, Session
 from requests.exceptions import RequestException
 from serieux import TaggedSubclass
-from tqdm import tqdm
 
 ua = UserAgent()
 
@@ -85,15 +85,14 @@ class Fetcher:
         print(f"Downloading {url}")
         r = self.get(url, stream=True, **kwargs)
         r.raise_for_status()
-        total = int(r.headers.get("content-length") or "1024")
+        total = int(r.headers.get("content-length") or 1024**2)
+        sofar = 0
         with open(filename, "wb") as f:
-            with tqdm(total=total) as progress:
-                for chunk in iter_with_timeout(
-                    r, chunk_size=max(total // 100, 1), timeout=5
-                ):
-                    f.write(chunk)
-                    f.flush()
-                    progress.update(len(chunk))
+            for chunk in iter_with_timeout(r, chunk_size=max(total // 100, 1), timeout=5):
+                f.write(chunk)
+                f.flush()
+                sofar += len(chunk)
+                give(progress=(Path(url).name, sofar, total))
         print(f"Saved {filename}")
 
     def read(self, url, format=None, cache_into=None, **kwargs):
@@ -101,6 +100,7 @@ class Fetcher:
             content = cache_into.read_text()
         else:
             resp = self.get(url, **kwargs)
+            give(url=url, params=kwargs.get("params", {}), response=resp)
             resp.raise_for_status()
             if resp.encoding == resp.apparent_encoding:
                 content = resp.text

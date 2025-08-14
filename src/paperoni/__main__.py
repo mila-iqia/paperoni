@@ -6,9 +6,11 @@ from typing import Annotated, Any, Literal
 
 import yaml
 from gifnoc import add_overlay, cli
+from outsight import give, outsight
 from serieux import Auto, Registered, TaggedUnion, deserialize, dump, serialize, singleton
 from serieux.features.tagset import FromEntryPoint
 
+from paperoni.dash import History
 from paperoni.model.focus import Focuses, Scored, Top
 
 from .config import config
@@ -50,12 +52,20 @@ class TerminalFormatter(Formatter):
 
 
 @dataclass
-class Discover:
-    """Discover papers from various sources."""
-
+class Productor:
     command: Annotated[
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
+
+    def iterate(self):
+        for p in self.command():
+            give(discover=p)
+            yield p
+
+
+@dataclass
+class Discover(Productor):
+    """Discover papers from various sources."""
 
     # Output format
     format: Formatter = TerminalFormatter
@@ -64,7 +74,7 @@ class Discover:
     top: int = 0
 
     def run(self):
-        papers = self.command()
+        papers = self.iterate()
         if self.top:
             papers = config.focuses.top(n=self.top, pinfos=papers)
         self.format(papers)
@@ -129,12 +139,8 @@ class Work:
     """Discover and work on prospective papers."""
 
     @dataclass
-    class Get:
+    class Get(Productor):
         """Get articles from various sources."""
-
-        command: Annotated[
-            Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
-        ]
 
         def run(self, work):
             focuses = deserialize(Focuses, work.focuses)
@@ -143,10 +149,10 @@ class Work:
                 top = deserialize(Top[Scored[PaperWorkingSet]], work.state)
             else:
                 top = Top(work.n)
-            for paper in self.command():
-                if ex and paper.key in ex:
+            for pinfo in self.iterate():
+                if ex and pinfo.key in ex:
                     continue
-                scored = Scored(focuses.score(paper), PaperWorkingSet.make(paper))
+                scored = Scored(focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 top.add(scored)
             dump(Top[Scored[PaperWorkingSet]], top, dest=work.state)
 
@@ -195,13 +201,51 @@ class PaperoniInterface:
 
 
 def main():
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--config", default=None)
-    args, remaining = parser.parse_known_args()
-    if args.config:
-        add_overlay(Path(args.config))
-    command = cli(field="paperoni.cli", type=PaperoniInterface, argv=remaining)
-    command.run()
+    @outsight.add
+    async def show_progress(given, dash):
+        async for name, sofar, total in given["progress"]:
+            dash.add_progress(name, sofar, total)
+
+    @outsight.add
+    async def show_paper_stats(given, dash):
+        async for group in given["discover"].roll(5, partial=True):
+            values = [f"{pinfo.paper.title}" for pinfo in group]
+            dash["titles"] = History(values)
+
+    @outsight.add
+    async def show_requests(given, dash):
+        async for group in given["url", "params", "response"].roll(5, partial=True):
+            values = [
+                f"[{resp.status_code}] {req} {params or ''}"
+                for req, params, resp in group
+            ]
+            dash["request"] = History(values)
+
+    @outsight.add
+    async def show_score_stats(given, dash):
+        min_score = None
+        max_score = None
+        count = 0
+        async for score in given["score"]:
+            if score == 0:
+                continue
+            count += 1
+            if min_score is None or score < min_score:
+                min_score = score
+            if max_score is None or score > max_score:
+                max_score = score
+            dash["score"] = (
+                f"{score}   [bold green]max: {max_score}[/bold green]   [bold blue]count: {count}[/bold blue]"
+            )
+
+    with outsight:
+        parser = argparse.ArgumentParser(add_help=False)
+        parser.add_argument("--config", default=None)
+        args, remaining = parser.parse_known_args()
+        if args.config:
+            add_overlay(Path(args.config))
+        command = cli(field="paperoni.cli", type=PaperoniInterface, argv=remaining)
+        command.run()
 
 
 if __name__ == "__main__":
