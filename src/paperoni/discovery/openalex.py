@@ -341,6 +341,10 @@ class OpenAlex(Discoverer):
                             author=name,
                             institution=institution,
                             title=title,
+                            page=page,
+                            per_page=per_page,
+                            limit=limit,
+                            verbose=verbose,
                         )
                     case Focus(type="institution", name=name, score=score):
                         yield from rescore(
@@ -348,6 +352,10 @@ class OpenAlex(Discoverer):
                                 author=author,
                                 institution=name,
                                 title=title,
+                                page=page,
+                                per_page=per_page,
+                                limit=limit,
+                                verbose=verbose,
                             ),
                             score,
                         )
