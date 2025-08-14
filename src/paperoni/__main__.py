@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal
 
 import yaml
 from gifnoc import add_overlay, cli
-from outsight import give, outsight
+from outsight import outsight, send
 from serieux import Auto, Registered, TaggedUnion, deserialize, dump, serialize, singleton
 from serieux.features.tagset import FromEntryPoint
 
@@ -59,7 +59,7 @@ class Productor:
 
     def iterate(self):
         for p in self.command():
-            give(discover=p)
+            send(discover=p)
             yield p
 
 
@@ -202,19 +202,19 @@ class PaperoniInterface:
 
 def main():
     @outsight.add
-    async def show_progress(given, dash):
-        async for name, sofar, total in given["progress"]:
+    async def show_progress(sent, dash):
+        async for name, sofar, total in sent["progress"]:
             dash.add_progress(name, sofar, total)
 
     @outsight.add
-    async def show_paper_stats(given, dash):
-        async for group in given["discover"].roll(5, partial=True):
+    async def show_paper_stats(sent, dash):
+        async for group in sent["discover"].roll(5, partial=True):
             values = [f"{pinfo.paper.title}" for pinfo in group]
             dash["titles"] = History(values)
 
     @outsight.add
-    async def show_requests(given, dash):
-        async for group in given["url", "params", "response"].roll(5, partial=True):
+    async def show_requests(sent, dash):
+        async for group in sent["url", "params", "response"].roll(5, partial=True):
             values = [
                 f"[{resp.status_code}] {req} {params or ''}"
                 for req, params, resp in group
@@ -222,11 +222,11 @@ def main():
             dash["request"] = History(values)
 
     @outsight.add
-    async def show_score_stats(given, dash):
+    async def show_score_stats(sent, dash):
         min_score = None
         max_score = None
         count = 0
-        async for score in given["score"]:
+        async for score in sent["score"]:
             if score == 0:
                 continue
             count += 1
