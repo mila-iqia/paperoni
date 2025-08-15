@@ -228,7 +228,9 @@ class OpenReview(Discoverer):
                 decision = decisions.pop()
                 return self.refine_decision(decision) or decision
 
-        if from_venue := self.refine_decision(self.get_content_field(note, "venue", "")):
+        if from_venue := self.refine_decision(
+            self.get_content_field(note, "venue", "")
+        ):
             return from_venue
 
         if from_vid := self.refine_decision(self.get_venue_id(note)):
@@ -425,7 +427,9 @@ class OpenReview(Discoverer):
 
     def _venues_from_wildcard(self, pattern):
         if isinstance(pattern, list):
-            return reduce(list.__add__, [self._venues_from_wildcard(p) for p in pattern])
+            return reduce(
+                list.__add__, [self._venues_from_wildcard(p) for p in pattern]
+            )
         elif "*" not in pattern:
             return [pattern]
         else:
@@ -457,15 +461,33 @@ class OpenReview(Discoverer):
     ):
         """Query OpenReview"""
         if focuses:
+            if limit is not None:
+                print(
+                    "The 'limit' parameter is ignored when 'focuses' are provided.",
+                    file=sys.stderr,
+                )
+
             for focus in focuses.focuses:
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
+                    case Focus(type="author", name=name, score=score):
+                        yield from rescore(
+                            self.query(
+                                venue=venue,
+                                author=name,
+                                title=title,
+                                block_size=block_size,
+                            ),
+                            score,
+                        )
                     case Focus(type="author_openreview", name=aid, score=score):
                         yield from rescore(
                             self.query(
+                                venue=venue,
                                 author_id=aid,
                                 title=title,
+                                block_size=block_size,
                             ),
                             score,
                         )
@@ -526,6 +548,8 @@ class OpenReviewDispatch(Discoverer):
         block_size: int = 100,
         # Maximum number of results to return
         limit: int = 100000,
+        # A list of focuses
+        focuses: Focuses = None,
     ):
         """Query OpenReview"""
         for api_version in self.api_versions:
@@ -538,6 +562,7 @@ class OpenReviewDispatch(Discoverer):
                 title=title,
                 block_size=block_size,
                 limit=limit,
+                focuses=focuses,
             )
 
             has_papers = False

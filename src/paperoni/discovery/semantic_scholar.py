@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import partial
@@ -314,12 +315,21 @@ class SemanticScholar(Discoverer):
     ):
         """Query semantic scholar"""
         if focuses:
+            if limit is not None:
+                print(
+                    "The 'limit' parameter is ignored when 'focuses' are provided.",
+                    file=sys.stderr,
+                )
+
             for focus in focuses.focuses:
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
                     case Focus(type="author", name=name, score=score):
-                        yield from rescore(self.query(author=name, title=title), score)
+                        yield from rescore(
+                            self.query(author=name, title=title, block_size=block_size),
+                            score,
+                        )
             return
 
         if isinstance(author, list):
@@ -345,4 +355,6 @@ class SemanticScholarConfig:
     api_key: str = None
 
 
-ss_config = gifnoc.define("paperoni.semantic_scholar", SemanticScholarConfig, defaults={})
+ss_config = gifnoc.define(
+    "paperoni.semantic_scholar", SemanticScholarConfig, defaults={}
+)

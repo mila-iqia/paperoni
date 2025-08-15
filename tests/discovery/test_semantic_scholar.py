@@ -5,6 +5,7 @@ from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.semantic_scholar import SemanticScholar
 from paperoni.model import PaperInfo
+from paperoni.model.focus import Focus, Focuses
 
 from ..utils import check_papers, filter_test_papers, split_on
 
@@ -89,12 +90,98 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                     set(split_on(query_params["title"].lower()))
                     & set(split_on(paper.paper.title.lower()))
                     for paper in papers
-                ), (
-                    f"Some papers' titles do not contain the words {query_params['title']=}"
-                )
+                ), f"Some papers' titles do not contain the words {query_params['title']=}"
                 match_found = True
 
     if not match_found:
         assert False, f"Unknown query parameter: {query_params=}"
 
     check_papers(data_regression, papers)
+
+
+def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
+    discoverer = SemanticScholar()
+    results = list(
+        discoverer.query(
+            author="Yoshua Bengio",
+            focuses=Focuses(
+                [
+                    Focus(
+                        type="author",
+                        name="Yoshua Bengio",
+                        score=1.0,
+                        drive_discovery=True,
+                    )
+                ]
+            ),
+            limit=1,
+        )
+    )
+
+    assert (
+        len(results) > 1
+    )  # As limit is ignored, up to default limit (currently 1000) matching results are returned
+    assert (
+        "The 'limit' parameter is ignored when 'focuses' are provided."
+        in capsys.readouterr().err.splitlines()
+    )
+
+
+def test_focuses_drive_discovery_false():
+    """Test that focuses with drive_discovery=False are skipped."""
+    discoverer = SemanticScholar()
+
+    # This should return no results because the focus is skipped
+    results = list(
+        discoverer.query(
+            focuses=Focuses([Focus(type="author", name="Yoshua Bengio", score=1.0)]),
+        )
+    )
+    assert len(results) == 0
+
+
+@pytest.mark.parametrize(
+    ["query_params", "focused_params"],
+    [
+        [
+            {
+                "author": "Yoshua Bengio",
+            },
+            {
+                "author": "Unknown Author",  # Focuses should take precedence over other parameters
+                "focuses": {
+                    "type": "author",
+                    "name": "Yoshua Bengio",
+                },
+            },
+        ],
+    ],
+)
+def test_focuses(query_params, focused_params):
+    """Test that focuses."""
+    discoverer = SemanticScholar()
+
+    focuses = Focuses(
+        [
+            Focus(
+                **focused_params.pop("focuses"),
+                score=10.0,
+                drive_discovery=True,
+            )
+        ]
+    )
+
+    # Query with focuses should return the same results as direct author query
+    direct_results = list(discoverer.query(**query_params))
+
+    focus_results = list(discoverer.query(**focused_params, focuses=focuses))
+
+    # Both should return the same papers
+    direct_papers = [p.paper.title for p in direct_results]
+    focus_papers = [p.paper.title for p in focus_results]
+
+    assert focus_papers == direct_papers
+
+    # All focus results should have the rescored score
+    for result in focus_results:
+        assert result.score == 10.0
