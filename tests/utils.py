@@ -3,7 +3,7 @@
 from typing import Generator, Iterable
 
 from pytest_regressions.data_regression import DataRegressionFixture
-from serieux import serialize
+from serieux import deserialize, serialize
 
 from paperoni.model import Institution, Paper, PaperInfo, Release, VenueType
 
@@ -38,6 +38,10 @@ def check_papers(data_regression: DataRegressionFixture, papers: list[PaperInfo]
     # papers = sort_keys(papers[:5])
     # [p.pop("acquired") for p in papers]
     papers = serialize(list[PaperInfo], papers[:5])
+
+    # make sure we can deserialize the papers
+    deserialize(list[PaperInfo], papers)
+
     [p.pop("acquired") for p in papers]
     data_regression.check(papers)
 

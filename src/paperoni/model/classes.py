@@ -175,7 +175,7 @@ class Venue:
     type: VenueType
     name: str
     series: str
-    date: date
+    date: datetime
     date_precision: DatePrecision
     volume: str = None
     publisher: str = None
