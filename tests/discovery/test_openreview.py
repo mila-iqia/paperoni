@@ -123,12 +123,11 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
     discoverer = OpenReviewDispatch()
     results = list(
         discoverer.query(
-            venue="NeurIPS.cc/2024/Conference",
             focuses=Focuses(
                 [
                     Focus(
-                        type="author",
-                        name="Yoshua Bengio",
+                        type="author_openreview",
+                        name="~Yoshua_Bengio1",
                         score=1.0,
                         drive_discovery=True,
                     )
@@ -166,26 +165,10 @@ def test_focuses_drive_discovery_false():
     [
         [
             {
-                "author": "Yoshua Bengio",
-                "venue": "NeurIPS.cc/2024/Conference",
-            },
-            {
-                "author": "Unknown Author",  # Focuses should take precedence over other parameters
-                "venue": "NeurIPS.cc/2024/Conference",
-                "focuses": {
-                    "type": "author",
-                    "name": "Yoshua Bengio",
-                },
-            },
-        ],
-        [
-            {
                 "author_id": "~Yoshua_Bengio1",
-                "venue": "NeurIPS.cc/2024/Conference",
             },
             {
                 "author_id": "~INVALID",  # Focuses should take precedence over other parameters
-                "venue": "NeurIPS.cc/2024/Conference",
                 "focuses": {
                     "type": "author_openreview",
                     "name": "~Yoshua_Bengio1",
