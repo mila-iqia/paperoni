@@ -471,16 +471,6 @@ class OpenReview(Discoverer):
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
-                    case Focus(type="author", name=name, score=score):
-                        yield from rescore(
-                            self.query(
-                                venue=venue,
-                                author=name,
-                                title=title,
-                                block_size=block_size,
-                            ),
-                            score,
-                        )
                     case Focus(type="author_openreview", name=aid, score=score):
                         yield from rescore(
                             self.query(
