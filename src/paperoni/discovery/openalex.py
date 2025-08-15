@@ -1,4 +1,5 @@
 import pprint
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, List, Optional
@@ -257,7 +258,8 @@ class OpenAlexQueryManager:
                         open=location["is_oa"],
                         # https://docs.openalex.org/api-entities/works/work-object/location-object#version
                         peer_reviewed=(
-                            location["version"] in ("acceptedVersion", "publishedVersion")
+                            location["version"]
+                            in ("acceptedVersion", "publishedVersion")
                         ),
                     ),
                     status=(
@@ -332,19 +334,44 @@ class OpenAlex(Discoverer):
     ):
         """Query OpenAlex for works."""
         if focuses:
+            if limit is not None:
+                print(
+                    "The 'limit' parameter is ignored when 'focuses' are provided.",
+                    file=sys.stderr,
+                )
+            if any((page is not None, per_page is not None)):
+                print(
+                    "The 'page' and 'per_page' parameters will effectively be multiplied by the number of 'focuses' provided.",
+                    file=sys.stderr,
+                )
+
             for focus in focuses.focuses:
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
-                    case Focus(type="author", name=name):
-                        yield from self.query(
-                            author=name,
-                            institution=institution,
-                            title=title,
-                            page=page,
-                            per_page=per_page,
-                            limit=limit,
-                            verbose=verbose,
+                    case Focus(type="author", name=name, score=score):
+                        yield from rescore(
+                            self.query(
+                                author=name,
+                                institution=institution,
+                                title=title,
+                                page=page,
+                                per_page=per_page,
+                                verbose=verbose,
+                            ),
+                            score,
+                        )
+                    case Focus(type="author_openalex", name=aid, score=score):
+                        yield from rescore(
+                            self.query(
+                                author_id=aid,
+                                institution=institution,
+                                title=title,
+                                page=page,
+                                per_page=per_page,
+                                verbose=verbose,
+                            ),
+                            score,
                         )
                     case Focus(type="institution", name=name, score=score):
                         yield from rescore(
@@ -354,7 +381,6 @@ class OpenAlex(Discoverer):
                                 title=title,
                                 page=page,
                                 per_page=per_page,
-                                limit=limit,
                                 verbose=verbose,
                             ),
                             score,
