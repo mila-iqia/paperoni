@@ -117,7 +117,7 @@ def test_focuses_top():
 
     top_2 = focuses.top(papers, 2)
     assert len(top_2) == 2
-    fst, snd = list(top_2)
+    fst, snd = top_2
     assert fst.value.paper.title == "Paper from Charlie"
     assert snd.value.paper.title == "Paper from Alice"
 
