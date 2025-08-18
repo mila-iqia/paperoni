@@ -48,7 +48,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2020-11-13T00:00:00'
+        date: '2020-11-13'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2020/Conference
@@ -109,7 +109,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2020-11-13T00:00:00'
+        date: '2020-11-13'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2020/Conference
@@ -151,7 +151,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2020-11-13T00:00:00'
+        date: '2020-11-13'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2020/Conference
@@ -199,7 +199,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2020-11-13T00:00:00'
+        date: '2020-11-13'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2020/Conference
@@ -254,7 +254,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2020-11-13T00:00:00'
+        date: '2020-11-13'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2020/Conference

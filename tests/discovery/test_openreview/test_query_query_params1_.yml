@@ -62,7 +62,7 @@
       status: poster
       venue:
         aliases: []
-        date: '2024-09-25T00:00:00'
+        date: '2024-09-25'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2024/Conference
@@ -128,7 +128,7 @@
       status: poster
       venue:
         aliases: []
-        date: '2024-09-25T00:00:00'
+        date: '2024-09-25'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2024/Conference
@@ -220,7 +220,7 @@
       status: poster
       venue:
         aliases: []
-        date: '2024-09-25T00:00:00'
+        date: '2024-09-25'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2024/Conference
@@ -345,7 +345,7 @@
       status: poster
       venue:
         aliases: []
-        date: '2024-09-25T00:00:00'
+        date: '2024-09-25'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2024/Conference
@@ -437,7 +437,7 @@
       status: poster
       venue:
         aliases: []
-        date: '2024-09-25T00:00:00'
+        date: '2024-09-25'
         date_precision: 3
         links:
         - link: NeurIPS.cc/2024/Conference

@@ -70,7 +70,7 @@
       status: published
       venue:
         aliases: []
-        date: '2022-08-17T00:00:00'
+        date: '2022-08-17'
         date_precision: 3
         links: []
         name: Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial
@@ -162,7 +162,7 @@
       status: published
       venue:
         aliases: []
-        date: '2022-08-17T00:00:00'
+        date: '2022-08-17'
         date_precision: 3
         links: []
         name: Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial

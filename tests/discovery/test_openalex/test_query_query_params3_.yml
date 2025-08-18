@@ -14,7 +14,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -33,7 +33,7 @@
       display_name: Alessandro Sordoni
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: McGill University
       author:
         aliases: []
@@ -44,7 +44,7 @@
       display_name: Ryan Lowe
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: HEC Montréal
       author:
         aliases: []
@@ -57,7 +57,7 @@
       display_name: Laurent Charlin
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: McGill University
       author:
         aliases: []
@@ -70,7 +70,7 @@
       display_name: Joëlle Pineau
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -83,7 +83,7 @@
       display_name: Aaron Courville
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -117,7 +117,7 @@
       status: published
       venue:
         aliases: []
-        date: '2017-02-12T00:00:00'
+        date: '2017-02-12'
         date_precision: 3
         links:
         - link: https://doi.org/10.1609/aaai.v31i1.10983

@@ -1,5 +1,5 @@
 import traceback
-from datetime import datetime
+from datetime import date, datetime
 from traceback import print_exc
 
 from ..config import config
@@ -41,7 +41,7 @@ def parse_paper(entry):
             Release(
                 venue=Venue(
                     name=entry["container-title"],
-                    date=datetime(*map(int, entry["issued"]["date-parts"])),
+                    date=date(*map(int, entry["issued"]["date-parts"])),
                     date_precision=DatePrecision.day,
                     type=VenueType.unknown,
                     series=entry["container-title"],
