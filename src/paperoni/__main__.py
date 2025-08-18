@@ -1,6 +1,7 @@
 import argparse
 import json
 from dataclasses import dataclass
+from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Literal
 
@@ -143,18 +144,18 @@ class Work:
         """Get articles from various sources."""
 
         def run(self, work):
-            focuses = deserialize(Focuses, work.focuses)
+            focuses = deserialize(Focuses, work.focuses or config.focuses)
             ex = work.exclusions and deserialize(set[str], work.exclusions)
-            if work.state.exists():
-                top = deserialize(Top[Scored[PaperWorkingSet]], work.state)
-            else:
-                top = Top(work.n)
             for pinfo in self.iterate():
                 if ex and pinfo.key in ex:
                     continue
                 scored = Scored(focuses.score(pinfo), PaperWorkingSet.make(pinfo))
-                top.add(scored)
-            dump(Top[Scored[PaperWorkingSet]], top, dest=work.state)
+                work.top.add(scored)
+            dump(
+                Top[Scored[PaperWorkingSet]],
+                work.top,
+                dest=work.workfile or config.workfile,
+            )
 
     @dataclass
     class View:
@@ -164,20 +165,18 @@ class Work:
         format: Formatter = TerminalFormatter
 
         def run(self, work):
-            top = deserialize(Top[Scored[PaperWorkingSet]], work.state)
-            papers = list(ws.value.current for ws in top)
-            self.format(papers)
+            self.format(ws.value.current for ws in work.top)
 
     # Command
     command: TaggedUnion[Get, View]
 
     # File containing the working set
     # [alias: -w]
-    state: Path
+    workfile: Path = None
 
     # List of focuses
     # [alias: -f]
-    focuses: Path
+    focuses: Path = None
 
     # Exclusion list
     # [alias: -x]
@@ -185,6 +184,15 @@ class Work:
 
     # Number of papers to keep in the working set
     n: int = 10
+
+    @cached_property
+    def top(self):
+        workfile = self.workfile or config.workfile
+        if workfile.exists():
+            top = deserialize(Top[Scored[PaperWorkingSet]], workfile)
+        else:
+            top = Top(self.n)
+        return top
 
     def run(self):
         self.command.run(self)
