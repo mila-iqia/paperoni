@@ -1,7 +1,7 @@
 import pprint
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
 from typing import Dict, List, Optional
 
 from ..config import config
@@ -189,7 +189,7 @@ class OpenAlexQueryManager:
             release_locations = [data["primary_location"]]
 
         # We will use work publication date with primary location to set release
-        publication_date = datetime.fromisoformat(data["publication_date"])
+        publication_date = date.fromisoformat(data["publication_date"])
 
         # We will save open access url in paper links
         oa_url = data["open_access"]["oa_url"]
@@ -219,7 +219,7 @@ class OpenAlexQueryManager:
                         Institution(
                             name=author_inst["display_name"],
                             category=INSTITUTION_CATEGORY_MAPPING.get(
-                                author_inst["type"], "wat"
+                                author_inst["type"], InstitutionCategory.unknown
                             ),
                             aliases=[],
                         )

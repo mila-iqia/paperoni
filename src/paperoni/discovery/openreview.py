@@ -1,7 +1,7 @@
 import re
 import sys
 from dataclasses import dataclass, field as dc_field
-from datetime import datetime, timedelta
+from datetime import date, datetime
 from fnmatch import fnmatch
 from functools import reduce
 
@@ -27,7 +27,7 @@ from .base import Discoverer
 def extract_date(txt: str) -> dict | None:
     if isinstance(txt, int):
         return {
-            "date": datetime(txt, 1, 1),
+            "date": date(txt, 1, 1),
             "date_precision": DatePrecision.year,
         }
 
@@ -98,7 +98,7 @@ def extract_date(txt: str) -> dict | None:
                 results.setdefault("m", "Jan")
                 precision = DatePrecision.year
             return {
-                "date": datetime(
+                "date": date(
                     int(results["y"]),
                     stems.index(results["m"].lower()[:3]) + 1,
                     int(results["d"]),
@@ -303,16 +303,13 @@ class OpenReview(Discoverer):
                     venue_data["status"] = "published"
 
                 tstamp = note.pdate or note.odate or note.tcdate or note.tmdate
-                date = datetime.fromtimestamp(tstamp // 1000)
-                date -= timedelta(
-                    hours=date.hour, minutes=date.minute, seconds=date.second
-                )
+                the_date = date.fromtimestamp(tstamp // 1000)
                 precision = DatePrecision.day
                 if "year" in venue_data:
                     # Make sure that the year is correct
                     year = int(venue_data["year"])
-                    if date.year != year:
-                        date = datetime(year, 1, 1)
+                    if the_date.year != year:
+                        the_date = date(year, 1, 1)
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
 
@@ -330,7 +327,7 @@ class OpenReview(Discoverer):
                                     name=vid,
                                     series=venue_to_series(vid),
                                     volume=venue_data["venue"],
-                                    date=date,
+                                    date=the_date,
                                     date_precision=precision,
                                     links=[
                                         Link(

@@ -102,7 +102,7 @@ releases:
   status: unknown
   venue:
     aliases: []
-    date: '2017-01-01T00:00:00'
+    date: '2017-01-01'
     date_precision: 3
     links:
     - link: https://arxiv.org/abs/1706.03762

@@ -14,7 +14,7 @@ abstract: We introduce a new language representation model called BERT, which st
 authors:
 - affiliations:
   - aliases: []
-    category: wat
+    category: unknown
     name: Google (United States)
   author:
     aliases: []
@@ -25,7 +25,7 @@ authors:
   display_name: Jacob Devlin
 - affiliations:
   - aliases: []
-    category: wat
+    category: unknown
     name: Google (United States)
   author:
     aliases: []
@@ -38,7 +38,7 @@ authors:
   display_name: Ming‐Wei Chang
 - affiliations:
   - aliases: []
-    category: wat
+    category: unknown
     name: Google (United States)
   author:
     aliases: []
@@ -51,7 +51,7 @@ authors:
   display_name: Kenton Lee
 - affiliations:
   - aliases: []
-    category: wat
+    category: unknown
     name: Google (United States)
   author:
     aliases: []
@@ -79,7 +79,7 @@ releases:
   status: unknown
   venue:
     aliases: []
-    date: '2018-01-01T00:00:00'
+    date: '2018-01-01'
     date_precision: 3
     links:
     - link: https://arxiv.org/abs/1810.04805

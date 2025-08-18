@@ -1,6 +1,6 @@
 import math
 import re
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 
 from ..config import config
@@ -231,7 +231,7 @@ class MiniConf(Discoverer):
 
         # If no valid starttime found, use a default date
         if conference_date is None:
-            conference_date = datetime(year, 1, 1)
+            conference_date = date(year, 1, 1)
 
         def matches(paper):
             if not affiliation and not author:

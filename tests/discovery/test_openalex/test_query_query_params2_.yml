@@ -14,7 +14,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -33,7 +33,7 @@
       display_name: Alessandro Sordoni
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: McGill University
       author:
         aliases: []
@@ -44,7 +44,7 @@
       display_name: Ryan Lowe
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: HEC Montréal
       author:
         aliases: []
@@ -57,7 +57,7 @@
       display_name: Laurent Charlin
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: McGill University
       author:
         aliases: []
@@ -70,7 +70,7 @@
       display_name: Joëlle Pineau
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -83,7 +83,7 @@
       display_name: Aaron Courville
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -117,7 +117,7 @@
       status: published
       venue:
         aliases: []
-        date: '2017-02-12T00:00:00'
+        date: '2017-02-12'
         date_precision: 3
         links:
         - link: https://doi.org/10.1609/aaai.v31i1.10983
@@ -169,10 +169,10 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       - aliases: []
-        category: wat
+        category: unknown
         name: Concordia University
       author:
         aliases: []
@@ -183,7 +183,7 @@
       display_name: Devansh Arpit
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Jagiellonian University
       author:
         aliases: []
@@ -196,10 +196,10 @@
       display_name: Stanisław Jastrzȩbski
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       - aliases: []
-        category: wat
+        category: unknown
         name: Concordia University
       author:
         aliases: []
@@ -210,10 +210,10 @@
       display_name: Nicolas Ballas
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       - aliases: []
-        category: wat
+        category: unknown
         name: Concordia University
       author:
         aliases: []
@@ -226,7 +226,7 @@
       display_name: David Krueger
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: McGill University
       author:
         aliases: []
@@ -239,7 +239,7 @@
       display_name: Emmanuel Bengio
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of California, Berkeley
       author:
         aliases: []
@@ -250,7 +250,7 @@
       display_name: Maxinder S Kanwal
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Polytechnique Montréal
       author:
         aliases: []
@@ -263,7 +263,7 @@
       display_name: Tegan Maharaj
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of Bonn
       author:
         aliases: []
@@ -276,10 +276,10 @@
       display_name: Asja Fischer
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Canadian Institute for Advanced Research
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -292,10 +292,10 @@
       display_name: Aaron Courville
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       - aliases: []
-        category: wat
+        category: unknown
         name: Canadian Institute for Advanced Research
       author:
         aliases: []
@@ -308,10 +308,10 @@
       display_name: Yoshua Bengio
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       - aliases: []
-        category: wat
+        category: unknown
         name: Concordia University
       author:
         aliases: []
@@ -335,7 +335,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2017-08-06T00:00:00'
+        date: '2017-08-06'
         date_precision: 3
         links:
         - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
@@ -390,7 +390,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Technion – Israel Institute of Technology
       author:
         aliases: []
@@ -401,7 +401,7 @@
       display_name: Itay Hubara
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -412,7 +412,7 @@
       display_name: Matthieu Courbariaux
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Columbia University
       author:
         aliases: []
@@ -425,7 +425,7 @@
       display_name: Daniel Soudry
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Technion – Israel Institute of Technology
       author:
         aliases: []
@@ -436,7 +436,7 @@
       display_name: Ran El‐Yaniv
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -460,7 +460,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2016-02-08T00:00:00'
+        date: '2016-02-08'
         date_precision: 3
         links:
         - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
@@ -514,7 +514,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -525,7 +525,7 @@
       display_name: Iulian Vlad Serban
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -536,7 +536,7 @@
       display_name: Alessandro Sordoni
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -549,7 +549,7 @@
       display_name: Yoshua Bengio
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -562,7 +562,7 @@
       display_name: Aaron Courville
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: McGill University
       author:
         aliases: []
@@ -596,7 +596,7 @@
       status: published
       venue:
         aliases: []
-        date: '2016-03-05T00:00:00'
+        date: '2016-03-05'
         date_precision: 3
         links:
         - link: https://doi.org/10.1609/aaai.v30i1.9883
@@ -660,7 +660,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -671,7 +671,7 @@
       display_name: Salah Rifai
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -682,7 +682,7 @@
       display_name: Pascal Vincent
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -693,7 +693,7 @@
       display_name: Xavier Muller
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -706,7 +706,7 @@
       display_name: Xavier Glorot
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -730,7 +730,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2011-06-28T00:00:00'
+        date: '2011-06-28'
         date_precision: 3
         links:
         - link: https://icml.cc/2011/papers/455_icmlpaper.pdf

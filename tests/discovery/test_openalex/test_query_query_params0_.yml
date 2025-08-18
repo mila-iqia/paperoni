@@ -44,7 +44,7 @@
       display_name: Mirco Ravanelli
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Marche Polytechnic University
       author:
         aliases: []
@@ -68,7 +68,7 @@
       display_name: Mirko Bronzi
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of Rochester
       author:
         aliases: []
@@ -98,7 +98,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2021-05-13T00:00:00'
+        date: '2021-05-13'
         date_precision: 3
         links:
         - link: https://doi.org/10.1109/icassp39728.2021.9413901
@@ -148,7 +148,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Indian Institute of Technology Madras
       - aliases: []
         category: unknown
@@ -187,10 +187,10 @@
       display_name: François Grondin
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Ghent University
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Sherbrooke
       author:
         aliases: []
@@ -203,7 +203,7 @@
       display_name: Jenthe Thienpondt
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Ghent University
       author:
         aliases: []
@@ -214,7 +214,7 @@
       display_name: Brecht Desplanques
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Samsung (South Korea)
       author:
         aliases: []
@@ -254,7 +254,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2021-08-27T00:00:00'
+        date: '2021-08-27'
         date_precision: 3
         links:
         - link: https://doi.org/10.21437/interspeech.2021-941
@@ -328,7 +328,7 @@
       display_name: Meng Qu
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Massachusetts Institute of Technology
       author:
         aliases: []
@@ -341,7 +341,7 @@
       display_name: Kenji Kawaguchi
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Université de Montréal
       author:
         aliases: []
@@ -365,7 +365,7 @@
       display_name: Yoshua Bengio
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Aalto University
       author:
         aliases: []
@@ -422,7 +422,7 @@
       status: published
       venue:
         aliases: []
-        date: '2021-05-18T00:00:00'
+        date: '2021-05-18'
         date_precision: 3
         links:
         - link: https://doi.org/10.1609/aaai.v35i11.17203
@@ -470,7 +470,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Iran University of Science and Technology
       author:
         aliases: []
@@ -483,7 +483,7 @@
       display_name: Moein Heidari
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Iran University of Science and Technology
       author:
         aliases: []
@@ -496,7 +496,7 @@
       display_name: Amirhossein Kazerouni
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: Iran University of Science and Technology
       author:
         aliases: []
@@ -507,7 +507,7 @@
       display_name: Milad Soltany
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: RWTH Aachen University
       author:
         aliases: []
@@ -544,7 +544,7 @@
       display_name: Julien Cohen‐Adad
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of Regensburg
       - aliases: []
         category: unknown
@@ -577,7 +577,7 @@
       status: unknown
       venue:
         aliases: []
-        date: '2023-01-01T00:00:00'
+        date: '2023-01-01'
         date_precision: 3
         links:
         - link: https://doi.org/10.1109/wacv56688.2023.00614
@@ -646,7 +646,7 @@
       display_name: Yusong Wu
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of California, San Diego
       author:
         aliases: []
@@ -685,7 +685,7 @@
       display_name: Yuchen Hui
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of California, San Diego
       author:
         aliases: []
@@ -698,7 +698,7 @@
       display_name: Taylor Berg-Kirkpatrick
     - affiliations:
       - aliases: []
-        category: wat
+        category: unknown
         name: University of California, San Diego
       author:
         aliases: []
@@ -732,7 +732,7 @@
       status: published
       venue:
         aliases: []
-        date: '2023-05-05T00:00:00'
+        date: '2023-05-05'
         date_precision: 3
         links:
         - link: https://doi.org/10.1109/icassp49357.2023.10095969
