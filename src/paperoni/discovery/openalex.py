@@ -258,8 +258,7 @@ class OpenAlexQueryManager:
                         open=location["is_oa"],
                         # https://docs.openalex.org/api-entities/works/work-object/location-object#version
                         peer_reviewed=(
-                            location["version"]
-                            in ("acceptedVersion", "publishedVersion")
+                            location["version"] in ("acceptedVersion", "publishedVersion")
                         ),
                     ),
                     status=(

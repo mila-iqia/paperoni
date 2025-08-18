@@ -57,7 +57,9 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                         for aff in iter_affiliations(paper.paper)
                     )
                     for paper in papers
-                ), f"Some papers do not contain the institution {query_params['institution']=}"
+                ), (
+                    f"Some papers do not contain the institution {query_params['institution']=}"
+                )
                 match_found = True
 
             case "author":
@@ -82,7 +84,9 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                         ),
                         key=lambda x: x.paper.title,
                     )
-                ], "Querying by author ID should return the same papers as querying by author name"
+                ], (
+                    "Querying by author ID should return the same papers as querying by author name"
+                )
                 match_found = True
 
             case "title":
@@ -91,7 +95,9 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                     set(split_on(query_params["title"].lower()))
                     & set(split_on(paper.paper.title.lower()))
                     for paper in papers
-                ), f"Some papers' titles do not contain the words {query_params['title']=}"
+                ), (
+                    f"Some papers' titles do not contain the words {query_params['title']=}"
+                )
                 match_found = True
 
     if not match_found:
@@ -268,6 +274,4 @@ def test_focuses_multiple_focuses():
 
     # The last active focus is a duplicate of the first focus, so the first 10
     # results should be the same as the last 10 results
-    assert [p.paper.title for p in results][:10] == [p.paper.title for p in results][
-        20:
-    ]
+    assert [p.paper.title for p in results][:10] == [p.paper.title for p in results][20:]
