@@ -5,7 +5,6 @@ import gifnoc
 from serieux import TaggedSubclass
 
 from .get import Fetcher, RequestsFetcher
-from .model.focus import Focuses
 
 
 class Keys(dict):
@@ -20,7 +19,8 @@ class PaperoniConfig:
     mailto: str = ""
     api_keys: Keys[str, str] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
-    focuses: Focuses = field(default_factory=Focuses)
+    focuses: Path = None
+    workfile: Path = None
 
 
 config = gifnoc.define(
