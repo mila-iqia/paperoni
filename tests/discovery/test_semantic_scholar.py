@@ -90,7 +90,9 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                     set(split_on(query_params["title"].lower()))
                     & set(split_on(paper.paper.title.lower()))
                     for paper in papers
-                ), f"Some papers' titles do not contain the words {query_params['title']=}"
+                ), (
+                    f"Some papers' titles do not contain the words {query_params['title']=}"
+                )
                 match_found = True
 
     if not match_found:

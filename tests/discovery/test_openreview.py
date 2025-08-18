@@ -41,9 +41,9 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
             papers_per_version[api_version] = []
 
     if papers_per_version[1] and papers_per_version[2]:
-        assert (
-            False
-        ), f"The same papers are not expected to be in version 1 and 2 at the same time. Papers: {len(papers_per_version[1])=} {len(papers_per_version[2])=}"
+        assert False, (
+            f"The same papers are not expected to be in version 1 and 2 at the same time. Papers: {len(papers_per_version[1])=} {len(papers_per_version[2])=}"
+        )
 
     papers: list[PaperInfo] = sum(papers_per_version.values(), [])
 
@@ -55,7 +55,9 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
             openreview_dispatch.query(**query_params),
             key=lambda x: x.paper.title,
         )
-    ], f"Querying with OpenReview({api_versions=}) should return the same papers as querying with OpenReviewDispatch"
+    ], (
+        f"Querying with OpenReview({api_versions=}) should return the same papers as querying with OpenReviewDispatch"
+    )
 
     match_found = False
 
@@ -103,14 +105,18 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                         ),
                         key=lambda x: x.paper.title,
                     )
-                ], "Querying by author ID, at least for Yoshua Bengio, should return the same papers as querying by author name"
+                ], (
+                    "Querying by author ID, at least for Yoshua Bengio, should return the same papers as querying by author name"
+                )
                 match_found = True
 
             case "title":
                 assert all(
                     query_params["title"].lower() == paper.paper.title.lower()
                     for paper in papers
-                ), f"Some papers' titles do not contain the words {query_params['title']=}"
+                ), (
+                    f"Some papers' titles do not contain the words {query_params['title']=}"
+                )
                 match_found = True
 
     if not match_found:

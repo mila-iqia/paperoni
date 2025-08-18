@@ -228,9 +228,7 @@ class OpenReview(Discoverer):
                 decision = decisions.pop()
                 return self.refine_decision(decision) or decision
 
-        if from_venue := self.refine_decision(
-            self.get_content_field(note, "venue", "")
-        ):
+        if from_venue := self.refine_decision(self.get_content_field(note, "venue", "")):
             return from_venue
 
         if from_vid := self.refine_decision(self.get_venue_id(note)):
@@ -427,9 +425,7 @@ class OpenReview(Discoverer):
 
     def _venues_from_wildcard(self, pattern):
         if isinstance(pattern, list):
-            return reduce(
-                list.__add__, [self._venues_from_wildcard(p) for p in pattern]
-            )
+            return reduce(list.__add__, [self._venues_from_wildcard(p) for p in pattern])
         elif "*" not in pattern:
             return [pattern]
         else:

@@ -355,6 +355,4 @@ class SemanticScholarConfig:
     api_key: str = None
 
 
-ss_config = gifnoc.define(
-    "paperoni.semantic_scholar", SemanticScholarConfig, defaults={}
-)
+ss_config = gifnoc.define("paperoni.semantic_scholar", SemanticScholarConfig, defaults={})
