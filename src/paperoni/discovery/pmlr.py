@@ -88,6 +88,10 @@ class PMLR(Discoverer):
     ):
         """Query Proceedings of Machine Learning Research."""
         name = name and asciiify(name).lower()
+        if volume is None:
+            for v in self.list_volumes():
+                yield from self.query(v, name, cache, focuses)
+            return
         results = self.get_volume(volume, cache)
         for paper_info in results:
             try:
