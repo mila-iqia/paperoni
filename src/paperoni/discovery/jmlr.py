@@ -37,6 +37,10 @@ class JMLR(Discoverer):
         focuses: Focuses = None,
     ):
         """Query Journal of Machine Learning Research."""
+        if volume is None:
+            for v in self.list_volumes():
+                yield from self.query(v, name, cache, focuses)
+            return
         name = name and asciiify(name).lower()
         results = self.get_volume(volume, cache)
         for paper_info in results:
