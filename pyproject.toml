@@ -29,6 +29,7 @@ dependencies = [
     "eventlet>=0.40.1",
     "outsight>=0.0.2",
     "rich>=14.1.0",
+    "paperazzi>=0.0.6",
 ]
 
 [project.urls]
@@ -57,6 +58,11 @@ synth = "paperoni.discovery.synth:Synth"
 
 [project.entry-points."outsight.fixtures"]
 dash = "paperoni.dash:Dash"
+
+[project.optional-dependencies]
+vertexai = [
+    "paperazzi[vertexai]",
+]
 
 [tool.ruff]
 line-length = 90

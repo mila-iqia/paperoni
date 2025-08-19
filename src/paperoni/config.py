@@ -4,6 +4,7 @@ from pathlib import Path
 import gifnoc
 from serieux import TaggedSubclass
 
+from .model.focus import Focuses
 from .get import Fetcher, RequestsFetcher
 
 
@@ -13,14 +14,24 @@ class Keys(dict):
 
 
 @dataclass
+class PDFRefine:
+    model: str
+
+
+@dataclass
+class Refine:
+    pdf: PDFRefine = None
+
+
+@dataclass
 class PaperoniConfig:
     cache_path: Path = None
     data_path: Path = None
     mailto: str = ""
     api_keys: Keys[str, str] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
-    focuses: Path = None
-    workfile: Path = None
+    focuses: Focuses = field(default_factory=Focuses)
+    refine: Refine = None
 
 
 config = gifnoc.define(
