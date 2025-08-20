@@ -1,3 +1,4 @@
+import hashlib
 import json
 from dataclasses import dataclass, field
 from typing import Any, BinaryIO
@@ -67,17 +68,30 @@ class GenAIPrompt(Prompt):
     model: str
     client: genai.Client = field(default_factory=genai.Client)
 
+    @staticmethod
+    def _make_key(_, kwargs):
+        kwargs = {**{k: v for k, v in kwargs.items() if k not in ("client",)}}
+        for i, message in enumerate(kwargs.get("messages", [])):
+            message: Message
+            if message.type == "application/pdf":
+                kwargs["messages"][i] = Message(
+                    type=message.type,
+                    prompt=hashlib.sha256(message.content.read_bytes()).hexdigest(),
+                    args=message.args,
+                    kwargs=message.kwargs,
+                )
+
+        return _make_key(None, kwargs)
+
     @disk_store
     @disk_cache(
         serializer=ParsedResponseSerializer(content_type=None),
-        make_key=lambda _, kwargs: _make_key(
-            None,
-            {**{k: v for k, v in kwargs.items() if k not in ("client",)}},
-        ),
+        make_key=_make_key,
     )
     @staticmethod
     def prompt(
         client: genai.Client,
+        *,
         messages: list[Message],
         model: str,
         structured_model=None,
