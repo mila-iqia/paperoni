@@ -1,4 +1,5 @@
 import argparse
+import itertools
 import json
 from dataclasses import dataclass
 from functools import cached_property
@@ -8,20 +9,28 @@ from typing import Annotated, Any, Literal
 import yaml
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
-from serieux import Auto, Registered, TaggedUnion, deserialize, dump, serialize, singleton
+from serieux import (
+    Auto,
+    CommentRec,
+    Registered,
+    TaggedUnion,
+    deserialize,
+    dump,
+    serialize,
+    singleton,
+)
 from serieux.features.tagset import FromEntryPoint
 
-from paperoni.dash import History
-from paperoni.model.focus import Focuses, Scored, Top
-
 from .config import config
+from .dash import History
 from .display import display, terminal_width
 from .fulltext.locate import locate_all
 from .fulltext.pdf import CachePolicies, get_pdf
 from .model import PaperInfo
+from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .refinement import fetch_all
-from .utils import url_to_id
+from .utils import prog, url_to_id
 
 
 class Formatter(Registered):
@@ -151,11 +160,7 @@ class Work:
                     continue
                 scored = Scored(focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 work.top.add(scored)
-            dump(
-                Top[Scored[PaperWorkingSet]],
-                work.top,
-                dest=work.workfile or config.workfile,
-            )
+            work.save()
 
     @dataclass
     class View:
@@ -164,11 +169,35 @@ class Work:
         # Output format
         format: Formatter = TerminalFormatter
 
+        # Number of papers to view
+        n: int = None
+
         def run(self, work):
-            self.format(ws.value.current for ws in work.top)
+            it = itertools.islice(work.top, self.n) if self.n else work.top
+            self.format(Scored(ws.score, ws.value.current) for ws in it)
+
+    @dataclass
+    class Refine:
+        """Refine articles in the workset."""
+
+        # Number of papers to refine, starting from top
+        n: int = None
+
+        def run(self, work):
+            focuses = deserialize(Focuses, work.focuses or config.focuses)
+            it = itertools.islice(work.top, self.n) if self.n else work.top
+            jobs = [
+                (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
+            ]
+            for ws, sws, lnk in prog(jobs, name="refine"):
+                for pinfo in fetch_all(lnk.type, lnk.link):
+                    ws.add(pinfo)
+                    sws.score = focuses.score(ws)
+            work.top.resort()
+            work.save()
 
     # Command
-    command: TaggedUnion[Get, View]
+    command: TaggedUnion[Get, View, Refine]
 
     # File containing the working set
     # [alias: -w]
@@ -189,10 +218,17 @@ class Work:
     def top(self):
         workfile = self.workfile or config.workfile
         if workfile.exists():
-            top = deserialize(Top[Scored[PaperWorkingSet]], workfile)
+            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], workfile)
         else:
             top = Top(self.n)
         return top
+
+    def save(self):
+        dump(
+            Top[Scored[CommentRec[PaperWorkingSet, float]]],
+            self.top,
+            dest=self.workfile or config.workfile,
+        )
 
     def run(self):
         self.command.run(self)
