@@ -32,4 +32,5 @@ paperoni:
           api_key: ${secrets.tokens.scraperapi}
   refine:
     pdf:
+      $class: GenAIPrompt
       model: gemini-2.5-pro

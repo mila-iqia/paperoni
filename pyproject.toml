@@ -29,7 +29,7 @@ dependencies = [
     "eventlet>=0.40.1",
     "outsight>=0.0.2",
     "rich>=14.1.0",
-    "paperazzi[vertexai]>=0.0.6",
+    "paperazzi[vertexai]>=0.0.7",
 ]
 
 [project.urls]

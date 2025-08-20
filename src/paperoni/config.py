@@ -4,6 +4,8 @@ from pathlib import Path
 import gifnoc
 from serieux import TaggedSubclass
 
+from .prompt import GenAIPrompt, Prompt
+from .get import Fetcher, RequestsFetcher
 from .model.focus import Focuses
 from .get import Fetcher, RequestsFetcher
 
@@ -14,13 +16,8 @@ class Keys(dict):
 
 
 @dataclass
-class PDFRefine:
-    model: str
-
-
-@dataclass
 class Refine:
-    pdf: PDFRefine = None
+    pdf: TaggedSubclass[Prompt] = field(default_factory=GenAIPrompt)
 
 
 @dataclass
