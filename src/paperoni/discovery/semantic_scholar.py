@@ -54,6 +54,7 @@ def _paper_long_fields(parent=None, extras=()):
         "venue",
         "publicationTypes",
         "publicationDate",
+        "publicationVenue",
         "year",
         "journal",
         "referenceCount",

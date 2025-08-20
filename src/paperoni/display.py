@@ -30,6 +30,7 @@ def expand_links(links):
 @ovld
 def display(s: Scored):
     recurse(s.value)
+    print_field("Score", s.score)
 
 
 @ovld

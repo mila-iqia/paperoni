@@ -2,6 +2,7 @@ import itertools
 import re
 import unicodedata
 
+from outsight import send
 from unidecode import unidecode
 
 link_generators = {
@@ -175,3 +176,12 @@ def associate(l1, l2, key, threshold=0):
         if len(mapping) == n:
             break
     return [(x1, mapping.get(i1, None)) for i1, x1 in el1]
+
+
+def prog(it, name="progress", total=None):
+    if total is None:
+        total = len(it)
+    send(progress=(name, 0, total))
+    for i, x in enumerate(it):
+        yield x
+        send(progress=(name, i + 1, total))
