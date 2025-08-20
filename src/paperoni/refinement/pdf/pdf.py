@@ -1,5 +1,4 @@
 import json
-import os
 from dataclasses import dataclass
 from typing import BinaryIO
 
@@ -11,8 +10,14 @@ from paperazzi.utils import DiskStore, _make_key, disk_cache, disk_store
 
 from paperoni.config import config
 from paperoni.fulltext.pdf import CachePolicies, get_pdf
-from paperoni.model.classes import Author, Institution, Link, Paper, PaperAuthor
-from paperoni.refinement.fetch import register_fetch
+from paperoni.model.classes import (
+    Author,
+    Institution,
+    Link,
+    Paper,
+    PaperAuthor,
+    PaperInfo,
+)
 from paperoni.refinement.pdf.model import SYSTEM_MESSAGE, Analysis
 
 
@@ -106,14 +111,14 @@ def prompt(
     return client.models.generate_content(contents=contents, model=model, config=config)
 
 
-@register_fetch
-def pdf(type: str, link: str):
-    p = get_pdf(":".join([type, link]), cache_policy=CachePolicies.USE_BEST)
+def analyse_pdf(type: str, link: str) -> PaperInfo:
+    key = f"{type}:{link}"
+    p = get_pdf(key, cache_policy=CachePolicies.USE_BEST)
 
     if p is None:
         return None
 
-    client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
+    client = genai.Client()
     model = config.refine.pdf.model
 
     analysis: Analysis = prompt.update(
@@ -129,7 +134,7 @@ def pdf(type: str, link: str):
         structured_model=Analysis,
     ).parsed
 
-    return Paper(
+    paper = Paper(
         title=None,
         authors=[
             PaperAuthor(
@@ -144,3 +149,4 @@ def pdf(type: str, link: str):
         ],
         links=[Link(type=type, link=link)],
     )
+    return PaperInfo(paper=paper, key=key, info={"refined_by": {f"pdf-{model}": key}})
