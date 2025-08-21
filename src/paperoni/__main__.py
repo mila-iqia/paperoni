@@ -22,6 +22,7 @@ from serieux import (
 from serieux.features.tagset import FromEntryPoint
 
 from .collection.filecoll import FileCollection
+from .collection.tmpcoll import TmpCollection
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -164,13 +165,17 @@ class Work:
     class Get(Productor):
         """Get articles from various sources."""
 
-        def run(self, work):
+        def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions()
+            tmp_col = TmpCollection()
+            tmp_col.add_papers(work.collection and work.collection.search() or [])
+            tmp_col.add_papers(scored.value.current for scored in work.top)
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                if work.collection and work.collection.find_paper(pinfo.paper):
+                if tmp_col.find_paper(pinfo.paper):
                     continue
+                tmp_col.add_papers([pinfo.paper])
                 scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 work.top.add(scored)
             work.save()
@@ -185,7 +190,7 @@ class Work:
         # Number of papers to view
         n: int = None
 
-        def run(self, work):
+        def run(self, work: "Work"):
             it = itertools.islice(work.top, self.n) if self.n else work.top
             self.format(Scored(ws.score, ws.value.current) for ws in it)
 
@@ -196,7 +201,7 @@ class Work:
         # Number of papers to refine, starting from top
         n: int = None
 
-        def run(self, work):
+        def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
             jobs = [
@@ -218,7 +223,7 @@ class Work:
 
     @dataclass
     class Extractor:
-        def extract(self, work, filter, start=0, stop=None):
+        def extract(self, work: "Work", filter, start=0, stop=None):
             if start or stop:
                 it = itertools.islice(work.top, start, stop)
             else:
@@ -237,7 +242,7 @@ class Work:
         # Minimum score for saving
         score: float = 0.1
 
-        def run(self, work):
+        def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 start=self.n,
@@ -256,7 +261,7 @@ class Work:
         # Maximum score for excluding
         score: float = 0.0
 
-        def run(self, work):
+        def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 stop=None if self.n is None else -self.n,
@@ -269,7 +274,7 @@ class Work:
     class Clear(Extractor):
         """Clear the workset."""
 
-        def run(self, work):
+        def run(self, work: "Work"):
             self.extract(work, filter=lambda _: True)
             work.save()
 
