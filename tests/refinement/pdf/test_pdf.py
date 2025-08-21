@@ -2,9 +2,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from pytest_regressions.data_regression import DataRegressionFixture
-from serieux import serialize
 
 from paperoni.refinement.pdf.pdf import analyse_pdf
+from tests.utils import check_papers
 
 
 def test_analyse_pdf(data_regression: DataRegressionFixture):
@@ -13,4 +13,4 @@ def test_analyse_pdf(data_regression: DataRegressionFixture):
 
     assert pinfo is not None
 
-    data_regression.check(serialize(type(pinfo), pinfo))
+    check_papers(data_regression, [pinfo])
