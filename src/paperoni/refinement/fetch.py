@@ -14,10 +14,22 @@ def register_fetch(f):
     return f
 
 
-def fetch_all(type, link):
+def fetch_all(type, link, statuses=None):
+    statuses = statuses or {}
     for f in fetch.resolve_all(type, link):
-        paper = f()
         name = getattr(f.func, "description", "???")
         key = f"{type}:{link}"
-        if paper is not None:
-            yield PaperInfo(paper=paper, key=key, info={"refined_by": {name: key}})
+        nk = name, key
+        if nk in statuses:
+            continue
+        statuses[nk] = "pending"
+        try:
+            paper = f()
+            if paper is not None:
+                statuses[nk] = "found"
+                yield PaperInfo(paper=paper, key=key, info={"refined_by": {name: key}})
+            else:
+                statuses[nk] = "not_found"
+        except Exception:
+            statuses[nk] = "error"
+            raise
