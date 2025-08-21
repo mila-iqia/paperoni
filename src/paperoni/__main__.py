@@ -184,13 +184,21 @@ class Work:
         n: int = None
 
         def run(self, work):
+            statuses = {}
             focuses = deserialize(Focuses, work.focuses or config.focuses)
             it = itertools.islice(work.top, self.n) if self.n else work.top
             jobs = [
                 (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
             ]
             for ws, sws, lnk in prog(jobs, name="refine"):
-                for pinfo in fetch_all(lnk.type, lnk.link):
+                statuses.update(
+                    {
+                        (name, key): "done"
+                        for pinfo in ws.collected
+                        for name, key in pinfo.info.get("refined_by", {}).items()
+                    }
+                )
+                for pinfo in fetch_all(lnk.type, lnk.link, statuses=statuses):
                     ws.add(pinfo)
                     sws.score = focuses.score(ws)
             work.top.resort()
