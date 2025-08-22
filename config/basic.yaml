@@ -1,4 +1,5 @@
 paperoni:
+  db_path: ../papers.db
   cache_path: ../cache
   data_path: ../data
   mailto: ${secrets.mailto}

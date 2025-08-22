@@ -21,6 +21,7 @@ class Refine:
 
 @dataclass
 class PaperoniConfig:
+    db_path: Path
     cache_path: Path = None
     data_path: Path = None
     mailto: str = ""
@@ -28,6 +29,15 @@ class PaperoniConfig:
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
     refine: Refine = None
+
+    @property
+    def database(self):
+        """Load the database from ``db_path`` (lazily)."""
+        if self._database is None:
+            from .db.database import Database
+
+            self._database = Database(self.db_path)
+        return self._database
 
 
 config = gifnoc.define(

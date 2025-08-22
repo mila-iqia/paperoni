@@ -35,8 +35,8 @@ class VenueType(str, Enum):
 
 
 class InstitutionCategory(str, Enum):
-    industry = "industry"
     academia = "academia"
+    industry = "industry"
     unknown = "unknown"
 
 

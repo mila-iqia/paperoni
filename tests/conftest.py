@@ -15,6 +15,9 @@ def set_config():
     with TemporaryDirectory() as tmpdir:
         with gifnoc.use(
             Path(__file__).parent / "test-config.yaml",
-            {"paperoni.data_path": str(Path(tmpdir) / "data")},
+            {
+                "paperoni.db_path": str(Path(tmpdir) / "papers.db"),
+                "paperoni.data_path": str(Path(tmpdir) / "data"),
+            },
         ):
             yield

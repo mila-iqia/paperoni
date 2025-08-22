@@ -1,7 +1,7 @@
 paperoni:
-  mailto: publications@mila.quebec
   cache_path: ../cache
   data_path: data
+  mailto: publications@mila.quebec
   fetch:
     $class: RulesFetcher
     rules:
