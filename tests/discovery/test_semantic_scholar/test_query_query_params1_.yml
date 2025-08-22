@@ -1,20 +1,7 @@
 - info: {}
   key: semantic_scholar:de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
   paper:
-    abstract: Visualization has proven to be a powerful and widely-applicable tool
-      for the analysis and interpretation of multivariate data. Most visualization
-      algorithms aim to find a projection from the data space down to a two-dimensional
-      visualization space. However, for complex data sets living in a high-dimensional
-      space, it is unlikely that a single two-dimensional projection can reveal all
-      of the interesting structure. We therefore introduce a hierarchical visualization
-      algorithm which allows the complete data set to be visualized at the top level,
-      with clusters and subclusters of data points visualized at deeper levels. The
-      algorithm is based on a hierarchical mixture of latent variable models, whose
-      parameters are estimated using the expectation-maximization algorithm. We demonstrate
-      the principle of the approach on a toy data set, and we then apply the algorithm
-      to the visualization of a synthetic data set in 12 dimensions obtained from
-      a simulation of multiphase flows in oil pipelines, and to data in 36 dimensions
-      derived from satellite images.
+    abstract: ''
     authors:
     - affiliations: []
       author:
