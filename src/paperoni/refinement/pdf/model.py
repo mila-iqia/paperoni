@@ -8,14 +8,14 @@ SYSTEM_MESSAGE = """You are a Deep Learning expert specializing in scientific te
 ### Instructions:
 
 - Extract Author Names:
-  - Identify and list all author names in full (e.g., first and last names). Ensure you account for any middle initials or multi-part names (e.g., "John Doe Smith").
+  - Identify and list all author names in full (e.g., first and last names). Ensure you account for any middle initials or multi-part names (e.g., "John Doe Smith"). If the name is in all caps, e.g. "JOHN MCDONALD", normalize it as "John McDonald".
 - Extract Affiliations:
   - For each author, extract all affiliated institutions.
   - If an author has multiple affiliations, capture each institution accurately.
 - Associate Authors with Institutions:
   - Correctly pair each author with their corresponding affiliation(s).
   - Pay attention to superscript numbers, symbols (e.g., †), or any other references that indicate specific institutional ties.
-  - Some affiliations might be explicitly stated near the author’s name without superscripts—be sure to capture those as well.
+  - Some affiliations might be explicitly stated near the author's name without superscripts—be sure to capture those as well.
 - Affiliation Accuracy:
   - Verify that all authors are paired with the correct number of affiliations (as indicated by superscripts or numeric references in the text).
   - Ensure no author or institution is missed, even if multiple affiliations are provided.
