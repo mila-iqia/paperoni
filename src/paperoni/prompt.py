@@ -49,13 +49,14 @@ class ParsedResponseSerializer:
 @dataclass
 class Prompt:
     model: str
-    client = None
+    client: Any = None
 
     @disk_store
     @disk_cache
     @staticmethod
     def prompt(
         client: genai.Client,
+        *,
         messages: list[Message],
         model: str,
         structured_model=None,
@@ -65,13 +66,14 @@ class Prompt:
 
 @dataclass
 class GenAIPrompt(Prompt):
-    model: str
     client: genai.Client = field(default_factory=genai.Client)
 
     @staticmethod
-    def _make_key(_, kwargs):
-        kwargs = {**{k: v for k, v in kwargs.items() if k not in ("client",)}}
-        for i, message in enumerate(kwargs.get("messages", [])):
+    def _make_key(_: tuple, kwargs: dict):
+        kwargs = kwargs.copy()
+        kwargs.pop("client", None)
+        kwargs["messages"] = kwargs["messages"][:]
+        for i, message in enumerate(kwargs["messages"]):
             message: Message
             if message.type == "application/pdf":
                 kwargs["messages"][i] = Message(
