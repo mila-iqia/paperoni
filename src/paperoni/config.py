@@ -5,11 +5,18 @@ import gifnoc
 from serieux import TaggedSubclass
 
 from .get import Fetcher, RequestsFetcher
+from .model.focus import Focuses
+from .prompt import GenAIPrompt, Prompt
 
 
 class Keys(dict):
     def __getattr__(self, attr):
         return self.get(attr, None)
+
+
+@dataclass
+class Refine:
+    pdf: TaggedSubclass[Prompt] = field(default_factory=GenAIPrompt)
 
 
 @dataclass
@@ -19,8 +26,8 @@ class PaperoniConfig:
     mailto: str = ""
     api_keys: Keys[str, str] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
-    focuses: Path = None
-    workfile: Path = None
+    focuses: Focuses = field(default_factory=Focuses)
+    refine: Refine = None
 
 
 config = gifnoc.define(

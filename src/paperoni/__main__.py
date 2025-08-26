@@ -30,6 +30,7 @@ from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .refinement import fetch_all
+from .refinement.pdf.pdf import analyse_pdf
 from .utils import prog, url_to_id
 
 
@@ -145,6 +146,29 @@ class Refine:
 
 
 @dataclass
+class RefinePDF(Refine):
+    """Refine paper information from PDF files."""
+
+    # Whether to force re-running the prompt
+    force: bool = False
+
+    def run(self):
+        results = []
+        for link in self.link:
+            if link.startswith("http"):
+                type, link = url_to_id(link)
+            else:
+                type, link = link.split(":", 1)
+            pinfo = analyse_pdf(type, link, force=self.force)
+            if pinfo is None:
+                continue
+            results.append(pinfo)
+        if self.merge:
+            results = [merge_all(results)]
+        self.format(results)
+
+
+@dataclass
 class Work:
     """Discover and work on prospective papers."""
 
@@ -246,7 +270,7 @@ class Work:
 class PaperoniInterface:
     """Paper database"""
 
-    command: TaggedUnion[Discover, Refine, Fulltext, Work]
+    command: TaggedUnion[Discover, Refine, RefinePDF, Fulltext, Work]
 
     def run(self):
         self.command.run()

@@ -30,3 +30,8 @@ paperoni:
           cache_path: ${paperoni.cache_path}/scraper-cache.sql
           expire_after: 100d
           api_key: ${secrets.tokens.scraperapi}
+  refine:
+    pdf:
+      $class: GenAIPrompt
+      model: gemini-2.5-pro
+      api_key: ${env:GEMINI_API_KEY}
