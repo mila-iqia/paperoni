@@ -257,13 +257,19 @@ class Work:
 class PaperoniInterface:
     """Paper database"""
 
+    # Command to execute
     command: TaggedUnion[Discover, Refine, Fulltext, Work]
 
+    # Enable rich dashboard
+    dash: bool = True
+
     def run(self):
+        if self.dash:
+            enable_dash()
         self.command.run()
 
 
-def main():
+def enable_dash():
     @outsight.add
     async def show_progress(sent, dash):
         async for name, sofar, total in sent["progress"]:
@@ -307,6 +313,8 @@ def main():
             values = [f"{model} {prompt} {input}" for prompt, model, input in group]
             dash["prompt"] = History(values)
 
+
+def main():
     with outsight:
         parser = argparse.ArgumentParser(add_help=False)
         parser.add_argument("--config", default=None)
