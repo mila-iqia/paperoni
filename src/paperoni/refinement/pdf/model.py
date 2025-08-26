@@ -16,6 +16,8 @@ SYSTEM_MESSAGE = """You are a Deep Learning expert specializing in scientific te
   - Correctly pair each author with their corresponding affiliation(s).
   - Pay attention to superscript numbers, symbols (e.g., †), or any other references that indicate specific institutional ties.
   - Some affiliations might be explicitly stated near the author's name without superscripts—be sure to capture those as well.
+  - When a researcher is affiliated with a department or subgroup of an organization, e.g. "Department of Computer Engineering at Polytechnique Montréal", only keep the organization (e.g. Polytechnique Montréal)
+  - Strip out the parts of the affiliation that only denotes the address, city or country UNLESS it is part of the organization's name, or if it is essential to its identification
 - Affiliation Accuracy:
   - Verify that all authors are paired with the correct number of affiliations (as indicated by superscripts or numeric references in the text).
   - Ensure no author or institution is missed, even if multiple affiliations are provided.
