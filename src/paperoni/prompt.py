@@ -1,6 +1,6 @@
 import hashlib
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, BinaryIO, Type
 
 import serieux
@@ -154,8 +154,6 @@ class GenAIPrompt(Prompt):
                     args=message.args,
                     kwargs=message.kwargs,
                 )
-        kwargs["structured_model"] = cleanup_schema(
-            kwargs.pop("structured_model", None)
-        )
+        kwargs["structured_model"] = cleanup_schema(kwargs.pop("structured_model", None))
 
         return _make_key(None, kwargs)
