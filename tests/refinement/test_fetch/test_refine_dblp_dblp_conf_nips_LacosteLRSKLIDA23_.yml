@@ -3,105 +3,139 @@ authors:
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Alexandre Lacoste
+      type: dblp
     name: Alexandre Lacoste
   display_name: Alexandre Lacoste
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Nils Lehmann
+      type: dblp
     name: Nils Lehmann
   display_name: Nils Lehmann
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Pau Rodríguez
+      type: dblp
     name: Pau Rodríguez
   display_name: Pau Rodríguez
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Evan D. Sherwin
+      type: dblp
     name: Evan D. Sherwin
   display_name: Evan D. Sherwin
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Hannah Kerner
+      type: dblp
     name: Hannah Kerner
   display_name: Hannah Kerner
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Björn Lütjens
+      type: dblp
     name: Björn Lütjens
   display_name: Björn Lütjens
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Jeremy Irvin
+      type: dblp
     name: Jeremy Irvin
   display_name: Jeremy Irvin
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: David Dao
+      type: dblp
     name: David Dao
   display_name: David Dao
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Hamed Alemohammad
+      type: dblp
     name: Hamed Alemohammad
   display_name: Hamed Alemohammad
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Alexandre Drouin
+      type: dblp
     name: Alexandre Drouin
   display_name: Alexandre Drouin
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Mehmet Gunturkun
+      type: dblp
     name: Mehmet Gunturkun
   display_name: Mehmet Gunturkun
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Gabriel Huang
+      type: dblp
     name: Gabriel Huang
   display_name: Gabriel Huang
 - affiliations: []
   author:
     aliases: []
-    links: []
-    name: David Vázquez 0001
-  display_name: David Vázquez 0001
+    links:
+    - link: David Vázquez 0001
+      type: dblp
+    name: David Vázquez
+  display_name: David Vázquez
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Dava J. Newman
+      type: dblp
     name: Dava J. Newman
   display_name: Dava J. Newman
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Yoshua Bengio
+      type: dblp
     name: Yoshua Bengio
   display_name: Yoshua Bengio
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Stefano Ermon
+      type: dblp
     name: Stefano Ermon
   display_name: Stefano Ermon
 - affiliations: []
   author:
     aliases: []
-    links: []
-    name: Xiaoxiang Zhu 0001
-  display_name: Xiaoxiang Zhu 0001
+    links:
+    - link: Xiaoxiang Zhu 0001
+      type: dblp
+    name: Xiaoxiang Zhu
+  display_name: Xiaoxiang Zhu
 flags: []
 links:
 - link: conf/nips/LacosteLRSKLIDA23

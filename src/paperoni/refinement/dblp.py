@@ -1,3 +1,4 @@
+import re
 from datetime import date
 from typing import Literal
 
@@ -13,6 +14,17 @@ from ..model import (
     VenueType,
 )
 from .fetch import register_fetch
+
+
+def _clean_author_name(name):
+    return re.sub(r"\s*\d+$", "", name)
+
+
+def _author_links(author_span):
+    links = [Link(type="dblp", link=author_span.text)]
+    if orcid := author_span.attrs.get("orcid"):
+        links.append(Link(type="orcid", link=orcid))
+    return links
 
 
 @register_fetch
@@ -33,14 +45,10 @@ def dblp(type: Literal["dblp"], link: str):
         abstract="",
         authors=[
             PaperAuthor(
-                display_name=author.text,
+                display_name=(name := _clean_author_name(author.text)),
                 author=Author(
-                    name=author.text,
-                    links=(
-                        [Link(type="orcid", link=orcid)]
-                        if (orcid := author.attrs.get("orcid", None))
-                        else []
-                    ),
+                    name=name,
+                    links=_author_links(author),
                 ),
                 affiliations=[],
             )
