@@ -3,43 +3,57 @@ authors:
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Sébastien Lachapelle
+      type: dblp
     name: Sébastien Lachapelle
   display_name: Sébastien Lachapelle
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Tristan Deleu
+      type: dblp
     name: Tristan Deleu
   display_name: Tristan Deleu
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Divyat Mahajan
+      type: dblp
     name: Divyat Mahajan
   display_name: Divyat Mahajan
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Ioannis Mitliagkas
+      type: dblp
     name: Ioannis Mitliagkas
   display_name: Ioannis Mitliagkas
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Yoshua Bengio
+      type: dblp
     name: Yoshua Bengio
   display_name: Yoshua Bengio
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Simon Lacoste-Julien
+      type: dblp
     name: Simon Lacoste-Julien
   display_name: Simon Lacoste-Julien
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Quentin Bertrand
+      type: dblp
     name: Quentin Bertrand
   display_name: Quentin Bertrand
 flags: []

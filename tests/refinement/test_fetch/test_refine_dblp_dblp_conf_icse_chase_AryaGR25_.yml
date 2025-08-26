@@ -3,19 +3,25 @@ authors:
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Deeksha M. Arya
+      type: dblp
     name: Deeksha M. Arya
   display_name: Deeksha M. Arya
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Jin L. C. Guo
+      type: dblp
     name: Jin L. C. Guo
   display_name: Jin L. C. Guo
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Martin P. Robillard
+      type: dblp
     name: Martin P. Robillard
   display_name: Martin P. Robillard
 flags: []

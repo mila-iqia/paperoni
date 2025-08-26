@@ -3,31 +3,41 @@ authors:
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Sahand Rezaei-Shoshtari
+      type: dblp
     name: Sahand Rezaei-Shoshtari
   display_name: Sahand Rezaei-Shoshtari
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Charlotte Morissette
+      type: dblp
     name: Charlotte Morissette
   display_name: Charlotte Morissette
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: François Robert Hogan
+      type: dblp
     name: François Robert Hogan
   display_name: François Robert Hogan
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Gregory Dudek
+      type: dblp
     name: Gregory Dudek
   display_name: Gregory Dudek
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: David Meger
+      type: dblp
     name: David Meger
   display_name: David Meger
 flags: []

@@ -3,13 +3,17 @@ authors:
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Dinesh Daultani
+      type: dblp
     name: Dinesh Daultani
   display_name: Dinesh Daultani
 - affiliations: []
   author:
     aliases: []
-    links: []
+    links:
+    - link: Hugo Larochelle
+      type: dblp
     name: Hugo Larochelle
   display_name: Hugo Larochelle
 flags: []
