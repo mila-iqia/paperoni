@@ -1,7 +1,7 @@
 import hashlib
 import json
 from dataclasses import dataclass, field
-from typing import Any, BinaryIO
+from typing import Any, BinaryIO, Type
 
 import serieux
 from google import genai
@@ -10,8 +10,13 @@ from paperazzi.platforms.utils import Message
 from paperazzi.utils import _make_key, disk_cache, disk_store
 
 
-def cleanup_schema(schema: dict) -> dict:
-    # recusively clean up the schema removing $schema and unsupported additionalProperties
+def cleanup_schema(schema: dict | Type[Any]) -> dict:
+    """
+    Recursively clean up the schema removing $schema and unsupported additionalProperties
+    """
+    if not isinstance(schema, dict):
+        schema = serieux.schema(schema).compile(ref_policy="never")
+
     for key in ["$schema", "additionalProperties"]:
         if key in schema:
             del schema[key]
@@ -59,31 +64,18 @@ class Prompt:
         *,
         messages: list[Message],
         model: str,
-        structured_model=None,
+        structured_model: Type[Any] = None,
     ):
+        raise NotImplementedError
+
+    @staticmethod
+    def _make_key(_: tuple, kwargs: dict) -> str:
         raise NotImplementedError
 
 
 @dataclass
 class GenAIPrompt(Prompt):
     client: genai.Client = field(default_factory=genai.Client)
-
-    @staticmethod
-    def _make_key(_: tuple, kwargs: dict):
-        kwargs = kwargs.copy()
-        kwargs.pop("client", None)
-        kwargs["messages"] = kwargs["messages"][:]
-        for i, message in enumerate(kwargs["messages"]):
-            message: Message
-            if message.type == "application/pdf":
-                kwargs["messages"][i] = Message(
-                    type=message.type,
-                    prompt=hashlib.sha256(message.content.read_bytes()).hexdigest(),
-                    args=message.args,
-                    kwargs=message.kwargs,
-                )
-
-        return _make_key(None, kwargs)
 
     @disk_store
     @disk_cache(
@@ -96,7 +88,7 @@ class GenAIPrompt(Prompt):
         *,
         messages: list[Message],
         model: str,
-        structured_model=None,
+        structured_model: Type[Any] = None,
     ) -> types.GenerateContentResponse:
         """Generate a prompt for a list of messages.
 
@@ -128,11 +120,7 @@ class GenAIPrompt(Prompt):
             #     "response_json_schema": serieux.schema(structured_model).compile(ref_policy="never"),
             # }
             # google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'A schema in GenerationConfig in the request exceeds the maximum allowed nesting depth.', 'status': 'INVALID_ARGUMENT'}}
-            schema = types.Schema.model_validate(
-                cleanup_schema(
-                    serieux.schema(structured_model).compile(ref_policy="never")
-                )
-            )
+            schema = types.Schema.model_validate(cleanup_schema(structured_model))
             config = {
                 "response_mime_type": "application/json",
                 "response_schema": schema,
@@ -146,3 +134,21 @@ class GenAIPrompt(Prompt):
             response.parsed = serieux.deserialize(structured_model, response.parsed)
 
         return response
+
+    @staticmethod
+    def _make_key(_: tuple, kwargs: dict) -> str:
+        kwargs = kwargs.copy()
+        kwargs.pop("client", None)
+        kwargs["messages"] = kwargs["messages"][:]
+        for i, message in enumerate(kwargs["messages"]):
+            message: Message
+            if message.type == "application/pdf":
+                kwargs["messages"][i] = Message(
+                    type=message.type,
+                    prompt=hashlib.sha256(message.content.read_bytes()).hexdigest(),
+                    args=message.args,
+                    kwargs=message.kwargs,
+                )
+        kwargs["structured_model"] = cleanup_schema(kwargs.pop("structured_model", None))
+
+        return _make_key(None, kwargs)

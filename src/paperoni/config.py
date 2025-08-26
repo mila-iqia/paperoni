@@ -4,10 +4,9 @@ from pathlib import Path
 import gifnoc
 from serieux import TaggedSubclass
 
-from .prompt import GenAIPrompt, Prompt
 from .get import Fetcher, RequestsFetcher
 from .model.focus import Focuses
-from .get import Fetcher, RequestsFetcher
+from .prompt import GenAIPrompt, Prompt
 
 
 class Keys(dict):

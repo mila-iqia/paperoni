@@ -30,8 +30,8 @@ from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .refinement import fetch_all
-from .utils import prog, url_to_id
 from .refinement.pdf.pdf import analyse_pdf
+from .utils import prog, url_to_id
 
 
 class Formatter(Registered):
