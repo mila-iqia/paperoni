@@ -15,7 +15,7 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
     Recursively clean up the schema removing $schema and unsupported additionalProperties
     """
     if not isinstance(schema, dict):
-        schema = serieux.schema(schema).compile(ref_policy="never")
+        schema = serieux.schema(schema).compile(ref_policy="never", root=False)
 
     for key in ["$schema", "additionalProperties"]:
         if key in schema:
@@ -75,7 +75,12 @@ class Prompt:
 
 @dataclass
 class GenAIPrompt(Prompt):
-    client: genai.Client = field(default_factory=genai.Client)
+    client: genai.Client = None
+    api_key: str = None
+
+    def __post_init__(self):
+        if self.client is None:
+            self.client = genai.Client(api_key=self.api_key or None)
 
     @disk_store
     @disk_cache(
@@ -149,6 +154,8 @@ class GenAIPrompt(Prompt):
                     args=message.args,
                     kwargs=message.kwargs,
                 )
-        kwargs["structured_model"] = cleanup_schema(kwargs.pop("structured_model", None))
+        kwargs["structured_model"] = cleanup_schema(
+            kwargs.pop("structured_model", None)
+        )
 
         return _make_key(None, kwargs)

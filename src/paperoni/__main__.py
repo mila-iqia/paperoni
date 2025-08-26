@@ -149,6 +149,9 @@ class Refine:
 class RefinePDF(Refine):
     """Refine paper information from PDF files."""
 
+    # Whether to force re-running the prompt
+    force: bool = False
+
     def run(self):
         results = []
         for link in self.link:
@@ -156,7 +159,7 @@ class RefinePDF(Refine):
                 type, link = url_to_id(link)
             else:
                 type, link = link.split(":", 1)
-            pinfo = analyse_pdf(type, link)
+            pinfo = analyse_pdf(type, link, force=self.force)
             if pinfo is None:
                 continue
             results.append(pinfo)

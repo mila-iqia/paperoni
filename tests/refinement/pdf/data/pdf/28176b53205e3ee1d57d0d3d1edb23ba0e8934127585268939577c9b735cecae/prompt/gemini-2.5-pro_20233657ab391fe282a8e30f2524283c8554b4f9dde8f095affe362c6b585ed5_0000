@@ -1,0 +1,182 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Tue, 26 Aug 2025 18:46:25 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=18302",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "video_metadata": null,
+            "thought": null,
+            "inline_data": null,
+            "file_data": null,
+            "thought_signature": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "function_call": null,
+            "function_response": null,
+            "text": "{\n  \"title\": {\n    \"$value\": \"Efficient Queries Transformer Neural Processes\",\n    \"$comment\": {\n      \"reasoning\": \"The title is prominently displayed at the top of the first page of the paper.\",\n      \"quote\": \"Efficient Queries Transformer Neural Processes\"\n    }\n  },\n  \"authors_affiliations\": [\n    {\n      \"author\": {\n        \"$value\": \"Leo Feng\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed first on the top of the first page, below the title.\",\n          \"quote\": \"Leo Feng* 1,2\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Borealis AI\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '1' next to the author's name corresponds to the affiliation 'Borealis AI'.\",\n            \"quote\": \"1 Borealis AI\"\n          }\n        },\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '2' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Hossein Hajimirsadeghi\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed second on the top of the first page, below the title.\",\n          \"quote\": \"Hossein Hajimirsadeghi ¹\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Borealis AI\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '¹' (1) next to the author's name corresponds to the affiliation 'Borealis AI'.\",\n            \"quote\": \"1 Borealis AI\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yoshua Bengio\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed third on the top of the first page, below the title.\",\n          \"quote\": \"Yoshua Bengio ²\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '²' (2) next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Mohamed Osama Ahmed\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed fourth on the top of the first page, below the title.\",\n          \"quote\": \"Mohamed Osama Ahmed ²\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '²' (2) next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    }\n  ],\n  \"affiliations\": [\n    {\n      \"$value\": \"Borealis AI\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed on the first page and is associated with authors via the superscript '1'.\",\n        \"quote\": \"1 Borealis AI\"\n      }\n    },\n    {\n      \"$value\": \"Mila - Université de Montréal\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed on the first page and is associated with authors via the superscript '2'.\",\n        \"quote\": \"2 Mila - Université de Montréal\"\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "url_context_metadata": null,
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "AQGuaK3wM_3K_uMP_N344Ag",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 926,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 1986,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 438
+      },
+      {
+        "modality": "DOCUMENT",
+        "token_count": 1548
+      }
+    ],
+    "thoughts_token_count": 1248,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 4160,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "title": {
+      "$value": "Efficient Queries Transformer Neural Processes",
+      "$comment": {
+        "reasoning": "The title is prominently displayed at the top of the first page of the paper.",
+        "quote": "Efficient Queries Transformer Neural Processes"
+      }
+    },
+    "authors_affiliations": [
+      {
+        "author": {
+          "$value": "Leo Feng",
+          "$comment": {
+            "reasoning": "The author's name is listed first on the top of the first page, below the title.",
+            "quote": "Leo Feng* 1,2"
+          }
+        },
+        "affiliations": [
+          {
+            "$value": "Borealis AI",
+            "$comment": {
+              "reasoning": "The superscript '1' next to the author's name corresponds to the affiliation 'Borealis AI'.",
+              "quote": "1 Borealis AI"
+            }
+          },
+          {
+            "$value": "Mila - Université de Montréal",
+            "$comment": {
+              "reasoning": "The superscript '2' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.",
+              "quote": "2 Mila - Université de Montréal"
+            }
+          }
+        ]
+      },
+      {
+        "author": {
+          "$value": "Hossein Hajimirsadeghi",
+          "$comment": {
+            "reasoning": "The author's name is listed second on the top of the first page, below the title.",
+            "quote": "Hossein Hajimirsadeghi ¹"
+          }
+        },
+        "affiliations": [
+          {
+            "$value": "Borealis AI",
+            "$comment": {
+              "reasoning": "The superscript '¹' (1) next to the author's name corresponds to the affiliation 'Borealis AI'.",
+              "quote": "1 Borealis AI"
+            }
+          }
+        ]
+      },
+      {
+        "author": {
+          "$value": "Yoshua Bengio",
+          "$comment": {
+            "reasoning": "The author's name is listed third on the top of the first page, below the title.",
+            "quote": "Yoshua Bengio ²"
+          }
+        },
+        "affiliations": [
+          {
+            "$value": "Mila - Université de Montréal",
+            "$comment": {
+              "reasoning": "The superscript '²' (2) next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.",
+              "quote": "2 Mila - Université de Montréal"
+            }
+          }
+        ]
+      },
+      {
+        "author": {
+          "$value": "Mohamed Osama Ahmed",
+          "$comment": {
+            "reasoning": "The author's name is listed fourth on the top of the first page, below the title.",
+            "quote": "Mohamed Osama Ahmed ²"
+          }
+        },
+        "affiliations": [
+          {
+            "$value": "Mila - Université de Montréal",
+            "$comment": {
+              "reasoning": "The superscript '²' (2) next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.",
+              "quote": "2 Mila - Université de Montréal"
+            }
+          }
+        ]
+      }
+    ],
+    "affiliations": [
+      {
+        "$value": "Borealis AI",
+        "$comment": {
+          "reasoning": "This affiliation is listed on the first page and is associated with authors via the superscript '1'.",
+          "quote": "1 Borealis AI"
+        }
+      },
+      {
+        "$value": "Mila - Université de Montréal",
+        "$comment": {
+          "reasoning": "This affiliation is listed on the first page and is associated with authors via the superscript '2'.",
+          "quote": "2 Mila - Université de Montréal"
+        }
+      }
+    ]
+  }
+}

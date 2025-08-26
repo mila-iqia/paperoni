@@ -201,7 +201,7 @@ class PaperAuthor:
 
 @dataclass
 class Paper:
-    title: str | None
+    title: str
     abstract: str = None
     authors: list[PaperAuthor] = field(default_factory=list)
     releases: list[Release] = field(default_factory=list)
