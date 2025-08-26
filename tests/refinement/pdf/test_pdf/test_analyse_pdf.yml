@@ -1,6 +1,6 @@
 - info:
     refined_by:
-      pdf-gemini-2.5-pro: openreview:_3FyT_W1DW
+      pdf:gemini-2.5-pro: openreview:_3FyT_W1DW
   key: openreview:_3FyT_W1DW
   paper:
     abstract: null

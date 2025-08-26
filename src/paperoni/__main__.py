@@ -30,7 +30,7 @@ from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .refinement import fetch_all
-from .refinement.pdf.pdf import analyse_pdf
+from .refinement.pdf import fetch_all as fetch_all_pdf
 from .utils import prog, url_to_id
 
 
@@ -139,10 +139,13 @@ class Refine:
                 type, link = url_to_id(link)
             else:
                 type, link = link.split(":", 1)
-            results.extend(fetch_all(type, link))
+            results.extend(self._fetch_all(type, link))
         if self.merge:
             results = [merge_all(results)]
         self.format(results)
+
+    def _fetch_all(self, type: str, link: str) -> list[PaperInfo]:
+        return fetch_all(type, link)
 
 
 @dataclass
@@ -152,20 +155,8 @@ class RefinePDF(Refine):
     # Whether to force re-running the prompt
     force: bool = False
 
-    def run(self):
-        results = []
-        for link in self.link:
-            if link.startswith("http"):
-                type, link = url_to_id(link)
-            else:
-                type, link = link.split(":", 1)
-            pinfo = analyse_pdf(type, link, force=self.force)
-            if pinfo is None:
-                continue
-            results.append(pinfo)
-        if self.merge:
-            results = [merge_all(results)]
-        self.format(results)
+    def _fetch_all(self, type: str, link: str) -> list[PaperInfo]:
+        return fetch_all_pdf(type, link, force=self.force)
 
 
 @dataclass
@@ -313,6 +304,12 @@ def main():
             dash["score"] = (
                 f"{score}   [bold green]max: {max_score}[/bold green]   [bold blue]count: {count}[/bold blue]"
             )
+
+    @outsight.add
+    async def show_prompt(sent, dash):
+        async for group in sent["prompt", "model", "input"].roll(5, partial=True):
+            values = [f"{model} {prompt} {input}" for prompt, model, input in group]
+            dash["prompt"] = History(values)
 
     with outsight:
         parser = argparse.ArgumentParser(add_help=False)
