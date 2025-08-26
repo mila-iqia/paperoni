@@ -5,7 +5,7 @@ from ...config import config
 from ...fulltext.pdf import PDF, CachePolicies, get_pdf
 from ...model.classes import Author, Institution, Link, Paper, PaperAuthor, PaperInfo
 from ...prompt import ParsedResponseSerializer
-from .fetch import register_fetch
+from ..fetch import register_fetch
 from .model import SYSTEM_MESSAGE, Analysis
 
 
@@ -57,7 +57,7 @@ def prompt(pdf: PDF, force: bool = False) -> Analysis:
         return pdf_prompt(**prompt_kwargs).parsed
 
 
-@register_fetch
+@register_fetch(tags={"prompt", "pdf"})
 def pdf(type: str, link: str, force: bool = False) -> PaperInfo:
     key = f"{type}:{link}"
     p = get_pdf(key, cache_policy=CachePolicies.USE_BEST)

@@ -1,7 +1,7 @@
 import argparse
 import itertools
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Literal
@@ -30,7 +30,6 @@ from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .refinement import fetch_all
-from .refinement.pdf import fetch_all as fetch_all_pdf
 from .utils import prog, url_to_id
 
 
@@ -126,11 +125,20 @@ class Refine:
     # [action: append]
     link: list[str]
 
+    # Tags to refine
+    tags: list[str] = field(default_factory=list)
+
+    # Whether to force re-running the refine
+    force: bool = False
+
     # Whether to merge the results
     merge: bool = False
 
     # Output format
     format: Formatter = TerminalFormatter
+
+    def __post_init__(self):
+        self.tags = set(self.tags)
 
     def run(self):
         results = []
@@ -139,24 +147,10 @@ class Refine:
                 type, link = url_to_id(link)
             else:
                 type, link = link.split(":", 1)
-            results.extend(self._fetch_all(type, link))
+            results.extend(fetch_all(type, link, tags=self.tags, force=self.force))
         if self.merge:
             results = [merge_all(results)]
         self.format(results)
-
-    def _fetch_all(self, type: str, link: str) -> list[PaperInfo]:
-        return fetch_all(type, link)
-
-
-@dataclass
-class RefinePDF(Refine):
-    """Refine paper information from PDF files."""
-
-    # Whether to force re-running the prompt
-    force: bool = False
-
-    def _fetch_all(self, type: str, link: str) -> list[PaperInfo]:
-        return fetch_all_pdf(type, link, force=self.force)
 
 
 @dataclass
@@ -261,7 +255,7 @@ class Work:
 class PaperoniInterface:
     """Paper database"""
 
-    command: TaggedUnion[Discover, Refine, RefinePDF, Fulltext, Work]
+    command: TaggedUnion[Discover, Refine, Fulltext, Work]
 
     def run(self):
         self.command.run()
