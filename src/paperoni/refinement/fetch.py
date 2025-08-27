@@ -14,7 +14,8 @@ def fetch(type: str, link: str):
 def register_fetch(f=None, *, tags=None):
     def decorator(f):
         f.description = f.__name__
-        f.tags = tags or set()
+        f.tags = tags or {"normal"}
+        f.tags.add(f.__name__)
         fetch.register(f)
         return f
 
@@ -25,27 +26,7 @@ def register_fetch(f=None, *, tags=None):
 
 
 def _test_tags(f_tags: set, tags: set) -> bool:
-    # no tags are required for the function to execute
-    if not f_tags:
-        return True
-
-    try:
-        tags.remove("*")
-        star_tag = "*"
-    except KeyError:
-        star_tag = None
-
-    # tags that are not in f_tags
-    extra_tags = tags - (f_tags & tags)
-
-    if extra_tags:
-        return False
-
-    unmatched_f_tags = f_tags - tags
-
-    # There should be no unmatched tags, or if there are, there should be a star
-    # tag
-    return not unmatched_f_tags or star_tag is not None
+    return "all" in tags or not (tags - f_tags)
 
 
 def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
@@ -58,9 +39,9 @@ def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
 
 def fetch_all(type, link, statuses=None, tags=None, force=False):
     statuses = statuses or {}
-    tags = tags or set()
+    tags = tags or {"normal"}
     for f in fetch.resolve_all(type, link):
-        if not _test_tags(getattr(f.func, "tags", set()), tags):
+        if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
             continue
 
         name = getattr(f.func, "description", "???")

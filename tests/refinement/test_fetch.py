@@ -13,14 +13,16 @@ from paperoni.refinement.title import crossref_title, openalex_title
     ["f_tags", "tags", "pass_"],
     [
         (set(), set(), True),
-        (set(), {"*"}, True),
-        (set(), {"a"}, True),
-        ({"a", "b"}, {"*"}, True),
+        (set(), {"all"}, True),
+        (set(), {"a"}, False),
+        ({"a", "b"}, {"all"}, True),
+        ({"a", "b"}, {"a"}, True),
+        ({"a", "b"}, {"b"}, True),
         ({"a", "b"}, {"a", "b"}, True),
         ({"a", "b"}, {"a", "b", "c"}, False),
         ({"a", "b"}, {"a", "c"}, False),
-        ({"a", "b"}, {"a", "c", "*"}, False),
-        ({"a", "b", "c"}, {"a", "b", "c", "*"}, True),
+        ({"a", "b"}, {"a", "c", "all"}, True),
+        ({"a", "b", "c"}, {"a", "b", "c", "all"}, True),
     ],
 )
 def test__test_tags(f_tags, tags, pass_):
