@@ -50,7 +50,7 @@ def crossref(type: Literal["doi"], link: str):
 
 
 @register_fetch
-def datacite(type: Literal["doi"], link: str):
+def datacite(type: Literal["doi", "arxiv"], link: str):
     """
     Refine using DataCite.
 
@@ -59,7 +59,10 @@ def datacite(type: Literal["doi"], link: str):
     API call reference: https://support.datacite.org/reference/get_dois-id
     DataCite metadata properties: https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/
     """
-    doi = link
+    if type == "arxiv":
+        doi = f"10.48550/arXiv.{link}"
+    else:
+        doi = link
 
     try:
         json_data = config.fetch.read(

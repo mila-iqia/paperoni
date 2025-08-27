@@ -8,7 +8,6 @@ from serieux import deserialize, dump
 from ..model.classes import Paper
 from .abc import PaperCollection
 
-
 _id_types = {
     "arxiv",
     "dblp",
@@ -28,8 +27,8 @@ class FileCollection(PaperCollection):
     directory: Path
 
     def __post_init__(self):
-        self.papers_file = self.directory / "papers.yaml"
-        self.exclusions_file = self.directory / "exclusions.yaml"
+        self.papers_file = self.directory / "papers.json"
+        self.exclusions_file = self.directory / "exclusions.json"
         if not self.papers_file.exists():
             self.papers_file.write_text("[]")
         self._papers = deserialize(list[Paper], self.papers_file)
