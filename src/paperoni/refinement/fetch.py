@@ -24,6 +24,30 @@ def register_fetch(f=None, *, tags=None):
         return decorator(f)
 
 
+def _test_tags(f_tags: set, tags: set) -> bool:
+    # no tags are required for the function to execute
+    if not f_tags:
+        return True
+
+    try:
+        tags.remove("*")
+        star_tag = "*"
+    except KeyError:
+        star_tag = None
+
+    # tags that are not in f_tags
+    extra_tags = tags - (f_tags & tags)
+
+    if extra_tags:
+        return False
+
+    unmatched_f_tags = f_tags - tags
+
+    # There should be no unmatched tags, or if there are, there should be a star
+    # tag
+    return not unmatched_f_tags or star_tag is not None
+
+
 def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
     f_sig = inspect.signature(f)
     if "force" in f_sig.parameters:
@@ -41,8 +65,7 @@ def fetch_all(type, link, statuses=None, tags=None, force=False):
     statuses = statuses or {}
     tags = tags or set()
     for f in fetch.resolve_all(type, link):
-        f_tags = getattr(f.func, "tags", set())
-        if f_tags and not f_tags <= tags:
+        if not _test_tags(getattr(f.func, "tags", set()), tags):
             continue
 
         name = getattr(f.func, "description", "???")
