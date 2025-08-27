@@ -25,9 +25,9 @@ SYSTEM_MESSAGE = """You are a Deep Learning expert specializing in scientific te
   - Ensure no author is omitted from the list.
   - Ensure all affiliations are listed correctly for each author.
 - Normalize these affiliation names. The name in quotes is the normalized name that you should use.
-  - "Mila": could be listed as MILA, Montreal Institute for Learning Algorithms, IQIA, Institut Québécois d'Intelligence Artificielle
-  - "Université de Montréal": could be listed in English as University of Montreal, possibly as the shortened UdeM
-- CIFAR AI Chair is not an affiliation. Ignore it.
+  - "Mila": could be listed as MILA, Montreal Institute for Learning Algorithms, Quebec AI Institute, Mila AI Institute, Institut Québécois de l'Intelligence Artificielle, IQIA.
+  - "Université de Montréal": could be listed in English as University of Montreal, as U. Montreal, etc.
+  - "CIFAR": sometimes listed as CIFAR AI Chair
 
 ### Key Considerations:
 
