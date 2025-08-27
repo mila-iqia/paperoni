@@ -4,6 +4,7 @@ from pathlib import Path
 import gifnoc
 from serieux import TaggedSubclass
 
+from .collection.abc import PaperCollection
 from .get import Fetcher, RequestsFetcher
 from .model.focus import Focuses
 from .prompt import GenAIPrompt, Prompt
@@ -28,6 +29,8 @@ class PaperoniConfig:
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
     refine: Refine = None
+    workfile: Path = None
+    collection: TaggedSubclass[PaperCollection] = None
 
 
 config = gifnoc.define(

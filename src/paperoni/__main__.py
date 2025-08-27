@@ -21,6 +21,7 @@ from serieux import (
 )
 from serieux.features.tagset import FromEntryPoint
 
+from .collection.filecoll import FileCollection
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -164,12 +165,11 @@ class Work:
         """Get articles from various sources."""
 
         def run(self, work):
-            focuses = deserialize(Focuses, work.focuses or config.focuses)
-            ex = work.exclusions and deserialize(set[str], work.exclusions)
+            ex = work.collection and work.collection.exclusions
             for pinfo in self.iterate():
                 if ex and pinfo.key in ex:
                     continue
-                scored = Scored(focuses.score(pinfo), PaperWorkingSet.make(pinfo))
+                scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 work.top.add(scored)
             work.save()
 
@@ -224,14 +224,28 @@ class Work:
 
     # List of focuses
     # [alias: -f]
-    focuses: Path = None
+    focus_file: Path = None
 
-    # Exclusion list
-    # [alias: -x]
-    exclusions: Path = None
+    # Collection file
+    # [alias: -c]
+    collection_dir: Path = None
 
     # Number of papers to keep in the working set
     n: int = 10
+
+    @cached_property
+    def focuses(self):
+        if self.focus_file:
+            return deserialize(Focuses, self.focus_file)
+        else:
+            return config.focuses
+
+    @cached_property
+    def collection(self):
+        if self.collection_dir:
+            return FileCollection(self.collection_dir)
+        else:
+            return config.collection
 
     @cached_property
     def top(self):
