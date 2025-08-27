@@ -1,3 +1,6 @@
+import inspect
+from typing import Callable
+
 from ovld import ovld
 
 from ..model import PaperInfo
@@ -8,15 +11,58 @@ def fetch(type: str, link: str):
     return None
 
 
-def register_fetch(f):
-    f.description = f.__name__
-    fetch.register(f)
-    return f
+def register_fetch(f=None, *, tags=None):
+    def decorator(f):
+        f.description = f.__name__
+        f.tags = tags or set()
+        fetch.register(f)
+        return f
+
+    if f is None:
+        return decorator
+    else:
+        return decorator(f)
 
 
-def fetch_all(type, link, statuses=None):
+def _test_tags(f_tags: set, tags: set) -> bool:
+    # no tags are required for the function to execute
+    if not f_tags:
+        return True
+
+    try:
+        tags.remove("*")
+        star_tag = "*"
+    except KeyError:
+        star_tag = None
+
+    # tags that are not in f_tags
+    extra_tags = tags - (f_tags & tags)
+
+    if extra_tags:
+        return False
+
+    unmatched_f_tags = f_tags - tags
+
+    # There should be no unmatched tags, or if there are, there should be a star
+    # tag
+    return not unmatched_f_tags or star_tag is not None
+
+
+def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
+    f_sig = inspect.signature(f)
+    if "force" in f_sig.parameters:
+        return f(*args, force=force, **kwargs)
+    else:
+        return f(*args, **kwargs)
+
+
+def fetch_all(type, link, statuses=None, tags=None, force=False):
     statuses = statuses or {}
+    tags = tags or set()
     for f in fetch.resolve_all(type, link):
+        if not _test_tags(getattr(f.func, "tags", set()), tags):
+            continue
+
         name = getattr(f.func, "description", "???")
         key = f"{type}:{link}"
         nk = name, key
@@ -24,10 +70,14 @@ def fetch_all(type, link, statuses=None):
             continue
         statuses[nk] = "pending"
         try:
-            paper = f()
+            paper = _call(f.func, type, link, force=force)
             if paper is not None:
                 statuses[nk] = "found"
-                yield PaperInfo(paper=paper, key=key, info={"refined_by": {name: key}})
+                yield PaperInfo(
+                    paper=paper,
+                    key=key,
+                    info={"refined_by": {name: key}},
+                )
             else:
                 statuses[nk] = "not_found"
         except Exception:

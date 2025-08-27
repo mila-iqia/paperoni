@@ -22,6 +22,6 @@ paperoni:
         $class: CloudFlareFetcher
         user_agent: chrome
   refine:
-    pdf:
+    prompt:
       $class: GenAIPrompt
       model: gemini-2.5-pro

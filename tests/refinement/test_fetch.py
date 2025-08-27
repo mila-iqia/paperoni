@@ -4,8 +4,28 @@ from serieux import serialize
 from paperoni.model.classes import Paper
 from paperoni.refinement.dblp import dblp
 from paperoni.refinement.doi import biorxiv, crossref, datacite, unpaywall
+from paperoni.refinement.fetch import _test_tags
 from paperoni.refinement.pubmed import pubmed
 from paperoni.refinement.title import crossref_title, openalex_title
+
+
+@pytest.mark.parametrize(
+    ["f_tags", "tags", "pass_"],
+    [
+        (set(), set(), True),
+        (set(), {"*"}, True),
+        (set(), {"a"}, True),
+        ({"a", "b"}, {"*"}, True),
+        ({"a", "b"}, {"a", "b"}, True),
+        ({"a", "b"}, {"a", "b", "c"}, False),
+        ({"a", "b"}, {"a", "c"}, False),
+        ({"a", "b"}, {"a", "c", "*"}, False),
+        ({"a", "b", "c"}, {"a", "b", "c", "*"}, True),
+    ],
+)
+def test__test_tags(f_tags, tags, pass_):
+    assert _test_tags(f_tags, tags) == pass_
+
 
 links = [
     # Crossref

@@ -1,9 +1,11 @@
+from outsight import send
 from paperazzi.platforms.utils import Message
 
 from ...config import config
 from ...fulltext.pdf import PDF, CachePolicies, get_pdf
 from ...model.classes import Author, Institution, Link, Paper, PaperAuthor, PaperInfo
 from ...prompt import ParsedResponseSerializer
+from ..fetch import register_fetch
 from .model import SYSTEM_MESSAGE, Analysis
 
 
@@ -20,24 +22,24 @@ def _make_key(_, kwargs: dict) -> str:
 
     kwargs["messages"] = [m for m in kwargs["messages"] if m is not None]
 
-    return config.refine.pdf._make_key(None, kwargs)
+    return config.refine.prompt._make_key(None, kwargs)
 
 
 def prompt(pdf: PDF, force: bool = False) -> Analysis:
-    pdf_prompt = config.refine.pdf.prompt.update(
+    pdf_prompt = config.refine.prompt.prompt.update(
         serializer=ParsedResponseSerializer[Analysis],
         cache_dir=pdf.directory / "prompt",
         make_key=_make_key,
-        prefix=config.refine.pdf.model,
+        prefix=config.refine.prompt.model,
         index=0,
     )
     prompt_kwargs = {
-        "client": config.refine.pdf.client,
+        "client": config.refine.prompt.client,
         "messages": [
             Message(type="system", prompt=SYSTEM_MESSAGE),
             Message(type="application/pdf", prompt=pdf.pdf_path),
         ],
-        "model": config.refine.pdf.model,
+        "model": config.refine.prompt.model,
         "structured_model": Analysis,
     }
 
@@ -55,16 +57,19 @@ def prompt(pdf: PDF, force: bool = False) -> Analysis:
         return pdf_prompt(**prompt_kwargs).parsed
 
 
-def analyse_pdf(type: str, link: str, force: bool = False) -> PaperInfo:
+@register_fetch(tags={"prompt", "pdf"})
+def pdf(type: str, link: str, force: bool = False) -> PaperInfo:
     key = f"{type}:{link}"
     p = get_pdf(key, cache_policy=CachePolicies.USE_BEST)
 
     if p is None:
         return None
 
+    send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=key)
+
     analysis = prompt(p, force=force)
 
-    paper = Paper(
+    return Paper(
         title=str(analysis.title),
         authors=[
             PaperAuthor(
@@ -78,9 +83,4 @@ def analyse_pdf(type: str, link: str, force: bool = False) -> PaperInfo:
             for author_affiliations in analysis.authors_affiliations
         ],
         links=[Link(type=type, link=link)],
-    )
-    return PaperInfo(
-        paper=paper,
-        key=key,
-        info={"refined_by": {f"pdf-{config.refine.pdf.model}": key}},
     )

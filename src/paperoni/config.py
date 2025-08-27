@@ -16,7 +16,7 @@ class Keys(dict):
 
 @dataclass
 class Refine:
-    pdf: TaggedSubclass[Prompt] = field(default_factory=GenAIPrompt)
+    prompt: TaggedSubclass[Prompt] = field(default_factory=GenAIPrompt)
 
 
 @dataclass
