@@ -3,6 +3,8 @@ import re
 from datetime import date, datetime
 from enum import Enum
 
+import requests
+
 from ..config import config
 from ..model.classes import (
     Author,
@@ -168,7 +170,7 @@ class MiniConf(Discoverer):
         # Conference name (e.g. "neurips", "icml", "iclr", "mlsys", "aistats", "cvpr")
         conference: str,
         # Year of the conference
-        year: int,
+        year: int = None,
         # Filter on an affiliation
         affiliation: str = None,
         # Filter on an author
@@ -183,6 +185,26 @@ class MiniConf(Discoverer):
         focuses: Focuses = None,
     ):
         """Query conference papers as JSON"""
+        if year is None:
+            current = datetime.now().year
+            consecutive_failures = 0
+            while consecutive_failures <= 2:
+                try:
+                    yield from self.query(
+                        conference,
+                        year=current,
+                        affiliation=affiliation,
+                        author=author,
+                        limit=limit,
+                        cache=cache,
+                        error_policy=error_policy,
+                    )
+                    consecutive_failures = 0
+                except requests.HTTPError:
+                    consecutive_failures += 1
+                current -= 1
+            return
+
         # Get the base URL for the conference, defaulting to conference.cc if not found
         base_url = conference_urls[conference.lower()]
         base_url = f"https://{base_url}"
