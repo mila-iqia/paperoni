@@ -277,7 +277,7 @@ class Work:
     # [alias: -f]
     focus_file: Path = None
 
-    # Collection file
+    # Collection dir
     # [alias: -c]
     collection_dir: Path = None
 
@@ -319,11 +319,53 @@ class Work:
 
 
 @dataclass
+class Coll:
+    @dataclass
+    class Search:
+        # Title of the paper
+        title: str = None
+
+        # Author of the paper
+        # [alias: -a]
+        author: str = None
+
+        # Institution of an author
+        # [alias: -i]
+        institution: str = None
+
+        # Output format
+        format: Formatter = TerminalFormatter
+
+        def run(self, coll):
+            results = coll.collection.search(
+                title=self.title, author=self.author, institution=self.institution
+            )
+            self.format(results)
+
+    # Command to execute
+    command: TaggedUnion[Search]
+
+    # Collection dir
+    # [alias: -c]
+    collection_dir: Path = None
+
+    @cached_property
+    def collection(self):
+        if self.collection_dir:
+            return FileCollection(self.collection_dir)
+        else:
+            return config.collection
+
+    def run(self):
+        self.command.run(self)
+
+
+@dataclass
 class PaperoniInterface:
     """Paper database"""
 
     # Command to execute
-    command: TaggedUnion[Discover, Refine, Fulltext, Work]
+    command: TaggedUnion[Discover, Refine, Fulltext, Work, Coll]
 
     # Enable rich dashboard
     dash: bool = True
