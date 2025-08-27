@@ -48,14 +48,20 @@ class FileCollection(PaperCollection):
     def add_papers(self, papers: Iterable[Paper]) -> None:
         if papers:
             self._papers.extend(papers)
-            dump(list[Paper], self._papers, dest=self.papers_file)
+            json.dump(
+                fp=open(self.papers_file, "w"),
+                obj=serialize(list[Paper], self._papers),
+            )
 
     def exclude_papers(self, papers: Iterable[Paper]) -> None:
         for paper in papers:
             for link in getattr(paper, "links", []):
                 if link.type in _id_types:
                     self._exclusions.add(f"{link.type}:{link.link}")
-        dump(set[str], self._exclusions, dest=self.exclusions_file)
+        json.dump(
+            fp=open(self.exclusions_file, "w"),
+            obj=serialize(set[str], self._exclusions),
+        )
 
     def find_paper(self, paper: Paper) -> Paper | None:
         for lnk in paper.links:
