@@ -70,6 +70,7 @@ class Dash(Fixture):
         self.data[key] = value
         if self.live:
             self.live.update(self.make_display())
+        self.ensure()
 
     def add_progress(self, name, current, total):
         if name not in self.progress_bars:
@@ -78,6 +79,11 @@ class Dash(Fixture):
         else:
             task_id = self.progress_bars[name]
         self.progress.update(task_id, completed=current, total=total)
+        self.ensure()
+
+    def ensure(self):
+        if self.live and not self.live_ctx:
+            self.live_ctx = self.live.__enter__()
 
     @asynccontextmanager
     async def context(self):
@@ -85,6 +91,10 @@ class Dash(Fixture):
             yield self
         else:
             console = Console()
-            with Live(self.make_display(), console=console, refresh_per_second=4) as live:
-                self.live = live
+            self.live_ctx = None
+            self.live = Live(self.make_display(), console=console, refresh_per_second=4)
+            try:
                 yield self
+            finally:
+                if self.live_ctx:
+                    self.live_ctx.__exit__(None, None, None)
