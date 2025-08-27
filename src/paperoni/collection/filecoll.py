@@ -9,6 +9,20 @@ from ..model.classes import Paper
 from .abc import PaperCollection
 
 
+_id_types = {
+    "arxiv",
+    "dblp",
+    "doi",
+    "mlr",
+    "openalex",
+    "openreview",
+    "pmc",
+    "pubmed",
+    "semantic_scholar",
+    "uid",
+}
+
+
 @dataclass
 class FileCollection(PaperCollection):
     directory: Path
@@ -39,8 +53,9 @@ class FileCollection(PaperCollection):
     def exclude_papers(self, papers: Iterable[Paper]) -> None:
         for paper in papers:
             for link in getattr(paper, "links", []):
-                self.exclusions.add(f"{link.type}:{link.link}")
-        dump(set[str], self.exclusions, dest=self.exclusions_file)
+                if link.type in _id_types:
+                    self._exclusions.add(f"{link.type}:{link.link}")
+        dump(set[str], self._exclusions, dest=self.exclusions_file)
 
     def find_paper(self, paper: Paper) -> Paper | None:
         for lnk in paper.links:

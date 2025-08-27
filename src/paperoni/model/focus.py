@@ -127,6 +127,11 @@ class Top[T]:
         for elem in elems:
             self.add(elem)
 
+    def discard_all(self, elems):
+        ids = {id(e) for e in elems}
+        self.entries = [e for e in self.entries if id(e) not in ids]
+        heapify(self.entries)
+
     def resort(self):
         self.entries = [e for e in self.entries if e]
         heapify(self.entries)

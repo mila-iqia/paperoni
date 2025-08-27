@@ -169,6 +169,8 @@ class Work:
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
+                if work.collection and work.collection.find_paper(pinfo.paper):
+                    continue
                 scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 work.top.add(scored)
             work.save()
@@ -215,8 +217,57 @@ class Work:
             work.top.resort()
             work.save()
 
+    @dataclass
+    class Extractor:
+        def extract(self, work, filter, start=0, stop=None):
+            if start or stop:
+                it = itertools.islice(work.top, start, stop)
+            else:
+                it = iter(work.top)
+            selected = [sws for sws in it if filter(sws)]
+            work.top.discard_all(selected)
+            return [s.value.current for s in selected]
+
+    @dataclass
+    class Include(Extractor):
+        """Include top articles to collection."""
+
+        # Maximum number of papers to include
+        n: int = None
+
+        # Minimum score for saving
+        score: float = 0.1
+
+        def run(self, work):
+            selected = self.extract(
+                work,
+                start=self.n,
+                filter=lambda sws: sws.score >= self.score,
+            )
+            work.collection.add_papers(selected)
+            work.save()
+
+    @dataclass
+    class Exclude(Extractor):
+        """Exclude bottom articles from collection."""
+
+        # Maximum number of papers to exclude
+        n: int = None
+
+        # Maximum score for excluding
+        score: float = 0.0
+
+        def run(self, work):
+            selected = self.extract(
+                work,
+                stop=None if self.n is None else -self.n,
+                filter=lambda sws: sws.score <= self.score,
+            )
+            work.collection.exclude_papers(selected)
+            work.save()
+
     # Command
-    command: TaggedUnion[Get, View, Refine]
+    command: TaggedUnion[Get, View, Refine, Include, Exclude]
 
     # File containing the working set
     # [alias: -w]
