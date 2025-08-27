@@ -41,12 +41,14 @@
       display_name: Xavier Bresson
     flags: []
     links:
-    - link: https://jmlr.org/papers/v24/22-0567.html
-      type: abstract.official
     - link: https://jmlr.org/papers/volume24/22-0567/22-0567.pdf
       type: pdf.official
     - link: https://jmlr.org/papers/v24/22-0567.bib
       type: bibtex
+    - link: https://jmlr.org/papers/v24/22-0567.html
+      type: abstract.official
+    - link: https://jmlr.org/papers/v24/22-0567.html
+      type: uid
     releases:
     - pages: 1-48
       status: published
@@ -109,12 +111,14 @@
       display_name: Emmanuel Bengio
     flags: []
     links:
-    - link: https://jmlr.org/papers/v24/22-0364.html
-      type: abstract.official
     - link: https://jmlr.org/papers/volume24/22-0364/22-0364.pdf
       type: pdf.official
     - link: https://jmlr.org/papers/v24/22-0364.bib
       type: bibtex
+    - link: https://jmlr.org/papers/v24/22-0364.html
+      type: abstract.official
+    - link: https://jmlr.org/papers/v24/22-0364.html
+      type: uid
     releases:
     - pages: 1-55
       status: published

@@ -134,6 +134,7 @@ class MiniConf(Discoverer):
             links.add(Link(type="pdf", link=url))
         if url := expand_base(data.get("virtualsite_url")):
             links.add(Link(type="abstract", link=url))
+        links.add(Link(type="uid", link=data["uid"]))
 
         # Add eventmedia links
         for media in data.get("eventmedia", []):

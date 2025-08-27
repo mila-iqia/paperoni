@@ -84,6 +84,8 @@
       type: pdf
     - link: https://icml.cc/virtual/2024/poster/34356
       type: abstract
+    - link: bb1662b7c5f22a0f905fd59e718ca05e
+      type: uid
     releases:
     - pages: null
       status: Accept (Poster)
@@ -264,6 +266,8 @@
       type: pdf
     - link: https://icml.cc/virtual/2024/poster/33422
       type: abstract
+    - link: 63eb58bd4d3486f001438f911a11d323
+      type: uid
     releases:
     - pages: null
       status: Accept (Poster)
@@ -409,6 +413,8 @@
       type: abstract
     - link: https://icml.cc/media/icml-2024/Slides/34500.pdf
       type: slides
+    - link: 1a6727711b84fd1efbb87fc565199d13
+      type: uid
     releases:
     - pages: null
       status: Accept (Poster)
@@ -506,6 +512,8 @@
       type: pdf
     - link: https://icml.cc/virtual/2024/poster/32689
       type: abstract
+    - link: cf1f78fe923afe05f7597da2be7a3da8
+      type: uid
     releases:
     - pages: null
       status: Accept (Poster)
@@ -617,6 +625,8 @@
       type: abstract
     - link: https://jmlr.org/papers/v25/23-0680.html
       type: jmlr
+    - link: f0935e4cd5920aa6c7c996a5ee53a70f
+      type: uid
     releases:
     - pages: null
       status: Accept (Poster)
