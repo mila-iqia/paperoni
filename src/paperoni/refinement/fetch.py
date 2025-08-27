@@ -51,14 +51,9 @@ def _test_tags(f_tags: set, tags: set) -> bool:
 def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
     f_sig = inspect.signature(f)
     if "force" in f_sig.parameters:
-        ret = f(*args, force=force, **kwargs)
+        return f(*args, force=force, **kwargs)
     else:
-        ret = f(*args, **kwargs)
-
-    if isinstance(ret, tuple):
-        return ret
-    else:
-        return (ret,)
+        return f(*args, **kwargs)
 
 
 def fetch_all(type, link, statuses=None, tags=None, force=False):
@@ -75,13 +70,13 @@ def fetch_all(type, link, statuses=None, tags=None, force=False):
             continue
         statuses[nk] = "pending"
         try:
-            paper, *subnames = _call(f.func, type, link, force=force)
+            paper = _call(f.func, type, link, force=force)
             if paper is not None:
                 statuses[nk] = "found"
                 yield PaperInfo(
                     paper=paper,
                     key=key,
-                    info={"refined_by": {":".join([name, *subnames]): key}},
+                    info={"refined_by": {name: key}},
                 )
             else:
                 statuses[nk] = "not_found"

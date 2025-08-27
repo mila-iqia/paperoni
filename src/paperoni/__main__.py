@@ -126,6 +126,8 @@ class Refine:
     link: list[str]
 
     # Tags to refine
+    # [action: append]
+    # [alias: -t]
     tags: list[str] = field(default_factory=list)
 
     # Whether to force re-running the refine

@@ -69,21 +69,18 @@ def pdf(type: str, link: str, force: bool = False) -> PaperInfo:
 
     analysis = prompt(p, force=force)
 
-    return (
-        Paper(
-            title=str(analysis.title),
-            authors=[
-                PaperAuthor(
-                    display_name=str(author_affiliations.author),
-                    author=Author(name=str(author_affiliations.author)),
-                    affiliations=[
-                        Institution(name=str(affiliation))
-                        for affiliation in author_affiliations.affiliations
-                    ],
-                )
-                for author_affiliations in analysis.authors_affiliations
-            ],
-            links=[Link(type=type, link=link)],
-        ),
-        config.refine.prompt.model,
+    return Paper(
+        title=str(analysis.title),
+        authors=[
+            PaperAuthor(
+                display_name=str(author_affiliations.author),
+                author=Author(name=str(author_affiliations.author)),
+                affiliations=[
+                    Institution(name=str(affiliation))
+                    for affiliation in author_affiliations.affiliations
+                ],
+            )
+            for author_affiliations in analysis.authors_affiliations
+        ],
+        links=[Link(type=type, link=link)],
     )
