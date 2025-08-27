@@ -1,3 +1,4 @@
+import logging
 import re
 import traceback
 from datetime import date, datetime
@@ -74,22 +75,29 @@ class JMLR(Discoverer):
             print_exc()
             return
 
+        def absolutize(lnk):
+            if lnk.startswith("/"):
+                lnk = f"{self.urlbase}{lnk}"
+            return lnk
+
         for entry in index.select("dl"):
-            title = entry.select_one("dt").text
+            title = entry.select_one("dt").text.strip()
             author_names = entry.select_one("b").text.split(",")
             author_names = [name.strip() for name in author_names]
             lnks = {x.text: x.attrs["href"] for x in entry.select("a")}
             links = []
-            if "abs" in lnks:
-                links.append(
-                    Link(type="abstract.official", link=f"{self.urlbase}{lnks['abs']}")
-                )
+            uid = None
             if "pdf" in lnks:
-                links.append(
-                    Link(type="pdf.official", link=f"{self.urlbase}{lnks['pdf']}")
-                )
+                uid = absolutize(lnks["pdf"])
+                links.append(Link(type="pdf.official", link=uid))
             if "bib" in lnks:
-                links.append(Link(type="bibtex", link=f"{self.urlbase}{lnks['bib']}"))
+                uid = absolutize(lnks["bib"])
+                links.append(Link(type="bibtex", link=uid))
+            if "abs" in lnks:
+                uid = absolutize(lnks["abs"])
+                links.append(Link(type="abstract.official", link=uid))
+            if uid:
+                links.append(Link(type="uid", link=uid))
 
             # Extract page numbers and year from the text after authors (dd > b)
             text_after_authors = entry.select_one("dd > b").next_sibling
@@ -106,12 +114,15 @@ class JMLR(Discoverer):
                     year = int(page_year_match.group(4))
                     pages = f"{start_page}-{end_page}"
                 else:
-                    # Fallback if pattern not found
-                    pages = ""
-                    year = datetime.now().year
+                    logging.warning(
+                        f"Could not extract year for paper '{title}' in volume {volume}"
+                    )
+                    continue
             else:
-                pages = ""
-                year = datetime.now().year
+                logging.warning(
+                    f"Could not extract year for paper '{title}' in volume {volume}"
+                )
+                continue
 
             paper = Paper(
                 title=title,
