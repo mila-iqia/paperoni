@@ -68,8 +68,8 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
-    def iterate(self):
-        for p in self.command():
+    def iterate(self, **kwargs):
+        for p in self.command(**kwargs):
             send(discover=p)
             yield p
 
@@ -166,7 +166,7 @@ class Work:
 
         def run(self, work):
             ex = work.collection and work.collection.exclusions
-            for pinfo in self.iterate():
+            for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
                 scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
