@@ -265,8 +265,16 @@ class Work:
             work.collection.exclude_papers(selected)
             work.save()
 
+    @dataclass
+    class Clear(Extractor):
+        """Clear the workset."""
+
+        def run(self, work):
+            self.extract(work, filter=lambda _: True)
+            work.save()
+
     # Command
-    command: TaggedUnion[Get, View, Refine, Include, Exclude]
+    command: TaggedUnion[Get, View, Refine, Include, Exclude, Clear]
 
     # File containing the working set
     # [alias: -w]
