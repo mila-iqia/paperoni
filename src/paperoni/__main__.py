@@ -319,8 +319,12 @@ class Work:
 
 @dataclass
 class Coll:
+    """Operations on the paper collection."""
+
     @dataclass
     class Search:
+        """Search the paper collection."""
+
         # Title of the paper
         title: str = None
 
