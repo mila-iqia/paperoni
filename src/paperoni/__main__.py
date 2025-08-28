@@ -165,7 +165,7 @@ class Work:
         """Get articles from various sources."""
 
         def run(self, work):
-            ex = work.collection and work.collection.exclusions
+            ex = work.collection and work.collection.exclusions()
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
@@ -198,7 +198,6 @@ class Work:
 
         def run(self, work):
             statuses = {}
-            focuses = deserialize(Focuses, work.focuses or config.focuses)
             it = itertools.islice(work.top, self.n) if self.n else work.top
             jobs = [
                 (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
@@ -213,7 +212,7 @@ class Work:
                 )
                 for pinfo in fetch_all(lnk.type, lnk.link, statuses=statuses):
                     ws.add(pinfo)
-                    sws.score = focuses.score(ws)
+                    sws.score = work.focuses.score(ws)
             work.top.resort()
             work.save()
 
@@ -271,7 +270,7 @@ class Work:
 
     # File containing the working set
     # [alias: -w]
-    workfile: Path = None
+    work_file: Path = None
 
     # List of focuses
     # [alias: -f]
@@ -300,9 +299,9 @@ class Work:
 
     @cached_property
     def top(self):
-        workfile = self.workfile or config.workfile
-        if workfile.exists():
-            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], workfile)
+        work_file = self.work_file or config.work_file
+        if work_file.exists():
+            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
         else:
             top = Top(self.n)
         return top
@@ -311,7 +310,7 @@ class Work:
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
             self.top,
-            dest=self.workfile or config.workfile,
+            dest=self.work_file or config.work_file,
         )
 
     def run(self):

@@ -29,7 +29,7 @@ class PaperoniConfig:
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
     refine: Refine = None
-    workfile: Path = None
+    work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
 
 

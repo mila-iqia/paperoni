@@ -37,5 +37,6 @@ class Synth(Discoverer):
     discoverers: DiscoBag
 
     def query(self, focuses: Focuses):
+        """Query multiple discoverers."""
         for disco in self.discoverers.discoverers:
             yield from disco(focuses=focuses)

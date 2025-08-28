@@ -28,6 +28,8 @@ class FileCollection(PaperCollection):
     directory: Path
 
     def __post_init__(self):
+        if not self.directory.exists():
+            self.directory.mkdir(exist_ok=True, parents=True)
         self.papers_file = self.directory / "papers.json"
         self.exclusions_file = self.directory / "exclusions.json"
         if not self.papers_file.exists():
@@ -46,12 +48,17 @@ class FileCollection(PaperCollection):
         return {link: p for p in self._papers for link in p.links}
 
     def add_papers(self, papers: Iterable[Paper]) -> None:
+        papers = list(papers)
         if papers:
             self._papers.extend(papers)
             json.dump(
                 fp=open(self.papers_file, "w"),
                 obj=serialize(list[Paper], self._papers),
             )
+            for p in papers:
+                self._by_title[p.title] = p
+                for link in p.links:
+                    self._by_link[link] = p
 
     def exclude_papers(self, papers: Iterable[Paper]) -> None:
         for paper in papers:
@@ -78,13 +85,18 @@ class FileCollection(PaperCollection):
         # Author of the paper
         author: str = None,
     ):
+        title = title and title.lower()
+        author = author and author.lower()
+        institution = institution and institution.lower()
         for p in self._papers:
-            if title and title not in p.title:
+            if title and title not in p.title.lower():
                 continue
-            if author and not any(author in a.display_name for a in p.authors):
+            if author and not any(author in a.display_name.lower() for a in p.authors):
                 continue
             if institution and not any(
-                institution in aff.name for a in p.authors for aff in a.affiliations
+                institution in aff.name.lower()
+                for a in p.authors
+                for aff in a.affiliations
             ):
                 continue
             yield p

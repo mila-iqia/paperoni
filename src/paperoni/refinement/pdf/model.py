@@ -28,6 +28,7 @@ SYSTEM_MESSAGE = """You are a Deep Learning expert specializing in scientific te
   - "Mila": could be listed as MILA, Montreal Institute for Learning Algorithms, Quebec AI Institute, Mila AI Institute, Institut Québécois de l'Intelligence Artificielle, IQIA.
   - "Université de Montréal": could be listed in English as University of Montreal, as U. Montreal, etc.
   - "CIFAR": sometimes listed as CIFAR AI Chair
+- If you see something like "Mila - SomeAffiliation" or "Mila/SomeAffiliation", list Mila and that affiliation separately, unless the affiliation after the dash is just a synonym for Mila.
 
 ### Key Considerations:
 
