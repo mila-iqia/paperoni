@@ -74,7 +74,7 @@ class FileCollection(PaperCollection):
         for lnk in paper.links:
             if result := self._by_link.get(lnk, None):
                 return result
-        return self._by_title.get(paper.title, None)
+        return self._by_title.get(paper.title.lower(), None)
 
     def search(
         self,
