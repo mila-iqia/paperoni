@@ -56,7 +56,7 @@ class FileCollection(PaperCollection):
                 obj=serialize(list[Paper], self._papers),
             )
             for p in papers:
-                self._by_title[p.title] = p
+                self._by_title[p.title.lower()] = p
                 for link in p.links:
                     self._by_link[link] = p
 
