@@ -26,7 +26,7 @@ def register_fetch(f=None, *, tags=None):
 
 
 def _test_tags(f_tags: set, tags: set) -> bool:
-    return "all" in tags or not (tags - f_tags)
+    return "all" in tags or bool(f_tags & tags)
 
 
 def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:

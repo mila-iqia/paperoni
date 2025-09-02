@@ -15,9 +15,10 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
     Recursively clean up the schema removing $schema and unsupported additionalProperties
     """
     if not isinstance(schema, dict):
+        # $schema is removed by root=False
         schema = serieux.schema(schema).compile(ref_policy="never", root=False)
 
-    for key in ["$schema", "additionalProperties"]:
+    for key in ["additionalProperties"]:
         if key in schema:
             del schema[key]
 

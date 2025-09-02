@@ -30,8 +30,9 @@ def _make_key(_, kwargs: dict) -> str:
 
 
 def prompt(link: str, force: bool = False) -> Analysis:
+    """Analyze HTML content to extract author and affiliation information."""
     try:
-        html_content = config.fetch.read(f"https://doi.org/{link}", format="txt")
+        html_content = config.fetch.read(link, format="txt")
     except HTTPError as exc:  # pragma: no cover
         if exc.response.status_code == 404:
             return None
@@ -73,27 +74,30 @@ def prompt(link: str, force: bool = False) -> Analysis:
 
 @register_fetch(tags={"prompt", "html"})
 def html(type: Literal["doi"], link: str, force: bool = False) -> Paper:
-    """Analyze HTML content to extract author and affiliation information."""
     send(
         prompt=Analysis.__module__,
         model=config.refine.prompt.model,
         input=f"{type}:{link}",
     )
 
-    analysis = prompt(link, force=force)
+    analysis = prompt(f"https://doi.org/{link}", force=force)
 
-    return Paper(
-        title=str(analysis.title),
-        authors=[
-            PaperAuthor(
-                display_name=str(author_affiliations.author),
-                author=Author(name=str(author_affiliations.author)),
-                affiliations=[
-                    Institution(name=str(affiliation))
-                    for affiliation in author_affiliations.affiliations
-                ],
-            )
-            for author_affiliations in analysis.authors_affiliations
-        ],
-        links=[Link(type=type, link=link)],
-    )
+    return (
+        analysis
+        and analysis.authors_affiliations
+        and Paper(
+            title=str(analysis.title),
+            authors=[
+                PaperAuthor(
+                    display_name=str(author_affiliations.author),
+                    author=Author(name=str(author_affiliations.author)),
+                    affiliations=[
+                        Institution(name=str(affiliation))
+                        for affiliation in author_affiliations.affiliations
+                    ],
+                )
+                for author_affiliations in analysis.authors_affiliations
+            ],
+            links=[Link(type=type, link=link)],
+        )
+    ) or None

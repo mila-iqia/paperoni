@@ -126,7 +126,8 @@ class Refine:
     # [action: append]
     link: list[str]
 
-    # Tags to refine
+    # Refine tags. Refine will be executed on all strategies tagged with at
+    # least one of the tags. Use "all" to refine using all strategies.
     # [action: append]
     # [alias: -t]
     tags: list[str] = field(default_factory=list)

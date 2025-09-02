@@ -12,17 +12,13 @@ from paperoni.refinement.title import crossref_title, openalex_title
 @pytest.mark.parametrize(
     ["f_tags", "tags", "pass_"],
     [
-        (set(), set(), True),
         (set(), {"all"}, True),
         (set(), {"a"}, False),
-        ({"a", "b"}, {"all"}, True),
-        ({"a", "b"}, {"a"}, True),
-        ({"a", "b"}, {"b"}, True),
-        ({"a", "b"}, {"a", "b"}, True),
-        ({"a", "b"}, {"a", "b", "c"}, False),
-        ({"a", "b"}, {"a", "c"}, False),
-        ({"a", "b"}, {"a", "c", "all"}, True),
-        ({"a", "b", "c"}, {"a", "b", "c", "all"}, True),
+        ({"normal", "a"}, {"all"}, True),
+        ({"normal", "a"}, {"normal"}, True),
+        ({"normal", "a"}, {"a"}, True),
+        ({"normal", "a"}, {"normal", "a"}, True),
+        ({"a", "b"}, {"c", "d"}, False),
     ],
 )
 def test__test_tags(f_tags, tags, pass_):

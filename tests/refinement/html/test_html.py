@@ -30,7 +30,7 @@ def test_html(data_regression: DataRegressionFixture):
         pinfo = next(
             filter(
                 lambda pinfo: "html" in pinfo.info["refined_by"],
-                fetch_all("doi", "10.1038/s41597-023-02214-y", tags={"prompt", "html"}),
+                fetch_all("doi", "10.1038/s41597-023-02214-y", tags={"html"}),
             )
         )
 
