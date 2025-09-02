@@ -21,6 +21,7 @@ from serieux import (
 )
 from serieux.features.tagset import FromEntryPoint
 
+from .collection.filecoll import FileCollection
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -67,8 +68,8 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
-    def iterate(self):
-        for p in self.command():
+    def iterate(self, **kwargs):
+        for p in self.command(**kwargs):
             send(discover=p)
             yield p
 
@@ -164,12 +165,13 @@ class Work:
         """Get articles from various sources."""
 
         def run(self, work):
-            focuses = deserialize(Focuses, work.focuses or config.focuses)
-            ex = work.exclusions and deserialize(set[str], work.exclusions)
-            for pinfo in self.iterate():
+            ex = work.collection and work.collection.exclusions()
+            for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                scored = Scored(focuses.score(pinfo), PaperWorkingSet.make(pinfo))
+                if work.collection and work.collection.find_paper(pinfo.paper):
+                    continue
+                scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 work.top.add(scored)
             work.save()
 
@@ -196,7 +198,6 @@ class Work:
 
         def run(self, work):
             statuses = {}
-            focuses = deserialize(Focuses, work.focuses or config.focuses)
             it = itertools.islice(work.top, self.n) if self.n else work.top
             jobs = [
                 (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
@@ -211,33 +212,104 @@ class Work:
                 )
                 for pinfo in fetch_all(lnk.type, lnk.link, statuses=statuses):
                     ws.add(pinfo)
-                    sws.score = focuses.score(ws)
+                    sws.score = work.focuses.score(ws)
             work.top.resort()
             work.save()
 
+    @dataclass
+    class Extractor:
+        def extract(self, work, filter, start=0, stop=None):
+            if start or stop:
+                it = itertools.islice(work.top, start, stop)
+            else:
+                it = iter(work.top)
+            selected = [sws for sws in it if filter(sws)]
+            work.top.discard_all(selected)
+            return [s.value.current for s in selected]
+
+    @dataclass
+    class Include(Extractor):
+        """Include top articles to collection."""
+
+        # Maximum number of papers to include
+        n: int = None
+
+        # Minimum score for saving
+        score: float = 0.1
+
+        def run(self, work):
+            selected = self.extract(
+                work,
+                start=self.n,
+                filter=lambda sws: sws.score >= self.score,
+            )
+            work.collection.add_papers(selected)
+            work.save()
+
+    @dataclass
+    class Exclude(Extractor):
+        """Exclude bottom articles from collection."""
+
+        # Maximum number of papers to exclude
+        n: int = None
+
+        # Maximum score for excluding
+        score: float = 0.0
+
+        def run(self, work):
+            selected = self.extract(
+                work,
+                stop=None if self.n is None else -self.n,
+                filter=lambda sws: sws.score <= self.score,
+            )
+            work.collection.exclude_papers(selected)
+            work.save()
+
+    @dataclass
+    class Clear(Extractor):
+        """Clear the workset."""
+
+        def run(self, work):
+            self.extract(work, filter=lambda _: True)
+            work.save()
+
     # Command
-    command: TaggedUnion[Get, View, Refine]
+    command: TaggedUnion[Get, View, Refine, Include, Exclude, Clear]
 
     # File containing the working set
     # [alias: -w]
-    workfile: Path = None
+    work_file: Path = None
 
     # List of focuses
     # [alias: -f]
-    focuses: Path = None
+    focus_file: Path = None
 
-    # Exclusion list
-    # [alias: -x]
-    exclusions: Path = None
+    # Collection dir
+    # [alias: -c]
+    collection_dir: Path = None
 
     # Number of papers to keep in the working set
     n: int = 10
 
     @cached_property
+    def focuses(self):
+        if self.focus_file:
+            return deserialize(Focuses, self.focus_file)
+        else:
+            return config.focuses
+
+    @cached_property
+    def collection(self):
+        if self.collection_dir:
+            return FileCollection(self.collection_dir)
+        else:
+            return config.collection
+
+    @cached_property
     def top(self):
-        workfile = self.workfile or config.workfile
-        if workfile.exists():
-            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], workfile)
+        work_file = self.work_file or config.work_file
+        if work_file.exists():
+            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
         else:
             top = Top(self.n)
         return top
@@ -246,8 +318,54 @@ class Work:
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
             self.top,
-            dest=self.workfile or config.workfile,
+            dest=self.work_file or config.work_file,
         )
+
+    def run(self):
+        self.command.run(self)
+
+
+@dataclass
+class Coll:
+    """Operations on the paper collection."""
+
+    @dataclass
+    class Search:
+        """Search the paper collection."""
+
+        # Title of the paper
+        title: str = None
+
+        # Author of the paper
+        # [alias: -a]
+        author: str = None
+
+        # Institution of an author
+        # [alias: -i]
+        institution: str = None
+
+        # Output format
+        format: Formatter = TerminalFormatter
+
+        def run(self, coll):
+            results = coll.collection.search(
+                title=self.title, author=self.author, institution=self.institution
+            )
+            self.format(results)
+
+    # Command to execute
+    command: TaggedUnion[Search]
+
+    # Collection dir
+    # [alias: -c]
+    collection_dir: Path = None
+
+    @cached_property
+    def collection(self):
+        if self.collection_dir:
+            return FileCollection(self.collection_dir)
+        else:
+            return config.collection
 
     def run(self):
         self.command.run(self)
@@ -258,7 +376,7 @@ class PaperoniInterface:
     """Paper database"""
 
     # Command to execute
-    command: TaggedUnion[Discover, Refine, Fulltext, Work]
+    command: TaggedUnion[Discover, Refine, Fulltext, Work, Coll]
 
     # Enable rich dashboard
     dash: bool = True

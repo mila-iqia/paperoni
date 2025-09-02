@@ -39,7 +39,9 @@ class ErrorPolicy(Enum):
 
 
 class MiniConf(Discoverer):
-    def convert_paper(self, data, conference=None, venue_date=None):
+    def convert_paper(
+        self, data, conference=None, venue_date=None, date_precision=DatePrecision.day
+    ):
         """Convert JSON data from conference API to Paper object"""
         # Extract basic paper information
         title = data.get("name", "")
@@ -88,7 +90,7 @@ class MiniConf(Discoverer):
             name=conference_name,
             series=conference_name,
             date=venue_date,
-            date_precision=DatePrecision.day,
+            date_precision=date_precision,
             aliases=[],
             links=[],
             open=True,
@@ -238,6 +240,7 @@ class MiniConf(Discoverer):
 
         # Find the minimum starttime across all papers to determine conference date
         conference_date = None
+        date_precision = DatePrecision.day
         for paper_data in data["results"]:
             if paper_data.get("starttime"):
                 try:
@@ -255,6 +258,7 @@ class MiniConf(Discoverer):
         # If no valid starttime found, use a default date
         if conference_date is None:
             conference_date = date(year, 1, 1)
+            date_precision = DatePrecision.year
 
         def matches(paper):
             if not affiliation and not author:
@@ -279,7 +283,10 @@ class MiniConf(Discoverer):
             paper_data["base_url"] = base_url
             try:
                 paper = self.convert_paper(
-                    paper_data, conference=conference, venue_date=conference_date
+                    paper_data,
+                    conference=conference,
+                    venue_date=conference_date,
+                    date_precision=date_precision,
                 )
                 if matches(paper.paper):
                     n += 1

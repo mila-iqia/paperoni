@@ -50,6 +50,16 @@ def merge(x: object, y: object, qx: Number, qy: Number):
 
 
 @ovld
+def merge(x: None, y: object, qx: Number, qy: Number):
+    return y
+
+
+@ovld(priority=0.1)
+def merge(x: object, y: None, qx: Number, qy: Number):
+    return x
+
+
+@ovld
 def merge(x: object, y: object, qx: Number, qy: Number):
     return x if qx > qy else y
 
