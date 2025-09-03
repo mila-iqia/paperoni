@@ -239,6 +239,7 @@ class Work:
                 (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
             ]
             for ws, sws, lnk in prog(jobs, name="refine"):
+                send(event=f"Refine {lnk.type}:{lnk.link}")
                 statuses.update(
                     {
                         (name, key): "done"
@@ -331,7 +332,7 @@ class Work:
     collection_file: Path = None
 
     # Number of papers to keep in the working set
-    n: int = 10
+    n: int = 1000
 
     @cached_property
     def focuses(self):
@@ -415,11 +416,29 @@ class Coll:
 
 
 @dataclass
+class Batch:
+    """Run a batch of commands from a YAML or JSON file."""
+
+    # Path to the batch file
+    # [positional]
+    batch_file: Path
+
+    def run(self):
+        batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
+        for name, cmd in batch.items():
+            send(event=f"Batch: start step {name}")
+            cmd.run()
+
+
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch]
+
+
+@dataclass
 class PaperoniInterface:
     """Paper database"""
 
     # Command to execute
-    command: TaggedUnion[Discover, Refine, Fulltext, Work, Coll]
+    command: PaperoniCommand
 
     # Enable rich dashboard
     dash: bool = True
@@ -431,6 +450,11 @@ class PaperoniInterface:
 
 
 def enable_dash():
+    @outsight.add
+    async def show_events(sent, dash):
+        async for messages in sent["event"].roll(5, partial=True):
+            dash["event"] = History(messages)
+
     @outsight.add
     async def show_progress(sent, dash):
         async for name, sofar, total in sent["progress"]:
