@@ -1,0 +1,251 @@
+- info:
+    refined_by:
+      html: doi:10.1038/s41597-023-02214-y
+  key: doi:10.1038/s41597-023-02214-y
+  paper:
+    abstract: null
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: University of Toronto
+      - aliases: []
+        category: unknown
+        name: University of Toronto Scarborough
+      - aliases: []
+        category: unknown
+        name: Mila
+      author:
+        aliases: []
+        links: []
+        name: Colleen J. Gillon
+      display_name: Colleen J. Gillon
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Jérôme A. Lecoq
+      display_name: Jérôme A. Lecoq
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: York University
+      author:
+        aliases: []
+        links: []
+        name: Jason E. Pina
+      display_name: Jason E. Pina
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Ruweida Ahmed
+      display_name: Ruweida Ahmed
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Yazan N. Billeh
+      display_name: Yazan N. Billeh
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Shiella Caldejon
+      display_name: Shiella Caldejon
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Peter Groblewski
+      display_name: Peter Groblewski
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: York University
+      author:
+        aliases: []
+        links: []
+        name: Timothy M. Henley
+      display_name: Timothy M. Henley
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: India Kato
+      display_name: India Kato
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Eric Lee
+      display_name: Eric Lee
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Jennifer Luviano
+      display_name: Jennifer Luviano
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Kyla Mace
+      display_name: Kyla Mace
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Chelsea Nayan
+      display_name: Chelsea Nayan
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Thuyanh V. Nguyen
+      display_name: Thuyanh V. Nguyen
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Kat North
+      display_name: Kat North
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Jed Perkins
+      display_name: Jed Perkins
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Sam Seid
+      display_name: Sam Seid
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Matthew T. Valley
+      display_name: Matthew T. Valley
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Allen Institute
+      author:
+        aliases: []
+        links: []
+        name: Ali Williford
+      display_name: Ali Williford
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      - aliases: []
+        category: unknown
+        name: Université de Montréal
+      - aliases: []
+        category: unknown
+        name: CIFAR
+      author:
+        aliases: []
+        links: []
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: DeepMind
+      - aliases: []
+        category: unknown
+        name: University College London
+      author:
+        aliases: []
+        links: []
+        name: Timothy P. Lillicrap
+      display_name: Timothy P. Lillicrap
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: York University
+      - aliases: []
+        category: unknown
+        name: CIFAR
+      - aliases: []
+        category: unknown
+        name: Vector Institute for Artificial Intelligence
+      author:
+        aliases: []
+        links: []
+        name: Joel Zylberberg
+      display_name: Joel Zylberberg
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Mila
+      - aliases: []
+        category: unknown
+        name: CIFAR
+      - aliases: []
+        category: unknown
+        name: McGill University
+      author:
+        aliases: []
+        links: []
+        name: Blake A. Richards
+      display_name: Blake A. Richards
+    flags: []
+    links:
+    - link: 10.1038/s41597-023-02214-y
+      type: doi
+    releases: []
+    title: Responses of pyramidal cell somata and apical dendrites in mouse visual
+      cortex over multiple days
+    topics: []
+  score: 0.0
+  update_key: null

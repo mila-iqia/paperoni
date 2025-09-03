@@ -3,7 +3,7 @@ from paperazzi.platforms.utils import Message
 
 from ...config import config
 from ...fulltext.pdf import PDF, CachePolicies, get_pdf
-from ...model.classes import Author, Institution, Link, Paper, PaperAuthor, PaperInfo
+from ...model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ...prompt import ParsedResponseSerializer
 from ..fetch import register_fetch
 from .model import SYSTEM_MESSAGE, Analysis
@@ -25,7 +25,7 @@ def _make_key(_, kwargs: dict) -> str:
     return config.refine.prompt._make_key(None, kwargs)
 
 
-def prompt(pdf: PDF, force: bool = False) -> Analysis:
+def prompt(pdf: PDF, force: bool = False) -> Paper:
     pdf_prompt = config.refine.prompt.prompt.update(
         serializer=ParsedResponseSerializer[Analysis],
         cache_dir=pdf.directory / "prompt",
@@ -49,25 +49,12 @@ def prompt(pdf: PDF, force: bool = False) -> Analysis:
         _, tmp_cache_file = tmp_pdf_prompt.exists(**prompt_kwargs)
         tmp_cache_file.unlink(missing_ok=True)
         try:
-            return tmp_pdf_prompt(**prompt_kwargs).parsed
+            analysis = tmp_pdf_prompt(**prompt_kwargs).parsed
         finally:
             if tmp_cache_file.exists():
                 tmp_cache_file.rename(cache_file)
     else:
-        return pdf_prompt(**prompt_kwargs).parsed
-
-
-@register_fetch(tags={"prompt", "pdf"})
-def pdf(type: str, link: str, force: bool = False) -> PaperInfo:
-    key = f"{type}:{link}"
-    p = get_pdf(key, cache_policy=CachePolicies.USE_BEST)
-
-    if p is None:
-        return None
-
-    send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=key)
-
-    analysis = prompt(p, force=force)
+        analysis: Analysis = pdf_prompt(**prompt_kwargs).parsed
 
     return Paper(
         title=str(analysis.title),
@@ -82,5 +69,20 @@ def pdf(type: str, link: str, force: bool = False) -> PaperInfo:
             )
             for author_affiliations in analysis.authors_affiliations
         ],
-        links=[Link(type=type, link=link)],
     )
+
+
+@register_fetch(tags={"prompt", "pdf"})
+def pdf(type: str, link: str, force: bool = False) -> Paper:
+    key = f"{type}:{link}"
+    p = get_pdf(key, cache_policy=CachePolicies.USE_BEST)
+
+    if p is None:
+        return None
+
+    send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=key)
+
+    paper = prompt(p, force=force)
+    paper.links.append(Link(type=type, link=link))
+
+    return paper.authors and paper or None

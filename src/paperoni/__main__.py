@@ -126,7 +126,7 @@ class Refine:
     # [action: append]
     link: list[str]
 
-    # Tags to refine
+    # Refine tags
     # [action: append]
     # [alias: -t]
     tags: list[str] = field(default_factory=list)
