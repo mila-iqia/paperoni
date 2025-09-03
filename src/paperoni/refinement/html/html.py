@@ -29,7 +29,7 @@ def _make_key(_, kwargs: dict) -> str:
     return config.refine.prompt._make_key(None, kwargs)
 
 
-def prompt(link: str, force: bool = False) -> Analysis:
+def prompt(link: str, force: bool = False) -> Paper:
     """Analyze HTML content to extract author and affiliation information."""
     try:
         html_content = config.fetch.read(link, format="txt")
@@ -64,12 +64,27 @@ def prompt(link: str, force: bool = False) -> Analysis:
         _, tmp_cache_file = tmp_html_prompt.exists(**prompt_kwargs)
         tmp_cache_file.unlink(missing_ok=True)
         try:
-            return tmp_html_prompt(**prompt_kwargs).parsed
+            analysis = tmp_html_prompt(**prompt_kwargs).parsed
         finally:
             if tmp_cache_file.exists():
                 tmp_cache_file.rename(cache_file)
     else:
-        return html_prompt(**prompt_kwargs).parsed
+        analysis: Analysis = html_prompt(**prompt_kwargs).parsed
+
+    return Paper(
+        title=str(analysis.title),
+        authors=[
+            PaperAuthor(
+                display_name=str(author_affiliations.author),
+                author=Author(name=str(author_affiliations.author)),
+                affiliations=[
+                    Institution(name=str(affiliation))
+                    for affiliation in author_affiliations.affiliations
+                ],
+            )
+            for author_affiliations in analysis.authors_affiliations
+        ],
+    )
 
 
 @register_fetch(tags={"prompt", "html"})
@@ -80,24 +95,7 @@ def html(type: Literal["doi"], link: str, force: bool = False) -> Paper:
         input=f"{type}:{link}",
     )
 
-    analysis = prompt(f"https://doi.org/{link}", force=force)
+    paper = prompt(f"https://doi.org/{link}", force=force)
+    paper.links.append(Link(type=type, link=link))
 
-    return (
-        analysis
-        and analysis.authors_affiliations
-        and Paper(
-            title=str(analysis.title),
-            authors=[
-                PaperAuthor(
-                    display_name=str(author_affiliations.author),
-                    author=Author(name=str(author_affiliations.author)),
-                    affiliations=[
-                        Institution(name=str(affiliation))
-                        for affiliation in author_affiliations.affiliations
-                    ],
-                )
-                for author_affiliations in analysis.authors_affiliations
-            ],
-            links=[Link(type=type, link=link)],
-        )
-    ) or None
+    return paper.authors and paper or None
