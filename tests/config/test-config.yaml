@@ -1,7 +1,7 @@
 paperoni:
   mailto: publications@mila.quebec
-  cache_path: ../cache
-  data_path: data
+  cache_path: ../../cache
+  data_path: ../data
   fetch:
     $class: RulesFetcher
     rules:
@@ -21,6 +21,10 @@ paperoni:
       cloudflare:
         $class: CloudFlareFetcher
         user_agent: chrome
+  focuses:
+    - "!institution :: Mila :: 10"
+    - "!author :: Yoshua Bengio :: 3"
+    - "!author :: Aaron Courville :: 3"
   refine:
     prompt:
       $class: GenAIPrompt
