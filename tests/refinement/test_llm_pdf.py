@@ -8,19 +8,18 @@ from paperoni.refinement.fetch import fetch_all
 from tests.utils import check_papers
 
 
-def test_html(data_regression: DataRegressionFixture):
+def test_pdf(data_regression: DataRegressionFixture):
     with (
         gifnoc.overlay({"paperoni.data_path": str(Path(__file__).parent / "data")}),
         patch(
-            "paperoni.refinement.html.html._make_key",
-            lambda *args, **kwargs: "DUMMY_KEY",
+            "paperoni.refinement.llm_pdf._make_key", lambda *args, **kwargs: "DUMMY_KEY"
         ),
     ):
         assert (
             next(
                 filter(
-                    lambda pinfo: "html" in pinfo.info["refined_by"],
-                    fetch_all("doi", "10.1038/s41597-023-02214-y", tags={}),
+                    lambda pinfo: "pdf" in pinfo.info["refined_by"],
+                    fetch_all("openreview", "_3FyT_W1DW", tags={}),
                 ),
                 None,
             )
@@ -29,8 +28,8 @@ def test_html(data_regression: DataRegressionFixture):
 
         pinfo = next(
             filter(
-                lambda pinfo: "html" in pinfo.info["refined_by"],
-                fetch_all("doi", "10.1038/s41597-023-02214-y", tags={"html"}),
+                lambda pinfo: "pdf" in pinfo.info["refined_by"],
+                fetch_all("openreview", "_3FyT_W1DW", tags={"pdf"}),
             )
         )
 

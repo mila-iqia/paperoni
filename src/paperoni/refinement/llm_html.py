@@ -1,15 +1,22 @@
 import hashlib
+from pathlib import Path
 from typing import Literal
 
 from outsight import send
 from paperazzi.platforms.utils import Message
 from requests import HTTPError
 
-from ...config import config
-from ...model.classes import Author, Institution, Link, Paper, PaperAuthor
-from ...prompt import ParsedResponseSerializer
-from ..fetch import register_fetch
-from .model import FIRST_MESSAGE, SYSTEM_MESSAGE, Analysis
+from ..config import config
+from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
+from ..prompt import ParsedResponseSerializer
+from .fetch import register_fetch
+from .llm_common import Analysis
+
+SYSTEM_MESSAGE = (Path(__file__).parent / "llm-html-system-prompt.md").read_text()
+
+FIRST_MESSAGE = """### The HTML web page of the scientific paper:
+
+{}"""
 
 
 def _make_key(_, kwargs: dict) -> str:
