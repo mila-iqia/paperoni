@@ -1,12 +1,16 @@
+from pathlib import Path
+
 from outsight import send
 from paperazzi.platforms.utils import Message
 
-from ...config import config
-from ...fulltext.pdf import PDF, CachePolicies, get_pdf
-from ...model.classes import Author, Institution, Link, Paper, PaperAuthor
-from ...prompt import ParsedResponseSerializer
-from ..fetch import register_fetch
-from .model import SYSTEM_MESSAGE, Analysis
+from ..config import config
+from ..fulltext.pdf import PDF, CachePolicies, get_pdf
+from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
+from ..prompt import ParsedResponseSerializer
+from .fetch import register_fetch
+from .llm_common import Analysis
+
+SYSTEM_MESSAGE = (Path(__file__).parent / "llm-pdf-system-prompt.md").read_text()
 
 
 def _make_key(_, kwargs: dict) -> str:
