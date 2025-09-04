@@ -166,7 +166,7 @@ class Work:
         """Get articles from various sources."""
 
         def run(self, work: "Work"):
-            ex = work.collection and work.collection.exclusions()
+            ex = work.collection and work.collection.exclusions
             tmp_col = TmpCollection()
             tmp_col.add_papers(scored.value.current for scored in work.top)
             for pinfo in self.iterate(focuses=work.focuses):
@@ -315,9 +315,7 @@ class Work:
     def top(self):
         work_file = self.work_file or config.work_file
         if work_file.exists():
-            top = deserialize(
-                Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file
-            )
+            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
         else:
             top = Top(self.n)
         return top

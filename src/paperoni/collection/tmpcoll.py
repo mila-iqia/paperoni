@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Iterable
+from typing import Generator, Iterable
 
 from ..model.classes import Paper
 from .abc import PaperCollection
@@ -25,6 +25,10 @@ class TmpCollection(PaperCollection):
         self._papers: list[Paper] = []
         self._exclusions: set[str] = set()
 
+    @property
+    def exclusions(self) -> set[str]:
+        return self._exclusions
+
     @cached_property
     def _by_title(self):
         return {}
@@ -34,10 +38,12 @@ class TmpCollection(PaperCollection):
         return {}
 
     def add_papers(self, papers: Iterable[Paper]) -> None:
-        papers = list(papers)
-        if papers:
-            self._papers.extend(papers)
-            for p in papers:
+        for p in papers:
+            for link in p.links:
+                if f"{link.type}:{link.link}" in self.exclusions:
+                    break
+            else:
+                self._papers.append(p)
                 self._by_title[p.title.lower()] = p
                 for link in p.links:
                     self._by_link[link] = p
@@ -62,7 +68,7 @@ class TmpCollection(PaperCollection):
         institution: str = None,
         # Author of the paper
         author: str = None,
-    ):
+    ) -> Generator[Paper, None, None]:
         title = title and title.lower()
         author = author and author.lower()
         institution = institution and institution.lower()
@@ -78,6 +84,3 @@ class TmpCollection(PaperCollection):
             ):
                 continue
             yield p
-
-    def exclusions(self) -> set[str]:
-        return self._exclusions
