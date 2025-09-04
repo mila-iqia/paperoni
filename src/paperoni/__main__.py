@@ -4,7 +4,7 @@ import json
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Generator, Literal
 
 import yaml
 from gifnoc import add_overlay, cli
@@ -69,7 +69,7 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
-    def iterate(self, **kwargs):
+    def iterate(self, **kwargs) -> Generator[PaperInfo, None, None]:
         for p in self.command(**kwargs):
             send(discover=p)
             yield p
@@ -168,12 +168,13 @@ class Work:
         def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions()
             tmp_col = TmpCollection()
-            tmp_col.add_papers(work.collection and work.collection.search() or [])
             tmp_col.add_papers(scored.value.current for scored in work.top)
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                if tmp_col.find_paper(pinfo.paper):
+                if tmp_col.find_paper(pinfo.paper) or (
+                    work.collection and work.collection.find_paper(pinfo.paper)
+                ):
                     continue
                 tmp_col.add_papers([pinfo.paper])
                 scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
@@ -314,7 +315,9 @@ class Work:
     def top(self):
         work_file = self.work_file or config.work_file
         if work_file.exists():
-            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
+            top = deserialize(
+                Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file
+            )
         else:
             top = Top(self.n)
         return top
