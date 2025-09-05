@@ -31,6 +31,7 @@ from .fulltext.pdf import CachePolicies, get_pdf
 from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
+from .model.utils import paper_has_updated
 from .refinement import fetch_all
 from .utils import prog, url_to_id
 
@@ -169,12 +170,35 @@ class Work:
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                if tmp_col.find_paper(pinfo.paper) or (
-                    work.collection and work.collection.find_paper(pinfo.paper)
+                if tmp_col.find_paper(pinfo.paper):
+                    continue
+
+                if (
+                    work.collection
+                    and (col_paper := work.collection.find_paper(pinfo.paper))
+                    and not paper_has_updated(pinfo.paper, col_paper)
                 ):
                     continue
+
+                if col_paper:
+                    working_set = PaperWorkingSet.make(
+                        PaperInfo(
+                            paper=col_paper,
+                            key=pinfo.key,
+                            update_key=pinfo.update_key,
+                            info=pinfo.info,
+                            score=10**10,
+                        )
+                    )
+                    working_set.add(pinfo)
+                    scored = Scored(10**10, working_set)
+
+                else:
+                    scored = Scored(
+                        work.focuses.score(pinfo), PaperWorkingSet.make(pinfo)
+                    )
+
                 tmp_col.add_papers([pinfo.paper])
-                scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
                 work.top.add(scored)
             work.save()
 
