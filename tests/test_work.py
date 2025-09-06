@@ -1,10 +1,12 @@
-from functools import partial
+from datetime import datetime
 from pathlib import Path
+from time import sleep
 
 import yaml
 from serieux import CommentRec, deserialize, serialize
 
 from paperoni.__main__ import Work
+from paperoni.collection.abc import CollectionPaper
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.tmpcoll import TmpCollection
 from paperoni.discovery.semantic_scholar import SemanticScholar
@@ -18,7 +20,7 @@ def work(command, *, state_path: Path, collection_dir: Path):
     return deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state_path)
 
 
-def test_get_does_not_duplicate(tmp_path: Path):
+def test_work_get_does_not_duplicate(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
@@ -47,7 +49,7 @@ def test_get_does_not_duplicate(tmp_path: Path):
         tmp_col.add_papers([paper])
 
 
-def test_get_does_not_duplicate_collection_papers(tmp_path: Path):
+def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
     work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
@@ -69,14 +71,14 @@ def test_get_does_not_duplicate_collection_papers(tmp_path: Path):
         assert col.find_paper(paper) is None
 
 
-def test_get_updates_collection_papers(tmp_path: Path):
+def test_work_updates_collection_papers(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
         collection_dir=tmp_path / "collection",
     )
 
-    # remove a link from a paper to fake an update
+    # remove a link from a paper to fake an update on the next work-get
     paper_to_update: Paper = state.entries[2].value.current
     paper_to_update.links = paper_to_update.links[:-1]
     (tmp_path / "state.yaml").write_text(
@@ -97,8 +99,17 @@ def test_get_updates_collection_papers(tmp_path: Path):
 
     tmp_col = TmpCollection()
     tmp_col.add_papers([scored.value.current for scored in state])
-
     assert tmp_col.find_paper(paper_to_update) is not None
+
+    # At this point, if work-include is run, the paper should be updated in the
+    # collection. Fake a concurrent update of the paper to discard the current
+    # update inclusion
+    col = FileCollection(tmp_path / "collection")
+    assert col.find_paper(paper_to_update) is not None
+    paper = CollectionPaper(**vars(col.find_paper(paper_to_update)))
+    sleep(1)
+    paper.version = datetime.now()
+    col.add_papers([paper])
 
     work(
         Work.Include(),
@@ -114,5 +125,4 @@ def test_get_updates_collection_papers(tmp_path: Path):
 
     tmp_col = TmpCollection()
     tmp_col.add_papers([scored.value.current for scored in state])
-
-    assert tmp_col.find_paper(paper_to_update) is None
+    assert tmp_col.find_paper(paper_to_update) is not None

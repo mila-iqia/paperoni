@@ -64,7 +64,8 @@ class TmpCollection(PaperCollection):
                 if isinstance(p, CollectionMixin) and p.id in self._by_id:
                     paper = self._by_id[p.id]
                     if paper.version >= p.version:
-                        # Paper has been updated since last time it was fetched. Do not replace it.
+                        # Paper has been updated since last time it was fetched.
+                        # Do not replace it.
                         continue
                     self._papers.remove(paper)
                     p.version = datetime.now()

@@ -35,6 +35,10 @@ class FileCollection(TmpCollection):
         self._exclusions = deserialize(set[str], self.exclusions_file)
 
     @cached_property
+    def _by_id(self):
+        return {p.id: p for p in self._papers}
+
+    @cached_property
     def _by_title(self):
         return {p.title: p for p in self._papers}
 
