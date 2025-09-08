@@ -14,7 +14,7 @@ from .tmpcoll import TmpCollection
 @dataclass
 class FileCollection(TmpCollection):
     directory: Path
-    _next_paper_id: int = -1
+    _last_id: int = -1
 
     def __post_init__(self):
         if not self.directory.exists():
@@ -26,7 +26,7 @@ class FileCollection(TmpCollection):
 
         if not self._last_id_file.exists():
             self._last_id_file.write_text("-1")
-        self._next_paper_id = int(self._last_id_file.read_text())
+        self._last_id = int(self._last_id_file.read_text())
         if not self.papers_file.exists():
             self.papers_file.write_text("[]")
         self._papers = deserialize(list[CollectionPaper], self.papers_file)
@@ -49,9 +49,9 @@ class FileCollection(TmpCollection):
     def next_paper_id(self) -> int:
         # In case we added papers without incrementing the id, reset the first
         # id to the length of the papers
-        self._next_paper_id += 1
-        self._last_id_file.write_text(str(self._next_paper_id))
-        return self._next_paper_id
+        self._last_id += 1
+        self._last_id_file.write_text(str(self._last_id))
+        return self._last_id
 
     def add_papers(self, papers: Iterable[Paper | CollectionPaper]) -> None:
         if super().add_papers(papers):

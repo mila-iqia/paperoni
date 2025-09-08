@@ -23,7 +23,7 @@ _id_types = {
 @dataclass
 class TmpCollection(PaperCollection):
     def __post_init__(self):
-        self._next_paper_id = -1
+        self._last_id = -1
         self._papers: list[Paper | CollectionMixin] = []
         self._exclusions: set[str] = set()
 
@@ -46,11 +46,11 @@ class TmpCollection(PaperCollection):
     def next_paper_id(self) -> int:
         # In case we added papers without incrementing the id, reset the first
         # id to the length of the papers
-        self._next_paper_id = max(
-            self._next_paper_id, len(self._papers) - 1, *[p.id for p in self._papers]
+        self._last_id = max(
+            self._last_id, len(self._papers) - 1, *[p.id for p in self._papers]
         )
-        self._next_paper_id += 1
-        return self._next_paper_id
+        self._last_id += 1
+        return self._last_id
 
     def add_papers(self, papers: Iterable[Paper | CollectionPaper]) -> int:
         added = 0
