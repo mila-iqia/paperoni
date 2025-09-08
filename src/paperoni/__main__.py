@@ -130,7 +130,7 @@ class Refine:
     # Refine tags
     # [action: append]
     # [alias: -t]
-    tags: list[str] = field(default_factory=list)
+    tags: set[str] = field(default_factory=set)
 
     # Whether to force re-running the refine
     force: bool = False
@@ -140,9 +140,6 @@ class Refine:
 
     # Output format
     format: Formatter = TerminalFormatter
-
-    def __post_init__(self):
-        self.tags = set(self.tags)
 
     def run(self):
         results = []
@@ -202,6 +199,14 @@ class Work:
         # Number of papers to refine, starting from top
         n: int = None
 
+        # Refine tags
+        # [action: append]
+        # [alias: -t]
+        tags: set[str] = field(default_factory=set)
+
+        # Whether to force re-running the refine
+        force: bool = False
+
         def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
@@ -216,7 +221,13 @@ class Work:
                         for name, key in pinfo.info.get("refined_by", {}).items()
                     }
                 )
-                for pinfo in fetch_all(lnk.type, lnk.link, statuses=statuses):
+                for pinfo in fetch_all(
+                    lnk.type,
+                    lnk.link,
+                    tags=self.tags,
+                    force=self.force,
+                    statuses=statuses,
+                ):
                     ws.add(pinfo)
                     sws.score = work.focuses.score(ws)
             work.top.resort()
