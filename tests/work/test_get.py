@@ -1,35 +1,30 @@
+from functools import partial
 from pathlib import Path
-from unittest.mock import patch
 
 import yaml
 from serieux import CommentRec, deserialize, serialize
 
-from paperoni.__main__ import main
+from paperoni.__main__ import Work
 from paperoni.collection.tmpcoll import TmpCollection
+from paperoni.discovery.semantic_scholar import SemanticScholar
 from paperoni.model.focus import Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 
 
 def test_get_does_not_duplicate(tmp_path: Path):
     def patch_work(state_path: Path, author: str):
-        with patch(
-            "sys.argv",
-            [
-                "paperoni",
-                "work",
-                "-n",
-                "10",
-                "--work-file",
-                str(state_path),
-                "--collection-dir",
-                str(tmp_path / "collection"),
-                "get",
-                "semantic_scholar",
-                "--author",
-                author,
-            ],
-        ):
-            main()
+        command = Work(
+            n=10,
+            work_file=state_path,
+            collection_dir=tmp_path,
+            command=Work.Get(
+                command=partial(
+                    SemanticScholar().query,
+                    author=author,
+                )
+            ),
+        )
+        command.run()
         return deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state_path)
 
     state = patch_work(tmp_path / "state.yaml", "Yoshua Bengio")
