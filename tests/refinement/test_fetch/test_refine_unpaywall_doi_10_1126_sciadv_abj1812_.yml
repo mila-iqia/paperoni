@@ -185,8 +185,6 @@ links:
   type: doi
 - link: https://www.science.org/history/af398e21-491d-4ed6-b413-c8ca1c03948d/sciadv.abj1812.v1.pdf
   type: pdf
-- link: https://orbi.uliege.be/bitstream/2268/289493/1/Li_et_al_2022_SA.pdf
-  type: pdf
 releases:
 - pages: null
   status: published
