@@ -187,11 +187,11 @@ class Work:
                             key=pinfo.key,
                             update_key=pinfo.update_key,
                             info=pinfo.info,
-                            score=10**10,
+                            score=work.focuses.score(col_paper),
                         )
                     )
                     working_set.add(pinfo)
-                    scored = Scored(10**10, working_set)
+                    scored = Scored(work.focuses.score(working_set.current), working_set)
 
                 else:
                     scored = Scored(
