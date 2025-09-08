@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import gifnoc
 from outsight import send
 from paperazzi.platforms.utils import Message
 
@@ -8,9 +9,7 @@ from ..fulltext.pdf import PDF, CachePolicies, get_pdf
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
-from .llm_common import Analysis
-
-SYSTEM_MESSAGE = (Path(__file__).parent / "llm-pdf-system-prompt.md").read_text()
+from .llm_common import Analysis, PromptConfig
 
 
 def _make_key(_, kwargs: dict) -> str:
@@ -40,7 +39,7 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
     prompt_kwargs = {
         "client": config.refine.prompt.client,
         "messages": [
-            Message(type="system", prompt=SYSTEM_MESSAGE),
+            Message(type="system", prompt=llm_pdf_config.system_prompt),
             Message(type="application/pdf", prompt=pdf.pdf_path),
         ],
         "model": config.refine.prompt.model,
@@ -90,3 +89,12 @@ def pdf(type: str, link: str, force: bool = False) -> Paper:
     paper.links.append(Link(type=type, link=link))
 
     return paper.authors and paper or None
+
+
+DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "llm-pdf-system-prompt.md").read_text()
+
+llm_pdf_config = gifnoc.define(
+    "paperoni.llm_pdf",
+    PromptConfig,
+    defaults={"system_prompt_template": DEFAULT_SYSTEM_MESSAGE},
+)

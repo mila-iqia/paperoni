@@ -2,6 +2,7 @@ import hashlib
 from pathlib import Path
 from typing import Literal
 
+import gifnoc
 from outsight import send
 from paperazzi.platforms.utils import Message
 from requests import HTTPError
@@ -10,9 +11,7 @@ from ..config import config
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
-from .llm_common import Analysis
-
-SYSTEM_MESSAGE = (Path(__file__).parent / "llm-html-system-prompt.md").read_text()
+from .llm_common import Analysis, PromptConfig
 
 FIRST_MESSAGE = """### The HTML web page of the scientific paper:
 
@@ -58,7 +57,7 @@ def prompt(link: str, force: bool = False) -> Paper:
     prompt_kwargs = {
         "client": config.refine.prompt.client,
         "messages": [
-            Message(type="system", prompt=SYSTEM_MESSAGE),
+            Message(type="system", prompt=llm_html_config.system_prompt),
             Message(type="user", prompt=FIRST_MESSAGE, args=(html_content,)),
         ],
         "model": config.refine.prompt.model,
@@ -106,3 +105,12 @@ def html(type: Literal["doi"], link: str, force: bool = False) -> Paper:
     paper.links.append(Link(type=type, link=link))
 
     return paper.authors and paper or None
+
+
+DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "llm-html-system-prompt.md").read_text()
+
+llm_html_config = gifnoc.define(
+    "paperoni.llm_html",
+    PromptConfig,
+    defaults={"system_prompt_template": DEFAULT_SYSTEM_MESSAGE},
+)
