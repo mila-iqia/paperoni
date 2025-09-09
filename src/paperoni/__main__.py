@@ -9,6 +9,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Generator, Literal
 
+import uvicorn
 import yaml
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
@@ -473,7 +474,7 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
-        def run(self, coll):
+        def run(self, coll: "Coll"):
             results = coll.collection.search(
                 title=self.title, author=self.author, institution=self.institution
             )
@@ -562,7 +563,31 @@ class Focus:
         self.command.run(self)
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus]
+class REST:
+    """Rest API."""
+
+    # Host to bind to
+    host: str = "127.0.0.1"
+
+    # Port to bind to
+    # [alias: -p]
+    port: int = 8000
+
+    # Enable auto-reload for development
+    # [alias: -r]
+    reload: bool = False
+
+    def run(self):
+        from paperoni.restapi import create_app
+
+        app = create_app(collection=config.collection)
+        uvicorn.run(app, host=self.host, port=self.port, reload=self.reload)
+
+    def no_dash(self):
+        return True
+
+
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus, REST]
 
 
 @dataclass
@@ -586,7 +611,7 @@ class PaperoniInterface:
             self.dash = sys.stdout.isatty()
 
     def run(self):
-        if self.dash:
+        if self.dash and not getattr(self.command, "no_dash", lambda: False)():
             enable_dash()
         if self.log:
             enable_log()

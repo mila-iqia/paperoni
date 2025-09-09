@@ -35,3 +35,6 @@ class PaperCollection:
         end_date: date = None,
     ) -> Iterable[CollectionPaper]:
         raise NotImplementedError()
+
+    def __len__(self) -> int:
+        raise NotImplementedError()

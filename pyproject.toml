@@ -30,8 +30,9 @@ dependencies = [
     "outsight>=0.0.2",
     "rich>=14.1.0",
     "paperazzi[vertexai]>=0.0.7",
-    "pyyaml>=6.0.2",
     "rapporteur>=0.1.1,<0.2.0",
+    "fastapi>=0.116.1",
+    "uvicorn[standard]>=0.35.0",
 ]
 
 [project.urls]

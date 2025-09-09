@@ -135,3 +135,6 @@ class MemCollection(PaperCollection):
     def commit(self) -> None:
         # MemCollection, nothing to commit
         pass
+
+    def __len__(self) -> int:
+        return len(self._papers)
