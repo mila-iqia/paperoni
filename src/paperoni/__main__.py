@@ -35,8 +35,8 @@ from .collection.finder import Finder
 from .config import config
 from .dash import History
 from .display import display, terminal_width
-from .fulltext.locate import locate_all
-from .fulltext.pdf import CachePolicies, get_pdf
+from .fulltext.locate import URL, locate_all
+from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
@@ -129,27 +129,51 @@ class Discover(Productor):
 class Fulltext:
     """Download and process fulltext."""
 
-    def locate(
+    @dataclass
+    class Locate:
         # Reference to locate
         # [positional]
-        ref: str,
-    ):
-        for url in locate_all(ref):
-            print(f"\033[36m[{url.info}]\033[0m {url.url}")
+        ref: str
 
-    def download(
+        def format(self, urls: list[URL]):
+            for url in urls:
+                print(f"\033[36m[{url.info}]\033[0m {url.url}")
+
+        def run(self):
+            if self.ref.startswith("http"):
+                ref = ":".join(url_to_id(self.ref) or ["", ""])
+            else:
+                ref = self.ref
+
+            urls = list(locate_all(ref))
+            self.format(urls)
+            return urls
+
+    @dataclass
+    class Download:
         # Reference to locate
         # [positional]
         # [nargs: +]
-        ref: list[str],
+        ref: list[str]
         # Cache policy
         # [alias: -p]
-        cache_policy: Literal["use", "use_best", "no_download", "force"] = "use",
-    ):
-        p = get_pdf(ref, cache_policy=getattr(CachePolicies, cache_policy.upper()))
-        print("Downloaded into:", p.pdf_path.resolve())
+        cache_policy: Literal["use", "use_best", "no_download", "force"] = "use"
 
-    run: TaggedUnion[Auto[locate], Auto[download]]
+        def format(self, pdf: PDF):
+            print("Downloaded into:", pdf.pdf_path.resolve())
+
+        def run(self):
+            p = get_pdf(
+                self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
+            )
+            self.format(p)
+            return p
+
+    # Command to execute
+    command: TaggedUnion[Locate, Download]
+
+    def run(self):
+        self.command.run()
 
 
 @dataclass
@@ -475,10 +499,13 @@ class Coll:
         format: Formatter = TerminalFormatter
 
         def run(self, coll: "Coll"):
-            results = coll.collection.search(
-                title=self.title, author=self.author, institution=self.institution
+            results = list(
+                coll.collection.search(
+                    title=self.title, author=self.author, institution=self.institution
+                )
             )
             self.format(results)
+            return results
 
     # Command to execute
     command: TaggedUnion[Search]
@@ -580,7 +607,7 @@ class REST:
     def run(self):
         from paperoni.restapi import create_app
 
-        app = create_app(collection=config.collection)
+        app = create_app()
         uvicorn.run(app, host=self.host, port=self.port, reload=self.reload)
 
     def no_dash(self):

@@ -2,18 +2,21 @@
 FastAPI interface for paperoni collection search functionality.
 """
 
+import asyncio
 import importlib.metadata
 import itertools
 from dataclasses import dataclass
 from typing import Iterable, List
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 
 import paperoni
-from paperoni.__main__ import Coll
 
-from .collection.abc import PaperCollection
+from .__main__ import Coll, Fulltext
+from .fulltext.locate import URL
 from .model.classes import Paper
+from .utils import url_to_id
 
 
 @dataclass
@@ -25,7 +28,7 @@ class PagingMixin:
     # Number of results to display per page
     per_page: int = None
     # Max number of papers to show
-    limit: int = None
+    limit: int = 100
 
     def slice(
         self,
@@ -54,10 +57,15 @@ class PagingMixin:
 
 
 @dataclass
-class SearchRequest(Coll.Search, PagingMixin):
+class SearchRequest(PagingMixin, Coll.Search):
     """Request model for paper search."""
 
-    limit: int = 100
+    # TODO: hide the format field from the api entry point schema
+    format: int = None
+
+    # Disable format
+    def format(self, *args, **kwargs):
+        pass
 
 
 @dataclass
@@ -68,12 +76,55 @@ class SearchResponse:
     total: int
 
 
-def create_app(collection: PaperCollection) -> FastAPI:
+@dataclass
+class LocateFulltextRequest(PagingMixin, Fulltext.Locate):
+    """Request model for fulltext locate."""
+
+    # Disable format
+    def format(self, *args, **kwargs):
+        pass
+
+
+@dataclass
+class LocateFulltextResponse:
+    """Response model for fulltext locate."""
+
+    urls: list[URL]
+
+
+@dataclass
+class DownloadFulltextRequest(Fulltext.Download):
+    """Request model for fulltext download."""
+
+    ref: str | list[str]
+
+    # Disable format
+    def format(self, *args, **kwargs):
+        pass
+
+    def __post_init__(self):
+        if isinstance(self.ref, str):
+            self.ref = [self.ref]
+        else:
+            self.ref = self.ref
+
+        self.ref = list(
+            map(
+                lambda x: (
+                    ":".join(url_to_id(x) or ["", ""]) if x.startswith("http") else x
+                ),
+                self.ref,
+            )
+        )
+
+
+def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI(
         title="Paperoni API",
         description="API for searching scientific papers",
         version=importlib.metadata.version(paperoni.__name__),
+        root_path="/api/v1",
     )
 
     @app.get("/")
@@ -88,26 +139,57 @@ def create_app(collection: PaperCollection) -> FastAPI:
     async def search_papers(request: SearchRequest = None):
         """Search for papers in the collection."""
         request = request or SearchRequest()
+        coll = Coll(command=None)
+
         try:
             # Perform search using the collection's search method
-            results = list(
-                request.slice(
-                    collection.search(
-                        title=request.title,
-                        author=request.author,
-                        institution=request.institution,
-                    )
-                )
+            results = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: list(request.slice(request.run(coll)))
             )
 
-            return SearchResponse(papers=results, total=len(collection))
+            return SearchResponse(papers=results, total=len(coll.collection))
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
-    @app.get("/health")
-    async def health_check():
-        """Health check endpoint."""
-        return {"status": "healthy"}
+    @app.get("/fulltext/locate")
+    async def locate_fulltext(request: LocateFulltextRequest):
+        """Locate fulltext urls for a paper."""
+        try:
+            results = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: list(request.slice(request.run()))
+            )
+            return LocateFulltextResponse(urls=results)
+
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, detail=f"Locate fulltext failed: {str(e)}"
+            )
+
+    @app.get("/fulltext/download")
+    async def download_fulltext(request: DownloadFulltextRequest):
+        """Download fulltext for a paper."""
+        try:
+            # Run blocking download in thread pool
+            pdf = await asyncio.get_event_loop().run_in_executor(None, request.run)
+
+            # Return as file download
+            async def async_iter_pdf():
+                with pdf.pdf_path.open("rb") as bf:
+                    while b := bf.read(1024):
+                        yield b
+
+            return StreamingResponse(
+                async_iter_pdf(),
+                media_type="application/pdf",
+                headers={
+                    "Content-Disposition": f'attachment; filename="{pdf.directory.name}.pdf"'
+                },
+            )
+
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, detail=f"Download fulltext failed: {str(e)}"
+            )
 
     return app
