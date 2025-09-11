@@ -6,16 +6,19 @@ import asyncio
 import importlib.metadata
 import itertools
 from dataclasses import dataclass
-from typing import Iterable, List
+from typing import Iterable
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
+from serieux import dump, serialize
 
 import paperoni
 
-from .__main__ import Coll, Fulltext
+from .__main__ import Coll, Fulltext, Work
+from .config import config
 from .fulltext.locate import URL
 from .model.classes import Paper
+from .model.focus import Focuses, Scored
 from .utils import url_to_id
 
 
@@ -72,7 +75,7 @@ class SearchRequest(PagingMixin, Coll.Search):
 class SearchResponse:
     """Response model for paper search."""
 
-    papers: List[Paper]
+    papers: list[Paper]
     total: int
 
 
@@ -118,6 +121,41 @@ class DownloadFulltextRequest(Fulltext.Download):
         )
 
 
+@dataclass
+class IncludeRequest(Work.Include):
+    """Request model for work state paper include."""
+
+
+@dataclass
+class IncludeResponse:
+    """Response model for work state paper include."""
+
+    total: int
+
+
+@dataclass
+class ViewRequest(PagingMixin, Work.View):
+    """Request model for work state paper view."""
+
+    # Disable format
+    format: int = None
+
+    def __post_init__(self):
+        self.n = self.n or self.limit
+        self.limit = min(self.limit, self.n)
+
+    def format(self, *args, **kwargs):
+        pass
+
+
+@dataclass
+class ViewResponse:
+    """Response model for work state paper view."""
+
+    papers: list[Scored[Paper]]
+    total: int
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI(
@@ -126,6 +164,11 @@ def create_app() -> FastAPI:
         version=importlib.metadata.version(paperoni.__name__),
         root_path="/api/v1",
     )
+
+    focus_file = config.client_dir / "focuses.yaml"
+
+    if not focus_file.exists():
+        dump(Focuses, config.focuses, dest=focus_file)
 
     @app.get("/")
     async def root():
@@ -152,14 +195,59 @@ def create_app() -> FastAPI:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
+    @app.get("/work/view", response_model=ViewResponse)
+    async def work_view_papers(request: ViewRequest = None):
+        """Search for papers in the collection."""
+        request = request or ViewRequest()
+
+        # TODO: get user id from logged in user data
+        user_id = "u1"
+        work_file = config.client_dir / user_id / "work.yaml"
+
+        work = Work(command=None, work_file=work_file, focus_file=focus_file)
+
+        try:
+            papers: list[Scored[Paper]] = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: list(request.slice(request.run(work)))
+            )
+
+            return ViewResponse(
+                papers=serialize(list[Scored[Paper]], papers), total=len(papers)
+            )
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Include failed: {str(e)}")
+
+    @app.get("/work/include", response_model=IncludeResponse)
+    async def work_include_papers(request: IncludeRequest = None):
+        """Search for papers in the collection."""
+        request = request or IncludeRequest()
+
+        # TODO: get user id from logged in user data
+        user_id = "u1"
+        work_file = config.client_dir / user_id / "work.yaml"
+
+        work = Work(command=None, work_file=work_file, focus_file=focus_file)
+
+        try:
+            # Perform search using the collection's search method
+            added = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: request.run(work)
+            )
+
+            return IncludeResponse(total=added)
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Include failed: {str(e)}")
+
     @app.get("/fulltext/locate")
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
         try:
-            results = await asyncio.get_event_loop().run_in_executor(
+            urls = await asyncio.get_event_loop().run_in_executor(
                 None, lambda: list(request.slice(request.run()))
             )
-            return LocateFulltextResponse(urls=results)
+            return LocateFulltextResponse(urls=urls)
 
         except Exception as e:
             raise HTTPException(

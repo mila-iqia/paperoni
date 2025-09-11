@@ -1,5 +1,6 @@
 paperoni:
   cache_path: ../cache
+  client_dir: ${paperoni.data_path}/client
   data_path: ../data
   mailto: _@mila.quebec
   api_keys:

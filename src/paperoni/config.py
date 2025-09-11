@@ -25,6 +25,7 @@ class Refine:
 @dataclass
 class PaperoniConfig:
     cache_path: Path = None
+    client_dir: Path = None
     data_path: Path = None
     mailto: str = ""
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)

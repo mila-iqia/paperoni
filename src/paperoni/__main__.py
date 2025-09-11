@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from functools import cached_property
 from pathlib import Path
-from typing import Annotated, Any, Generator, Literal
+from typing import Annotated, Any, Generator, Iterable, Literal
 
 import uvicorn
 import yaml
@@ -29,6 +29,8 @@ from serieux import (
 )
 from serieux.features.proxy import ProxyBase
 from serieux.features.tagset import FromEntryPoint
+
+from paperoni.collection.abc import PaperCollection
 
 from .collection.filecoll import FileCollection
 from .collection.finder import Finder
@@ -245,6 +247,7 @@ class Work:
                         work.top.resort()
                     continue
 
+                col_paper = None
                 if (
                     work.collection
                     and (col_paper := work.collection.find_paper(pinfo.paper))
@@ -392,8 +395,10 @@ class Work:
                 start=self.n,
                 filter=lambda sws: sws.score >= self.score,
             )
-            work.collection.add_papers(selected)
+            added = work.collection.add_papers(selected)
             work.save()
+
+            return added
 
     @dataclass
     class Exclude(Extractor):
@@ -515,7 +520,7 @@ class Coll:
     collection_file: Path = None
 
     @cached_property
-    def collection(self):
+    def collection(self) -> PaperCollection:
         if self.collection_file:
             return FileCollection(self.collection_file)
         else:
