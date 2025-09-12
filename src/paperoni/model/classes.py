@@ -214,7 +214,6 @@ class Paper:
 class PaperInfo:
     paper: Paper
     key: str
-    update_key: str = None
     info: dict[str, JSON] = field(default_factory=dict)
     acquired: datetime = field(default_factory=datetime.now)
     score: float = 0.0

@@ -86,7 +86,6 @@
     - name: Computer Science
     - name: Medicine
   score: 0.0
-  update_key: null
 - info: {}
   key: semantic_scholar:b2283234d862b7da0f3fd7034624e3744154da44
   paper:
@@ -1510,7 +1509,6 @@
     topics:
     - name: Medicine
   score: 0.0
-  update_key: null
 - info: {}
   key: semantic_scholar:9b1e7754b0a508b0ce324167acd1e0381824bd9a
   paper:
@@ -1583,7 +1581,6 @@
     topics:
     - name: Computer Science
   score: 0.0
-  update_key: null
 - info: {}
   key: semantic_scholar:c2c5f451c8109f3fccd233c28c639a70bf409f45
   paper:
@@ -1712,7 +1709,6 @@
     - name: Biology
     - name: Medicine
   score: 0.0
-  update_key: null
 - info: {}
   key: semantic_scholar:0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
   paper:
@@ -1760,4 +1756,3 @@
     title: AI and Catastrophic Risk
     topics: []
   score: 0.0
-  update_key: null

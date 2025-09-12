@@ -64,7 +64,6 @@
       Image Data'
     topics: []
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:XeqwZIbowL
   paper:
@@ -124,7 +123,6 @@
     title: A Combinatorial Perspective on Transfer Learning
     topics: []
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:PGASukuVc_z
   paper:
@@ -166,7 +164,6 @@
     title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
     topics: []
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:6KHVe4iMtIs
   paper:
@@ -215,7 +212,6 @@
       of Multi-modal Distributions
     topics: []
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:JrSYyibYFVa
   paper:
@@ -269,4 +265,3 @@
     title: A Dynamical Central Limit Theorem for Shallow Neural Networks
     topics: []
   score: 0.0
-  update_key: null

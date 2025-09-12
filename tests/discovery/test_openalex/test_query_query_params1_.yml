@@ -150,7 +150,6 @@
     - name: Economics
     - name: Operating system
   score: 0.0
-  update_key: null
 - info: {}
   key: openalex:W2963096987
   paper:
@@ -370,7 +369,6 @@
     - name: Image (mathematics)
     - name: Gene
   score: 0.0
-  update_key: null
 - info: {}
   key: openalex:W2267635276
   paper:
@@ -497,7 +495,6 @@
     - name: Quantum
     - name: Programming language
   score: 0.0
-  update_key: null
 - info: {}
   key: openalex:W2962883855
   paper:
@@ -636,7 +633,6 @@
     - name: Economics
     - name: Operating system
   score: 0.0
-  update_key: null
 - info: {}
   key: openalex:W2218318129
   paper:
@@ -770,4 +766,3 @@
     - name: Composite material
     - name: Operating system
   score: 0.0
-  update_key: null

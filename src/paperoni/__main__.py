@@ -185,7 +185,6 @@ class Work:
                         PaperInfo(
                             paper=col_paper,
                             key=pinfo.key,
-                            update_key=pinfo.update_key,
                             info=pinfo.info,
                             score=work.focuses.score(col_paper),
                         )
