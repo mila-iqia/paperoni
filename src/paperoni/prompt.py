@@ -8,6 +8,7 @@ from google import genai
 from google.genai import types
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import _make_key, disk_cache, disk_store
+from serieux.features.encrypt import Secret
 
 
 def cleanup_schema(schema: dict | Type[Any]) -> dict:
@@ -77,7 +78,7 @@ class Prompt:
 @dataclass
 class GenAIPrompt(Prompt):
     client: genai.Client = None
-    api_key: str = None
+    api_key: Secret[str] = None
 
     def __post_init__(self):
         if self.client is None:

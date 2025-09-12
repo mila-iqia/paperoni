@@ -13,9 +13,9 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
-    "ovld>=0.5.10",
-    "serieux>=0.2.7",
-    "gifnoc>=0.6.0",
+    "ovld>=0.5.13",
+    "serieux>=0.2.8",
+    "gifnoc>=0.6.1",
     "backoff>=2.2.1",
     "beautifulsoup4>=4.13.4",
     "blessed>=1.21.0",
@@ -45,6 +45,7 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.1.0",
     "pytest-regressions>=2.7.0",
+    "pytest-timeout>=2.4.0",
     "ruff>=0.11.3",
 ]
 
@@ -69,3 +70,6 @@ ignore = ["E241", "F722", "E501", "E203", "F811", "F821", "E741"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+
+[tool.pytest.ini_options]
+timeout = 20

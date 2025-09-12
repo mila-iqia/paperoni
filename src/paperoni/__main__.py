@@ -11,13 +11,13 @@ from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from serieux import (
     Auto,
+    AutoRegistered,
     CommentRec,
-    Registered,
     TaggedUnion,
+    auto_singleton,
     deserialize,
     dump,
     serialize,
-    singleton,
 )
 from serieux.features.tagset import FromEntryPoint
 
@@ -36,25 +36,25 @@ from .refinement import fetch_all
 from .utils import prog, url_to_id
 
 
-class Formatter(Registered):
+class Formatter(AutoRegistered):
     pass
 
 
-@singleton("json")
+@auto_singleton("json")
 class JSONFormatter(Formatter):
     def __call__(self, papers):
         ser = serialize(list[PaperInfo], list(papers))
         print(json.dumps(ser, indent=4))
 
 
-@singleton("yaml")
+@auto_singleton("yaml")
 class YAMLFormatter(Formatter):
     def __call__(self, papers):
         ser = serialize(list[PaperInfo], list(papers))
         print(yaml.safe_dump(ser, sort_keys=False))
 
 
-@singleton("terminal")
+@auto_singleton("terminal")
 class TerminalFormatter(Formatter):
     def __call__(self, papers):
         for i, paper in enumerate(papers):
