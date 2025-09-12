@@ -1,0 +1,3 @@
+paperoni:
+  cache_path: "~/paperoni/cache"
+  data_path: "~/paperoni/data"
