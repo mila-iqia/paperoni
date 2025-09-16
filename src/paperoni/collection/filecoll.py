@@ -1,70 +1,46 @@
-import json
-from dataclasses import dataclass
-from functools import cached_property
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable
 
-from serieux import deserialize, serialize
+from serieux import deserialize, dump, load, serialize
 
-from ..model.classes import Paper
-from .abc import CollectionPaper
-from .tmpcoll import TmpCollection
+from .memcoll import CollectionPaper, MemCollection
 
 
 @dataclass
-class FileCollection(TmpCollection):
-    directory: Path
-    _last_id: int = -1
+class FileCollection(MemCollection):
+    directory: Path = field(compare=False)
+    _last_id: int = field(init=False, compare=False, default=None)
+    _papers: list[CollectionPaper] = field(init=False, default_factory=list)
+    _exclusions: set[str] = field(init=False, default_factory=set)
 
     def __post_init__(self):
-        if not self.directory.exists():
+        if self.directory is None:
+            # If no directory is provided, use the MemCollection implementation
+            self._file = None
+
+            super().__post_init__()
+            return
+
+        self._file = self.directory / "collection.yaml"
+
+        if self._file.exists():
+            self.__dict__.update(vars(load(type(self), self._file)))
+
+        else:
             self.directory.mkdir(exist_ok=True, parents=True)
+            self.commit()
 
-        self._last_id_file = self.directory / "_last_id"
-        self.papers_file = self.directory / "papers.json"
-        self.exclusions_file = self.directory / "exclusions.json"
+    def commit(self) -> None:
+        if self._file is None:
+            super().commit()
+            return
 
-        if not self._last_id_file.exists():
-            self._last_id_file.write_text("-1")
-        self._last_id = int(self._last_id_file.read_text())
-        if not self.papers_file.exists():
-            self.papers_file.write_text("[]")
-        self._papers = deserialize(list[CollectionPaper], self.papers_file)
-        if not self.exclusions_file.exists():
-            self.exclusions_file.write_text("[]")
-        self._exclusions = deserialize(set[str], self.exclusions_file)
+        dump(type(self), self, dest=self._file)
 
-    @cached_property
-    def _by_id(self):
-        return {p.id: p for p in self._papers}
+    @classmethod
+    def serieux_deserialize(cls, obj: dict, ctx, call_next):
+        return deserialize(MemCollection, obj)
 
-    @cached_property
-    def _by_title(self):
-        return {p.title: p for p in self._papers}
-
-    @cached_property
-    def _by_link(self):
-        return {link: p for p in self._papers for link in p.links}
-
-    def next_paper_id(self) -> int:
-        # In case we added papers without incrementing the id, reset the first
-        # id to the length of the papers
-        self._last_id += 1
-        self._last_id_file.write_text(str(self._last_id))
-        return self._last_id
-
-    def add_papers(self, papers: Iterable[Paper | CollectionPaper]) -> None:
-        if super().add_papers(papers):
-            json.dump(
-                fp=open(self.papers_file, "w"),
-                obj=serialize(list[CollectionPaper], self._papers),
-            )
-
-    def exclude_papers(self, papers: Iterable[Paper]) -> None:
-        papers = list(papers)
-        super().exclude_papers(papers)
-        if papers:
-            json.dump(
-                fp=open(self.exclusions_file, "w"),
-                obj=serialize(set[str], self._exclusions),
-            )
+    @classmethod
+    def serieux_serialize(cls, obj, ctx, call_next):
+        return serialize(MemCollection, obj)

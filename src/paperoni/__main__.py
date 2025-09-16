@@ -22,7 +22,7 @@ from serieux import (
 from serieux.features.tagset import FromEntryPoint
 
 from .collection.filecoll import FileCollection
-from .collection.tmpcoll import TmpCollection
+from .collection.memcoll import MemCollection
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -165,12 +165,14 @@ class Work:
 
         def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions
-            tmp_col = TmpCollection()
-            tmp_col.add_papers(scored.value.current for scored in work.top)
+            mem_col = MemCollection(
+                _last_id=work.collection._last_id if work.collection else None,
+            )
+            mem_col.add_papers(scored.value.current for scored in work.top)
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                if tmp_col.find_paper(pinfo.paper):
+                if mem_col.find_paper(pinfo.paper):
                     continue
 
                 if (
@@ -197,7 +199,7 @@ class Work:
                         work.focuses.score(pinfo), PaperWorkingSet.make(pinfo)
                     )
 
-                tmp_col.add_papers([pinfo.paper])
+                mem_col.add_papers([pinfo.paper])
                 work.top.add(scored)
             work.save()
 
@@ -355,6 +357,7 @@ class Work:
         return top
 
     def save(self):
+        self.work_file.parent.mkdir(exist_ok=True, parents=True)
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
             self.top,

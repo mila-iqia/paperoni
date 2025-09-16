@@ -3,7 +3,7 @@ from typing import Any, Generator
 import pytest
 from ovld import ovld
 
-from paperoni.collection.tmpcoll import TmpCollection, _id_types
+from paperoni.collection.memcoll import MemCollection, _id_types
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model.classes import (
     Institution,
@@ -87,7 +87,7 @@ def excluded_papers(
 
 def test_add_papers_multiple(sample_papers: list[Paper]):
     """Test adding multiple papers."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     assert eq(list(collection.search()), sample_papers)
@@ -97,7 +97,7 @@ def test_exclude_papers_multiple(
     sample_papers: list[Paper], excluded_papers: list[Paper]
 ):
     """Test excluding multiple papers."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.exclude_papers(excluded_papers)
 
     collection.add_papers(sample_papers)
@@ -108,7 +108,7 @@ def test_exclude_papers_multiple(
 
 def test_exclude_papers_unknown_link_type():
     """Test excluding papers with unknown link types."""
-    collection = TmpCollection()
+    collection = MemCollection()
     paper = Paper(
         title="Unknown Links",
         links=[
@@ -124,7 +124,7 @@ def test_exclude_papers_unknown_link_type():
 
 def test_find_paper_by_link(sample_papers: list[Paper], sample_paper: Paper):
     """Test finding a paper by its link."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     # Create a paper with a matching link
@@ -136,7 +136,7 @@ def test_find_paper_by_link(sample_papers: list[Paper], sample_paper: Paper):
 
 def test_find_paper_by_title(sample_papers: list[Paper], sample_paper: Paper):
     """Test finding a paper by its title."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     # Create a paper with a matching title but no matching links
@@ -148,7 +148,7 @@ def test_find_paper_by_title(sample_papers: list[Paper], sample_paper: Paper):
 
 def test_find_paper_not_found(sample_papers: list[Paper]):
     """Test finding a paper that doesn't exist."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     # Create a paper with no matching links or title
@@ -163,7 +163,7 @@ def test_find_paper_not_found(sample_papers: list[Paper]):
 
 def test_find_paper_prioritizes_links_over_title(sample_paper: Paper):
     """Test that find_paper prioritizes link matches over title matches."""
-    collection = TmpCollection()
+    collection = MemCollection()
 
     # Add a paper with a specific title
     paper1 = Paper(title=sample_paper.title, links=sample_paper.links)
@@ -183,7 +183,7 @@ def test_find_paper_prioritizes_links_over_title(sample_paper: Paper):
 
 def test_search_by_title(sample_papers: list[Paper], sample_paper: Paper):
     """Test searching by title."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     results = list(collection.search(title=sample_paper.title))
@@ -192,7 +192,7 @@ def test_search_by_title(sample_papers: list[Paper], sample_paper: Paper):
 
 def test_search_by_author(sample_papers: list[Paper]):
     """Test searching by author."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     results = list(collection.search(author="Yoshua Bengio"))
@@ -210,7 +210,7 @@ def test_search_by_author(sample_papers: list[Paper]):
 
 def test_search_by_institution(sample_papers):
     """Test searching by institution."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     results = list(collection.search(institution="MILA"))
@@ -225,7 +225,7 @@ def test_search_by_institution(sample_papers):
 
 def test_search_multiple_criteria(sample_papers: list[Paper], sample_paper: Paper):
     """Test searching with multiple criteria."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     # Search for papers with sample_paper title AND "Guillaume Alain" as author
@@ -241,7 +241,7 @@ def test_search_multiple_criteria(sample_papers: list[Paper], sample_paper: Pape
 
 def test_search_case_insensitive(sample_papers: list[Paper], sample_paper: Paper):
     """Test that search is case insensitive."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     results = list(collection.search(title=sample_paper.title.upper()))
@@ -259,7 +259,7 @@ def test_search_case_insensitive(sample_papers: list[Paper], sample_paper: Paper
 
 def test_search_no_criteria(sample_papers):
     """Test searching with no criteria returns all papers."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     results = list(collection.search())
@@ -268,7 +268,7 @@ def test_search_no_criteria(sample_papers):
 
 def test_search_partial_matches(sample_papers: list[Paper], sample_paper: Paper):
     """Test that search finds partial matches."""
-    collection = TmpCollection()
+    collection = MemCollection()
     collection.add_papers(sample_papers)
 
     # Partial title match
