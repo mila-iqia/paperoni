@@ -3,8 +3,8 @@ from datetime import datetime
 from functools import cached_property
 from typing import Generator, Iterable
 
-from ..model.classes import Link, Paper
-from .abc import CollectionMixin, CollectionPaper, PaperCollection
+from ..model.classes import CollectionMixin, CollectionPaper, Link, Paper
+from .abc import PaperCollection
 
 _id_types = {
     "arxiv",

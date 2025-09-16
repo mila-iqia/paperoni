@@ -9,5 +9,5 @@ def paper_has_updated(paper: Paper, new_paper: Paper) -> bool:
         or len({author.display_name for author in paper.authors})
         != len({author.display_name for author in new_paper.authors})
         # There are new links in the new paper
-        or {link for link in new_paper.links} - {link for link in paper.links}
+        or bool({link for link in new_paper.links} - {link for link in paper.links})
     )

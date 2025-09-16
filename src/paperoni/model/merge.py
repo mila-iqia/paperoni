@@ -5,10 +5,8 @@ from numbers import Number
 from ovld import Dataclass, call_next, ovld, recurse
 from serieux.features.comment import CommentProxy
 
-from paperoni.collection.abc import CollectionPaper
-
 from ..utils import associate, plainify
-from .classes import Institution, PaperAuthor, PaperInfo
+from .classes import CollectionPaper, Institution, PaperAuthor, PaperInfo
 
 
 @dataclass

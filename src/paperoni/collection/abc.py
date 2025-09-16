@@ -1,34 +1,6 @@
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Callable, Iterable
+from typing import Iterable
 
-from ..model.classes import Paper
-
-
-@dataclass
-class CollectionMixin:
-    id: int = None
-    version: datetime = None
-
-    @classmethod
-    def make_collection_item(
-        cls,
-        item,
-        *,
-        next_id: Callable[[], int] = lambda: None,
-        **defaults,
-    ) -> "CollectionMixin":
-        if not isinstance(item, CollectionMixin):
-            fields = {**defaults, **vars(item)}
-            item = cls(**fields)
-        item.id = next_id() if item.id is None else item.id
-        item.version = datetime.now() if item.version is None else item.version
-        return item
-
-
-@dataclass
-class CollectionPaper(Paper, CollectionMixin):
-    pass
+from ..model.classes import CollectionPaper, Paper
 
 
 class PaperCollection:

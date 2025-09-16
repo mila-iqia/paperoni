@@ -178,7 +178,7 @@ class Work:
                 if (
                     work.collection
                     and (col_paper := work.collection.find_paper(pinfo.paper))
-                    and not paper_has_updated(pinfo.paper, col_paper)
+                    and not paper_has_updated(col_paper, pinfo.paper)
                 ):
                     continue
 

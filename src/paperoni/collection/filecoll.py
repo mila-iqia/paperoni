@@ -3,7 +3,8 @@ from pathlib import Path
 
 from serieux import deserialize, dump, load, serialize
 
-from .memcoll import CollectionPaper, MemCollection
+from ..model.classes import CollectionPaper
+from .memcoll import MemCollection
 
 
 @dataclass

@@ -6,11 +6,10 @@ import yaml
 from serieux import CommentRec, deserialize, serialize
 
 from paperoni.__main__ import Work
-from paperoni.collection.abc import CollectionPaper
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
 from paperoni.discovery.semantic_scholar import SemanticScholar
-from paperoni.model.classes import Paper
+from paperoni.model.classes import CollectionPaper
 from paperoni.model.focus import Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 
@@ -79,7 +78,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
     )
 
     # remove a link from a paper to fake an update on the next work-get
-    paper_to_update: Paper = state.entries[2].value.current
+    paper_to_update: CollectionPaper = state.entries[2].value.current
     paper_to_update.links = paper_to_update.links[:-1]
     (tmp_path / "state.yaml").write_text(
         yaml.safe_dump(serialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state))
@@ -97,14 +96,15 @@ def test_work_updates_collection_papers(tmp_path: Path):
         collection_dir=tmp_path / "collection",
     )
 
-    mem_col = MemCollection()
+    col = FileCollection(tmp_path / "collection")
+    mem_col = MemCollection(_last_id=col._last_id)
+
     mem_col.add_papers([scored.value.current for scored in state])
     assert mem_col.find_paper(paper_to_update) is not None
 
     # At this point, if work-include is run, the paper should be updated in the
     # collection. Fake a concurrent update of the paper to discard the current
     # update inclusion
-    col = FileCollection(tmp_path / "collection")
     assert col.find_paper(paper_to_update) is not None
     paper = CollectionPaper(**vars(col.find_paper(paper_to_update)))
     sleep(1)
@@ -123,6 +123,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
         collection_dir=tmp_path / "collection",
     )
 
-    mem_col = MemCollection()
+    col = FileCollection(tmp_path / "collection")
+    mem_col = MemCollection(_last_id=col._last_id)
     mem_col.add_papers([scored.value.current for scored in state])
     assert mem_col.find_paper(paper_to_update) is not None

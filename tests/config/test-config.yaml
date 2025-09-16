@@ -1,25 +1,23 @@
 paperoni:
-  mailto: publications@mila.quebec
-  cache_path: ../../cache
+  cache_path: ../cache
   data_path: ../data
+  mailto: publications@mila.quebec
   fetch:
     $class: RulesFetcher
     rules:
       "^https://www.biorxiv.org/": cloudflare
       "^https://www.medrxiv.org/": cloudflare
-      "^https://api.semanticscholar.org/": cached
-      ".*": standard
+      ".*": cached
     fetchers:
-      standard:
-        $class: RequestsFetcher
-        user_agent: chrome
       cached:
         $class: CachedFetcher
         cache_path: ${paperoni.cache_path}/requests-cache.sql
-        expire_after: 6d
+        expire_after: 7d
         user_agent: chrome
       cloudflare:
         $class: CloudFlareFetcher
+        cache_path: ${paperoni.cache_path}/requests-cache.sql
+        expire_after: 7d
         user_agent: chrome
   focuses:
     - "!institution :: Mila :: 10"
@@ -29,3 +27,4 @@ paperoni:
     prompt:
       $class: GenAIPrompt
       model: gemini-2.5-pro
+      api_key: ${env:GEMINI_API_KEY}
