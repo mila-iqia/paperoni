@@ -328,7 +328,7 @@ class Work:
 
     # Collection dir
     # [alias: -c]
-    collection_dir: Path = None
+    collection_file: Path = None
 
     # Number of papers to keep in the working set
     n: int = 10
@@ -342,8 +342,8 @@ class Work:
 
     @cached_property
     def collection(self):
-        if self.collection_dir:
-            return FileCollection(self.collection_dir)
+        if self.collection_file:
+            return FileCollection(self.collection_file)
         else:
             return config.collection
 
@@ -401,12 +401,12 @@ class Coll:
 
     # Collection dir
     # [alias: -c]
-    collection_dir: Path = None
+    collection_file: Path = None
 
     @cached_property
     def collection(self):
-        if self.collection_dir:
-            return FileCollection(self.collection_dir)
+        if self.collection_file:
+            return FileCollection(self.collection_file)
         else:
             return config.collection
 

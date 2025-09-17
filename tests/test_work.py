@@ -14,8 +14,8 @@ from paperoni.model.focus import Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 
 
-def work(command, *, state_path: Path, collection_dir: Path):
-    Work(command=command, work_file=state_path, collection_dir=collection_dir).run()
+def work(command, *, state_path: Path, collection_file: Path):
+    Work(command=command, work_file=state_path, collection_file=collection_file).run()
     return deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state_path)
 
 
@@ -23,7 +23,7 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
     # update the max number of papers in the state to allow for more papers
@@ -35,7 +35,7 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
     paper_keys = {pinfo.key for scored in state for pinfo in scored.value.collected}
@@ -52,20 +52,20 @@ def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
     work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
     work(
         Work.Include(),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
-    col = FileCollection(tmp_path / "collection")
+    col = FileCollection(tmp_path / "collection.yaml")
     for paper in (scored.value.current for scored in state):
         assert col.find_paper(paper) is None
 
@@ -74,7 +74,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
     # remove a link from a paper to fake an update on the next work-get
@@ -87,16 +87,16 @@ def test_work_updates_collection_papers(tmp_path: Path):
     work(
         Work.Include(),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
-    col = FileCollection(tmp_path / "collection")
+    col = FileCollection(tmp_path / "collection.yaml")
     mem_col = MemCollection(_last_id=col._last_id)
 
     mem_col.add_papers([scored.value.current for scored in state])
@@ -114,16 +114,16 @@ def test_work_updates_collection_papers(tmp_path: Path):
     work(
         Work.Include(),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
         state_path=tmp_path / "state.yaml",
-        collection_dir=tmp_path / "collection",
+        collection_file=tmp_path / "collection.yaml",
     )
 
-    col = FileCollection(tmp_path / "collection")
+    col = FileCollection(tmp_path / "collection.yaml")
     mem_col = MemCollection(_last_id=col._last_id)
     mem_col.add_papers([scored.value.current for scored in state])
     assert mem_col.find_paper(paper_to_update) is not None
