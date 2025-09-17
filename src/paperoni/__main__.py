@@ -446,6 +446,58 @@ PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch]
 
 
 @dataclass
+class Focus:
+    """Operations on the focuses."""
+
+    @dataclass
+    class AutoFocus:
+        """Automatically add focuses."""
+
+        def run(self, focus: "Focus"):
+            focus.focuses.update(focus.collection.search(), config.autofocus)
+
+            focus_file = focus.focus_file or (
+                yaml.safe_load(config._file).get("focuses", None)
+                if config._file
+                else None
+            )
+            if focus_file:
+                dump(Focuses, focus.focuses, dest=focus_file)
+            # TODO: Not sure how to get the config file to update the focuses
+            elif config._file:
+                _config: dict = yaml.safe_load(config._file)
+                _config["focuses"] = serialize(Focuses, focus.focuses)
+
+    # Command to execute
+    command: TaggedUnion[AutoFocus]
+
+    # List of focuses
+    # [alias: -f]
+    focus_file: Path = None
+
+    # Collection dir
+    # [alias: -c]
+    collection_file: Path = None
+
+    @cached_property
+    def focuses(self):
+        if self.focus_file:
+            return deserialize(Focuses, self.focus_file)
+        else:
+            return config.focuses
+
+    @cached_property
+    def collection(self):
+        if self.collection_file:
+            return FileCollection(self.collection_file)
+        else:
+            return config.collection
+
+    def run(self):
+        self.command.run(self)
+
+
+@dataclass
 class PaperoniInterface:
     """Paper database"""
 
