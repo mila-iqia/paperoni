@@ -25,6 +25,7 @@ link_generators = {
     },
     "mlr": {
         "abstract": "https://proceedings.mlr.press/v{}.html",
+        "pdf": lambda lnk: f"https://proceedings.mlr.press/v{lnk}/{lnk.split('/')[-1]}.pdf",
     },
     "dblp": {"abstract": "https://dblp.uni-trier.de/rec/{}"},
     "semantic_scholar": {"abstract": "https://www.semanticscholar.org/paper/{}"},
@@ -67,7 +68,7 @@ def expand_links_dict(links):
                 {
                     "type": f"{link.type}.{kind}",
                     "link": link.link,
-                    "url": url.format(link.link),
+                    "url": url(link.link) if callable(url) else url.format(link.link),
                 }
                 for kind, url in link_generators[link.type].items()
             )
