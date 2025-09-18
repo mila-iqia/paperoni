@@ -133,9 +133,7 @@ AUTHOR_PAPERS_FIELDS = (
 
 @dataclass
 class SemanticScholar(Discoverer):
-    api_key: str = field(
-        default_factory=lambda: config.api_keys.get("semantic_scholar", None)
-    )
+    api_key: str = field(default_factory=lambda: config.api_keys.semantic_scholar)
 
     def _evaluate(self, path: str, **params):
         jdata = config.fetch.read_retry(
