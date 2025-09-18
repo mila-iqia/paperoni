@@ -22,7 +22,7 @@ from serieux import (
 from serieux.features.tagset import FromEntryPoint
 
 from .collection.filecoll import FileCollection
-from .collection.tmpcoll import TmpCollection
+from .collection.memcoll import MemCollection
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -31,6 +31,7 @@ from .fulltext.pdf import CachePolicies, get_pdf
 from .model import PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
+from .model.utils import paper_has_updated
 from .refinement import fetch_all
 from .utils import prog, url_to_id
 
@@ -164,17 +165,41 @@ class Work:
 
         def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions
-            tmp_col = TmpCollection()
-            tmp_col.add_papers(scored.value.current for scored in work.top)
+            mem_col = MemCollection(
+                _last_id=work.collection._last_id if work.collection else None,
+            )
+            mem_col.add_papers(scored.value.current for scored in work.top)
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                if tmp_col.find_paper(pinfo.paper) or (
-                    work.collection and work.collection.find_paper(pinfo.paper)
+                if mem_col.find_paper(pinfo.paper):
+                    continue
+
+                if (
+                    work.collection
+                    and (col_paper := work.collection.find_paper(pinfo.paper))
+                    and not paper_has_updated(col_paper, pinfo.paper)
                 ):
                     continue
-                tmp_col.add_papers([pinfo.paper])
-                scored = Scored(work.focuses.score(pinfo), PaperWorkingSet.make(pinfo))
+
+                if col_paper:
+                    working_set = PaperWorkingSet.make(
+                        PaperInfo(
+                            paper=col_paper,
+                            key=pinfo.key,
+                            info=pinfo.info,
+                            score=work.focuses.score(col_paper),
+                        )
+                    )
+                    working_set.add(pinfo)
+                    scored = Scored(work.focuses.score(working_set.current), working_set)
+
+                else:
+                    scored = Scored(
+                        work.focuses.score(pinfo), PaperWorkingSet.make(pinfo)
+                    )
+
+                mem_col.add_papers([pinfo.paper])
                 work.top.add(scored)
             work.save()
 
@@ -303,7 +328,7 @@ class Work:
 
     # Collection dir
     # [alias: -c]
-    collection_dir: Path = None
+    collection_file: Path = None
 
     # Number of papers to keep in the working set
     n: int = 10
@@ -317,8 +342,8 @@ class Work:
 
     @cached_property
     def collection(self):
-        if self.collection_dir:
-            return FileCollection(self.collection_dir)
+        if self.collection_file:
+            return FileCollection(self.collection_file)
         else:
             return config.collection
 
@@ -332,6 +357,7 @@ class Work:
         return top
 
     def save(self):
+        self.work_file.parent.mkdir(exist_ok=True, parents=True)
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
             self.top,
@@ -375,12 +401,12 @@ class Coll:
 
     # Collection dir
     # [alias: -c]
-    collection_dir: Path = None
+    collection_file: Path = None
 
     @cached_property
     def collection(self):
-        if self.collection_dir:
-            return FileCollection(self.collection_dir)
+        if self.collection_file:
+            return FileCollection(self.collection_file)
         else:
             return config.collection
 

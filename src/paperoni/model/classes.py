@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import partial
+from typing import Callable
 
 from serieux import JSON
 
@@ -214,7 +215,6 @@ class Paper:
 class PaperInfo:
     paper: Paper
     key: str
-    update_key: str = None
     info: dict[str, JSON] = field(default_factory=dict)
     acquired: datetime = field(default_factory=datetime.now)
     score: float = 0.0
@@ -224,3 +224,27 @@ def rescore(stream, score):
     for pinfo in stream:
         pinfo.score = score
         yield pinfo
+
+
+@dataclass
+class CollectionMixin:
+    id: int = None
+    version: datetime = None
+
+    @classmethod
+    def make_collection_item(
+        cls,
+        item,
+        *,
+        next_id: Callable[[], int] = lambda: None,
+        **defaults,
+    ) -> "CollectionMixin":
+        item = cls(**{**defaults, **vars(item)})
+        item.id = next_id() if item.id is None else item.id
+        item.version = datetime.now() if item.version is None else item.version
+        return item
+
+
+@dataclass
+class CollectionPaper(Paper, CollectionMixin):
+    pass

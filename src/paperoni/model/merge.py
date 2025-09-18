@@ -6,12 +6,12 @@ from ovld import Dataclass, call_next, ovld, recurse
 from serieux.features.comment import CommentProxy
 
 from ..utils import associate, plainify
-from .classes import Institution, Paper, PaperAuthor, PaperInfo
+from .classes import CollectionPaper, Institution, PaperAuthor, PaperInfo
 
 
 @dataclass
 class PaperWorkingSet:
-    current: Paper = None
+    current: CollectionPaper = None
     collected: list[PaperInfo] = field(default_factory=list)
 
     @classmethod
@@ -23,9 +23,11 @@ class PaperWorkingSet:
     def add(self, p: PaperInfo):
         self.collected.append(p)
         if self.current is None:
-            self.current = p.paper
+            self.current = CollectionPaper.make_collection_item(p.paper)
         else:
-            self.current = merge(self.current, p.paper)
+            self.current = CollectionPaper.make_collection_item(
+                merge(self.current, p.paper), **vars(self.current)
+            )
 
 
 def qual(x, q):

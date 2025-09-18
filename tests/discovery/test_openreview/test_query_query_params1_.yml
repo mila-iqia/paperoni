@@ -80,7 +80,6 @@
     - name: linear mode connectivity
     - name: deep learning
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:rYjYwuM6yH
   paper:
@@ -148,7 +147,6 @@
     - name: batching
     - name: interpretability
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:0sJBW05a2W
   paper:
@@ -237,7 +235,6 @@
     - name: Point Cloud Registration
     - name: Focus and Matching
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:qRnmLJQHgx
   paper:
@@ -367,7 +364,6 @@
     - name: generative models
     - name: computer vision
   score: 0.0
-  update_key: null
 - info: {}
   key: openreview:9f5tOXKoMC
   paper:
@@ -458,4 +454,3 @@
     - name: Data denoising
     - name: Domain adaptation
   score: 0.0
-  update_key: null
