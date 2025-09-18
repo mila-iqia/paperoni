@@ -59,6 +59,11 @@ from paperoni.utils import asciiify, expand_links_dict, mostly_latin
                     "link": "42",
                     "url": "https://proceedings.mlr.press/v42.html",
                 },
+                {
+                    "type": "mlr.pdf",
+                    "link": "42",
+                    "url": "https://proceedings.mlr.press/v42/v42.pdf",
+                },
             ],
         ),
         (

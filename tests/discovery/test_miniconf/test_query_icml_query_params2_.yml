@@ -85,10 +85,10 @@
       display_name: Alireza Makhzani
     flags: []
     links:
-    - link: https://proceedings.mlr.press/v235/neklyudov24a.html
-      type: pdf
     - link: https://icml.cc/virtual/2024/poster/32732
       type: abstract
+    - link: 235/neklyudov24a
+      type: mlr
     - link: 989652eef28bc49eec908063ba36a854
       type: uid
     releases:
@@ -217,10 +217,10 @@
       display_name: Mark Rowland
     flags: []
     links:
-    - link: https://proceedings.mlr.press/v235/wiltzer24a.html
-      type: pdf
     - link: https://icml.cc/virtual/2024/poster/32627
       type: abstract
+    - link: 235/wiltzer24a
+      type: mlr
     - link: a6155b0da06d1ad154ad2d039d1fadf4
       type: uid
     releases:
@@ -306,10 +306,10 @@
       display_name: Gauthier Gidel
     flags: []
     links:
-    - link: https://proceedings.mlr.press/v235/hossain24b.html
-      type: pdf
     - link: https://icml.cc/virtual/2024/poster/33949
       type: abstract
+    - link: 235/hossain24b
+      type: mlr
     - link: https://icml.cc/media/icml-2024/Slides/33949_ypaq1v1.pdf
       type: slides
     - link: 285da2198b2b496c9d447cc4ac6b0734
@@ -430,10 +430,10 @@
       display_name: Sara Magliacane
     flags: []
     links:
-    - link: https://proceedings.mlr.press/v235/xu24ac.html
-      type: pdf
     - link: https://icml.cc/virtual/2024/poster/34245
       type: abstract
+    - link: 235/xu24ac
+      type: mlr
     - link: d465f14a648b3d0a1faa6f447e526c60
       type: uid
     releases:
@@ -518,10 +518,10 @@
       display_name: Guillaume Rabusseau
     flags: []
     links:
-    - link: https://proceedings.mlr.press/v235/lizaire24a.html
-      type: pdf
     - link: https://icml.cc/virtual/2024/poster/34560
       type: abstract
+    - link: 235/lizaire24a
+      type: mlr
     - link: f2c5b1f06bfe59954cb2a56858c2ed98
       type: uid
     releases:

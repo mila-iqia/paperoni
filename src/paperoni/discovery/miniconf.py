@@ -42,7 +42,11 @@ pdf_mappings = [
     {
         "pattern": r"https://proceedings\.neurips\.cc//?paper_files/paper/(?P<year>\d{4})/hash/(?P<hash>[a-f0-9]{32})-Abstract(?P<suffix>.*)\.html",
         "pdf": "https://proceedings.neurips.cc/paper_files/paper/{year}/file/{hash}-Paper{suffix}.pdf",
-    }
+    },
+    {
+        "pattern": r"https://openaccess.thecvf.com/content/CVPR(?P<year>\d{4})/html/(?P<lnk>.*).html",
+        "pdf": "https://openaccess.thecvf.com/content/CVPR{year}/papers/{lnk}.pdf",
+    },
 ]
 
 
@@ -153,10 +157,11 @@ class MiniConf(Discoverer):
             if uri.startswith("https://openreview.net/forum?id="):
                 uri = uri.split("=")[-1]
                 media_type = "openreview"
-            elif uri.startswith(
-                pfx := "http://proceedings.mlr.press/v"
-            ) or uri.startswith(pfx := "https://proceedings.mlr.press/v"):
-                uri = uri.rstrip(".html").lstrip(pfx)
+            elif m := re.match(
+                r"^https?://proceedings\.mlr\.press/v(\d+)/([^\./]+)", uri
+            ):
+                vol, tag = m.groups()
+                uri = f"{vol}/{tag}"
                 media_type = "mlr"
             else:
                 uri = expand_base(uri)
@@ -165,11 +170,10 @@ class MiniConf(Discoverer):
         if url := expand_base(data.get("paper_url")):
             process_uri("abstract", url)
         if url := expand_base(data.get("paper_pdf_url")):
-            if url.endswith(".pdf"):
-                process_uri("pdf", url)
+            process_uri("pdf", url)
         if url := expand_base(data.get("virtualsite_url")):
             process_uri("abstract", url)
-        process_uri("uid", data["uid"])
+        links.add(Link(type="uid", link=data["uid"]))
 
         # Add eventmedia links
         for media in data.get("eventmedia", []):
@@ -181,6 +185,13 @@ class MiniConf(Discoverer):
         for lnk in list(links):
             if pdf_url := map_pdf_url(lnk.link):
                 links.add(Link(type="pdf", link=pdf_url))
+
+        # Remove "pdf" links that aren't actually pdfs
+        links = [
+            lnk
+            for lnk in list(links)
+            if "pdf" not in lnk.type or lnk.link.endswith(".pdf")
+        ]
 
         links = sorted(
             links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)

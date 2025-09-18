@@ -45,14 +45,12 @@
       display_name: Aishwarya Agrawal
     flags: []
     links:
-    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
+    - link: https://openaccess.thecvf.com/content/CVPR2024/papers/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.pdf
       type: pdf
     - link: https://cvpr.thecvf.com/virtual/2024/poster/29738
       type: abstract
     - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
       type: abstract
-    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
-      type: paper_pdf
     - link: e9dcb63ca828d0e00cd05b445099ed2e
       type: uid
     releases:
@@ -137,14 +135,12 @@
       display_name: Mohamed Elhoseiny
     flags: []
     links:
-    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
+    - link: https://openaccess.thecvf.com/content/CVPR2024/papers/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.pdf
       type: pdf
     - link: https://cvpr.thecvf.com/virtual/2024/poster/31810
       type: abstract
     - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
       type: abstract
-    - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
-      type: paper_pdf
     - link: 1170017b40d1ba28394ebc44158dae8a
       type: uid
     releases:

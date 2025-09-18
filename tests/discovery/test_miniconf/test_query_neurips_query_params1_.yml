@@ -190,6 +190,8 @@
       display_name: Nikolay Malkin
     flags: []
     links:
+    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/8b21a7ea42cbcd1c29a7a88c444cce45-Paper-Conference.pdf
+      type: pdf
     - link: https://neurips.cc/virtual/2024/poster/94137
       type: abstract
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
@@ -338,6 +340,8 @@
       display_name: Nikolay Malkin
     flags: []
     links:
+    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/93c936b9e492def9c00782cab79dbc6d-Paper-Conference.pdf
+      type: pdf
     - link: https://neurips.cc/virtual/2024/poster/93194
       type: abstract
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/93c936b9e492def9c00782cab79dbc6d-Abstract-Conference.html
@@ -500,6 +504,8 @@
       display_name: Sanjeev Arora
     flags: []
     links:
+    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/2318d75a06437eaa257737a5cf3ab83c-Paper-Conference.pdf
+      type: pdf
     - link: https://neurips.cc/virtual/2024/poster/96107
       type: abstract
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/2318d75a06437eaa257737a5cf3ab83c-Abstract-Conference.html
@@ -651,6 +657,8 @@
       display_name: Robert Batey
     flags: []
     links:
+    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/53704142f230054140418ecd8857f391-Paper-Conference.pdf
+      type: pdf
     - link: https://neurips.cc/virtual/2024/poster/94040
       type: abstract
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/53704142f230054140418ecd8857f391-Abstract-Conference.html
@@ -780,6 +788,8 @@
       display_name: Alexander Tong
     flags: []
     links:
+    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/c1e67cde895c3c91edb43569ad0df260-Paper-Conference.pdf
+      type: pdf
     - link: https://neurips.cc/virtual/2024/poster/94212
       type: abstract
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/c1e67cde895c3c91edb43569ad0df260-Abstract-Conference.html
