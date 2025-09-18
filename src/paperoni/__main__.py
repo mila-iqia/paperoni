@@ -1,6 +1,7 @@
 import argparse
 import itertools
 import json
+import sys
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
@@ -451,7 +452,11 @@ class PaperoniInterface:
     command: PaperoniCommand
 
     # Enable rich dashboard
-    dash: bool = True
+    dash: bool = None
+
+    def __post_init__(self):
+        if self.dash is None:
+            self.dash = sys.stdout.isatty()
 
     def run(self):
         if self.dash:
