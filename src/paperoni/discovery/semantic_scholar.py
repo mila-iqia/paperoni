@@ -40,6 +40,7 @@ venue_type_mapping = {
     "LettersAndComments": VenueType.letters_and_comments,
     "CaseReport": VenueType.case_report,
     "ClinicalTrial": VenueType.clinical_trial,
+    "Dataset": VenueType.dataset,
     "_": VenueType.unknown,
 }
 

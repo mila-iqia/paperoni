@@ -126,4 +126,7 @@ def get_pdf(refs, cache_policy: CachePolicy = CachePolicies.USE):
                 exceptions.append(exc)
                 continue
 
-    raise ExceptionGroup("No fulltext found for any reference", exceptions)
+    if exceptions:
+        raise ExceptionGroup("No fulltext found for any reference", exceptions)
+    else:
+        raise Exception("No fulltext found for any reference")

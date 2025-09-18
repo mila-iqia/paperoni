@@ -33,6 +33,7 @@ class VenueType(str, Enum):
     tutorials = "tutorials"
     seminar = "seminar"
     preprint = "preprint"
+    dataset = "dataset"
 
 
 class InstitutionCategory(str, Enum):
