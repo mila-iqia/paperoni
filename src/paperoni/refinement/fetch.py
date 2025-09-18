@@ -4,6 +4,7 @@ from typing import Callable
 from ovld import ovld
 
 from ..model import PaperInfo
+from ..utils import soft_fail
 
 
 @ovld
@@ -41,26 +42,27 @@ def fetch_all(type, link, statuses=None, tags=None, force=False):
     statuses = statuses or {}
     tags = tags or {"normal"}
     for f in fetch.resolve_all(type, link):
-        if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
-            continue
+        with soft_fail(f"Refinement of {type}:{link}"):
+            if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
+                continue
 
-        name = getattr(f.func, "description", "???")
-        key = f"{type}:{link}"
-        nk = name, key
-        if nk in statuses:
-            continue
-        statuses[nk] = "pending"
-        try:
-            paper = _call(f.func, type, link, force=force)
-            if paper is not None:
-                statuses[nk] = "found"
-                yield PaperInfo(
-                    paper=paper,
-                    key=key,
-                    info={"refined_by": {name: key}},
-                )
-            else:
-                statuses[nk] = "not_found"
-        except Exception:
-            statuses[nk] = "error"
-            raise
+            name = getattr(f.func, "description", "???")
+            key = f"{type}:{link}"
+            nk = name, key
+            if nk in statuses:
+                continue
+            statuses[nk] = "pending"
+            try:
+                paper = _call(f.func, type, link, force=force)
+                if paper is not None:
+                    statuses[nk] = "found"
+                    yield PaperInfo(
+                        paper=paper,
+                        key=key,
+                        info={"refined_by": {name: key}},
+                    )
+                else:
+                    statuses[nk] = "not_found"
+            except Exception:
+                statuses[nk] = "error"
+                raise

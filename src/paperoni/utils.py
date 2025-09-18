@@ -1,4 +1,5 @@
 import itertools
+import logging
 import re
 import unicodedata
 
@@ -186,3 +187,19 @@ def prog(it, name="progress", total=None):
     for i, x in enumerate(it):
         yield x
         send(progress=(name, i + 1, total))
+
+
+class soft_fail:
+    def __init__(self, message=None):
+        self.message = message
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is not None:
+            logging.getLogger().exception(
+                msg=self.message or repr(exc_value), exc_info=exc_value
+            )
+            send(exception=exc_value)
+            return True

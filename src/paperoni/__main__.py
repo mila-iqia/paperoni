@@ -34,7 +34,7 @@ from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
-from .utils import prog, url_to_id
+from .utils import prog, soft_fail, url_to_id
 
 
 def deprox(x):
@@ -434,8 +434,10 @@ class Batch:
     def run(self):
         batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
         for name, cmd in batch.items():
-            send(event=f"Batch: start step {name}")
-            cmd.run()
+            batch_descr = f"Batch: start step {name}"
+            with soft_fail(batch_descr):
+                send(event=batch_descr)
+                cmd.run()
 
 
 PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch]
