@@ -94,7 +94,7 @@ def prompt(link: str, force: bool = False) -> Paper:
 
 
 @register_fetch(tags={"prompt", "html"})
-def html(type: Literal["doi"], link: str, force: bool = False) -> Paper:
+def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
     send(
         prompt=Analysis.__module__,
         model=config.refine.prompt.model,

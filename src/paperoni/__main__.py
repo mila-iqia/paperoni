@@ -154,12 +154,15 @@ class Refine:
 
     def run(self):
         results = []
+        links = []
         for link in self.link:
             if link.startswith("http"):
-                type, link = url_to_id(link)
+                links.append(url_to_id(link))
             else:
-                type, link = link.split(":", 1)
-            results.extend(fetch_all(type, link, tags=self.tags, force=self.force))
+                links.append(link.split(":", 1))
+
+        results = list(fetch_all(links, tags=self.tags, force=self.force))
+
         if self.merge:
             results = [merge_all(results)]
         self.format(results)
@@ -245,27 +248,28 @@ class Work:
         def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
-            jobs = [
-                (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
-            ]
-            for ws, sws, lnk in prog(jobs, name="refine"):
-                send(event=f"Refine {lnk.type}:{lnk.link}")
+
+            for sws in prog(list(it), name="refine"):
+                links = [(lnk.type, lnk.link) for lnk in sws.value.current.links]
+                send(to_refine=links)
                 statuses.update(
                     {
                         (name, key): "done"
-                        for pinfo in ws.collected
+                        for pinfo in sws.value.collected
                         for name, key in pinfo.info.get("refined_by", {}).items()
                     }
                 )
                 for pinfo in fetch_all(
-                    lnk.type,
-                    lnk.link,
+                    links,
+                    group=";".join([f"{type}:{link}" for type, link in links]),
                     tags=self.tags,
                     force=self.force,
                     statuses=statuses,
                 ):
-                    ws.add(pinfo)
-                    sws.score = work.focuses.score(ws)
+                    send(refinement=pinfo)
+                    sws.value.add(pinfo)
+                    sws.score = work.focuses.score(sws.value)
+
             work.top.resort()
             work.save()
 
@@ -368,11 +372,12 @@ class Work:
         return top
 
     def save(self):
-        self.work_file.parent.mkdir(exist_ok=True, parents=True)
+        wfile = deprox(self.work_file or config.work_file)
+        wfile.parent.mkdir(exist_ok=True, parents=True)
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
             self.top,
-            dest=deprox(self.work_file or config.work_file),
+            dest=wfile,
         )
 
     def run(self):

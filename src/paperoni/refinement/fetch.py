@@ -38,31 +38,36 @@ def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
         return f(*args, **kwargs)
 
 
-def fetch_all(type, link, statuses=None, tags=None, force=False):
+def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
     statuses = statuses or {}
     tags = tags or {"normal"}
-    for f in fetch.resolve_all(type, link):
-        with soft_fail(f"Refinement of {type}:{link}"):
-            if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
-                continue
 
-            name = getattr(f.func, "description", "???")
-            key = f"{type}:{link}"
-            nk = name, key
-            if nk in statuses:
-                continue
-            statuses[nk] = "pending"
-            try:
-                paper = _call(f.func, type, link, force=force)
-                if paper is not None:
-                    statuses[nk] = "found"
-                    yield PaperInfo(
-                        paper=paper,
-                        key=key,
-                        info={"refined_by": {name: key}},
-                    )
-                else:
-                    statuses[nk] = "not_found"
-            except Exception:
-                statuses[nk] = "error"
-                raise
+    funcs = [(group, (links,), fetch.resolve_all(links))]
+    for type, link in links:
+        funcs.append((f"{type}:{link}", (type, link), fetch.resolve_all(type, link)))
+
+    for key, args, fs in funcs:
+        for f in fs:
+            with soft_fail(f"Refinement of {key}"):
+                if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
+                    continue
+
+                name = getattr(f.func, "description", "???")
+                nk = name, key
+                if nk in statuses:
+                    continue
+                statuses[nk] = "pending"
+                try:
+                    paper = _call(f.func, *args, force=force)
+                    if paper is not None:
+                        statuses[nk] = "found"
+                        yield PaperInfo(
+                            paper=paper,
+                            key=key,
+                            info={"refined_by": {name: key}},
+                        )
+                    else:
+                        statuses[nk] = "not_found"
+                except Exception:
+                    statuses[nk] = "error"
+                    raise
