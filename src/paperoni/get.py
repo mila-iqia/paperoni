@@ -16,6 +16,7 @@ from ovld import ovld
 from requests import HTTPError, Session
 from requests.exceptions import RequestException
 from serieux import TaggedSubclass
+from serieux.features.encrypt import Secret
 
 ua = UserAgent()
 
@@ -179,7 +180,7 @@ class CloudFlareFetcher(RequestsFetcher):
 
 @dataclass
 class ScraperAPIFetcher(CachedFetcher):
-    api_key: str = None
+    api_key: Secret[str] = None
 
     def generic(self, method, url, **kwargs):
         assert self.api_key is not None

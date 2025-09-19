@@ -3,6 +3,7 @@ from pathlib import Path
 
 import gifnoc
 from serieux import TaggedSubclass
+from serieux.features.encrypt import Secret
 
 from .collection.abc import PaperCollection
 from .get import Fetcher, RequestsFetcher
@@ -25,7 +26,7 @@ class PaperoniConfig:
     cache_path: Path = None
     data_path: Path = None
     mailto: str = ""
-    api_keys: Keys[str, str] = field(default_factory=Keys)
+    api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
     refine: Refine = None
@@ -38,5 +39,4 @@ config = gifnoc.define(
     PaperoniConfig,
 )
 
-type JSON = dict[str, JSON] | list[JSON] | int | str | bool | type(None)
-gifnoc.define("secrets", JSON)
+gifnoc_model = gifnoc.global_registry.model()

@@ -2,6 +2,8 @@ import traceback
 from datetime import date, datetime
 from traceback import print_exc
 
+from outsight import send
+
 from ..config import config
 from ..model.classes import (
     Author,
@@ -111,7 +113,7 @@ class PMLR(Discoverer):
                 traceback.print_exception(exc)
 
     def get_volume(self, volume, cache=False):
-        print(f"Fetching PMLR {volume}")
+        send(event=f"Fetching PMLR {volume}")
         try:
             papers = config.fetch.read(
                 f"https://proceedings.mlr.press/{volume}/assets/bib/citeproc.yaml",

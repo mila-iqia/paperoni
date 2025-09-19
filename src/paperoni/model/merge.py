@@ -105,7 +105,7 @@ def merge(x: list, y: list, qx: Number, qy: Number):
     first = x[0]
     if isinstance(first, CommentProxy):
         first = first._obj
-    return recurse(x, y, qx, qy, type(first))
+    return recurse(main, other, qx, qy, type(first))
 
 
 @ovld

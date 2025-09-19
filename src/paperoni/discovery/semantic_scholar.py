@@ -3,8 +3,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import partial
 
-import gifnoc
-
 from ..config import config
 from ..model import (
     Author,
@@ -21,6 +19,7 @@ from ..model import (
 )
 from ..model.focus import Focus, Focuses
 from ..model.merge import qual
+from ..utils import soft_fail
 from .base import Discoverer, QueryError
 
 external_ids_mapping = {
@@ -134,7 +133,7 @@ AUTHOR_PAPERS_FIELDS = (
 
 @dataclass
 class SemanticScholar(Discoverer):
-    api_key: str = field(default_factory=lambda: ss_config.api_key)
+    api_key: str = field(default_factory=lambda: config.api_keys.semantic_scholar)
 
     def _evaluate(self, path: str, **params):
         jdata = config.fetch.read_retry(
@@ -324,14 +323,17 @@ class SemanticScholar(Discoverer):
                 )
 
             for focus in focuses.focuses:
-                match focus:
-                    case Focus(drive_discovery=False):
-                        continue
-                    case Focus(type="author", name=name, score=score):
-                        yield from rescore(
-                            self.query(author=name, title=title, block_size=block_size),
-                            score,
-                        )
+                with soft_fail(f"Discovery of {focus}"):
+                    match focus:
+                        case Focus(drive_discovery=False):
+                            continue
+                        case Focus(type="author", name=name, score=score):
+                            yield from rescore(
+                                self.query(
+                                    author=name, title=title, block_size=block_size
+                                ),
+                                score,
+                            )
             return
 
         if isinstance(author, list):
@@ -350,11 +352,3 @@ class SemanticScholar(Discoverer):
                 author, block_size=block_size, limit=limit
             ):
                 yield from papers
-
-
-@dataclass
-class SemanticScholarConfig:
-    api_key: str = None
-
-
-ss_config = gifnoc.define("paperoni.semantic_scholar", SemanticScholarConfig, defaults={})

@@ -1,6 +1,7 @@
 import argparse
 import itertools
 import json
+import sys
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path
@@ -9,16 +10,18 @@ from typing import Annotated, Any, Generator, Literal
 import yaml
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
+from outsight.ops import ticktock
 from serieux import (
     Auto,
+    AutoRegistered,
     CommentRec,
-    Registered,
     TaggedUnion,
+    auto_singleton,
     deserialize,
     dump,
     serialize,
-    singleton,
 )
+from serieux.features.proxy import ProxyBase
 from serieux.features.tagset import FromEntryPoint
 
 from .collection.filecoll import FileCollection
@@ -33,28 +36,35 @@ from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
-from .utils import prog, url_to_id
+from .utils import prog, soft_fail, url_to_id
 
 
-class Formatter(Registered):
+def deprox(x):
+    if isinstance(x, ProxyBase):
+        return x._obj
+    else:
+        return x
+
+
+class Formatter(AutoRegistered):
     pass
 
 
-@singleton("json")
+@auto_singleton("json")
 class JSONFormatter(Formatter):
     def __call__(self, papers):
         ser = serialize(list[PaperInfo], list(papers))
         print(json.dumps(ser, indent=4))
 
 
-@singleton("yaml")
+@auto_singleton("yaml")
 class YAMLFormatter(Formatter):
     def __call__(self, papers):
         ser = serialize(list[PaperInfo], list(papers))
         print(yaml.safe_dump(ser, sort_keys=False))
 
 
-@singleton("terminal")
+@auto_singleton("terminal")
 class TerminalFormatter(Formatter):
     def __call__(self, papers):
         for i, paper in enumerate(papers):
@@ -239,6 +249,7 @@ class Work:
                 (sws.value, sws, lnk) for sws in it for lnk in sws.value.current.links
             ]
             for ws, sws, lnk in prog(jobs, name="refine"):
+                send(event=f"Refine {lnk.type}:{lnk.link}")
                 statuses.update(
                     {
                         (name, key): "done"
@@ -331,7 +342,7 @@ class Work:
     collection_file: Path = None
 
     # Number of papers to keep in the working set
-    n: int = 10
+    n: int = 1000
 
     @cached_property
     def focuses(self):
@@ -361,7 +372,7 @@ class Work:
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
             self.top,
-            dest=self.work_file or config.work_file,
+            dest=deprox(self.work_file or config.work_file),
         )
 
     def run(self):
@@ -415,22 +426,83 @@ class Coll:
 
 
 @dataclass
+class Batch:
+    """Run a batch of commands from a YAML or JSON file."""
+
+    # Path to the batch file
+    # [positional]
+    batch_file: Path
+
+    def run(self):
+        batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
+        for name, cmd in batch.items():
+            batch_descr = f"Batch: start step {name}"
+            with soft_fail(batch_descr):
+                send(event=batch_descr)
+                cmd.run()
+
+
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch]
+
+
+@dataclass
 class PaperoniInterface:
     """Paper database"""
 
     # Command to execute
-    command: TaggedUnion[Discover, Refine, Fulltext, Work, Coll]
+    command: PaperoniCommand
 
     # Enable rich dashboard
-    dash: bool = True
+    dash: bool = None
+
+    # Enable slow log
+    log: bool = False
+
+    def __post_init__(self):
+        if self.dash is None and not self.log:
+            self.dash = sys.stdout.isatty()
 
     def run(self):
         if self.dash:
             enable_dash()
+        if self.log:
+            enable_log()
         self.command.run()
 
 
+def enable_log():
+    @outsight.add
+    async def slow_log(sent):
+        def checkpoint():
+            for k, x in counts.items():
+                (n, msg) = x
+                if n:
+                    print(msg.format(n))
+                x[0] = 0
+
+        counts = {
+            "discover": [0, "Discovered {} papers"],
+            "to_refine": [0, "Refinement attempts: {}"],
+            "refinement": [0, "Successful refinements: {}"],
+        }
+        async for group in sent.buffer(ticktock(1)):
+            for entry in group:
+                if "event" in entry:
+                    checkpoint()
+                    print(entry["event"])
+                else:
+                    for k, x in counts.items():
+                        if k in entry:
+                            x[0] += 1
+            checkpoint()
+
+
 def enable_dash():
+    @outsight.add
+    async def show_events(sent, dash):
+        async for messages in sent["event"].roll(5, partial=True):
+            dash["event"] = History(messages)
+
     @outsight.add
     async def show_progress(sent, dash):
         async for name, sofar, total in sent["progress"]:
