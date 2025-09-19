@@ -4,6 +4,8 @@ import traceback
 from datetime import date, datetime
 from traceback import print_exc
 
+from outsight import send
+
 from ..config import config
 from ..model.classes import (
     Author,
@@ -62,7 +64,7 @@ class JMLR(Discoverer):
                 traceback.print_exception(exc)
 
     def get_volume(self, volume, cache=False):
-        print(f"Fetching JMLR {volume}")
+        send(event=f"Fetching JMLR {volume}")
         try:
             index = config.fetch.read(
                 f"{self.urlbase}/papers/{volume}",

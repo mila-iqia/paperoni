@@ -10,6 +10,7 @@ from typing import Annotated, Any, Generator, Literal
 import yaml
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
+from outsight.ops import ticktock
 from serieux import (
     Auto,
     AutoRegistered,
@@ -454,14 +455,46 @@ class PaperoniInterface:
     # Enable rich dashboard
     dash: bool = None
 
+    # Enable slow log
+    log: bool = False
+
     def __post_init__(self):
-        if self.dash is None:
+        if self.dash is None and not self.log:
             self.dash = sys.stdout.isatty()
 
     def run(self):
         if self.dash:
             enable_dash()
+        if self.log:
+            enable_log()
         self.command.run()
+
+
+def enable_log():
+    @outsight.add
+    async def slow_log(sent):
+        def checkpoint():
+            for k, x in counts.items():
+                (n, msg) = x
+                if n:
+                    print(msg.format(n))
+                x[0] = 0
+
+        counts = {
+            "discover": [0, "Discovered {} papers"],
+            "to_refine": [0, "Refinement attempts: {}"],
+            "refinement": [0, "Successful refinements: {}"],
+        }
+        async for group in sent.buffer(ticktock(1)):
+            for entry in group:
+                if "event" in entry:
+                    checkpoint()
+                    print(entry["event"])
+                else:
+                    for k, x in counts.items():
+                        if k in entry:
+                            x[0] += 1
+            checkpoint()
 
 
 def enable_dash():

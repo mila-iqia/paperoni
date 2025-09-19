@@ -197,6 +197,8 @@ class soft_fail:
         pass
 
     def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is KeyboardInterrupt:
+            return None
         if exc_type is not None:
             logging.getLogger().exception(
                 msg=self.message or repr(exc_value), exc_info=exc_value
