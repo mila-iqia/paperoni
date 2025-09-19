@@ -111,9 +111,9 @@ def get_pdf(refs, cache_policy: CachePolicy = CachePolicies.USE):
         refs = [refs]
 
     if cache_policy.use and not cache_policy.best:
-        urls = [url for ref in refs for url in locate_all(ref)]
-        for url in urls:
-            if (p := PDF(url).load()).success:
+        urls = [(url, ref) for ref in refs for url in locate_all(ref)]
+        for url, ref in urls:
+            if (p := PDF(url, ref=ref).load()).success:
                 return p
 
     exceptions = []

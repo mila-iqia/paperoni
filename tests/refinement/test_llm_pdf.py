@@ -19,7 +19,7 @@ def test_pdf(data_regression: DataRegressionFixture):
             next(
                 filter(
                     lambda pinfo: "pdf" in pinfo.info["refined_by"],
-                    fetch_all("openreview", "_3FyT_W1DW", tags={}),
+                    fetch_all([("openreview", "_3FyT_W1DW")], tags={}),
                 ),
                 None,
             )
@@ -29,7 +29,7 @@ def test_pdf(data_regression: DataRegressionFixture):
         pinfo = next(
             filter(
                 lambda pinfo: "pdf" in pinfo.info["refined_by"],
-                fetch_all("openreview", "_3FyT_W1DW", tags={"pdf"}),
+                fetch_all([("openreview", "_3FyT_W1DW")], tags={"pdf"}),
             )
         )
 

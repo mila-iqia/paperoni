@@ -89,10 +89,11 @@ def pdf(refs: list, *, force: bool = False) -> Paper:
         return None
 
     send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=p.source.url)
-    type, link = p.ref.split(":", 1)
-
     paper = prompt(p, force=force)
-    paper.links.append(Link(type=type, link=link))
+
+    if ":" in p.ref:
+        type, link = p.ref.split(":", 1)
+        paper.links.append(Link(type=type, link=link))
 
     return paper.authors and paper or None
 
