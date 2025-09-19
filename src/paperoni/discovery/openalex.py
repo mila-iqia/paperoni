@@ -281,13 +281,14 @@ class OpenAlexQueryManager:
 
         # Create unique key based on OpenAlex work ID
         # OpenAlex IDs are in the format "https://openalex.org/W2741809807"
-        openalex_id = data["id"]
-        paper_key = f"openalex:{openalex_id.split('/')[-1]}"
+        openalex_id = data["id"].split("/")[-1]
+        paper_key = f"openalex:{openalex_id}"
 
         return PaperInfo(
             key=paper_key,
             acquired=datetime.now(),
             paper=paper,
+            info={"discovered_by": {"openalex": openalex_id}},
         )
 
     @classmethod

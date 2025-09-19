@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openreview: gVTkMsaaGI
   key: openreview:gVTkMsaaGI
   paper:
     abstract: 'Diffusion models have emerged as effective distribution estimators
@@ -175,7 +177,9 @@
     - name: planning
     - name: GFlowNet
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: vieIamY2Gi
   key: openreview:vieIamY2Gi
   paper:
     abstract: We study the problem of training diffusion models to sample from a distribution
@@ -290,7 +294,9 @@
     - name: stochastic control
     - name: GFlowNets
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: D19UyP4HYk
   key: openreview:D19UyP4HYk
   paper:
     abstract: '\emph{Metacognitive knowledge} refers to humans'' intuitive knowledge
@@ -421,7 +427,9 @@
     - name: Metacognitive abilities of LLM
     - name: Mathematical Reasoning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: hpvJwmzEHX
   key: openreview:hpvJwmzEHX
   paper:
     abstract: Generative models hold great promise for small molecule discovery, significantly
@@ -540,7 +548,9 @@
     - name: GFlowNets
     - name: synthesizability
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: fNakQltI1N
   key: openreview:fNakQltI1N
   paper:
     abstract: "Modeling stochastic and irregularly sampled time series is a challenging\

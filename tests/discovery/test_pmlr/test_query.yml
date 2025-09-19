@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      pmlr: v180:deleu22a
   key: pmlr:v180:deleu22a
   paper:
     abstract: In Bayesian structure learning, we are interested in inferring a distribution
@@ -85,7 +87,9 @@
     title: Bayesian structure learning with generative flow networks
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      pmlr: v180:erraqabi22a
   key: pmlr:v180:erraqabi22a
   paper:
     abstract: In reinforcement learning, the graph Laplacian has proved to be a valuable

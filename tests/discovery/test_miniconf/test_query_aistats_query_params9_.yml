@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: aistats:a760880003e7ddedfef56acb3b09697f
   key: miniconf:aistats:a760880003e7ddedfef56acb3b09697f
   paper:
     abstract: We present simulation-free score and flow matching ([SF]$^2$M), a simulation-free

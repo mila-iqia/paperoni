@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
   key: semantic_scholar:c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
   paper:
     abstract: 'Learning in nonstationary environments is one of the biggest challenges
@@ -86,7 +88,9 @@
     - name: Computer Science
     - name: Medicine
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: b2283234d862b7da0f3fd7034624e3744154da44
   key: semantic_scholar:b2283234d862b7da0f3fd7034624e3744154da44
   paper:
     abstract: The COVID‐19 pandemic continues to pose a substantial threat to human
@@ -1509,7 +1513,9 @@
     topics:
     - name: Medicine
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: 9b1e7754b0a508b0ce324167acd1e0381824bd9a
   key: semantic_scholar:9b1e7754b0a508b0ce324167acd1e0381824bd9a
   paper:
     abstract: ''
@@ -1581,7 +1587,9 @@
     topics:
     - name: Computer Science
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: c2c5f451c8109f3fccd233c28c639a70bf409f45
   key: semantic_scholar:c2c5f451c8109f3fccd233c28c639a70bf409f45
   paper:
     abstract: One of the most fundamental laws of physics is the principle of least
@@ -1709,7 +1717,9 @@
     - name: Biology
     - name: Medicine
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: 0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
   key: semantic_scholar:0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
   paper:
     abstract: Abstract:Since OpenAI's release of the very large language models Chat-GPT

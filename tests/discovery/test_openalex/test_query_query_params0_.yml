@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3163652268
   key: openalex:W3163652268
   paper:
     abstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture
@@ -127,7 +129,9 @@
     - name: Electrical engineering
     - name: Image (mathematics)
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3143367551
   key: openalex:W3143367551
   paper:
     abstract: Learning robust speaker embeddings is a crucial step in speaker diarization.
@@ -281,7 +285,9 @@
     - name: Chemistry
     - name: Gene
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3092206109
   key: openalex:W3092206109
   paper:
     abstract: 'We present GraphMix, a regularization method for Graph Neural Network
@@ -445,7 +451,9 @@
     - name: Regularization (linguistics)
     - name: Artificial neural network
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W4319300975
   key: openalex:W4319300975
   paper:
     abstract: Convolutional neural networks (CNNs) have been the consensus for medical
@@ -604,7 +612,9 @@
     - name: Quantum mechanics
     - name: Operating system
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W4372260310
   key: openalex:W4372260310
   paper:
     abstract: 'Contrastive learning has shown remarkable success in the field of multimodal

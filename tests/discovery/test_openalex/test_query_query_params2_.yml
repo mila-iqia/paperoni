@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3022187094
   key: openalex:W3022187094
   paper:
     abstract: Sequential data often possesses hierarchical structures with complex
@@ -150,7 +152,9 @@
     - name: Economics
     - name: Operating system
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W2963096987
   key: openalex:W2963096987
   paper:
     abstract: We examine the role of memorization in deep learning, drawing connections
@@ -369,7 +373,9 @@
     - name: Image (mathematics)
     - name: Gene
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W2267635276
   key: openalex:W2267635276
   paper:
     abstract: We introduce a method to train Binarized Neural Networks (BNNs) - neural
@@ -495,7 +501,9 @@
     - name: Quantum
     - name: Programming language
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W2962883855
   key: openalex:W2962883855
   paper:
     abstract: We investigate the task of building open domain, conversational dialogue
@@ -633,7 +641,9 @@
     - name: Economics
     - name: Operating system
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W2218318129
   key: openalex:W2218318129
   paper:
     abstract: We present in this paper a novel approach for training deterministic

@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:bb1662b7c5f22a0f905fd59e718ca05e
   key: miniconf:icml:bb1662b7c5f22a0f905fd59e718ca05e
   paper:
     abstract: We present a performant, general-purpose gradient-guided nested sampling
@@ -105,7 +107,9 @@
     topics:
     - name: Probabilistic Methods->Monte Carlo and Sampling Methods
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:63eb58bd4d3486f001438f911a11d323
   key: miniconf:icml:63eb58bd4d3486f001438f911a11d323
   paper:
     abstract: Efficiently generating statistically independent samples from an unnormalized
@@ -286,7 +290,9 @@
     topics:
     - name: Probabilistic Methods->Monte Carlo and Sampling Methods
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:1a6727711b84fd1efbb87fc565199d13
   key: miniconf:icml:1a6727711b84fd1efbb87fc565199d13
   paper:
     abstract: GFlowNets are probabilistic models that sequentially generate compositional
@@ -432,7 +438,9 @@
     topics:
     - name: Probabilistic Methods
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:cf1f78fe923afe05f7597da2be7a3da8
   key: miniconf:icml:cf1f78fe923afe05f7597da2be7a3da8
   paper:
     abstract: Neural Processes (NPs) are popular meta-learning methods for efficiently
@@ -530,7 +538,9 @@
     topics:
     - name: Deep Learning->Attention Mechanisms
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:f0935e4cd5920aa6c7c996a5ee53a70f
   key: miniconf:icml:f0935e4cd5920aa6c7c996a5ee53a70f
   paper:
     abstract: 'Mitigating the climate crisis requires a rapid transition towards lower-carbon

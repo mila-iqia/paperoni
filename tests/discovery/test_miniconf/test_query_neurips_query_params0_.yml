@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:eed4435e296d75fa7280539943113a7d
   key: miniconf:neurips:eed4435e296d75fa7280539943113a7d
   paper:
     abstract: Complex logical query answering (CLQA) in knowledge graphs (KGs) goes
@@ -104,7 +106,9 @@
     topics:
     - name: Graph Neural Networks
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:2f10158c59d8ce7d40687769eb8e0424
   key: miniconf:neurips:2f10158c59d8ce7d40687769eb8e0424
   paper:
     abstract: When decisions are made at high frequency, traditional reinforcement
@@ -212,7 +216,9 @@
     topics:
     - name: Reinforcement Learning->Everything Else
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:8d97f450424ddf6448b7efe4159d2aa6
   key: miniconf:neurips:8d97f450424ddf6448b7efe4159d2aa6
   paper:
     abstract: General Value Functions (GVFs) (Sutton et al., 2011) represent predictive
@@ -297,7 +303,9 @@
     topics:
     - name: Reinforcement Learning->Everything Else
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:6e2d5d50a943a0e0d738377f51011685
   key: miniconf:neurips:6e2d5d50a943a0e0d738377f51011685
   paper:
     abstract: 'Diffusion models have emerged as effective distribution estimators
@@ -521,7 +529,9 @@
     topics:
     - name: Generative Models->Diffusion models
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:76a271c64a315732aa56eeb7277a63d4
   key: miniconf:neurips:76a271c64a315732aa56eeb7277a63d4
   paper:
     abstract: 'Due to the recent remarkable advances in artificial intelligence, researchers

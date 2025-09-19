@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openreview: vieIamY2Gi
   key: openreview:vieIamY2Gi
   paper:
     abstract: We study the problem of training diffusion models to sample from a distribution

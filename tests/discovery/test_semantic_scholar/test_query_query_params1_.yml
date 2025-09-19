@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
   key: semantic_scholar:de3ec11fe51e9abc6a6c1a639044ae5a70c43e72
   paper:
     abstract: ''
@@ -54,7 +56,9 @@
     topics:
     - name: Computer Science
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
   key: semantic_scholar:a1c954dc1a1bcf3af3e5fd8e72120f221e8c63b8
   paper:
     abstract: Building intelligent agents to generate realistic Weibo comments is
@@ -160,7 +164,9 @@
     topics:
     - name: Computer Science
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      semantic_scholar: 7fc9d442f9019be17c008974018929135e81b476
   key: semantic_scholar:7fc9d442f9019be17c008974018929135e81b476
   paper:
     abstract: ''

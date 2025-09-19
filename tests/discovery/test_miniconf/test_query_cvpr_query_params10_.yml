@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: cvpr:e9dcb63ca828d0e00cd05b445099ed2e
   key: miniconf:cvpr:e9dcb63ca828d0e00cd05b445099ed2e
   paper:
     abstract: Vision-Language Models (VLMs), such as CLIP, exhibit strong image-text
@@ -72,7 +74,9 @@
       Visio-Linguistic Compositional Understanding
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: cvpr:1170017b40d1ba28394ebc44158dae8a
   key: miniconf:cvpr:1170017b40d1ba28394ebc44158dae8a
   paper:
     abstract: Foundation models encompass an extensive knowledge base and offer remarkable

@@ -252,6 +252,7 @@ class SemanticScholar(Discoverer):
             key=paper_key,
             acquired=datetime.now(),
             paper=paper,
+            info={"discovered_by": {"semantic_scholar": data["paperId"]}},
         )
 
     def search(self, query, fields=SEARCH_FIELDS, **params):
