@@ -221,6 +221,10 @@ class Work:
     class View:
         """View the articles in the workset."""
 
+        # What to view
+        # [positional]
+        what: Literal["paper", "has_pdf"] = "paper"
+
         # Output format
         format: Formatter = TerminalFormatter
 
@@ -228,8 +232,25 @@ class Work:
         n: int = None
 
         def run(self, work: "Work"):
-            it = itertools.islice(work.top, self.n) if self.n else work.top
-            self.format(Scored(ws.score, ws.value.current) for ws in it)
+            worksets = list(itertools.islice(work.top, self.n) if self.n else work.top)
+            match self.what:
+                case "paper":
+                    self.format(Scored(ws.score, ws.value.current) for ws in worksets)
+                case "has_pdf":
+                    n = total = 0
+                    for ws in worksets:
+                        paper = ws.value.current
+                        pdf = None
+                        total += 1
+                        try:
+                            pdf = get_pdf(
+                                [f"{lnk.type}:{lnk.link}" for lnk in paper.links]
+                            )
+                            n += 1
+                        except Exception as exc:
+                            print(exc)
+                        print(pdf is not None, "--", paper.title)
+                    print(f"{n}/{total} papers have PDFs")
 
     @dataclass
     class Refine:
