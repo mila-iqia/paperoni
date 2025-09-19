@@ -21,7 +21,7 @@ from ..model.classes import (
     rescore,
 )
 from ..model.focus import Focus, Focuses
-from ..utils import QueryError, link_generators as LINK_GENERATORS
+from ..utils import QueryError, link_generators as LINK_GENERATORS, url_to_id
 from .base import Discoverer
 
 # https://docs.openalex.org/api-entities/institutions/institution-object#type
@@ -65,6 +65,9 @@ def _get_link(link_type: str, link_value: str) -> Link:
         relevant_part = link_value[
             ref_start : (-nb_chars_after_ref if nb_chars_after_ref else len(link_value))
         ]
+    elif urlid := url_to_id(link_value):
+        typ, lnk = urlid
+        return Link(type=typ, link=lnk)
     else:
         # Keep full link
         relevant_part = link_value
@@ -132,7 +135,7 @@ class OpenAlexQueryManager:
     def _evaluate(self, path: str, **params):
         if self.mailto:
             params["mailto"] = self.mailto
-        jdata = config.fetch.read(
+        jdata = config.fetch.read_retry(
             f"https://api.openalex.org/{path}", params=params, format="json"
         )
         if jdata is None:
@@ -412,7 +415,7 @@ class OpenAlex(Discoverer):
             if institution_id is None:
                 if verbose:
                     print("[no institution found]", institution)
-                    return
+                return
             filters.append(f"institutions.id:{institution_id}")
 
         if title:

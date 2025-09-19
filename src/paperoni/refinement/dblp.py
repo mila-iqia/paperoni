@@ -29,9 +29,6 @@ def _author_links(author_span):
 
 @register_fetch
 def dblp(type: Literal["dblp"], link: str):
-    if "/corr/" in link:
-        return None
-
     data = config.fetch.read(f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml")
     ee = data.find("ee")
     extra_links = []
@@ -40,9 +37,19 @@ def dblp(type: Literal["dblp"], link: str):
         extra_links = [Link(type="doi", link=doi.lower())]
     elif ee:
         extra_links = [Link(type="html", link=ee.text)]
+
+    if m := re.match(r".*/corr/abs-(\d+)-(\d+)", link):
+        arxiv_id = f"{m.group(1)}.{m.group(2)}"
+        extra_links.append(Link(type="arxiv", link=arxiv_id))
+        jname = "arXiv"
+        status = "preprint"
+    else:
+        jname = (data.find("booktitle") or data.find("journal")).text
+        status = "published"
+
     return Paper(
         title=data.find("title").text,
-        abstract="",
+        abstract=None,
         authors=[
             PaperAuthor(
                 display_name=(name := _clean_author_name(author.text)),
@@ -58,14 +65,14 @@ def dblp(type: Literal["dblp"], link: str):
         releases=[
             Release(
                 venue=Venue(
-                    name=(jname := (data.find("booktitle") or data.find("journal")).text),
+                    name=jname,
                     series=jname,
                     type=VenueType.journal,
                     date=date(year=int(data.find("year").text), month=1, day=1),
                     date_precision=DatePrecision.year,
                     publisher=None,
                 ),
-                status="published",
+                status=status,
                 pages=(pg := data.find("pages")) and pg.text,
             )
         ],

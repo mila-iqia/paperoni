@@ -232,7 +232,7 @@ def datacite(type: Literal["doi", "arxiv"], link: str):
                 ],
             )
             for creator in raw_paper.creators
-            if creator["nameType"] == "Personal"
+            if creator.get("nameType", "Personal") == "Personal"
         ],
         releases=releases,
         topics=[Topic(name=subject["subject"]) for subject in raw_paper.subjects],
