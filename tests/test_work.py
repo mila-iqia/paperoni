@@ -15,7 +15,12 @@ from paperoni.model.merge import PaperWorkingSet
 
 
 def work(command, *, state_path: Path, collection_file: Path):
-    Work(command=command, work_file=state_path, collection_file=collection_file).run()
+    Work(
+        command=command,
+        work_file=state_path,
+        collection_file=collection_file,
+        n=10,
+    ).run()
     return deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state_path)
 
 
