@@ -19,6 +19,8 @@ from ..utils import url_to_id
 
 
 def paper_from_crossref(data):
+    if not getattr(data, "author", None):
+        return None
     releases = []
     if getattr(data, "event", None) or getattr(data, "container-title", None):
         date_parts = None
