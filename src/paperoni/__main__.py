@@ -246,13 +246,14 @@ class Work:
         # Whether to force re-running the refine
         force: bool = False
 
+        # Number of refinement loops to perform for each paper
+        loops: int = 1
+
         def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
             for sws in prog(list(it), name="refine"):
-                links = [(lnk.type, lnk.link) for lnk in sws.value.current.links]
-                send(to_refine=links)
                 statuses.update(
                     {
                         (name, key): "done"
@@ -260,16 +261,22 @@ class Work:
                         for name, key in pinfo.info.get("refined_by", {}).items()
                     }
                 )
-                for pinfo in fetch_all(
-                    links,
-                    group=";".join([f"{type}:{link}" for type, link in links]),
-                    tags=self.tags,
-                    force=self.force,
-                    statuses=statuses,
-                ):
-                    send(refinement=pinfo)
-                    sws.value.add(pinfo)
-                    sws.score = work.focuses.score(sws.value)
+                for i in range(self.loops):
+                    # Loop a bit because refiners can add new links to refine further
+                    links = [(lnk.type, lnk.link) for lnk in sws.value.current.links]
+                    links.append(("title", sws.value.current.title))
+                    if i == 0:
+                        send(to_refine=links)
+                    for pinfo in fetch_all(
+                        links,
+                        group=";".join([f"{type}:{link}" for type, link in links]),
+                        tags=self.tags,
+                        force=self.force,
+                        statuses=statuses,
+                    ):
+                        send(refinement=pinfo)
+                        sws.value.add(pinfo)
+                        sws.score = work.focuses.score(sws.value)
 
             work.top.resort()
             work.save()
