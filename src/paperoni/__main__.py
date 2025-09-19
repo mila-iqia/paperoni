@@ -495,6 +495,9 @@ def enable_log():
                 if "event" in entry:
                     checkpoint()
                     print(entry["event"])
+                elif "prompt" in entry:
+                    checkpoint()
+                    print("Prompt {model} on {input}".format(**entry))
                 else:
                     for k, x in counts.items():
                         if k in entry:
