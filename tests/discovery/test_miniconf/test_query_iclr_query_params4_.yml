@@ -78,8 +78,6 @@
     links:
     - link: https://iclr.cc/virtual/2024/poster/17762
       type: abstract
-    - link: https://openreview.net/forum?id=ptXo0epLQo
-      type: abstract
     - link: ptXo0epLQo
       type: openreview
     - link: 40dba662fae60cd3bcceaa76a82d2873
@@ -167,8 +165,6 @@
     flags: []
     links:
     - link: https://iclr.cc/virtual/2024/poster/17676
-      type: abstract
-    - link: https://openreview.net/forum?id=ruGY8v10mK
       type: abstract
     - link: ruGY8v10mK
       type: openreview
@@ -293,8 +289,6 @@
     links:
     - link: https://iclr.cc/virtual/2024/poster/18725
       type: abstract
-    - link: https://openreview.net/forum?id=Ouj6p4ca60
-      type: abstract
     - link: 2024-Oral--1391-05763559
       type: openreview
     - link: Ouj6p4ca60
@@ -409,8 +403,6 @@
     flags: []
     links:
     - link: https://iclr.cc/virtual/2024/poster/18437
-      type: abstract
-    - link: https://openreview.net/forum?id=Xz13DtbOVW
       type: abstract
     - link: Xz13DtbOVW
       type: openreview
@@ -532,8 +524,6 @@
     flags: []
     links:
     - link: https://iclr.cc/virtual/2024/poster/17879
-      type: abstract
-    - link: https://openreview.net/forum?id=ms0VgzSGF2
       type: abstract
     - link: ms0VgzSGF2
       type: openreview

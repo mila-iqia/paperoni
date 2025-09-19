@@ -321,6 +321,9 @@ def unpaywall(type: Literal["doi"], doi: str):
         ]
 
     authors = []
+    if not data.get("z_authors", None):
+        return None
+
     for author_data in data.get("z_authors", []):
         author_name = author_data["raw_author_name"]
         affiliations = []

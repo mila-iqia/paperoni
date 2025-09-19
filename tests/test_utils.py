@@ -51,13 +51,18 @@ from paperoni.utils import asciiify, expand_links_dict, mostly_latin
         ),
         (
             [
-                Link(type="mlr", link="42"),
+                Link(type="mlr", link="42/quack"),
             ],
             [
                 {
                     "type": "mlr.abstract",
-                    "link": "42",
-                    "url": "https://proceedings.mlr.press/v42.html",
+                    "link": "42/quack",
+                    "url": "https://proceedings.mlr.press/v42/quack.html",
+                },
+                {
+                    "type": "mlr.pdf",
+                    "link": "42/quack",
+                    "url": "https://proceedings.mlr.press/v42/quack/quack.pdf",
                 },
             ],
         ),

@@ -38,6 +38,28 @@ class ErrorPolicy(Enum):
     RAISE = "raise"
 
 
+pdf_mappings = [
+    {
+        "pattern": r"https://proceedings\.neurips\.cc//?paper_files/paper/(?P<year>\d{4})/hash/(?P<hash>[a-f0-9]{32})-Abstract(?P<suffix>.*)\.html",
+        "pdf": "https://proceedings.neurips.cc/paper_files/paper/{year}/file/{hash}-Paper{suffix}.pdf",
+    },
+    {
+        "pattern": r"https://openaccess.thecvf.com/content/CVPR(?P<year>\d{4})/html/(?P<lnk>.*).html",
+        "pdf": "https://openaccess.thecvf.com/content/CVPR{year}/papers/{lnk}.pdf",
+    },
+]
+
+
+def map_pdf_url(url):
+    for mapping in pdf_mappings:
+        pattern = mapping["pattern"]
+        m = re.match(pattern, url)
+        if m:
+            pdf_template = mapping["pdf"]
+            return pdf_template.format(**m.groupdict())
+    return None
+
+
 class MiniConf(Discoverer):
     def convert_paper(
         self, data, conference=None, venue_date=None, date_precision=DatePrecision.day
@@ -130,12 +152,27 @@ class MiniConf(Discoverer):
 
         # Extract links
         links = set()
+
+        def process_uri(media_type, uri):
+            if uri.startswith("https://openreview.net/forum?id="):
+                uri = uri.split("=")[-1]
+                media_type = "openreview"
+            elif m := re.match(
+                r"^https?://proceedings\.mlr\.press/v(\d+)/([^\./]+)", uri
+            ):
+                vol, tag = m.groups()
+                uri = f"{vol}/{tag}"
+                media_type = "mlr"
+            else:
+                uri = expand_base(uri)
+            links.add(Link(type=media_type, link=uri))
+
         if url := expand_base(data.get("paper_url")):
-            links.add(Link(type="abstract", link=url))
+            process_uri("abstract", url)
         if url := expand_base(data.get("paper_pdf_url")):
-            links.add(Link(type="pdf", link=url))
+            process_uri("pdf", url)
         if url := expand_base(data.get("virtualsite_url")):
-            links.add(Link(type="abstract", link=url))
+            process_uri("abstract", url)
         links.add(Link(type="uid", link=data["uid"]))
 
         # Add eventmedia links
@@ -143,11 +180,18 @@ class MiniConf(Discoverer):
             if media.get("uri") and media.get("visible", True):
                 media_type = media.get("name", "").lower().replace(" ", "_")
                 uri = media["uri"]
-                if uri.startswith("https://openreview.net/forum?id="):
-                    uri = uri.split("=")[-1]
-                else:
-                    uri = expand_base(uri)
-                links.add(Link(type=media_type, link=uri))
+                process_uri(media_type, uri)
+
+        for lnk in list(links):
+            if pdf_url := map_pdf_url(lnk.link):
+                links.add(Link(type="pdf", link=pdf_url))
+
+        # Remove "pdf" links that aren't actually pdfs
+        links = [
+            lnk
+            for lnk in list(links)
+            if "pdf" not in lnk.type or lnk.link.endswith(".pdf")
+        ]
 
         links = sorted(
             links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)
