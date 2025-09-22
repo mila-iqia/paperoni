@@ -1,6 +1,5 @@
 paperoni:
   cache_path: ../cache
-  client_dir: ${paperoni.data_path}/client
   data_path: ../data
   mailto: _@mila.quebec
   api_keys:
@@ -44,9 +43,12 @@ paperoni:
       institution_score_threshold: 1
   refine:
     prompt:
-      $class: GenAIPrompt
+      $class: paperoni.prompt:GenAIPrompt
       model: gemini-2.5-pro
       api_key: ${paperoni.api_keys.gemini}
   collection:
     $class: paperoni.collection.filecoll:FileCollection
     file: ${paperoni.data_path}/collection.yaml
+  server:
+    secret_key: _
+    client_dir: ${paperoni.data_path}/client

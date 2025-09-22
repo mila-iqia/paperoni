@@ -23,9 +23,14 @@ class Refine:
 
 
 @dataclass
+class Server:
+    secret_key: Secret[str] = None
+    client_dir: Path = None
+
+
+@dataclass
 class PaperoniConfig:
     cache_path: Path = None
-    client_dir: Path = None
     data_path: Path = None
     mailto: str = ""
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
@@ -36,6 +41,7 @@ class PaperoniConfig:
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
+    server: Server = None
 
     def __post_init__(self):
         # Only used for type hinting

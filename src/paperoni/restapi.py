@@ -2,13 +2,15 @@
 FastAPI interface for paperoni collection search functionality.
 """
 
-import asyncio
+import datetime
+import hashlib
 import importlib.metadata
 import itertools
 from dataclasses import dataclass
 from typing import Iterable
 
-from fastapi import FastAPI, HTTPException
+import jwt
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from serieux import dump, serialize
 
@@ -57,6 +59,21 @@ class PagingMixin:
             end = limit
 
         return itertools.islice(iterable, start, end)
+
+
+# Authentication models
+@dataclass
+class User:
+    """User model for authentication."""
+
+    email: str
+    name: str = None
+    admin: bool = False
+
+    def user_id(self) -> str:
+        """Get user id."""
+        email_hash = hashlib.sha256(self.email.encode()).hexdigest()
+        return f"{self.email.split('@')[0]}_{email_hash[:8]}"
 
 
 @dataclass
@@ -156,6 +173,47 @@ class ViewResponse:
     total: int
 
 
+@dataclass
+class LoginRequest:
+    """Request model for login."""
+
+    email: str = None
+
+
+@dataclass
+class LoginResponse:
+    """Response model for login."""
+
+    access_token: str
+
+
+# Authentication dependencies
+async def get_current_user(request: LoginResponse):
+    """Get current user from token."""
+    try:
+        payload = jwt.decode(
+            request.access_token, config.server.secret_key, algorithms=["HS256"]
+        )
+        user = User(**payload["user"])
+    except jwt.exceptions.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    if user.email is None:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    return user
+
+
+async def get_current_admin(request: LoginResponse):
+    """Get current admin from token."""
+    user = await get_current_user(request)
+
+    if not user.admin:
+        raise HTTPException(status_code=401, detail="Permission denied")
+
+    return user
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI(
@@ -165,9 +223,10 @@ def create_app() -> FastAPI:
         root_path="/api/v1",
     )
 
-    focus_file = config.client_dir / "focuses.yaml"
+    focus_file = config.server.client_dir / "focuses.yaml"
 
     if not focus_file.exists():
+        focus_file.parent.mkdir(exist_ok=True, parents=True)
         dump(Focuses, config.focuses, dest=focus_file)
 
     @app.get("/")
@@ -178,7 +237,24 @@ def create_app() -> FastAPI:
             "version": app.version,
         }
 
-    @app.get("/search", response_model=SearchResponse)
+    @app.get("/auth", response_model=LoginResponse)
+    async def auth(request: LoginRequest):
+        """Login with email and access token."""
+        # Compute new access token
+        user = User(email=request.email, name=None)
+        payload = {
+            "user": serialize(User, user),
+            "exp": datetime.datetime.now(datetime.timezone.utc)
+            + datetime.timedelta(days=28),
+        }
+        access_token = jwt.encode(payload, config.server.secret_key, algorithm="HS256")
+        return LoginResponse(access_token=access_token)
+
+    @app.get(
+        "/search",
+        response_model=SearchResponse,
+        dependencies=[Depends(get_current_user)],
+    )
     async def search_papers(request: SearchRequest = None):
         """Search for papers in the collection."""
         request = request or SearchRequest()
@@ -186,67 +262,67 @@ def create_app() -> FastAPI:
 
         try:
             # Perform search using the collection's search method
-            results = await asyncio.get_event_loop().run_in_executor(
-                None, lambda: list(request.slice(request.run(coll)))
-            )
+            results = list(request.slice(request.run(coll)))
 
             return SearchResponse(papers=results, total=len(coll.collection))
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
-    @app.get("/work/view", response_model=ViewResponse)
-    async def work_view_papers(request: ViewRequest = None):
+    @app.get(
+        "/work/view",
+        response_model=ViewResponse,
+        dependencies=[Depends(get_current_user)],
+    )
+    async def work_view_papers(
+        request: ViewRequest = None, user: User = Depends(get_current_user)
+    ):
         """Search for papers in the collection."""
         request = request or ViewRequest()
 
-        # TODO: get user id from logged in user data
-        user_id = "u1"
-        work_file = config.client_dir / user_id / "work.yaml"
+        work_file = config.server.client_dir / user.user_id() / "work.yaml"
 
         work = Work(command=None, work_file=work_file, focus_file=focus_file)
 
         try:
-            papers: list[Scored[Paper]] = await asyncio.get_event_loop().run_in_executor(
-                None, lambda: list(request.slice(request.run(work)))
-            )
+            papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
 
             return ViewResponse(
                 papers=serialize(list[Scored[Paper]], papers), total=len(papers)
             )
 
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Include failed: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"View failed: {str(e)}")
 
-    @app.get("/work/include", response_model=IncludeResponse)
-    async def work_include_papers(request: IncludeRequest = None):
+    @app.get(
+        "/work/include",
+        response_model=IncludeResponse,
+        dependencies=[Depends(get_current_admin)],
+    )
+    async def work_include_papers(
+        request: IncludeRequest = None, user: User = Depends(get_current_admin)
+    ):
         """Search for papers in the collection."""
         request = request or IncludeRequest()
 
-        # TODO: get user id from logged in user data
-        user_id = "u1"
-        work_file = config.client_dir / user_id / "work.yaml"
+        work_file = config.server.client_dir / user.user_id() / "work.yaml"
 
         work = Work(command=None, work_file=work_file, focus_file=focus_file)
 
         try:
             # Perform search using the collection's search method
-            added = await asyncio.get_event_loop().run_in_executor(
-                None, lambda: request.run(work)
-            )
+            added = request.run(work)
 
             return IncludeResponse(total=added)
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Include failed: {str(e)}")
 
-    @app.get("/fulltext/locate")
+    @app.get("/fulltext/locate", dependencies=[Depends(get_current_user)])
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
         try:
-            urls = await asyncio.get_event_loop().run_in_executor(
-                None, lambda: list(request.slice(request.run()))
-            )
+            urls = list(request.slice(request.run()))
             return LocateFulltextResponse(urls=urls)
 
         except Exception as e:
@@ -254,12 +330,12 @@ def create_app() -> FastAPI:
                 status_code=500, detail=f"Locate fulltext failed: {str(e)}"
             )
 
-    @app.get("/fulltext/download")
+    @app.get("/fulltext/download", dependencies=[Depends(get_current_user)])
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
         try:
             # Run blocking download in thread pool
-            pdf = await asyncio.get_event_loop().run_in_executor(None, request.run)
+            pdf = request.run()
 
             # Return as file download
             async def async_iter_pdf():

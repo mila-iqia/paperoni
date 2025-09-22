@@ -595,8 +595,9 @@ class Focus:
         self.command.run(self)
 
 
-class REST:
-    """Rest API."""
+@dataclass
+class Serve:
+    """Serve paperoni through a Rest API."""
 
     # Host to bind to
     host: str = "127.0.0.1"
@@ -619,7 +620,7 @@ class REST:
         return True
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus, REST]
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve]
 
 
 @dataclass
