@@ -7,6 +7,7 @@ from paperazzi.platforms.utils import Message
 from ..config import config
 from ..fulltext.pdf import PDF, CachePolicies, get_pdf
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
+from ..model.merge import qual
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
 from .llm_common import Analysis, PromptConfig
@@ -61,32 +62,38 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
 
     return Paper(
         title=str(analysis.title),
-        authors=[
-            PaperAuthor(
-                display_name=str(author_affiliations.author),
-                author=Author(name=str(author_affiliations.author)),
-                affiliations=[
-                    Institution(name=str(affiliation))
-                    for affiliation in author_affiliations.affiliations
-                ],
-            )
-            for author_affiliations in analysis.authors_affiliations
-        ],
+        authors=qual(
+            [
+                PaperAuthor(
+                    display_name=str(author_affiliations.author),
+                    author=Author(name=str(author_affiliations.author)),
+                    affiliations=[
+                        Institution(name=str(affiliation))
+                        for affiliation in author_affiliations.affiliations
+                    ],
+                )
+                for author_affiliations in analysis.authors_affiliations
+            ],
+            100,
+        ),
     )
 
 
 @register_fetch(tags={"prompt", "pdf"})
-def pdf(type: str, link: str, force: bool = False) -> Paper:
-    key = f"{type}:{link}"
-    p = get_pdf(key, cache_policy=CachePolicies.USE_BEST)
+def pdf(refs: list, *, force: bool = False) -> Paper:
+    p = get_pdf(
+        [f"{type}:{link}" for type, link in refs], cache_policy=CachePolicies.USE_BEST
+    )
 
     if p is None:
         return None
 
-    send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=key)
-
+    send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=p.source.url)
     paper = prompt(p, force=force)
-    paper.links.append(Link(type=type, link=link))
+
+    if ":" in p.ref:
+        type, link = p.ref.split(":", 1)
+        paper.links.append(Link(type=type, link=link))
 
     return paper.authors and paper or None
 

@@ -35,6 +35,13 @@ def find_download_links(typ: Literal["openreview"], link: str):
 
 
 @ovld
+def find_download_links(typ: Literal["mlr"], link: str):
+    """Return MLR PDF download link."""
+    name = link.split("/")[-1]
+    yield URL(url=f"https://proceedings.mlr.press/v{link}/{name}.pdf", info=typ)
+
+
+@ovld
 def find_download_links(typ: Literal["pdf", "pdf.official"], link: str):
     """Direct link to a PDF."""
     yield URL(url=link, info=typ)

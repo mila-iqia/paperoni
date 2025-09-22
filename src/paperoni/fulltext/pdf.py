@@ -38,6 +38,7 @@ class Info:
 @dataclass
 class PDF:
     source: URL
+    ref: str = None
     hash: str = None
     info: Info = None
     success: bool = False
@@ -110,15 +111,15 @@ def get_pdf(refs, cache_policy: CachePolicy = CachePolicies.USE):
         refs = [refs]
 
     if cache_policy.use and not cache_policy.best:
-        urls = [url for ref in refs for url in locate_all(ref)]
-        for url in urls:
-            if (p := PDF(url).load()).success:
+        urls = [(url, ref) for ref in refs for url in locate_all(ref)]
+        for url, ref in urls:
+            if (p := PDF(url, ref=ref).load()).success:
                 return p
 
     exceptions = []
     for ref in refs:
         for url in locate_all(ref):
-            p = PDF(url).load()
+            p = PDF(url, ref=ref).load()
             try:
                 p.fulltext(cache_policy=cache_policy)
                 return p
