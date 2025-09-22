@@ -98,21 +98,17 @@
       display_name: Yoshua Bengio
     flags: []
     links:
-    - link: W3022187094
-      type: openalex
+    - link: '1605.06069'
+      type: arxiv
     - link: 10.1609/aaai.v31i1.10983
       type: doi
     - link: '3022187094'
       type: mag
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
       type: open-access
-    - link: https://doi.org/10.1609/aaai.v31i1.10983
-      type: url
+    - link: W3022187094
+      type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-      type: pdf
-    - link: http://arxiv.org/abs/1605.06069
-      type: url
-    - link: http://arxiv.org/pdf/1605.06069
       type: pdf
     releases:
     - pages: null
@@ -122,8 +118,8 @@
         date: '2017-02-12'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1609/aaai.v31i1.10983
-          type: url
+        - link: 10.1609/aaai.v31i1.10983
+          type: doi
         - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
           type: pdf
         name: Proceedings of the AAAI Conference on Artificial Intelligence
@@ -327,10 +323,10 @@
       display_name: Simon Lacoste-Julien
     flags: []
     links:
-    - link: W2963096987
-      type: openalex
     - link: '2963096987'
       type: mag
+    - link: W2963096987
+      type: openalex
     - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
       type: url
     releases:
@@ -453,10 +449,10 @@
       display_name: Yoshua Bengio
     flags: []
     links:
-    - link: W2267635276
-      type: openalex
     - link: '2267635276'
       type: mag
+    - link: W2267635276
+      type: openalex
     - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
       type: url
     releases:
@@ -580,21 +576,17 @@
       display_name: Joëlle Pineau
     flags: []
     links:
-    - link: W2962883855
-      type: openalex
+    - link: '1507.04808'
+      type: arxiv
     - link: 10.1609/aaai.v30i1.9883
       type: doi
     - link: '2962883855'
       type: mag
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
       type: open-access
-    - link: https://doi.org/10.1609/aaai.v30i1.9883
-      type: url
+    - link: W2962883855
+      type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
-      type: pdf
-    - link: http://arxiv.org/abs/1507.04808
-      type: url
-    - link: http://arxiv.org/pdf/1507.04808
       type: pdf
     releases:
     - pages: null
@@ -604,8 +596,8 @@
         date: '2016-03-05'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1609/aaai.v30i1.9883
-          type: url
+        - link: 10.1609/aaai.v30i1.9883
+          type: doi
         - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
           type: pdf
         name: Proceedings of the AAAI Conference on Artificial Intelligence
@@ -725,10 +717,10 @@
       display_name: Yoshua Bengio
     flags: []
     links:
-    - link: W2218318129
-      type: openalex
     - link: '2218318129'
       type: mag
+    - link: W2218318129
+      type: openalex
     - link: https://icml.cc/2011/papers/455_icmlpaper.pdf
       type: url
     releases:

@@ -87,14 +87,12 @@ authors:
   display_name: Illia Polosukhin
 flags: []
 links:
-- link: W4385245566
-  type: openalex
+- link: '1706.03762'
+  type: arxiv
 - link: 10.48550/arxiv.1706.03762
   type: doi
-- link: https://arxiv.org/abs/1706.03762
-  type: open-access
-- link: https://arxiv.org/abs/1706.03762
-  type: url
+- link: W4385245566
+  type: openalex
 - link: https://api.datacite.org/dois/10.48550/arxiv.1706.03762
   type: url
 releases:
@@ -105,8 +103,8 @@ releases:
     date: '2017-01-01'
     date_precision: 3
     links:
-    - link: https://arxiv.org/abs/1706.03762
-      type: url
+    - link: '1706.03762'
+      type: arxiv
     name: arXiv (Cornell University)
     open: true
     peer_reviewed: false

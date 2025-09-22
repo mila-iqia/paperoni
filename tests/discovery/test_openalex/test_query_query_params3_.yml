@@ -98,21 +98,17 @@
       display_name: Yoshua Bengio
     flags: []
     links:
-    - link: W3022187094
-      type: openalex
+    - link: '1605.06069'
+      type: arxiv
     - link: 10.1609/aaai.v31i1.10983
       type: doi
     - link: '3022187094'
       type: mag
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
       type: open-access
-    - link: https://doi.org/10.1609/aaai.v31i1.10983
-      type: url
+    - link: W3022187094
+      type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-      type: pdf
-    - link: http://arxiv.org/abs/1605.06069
-      type: url
-    - link: http://arxiv.org/pdf/1605.06069
       type: pdf
     releases:
     - pages: null
@@ -122,8 +118,8 @@
         date: '2017-02-12'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1609/aaai.v31i1.10983
-          type: url
+        - link: 10.1609/aaai.v31i1.10983
+          type: doi
         - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
           type: pdf
         name: Proceedings of the AAAI Conference on Artificial Intelligence

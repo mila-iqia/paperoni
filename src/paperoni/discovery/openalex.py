@@ -197,6 +197,12 @@ class OpenAlexQueryManager:
         # We will save open access url in paper links
         oa_url = data["open_access"]["oa_url"]
 
+        links = {_get_link(typ, ref) for typ, ref in data["ids"].items()}
+        links.update([_get_link("open-access", oa_url)] if oa_url is not None else [])
+        links.update(links_from_locations)
+        links = list(links)
+        links.sort(key=lambda l: (l.type, l.link))
+
         paper = Paper(
             title=data["display_name"] or "Untilted",
             abstract=self._reconstruct_abstract(data["abstract_inverted_index"] or {}),
@@ -277,9 +283,7 @@ class OpenAlexQueryManager:
                 Topic(name=data_concept["display_name"])
                 for data_concept in data["concepts"]
             ],
-            links=[_get_link(typ, ref) for typ, ref in data["ids"].items()]
-            + ([_get_link("open-access", oa_url)] if oa_url is not None else [])
-            + links_from_locations,
+            links=links,
         )
 
         # Create unique key based on OpenAlex work ID
