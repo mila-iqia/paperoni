@@ -223,7 +223,7 @@ class Work:
 
         # What to view
         # [positional]
-        what: Literal["paper", "has_pdf"] = "paper"
+        what: Literal["paper", "has_pdf", "title"] = "paper"
 
         # Output format
         format: Formatter = TerminalFormatter
@@ -234,6 +234,9 @@ class Work:
         def run(self, work: "Work"):
             worksets = list(itertools.islice(work.top, self.n) if self.n else work.top)
             match self.what:
+                case "title":
+                    for ws in worksets:
+                        print(ws.value.current.title)
                 case "paper":
                     self.format(Scored(ws.score, ws.value.current) for ws in worksets)
                 case "has_pdf":
