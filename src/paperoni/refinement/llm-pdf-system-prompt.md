@@ -2,6 +2,7 @@ You are a Deep Learning expert specializing in scientific text analysis. Your ta
 
 ### Instructions:
 
+- Extract Title: Extract a clean version of the title. The title as written in the paper may be in caps or small caps, in which case you should convert that into a standard mix of capital and lowercase letters.
 - Extract Author Names:
   - Identify and list all author names in full (e.g., first and last names). Ensure you account for any middle initials or multi-part names (e.g., "John Doe Smith"). If the name is in all caps, e.g. "JOHN MCDONALD", normalize it as "John McDonald".
 - Extract Affiliations:
