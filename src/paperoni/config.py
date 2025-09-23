@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import gifnoc
+from rapporteur.report import Reporter
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 
@@ -33,6 +34,7 @@ class PaperoniConfig:
     refine: Refine = None
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
+    reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
 
     def __post_init__(self):
         # Only used for type hinting
