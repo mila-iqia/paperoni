@@ -2,17 +2,25 @@
 FastAPI interface for paperoni collection search functionality.
 """
 
+import asyncio
 import datetime
+import enum
 import hashlib
 import importlib.metadata
 import itertools
-from dataclasses import dataclass
-from typing import Iterable
+import secrets
+import urllib.parse
+from dataclasses import dataclass, field
+from functools import lru_cache
+from typing import Iterable, Optional
 
-import jwt
-from fastapi import Depends, FastAPI, HTTPException
+from authlib.integrations.starlette_client import OAuth
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
-from serieux import dump, serialize
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
+from serieux import deserialize, dump, serialize
+from starlette.middleware.sessions import SessionMiddleware
 
 import paperoni
 
@@ -67,8 +75,11 @@ class User:
     """User model for authentication."""
 
     email: str
-    name: str = None
-    admin: bool = False
+
+    @property
+    def is_admin(self) -> bool:
+        """Get user id."""
+        return self.email in config.server.admin_emails
 
     def user_id(self) -> str:
         """Get user id."""
@@ -77,11 +88,18 @@ class User:
 
 
 @dataclass
+class AuthorizedUser(User):
+    """Response model for authentication."""
+
+    access_token: str = None
+
+
+@dataclass
 class SearchRequest(PagingMixin, Coll.Search):
     """Request model for paper search."""
 
-    # TODO: hide the format field from the api entry point schema
-    format: int = None
+    # TODO: hide the format field from the api endpoint schema
+    format: int = field(init=False, repr=False, compare=False, default=None)
 
     # Disable format
     def format(self, *args, **kwargs):
@@ -154,8 +172,8 @@ class IncludeResponse:
 class ViewRequest(PagingMixin, Work.View):
     """Request model for work state paper view."""
 
-    # Disable format
-    format: int = None
+    # TODO: hide the format field from the api endpoint schema
+    format: int = field(init=False, repr=False, compare=False, default=None)
 
     def __post_init__(self):
         self.n = self.n or self.limit
@@ -174,43 +192,55 @@ class ViewResponse:
 
 
 @dataclass
-class LoginRequest:
-    """Request model for login."""
-
-    email: str = None
-
-
-@dataclass
 class LoginResponse:
     """Response model for login."""
 
-    access_token: str
+    headless_url: str
+    token_url: str
+
+
+@dataclass
+class AuthResponse(AuthorizedUser):
+    """Response model for authentication."""
+
+    pass
+
+
+# Security scheme for API documentation
+security = HTTPBearer(auto_error=False)
 
 
 # Authentication dependencies
-async def get_current_user(request: LoginResponse):
-    """Get current user from token."""
-    try:
-        payload = jwt.decode(
-            request.access_token, config.server.secret_key, algorithms=["HS256"]
-        )
-        user = User(**payload["user"])
-    except jwt.exceptions.PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+async def get_current_user(
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+) -> User:
+    """Get current user from JWT token or session."""
+    user = None
 
-    if user.email is None:
-        raise HTTPException(status_code=401, detail="Invalid token")
+    # Try to get user from Authorization header first
+    if credentials:
+        try:
+            user = jwt.decode(
+                credentials.credentials,
+                config.server.jwt_secret_key,
+                algorithms=["HS256"],
+            )
+        except JWTError:
+            pass
 
-    return user
+    # Try to get user from session
+    user = user or request.session.get("user")
+    if user:
+        return deserialize(User, user)
+
+    raise HTTPException(status_code=401, detail="Authentication required")
 
 
-async def get_current_admin(request: LoginResponse):
-    """Get current admin from token."""
-    user = await get_current_user(request)
-
-    if not user.admin:
-        raise HTTPException(status_code=401, detail="Permission denied")
-
+async def get_current_admin(user: User = Depends(get_current_user)) -> User:
+    """Get current admin user."""
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
     return user
 
 
@@ -222,12 +252,70 @@ def create_app() -> FastAPI:
         version=importlib.metadata.version(paperoni.__name__),
         root_path="/api/v1",
     )
+    # Add session middleware for OAuth
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=config.server.secret_key,
+        max_age=14 * 24 * 60 * 60,  # 14 days
+    )
+
+    @enum.unique
+    class HeadlessLoginFlag(enum.Enum):
+        ACTIVE = "active"
+
+    @lru_cache(maxsize=100)
+    def headless_login(
+        state: str,
+    ) -> dict[str, asyncio.Event | User | HeadlessLoginFlag]:
+        if not state:
+            return None
+
+        return {"event": asyncio.Event(), "user": None, "status": None}
+
+    def check_headless_state(state: str) -> bool:
+        return state and headless_login(state)["status"] is not None
+
+    async def get_oauth_state(request: Request, state: str = None) -> str:
+        if (
+            state
+            and jwt.decode(state, config.server.jwt_secret_key, algorithms=["HS256"])[
+                "state"
+            ]
+            and state != request.session.get("oauth_state")
+            and not check_headless_state(state)
+        ):
+            raise HTTPException(status_code=400, detail="Invalid state parameter")
+
+        return state or jwt.encode(
+            {
+                "state": secrets.token_urlsafe(32),
+                "exp": datetime.datetime.now(datetime.timezone.utc)
+                + datetime.timedelta(minutes=5),
+            },
+            config.server.jwt_secret_key,
+            algorithm="HS256",
+        )
+
+    # OAuth Setup
+    oauth = OAuth()
+    oauth.register(
+        name="google",
+        client_id=config.server.client_id,
+        client_secret=config.server.client_secret,
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={"scope": "openid email"},
+    )
 
     focus_file = config.server.client_dir / "focuses.yaml"
+    autofocus_file = config.server.client_dir / "autofocuses.yaml"
 
     if not focus_file.exists():
         focus_file.parent.mkdir(exist_ok=True, parents=True)
         dump(Focuses, config.focuses, dest=focus_file)
+
+    if not autofocus_file.exists():
+        autofocus_file.parent.mkdir(exist_ok=True, parents=True)
+        dump(Focuses, Focuses(), dest=autofocus_file)
 
     @app.get("/")
     async def root():
@@ -237,18 +325,99 @@ def create_app() -> FastAPI:
             "version": app.version,
         }
 
-    @app.get("/auth", response_model=LoginResponse)
-    async def auth(request: LoginRequest):
-        """Login with email and access token."""
-        # Compute new access token
-        user = User(email=request.email, name=None)
+    # OAuth Authentication Endpoints
+    @app.get("/auth/login", response_model=LoginResponse)
+    async def login(
+        request: Request,
+        headless: bool = False,
+        state: str = Depends(get_oauth_state),
+    ):
+        """Initiate Google OAuth login."""
+        # Generate state parameter for CSRF protection
+        request.session.clear()
+
+        request.session["oauth_state"] = state
+
+        if headless and not check_headless_state(state):
+            url_params = {"headless": headless, "state": state}
+            headless_url_params = urllib.parse.urlencode(url_params)
+            url_params.pop("headless")
+            token_url_params = urllib.parse.urlencode(url_params)
+
+            headless_login(state)["status"] = HeadlessLoginFlag.ACTIVE
+            return LoginResponse(
+                headless_url=f"{request.url_for('login')}?{headless_url_params}",
+                token_url=f"{request.url_for('token')}?{token_url_params}",
+            )
+
+        elif headless:
+            return await oauth.google.authorize_redirect(
+                request,
+                request.url_for("auth_headless"),
+                prompt="consent",
+                state=state,
+            )
+
+        else:
+            return await oauth.google.authorize_redirect(
+                request,
+                request.url_for("auth"),
+                prompt="consent",
+                state=state,
+            )
+
+    @app.get("/auth/token", response_model=AuthResponse)
+    async def token(state: str = Depends(get_oauth_state)):
+        """Handle Google OAuth token."""
+        await headless_login(state)["event"].wait()
+        user = headless_login(state)["user"]
+        headless_login(state)["status"] = None
+        return serialize(AuthorizedUser, user)
+
+    @app.get("/auth/headless")
+    async def auth_headless(request: Request, state: str = Depends(get_oauth_state)):
+        """Handle Google OAuth callback for headless mode."""
+        try:
+            token = await oauth.google.authorize_access_token(request)
+        except Exception:
+            raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+        # Create user object
+        user = User(email=token["userinfo"]["email"])
+
+        # Store user in session
+        request.session["user"] = serialize(User, user)
+
+        # Create token
         payload = {
-            "user": serialize(User, user),
+            **serialize(User, user),
             "exp": datetime.datetime.now(datetime.timezone.utc)
-            + datetime.timedelta(days=28),
+            + datetime.timedelta(days=14),
         }
-        access_token = jwt.encode(payload, config.server.secret_key, algorithm="HS256")
-        return LoginResponse(access_token=access_token)
+        access_token = jwt.encode(
+            payload, config.server.jwt_secret_key, algorithm="HS256"
+        )
+
+        # Clear OAuth state
+        user = AuthorizedUser(**serialize(User, user), access_token=access_token)
+
+        if check_headless_state(state):
+            headless_login(state)["user"] = user
+            headless_login(state)["event"].set()
+
+        request.session.pop("oauth_state", None)
+
+        return user
+
+    @app.get("/auth")
+    async def auth(request: Request, state: str = Depends(get_oauth_state)):
+        """Handle Google OAuth callback."""
+        user = await auth_headless(request, state)
+
+        # Clear OAuth state
+        request.session.pop("oauth_state", None)
+
+        return user
 
     @app.get(
         "/search",
@@ -272,7 +441,6 @@ def create_app() -> FastAPI:
     @app.get(
         "/work/view",
         response_model=ViewResponse,
-        dependencies=[Depends(get_current_user)],
     )
     async def work_view_papers(
         request: ViewRequest = None, user: User = Depends(get_current_user)
@@ -297,7 +465,6 @@ def create_app() -> FastAPI:
     @app.get(
         "/work/include",
         response_model=IncludeResponse,
-        dependencies=[Depends(get_current_admin)],
     )
     async def work_include_papers(
         request: IncludeRequest = None, user: User = Depends(get_current_admin)

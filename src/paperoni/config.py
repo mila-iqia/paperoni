@@ -24,8 +24,12 @@ class Refine:
 
 @dataclass
 class Server:
-    secret_key: Secret[str] = None
     client_dir: Path = None
+    secret_key: Secret[str] = None
+    jwt_secret_key: Secret[str] = None
+    client_id: Secret[str] = None
+    client_secret: Secret[str] = None
+    admin_emails: set[str] = field(default_factory=set)
 
 
 @dataclass
