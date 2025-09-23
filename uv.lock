@@ -937,7 +937,7 @@ requires-dist = [
     { name = "fake-useragent", specifier = ">=2.2.0" },
     { name = "gifnoc", specifier = ">=0.6.1" },
     { name = "lxml", specifier = ">=6.0.0" },
-    { name = "openreview-py", specifier = ">=1.50.0" },
+    { name = "openreview-py", specifier = ">=1.50.0,<1.52.3" },
     { name = "outsight", specifier = ">=0.0.2" },
     { name = "ovld", specifier = ">=0.5.13" },
     { name = "paperazzi", extras = ["vertexai"], specifier = ">=0.0.7" },
