@@ -393,8 +393,18 @@ class Work:
                 stop=self.n,
                 filter=lambda sws: sws.score >= self.score,
             )
-            added = work.collection.add_papers(selected)
-            work.save()
+
+            try:
+                added = work.collection.add_papers(selected)
+            finally:
+                # As some papers could be added to the collection before an
+                # error is raised, causing a new paper to exists in the
+                # collection (with an id) as well as in the work file (with no
+                # id), we prefer to rmove more papers than necessary in the work
+                # file than duplicating some of the newly added papers. Future
+                # get / refine should be able to readd the paper to the work
+                # file
+                work.save()
 
             return added
 
@@ -414,8 +424,11 @@ class Work:
                 stop=None if self.n is None else -self.n,
                 filter=lambda sws: sws.score <= self.score,
             )
-            work.collection.exclude_papers(selected)
-            work.save()
+
+            try:
+                work.collection.exclude_papers(selected)
+            finally:
+                work.save()
 
     @dataclass
     class Clear(Extractor):

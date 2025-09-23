@@ -3,7 +3,6 @@ from pathlib import Path
 
 from serieux import dump, load
 
-from ..model.classes import CollectionPaper
 from ..utils import deprox
 from .memcoll import MemCollection
 
@@ -11,9 +10,6 @@ from .memcoll import MemCollection
 @dataclass(kw_only=True)
 class FileCollection(MemCollection):
     file: Path = field(compare=False)
-    _last_id: int = field(compare=False, default=None)
-    _papers: list[CollectionPaper] = field(default_factory=list)
-    _exclusions: set[str] = field(default_factory=set)
 
     def __post_init__(self):
         super().__post_init__()

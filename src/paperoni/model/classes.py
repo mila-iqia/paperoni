@@ -212,7 +212,7 @@ class Paper:
     flags: list[Flag] = field(default_factory=list)
 
 
-@dataclass(kw_only=True)
+@dataclass
 class PaperInfo:
     paper: Paper
     key: str

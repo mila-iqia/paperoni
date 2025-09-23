@@ -3,6 +3,19 @@ from typing import Iterable
 
 from ..model.classes import CollectionPaper, Paper
 
+_id_types = {
+    "arxiv",
+    "dblp",
+    "doi",
+    "mlr",
+    "openalex",
+    "openreview",
+    "pmc",
+    "pubmed",
+    "semantic_scholar",
+    "uid",
+}
+
 
 class PaperCollection:
     @property
