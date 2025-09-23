@@ -3,6 +3,7 @@ import itertools
 import json
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Generator, Literal
@@ -447,7 +448,55 @@ class Batch:
                 cmd.run()
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch]
+@dataclass
+class Focus:
+    """Operations on the focuses."""
+
+    @dataclass
+    class AutoFocus:
+        """Automatically add focuses."""
+
+        # Timespan to consider for autofocus
+        # [alias: -t]
+        timespan: timedelta = timedelta(weeks=52)
+
+        def run(self, focus: "Focus"):
+            start_date = datetime.now() - self.timespan
+            start_date = start_date.date().replace(month=1, day=1)
+            focus.focuses.update(
+                focus.collection.search(start_date=start_date), config.autofocus
+            )
+
+            autofocus_file = focus.focus_file.parent / f"auto{focus.focus_file.name}"
+            dump(Focuses, focus.focuses, dest=autofocus_file)
+
+    # Command to execute
+    command: TaggedUnion[AutoFocus]
+
+    # List of focuses
+    # [alias: -f]
+    focus_file: Path
+
+    # Collection dir
+    # [alias: -c]
+    collection_file: Path = None
+
+    @cached_property
+    def focuses(self):
+        return deserialize(Focuses, self.focus_file)
+
+    @cached_property
+    def collection(self):
+        if self.collection_file:
+            return FileCollection(self.collection_file)
+        else:
+            return config.collection
+
+    def run(self):
+        self.command.run(self)
+
+
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus]
 
 
 @dataclass

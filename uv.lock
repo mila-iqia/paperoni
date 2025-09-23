@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.12"
 
 [[package]]
@@ -1372,14 +1372,14 @@ wheels = [
 
 [[package]]
 name = "serieux"
-version = "0.2.8"
+version = "0.2.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ovld" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e8/f1/79d562a1084b4c895cc92a44fecdace648dc9310f3030694788a4b748e4b/serieux-0.2.8.tar.gz", hash = "sha256:33783ec1a04d3cbe854334ce842a19101cff1b17eb2dd82e35c279722a7a9485", size = 153334, upload-time = "2025-09-11T19:52:55.606Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d9/09/e2a445935454fd586bbf1c29a628b811676ffd6f18f6da6e409302cea880/serieux-0.2.9.tar.gz", hash = "sha256:e2030826cc89ed5df07b14fc070cf0d3cd151f7f8bd36b32f091102e67874510", size = 153877, upload-time = "2025-09-22T20:11:44.797Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d4/be/37114abf49af8659270d334e683738e58dbdbc7b4917ba9d8383f4c87b8f/serieux-0.2.8-py3-none-any.whl", hash = "sha256:7b048c882b2fe7cbfcb18f4fbf28e158802d0c2d7b4d6e3a203cd3fb2545af6b", size = 50039, upload-time = "2025-09-11T19:52:54.138Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/8c/00393696ad05a6cb1fd729bf1bc8d0457f80c6bf5239953f4c5bdb02de8a/serieux-0.2.9-py3-none-any.whl", hash = "sha256:6625da3aab4ef7835096d62df3d5fe4f9c9900b42b0fad2f7a7cd976a109447c", size = 50202, upload-time = "2025-09-22T20:11:43.49Z" },
 ]
 
 [[package]]

@@ -180,6 +180,22 @@ def associate(l1, l2, key, threshold=0):
     return [(x1, mapping.get(i1, None)) for i1, x1 in el1]
 
 
+def normalize_institution(institution: str) -> str:
+    return unidecode(institution).lower()
+
+
+def normalize_name(name: str) -> str:
+    return unidecode(name).lower()
+
+
+def normalize_title(title: str) -> str:
+    return plainify(title).replace(" ", "")
+
+
+def split_institution(name: str) -> list[str]:
+    return re.split(r" *[,;/-] *", name)
+
+
 def prog(it, name="progress", total=None):
     if total is None:
         total = len(it)

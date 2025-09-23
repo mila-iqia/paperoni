@@ -7,7 +7,7 @@ from serieux.features.encrypt import Secret
 
 from .collection.abc import PaperCollection
 from .get import Fetcher, RequestsFetcher
-from .model.focus import Focuses
+from .model.focus import AutoFocus, Focuses
 from .prompt import GenAIPrompt, Prompt
 
 
@@ -29,9 +29,28 @@ class PaperoniConfig:
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
+    autofocus: AutoFocus[str, AutoFocus.Type] = field(default_factory=AutoFocus)
     refine: Refine = None
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
+
+    def __post_init__(self):
+        # Only used for type hinting
+        self._file: Path = getattr(self, "_file", None)
+
+    # TODO: Why does this seams to disable future gifnoc.define like
+    # `paperoni.semantic_scholar`?
+    # gifnoc.proxy.MissingConfigurationError: No configuration was found for 'paperoni.semantic_scholar'
+    # @classmethod
+    # def serieux_deserialize(cls, obj, ctx, call_next):
+    #     deserialized: PaperoniConfig = call_next(cls, obj, ctx)
+    #     if isinstance(ctx.full_path, Path):
+    #         config_file: Path = ctx.full_path
+    #     elif config_file := os.environ.get("GIFNOC_FILE", None):
+    #         config_file: Path = Path(os.environ.get("GIFNOC_FILE"))
+    #     if config_file:
+    #         deserialized._file = config_file
+    #     return deserialized
 
 
 config = gifnoc.define(

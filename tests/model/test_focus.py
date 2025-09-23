@@ -1,7 +1,15 @@
-from serieux import deserialize, serialize
+from pathlib import Path
 
+import gifnoc
+from pytest_regressions.data_regression import DataRegressionFixture
+from serieux import CommentRec, deserialize, dump, serialize
+
+from paperoni.__main__ import Work
+from paperoni.discovery.semantic_scholar import SemanticScholar
 from paperoni.model.classes import Institution, Paper, PaperAuthor, PaperInfo
 from paperoni.model.focus import Focus, Focuses, Scored, Top
+from paperoni.model.merge import PaperWorkingSet
+from tests.test_work import work
 
 
 def test_focus_scoring():
@@ -177,3 +185,73 @@ def test_serialization():
     deser = deserialize(Top[Scored[str]], expected)
     assert isinstance(deser, Top)
     assert deser == t
+
+
+def test_update(tmp_path: Path, data_regression: DataRegressionFixture):
+    with gifnoc.overlay(
+        {
+            "paperoni.focuses": [
+                "!institution :: Mila :: 10",
+                "!author :: Irina Rish :: 3",
+            ],
+            "paperoni.autofocus": {
+                "author": {"score": 1, "threshold": 5},
+            },
+        }
+    ) as config:
+        from paperoni.config import PaperoniConfig
+
+        config: PaperoniConfig = config.paperoni
+
+        state = work(
+            Work.Get(command=SemanticScholar().query),
+            work_file=tmp_path / "state.yaml",
+            collection_file=tmp_path / "collection.yaml",
+            n=100,
+        )
+        magnetoencephalography_paper: Scored[CommentRec[PaperWorkingSet, float]] = next(
+            filter(
+                lambda p: "artificial neural networks for magnetoencephalography".lower()
+                in p.value.current.title.lower(),
+                state,
+            )
+        )
+        state.discard_all(state)
+        state.add(magnetoencephalography_paper)
+        dump(
+            Top[Scored[CommentRec[PaperWorkingSet, float]]],
+            state,
+            dest=tmp_path / "state.yaml",
+        )
+
+        state = work(
+            Work.Refine(),
+            work_file=tmp_path / "state.yaml",
+            collection_file=tmp_path / "collection.yaml",
+        )
+        magnetoencephalography_paper = next(iter(state))
+
+        config.focuses.update(
+            [magnetoencephalography_paper.value.current]
+            * (config.autofocus.author.threshold - 1),
+            config.autofocus,
+        )
+
+        # Nothing should change as we have passed the threshold for the authors
+        # count affiliated to an institution
+        assert len(config.focuses.focuses) == 2
+
+        config.focuses.update(
+            [magnetoencephalography_paper.value.current]
+            * config.autofocus.author.threshold,
+            config.autofocus,
+        )
+
+        assert len(config.focuses.focuses) > 2
+        # Some of the author focus should have a score of config.autofocus.author.score
+        assert any(
+            f.type == "author" and f.score == config.autofocus.author.score
+            for f in config.focuses.focuses
+        )
+
+        data_regression.check(serialize(Focuses, config.focuses))

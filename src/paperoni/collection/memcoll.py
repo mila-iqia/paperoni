@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
 from functools import cached_property
 from typing import Generator, Iterable
 
 from ..model.classes import CollectionMixin, CollectionPaper, Link, Paper
+from ..utils import normalize_institution, normalize_name, normalize_title
 from .abc import PaperCollection
 
 _id_types = {
@@ -46,7 +47,7 @@ class MemCollection(PaperCollection):
 
     @cached_property
     def _by_title(self) -> dict[str, CollectionPaper]:
-        return {p.title: p for p in self._papers}
+        return {normalize_title(p.title): p for p in self._papers}
 
     @cached_property
     def _by_link(self) -> dict[Link, CollectionPaper]:
@@ -85,7 +86,7 @@ class MemCollection(PaperCollection):
                     assert p.id is not None
                     assert p.version is not None
                     self._by_id[p.id] = p
-                    self._by_title[p.title.lower()] = p
+                    self._by_title[normalize_title(p.title)] = p
                     for link in p.links:
                         self._by_link[link] = p
 
@@ -108,7 +109,7 @@ class MemCollection(PaperCollection):
         for lnk in paper.links:
             if result := self._by_link.get(lnk, None):
                 return result
-        return self._by_title.get(paper.title.lower(), None)
+        return self._by_title.get(normalize_title(paper.title), None)
 
     def search(
         self,
@@ -118,20 +119,32 @@ class MemCollection(PaperCollection):
         institution: str = None,
         # Author of the paper
         author: str = None,
+        # Start date to consider
+        start_date: date = None,
+        # End date to consider
+        end_date: date = None,
     ) -> Generator[CollectionPaper, None, None]:
-        title = title and title.lower()
-        author = author and author.lower()
-        institution = institution and institution.lower()
+        title = title and normalize_title(title)
+        author = author and normalize_name(author)
+        institution = institution and normalize_institution(institution)
         for p in self._papers:
-            if title and title not in p.title.lower():
+            if title and title not in normalize_title(p.title):
                 continue
-            if author and not any(author in a.display_name.lower() for a in p.authors):
+            if author and not any(
+                author in normalize_name(a.display_name) for a in p.authors
+            ):
                 continue
             if institution and not any(
-                institution in aff.name.lower()
+                institution in normalize_institution(aff.name)
                 for a in p.authors
                 for aff in a.affiliations
             ):
+                continue
+            if start_date and all(
+                release.venue.date < start_date for release in p.releases
+            ):
+                continue
+            if end_date and all(end_date < release.venue.date for release in p.releases):
                 continue
             yield p
 

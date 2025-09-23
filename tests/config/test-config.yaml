@@ -16,8 +16,6 @@ paperoni:
         user_agent: chrome
       cloudflare:
         $class: CloudFlareFetcher
-        cache_path: ${paperoni.cache_path}/requests-cache.sql
-        expire_after: 7d
         user_agent: chrome
   focuses:
     - "!institution :: Mila :: 10"

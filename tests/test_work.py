@@ -2,8 +2,7 @@ from datetime import datetime
 from pathlib import Path
 from time import sleep
 
-import yaml
-from serieux import CommentRec, deserialize, serialize
+from serieux import CommentRec, dump, load
 
 from paperoni.__main__ import Work
 from paperoni.collection.filecoll import FileCollection
@@ -14,32 +13,36 @@ from paperoni.model.focus import Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 
 
-def work(command, *, state_path: Path, collection_file: Path):
+def work(command, **kwargs):
+    work_file = kwargs.pop("work_file")
+    kwargs["n"] = kwargs.pop("n", 10)
     Work(
         command=command,
-        work_file=state_path,
-        collection_file=collection_file,
-        n=10,
+        work_file=work_file,
+        collection_file=kwargs.pop("collection_file"),
+        **kwargs,
     ).run()
-    return deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state_path)
+    return load(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
 
 
 def test_work_get_does_not_duplicate(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
     # update the max number of papers in the state to allow for more papers
     state.n = state.n * 2
-    (tmp_path / "state.yaml").write_text(
-        yaml.safe_dump(serialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state))
+    dump(
+        Top[Scored[CommentRec[PaperWorkingSet, float]]],
+        state,
+        dest=tmp_path / "state.yaml",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
@@ -56,17 +59,17 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
 def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
     work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
     work(
         Work.Include(),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
     state = work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
@@ -78,26 +81,28 @@ def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
 def test_work_updates_collection_papers(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
     # remove a link from a paper to fake an update on the next work-get
     paper_to_update: CollectionPaper = state.entries[2].value.current
     paper_to_update.links = paper_to_update.links[:-1]
-    (tmp_path / "state.yaml").write_text(
-        yaml.safe_dump(serialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], state))
+    dump(
+        Top[Scored[CommentRec[PaperWorkingSet, float]]],
+        state,
+        dest=tmp_path / "state.yaml",
     )
 
     work(
         Work.Include(),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
@@ -118,13 +123,13 @@ def test_work_updates_collection_papers(tmp_path: Path):
 
     work(
         Work.Include(),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
-        state_path=tmp_path / "state.yaml",
+        work_file=tmp_path / "state.yaml",
         collection_file=tmp_path / "collection.yaml",
     )
 
