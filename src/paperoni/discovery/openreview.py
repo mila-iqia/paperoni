@@ -347,6 +347,7 @@ class OpenReview(Discoverer):
                         ],
                         links=_links,
                     ),
+                    info={"discovered_by": {"openreview": note.id}},
                 )
             next_offset += len(notes)
             if not notes or "id" in params:

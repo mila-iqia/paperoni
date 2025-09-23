@@ -62,16 +62,14 @@ authors:
   display_name: Kristina Toutanova
 flags: []
 links:
-- link: W2896457183
-  type: openalex
+- link: '1810.04805'
+  type: arxiv
 - link: 10.48550/arxiv.1810.04805
   type: doi
 - link: '2896457183'
   type: mag
-- link: https://arxiv.org/abs/1810.04805
-  type: open-access
-- link: https://arxiv.org/abs/1810.04805
-  type: url
+- link: W2896457183
+  type: openalex
 - link: https://api.datacite.org/dois/10.48550/arxiv.1810.04805
   type: url
 releases:
@@ -82,8 +80,8 @@ releases:
     date: '2018-01-01'
     date_precision: 3
     links:
-    - link: https://arxiv.org/abs/1810.04805
-      type: url
+    - link: '1810.04805'
+      type: arxiv
     name: arXiv (Cornell University)
     open: true
     peer_reviewed: false

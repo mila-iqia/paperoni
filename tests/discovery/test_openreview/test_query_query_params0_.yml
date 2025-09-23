@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openreview: yI3LXao9Zwj
   key: openreview:yI3LXao9Zwj
   paper:
     abstract: null
@@ -64,7 +66,9 @@
       Image Data'
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: XeqwZIbowL
   key: openreview:XeqwZIbowL
   paper:
     abstract: null
@@ -123,7 +127,9 @@
     title: A Combinatorial Perspective on Transfer Learning
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: PGASukuVc_z
   key: openreview:PGASukuVc_z
   paper:
     abstract: null
@@ -164,7 +170,9 @@
     title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: 6KHVe4iMtIs
   key: openreview:6KHVe4iMtIs
   paper:
     abstract: null
@@ -212,7 +220,9 @@
       of Multi-modal Distributions
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: JrSYyibYFVa
   key: openreview:JrSYyibYFVa
   paper:
     abstract: null

@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:6e2d5d50a943a0e0d738377f51011685
   key: miniconf:neurips:6e2d5d50a943a0e0d738377f51011685
   paper:
     abstract: 'Diffusion models have emerged as effective distribution estimators
@@ -222,7 +224,9 @@
     topics:
     - name: Generative Models->Diffusion models
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:38811c5285e34e2e3319ab7d9f2cfa5b
   key: miniconf:neurips:38811c5285e34e2e3319ab7d9f2cfa5b
   paper:
     abstract: We study the problem of training diffusion models to sample from a distribution
@@ -371,7 +375,9 @@
     topics:
     - name: Generative Models->Diffusion models
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:306b0c0a95972617146049ce1a9a1613
   key: miniconf:neurips:306b0c0a95972617146049ce1a9a1613
   paper:
     abstract: \emph{Metacognitive knowledge} refers to humans' intuitive knowledge
@@ -536,7 +542,9 @@
     topics:
     - name: Generative Models->In Context Learning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:2f61bc8be89fcc808b4679e1d5de7c60
   key: miniconf:neurips:2f61bc8be89fcc808b4679e1d5de7c60
   paper:
     abstract: Generative models hold great promise for small molecule discovery, significantly
@@ -690,7 +698,9 @@
     topics:
     - name: Computational Biology
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: neurips:d9dbc51dc534921589adf460c85cd824
   key: miniconf:neurips:d9dbc51dc534921589adf460c85cd824
   paper:
     abstract: Modeling stochastic and irregularly sampled time series is a challenging

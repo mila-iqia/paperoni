@@ -162,12 +162,14 @@ class JMLR(Discoverer):
             )
 
             # Create unique key based on volume and title
-            paper_key = f"jmlr:v{volume}:{title[:50].replace(' ', '_').lower()}"
+            jmlr_key = f"{volume}:{title[:50].replace(' ', '_').lower()}"
+            paper_key = f"jmlr:{jmlr_key}"
 
             yield PaperInfo(
                 key=paper_key,
                 acquired=datetime.now(),
                 paper=paper,
+                info={"discovered_by": {"jmlr": jmlr_key}},
             )
 
     def extract_volumes(self, index, selector, map=None, filter=None):

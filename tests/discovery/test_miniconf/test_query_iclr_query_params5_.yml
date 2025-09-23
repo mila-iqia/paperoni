@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:7f53f8c6c730af6aeb52e66eb74d8507
   key: miniconf:iclr:7f53f8c6c730af6aeb52e66eb74d8507
   paper:
     abstract: 'Autoregressive large language models (LLMs) compress knowledge from
@@ -125,7 +127,9 @@
     topics:
     - name: Deep Learning->Large Language Models
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:0c0a7566915f4f24853fc4192689aa7e
   key: miniconf:iclr:0c0a7566915f4f24853fc4192689aa7e
   paper:
     abstract: Inspired by human conscious planning, we propose Skipper, a model-based
@@ -234,7 +238,9 @@
     topics:
     - name: Reinforcement Learning->Planning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:1d01bd2e16f57892f0954902899f0692
   key: miniconf:iclr:1d01bd2e16f57892f0954902899f0692
   paper:
     abstract: Developing deep learning models that effectively learn object-centric
@@ -319,7 +325,9 @@
     topics:
     - name: Deep Learning->Other Representation Learning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:23ad3e314e2a2b43b4c720507cec0723
   key: miniconf:iclr:23ad3e314e2a2b43b4c720507cec0723
   paper:
     abstract: 'We present a new algorithm for amortized inference in sparse probabilistic
@@ -456,7 +464,9 @@
     topics:
     - name: Probabilistic Methods->Graphical Models
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:7d3d5bcad324d3edc08e40738e663554
   key: miniconf:iclr:7d3d5bcad324d3edc08e40738e663554
   paper:
     abstract: We tackle the problem of sampling from intractable high-dimensional

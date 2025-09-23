@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3163652268
   key: openalex:W3163652268
   paper:
     abstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture
@@ -79,20 +81,14 @@
       display_name: Jianyuan Zhong
     flags: []
     links:
-    - link: W3163652268
-      type: openalex
+    - link: '2010.13154'
+      type: arxiv
     - link: 10.1109/icassp39728.2021.9413901
       type: doi
     - link: '3163652268'
       type: mag
-    - link: https://arxiv.org/pdf/2010.13154
-      type: open-access
-    - link: https://doi.org/10.1109/icassp39728.2021.9413901
-      type: url
-    - link: https://arxiv.org/abs/2010.13154
-      type: url
-    - link: https://arxiv.org/pdf/2010.13154
-      type: pdf
+    - link: W3163652268
+      type: openalex
     releases:
     - pages: null
       status: unknown
@@ -101,8 +97,8 @@
         date: '2021-05-13'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1109/icassp39728.2021.9413901
-          type: url
+        - link: 10.1109/icassp39728.2021.9413901
+          type: doi
         name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
           and Signal Processing (ICASSP)
         open: false
@@ -127,7 +123,9 @@
     - name: Electrical engineering
     - name: Image (mathematics)
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3143367551
   key: openalex:W3143367551
   paper:
     abstract: Learning robust speaker embeddings is a crucial step in speaker diarization.
@@ -224,29 +222,23 @@
       display_name: Hwidong Na
     flags: []
     links:
-    - link: W3143367551
-      type: openalex
+    - link: '2104.01466'
+      type: arxiv
     - link: 10.21437/interspeech.2021-941
       type: doi
     - link: '3143367551'
       type: mag
-    - link: https://arxiv.org/pdf/2104.01466
-      type: open-access
-    - link: https://doi.org/10.21437/interspeech.2021-941
-      type: url
-    - link: https://arxiv.org/abs/2104.01466
-      type: url
-    - link: https://arxiv.org/pdf/2104.01466
-      type: pdf
-    - link: https://biblio.ugent.be/publication/8720784/file/8720786
-      type: url
+    - link: W3143367551
+      type: openalex
     - link: https://biblio.ugent.be/publication/8720784/file/8720786
       type: pdf
-    - link: https://biblio.ugent.be/publication/8720784
-      type: url
     - link: https://biblio.ugent.be/publication/8720784/file/8720786.pdf
       type: pdf
     - link: https://api.datacite.org/dois/10.48550/arxiv.2104.01466
+      type: url
+    - link: https://biblio.ugent.be/publication/8720784
+      type: url
+    - link: https://biblio.ugent.be/publication/8720784/file/8720786
       type: url
     releases:
     - pages: null
@@ -256,8 +248,8 @@
         date: '2021-08-27'
         date_precision: 3
         links:
-        - link: https://doi.org/10.21437/interspeech.2021-941
-          type: url
+        - link: 10.21437/interspeech.2021-941
+          type: doi
         name: Interspeech 2022
         open: false
         peer_reviewed: false
@@ -281,7 +273,9 @@
     - name: Chemistry
     - name: Gene
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W3092206109
   key: openalex:W3092206109
   paper:
     abstract: 'We present GraphMix, a regularization method for Graph Neural Network
@@ -389,31 +383,23 @@
       display_name: Jian Tang
     flags: []
     links:
-    - link: W3092206109
-      type: openalex
+    - link: '1909.11715'
+      type: arxiv
     - link: 10.1609/aaai.v35i11.17203
       type: doi
     - link: '3092206109'
       type: mag
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
       type: open-access
-    - link: https://doi.org/10.1609/aaai.v35i11.17203
-      type: url
+    - link: W3092206109
+      type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
       type: pdf
+    - link: https://api.datacite.org/dois/10.48550/arxiv.1909.11715
+      type: url
     - link: https://hal.archives-ouvertes.fr/hal-03247184
       type: url
     - link: https://hal.science/hal-03247184
-      type: url
-    - link: http://arxiv.org/abs/1909.11715
-      type: url
-    - link: http://arxiv.org/pdf/1909.11715
-      type: pdf
-    - link: https://arxiv.org/abs/1909.11715
-      type: url
-    - link: https://arxiv.org/pdf/1909.11715
-      type: pdf
-    - link: https://api.datacite.org/dois/10.48550/arxiv.1909.11715
       type: url
     releases:
     - pages: null
@@ -423,8 +409,8 @@
         date: '2021-05-18'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1609/aaai.v35i11.17203
-          type: url
+        - link: 10.1609/aaai.v35i11.17203
+          type: doi
         - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
           type: pdf
         name: Proceedings of the AAAI Conference on Artificial Intelligence
@@ -445,7 +431,9 @@
     - name: Regularization (linguistics)
     - name: Artificial neural network
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W4319300975
   key: openalex:W4319300975
   paper:
     abstract: Convolutional neural networks (CNNs) have been the consensus for medical
@@ -557,18 +545,12 @@
       display_name: Dorit Merhof
     flags: []
     links:
-    - link: W4319300975
-      type: openalex
+    - link: '2207.08518'
+      type: arxiv
     - link: 10.1109/wacv56688.2023.00614
       type: doi
-    - link: https://arxiv.org/pdf/2207.08518
-      type: open-access
-    - link: https://doi.org/10.1109/wacv56688.2023.00614
-      type: url
-    - link: https://arxiv.org/abs/2207.08518
-      type: url
-    - link: https://arxiv.org/pdf/2207.08518
-      type: pdf
+    - link: W4319300975
+      type: openalex
     releases:
     - pages: null
       status: unknown
@@ -577,8 +559,8 @@
         date: '2023-01-01'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1109/wacv56688.2023.00614
-          type: url
+        - link: 10.1109/wacv56688.2023.00614
+          type: doi
         name: 2022 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)
         open: false
         peer_reviewed: false
@@ -604,7 +586,9 @@
     - name: Quantum mechanics
     - name: Operating system
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openalex: W4372260310
   key: openalex:W4372260310
   paper:
     abstract: 'Contrastive learning has shown remarkable success in the field of multimodal
@@ -707,22 +691,16 @@
       display_name: Shlomo Dubnov
     flags: []
     links:
-    - link: W4372260310
-      type: openalex
+    - link: '2211.06687'
+      type: arxiv
     - link: 10.1109/icassp49357.2023.10095969
       type: doi
-    - link: https://doi.org/10.1109/icassp49357.2023.10095969
-      type: open-access
-    - link: https://doi.org/10.1109/icassp49357.2023.10095969
-      type: url
-    - link: https://hal.science/hal-04766539
-      type: url
+    - link: W4372260310
+      type: openalex
     - link: https://hal.science/hal-04766539/document
       type: pdf
-    - link: https://arxiv.org/abs/2211.06687
+    - link: https://hal.science/hal-04766539
       type: url
-    - link: https://arxiv.org/pdf/2211.06687
-      type: pdf
     releases:
     - pages: null
       status: published
@@ -731,8 +709,8 @@
         date: '2023-05-05'
         date_precision: 3
         links:
-        - link: https://doi.org/10.1109/icassp49357.2023.10095969
-          type: url
+        - link: 10.1109/icassp49357.2023.10095969
+          type: doi
         name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
           and Signal Processing (ICASSP)
         open: true

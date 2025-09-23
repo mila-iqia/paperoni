@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:989652eef28bc49eec908063ba36a854
   key: miniconf:icml:989652eef28bc49eec908063ba36a854
   paper:
     abstract: The dynamical formulation of the optimal transport can be extended through
@@ -110,7 +112,9 @@
     topics:
     - name: Probabilistic Methods
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:a6155b0da06d1ad154ad2d039d1fadf4
   key: miniconf:icml:a6155b0da06d1ad154ad2d039d1fadf4
   paper:
     abstract: This paper contributes a new approach for distributional reinforcement
@@ -242,7 +246,9 @@
     topics:
     - name: Reinforcement Learning->Everything Else
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:285da2198b2b496c9d447cc4ac6b0734
   key: miniconf:icml:285da2198b2b496c9d447cc4ac6b0734
   paper:
     abstract: Bayesian Persuasion is proposed as a tool for social media platforms
@@ -332,7 +338,9 @@
     title: A Persuasive Approach to Combating Misinformation
     topics: []
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:d465f14a648b3d0a1faa6f447e526c60
   key: miniconf:icml:d465f14a648b3d0a1faa6f447e526c60
   paper:
     abstract: 'Causal representation learning aims at identifying high-level causal
@@ -455,7 +463,9 @@
     topics:
     - name: Miscellaneous Aspects of Machine Learning->Causality
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: icml:f2c5b1f06bfe59954cb2a56858c2ed98
   key: miniconf:icml:f2c5b1f06bfe59954cb2a56858c2ed98
   paper:
     abstract: Second-order Recurrent Neural Networks (2RNNs) extend RNNs by leveraging

@@ -238,7 +238,7 @@ class SemanticScholar(Discoverer):
         paper = Paper(
             links=links,
             authors=qual(authors, -10.0),
-            title=data["title"],
+            title=qual(data["title"], -10.0),
             abstract=data["abstract"] or "",
             # citation_count=data["citationCount"],
             topics=[Topic(name=field) for field in (data["fieldsOfStudy"] or ())],
@@ -252,6 +252,7 @@ class SemanticScholar(Discoverer):
             key=paper_key,
             acquired=datetime.now(),
             paper=paper,
+            info={"discovered_by": {"semantic_scholar": data["paperId"]}},
         )
 
     def search(self, query, fields=SEARCH_FIELDS, **params):

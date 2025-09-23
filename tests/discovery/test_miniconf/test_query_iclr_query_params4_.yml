@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:40dba662fae60cd3bcceaa76a82d2873
   key: miniconf:iclr:40dba662fae60cd3bcceaa76a82d2873
   paper:
     abstract: Understanding and developing optimal representations has long been foundational
@@ -101,7 +103,9 @@
     topics:
     - name: Deep Learning->Other Representation Learning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:6be5336db2c119736cf48f475e051bfe
   key: miniconf:iclr:6be5336db2c119736cf48f475e051bfe
   paper:
     abstract: Misclassification detection is an important problem in machine learning,
@@ -189,7 +193,9 @@
     topics:
     - name: Theory->Everything Else
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:7f53f8c6c730af6aeb52e66eb74d8507
   key: miniconf:iclr:7f53f8c6c730af6aeb52e66eb74d8507
   paper:
     abstract: 'Autoregressive large language models (LLMs) compress knowledge from
@@ -316,7 +322,9 @@
     topics:
     - name: Deep Learning->Large Language Models
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:92af93f73faf3cefc129b6bc55a748a9
   key: miniconf:iclr:92af93f73faf3cefc129b6bc55a748a9
   paper:
     abstract: 'Model pruning is a popular approach to enable the deployment of large
@@ -429,7 +437,9 @@
     topics:
     - name: Social Aspects->Trustworthy Machine Learning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      miniconf: iclr:a9be4c2a4041cadbf9d61ae16dd1389e
   key: miniconf:iclr:a9be4c2a4041cadbf9d61ae16dd1389e
   paper:
     abstract: Representations are at the core of all deep reinforcement learning (RL)

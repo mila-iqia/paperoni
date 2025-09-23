@@ -21,7 +21,7 @@ from ..model.classes import (
     rescore,
 )
 from ..model.focus import Focus, Focuses
-from ..utils import QueryError, link_generators as LINK_GENERATORS
+from ..utils import QueryError, link_generators as LINK_GENERATORS, url_to_id
 from .base import Discoverer
 
 # https://docs.openalex.org/api-entities/institutions/institution-object#type
@@ -65,6 +65,9 @@ def _get_link(link_type: str, link_value: str) -> Link:
         relevant_part = link_value[
             ref_start : (-nb_chars_after_ref if nb_chars_after_ref else len(link_value))
         ]
+    elif urlid := url_to_id(link_value):
+        typ, lnk = urlid
+        return Link(type=typ, link=lnk)
     else:
         # Keep full link
         relevant_part = link_value
@@ -132,7 +135,7 @@ class OpenAlexQueryManager:
     def _evaluate(self, path: str, **params):
         if self.mailto:
             params["mailto"] = self.mailto
-        jdata = config.fetch.read(
+        jdata = config.fetch.read_retry(
             f"https://api.openalex.org/{path}", params=params, format="json"
         )
         if jdata is None:
@@ -193,6 +196,12 @@ class OpenAlexQueryManager:
 
         # We will save open access url in paper links
         oa_url = data["open_access"]["oa_url"]
+
+        links = {_get_link(typ, ref) for typ, ref in data["ids"].items()}
+        links.update([_get_link("open-access", oa_url)] if oa_url is not None else [])
+        links.update(links_from_locations)
+        links = list(links)
+        links.sort(key=lambda l: (l.type, l.link))
 
         paper = Paper(
             title=data["display_name"] or "Untilted",
@@ -274,20 +283,19 @@ class OpenAlexQueryManager:
                 Topic(name=data_concept["display_name"])
                 for data_concept in data["concepts"]
             ],
-            links=[_get_link(typ, ref) for typ, ref in data["ids"].items()]
-            + ([_get_link("open-access", oa_url)] if oa_url is not None else [])
-            + links_from_locations,
+            links=links,
         )
 
         # Create unique key based on OpenAlex work ID
         # OpenAlex IDs are in the format "https://openalex.org/W2741809807"
-        openalex_id = data["id"]
-        paper_key = f"openalex:{openalex_id.split('/')[-1]}"
+        openalex_id = data["id"].split("/")[-1]
+        paper_key = f"openalex:{openalex_id}"
 
         return PaperInfo(
             key=paper_key,
             acquired=datetime.now(),
             paper=paper,
+            info={"discovered_by": {"openalex": openalex_id}},
         )
 
     @classmethod
@@ -411,7 +419,7 @@ class OpenAlex(Discoverer):
             if institution_id is None:
                 if verbose:
                     print("[no institution found]", institution)
-                    return
+                return
             filters.append(f"institutions.id:{institution_id}")
 
         if title:

@@ -12,7 +12,9 @@ import yaml
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from outsight.ops import ticktock
+from ovld import ovld
 from serieux import (
+    JSON,
     Auto,
     AutoRegistered,
     CommentRec,
@@ -48,31 +50,47 @@ def deprox(x):
 
 
 class Formatter(AutoRegistered):
-    pass
+    def serialize(self, things, typ=None):
+        things = list(things)
+        if not things:
+            return []
+        else:
+            typ = typ or type(things[0])
+            return serialize(list[typ], list(things))
 
 
 @auto_singleton("json")
 class JSONFormatter(Formatter):
-    def __call__(self, papers):
-        ser = serialize(list[PaperInfo], list(papers))
+    def __call__(self, things, typ=None):
+        ser = self.serialize(things, typ=typ)
         print(json.dumps(ser, indent=4))
 
 
 @auto_singleton("yaml")
 class YAMLFormatter(Formatter):
-    def __call__(self, papers):
-        ser = serialize(list[PaperInfo], list(papers))
+    def __call__(self, things, typ=None):
+        ser = self.serialize(things, typ=typ)
         print(yaml.safe_dump(ser, sort_keys=False))
+
+
+@ovld
+def term_display(obj: object, i: int):
+    if i == 0:
+        print("=" * terminal_width)
+    display(obj)
+    print("=" * terminal_width)
+
+
+@ovld
+def term_display(x: str, i: int):
+    print(x)
 
 
 @auto_singleton("terminal")
 class TerminalFormatter(Formatter):
-    def __call__(self, papers):
-        for i, paper in enumerate(papers):
-            if i == 0:
-                print("=" * terminal_width)
-            display(paper)
-            print("=" * terminal_width)
+    def __call__(self, things):
+        for i, thing in enumerate(things):
+            term_display(thing, i)
 
 
 @dataclass
@@ -221,6 +239,10 @@ class Work:
     class View:
         """View the articles in the workset."""
 
+        # What to view
+        # [positional]
+        what: Literal["paper", "has_pdf", "title"] = "paper"
+
         # Output format
         format: Formatter = TerminalFormatter
 
@@ -228,8 +250,32 @@ class Work:
         n: int = None
 
         def run(self, work: "Work"):
-            it = itertools.islice(work.top, self.n) if self.n else work.top
-            self.format(Scored(ws.score, ws.value.current) for ws in it)
+            worksets = list(itertools.islice(work.top, self.n) if self.n else work.top)
+            match self.what:
+                case "title":
+                    self.format(ws.value.current.title for ws in worksets)
+                case "paper":
+                    self.format(Scored(ws.score, ws.value.current) for ws in worksets)
+                case "has_pdf":
+                    n = total = 0
+
+                    def gen():
+                        nonlocal n, total
+                        for ws in worksets:
+                            paper = ws.value.current
+                            pdf = None
+                            total += 1
+                            try:
+                                pdf = get_pdf(
+                                    [f"{lnk.type}:{lnk.link}" for lnk in paper.links]
+                                )
+                                n += 1
+                            except Exception as exc:
+                                print(exc)
+                            yield {"has_pdf": pdf is not None, "title": paper.title}
+
+                    self.format(gen(), dict[str, JSON])
+                    print(f"{n}/{total} papers have PDFs")
 
     @dataclass
     class Refine:
@@ -246,13 +292,14 @@ class Work:
         # Whether to force re-running the refine
         force: bool = False
 
+        # Number of refinement loops to perform for each paper
+        loops: int = 1
+
         def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
             for sws in prog(list(it), name="refine"):
-                links = [(lnk.type, lnk.link) for lnk in sws.value.current.links]
-                send(to_refine=links)
                 statuses.update(
                     {
                         (name, key): "done"
@@ -260,16 +307,22 @@ class Work:
                         for name, key in pinfo.info.get("refined_by", {}).items()
                     }
                 )
-                for pinfo in fetch_all(
-                    links,
-                    group=";".join([f"{type}:{link}" for type, link in links]),
-                    tags=self.tags,
-                    force=self.force,
-                    statuses=statuses,
-                ):
-                    send(refinement=pinfo)
-                    sws.value.add(pinfo)
-                    sws.score = work.focuses.score(sws.value)
+                for i in range(self.loops):
+                    # Loop a bit because refiners can add new links to refine further
+                    links = [(lnk.type, lnk.link) for lnk in sws.value.current.links]
+                    links.append(("title", sws.value.current.title))
+                    if i == 0:
+                        send(to_refine=links)
+                    for pinfo in fetch_all(
+                        links,
+                        group=";".join([f"{type}:{link}" for type, link in links]),
+                        tags=self.tags,
+                        force=self.force,
+                        statuses=statuses,
+                    ):
+                        send(refinement=pinfo)
+                        sws.value.add(pinfo)
+                        sws.score = work.focuses.score(sws.value)
 
             work.top.resort()
             work.save()

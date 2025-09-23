@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openreview: gVTkMsaaGI
   key: openreview:gVTkMsaaGI
   paper:
     abstract: 'Diffusion models have emerged as effective distribution estimators

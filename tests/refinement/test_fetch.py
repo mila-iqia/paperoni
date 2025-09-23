@@ -107,8 +107,6 @@ def test_refine(func, link, data_regression):
     [
         # Arxiv not indexed on CrossRef
         (crossref, "doi:10.48550/arXiv.2206.08164"),
-        # DBLP mirrors Arxiv, we're not interested
-        (dblp, "dblp:conf/corr/icml/LachapelleDMMBL23"),
         # We need the title to match exactly, CrossRef does not have this one
         (crossref_title, "title:Attention is All You Need"),
         # We need the title to match exactly

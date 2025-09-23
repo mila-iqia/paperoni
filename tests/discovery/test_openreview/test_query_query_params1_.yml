@@ -1,4 +1,6 @@
-- info: {}
+- info:
+    discovered_by:
+      openreview: iD18l6prA7
   key: openreview:iD18l6prA7
   paper:
     abstract: "In this paper, we present a novel data-free method for merging neural\
@@ -80,7 +82,9 @@
     - name: linear mode connectivity
     - name: deep learning
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: rYjYwuM6yH
   key: openreview:rYjYwuM6yH
   paper:
     abstract: 'Parameter-efficient finetuning (PEFT) methods effectively adapt large
@@ -147,7 +151,9 @@
     - name: batching
     - name: interpretability
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: 0sJBW05a2W
   key: openreview:0sJBW05a2W
   paper:
     abstract: Multi-instance point cloud registration aims to estimate the pose of
@@ -235,7 +241,9 @@
     - name: Point Cloud Registration
     - name: Focus and Matching
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: qRnmLJQHgx
   key: openreview:qRnmLJQHgx
   paper:
     abstract: "Current multimodal and multitask foundation models, like 4M or UnifiedIO,\
@@ -364,7 +372,9 @@
     - name: generative models
     - name: computer vision
   score: 0.0
-- info: {}
+- info:
+    discovered_by:
+      openreview: 9f5tOXKoMC
   key: openreview:9f5tOXKoMC
   paper:
     abstract: "Data point selection (DPS) is becoming a critical topic in deep learning\

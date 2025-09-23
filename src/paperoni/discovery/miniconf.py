@@ -196,10 +196,11 @@ class MiniConf(Discoverer):
         links = sorted(
             links, key=lambda x: ({"pdf": 0}.get(x.type, math.inf), x.type, x.link)
         )
+        mid = f"{conference}:{data['uid']}"
 
         # Create and return Paper object
         return PaperInfo(
-            key=f"miniconf:{conference}:{data['uid']}",
+            key=f"miniconf:{mid}",
             acquired=datetime.now(),
             paper=Paper(
                 title=title,
@@ -210,6 +211,7 @@ class MiniConf(Discoverer):
                 links=list(links),
                 flags=[],
             ),
+            info={"discovered_by": {"miniconf": mid}},
         )
 
     def query(

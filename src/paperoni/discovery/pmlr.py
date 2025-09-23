@@ -65,12 +65,14 @@ def parse_paper(entry):
     )
 
     # Create unique key based on volume and ID
-    paper_key = f"pmlr:v{entry['volume']}:{entry['id']}"
+    pmlr_key = f"v{entry['volume']}:{entry['id']}"
+    paper_key = f"pmlr:{pmlr_key}"
 
     return PaperInfo(
         key=paper_key,
         acquired=datetime.now(),
         paper=p,
+        info={"discovered_by": {"pmlr": pmlr_key}},
     )
 
 
