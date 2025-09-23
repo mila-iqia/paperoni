@@ -28,6 +28,12 @@ def expand_links(links):
 
 
 @ovld
+def display(d: dict):
+    for k, v in d.items():
+        print_field(k, v)
+
+
+@ovld
 def display(s: Scored):
     recurse(s.value)
     print_field("Score", s.score)
