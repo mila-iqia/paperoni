@@ -24,7 +24,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 import paperoni
 
-from .__main__ import Coll, Fulltext, Work
+from .__main__ import Coll, Focus, Fulltext, Work
 from .config import config
 from .fulltext.locate import URL
 from .model.classes import Paper
@@ -192,6 +192,13 @@ class ViewResponse:
 
 
 @dataclass
+class AutoFocusRequest(Focus.AutoFocus):
+    """Request model for autofocus."""
+
+    pass
+
+
+@dataclass
 class LoginResponse:
     """Response model for login."""
 
@@ -303,7 +310,10 @@ def create_app() -> FastAPI:
         client_id=config.server.client_id,
         client_secret=config.server.client_secret,
         server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
-        client_kwargs={"scope": "openid email"},
+        client_kwargs={
+            "scope": "openid email",
+            "prompt": "select_account",  # force to select account
+        },
     )
 
     focus_file = config.server.client_dir / "focuses.yaml"
@@ -354,7 +364,6 @@ def create_app() -> FastAPI:
             return await oauth.google.authorize_redirect(
                 request,
                 request.url_for("auth_headless"),
-                prompt="consent",
                 state=state,
             )
 
@@ -362,7 +371,6 @@ def create_app() -> FastAPI:
             return await oauth.google.authorize_redirect(
                 request,
                 request.url_for("auth"),
-                prompt="consent",
                 state=state,
             )
 
@@ -484,6 +492,22 @@ def create_app() -> FastAPI:
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Include failed: {str(e)}")
+
+    @app.get(
+        "/focus/auto",
+        response_model=Focuses,
+        dependencies=[Depends(get_current_admin)],
+    )
+    async def autofocus(request: AutoFocusRequest = None):
+        """Autofocus the collection."""
+        request = request or AutoFocusRequest()
+        focus = Focus(command=None, focus_file=autofocus_file)
+
+        try:
+            return request.run(focus)
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Autofocus failed: {str(e)}")
 
     @app.get("/fulltext/locate", dependencies=[Depends(get_current_user)])
     async def locate_fulltext(request: LocateFulltextRequest):

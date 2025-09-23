@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from functools import cached_property
 from pathlib import Path
-from typing import Annotated, Any, Generator, Iterable, Literal
+from typing import Annotated, Any, Generator, Literal
 
 import uvicorn
 import yaml
@@ -568,6 +568,7 @@ class Focus:
 
             autofocus_file = focus.focus_file.parent / f"auto{focus.focus_file.name}"
             dump(Focuses, focus.focuses, dest=autofocus_file)
+            return focus.focuses
 
     # Command to execute
     command: TaggedUnion[AutoFocus]
