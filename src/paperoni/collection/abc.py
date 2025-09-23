@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Iterable
 
 from ..model.classes import CollectionPaper, Paper
@@ -28,5 +29,9 @@ class PaperCollection:
         institution: str = None,
         # Author of the paper
         author: str = None,
+        # Start date to consider
+        start_date: date = None,
+        # End date to consider
+        end_date: date = None,
     ) -> Iterable[CollectionPaper]:
         raise NotImplementedError()

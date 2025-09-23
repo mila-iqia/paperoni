@@ -3,6 +3,7 @@ import itertools
 import json
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Generator, Literal
@@ -442,9 +443,6 @@ class Batch:
                 cmd.run()
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch]
-
-
 @dataclass
 class Focus:
     """Operations on the focuses."""
@@ -453,27 +451,26 @@ class Focus:
     class AutoFocus:
         """Automatically add focuses."""
 
-        def run(self, focus: "Focus"):
-            focus.focuses.update(focus.collection.search(), config.autofocus)
+        # Timespan to consider for autofocus
+        # [alias: -t]
+        timespan: timedelta = timedelta(weeks=52)
 
-            focus_file = focus.focus_file or (
-                yaml.safe_load(config._file).get("focuses", None)
-                if config._file
-                else None
+        def run(self, focus: "Focus"):
+            start_date = datetime.now() - self.timespan
+            start_date = start_date.date().replace(month=1, day=1)
+            focus.focuses.update(
+                focus.collection.search(start_date=start_date), config.autofocus
             )
-            if focus_file:
-                dump(Focuses, focus.focuses, dest=focus_file)
-            # TODO: Not sure how to get the config file to update the focuses
-            elif config._file:
-                _config: dict = yaml.safe_load(config._file)
-                _config["focuses"] = serialize(Focuses, focus.focuses)
+
+            autofocus_file = focus.focus_file.parent / f"auto{focus.focus_file.name}"
+            dump(Focuses, focus.focuses, dest=autofocus_file)
 
     # Command to execute
     command: TaggedUnion[AutoFocus]
 
     # List of focuses
     # [alias: -f]
-    focus_file: Path = None
+    focus_file: Path
 
     # Collection dir
     # [alias: -c]
@@ -481,10 +478,7 @@ class Focus:
 
     @cached_property
     def focuses(self):
-        if self.focus_file:
-            return deserialize(Focuses, self.focus_file)
-        else:
-            return config.focuses
+        return deserialize(Focuses, self.focus_file)
 
     @cached_property
     def collection(self):
@@ -495,6 +489,9 @@ class Focus:
 
     def run(self):
         self.command.run(self)
+
+
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus]
 
 
 @dataclass

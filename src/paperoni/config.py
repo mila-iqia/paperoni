@@ -37,17 +37,6 @@ class PaperoniConfig:
     def __post_init__(self):
         # Only used for type hinting
         self._file: Path = getattr(self, "_file", None)
-        # Ideally we would not need this but there seams to an issue with
-        # autofocus not being of type AutoFocus when using something like:
-        # with gifnoc.overlay(
-        #         {
-        #             "paperoni.autofocus": {
-        #                 "author": {"score": 1, "threshold": 5},
-        #                 "institution": {"score": 5, "threshold": 20},
-        #             },
-        #         }
-        #     ):
-        self.autofocus = AutoFocus(**self.autofocus)
 
     # TODO: Why does this seams to disable future gifnoc.define like
     # `paperoni.semantic_scholar`?

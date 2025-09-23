@@ -1,7 +1,10 @@
 paperoni:
   cache_path: ../cache
   data_path: ../data
-  mailto: ${secrets.mailto}
+  mailto: _@mila.quebec
+  api_keys:
+    gemini: _
+    scraperapi: _
   fetch:
     $class: RulesFetcher
     rules:
@@ -29,9 +32,20 @@ paperoni:
         - $class: ScraperAPIFetcher
           cache_path: ${paperoni.cache_path}/scraper-cache.sql
           expire_after: 100d
-          api_key: ${secrets.tokens.scraperapi}
+          api_key: ${paperoni.api_keys.scraperapi}
+  focuses:
+    $include:
+    - focuses.yaml
+    - autofocuses.yaml
+  autofocus:
+    author:
+      score: 1
+      threshold: 1
   refine:
     prompt:
       $class: GenAIPrompt
       model: gemini-2.5-pro
-      api_key: ${env:GEMINI_API_KEY}
+      api_key: ${paperoni.api_keys.gemini}
+  collection:
+    $class: paperoni.collection.filecoll:FileCollection
+    file: ${paperoni.data_path}/collection.yaml

@@ -101,6 +101,8 @@ class Focuses:
         return t
 
     def update(self, papers: Iterable[Paper], autofocus: "AutoFocus") -> "Focuses":
+        # TODO: store each auto focus with a start / end date to avoid
+        # considering the papers of authors not at Mila anymore
         focused_institutions_cnts = {
             normalize_institution(f.name): Counter()
             for f in self.focuses

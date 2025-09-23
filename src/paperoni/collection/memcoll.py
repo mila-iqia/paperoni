@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
 from functools import cached_property
 from typing import Generator, Iterable
 
@@ -119,6 +119,10 @@ class MemCollection(PaperCollection):
         institution: str = None,
         # Author of the paper
         author: str = None,
+        # Start date to consider
+        start_date: date = None,
+        # End date to consider
+        end_date: date = None,
     ) -> Generator[CollectionPaper, None, None]:
         title = title and normalize_title(title)
         author = author and normalize_name(author)
@@ -135,6 +139,12 @@ class MemCollection(PaperCollection):
                 for a in p.authors
                 for aff in a.affiliations
             ):
+                continue
+            if start_date and all(
+                release.venue.date < start_date for release in p.releases
+            ):
+                continue
+            if end_date and all(end_date < release.venue.date for release in p.releases):
                 continue
             yield p
 
