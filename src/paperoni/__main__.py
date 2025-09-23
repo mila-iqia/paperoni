@@ -1,6 +1,7 @@
 import argparse
 import itertools
 import json
+import shlex
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -13,6 +14,7 @@ from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from outsight.ops import ticktock
 from ovld import ovld
+from rapporteur.report import Report
 from serieux import (
     JSON,
     Auto,
@@ -565,6 +567,9 @@ class PaperoniInterface:
     # Enable slow log
     log: bool = False
 
+    # Report the execution results
+    report: bool = False
+
     def __post_init__(self):
         if self.dash is None and not self.log:
             self.dash = sys.stdout.isatty()
@@ -574,7 +579,16 @@ class PaperoniInterface:
             enable_dash()
         if self.log:
             enable_log()
-        self.command.run()
+        if self.report:
+            if not config.reporters:
+                sys.exit("No reporters are defined in the config for --report")
+            with Report(
+                description="`" + " ".join(map(shlex.quote, sys.argv)) + "`",
+                reporters=config.reporters,
+            ):
+                self.command.run()
+        else:
+            self.command.run()
 
 
 def enable_log():
