@@ -40,7 +40,7 @@ paperoni:
   autofocus:
     author:
       score: 1
-      threshold: 1
+      institution_score_threshold: 1
   refine:
     prompt:
       $class: GenAIPrompt

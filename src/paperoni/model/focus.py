@@ -107,6 +107,7 @@ class Focuses:
             normalize_institution(f.name): Counter()
             for f in self.focuses
             if f.type == "institution"
+            and f.score >= autofocus.author.institution_score_threshold
         }
         focused_authors = {f.name for f in self.focuses if f.type == "author"}
 
@@ -146,16 +147,14 @@ class Focuses:
         )
 
 
-class AutoFocus(dict[str, "AutoFocus.Type"]):
+class AutoFocus(dict):
     @dataclass
-    class Type:
+    class Author:
         score: int
-        threshold: int
+        institution_score_threshold: int
+        threshold: int = 1
 
-    def __getitem__(self, key: str, /) -> "AutoFocus.Type":
-        return super().__getitem__(key)
-
-    def __getattr__(self, attr: str) -> "AutoFocus.Type":
+    def __getattr__(self, attr: str) -> "AutoFocus.Author":
         return self[attr]
 
 
