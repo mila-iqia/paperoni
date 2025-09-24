@@ -192,10 +192,15 @@ def test_update(tmp_path: Path, data_regression: DataRegressionFixture):
         {
             "paperoni.focuses": [
                 "!institution :: Mila :: 10",
+                "!institution :: McGill University :: 1",
                 "!author :: Irina Rish :: 3",
             ],
             "paperoni.autofocus": {
-                "author": {"score": 1, "threshold": 5},
+                "author": {
+                    "score": 1,
+                    "threshold": 5,
+                    "institution_score_threshold": 10,
+                },
             },
         }
     ) as config:
@@ -239,7 +244,7 @@ def test_update(tmp_path: Path, data_regression: DataRegressionFixture):
 
         # Nothing should change as we have passed the threshold for the authors
         # count affiliated to an institution
-        assert len(config.focuses.focuses) == 2
+        assert len(config.focuses.focuses) == 3
 
         config.focuses.update(
             [magnetoencephalography_paper.value.current]
@@ -247,10 +252,17 @@ def test_update(tmp_path: Path, data_regression: DataRegressionFixture):
             config.autofocus,
         )
 
-        assert len(config.focuses.focuses) > 2
+        assert len(config.focuses.focuses) > 3
         # Some of the author focus should have a score of config.autofocus.author.score
         assert any(
             f.type == "author" and f.score == config.autofocus.author.score
+            for f in config.focuses.focuses
+        )
+
+        # Vanessa Hadid is only affiliated to McGill University which doesn't
+        # not have a score >= 10 so it should not be added
+        assert not any(
+            f.type == "author" and f.name == "Vanessa Hadid"
             for f in config.focuses.focuses
         )
 

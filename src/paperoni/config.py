@@ -30,7 +30,7 @@ class PaperoniConfig:
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
-    autofocus: AutoFocus[str, AutoFocus.Type] = field(default_factory=AutoFocus)
+    autofocus: AutoFocus[str, AutoFocus.Author] = field(default_factory=AutoFocus)
     refine: Refine = None
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
