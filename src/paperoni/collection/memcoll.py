@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from functools import cached_property
 from typing import Generator, Iterable
 
-from ..model.classes import CollectionMixin, CollectionPaper, Link, Paper
+from ..model.classes import CollectionMixin, CollectionPaper, Paper
 from ..utils import normalize_institution, normalize_name, normalize_title
 from .abc import PaperCollection
+from .finder import Finder
 
 _id_types = {
     "arxiv",
@@ -31,27 +31,17 @@ class MemCollection(PaperCollection):
         if self._last_id is None:
             self._last_id = -1
 
+        self._finder = Finder()
         if self._papers:
             assert self._last_id > -1, "If papers are provided, last id must be set"
             assert self._last_id >= max(
                 len(self._papers) - 1, *[p.id for p in self._papers]
             ), "Last id must be at least equal to the maximum paper id"
+            self._finder.add(self._papers)
 
     @property
     def exclusions(self) -> set[str]:
         return self._exclusions
-
-    @cached_property
-    def _by_id(self) -> dict[int, CollectionPaper]:
-        return {p.id: p for p in self._papers}
-
-    @cached_property
-    def _by_title(self) -> dict[str, CollectionPaper]:
-        return {normalize_title(p.title): p for p in self._papers}
-
-    @cached_property
-    def _by_link(self) -> dict[Link, CollectionPaper]:
-        return {link: p for p in self._papers for link in p.links}
 
     def next_id(self) -> int:
         self._last_id += 1
@@ -67,8 +57,8 @@ class MemCollection(PaperCollection):
                         break
 
                 else:
-                    if isinstance(p, CollectionMixin) and p.id in self._by_id:
-                        paper = self._by_id[p.id]
+                    if isinstance(p, CollectionMixin) and p.id in self._finder.by_id:
+                        paper = self._finder.by_id[p.id]
                         if paper.version >= p.version:
                             # Paper has been updated since last time it was fetched.
                             # Do not replace it.
@@ -78,17 +68,14 @@ class MemCollection(PaperCollection):
 
                     else:
                         p = CollectionPaper.make_collection_item(p, next_id=self.next_id)
-                        assert p.id not in self._by_id
+                        assert p.id not in self._finder.by_id
 
                     self._papers.append(p)
                     added += 1
 
                     assert p.id is not None
                     assert p.version is not None
-                    self._by_id[p.id] = p
-                    self._by_title[normalize_title(p.title)] = p
-                    for link in p.links:
-                        self._by_link[link] = p
+                    self._finder.add([p])
 
         finally:
             if added:
@@ -106,10 +93,7 @@ class MemCollection(PaperCollection):
             self.commit()
 
     def find_paper(self, paper: Paper) -> CollectionPaper | None:
-        for lnk in paper.links:
-            if result := self._by_link.get(lnk, None):
-                return result
-        return self._by_title.get(normalize_title(paper.title), None)
+        return self._finder.find(paper)
 
     def search(
         self,
