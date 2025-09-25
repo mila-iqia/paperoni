@@ -29,8 +29,7 @@ from serieux import (
 )
 from serieux.features.tagset import FromEntryPoint
 
-from paperoni.collection.abc import PaperCollection
-
+from .collection.abc import PaperCollection
 from .collection.filecoll import FileCollection
 from .collection.finder import Finder
 from .config import config
@@ -39,6 +38,7 @@ from .display import display, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .model import PaperInfo
+from .model.classes import Paper
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
@@ -283,19 +283,22 @@ class Work:
         n: int = None
 
         def run(self, work: "Work"):
-            worksets = list(itertools.islice(work.top, self.n) if self.n else work.top)
+            worksets = itertools.islice(work.top, self.n) if self.n else work.top
+            papers: list[Scored[Paper]] = [
+                Scored(ws.score, ws.value.current) for ws in worksets
+            ]
             match self.what:
                 case "title":
-                    self.format(ws.value.current.title for ws in worksets)
+                    self.format(p.value.title for p in papers)
                 case "paper":
-                    self.format(Scored(ws.score, ws.value.current) for ws in worksets)
+                    self.format(papers)
                 case "has_pdf":
                     n = total = 0
 
                     def gen():
                         nonlocal n, total
-                        for ws in worksets:
-                            paper = ws.value.current
+                        for p in papers:
+                            paper = p.value
                             pdf = None
                             total += 1
                             try:
@@ -309,6 +312,8 @@ class Work:
 
                     self.format(gen(), dict[str, JSON])
                     print(f"{n}/{total} papers have PDFs")
+
+            return papers
 
     @dataclass
     class Refine:

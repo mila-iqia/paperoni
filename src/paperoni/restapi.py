@@ -12,7 +12,7 @@ import secrets
 import urllib.parse
 from dataclasses import dataclass, field
 from functools import lru_cache
-from typing import Iterable, Optional
+from typing import Iterable, Literal, Optional
 
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -172,6 +172,8 @@ class IncludeResponse:
 class ViewRequest(PagingMixin, Work.View):
     """Request model for work state paper view."""
 
+    what: Literal["paper"] = field(init=False, repr=False, compare=False, default="paper")
+
     # TODO: hide the format field from the api endpoint schema
     format: int = field(init=False, repr=False, compare=False, default=None)
 
@@ -317,15 +319,10 @@ def create_app() -> FastAPI:
     )
 
     focus_file = config.server.client_dir / "focuses.yaml"
-    autofocus_file = config.server.client_dir / "autofocuses.yaml"
 
     if not focus_file.exists():
         focus_file.parent.mkdir(exist_ok=True, parents=True)
         dump(Focuses, config.focuses, dest=focus_file)
-
-    if not autofocus_file.exists():
-        autofocus_file.parent.mkdir(exist_ok=True, parents=True)
-        dump(Focuses, Focuses(), dest=autofocus_file)
 
     @app.get("/")
     async def root():
@@ -456,9 +453,9 @@ def create_app() -> FastAPI:
         """Search for papers in the collection."""
         request = request or ViewRequest()
 
-        work_file = config.server.client_dir / user.user_id() / "work.yaml"
+        work_file = config.server.client_dir / user.user_id() / "work.json"
 
-        work = Work(command=None, work_file=work_file, focus_file=focus_file)
+        work = Work(command=None, work_file=work_file)
 
         try:
             papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
@@ -480,12 +477,11 @@ def create_app() -> FastAPI:
         """Search for papers in the collection."""
         request = request or IncludeRequest()
 
-        work_file = config.server.client_dir / user.user_id() / "work.yaml"
+        work_file = config.server.client_dir / user.user_id() / "work.json"
 
-        work = Work(command=None, work_file=work_file, focus_file=focus_file)
+        work = Work(command=None, work_file=work_file)
 
         try:
-            # Perform search using the collection's search method
             added = request.run(work)
 
             return IncludeResponse(total=added)
@@ -501,7 +497,7 @@ def create_app() -> FastAPI:
     async def autofocus(request: AutoFocusRequest = None):
         """Autofocus the collection."""
         request = request or AutoFocusRequest()
-        focus = Focus(command=None, focus_file=autofocus_file)
+        focus = Focus(command=None, focus_file=focus_file)
 
         try:
             return request.run(focus)
@@ -525,7 +521,6 @@ def create_app() -> FastAPI:
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
         try:
-            # Run blocking download in thread pool
             pdf = request.run()
 
             # Return as file download
