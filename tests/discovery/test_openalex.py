@@ -1,7 +1,7 @@
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.discovery.openalex import OpenAlex, QueryError
+from paperoni.discovery.openalex import WORK_TYPES, OpenAlex, QueryError
 from paperoni.model import Focus, Focuses, PaperInfo
 
 from ..utils import check_papers, filter_test_papers, iter_affiliations, split_on
@@ -144,6 +144,7 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
             page=1,
             per_page=10,
             limit=1,
+            work_types=WORK_TYPES,
         )
     )
 
@@ -165,6 +166,7 @@ def test_focuses_drive_discovery_false():
             focuses=Focuses([Focus(type="author", name="Yoshua Bengio", score=1.0)]),
             page=1,
             per_page=10,
+            work_types=WORK_TYPES,
         )
     )
     assert len(results) == 0
@@ -230,7 +232,9 @@ def test_focuses(query_params, focused_params):
 
     # Query with focuses should return the same results as direct author query
     direct_results = list(
-        discoverer.query(**query_params, page=1, per_page=10, limit=100)
+        discoverer.query(
+            **query_params, page=1, per_page=10, limit=100, work_types=WORK_TYPES
+        )
     )
 
     focus_results = list(
@@ -239,6 +243,7 @@ def test_focuses(query_params, focused_params):
             focuses=focuses,
             page=1,
             per_page=10,
+            work_types=WORK_TYPES,
         )
     )
 
@@ -267,7 +272,9 @@ def test_focuses_multiple_focuses():
         ]
     )
 
-    results = list(discoverer.query(focuses=focuses, page=1, per_page=10))
+    results = list(
+        discoverer.query(focuses=focuses, page=1, per_page=10, work_types=WORK_TYPES)
+    )
 
     # Should get results from both author and institution queries
     assert len(results) == 30

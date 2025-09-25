@@ -47,6 +47,52 @@ VENUE_TYPE_MAPPING = {
     "other": VenueType.unknown,
 }
 
+WORK_TYPES = {
+    "article",
+    "book-chapter",
+    "dataset",
+    "preprint",
+    "dissertation",
+    "book",
+    "review",
+    "paratext",
+    "libguides",
+    "letter",
+    "other",
+    "reference-entry",
+    "report",
+    "editorial",
+    "peer-review",
+    "erratum",
+    "standard",
+    "grant",
+    "supplementary-materials",
+    "retraction",
+}
+
+DEFAULT_WORK_TYPES = {
+    "article",
+    # "book-chapter",
+    # "dataset",
+    "preprint",
+    # "dissertation",
+    "book",
+    # "review",
+    # "paratext",
+    # "libguides",
+    # "letter",
+    # "other",
+    # "reference-entry",
+    # "report",
+    # "editorial",
+    # "peer-review",
+    # "erratum",
+    # "standard",
+    # "grant",
+    # "supplementary-materials",
+    # "retraction",
+}
+
 
 def _get_link(link_type: str, link_value: str) -> Link:
     if link_type == "pmid":
@@ -75,8 +121,9 @@ def _get_link(link_type: str, link_value: str) -> Link:
 
 
 class OpenAlexQueryManager:
-    def __init__(self, *, mailto=None):
+    def __init__(self, *, mailto=None, work_types=DEFAULT_WORK_TYPES):
         self.mailto = mailto
+        self.work_types = work_types
 
     def find_author_id(self, author: str) -> Optional[str]:
         found = self._evaluate("authors", filter=f"display_name.search:{author}")
@@ -91,7 +138,9 @@ class OpenAlexQueryManager:
         return results[0]["id"] if results else None
 
     def works(self, **params):
-        yield from map(self._try_wrapping_paper, self._list("works", **params))
+        for entry in self._list("works", **params):
+            if result := self._try_wrapping_paper(entry):
+                yield result
 
     def _list(
         self,
@@ -158,6 +207,10 @@ class OpenAlexQueryManager:
 
     def _wrap_paper(self, data: dict) -> PaperInfo:
         # Assert consistency in locations
+        typ = data["type"]
+        if typ not in self.work_types:
+            return None
+
         locations = data["locations"]
         if locations:
             assert locations[0] == data["primary_location"]
@@ -204,7 +257,7 @@ class OpenAlexQueryManager:
         links.sort(key=lambda l: (l.type, l.link))
 
         paper = Paper(
-            title=data["display_name"] or "Untilted",
+            title=data["display_name"] or "Untitled",
             abstract=self._reconstruct_abstract(data["abstract_inverted_index"] or {}),
             authors=[
                 PaperAuthor(
@@ -273,7 +326,11 @@ class OpenAlexQueryManager:
                     status=(
                         "published"
                         if location.get("is_published")
-                        else ("accepted" if location.get("is_accepted") else "unknown")
+                        else (
+                            "accepted"
+                            if location.get("is_accepted")
+                            else ("preprint" if typ == "preprint" else "unknown")
+                        )
                     ),
                     pages=None,
                 )
@@ -333,6 +390,8 @@ class OpenAlex(Discoverer):
         per_page: int = None,
         # Max number of papers to show
         limit: int = None,
+        # Work types
+        work_types: list[str] = DEFAULT_WORK_TYPES,
         # If specified, display debug info
         # [alias: -v]
         verbose: bool = False,
@@ -365,6 +424,7 @@ class OpenAlex(Discoverer):
                                 page=page,
                                 per_page=per_page,
                                 verbose=verbose,
+                                work_types=work_types,
                             ),
                             score,
                         )
@@ -377,6 +437,7 @@ class OpenAlex(Discoverer):
                                 page=page,
                                 per_page=per_page,
                                 verbose=verbose,
+                                work_types=work_types,
                             ),
                             score,
                         )
@@ -389,6 +450,7 @@ class OpenAlex(Discoverer):
                                 page=page,
                                 per_page=per_page,
                                 verbose=verbose,
+                                work_types=work_types,
                             ),
                             score,
                         )
@@ -396,7 +458,7 @@ class OpenAlex(Discoverer):
 
         if verbose and self.mailto:
             print("[openalex: using polite pool]")
-        qm = OpenAlexQueryManager(mailto=self.mailto)
+        qm = OpenAlexQueryManager(mailto=self.mailto, work_types=work_types)
         filters = []
 
         if author and author_id:
