@@ -452,7 +452,7 @@ class Work:
     @cached_property
     def collection(self):
         if self.collection_file:
-            return FileCollection(self.collection_file)
+            return FileCollection(file=self.collection_file)
         else:
             return config.collection
 
@@ -519,7 +519,7 @@ class Coll:
     @cached_property
     def collection(self) -> PaperCollection:
         if self.collection_file:
-            return FileCollection(self.collection_file)
+            return FileCollection(file=self.collection_file)
         else:
             return config.collection
 
@@ -585,7 +585,7 @@ class Focus:
     @cached_property
     def collection(self):
         if self.collection_file:
-            return FileCollection(self.collection_file)
+            return FileCollection(file=self.collection_file)
         else:
             return config.collection
 

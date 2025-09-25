@@ -73,7 +73,7 @@ def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
         collection_file=tmp_path / "collection.json",
     )
 
-    col = FileCollection(tmp_path / "collection.json")
+    col = FileCollection(file=tmp_path / "collection.json")
     for paper in (scored.value.current for scored in state):
         assert col.find_paper(paper) is None
 
@@ -106,7 +106,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
         collection_file=tmp_path / "collection.json",
     )
 
-    col = FileCollection(tmp_path / "collection.json")
+    col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
 
     mem_col.add_papers([scored.value.current for scored in state])
@@ -133,7 +133,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
         collection_file=tmp_path / "collection.json",
     )
 
-    col = FileCollection(tmp_path / "collection.json")
+    col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
     mem_col.add_papers([scored.value.current for scored in state])
     assert mem_col.find_paper(paper_to_update) is not None
