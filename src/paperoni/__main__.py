@@ -500,14 +500,12 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
-        def run(self, coll: "Coll"):
-            results = list(
-                coll.collection.search(
-                    title=self.title, author=self.author, institution=self.institution
-                )
-            )
-            self.format(results)
-            return results
+        def run(self, coll: "Coll") -> Generator[Paper, None, None]:
+            for paper in coll.collection.search(
+                title=self.title, author=self.author, institution=self.institution
+            ):
+                self.format([paper])
+                yield paper
 
     # Command to execute
     command: TaggedUnion[Search]
