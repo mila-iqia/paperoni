@@ -4,6 +4,7 @@ import re
 import unicodedata
 
 from outsight import send
+from serieux.features.proxy import ProxyBase
 from unidecode import unidecode
 
 link_generators = {
@@ -235,3 +236,10 @@ class soft_fail:
             )
             send(exception=exc_value)
             return True
+
+
+def deprox(x):
+    if isinstance(x, ProxyBase):
+        return x._obj
+    else:
+        return x

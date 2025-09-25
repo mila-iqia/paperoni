@@ -27,7 +27,6 @@ from serieux import (
     dump,
     serialize,
 )
-from serieux.features.proxy import ProxyBase
 from serieux.features.tagset import FromEntryPoint
 
 from paperoni.collection.abc import PaperCollection
@@ -44,14 +43,7 @@ from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
-from .utils import prog, soft_fail, url_to_id
-
-
-def deprox(x):
-    if isinstance(x, ProxyBase):
-        return x._obj
-    else:
-        return x
+from .utils import deprox, prog, soft_fail, url_to_id
 
 
 class Formatter(AutoRegistered):

@@ -87,10 +87,13 @@ post-install-commands = [
 ]
 
 [tool.hatch.envs.default.env-vars]
-GIFNOC_FILE = "{env:GIFNOC_FILE:{root:real}/config/secrets.yaml}"
+GIFNOC_FILE = "{env:GIFNOC_FILE:{root:real}/config/secrets.yaml,{root:real}/config/site.yaml}"
 SERIEUX_PASSWORD = "{env:SERIEUX_PASSWORD:_}"
 PAPERONI_SECRETS = "{env:PAPERONI_SECRETS:{home:real}/secrets/paperoni/config.yaml}"
 
 [tool.hatch.envs.default.scripts]
 sync = "uv sync --active --all-extras {args}"
-make-secrets = "serieux patch -m 'paperoni.config:gifnoc_model' -f {env:PAPERONI_SECRETS} -o {env:GIFNOC_FILE} -p {env:SERIEUX_PASSWORD}"
+make-secrets = [
+    'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" -p "{env:SERIEUX_PASSWORD}"',
+    'cp $(dirname "{env:PAPERONI_SECRETS}")/*focuses*.yaml "$(dirname "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)")"',
+]

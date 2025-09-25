@@ -48,12 +48,12 @@ paperoni:
       api_key: ${paperoni.api_keys.gemini}
   collection:
     $class: paperoni.collection.filecoll:FileCollection
-    file: ${paperoni.data_path}/collection.yaml
+    file: ${paperoni.data_path}/collection.json
   server:
     secret_key: _
     client_dir: ${paperoni.data_path}/serve
     client_id: _
     client_secret: _
     jwt_secret_key: _
-    admin_emails: 
+    admin_emails:
     - "satya.ortiz-gagne@mila.quebec"
