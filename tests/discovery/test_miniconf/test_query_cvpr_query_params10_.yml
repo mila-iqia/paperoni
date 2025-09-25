@@ -53,7 +53,7 @@
       type: abstract
     - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Contrasting_Intra-Modal_and_Ranking_Cross-Modal_Hard_Negatives_to_Enhance_Visio-Linguistic_CVPR_2024_paper.html
       type: abstract
-    - link: e9dcb63ca828d0e00cd05b445099ed2e
+    - link: cvpr/2024-06-19/e9dcb63ca828d0e00cd05b445099ed2e
       type: uid
     releases:
     - pages: null
@@ -145,7 +145,7 @@
       type: abstract
     - link: https://openaccess.thecvf.com/content/CVPR2024/html/Zhang_Overcoming_Generic_Knowledge_Loss_with_Selective_Parameter_Update_CVPR_2024_paper.html
       type: abstract
-    - link: 1170017b40d1ba28394ebc44158dae8a
+    - link: cvpr/2024-06-19/1170017b40d1ba28394ebc44158dae8a
       type: uid
     releases:
     - pages: null
