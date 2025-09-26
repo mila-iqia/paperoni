@@ -203,6 +203,7 @@ class Work:
             find = Finder(
                 title_finder=lambda scored: scored.value.current.title,
                 links_finder=lambda scored: scored.value.current.links,
+                authors_finder=lambda scored: scored.value.current.authors,
                 id_finder=lambda scored: getattr(scored.value.current, "id", None),
             )
             find.add(list(work.top))
