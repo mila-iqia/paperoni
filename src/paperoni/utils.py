@@ -15,7 +15,7 @@ link_generators = {
         "abstract": "https://pubmed.ncbi.nlm.nih.gov/{}",
     },
     "pmc": {
-        "abstract": "https://www.ncbi.nlm.nih.gov/pmc/articles/{}",
+        "abstract": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC{}",
     },
     "doi": {
         "abstract": "https://doi.org/{}",
@@ -88,7 +88,7 @@ url_extractors = {
     r"https?://scirate\.com/arxiv/([0-9]{4}\.[0-9]+).*": "arxiv",
     r"https?://pubmed\.ncbi\.nlm\.nih\.gov/([^/]*)/": "pubmed",
     r"https?://www\.ncbi\.nlm\.nih\.gov/pubmed/([^/]*)": "pubmed",
-    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/([^/]*)": "pmc",
+    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/PMC([^/]*)": "pmc",
     r"https?://europepmc.org/article/PMC/([^/]*)": "pmc",
     r"https?://(?:dx\.)?doi\.org/(.*)": "doi",
     r"https?://(?:www\.)?openreview\.net/(?:pdf\?|forum\?)id=(.*)": "openreview",
