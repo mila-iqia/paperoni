@@ -214,6 +214,10 @@ class Work:
 
                 if found := find.find(pinfo.paper):
                     found.value.add(pinfo)
+                    new_score = work.focuses.score(found.value.current)
+                    if new_score != found.score:
+                        # Might be unnecessarily expensive but we'll see
+                        work.top.resort()
                     continue
 
                 if (
