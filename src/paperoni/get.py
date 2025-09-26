@@ -125,7 +125,8 @@ class Fetcher:
         backoff.expo,
         RequestException,
         giveup=_giveup,
-        max_time=10,
+        max_time=30,
+        logger=None,
     )
     def read_retry(self, *args, **kwargs):
         return self.read(*args, **kwargs)
