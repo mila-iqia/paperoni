@@ -94,6 +94,6 @@ PAPERONI_SECRETS = "{env:PAPERONI_SECRETS:{home:real}/secrets/paperoni/config.ya
 [tool.hatch.envs.default.scripts]
 sync = "uv sync --active --all-extras {args}"
 make-secrets = [
-    'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" -p "{env:SERIEUX_PASSWORD}"',
+    'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" {args}',
     'cp $(dirname "{env:PAPERONI_SECRETS}")/*focuses*.yaml "$(dirname "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)")"',
 ]

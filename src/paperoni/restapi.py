@@ -5,7 +5,6 @@ FastAPI interface for paperoni collection search functionality.
 import asyncio
 import datetime
 import enum
-import hashlib
 import importlib.metadata
 import itertools
 import secrets
@@ -14,6 +13,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Iterable, Literal, Optional
 
+from authlib.integrations.base_client import OAuthError
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
@@ -36,37 +36,56 @@ from .utils import url_to_id
 class PagingMixin:
     """Mixin for paging."""
 
-    # Page of results to display
-    page: int = None
-    # Number of results to display per page
-    per_page: int = None
-    # Max number of papers to show
-    limit: int = 100
+    # Results offset
+    offset: int = None
+    # Max number of results to return
+    size: int = field(repr=False, compare=False, default=100)
+
+    _count: int = field(init=False, repr=False, compare=False, default=0)
+    _next_offset: int = field(init=False, repr=False, compare=False, default=None)
+
+    @property
+    def count(self) -> int:
+        return self._count
+
+    @property
+    def next_offset(self) -> int:
+        return self._next_offset
 
     def slice(
         self,
         iterable: Iterable,
         *,
-        page: int = None,
-        per_page: int = None,
-        limit: int = None,
+        offset: int = None,
+        size: int = None,
     ) -> Iterable:
-        if page is None:
-            page = self.page or 0
-        if per_page is None:
-            per_page = self.per_page
-        if limit is None:
-            limit = self.limit or len(iterable)
+        if offset is None:
+            offset = self.offset or 0
+        if size is None:
+            size = self.size or 100
 
-        if per_page is not None:
-            start = page * per_page
-            end = min((page + 1) * per_page, limit)
+        size = min(size, 10000)
 
-        else:
-            start = 0
-            end = limit
+        self._count = 0
+        self._next_offset = offset
+        for entry in itertools.islice(iterable, offset, offset + size):
+            self._count += 1
+            self._next_offset += 1
+            yield entry
 
-        return itertools.islice(iterable, start, end)
+        if self._count < self.size:
+            # No more results
+            self._next_offset = None
+
+
+@dataclass
+class PagingResponseMixin:
+    """Mixin for paging response."""
+
+    results: list
+    count: int
+    next_offset: int | None
+    total: int
 
 
 # Authentication models
@@ -80,11 +99,6 @@ class User:
     def is_admin(self) -> bool:
         """Get user id."""
         return self.email in config.server.admin_emails
-
-    def user_id(self) -> str:
-        """Get user id."""
-        email_hash = hashlib.sha256(self.email.encode()).hexdigest()
-        return f"{self.email.split('@')[0]}_{email_hash[:8]}"
 
 
 @dataclass
@@ -101,17 +115,12 @@ class SearchRequest(PagingMixin, Coll.Search):
     # TODO: hide the format field from the api endpoint schema
     format: int = field(init=False, repr=False, compare=False, default=None)
 
-    # Disable format
-    def format(self, *args, **kwargs):
-        pass
-
 
 @dataclass
-class SearchResponse:
+class SearchResponse(PagingResponseMixin):
     """Response model for paper search."""
 
-    papers: list[Paper]
-    total: int
+    results: list[Paper]
 
 
 @dataclass
@@ -124,10 +133,10 @@ class LocateFulltextRequest(PagingMixin, Fulltext.Locate):
 
 
 @dataclass
-class LocateFulltextResponse:
+class LocateFulltextResponse(PagingResponseMixin):
     """Response model for fulltext locate."""
 
-    urls: list[URL]
+    results: list[URL]
 
 
 @dataclass
@@ -135,6 +144,9 @@ class DownloadFulltextRequest(Fulltext.Download):
     """Request model for fulltext download."""
 
     ref: str | list[str]
+    cache_policy: Literal["no_download"] = field(
+        init=False, repr=False, compare=False, default="no_download"
+    )
 
     # Disable format
     def format(self, *args, **kwargs):
@@ -173,24 +185,23 @@ class ViewRequest(PagingMixin, Work.View):
     """Request model for work state paper view."""
 
     what: Literal["paper"] = field(init=False, repr=False, compare=False, default="paper")
+    n: int = field(init=False, repr=False, compare=False, default=None)
 
     # TODO: hide the format field from the api endpoint schema
     format: int = field(init=False, repr=False, compare=False, default=None)
 
     def __post_init__(self):
-        self.n = self.n or self.limit
-        self.limit = min(self.limit, self.n)
+        self.n = self.offset + self.size
 
     def format(self, *args, **kwargs):
         pass
 
 
 @dataclass
-class ViewResponse:
+class ViewResponse(PagingResponseMixin):
     """Response model for work state paper view."""
 
-    papers: list[Scored[Paper]]
-    total: int
+    results: list[Scored[Paper]]
 
 
 @dataclass
@@ -384,8 +395,12 @@ def create_app() -> FastAPI:
         """Handle Google OAuth callback for headless mode."""
         try:
             token = await oauth.google.authorize_access_token(request)
-        except Exception:
-            raise HTTPException(status_code=401, detail="Google authentication failed.")
+
+        except OAuthError as e:
+            raise HTTPException(
+                status_code=401,
+                detail=f"[{type(e).__name__}] Google authentication failed: {str(e)}",
+            )
 
         # Create user object
         user = User(email=token["userinfo"]["email"])
@@ -429,117 +444,90 @@ def create_app() -> FastAPI:
         response_model=SearchResponse,
         dependencies=[Depends(get_current_user)],
     )
-    async def search_papers(request: SearchRequest = None):
+    async def search_papers(request: SearchRequest):
         """Search for papers in the collection."""
-        request = request or SearchRequest()
         coll = Coll(command=None)
 
-        try:
-            # Perform search using the collection's search method
-            results = list(request.slice(request.run(coll)))
+        # Perform search using the collection's search method
+        results = list(request.slice(request.run(coll)))
 
-            return SearchResponse(papers=results, total=len(coll.collection))
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+        return SearchResponse(
+            results=results,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(coll.collection),
+        )
 
     @app.get(
         "/work/view",
         response_model=ViewResponse,
+        dependencies=[Depends(get_current_user)],
     )
-    async def work_view_papers(
-        request: ViewRequest = None, user: User = Depends(get_current_user)
-    ):
+    async def work_view_papers(request: ViewRequest):
         """Search for papers in the collection."""
-        request = request or ViewRequest()
+        work = Work(command=None)
 
-        work_file = config.server.client_dir / user.user_id() / "work.json"
+        papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
 
-        work = Work(command=None, work_file=work_file)
-
-        try:
-            papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
-
-            return ViewResponse(
-                papers=serialize(list[Scored[Paper]], papers), total=len(papers)
-            )
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"View failed: {str(e)}")
+        return ViewResponse(
+            results=serialize(list[Scored[Paper]], papers),
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(papers),
+        )
 
     @app.get(
         "/work/include",
         response_model=IncludeResponse,
+        dependencies=[Depends(get_current_admin)],
     )
-    async def work_include_papers(
-        request: IncludeRequest = None, user: User = Depends(get_current_admin)
-    ):
+    async def work_include_papers(request: IncludeRequest):
         """Search for papers in the collection."""
-        request = request or IncludeRequest()
+        work = Work(command=None)
 
-        work_file = config.server.client_dir / user.user_id() / "work.json"
+        added = request.run(work)
 
-        work = Work(command=None, work_file=work_file)
-
-        try:
-            added = request.run(work)
-
-            return IncludeResponse(total=added)
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Include failed: {str(e)}")
+        return IncludeResponse(total=added)
 
     @app.get(
         "/focus/auto",
         response_model=Focuses,
         dependencies=[Depends(get_current_admin)],
     )
-    async def autofocus(request: AutoFocusRequest = None):
+    async def autofocus(request: AutoFocusRequest):
         """Autofocus the collection."""
-        request = request or AutoFocusRequest()
         focus = Focus(command=None, focus_file=focus_file)
 
-        try:
-            return request.run(focus)
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Autofocus failed: {str(e)}")
+        return request.run(focus)
 
     @app.get("/fulltext/locate", dependencies=[Depends(get_current_user)])
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
-        try:
-            urls = list(request.slice(request.run()))
-            return LocateFulltextResponse(urls=urls)
-
-        except Exception as e:
-            raise HTTPException(
-                status_code=500, detail=f"Locate fulltext failed: {str(e)}"
-            )
+        urls = list(request.slice(request.run()))
+        return LocateFulltextResponse(
+            results=urls,
+            total=len(urls),
+            count=request.count,
+            next_offset=request.next_offset,
+        )
 
     @app.get("/fulltext/download", dependencies=[Depends(get_current_user)])
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
-        try:
-            pdf = request.run()
+        pdf = request.run()
 
-            # Return as file download
-            async def async_iter_pdf():
-                with pdf.pdf_path.open("rb") as bf:
-                    while b := bf.read(1024):
-                        yield b
+        # Return as file download
+        async def async_iter_pdf():
+            with pdf.pdf_path.open("rb") as bf:
+                while b := bf.read(1024):
+                    yield b
 
-            return StreamingResponse(
-                async_iter_pdf(),
-                media_type="application/pdf",
-                headers={
-                    "Content-Disposition": f'attachment; filename="{pdf.directory.name}.pdf"'
-                },
-            )
-
-        except Exception as e:
-            raise HTTPException(
-                status_code=500, detail=f"Download fulltext failed: {str(e)}"
-            )
+        return StreamingResponse(
+            async_iter_pdf(),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f'attachment; filename="{pdf.directory.name}.pdf"'
+            },
+        )
 
     return app
