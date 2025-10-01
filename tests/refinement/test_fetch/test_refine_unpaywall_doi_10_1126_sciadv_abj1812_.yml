@@ -193,6 +193,8 @@ flags: []
 links:
 - link: 10.1126/sciadv.abj1812
   type: doi
+- link: https://www.science.org/history/af398e21-491d-4ed6-b413-c8ca1c03948d/sciadv.abj1812.v1.pdf
+  type: pdf
 releases:
 - pages: null
   status: published

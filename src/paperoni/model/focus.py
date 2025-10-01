@@ -83,16 +83,6 @@ class Focuses:
         scores = [self.score(author) for author in p.authors]
         return combine(scores)
 
-    # @ovld
-    # def score(self, p: PaperAuthor):
-    #     name_score = self.score_index.get(("author", normalize_name(p.display_name)), 0.0)
-    #     iscores = [
-    #         self.score_index.get(("institution", normalize_institution(name)), 0.0)
-    #         for aff in p.affiliations
-    #         for name in split_institution(aff.name)
-    #     ]
-    #     return combine([name_score, *iscores])
-
     @ovld
     def score(self, p: PaperAuthor):
         name_score = self.score_index.get(("author", normalize_name(p.display_name)), 0.0)
