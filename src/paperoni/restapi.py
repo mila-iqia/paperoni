@@ -7,6 +7,7 @@ import datetime
 import enum
 import importlib.metadata
 import itertools
+import logging
 import secrets
 import urllib.parse
 from dataclasses import dataclass, field
@@ -16,6 +17,9 @@ from typing import Iterable, Literal, Optional
 from authlib.integrations.base_client import OAuthError
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.exception_handlers import (
+    http_exception_handler as default_http_exception_handler,
+)
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
@@ -30,6 +34,8 @@ from .fulltext.locate import URL
 from .model.classes import Paper
 from .model.focus import Focuses, Scored
 from .utils import url_to_id
+
+restapi_logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -279,6 +285,13 @@ def create_app() -> FastAPI:
         max_age=14 * 24 * 60 * 60,  # 14 days
     )
 
+    @app.exception_handler(Exception)
+    async def http_exception_handler(request, exc):
+        _EXCLUDED_STATUSES = {404}
+        if getattr(exc, "status_code", None) not in _EXCLUDED_STATUSES:
+            restapi_logger.error(exc, exc_info=True)
+        return await default_http_exception_handler(request, exc)
+
     @enum.unique
     class HeadlessLoginFlag(enum.Enum):
         ACTIVE = "active"
@@ -400,7 +413,7 @@ def create_app() -> FastAPI:
             raise HTTPException(
                 status_code=401,
                 detail=f"[{type(e).__name__}] Google authentication failed: {str(e)}",
-            )
+            ) from e
 
         # Create user object
         user = User(email=token["userinfo"]["email"])
