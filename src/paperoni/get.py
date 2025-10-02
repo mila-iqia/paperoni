@@ -59,6 +59,13 @@ def parse(content: str, format: Literal["txt"]):
     return content
 
 
+def _giveup(exc):
+    return getattr(exc, "response", None) is None or exc.response.status_code not in (
+        403,
+        429,
+    )
+
+
 class Fetcher:
     def generic(self, method, url, **kwargs):
         raise NotImplementedError()
@@ -117,8 +124,9 @@ class Fetcher:
     @backoff.on_exception(
         backoff.expo,
         RequestException,
-        giveup=lambda exc: exc.response.status_code not in (403, 429),
-        max_time=10,
+        giveup=_giveup,
+        max_time=30,
+        logger=None,
     )
     def read_retry(self, *args, **kwargs):
         return self.read(*args, **kwargs)
@@ -127,6 +135,7 @@ class Fetcher:
 @dataclass
 class RequestsFetcher(Fetcher):
     user_agent: str = None
+    timeout: int = 60
 
     def __post_init__(self):
         if self.user_agent is not None:
@@ -140,6 +149,7 @@ class RequestsFetcher(Fetcher):
         return Session()
 
     def generic(self, method, url, **kwargs):
+        kwargs.setdefault("timeout", self.timeout)
         if self.user_agent:
             headers = kwargs.setdefault("headers", {})
             headers["UserAgent"] = headers["User-Agent"] = self.user_agent

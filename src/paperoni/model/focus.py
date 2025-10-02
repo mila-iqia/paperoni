@@ -86,12 +86,19 @@ class Focuses:
     @ovld
     def score(self, p: PaperAuthor):
         name_score = self.score_index.get(("author", normalize_name(p.display_name)), 0.0)
-        iscores = [
-            self.score_index.get(("institution", normalize_institution(name)), 0.0)
-            for aff in p.affiliations
-            for name in split_institution(aff.name)
-        ]
-        return combine([name_score, *iscores])
+        iscores = 0.0
+        recognized_institution = False
+        for aff in p.affiliations:
+            for name in split_institution(aff.name):
+                iscore = self.score_index.get(
+                    ("institution", normalize_institution(name)), None
+                )
+                if iscore is not None:
+                    iscores += iscore
+                    recognized_institution = True
+        if p.affiliations and not recognized_institution:
+            return 0.0
+        return name_score + iscores
 
     def top(self, pinfos, n, drop_zero=True):
         t = Top(n, drop_zero=drop_zero)

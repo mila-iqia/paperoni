@@ -140,7 +140,7 @@ def test_find_paper_by_title(sample_papers: list[Paper], sample_paper: Paper):
     collection.add_papers(sample_papers)
 
     # Create a paper with a matching title but no matching links
-    search_paper = Paper(title=sample_paper.title)
+    search_paper = Paper(title=sample_paper.title, authors=sample_paper.authors)
     found = collection.find_paper(search_paper)
 
     assert eq(found, sample_paper)

@@ -85,7 +85,7 @@
       type: openreview
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/616521c3cf15f9f7018565c427d40e3b-Abstract-Conference.html
       type: paper
-    - link: eed4435e296d75fa7280539943113a7d
+    - link: neurips/2024-12-11/eed4435e296d75fa7280539943113a7d
       type: uid
     releases:
     - pages: null
@@ -194,7 +194,7 @@
       type: openreview
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/55769e1208c7f45e9acc98f06279c10c-Abstract-Conference.html
       type: paper
-    - link: 2f10158c59d8ce7d40687769eb8e0424
+    - link: neurips/2024-12-11/2f10158c59d8ce7d40687769eb8e0424
       type: uid
     releases:
     - pages: null
@@ -282,7 +282,7 @@
       type: openreview
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/794a72b1a9d5fc4c040eb3110d94c8a1-Abstract-Conference.html
       type: paper
-    - link: 8d97f450424ddf6448b7efe4159d2aa6
+    - link: neurips/2024-12-11/8d97f450424ddf6448b7efe4159d2aa6
       type: uid
     releases:
     - pages: null
@@ -507,7 +507,7 @@
       type: openreview
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
       type: paper
-    - link: 6e2d5d50a943a0e0d738377f51011685
+    - link: neurips/2024-12-11/6e2d5d50a943a0e0d738377f51011685
       type: uid
     releases:
     - pages: null
@@ -609,7 +609,7 @@
       type: openreview
     - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/92f79f493ca2d6c0ba04c3af76bb3368-Abstract-Conference.html
       type: paper
-    - link: 76a271c64a315732aa56eeb7277a63d4
+    - link: neurips/2024-12-11/76a271c64a315732aa56eeb7277a63d4
       type: uid
     releases:
     - pages: null

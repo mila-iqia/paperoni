@@ -173,7 +173,7 @@ class MiniConf(Discoverer):
             process_uri("pdf", url)
         if url := expand_base(data.get("virtualsite_url")):
             process_uri("abstract", url)
-        links.add(Link(type="uid", link=data["uid"]))
+        links.add(Link(type="uid", link=f"{conference}/{venue_date}/{data['uid']}"))
 
         # Add eventmedia links
         for media in data.get("eventmedia", []):

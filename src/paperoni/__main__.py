@@ -30,7 +30,7 @@ from serieux.features.proxy import ProxyBase
 from serieux.features.tagset import FromEntryPoint
 
 from .collection.filecoll import FileCollection
-from .collection.memcoll import MemCollection
+from .collection.finder import Finder
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -199,14 +199,25 @@ class Work:
 
         def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions
-            mem_col = MemCollection(
-                _last_id=work.collection._last_id if work.collection else None,
+
+            find = Finder(
+                title_finder=lambda scored: scored.value.current.title,
+                links_finder=lambda scored: scored.value.current.links,
+                authors_finder=lambda scored: scored.value.current.authors,
+                id_finder=lambda scored: getattr(scored.value.current, "id", None),
             )
-            mem_col.add_papers(scored.value.current for scored in work.top)
+            find.add(list(work.top))
+
             for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
-                if mem_col.find_paper(pinfo.paper):
+
+                if found := find.find(pinfo.paper):
+                    found.value.add(pinfo)
+                    new_score = work.focuses.score(found.value.current)
+                    if new_score != found.score:
+                        # Might be unnecessarily expensive but we'll see
+                        work.top.resort()
                     continue
 
                 if (
@@ -233,8 +244,8 @@ class Work:
                         work.focuses.score(pinfo), PaperWorkingSet.make(pinfo)
                     )
 
-                mem_col.add_papers([pinfo.paper])
                 work.top.add(scored)
+                find.add([scored])
             work.save()
 
     @dataclass

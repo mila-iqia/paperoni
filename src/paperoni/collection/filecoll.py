@@ -15,6 +15,8 @@ class FileCollection(MemCollection):
     _exclusions: set[str] = field(init=False, default_factory=set)
 
     def __post_init__(self):
+        super().__post_init__()
+
         if self.file.exists():
             self.__dict__.update(vars(load(type(self), self.file)))
 

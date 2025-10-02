@@ -15,7 +15,7 @@ link_generators = {
         "abstract": "https://pubmed.ncbi.nlm.nih.gov/{}",
     },
     "pmc": {
-        "abstract": "https://www.ncbi.nlm.nih.gov/pmc/articles/{}",
+        "abstract": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC{}",
     },
     "doi": {
         "abstract": "https://doi.org/{}",
@@ -88,7 +88,7 @@ url_extractors = {
     r"https?://scirate\.com/arxiv/([0-9]{4}\.[0-9]+).*": "arxiv",
     r"https?://pubmed\.ncbi\.nlm\.nih\.gov/([^/]*)/": "pubmed",
     r"https?://www\.ncbi\.nlm\.nih\.gov/pubmed/([^/]*)": "pubmed",
-    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/([^/]*)": "pmc",
+    r"https?://www\.ncbi\.nlm\.nih\.gov/pmc/articles/PMC([^/]*)": "pmc",
     r"https?://europepmc.org/article/PMC/([^/]*)": "pmc",
     r"https?://(?:dx\.)?doi\.org/(.*)": "doi",
     r"https?://(?:www\.)?openreview\.net/(?:pdf\?|forum\?)id=(.*)": "openreview",
@@ -194,6 +194,20 @@ def normalize_title(title: str) -> str:
 
 def split_institution(name: str) -> list[str]:
     return re.split(r" *[,;/-] *", name)
+
+
+def quick_author_similarity(names1, names2):
+    lasts1 = {normalize_name(n.split()[-1]) for n in names1}
+    lasts2 = {normalize_name(n.split()[-1]) for n in names2}
+    floor = 0.0
+    if (len(lasts2 - lasts1)) <= 1 and (len(lasts1 - lasts2)) <= 1:
+        # Affordance for adding, removing or misspelling an author regardless
+        # of how many authors there are.
+        floor = 0.9
+    if lasts1 and lasts2:
+        return max(floor, len(lasts1 & lasts2) / len(lasts1 | lasts2))
+    else:  # pragma: no cover
+        return 0.0
 
 
 def prog(it, name="progress", total=None):
