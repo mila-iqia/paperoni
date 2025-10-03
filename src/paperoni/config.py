@@ -1,5 +1,7 @@
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import gifnoc
 from rapporteur.report import Reporter
@@ -17,6 +19,15 @@ class Keys(dict):
         return self.get(attr, None)
 
 
+class Meta[T](Keys[str, T]):
+    def __getattr__(self, attr) -> T:
+        return self.get(attr, None)
+
+    def __setattr__(self, attr, value) -> T:
+        self[attr] = value
+        return value
+
+
 @dataclass
 class Refine:
     prompt: TaggedSubclass[Prompt] = field(default_factory=GenAIPrompt)
@@ -24,6 +35,7 @@ class Refine:
 
 @dataclass
 class Server:
+    max_results: int = 10000
     client_dir: Path = None
     secret_key: Secret[str] = None
     jwt_secret_key: Secret[str] = None
@@ -46,10 +58,26 @@ class PaperoniConfig:
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
     server: Server = None
+    metadata: Meta[Path | list[Path] | Meta | Any] = field(
+        init=False, repr=False, compare=False, default_factory=Meta
+    )
 
     def __post_init__(self):
-        # Only used for type hinting
-        self._file: Path = getattr(self, "_file", None)
+        g_file = os.environ.get("GIFNOC_FILE", None)
+        g_file = (g_file and g_file.split(",")) or []
+        m_files = self.metadata.files or g_file
+        self.metadata.files = [Path(f).resolve() for f in m_files]
+        self.metadata.file = (self.metadata.files and self.metadata.files[0]) or None
+
+        self.metadata.focuses = Meta[Focuses]()
+
+        # The focuses and autofocuses files should probably always be relative
+        # to the config file and use focuses.yaml and autofocuses.yaml as names.
+        if self.metadata.file and self.metadata.file.exists():
+            self.metadata.focuses.file = self.metadata.file.parent / "focuses.yaml"
+            self.metadata.focuses.autofile = Path(self.metadata.focuses.file).with_stem(
+                f"auto{self.metadata.focuses.file.stem}"
+            )
 
     # TODO: Why does this seams to disable future gifnoc.define like
     # `paperoni.semantic_scholar`?

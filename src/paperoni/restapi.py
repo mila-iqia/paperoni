@@ -5,37 +5,51 @@ FastAPI interface for paperoni collection search functionality.
 import asyncio
 import datetime
 import enum
+import hashlib
 import importlib.metadata
 import itertools
 import logging
 import secrets
 import urllib.parse
 from dataclasses import dataclass, field
-from functools import lru_cache
-from typing import Iterable, Literal, Optional
+from functools import cached_property, lru_cache, partial
+from types import NoneType
+from typing import AsyncGenerator, Generator, Iterable, Literal
 
+from anyio import Path
 from authlib.integrations.base_client import OAuthError
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.exception_handlers import (
-    http_exception_handler as default_http_exception_handler,
-)
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
-from serieux import deserialize, dump, serialize
+from serieux import auto_singleton, deserialize, serialize
+from starlette.exceptions import HTTPException
 from starlette.middleware.sessions import SessionMiddleware
 
 import paperoni
+from paperoni.fulltext.pdf import PDF
 
-from .__main__ import Coll, Focus, Fulltext, Work
+from .__main__ import Coll, Focus, Formatter, Fulltext, Work
 from .config import config
 from .fulltext.locate import URL
-from .model.classes import Paper
+from .model.classes import Paper, PaperInfo
 from .model.focus import Focuses, Scored
 from .utils import url_to_id
 
 restapi_logger = logging.getLogger(__name__)
+
+
+@enum.unique
+class HeadlessLoginFlag(enum.Enum):
+    ACTIVE = "active"
+
+
+@auto_singleton("raw")
+class RawFormatter(Formatter):
+    def __call__(self, things):
+        yield from things
 
 
 @dataclass
@@ -43,12 +57,12 @@ class PagingMixin:
     """Mixin for paging."""
 
     # Results offset
-    offset: int = None
+    offset: int = field(default=0)
     # Max number of results to return
-    size: int = field(repr=False, compare=False, default=100)
+    size: int = field(default=100)
 
-    _count: int = field(init=False, repr=False, compare=False, default=0)
-    _next_offset: int = field(init=False, repr=False, compare=False, default=None)
+    _count: NoneType = field(init=False, repr=False, compare=False, default=0)
+    _next_offset: NoneType = field(init=False, repr=False, compare=False, default=None)
 
     @property
     def count(self) -> int:
@@ -70,7 +84,7 @@ class PagingMixin:
         if size is None:
             size = self.size or 100
 
-        size = min(size, 10000)
+        size = min(size, config.server.max_results)
 
         self._count = 0
         self._next_offset = offset
@@ -95,19 +109,39 @@ class PagingResponseMixin:
 
 
 # Authentication models
-@dataclass
+@dataclass(frozen=True)
 class User:
     """User model for authentication."""
 
     email: str
+    as_user: bool = False
 
-    @property
+    @cached_property
     def is_admin(self) -> bool:
         """Get user id."""
-        return self.email in config.server.admin_emails
+        return not self.as_user and self.email in config.server.admin_emails
+
+    @cached_property
+    def work_file(self) -> Path:
+        """Get user work file."""
+        if self.is_admin:
+            # Admin user work file is the config file. That file is thus shared
+            # by all admins.
+            work_file = config.work_file
+
+        else:
+            email_hash = hashlib.sha256(self.email.encode()).hexdigest()
+            work_file = (
+                config.server.client_dir
+                / f"{self.email.split('@')[0]}_{email_hash[:8]}"
+                / "work.yaml"
+            )
+
+        work_file.parent.mkdir(parents=True, exist_ok=True)
+        return work_file
 
 
-@dataclass
+@dataclass(frozen=True)
 class AuthorizedUser(User):
     """Response model for authentication."""
 
@@ -119,7 +153,13 @@ class SearchRequest(PagingMixin, Coll.Search):
     """Request model for paper search."""
 
     # TODO: hide the format field from the api endpoint schema
-    format: int = field(init=False, repr=False, compare=False, default=None)
+    format: NoneType = field(
+        init=False, repr=False, compare=False, default_factory=lambda: RawFormatter
+    )
+
+    def __post_init__(self):
+        # Type hinting for format
+        self.format: RawFormatter = self.format
 
 
 @dataclass
@@ -133,9 +173,8 @@ class SearchResponse(PagingResponseMixin):
 class LocateFulltextRequest(PagingMixin, Fulltext.Locate):
     """Request model for fulltext locate."""
 
-    # Disable format
-    def format(self, *args, **kwargs):
-        pass
+    def format(self, urls: list[URL]):
+        yield from RawFormatter(urls)
 
 
 @dataclass
@@ -154,9 +193,8 @@ class DownloadFulltextRequest(Fulltext.Download):
         init=False, repr=False, compare=False, default="no_download"
     )
 
-    # Disable format
-    def format(self, *args, **kwargs):
-        pass
+    def format(self, pdf: PDF):
+        yield from RawFormatter([pdf])
 
     def __post_init__(self):
         if isinstance(self.ref, str):
@@ -178,6 +216,11 @@ class DownloadFulltextRequest(Fulltext.Download):
 class IncludeRequest(Work.Include):
     """Request model for work state paper include."""
 
+    # Minimum score for saving
+    score: float = field(
+        default_factory=lambda: max(f.score for f in config.focuses.focuses)
+    )
+
 
 @dataclass
 class IncludeResponse:
@@ -191,16 +234,45 @@ class ViewRequest(PagingMixin, Work.View):
     """Request model for work state paper view."""
 
     what: Literal["paper"] = field(init=False, repr=False, compare=False, default="paper")
-    n: int = field(init=False, repr=False, compare=False, default=None)
+    n: NoneType = field(init=False, repr=False, compare=False, default=None)
 
     # TODO: hide the format field from the api endpoint schema
-    format: int = field(init=False, repr=False, compare=False, default=None)
+    format: NoneType = field(
+        init=False, repr=False, compare=False, default_factory=lambda: RawFormatter
+    )
 
     def __post_init__(self):
-        self.n = self.offset + self.size
+        # Type hinting for format
+        self.format: RawFormatter = self.format
 
-    def format(self, *args, **kwargs):
-        pass
+
+@dataclass
+class AddRequest(Work.Get):
+    # disable command
+    command: NoneType = field(init=False, repr=False, compare=False, default=None)
+
+    papers: list[dict] = field(default_factory=list)
+
+    def __post_init__(self):
+        self.user: User = None
+
+    def iterate(self, **kwargs) -> Generator[PaperInfo, None, None]:
+        papers = deserialize(list[Paper], self.papers)
+
+        for paper in papers:
+            yield PaperInfo(
+                key=f"user:{self.user.email}",
+                acquired=datetime.datetime.now(datetime.timezone.utc),
+                paper=paper,
+                info={"added_by": {"user": self.user.email}},
+            )
+
+
+@dataclass
+class AddResponse:
+    """Response model for work state paper add."""
+
+    total: int
 
 
 @dataclass
@@ -225,49 +297,15 @@ class LoginResponse:
     token_url: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class AuthResponse(AuthorizedUser):
     """Response model for authentication."""
 
-    pass
+    as_user: NoneType = field(init=False, repr=False, compare=False, default=False)
 
 
 # Security scheme for API documentation
 security = HTTPBearer(auto_error=False)
-
-
-# Authentication dependencies
-async def get_current_user(
-    request: Request,
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
-) -> User:
-    """Get current user from JWT token or session."""
-    user = None
-
-    # Try to get user from Authorization header first
-    if credentials:
-        try:
-            user = jwt.decode(
-                credentials.credentials,
-                config.server.jwt_secret_key,
-                algorithms=["HS256"],
-            )
-        except JWTError:
-            pass
-
-    # Try to get user from session
-    user = user or request.session.get("user")
-    if user:
-        return deserialize(User, user)
-
-    raise HTTPException(status_code=401, detail="Authentication required")
-
-
-async def get_current_admin(user: User = Depends(get_current_user)) -> User:
-    """Get current admin user."""
-    if not user.is_admin:
-        raise HTTPException(status_code=403, detail="Admin access required")
-    return user
 
 
 def create_app() -> FastAPI:
@@ -286,15 +324,13 @@ def create_app() -> FastAPI:
     )
 
     @app.exception_handler(Exception)
-    async def http_exception_handler(request, exc):
-        _EXCLUDED_STATUSES = {404}
-        if getattr(exc, "status_code", None) not in _EXCLUDED_STATUSES:
-            restapi_logger.error(exc, exc_info=True)
-        return await default_http_exception_handler(request, exc)
+    async def exception_handler(request, exc):
+        restapi_logger.exception(exc)
 
-    @enum.unique
-    class HeadlessLoginFlag(enum.Enum):
-        ACTIVE = "active"
+        if getattr(exc, "status_code", None) is None:
+            exc = HTTPException(status_code=500, detail="Internal Server Error")
+
+        return await http_exception_handler(request, exc)
 
     @lru_cache(maxsize=100)
     def headless_login(
@@ -304,6 +340,10 @@ def create_app() -> FastAPI:
             return None
 
         return {"event": asyncio.Event(), "user": None, "status": None}
+
+    @lru_cache(maxsize=100000)
+    def active_logins(work_file: Path) -> asyncio.Lock:
+        return asyncio.Lock()
 
     def check_headless_state(state: str) -> bool:
         return state and headless_login(state)["status"] is not None
@@ -342,11 +382,72 @@ def create_app() -> FastAPI:
         },
     )
 
-    focus_file = config.server.client_dir / "focuses.yaml"
+    # Authentication dependencies
+    async def get_current_user(
+        request: Request,
+        as_user: bool = False,
+        credentials: HTTPAuthorizationCredentials = Depends(security),
+    ) -> AsyncGenerator[User, None]:
+        """Get current user from JWT token or session."""
+        user = None
 
-    if not focus_file.exists():
-        focus_file.parent.mkdir(exist_ok=True, parents=True)
-        dump(Focuses, config.focuses, dest=focus_file)
+        # Try to get user from Authorization header first
+        if credentials:
+            try:
+                user = jwt.decode(
+                    credentials.credentials,
+                    config.server.jwt_secret_key,
+                    algorithms=["HS256"],
+                )
+            except JWTError:
+                pass
+
+        # Try to get user from session
+        user = user or request.session.get("user")
+
+        if user:
+            user = {**user, "as_user": as_user}
+            user = deserialize(User, user)
+            yield user
+
+        else:
+            raise HTTPException(status_code=401, detail="Authentication required")
+
+    async def acquire_current_user(
+        user: User = Depends(get_current_user),
+    ) -> AsyncGenerator[User, None]:
+        """Acquire current user lock."""
+        locked = False
+        # As all admins share the same work file, the lock is also shared by all
+        # admins.
+        lock = active_logins(user.work_file)
+
+        try:
+            async with asyncio.timeout(5):
+                locked = await lock.acquire()
+            yield user
+
+        except TimeoutError:
+            raise HTTPException(
+                status_code=403,
+                detail="User is already logged in and running operations. Please logout from other sessions or wait for the operation to finish and try again.",
+            )
+
+        finally:
+            if locked:
+                lock.release()
+
+    acquire_current_user_as_user = partial(
+        acquire_current_user, user=Depends(partial(get_current_user, as_user=True))
+    )
+
+    async def acquire_current_admin(
+        user: User = Depends(acquire_current_user),
+    ) -> AsyncGenerator[User, None]:
+        """Get current admin user."""
+        if not user.is_admin:
+            raise HTTPException(status_code=403, detail="Admin access required")
+        yield user
 
     @app.get("/")
     async def root():
@@ -457,28 +558,46 @@ def create_app() -> FastAPI:
         response_model=SearchResponse,
         dependencies=[Depends(get_current_user)],
     )
-    async def search_papers(request: SearchRequest):
+    async def search_papers(request: SearchRequest = None):
         """Search for papers in the collection."""
+        request = request or SearchRequest()
+
         coll = Coll(command=None)
 
         # Perform search using the collection's search method
-        results = list(request.slice(request.run(coll)))
+        gen = request.run(coll)
+        results = list(request.slice(gen))
 
         return SearchResponse(
             results=results,
             count=request.count,
             next_offset=request.next_offset,
-            total=len(coll.collection),
+            # Is this wierd to iterate over the whole collection to get the
+            # total of matching results?
+            total=request.offset + len(results) + len(list(gen)),
         )
 
-    @app.get(
-        "/work/view",
-        response_model=ViewResponse,
-        dependencies=[Depends(get_current_user)],
-    )
-    async def work_view_papers(request: ViewRequest):
+    @app.post("/work/add", response_model=AddResponse)
+    async def work_add_papers(
+        request: AddRequest, user: User = Depends(acquire_current_user_as_user)
+    ):
+        """Add papers to the user's work."""
+
+        request.user = user
+
+        work = Work(command=None, work_file=user.work_file)
+        request.run(work)
+
+        return AddResponse(total=len(work.top))
+
+    @app.get("/work/view", response_model=ViewResponse)
+    async def work_view_papers(
+        request: ViewRequest = None, user: User = Depends(get_current_user)
+    ):
+        request = request or ViewRequest()
+
         """Search for papers in the collection."""
-        work = Work(command=None)
+        work = Work(command=None, work_file=user.work_file)
 
         papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
 
@@ -486,17 +605,15 @@ def create_app() -> FastAPI:
             results=serialize(list[Scored[Paper]], papers),
             count=request.count,
             next_offset=request.next_offset,
-            total=len(papers),
+            total=len(work.top),
         )
 
-    @app.get(
-        "/work/include",
-        response_model=IncludeResponse,
-        dependencies=[Depends(get_current_admin)],
-    )
-    async def work_include_papers(request: IncludeRequest):
+    @app.get("/work/include", response_model=IncludeResponse)
+    async def work_include_papers(
+        request: IncludeRequest, user: User = Depends(acquire_current_user_as_user)
+    ):
         """Search for papers in the collection."""
-        work = Work(command=None)
+        work = Work(command=None, work_file=user.work_file)
 
         added = request.run(work)
 
@@ -505,23 +622,29 @@ def create_app() -> FastAPI:
     @app.get(
         "/focus/auto",
         response_model=Focuses,
-        dependencies=[Depends(get_current_admin)],
+        dependencies=[Depends(acquire_current_admin)],
     )
-    async def autofocus(request: AutoFocusRequest):
+    async def autofocus(request: AutoFocusRequest = None):
+        request = request or AutoFocusRequest()
+
         """Autofocus the collection."""
-        focus = Focus(command=None, focus_file=focus_file)
+        focus = Focus(command=None)
 
         return request.run(focus)
 
-    @app.get("/fulltext/locate", dependencies=[Depends(get_current_user)])
+    @app.get(
+        "/fulltext/locate",
+        response_model=LocateFulltextResponse,
+        dependencies=[Depends(get_current_user)],
+    )
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
         urls = list(request.slice(request.run()))
         return LocateFulltextResponse(
             results=urls,
-            total=len(urls),
             count=request.count,
             next_offset=request.next_offset,
+            total=len(urls),
         )
 
     @app.get("/fulltext/download", dependencies=[Depends(get_current_user)])

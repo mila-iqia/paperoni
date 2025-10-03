@@ -139,9 +139,7 @@ class Fulltext:
             else:
                 ref = self.ref
 
-            urls = list(locate_all(ref))
-            self.format(urls)
-            return urls
+            yield from self.format(locate_all(ref))
 
     @dataclass
     class Download:
@@ -160,8 +158,7 @@ class Fulltext:
             p = get_pdf(
                 self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
             )
-            self.format(p)
-            return p
+            yield from self.format(p)
 
     # Command to execute
     command: TaggedUnion[Locate, Download]
@@ -205,7 +202,7 @@ class Refine:
 
         if self.merge:
             results = [merge_all(results)]
-        self.format(results)
+        yield from self.format(results)
 
 
 @dataclass
@@ -284,14 +281,14 @@ class Work:
 
         def run(self, work: "Work"):
             worksets = itertools.islice(work.top, self.n) if self.n else work.top
-            papers: list[Scored[Paper]] = [
+            papers: Generator[Scored[Paper], None, None] = (
                 Scored(ws.score, ws.value.current) for ws in worksets
-            ]
+            )
             match self.what:
                 case "title":
-                    self.format(p.value.title for p in papers)
+                    yield from self.format(p.value.title for p in papers)
                 case "paper":
-                    self.format(papers)
+                    yield from self.format(papers)
                 case "has_pdf":
                     n = total = 0
 
@@ -310,10 +307,8 @@ class Work:
                                 print(exc)
                             yield {"has_pdf": pdf is not None, "title": paper.title}
 
-                    self.format(gen(), dict[str, JSON])
+                    yield from self.format(gen(), dict[str, JSON])
                     print(f"{n}/{total} papers have PDFs")
-
-            return papers
 
     @dataclass
     class Refine:
@@ -389,7 +384,7 @@ class Work:
         def run(self, work: "Work"):
             selected = self.extract(
                 work,
-                start=self.n,
+                stop=self.n,
                 filter=lambda sws: sws.score >= self.score,
             )
             added = work.collection.add_papers(selected)
@@ -501,11 +496,9 @@ class Coll:
         format: Formatter = TerminalFormatter
 
         def run(self, coll: "Coll") -> Generator[Paper, None, None]:
-            for paper in coll.collection.search(
+            yield from coll.collection.search(
                 title=self.title, author=self.author, institution=self.institution
-            ):
-                self.format([paper])
-                yield paper
+            )
 
     # Command to execute
     command: TaggedUnion[Search]
@@ -561,8 +554,7 @@ class Focus:
                 focus.collection.search(start_date=start_date), config.autofocus
             )
 
-            autofocus_file = focus.focus_file.parent / f"auto{focus.focus_file.name}"
-            dump(Focuses, focus.focuses, dest=autofocus_file)
+            dump(Focuses, focus.focuses, dest=focus._autofocus_file)
             return focus.focuses
 
     # Command to execute
@@ -570,11 +562,20 @@ class Focus:
 
     # List of focuses
     # [alias: -f]
-    focus_file: Path
+    focus_file: Path = field(
+        default_factory=lambda: config.metadata.focuses.file.exists()
+        and config.metadata.focuses.file
+    )
 
     # Collection dir
     # [alias: -c]
     collection_file: Path = None
+
+    def __post_init__(self):
+        self._autofocus_file = (
+            self.focus_file.parent / f"auto{self.focus_file.name}"
+            or config.metadata.focuses.autofile
+        )
 
     @cached_property
     def focuses(self):
