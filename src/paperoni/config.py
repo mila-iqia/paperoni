@@ -1,4 +1,5 @@
 import os
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -36,12 +37,16 @@ class Refine:
 @dataclass
 class Server:
     max_results: int = 10000
+    process_pool_executor: dict = field(default_factory=dict)
     client_dir: Path = None
     secret_key: Secret[str] = None
     jwt_secret_key: Secret[str] = None
     client_id: Secret[str] = None
     client_secret: Secret[str] = None
     admin_emails: set[str] = field(default_factory=set)
+
+    def __post_init__(self):
+        self.process_pool = ProcessPoolExecutor(**self.process_pool_executor)
 
 
 @dataclass
@@ -58,18 +63,17 @@ class PaperoniConfig:
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
     server: Server = None
-    metadata: Meta[Path | list[Path] | Meta | Any] = field(
-        init=False, repr=False, compare=False, default_factory=Meta
-    )
 
     def __post_init__(self):
+        self.metadata: Meta[Path | list[Path] | Meta | Any] = Meta()
+
         g_file = os.environ.get("GIFNOC_FILE", None)
         g_file = (g_file and g_file.split(",")) or []
         m_files = self.metadata.files or g_file
         self.metadata.files = [Path(f).resolve() for f in m_files]
         self.metadata.file = (self.metadata.files and self.metadata.files[0]) or None
 
-        self.metadata.focuses = Meta[Focuses]()
+        self.metadata.focuses = Meta()
 
         # The focuses and autofocuses files should probably always be relative
         # to the config file and use focuses.yaml and autofocuses.yaml as names.

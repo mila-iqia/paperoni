@@ -46,10 +46,10 @@ class HeadlessLoginFlag(enum.Enum):
     ACTIVE = "active"
 
 
-@auto_singleton("raw")
-class RawFormatter(Formatter):
+@auto_singleton("void")
+class VoidFormatter(Formatter):
     def __call__(self, things):
-        yield from things
+        pass
 
 
 @dataclass
@@ -61,8 +61,8 @@ class PagingMixin:
     # Max number of results to return
     size: int = field(default=100)
 
-    _count: NoneType = field(init=False, repr=False, compare=False, default=0)
-    _next_offset: NoneType = field(init=False, repr=False, compare=False, default=None)
+    _count: NoneType = field(repr=False, compare=False, default=0)
+    _next_offset: NoneType = field(repr=False, compare=False, default=None)
 
     @property
     def count(self) -> int:
@@ -96,6 +96,16 @@ class PagingMixin:
         if self._count < self.size:
             # No more results
             self._next_offset = None
+
+    @classmethod
+    def serieux_deserialize(cls, obj: dict, ctx, call_next):
+        deserialized = cls(**{k: v for k, v in obj.items() if k in vars(PagingMixin())})
+        return deserialized
+
+    @classmethod
+    def serieux_serialize(cls, obj: "PagingMixin", ctx, call_next):
+        serialized = {k: v for k, v in vars(obj).items() if k in vars(PagingMixin())}
+        return serialized
 
 
 @dataclass
@@ -154,12 +164,28 @@ class SearchRequest(PagingMixin, Coll.Search):
 
     # TODO: hide the format field from the api endpoint schema
     format: NoneType = field(
-        init=False, repr=False, compare=False, default_factory=lambda: RawFormatter
+        init=False, repr=False, compare=False, default_factory=lambda: VoidFormatter
     )
 
     def __post_init__(self):
         # Type hinting for format
-        self.format: RawFormatter = self.format
+        self.format: VoidFormatter = self.format
+
+    @classmethod
+    def serieux_deserialize(cls, obj: dict, ctx, call_next):
+        fields: dict = {}
+        for parent in cls.__bases__:
+            fields.update(vars(deserialize(parent, obj, ctx)))
+        fields.pop("format")
+        return cls(**fields)
+
+    @classmethod
+    def serieux_serialize(cls, obj: "SearchRequest", ctx, call_next):
+        serialized = {}
+        for parent in cls.__bases__:
+            serialized.update(serialize(parent, obj, ctx))
+        serialized.pop("format")
+        return serialized
 
 
 @dataclass
@@ -174,7 +200,21 @@ class LocateFulltextRequest(PagingMixin, Fulltext.Locate):
     """Request model for fulltext locate."""
 
     def format(self, urls: list[URL]):
-        yield from RawFormatter(urls)
+        VoidFormatter(urls)
+
+    @classmethod
+    def serieux_deserialize(cls, obj: dict, ctx, call_next):
+        fields: dict = {}
+        for parent in cls.__bases__:
+            fields.update(vars(deserialize(parent, obj, ctx)))
+        return cls(**fields)
+
+    @classmethod
+    def serieux_serialize(cls, obj: "LocateFulltextRequest", ctx, call_next):
+        serialized = {}
+        for parent in cls.__bases__:
+            serialized.update(serialize(parent, obj, ctx))
+        return serialized
 
 
 @dataclass
@@ -190,11 +230,11 @@ class DownloadFulltextRequest(Fulltext.Download):
 
     ref: str | list[str]
     cache_policy: Literal["no_download"] = field(
-        init=False, repr=False, compare=False, default="no_download"
+        repr=False, compare=False, default="no_download"
     )
 
     def format(self, pdf: PDF):
-        yield from RawFormatter([pdf])
+        VoidFormatter([pdf])
 
     def __post_init__(self):
         if isinstance(self.ref, str):
@@ -238,12 +278,32 @@ class ViewRequest(PagingMixin, Work.View):
 
     # TODO: hide the format field from the api endpoint schema
     format: NoneType = field(
-        init=False, repr=False, compare=False, default_factory=lambda: RawFormatter
+        init=False, repr=False, compare=False, default_factory=lambda: VoidFormatter
     )
 
     def __post_init__(self):
         # Type hinting for format
-        self.format: RawFormatter = self.format
+        self.format: VoidFormatter = self.format
+
+    @classmethod
+    def serieux_deserialize(cls, obj: dict, ctx, call_next):
+        fields: dict = {}
+        for parent in cls.__bases__:
+            fields.update(vars(deserialize(parent, obj, ctx)))
+        fields.pop("format")
+        fields.pop("n")
+        fields.pop("what")
+        return cls(**fields)
+
+    @classmethod
+    def serieux_serialize(cls, obj: "ViewRequest", ctx, call_next):
+        serialized = {}
+        for parent in cls.__bases__:
+            serialized.update(serialize(parent, obj, ctx))
+        serialized.pop("format")
+        serialized.pop("n")
+        serialized.pop("what")
+        return serialized
 
 
 @dataclass
@@ -306,6 +366,46 @@ class AuthResponse(AuthorizedUser):
 
 # Security scheme for API documentation
 security = HTTPBearer(auto_error=False)
+
+
+def _search(request: dict):
+    request: SearchRequest = deserialize(SearchRequest, request)
+
+    coll = Coll(command=None)
+
+    # Perform search using the collection's search method
+    all_matches = request.run(coll)
+    results = list(request.slice(all_matches))
+
+    return results, request.count, request.next_offset, len(all_matches)
+
+
+def _work_view(request: dict, user: User):
+    request: ViewRequest = deserialize(ViewRequest, request)
+
+    """Search for papers in the collection."""
+    work = Work(command=None, work_file=user.work_file)
+
+    papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
+
+    return papers, request.count, request.next_offset, len(work.top)
+
+
+def _locate_fulltext(request: dict):
+    request: LocateFulltextRequest = deserialize(LocateFulltextRequest, request)
+    all_urls = request.run()
+    urls = list(request.slice(all_urls))
+    return urls, request.count, request.next_offset, len(all_urls)
+
+
+def _download_fulltext(request: dict):
+    request: DownloadFulltextRequest = deserialize(DownloadFulltextRequest, request)
+    return request.run()
+
+
+async def run_in_process_pool(func, *args):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(config.server.process_pool, func, *args)
 
 
 def create_app() -> FastAPI:
@@ -562,19 +662,11 @@ def create_app() -> FastAPI:
         """Search for papers in the collection."""
         request = request or SearchRequest()
 
-        coll = Coll(command=None)
-
-        # Perform search using the collection's search method
-        gen = request.run(coll)
-        results = list(request.slice(gen))
-
+        results, count, next_offset, total = await run_in_process_pool(
+            _search, serialize(SearchRequest, request)
+        )
         return SearchResponse(
-            results=results,
-            count=request.count,
-            next_offset=request.next_offset,
-            # Is this wierd to iterate over the whole collection to get the
-            # total of matching results?
-            total=request.offset + len(results) + len(list(gen)),
+            results=results, count=count, next_offset=next_offset, total=total
         )
 
     @app.post("/work/add", response_model=AddResponse)
@@ -596,16 +688,14 @@ def create_app() -> FastAPI:
     ):
         request = request or ViewRequest()
 
-        """Search for papers in the collection."""
-        work = Work(command=None, work_file=user.work_file)
-
-        papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
-
+        papers, count, next_offset, total = await run_in_process_pool(
+            _work_view, serialize(ViewRequest, request), user
+        )
         return ViewResponse(
             results=serialize(list[Scored[Paper]], papers),
-            count=request.count,
-            next_offset=request.next_offset,
-            total=len(work.top),
+            count=count,
+            next_offset=next_offset,
+            total=total,
         )
 
     @app.get("/work/include", response_model=IncludeResponse)
@@ -639,18 +729,22 @@ def create_app() -> FastAPI:
     )
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
-        urls = list(request.slice(request.run()))
+        results, count, next_offset, total = await run_in_process_pool(
+            _locate_fulltext, serialize(LocateFulltextRequest, request)
+        )
         return LocateFulltextResponse(
-            results=urls,
-            count=request.count,
-            next_offset=request.next_offset,
-            total=len(urls),
+            results=results,
+            count=count,
+            next_offset=next_offset,
+            total=total,
         )
 
     @app.get("/fulltext/download", dependencies=[Depends(get_current_user)])
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
-        pdf = request.run()
+        pdf = await run_in_process_pool(
+            _download_fulltext, serialize(DownloadFulltextRequest, request)
+        )
 
         # Return as file download
         async def async_iter_pdf():

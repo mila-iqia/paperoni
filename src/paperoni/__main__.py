@@ -139,7 +139,10 @@ class Fulltext:
             else:
                 ref = self.ref
 
-            yield from self.format(locate_all(ref))
+            urls = list(locate_all(ref))
+            self.format(urls)
+
+            return urls
 
     @dataclass
     class Download:
@@ -158,7 +161,8 @@ class Fulltext:
             p = get_pdf(
                 self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
             )
-            yield from self.format(p)
+            self.format(p)
+            return p
 
     # Command to execute
     command: TaggedUnion[Locate, Download]
@@ -202,7 +206,7 @@ class Refine:
 
         if self.merge:
             results = [merge_all(results)]
-        yield from self.format(results)
+        self.format(results)
 
 
 @dataclass
@@ -281,14 +285,14 @@ class Work:
 
         def run(self, work: "Work"):
             worksets = itertools.islice(work.top, self.n) if self.n else work.top
-            papers: Generator[Scored[Paper], None, None] = (
+            papers: list[Scored[Paper]] = [
                 Scored(ws.score, ws.value.current) for ws in worksets
-            )
+            ]
             match self.what:
                 case "title":
-                    yield from self.format(p.value.title for p in papers)
+                    self.format(p.value.title for p in papers)
                 case "paper":
-                    yield from self.format(papers)
+                    self.format(papers)
                 case "has_pdf":
                     n = total = 0
 
@@ -307,8 +311,10 @@ class Work:
                                 print(exc)
                             yield {"has_pdf": pdf is not None, "title": paper.title}
 
-                    yield from self.format(gen(), dict[str, JSON])
+                    self.format(gen(), dict[str, JSON])
                     print(f"{n}/{total} papers have PDFs")
+
+            return papers
 
     @dataclass
     class Refine:
@@ -495,10 +501,14 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
-        def run(self, coll: "Coll") -> Generator[Paper, None, None]:
-            yield from coll.collection.search(
-                title=self.title, author=self.author, institution=self.institution
+        def run(self, coll: "Coll") -> list[Paper]:
+            papers = list(
+                coll.collection.search(
+                    title=self.title, author=self.author, institution=self.institution
+                )
             )
+            self.format(papers)
+            return papers
 
     # Command to execute
     command: TaggedUnion[Search]
