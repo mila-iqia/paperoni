@@ -35,7 +35,6 @@ dependencies = [
     "uvicorn[standard]>=0.35.0",
     "authlib>=1.6.4",
     "python-jose[cryptography]>=3.5.0",
-    "google-auth[fastapi]>=2.40.3",
     "itsdangerous>=2.2.0",
 ]
 
