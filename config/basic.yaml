@@ -43,9 +43,21 @@ paperoni:
       institution_score_threshold: 1
   refine:
     prompt:
-      $class: GenAIPrompt
+      $class: paperoni.prompt:GenAIPrompt
       model: gemini-2.5-pro
       api_key: ${paperoni.api_keys.gemini}
+  work_file: ${paperoni.data_path}/work.json
   collection:
     $class: paperoni.collection.filecoll:FileCollection
-    file: ${paperoni.data_path}/collection.yaml
+    file: ${paperoni.data_path}/collection.json
+  server:
+    max_results: 10000
+    process_pool_executor:
+      max_workers: 4
+    secret_key: _
+    client_dir: ${paperoni.data_path}/serve
+    client_id: _
+    client_secret: _
+    jwt_secret_key: _
+    admin_emails:
+    - "satya.ortiz-gagne@mila.quebec"

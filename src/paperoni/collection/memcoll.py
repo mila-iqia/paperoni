@@ -21,7 +21,7 @@ _id_types = {
 }
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MemCollection(PaperCollection):
     _last_id: int = field(compare=False, default=None)
     _papers: list[CollectionPaper] = field(default_factory=list)
@@ -135,3 +135,6 @@ class MemCollection(PaperCollection):
     def commit(self) -> None:
         # MemCollection, nothing to commit
         pass
+
+    def __len__(self) -> int:
+        return len(self._papers)

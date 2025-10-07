@@ -17,3 +17,4 @@ requests-cache.sqlite
 .idea
 .cursorignore
 **secrets**
+.cursorignore

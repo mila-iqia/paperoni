@@ -28,8 +28,8 @@ def work(command, **kwargs):
 def test_work_get_does_not_duplicate(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
     # update the max number of papers in the state to allow for more papers
@@ -37,13 +37,13 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
     dump(
         Top[Scored[CommentRec[PaperWorkingSet, float]]],
         state,
-        dest=tmp_path / "state.yaml",
+        dest=tmp_path / "state.json",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
     paper_keys = {pinfo.key for scored in state for pinfo in scored.value.collected}
@@ -59,21 +59,21 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
 def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
     work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
     work(
         Work.Include(),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
     state = work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
-    col = FileCollection(tmp_path / "collection.yaml")
+    col = FileCollection(file=tmp_path / "collection.json")
     for paper in (scored.value.current for scored in state):
         assert col.find_paper(paper) is None
 
@@ -81,8 +81,8 @@ def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
 def test_work_updates_collection_papers(tmp_path: Path):
     state = work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
     # remove a link from a paper to fake an update on the next work-get
@@ -91,22 +91,22 @@ def test_work_updates_collection_papers(tmp_path: Path):
     dump(
         Top[Scored[CommentRec[PaperWorkingSet, float]]],
         state,
-        dest=tmp_path / "state.yaml",
+        dest=tmp_path / "state.json",
     )
 
     work(
         Work.Include(),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
-    col = FileCollection(tmp_path / "collection.yaml")
+    col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
 
     mem_col.add_papers([scored.value.current for scored in state])
@@ -123,17 +123,17 @@ def test_work_updates_collection_papers(tmp_path: Path):
 
     work(
         Work.Include(),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
     state = work(
         Work.Get(command=SemanticScholar().query),
-        work_file=tmp_path / "state.yaml",
-        collection_file=tmp_path / "collection.yaml",
+        work_file=tmp_path / "state.json",
+        collection_file=tmp_path / "collection.json",
     )
 
-    col = FileCollection(tmp_path / "collection.yaml")
+    col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
     mem_col.add_papers([scored.value.current for scored in state])
     assert mem_col.find_paper(paper_to_update) is not None

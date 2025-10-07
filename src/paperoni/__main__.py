@@ -9,6 +9,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Generator, Literal
 
+import uvicorn
 import yaml
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
@@ -26,29 +27,23 @@ from serieux import (
     dump,
     serialize,
 )
-from serieux.features.proxy import ProxyBase
 from serieux.features.tagset import FromEntryPoint
 
+from .collection.abc import PaperCollection
 from .collection.filecoll import FileCollection
 from .collection.finder import Finder
 from .config import config
 from .dash import History
 from .display import display, terminal_width
-from .fulltext.locate import locate_all
-from .fulltext.pdf import CachePolicies, get_pdf
+from .fulltext.locate import URL, locate_all
+from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .model import PaperInfo
+from .model.classes import Paper
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
-from .utils import prog, soft_fail, url_to_id
-
-
-def deprox(x):
-    if isinstance(x, ProxyBase):
-        return x._obj
-    else:
-        return x
+from .utils import deprox, prog, soft_fail, url_to_id
 
 
 class Formatter(AutoRegistered):
@@ -128,27 +123,52 @@ class Discover(Productor):
 class Fulltext:
     """Download and process fulltext."""
 
-    def locate(
+    @dataclass
+    class Locate:
         # Reference to locate
         # [positional]
-        ref: str,
-    ):
-        for url in locate_all(ref):
-            print(f"\033[36m[{url.info}]\033[0m {url.url}")
+        ref: str
 
-    def download(
+        def format(self, urls: list[URL]):
+            for url in urls:
+                print(f"\033[36m[{url.info}]\033[0m {url.url}")
+
+        def run(self):
+            if self.ref.startswith("http"):
+                ref = ":".join(url_to_id(self.ref) or ["", ""])
+            else:
+                ref = self.ref
+
+            urls = list(locate_all(ref))
+            self.format(urls)
+
+            return urls
+
+    @dataclass
+    class Download:
         # Reference to locate
         # [positional]
         # [nargs: +]
-        ref: list[str],
+        ref: list[str]
         # Cache policy
         # [alias: -p]
-        cache_policy: Literal["use", "use_best", "no_download", "force"] = "use",
-    ):
-        p = get_pdf(ref, cache_policy=getattr(CachePolicies, cache_policy.upper()))
-        print("Downloaded into:", p.pdf_path.resolve())
+        cache_policy: Literal["use", "use_best", "no_download", "force"] = "use"
 
-    run: TaggedUnion[Auto[locate], Auto[download]]
+        def format(self, pdf: PDF):
+            print("Downloaded into:", pdf.pdf_path.resolve())
+
+        def run(self):
+            p = get_pdf(
+                self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
+            )
+            self.format(p)
+            return p
+
+    # Command to execute
+    command: TaggedUnion[Locate, Download]
+
+    def run(self):
+        self.command.run()
 
 
 @dataclass
@@ -220,6 +240,7 @@ class Work:
                         work.top.resort()
                     continue
 
+                col_paper = None
                 if (
                     work.collection
                     and (col_paper := work.collection.find_paper(pinfo.paper))
@@ -263,19 +284,22 @@ class Work:
         n: int = None
 
         def run(self, work: "Work"):
-            worksets = list(itertools.islice(work.top, self.n) if self.n else work.top)
+            worksets = itertools.islice(work.top, self.n) if self.n else work.top
+            papers: list[Scored[Paper]] = [
+                Scored(ws.score, ws.value.current) for ws in worksets
+            ]
             match self.what:
                 case "title":
-                    self.format(ws.value.current.title for ws in worksets)
+                    self.format(p.value.title for p in papers)
                 case "paper":
-                    self.format(Scored(ws.score, ws.value.current) for ws in worksets)
+                    self.format(papers)
                 case "has_pdf":
                     n = total = 0
 
                     def gen():
                         nonlocal n, total
-                        for ws in worksets:
-                            paper = ws.value.current
+                        for p in papers:
+                            paper = p.value
                             pdf = None
                             total += 1
                             try:
@@ -289,6 +313,8 @@ class Work:
 
                     self.format(gen(), dict[str, JSON])
                     print(f"{n}/{total} papers have PDFs")
+
+            return papers
 
     @dataclass
     class Refine:
@@ -364,11 +390,13 @@ class Work:
         def run(self, work: "Work"):
             selected = self.extract(
                 work,
-                start=self.n,
+                stop=self.n,
                 filter=lambda sws: sws.score >= self.score,
             )
-            work.collection.add_papers(selected)
+            added = work.collection.add_papers(selected)
             work.save()
+
+            return added
 
     @dataclass
     class Exclude(Extractor):
@@ -425,7 +453,7 @@ class Work:
     @cached_property
     def collection(self):
         if self.collection_file:
-            return FileCollection(self.collection_file)
+            return FileCollection(file=self.collection_file)
         else:
             return config.collection
 
@@ -473,11 +501,14 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
-        def run(self, coll):
-            results = coll.collection.search(
-                title=self.title, author=self.author, institution=self.institution
+        def run(self, coll: "Coll") -> list[Paper]:
+            papers = list(
+                coll.collection.search(
+                    title=self.title, author=self.author, institution=self.institution
+                )
             )
-            self.format(results)
+            self.format(papers)
+            return papers
 
     # Command to execute
     command: TaggedUnion[Search]
@@ -487,9 +518,9 @@ class Coll:
     collection_file: Path = None
 
     @cached_property
-    def collection(self):
+    def collection(self) -> PaperCollection:
         if self.collection_file:
-            return FileCollection(self.collection_file)
+            return FileCollection(file=self.collection_file)
         else:
             return config.collection
 
@@ -533,19 +564,28 @@ class Focus:
                 focus.collection.search(start_date=start_date), config.autofocus
             )
 
-            autofocus_file = focus.focus_file.parent / f"auto{focus.focus_file.name}"
-            dump(Focuses, focus.focuses, dest=autofocus_file)
+            dump(Focuses, focus.focuses, dest=focus._autofocus_file)
+            return focus.focuses
 
     # Command to execute
     command: TaggedUnion[AutoFocus]
 
     # List of focuses
     # [alias: -f]
-    focus_file: Path
+    focus_file: Path = field(
+        default_factory=lambda: config.metadata.focuses.file.exists()
+        and config.metadata.focuses.file
+    )
 
     # Collection dir
     # [alias: -c]
     collection_file: Path = None
+
+    def __post_init__(self):
+        self._autofocus_file = (
+            self.focus_file.parent / f"auto{self.focus_file.name}"
+            or config.metadata.focuses.autofile
+        )
 
     @cached_property
     def focuses(self):
@@ -554,7 +594,7 @@ class Focus:
     @cached_property
     def collection(self):
         if self.collection_file:
-            return FileCollection(self.collection_file)
+            return FileCollection(file=self.collection_file)
         else:
             return config.collection
 
@@ -562,7 +602,32 @@ class Focus:
         self.command.run(self)
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus]
+@dataclass
+class Serve:
+    """Serve paperoni through a Rest API."""
+
+    # Host to bind to
+    host: str = "127.0.0.1"
+
+    # Port to bind to
+    # [alias: -p]
+    port: int = 8000
+
+    # Enable auto-reload for development
+    # [alias: -r]
+    reload: bool = False
+
+    def run(self):
+        from paperoni.restapi import create_app
+
+        app = create_app()
+        uvicorn.run(app, host=self.host, port=self.port, reload=self.reload)
+
+    def no_dash(self):
+        return True
+
+
+PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve]
 
 
 @dataclass
@@ -586,7 +651,7 @@ class PaperoniInterface:
             self.dash = sys.stdout.isatty()
 
     def run(self):
-        if self.dash:
+        if self.dash and not getattr(self.command, "no_dash", lambda: False)():
             enable_dash()
         if self.log:
             enable_log()

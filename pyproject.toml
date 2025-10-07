@@ -30,8 +30,12 @@ dependencies = [
     "outsight>=0.0.2",
     "rich>=14.1.0",
     "paperazzi[vertexai]>=0.0.7",
-    "pyyaml>=6.0.2",
     "rapporteur>=0.1.1,<0.2.0",
+    "fastapi>=0.116.1",
+    "uvicorn[standard]>=0.35.0",
+    "authlib>=1.6.4",
+    "python-jose[cryptography]>=3.5.0",
+    "itsdangerous>=2.2.0",
 ]
 
 [project.urls]
@@ -75,11 +79,20 @@ combine-as-imports = true
 [tool.pytest.ini_options]
 timeout = 20
 
+[tool.hatch.envs.default]
+installer = "uv"
+post-install-commands = [
+    "sync",
+]
+
 [tool.hatch.envs.default.env-vars]
-GIFNOC_FILE = "{env:GIFNOC_FILE:{root:real}/config/secrets.yaml}"
+GIFNOC_FILE = "{env:GIFNOC_FILE:{root:real}/config/secrets.yaml,{root:real}/config/site.yaml}"
 SERIEUX_PASSWORD = "{env:SERIEUX_PASSWORD:_}"
 PAPERONI_SECRETS = "{env:PAPERONI_SECRETS:{home:real}/secrets/paperoni/config.yaml}"
 
 [tool.hatch.envs.default.scripts]
 sync = "uv sync --active --all-extras {args}"
-make-secrets = "serieux patch -m 'paperoni.config:gifnoc_model' -f {env:PAPERONI_SECRETS} -o {env:GIFNOC_FILE} -p {env:SERIEUX_PASSWORD}"
+make-secrets = [
+    'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" {args}',
+    'cp $(dirname "{env:PAPERONI_SECRETS}")/*focuses*.yaml "$(dirname "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)")"',
+]
