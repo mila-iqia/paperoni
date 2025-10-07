@@ -4,21 +4,8 @@ from typing import Generator, Iterable
 
 from ..model.classes import CollectionMixin, CollectionPaper, Paper
 from ..utils import normalize_institution, normalize_name, normalize_title
-from .abc import PaperCollection
+from .abc import PaperCollection, _id_types
 from .finder import Finder
-
-_id_types = {
-    "arxiv",
-    "dblp",
-    "doi",
-    "mlr",
-    "openalex",
-    "openreview",
-    "pmc",
-    "pubmed",
-    "semantic_scholar",
-    "uid",
-}
 
 
 @dataclass(kw_only=True)
