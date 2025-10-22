@@ -106,7 +106,7 @@ mongo = [
     "sync",
     "hatch run mongo:restart",
     "run {args}",
-    "hatch run mongo:remove",
+    "hatch run mongo:stop",
 ]
 
 [tool.hatch.envs.hatch-test]
@@ -120,16 +120,48 @@ platform.macos.pre-install-commands = [
     "hatch run podman:install-macos",
 ]
 
+[tool.hatch.envs.pixi]
+detached = true
+installer = "uv"
+
+[tool.hatch.envs.pixi.scripts]
+install-linux = [
+    """which pixi && exit 0 \
+        || curl -fsSL https://pixi.sh/install.sh | sh"""
+]
+install-macos = [
+   "install-linux"
+]
+
 [tool.hatch.envs.podman]
 detached = true
 
+[tool.hatch.envs.podman.env-vars]
+PODMAN_VERSION = "{env:PODMAN_VERSION:5.6.1}"
+
 [tool.hatch.envs.podman.scripts]
+install-linux = [
+    """which podman && exit 0 \
+        || hatch run pixi:install-linux""",
+    """which podman && exit 0 \
+        || which pixi >/dev/null 2>&1 || echo 'Please restart or source your shell.' && which pixi >/dev/null 2>&1""",
+    """which podman && exit 0 \
+        || pixi global install -c conda-forge 'podman=={env:PODMAN_VERSION}'"""
+]
 install-macos = [
     """which podman && exit 0 \
-        || curl -sL https://github.com/containers/podman/releases/download/v{env:PODMAN_VERSION:5.6.1}/podman-installer-macos-universal.pkg \
+        || curl -sL https://github.com/containers/podman/releases/download/v{env:PODMAN_VERSION}/podman-installer-macos-universal.pkg \
         -o /tmp/podman-installer-macos-universal.pkg""",
     """which podman && exit 0 \
         || sudo installer -pkg /tmp/podman-installer-macos-universal.pkg -target /""",
+]
+
+[tool.hatch.envs.podman.overrides]
+platform.linux.pre-install-commands = [
+    "install-linux",
+]
+platform.macos.pre-install-commands = [
+    "install-macos",
 ]
 
 [tool.hatch.envs.mongo]
@@ -139,19 +171,21 @@ template = "podman"
 MONGO_INITDB_ROOT_USERNAME = "{env:MONGO_INITDB_ROOT_USERNAME:root}"
 MONGO_INITDB_ROOT_PASSWORD = "{env:MONGO_INITDB_ROOT_PASSWORD:pass}"
 MONGO_INITDB_PORT = "{env:MONGO_INITDB_PORT:27017}"
+MONGOPOD_NAME = "{env:MONGOPOD_NAME:pap_mongopod_test}"
 
 [tool.hatch.envs.mongo.scripts]
 start = [
     "- podman machine init",
     "- podman machine start",
-    "podman run -dt --name mongopod -p {env:MONGO_INITDB_PORT}:27017/tcp docker.io/library/mongo:noble",
+    "podman run -dt --name {env:MONGOPOD_NAME} -p {env:MONGO_INITDB_PORT}:27017/tcp docker.io/library/mongo:noble",
     "echo 'MongoDB should now be available at mongodb://localhost:{env:MONGO_INITDB_PORT}'"
 ]
-remove = [
-    "podman stop mongopod",
-    "podman rm mongopod",
+stop = [
+    "podman stop {env:MONGOPOD_NAME}",
+    # We do not need to keep test mongodb container
+    "- podman rm pap_mongopod_test",
 ]
 restart = [
-    "- remove",
+    "stop",
     "start",
 ]

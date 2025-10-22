@@ -44,10 +44,9 @@ jobs:
         cache-dependency-path: uv.lock
     - name: Install Podman
       uses: gacts/install-podman@v1.1.1
-    - name: Install Hatch
+    - name: Install and set up Hatch
       run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install hatch
+        uv tool install hatch
         echo "HATCH_UV=$(which uv)" >>$GITHUB_ENV
     - name: Pin Python version
       run: uv python pin ${{ matrix.settings.python }}
@@ -66,4 +65,4 @@ jobs:
       run: uv run coverage report | tail -1 | egrep "TOTAL +[0-9]+ +0 +100%"
     - name: Stop mongo
       if: always()
-      run: hatch run mongo:remove
+      run: hatch run mongo:stop
