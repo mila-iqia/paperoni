@@ -1,0 +1,23 @@
+from dataclasses import dataclass
+from pathlib import Path
+
+import gifnoc
+
+from ..llm_common import Explained, PromptConfig
+
+
+@dataclass
+class Analysis:
+    # The normalized author name
+    normalized_author: Explained[str]
+
+
+DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "system-prompt.md").read_text()
+FIRST_MESSAGE = """### The author name to normalize:
+{}"""
+
+llm_config: PromptConfig = gifnoc.define(
+    f"paperoni.{Path(__file__).parent.name}",
+    PromptConfig,
+    defaults={"system_prompt_template": DEFAULT_SYSTEM_MESSAGE},
+)

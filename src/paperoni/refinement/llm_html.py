@@ -12,6 +12,7 @@ from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
 from .llm_common import Analysis, PromptConfig
+from .llm_utils import force_prompt
 
 FIRST_MESSAGE = """### The HTML web page of the scientific paper:
 
@@ -65,15 +66,7 @@ def prompt(link: str, force: bool = False) -> Paper:
     }
 
     if force:
-        _, cache_file = html_prompt.exists(**prompt_kwargs)
-        tmp_html_prompt = html_prompt.update(prefix=f".{html_prompt.info.store.prefix}")
-        _, tmp_cache_file = tmp_html_prompt.exists(**prompt_kwargs)
-        tmp_cache_file.unlink(missing_ok=True)
-        try:
-            analysis = tmp_html_prompt(**prompt_kwargs).parsed
-        finally:
-            if tmp_cache_file.exists():
-                tmp_cache_file.rename(cache_file)
+        analysis: Analysis = force_prompt(html_prompt, **prompt_kwargs).parsed
     else:
         analysis: Analysis = html_prompt(**prompt_kwargs).parsed
 

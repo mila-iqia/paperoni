@@ -1,4 +1,5 @@
 import pytest
+import requests
 from serieux import serialize
 
 from paperoni.model.classes import Paper
@@ -92,14 +93,34 @@ links = [
     ),
 ]
 
+# biorxiv links sometimes fails with requests.exceptions.HTTPError: 421 Client
+# Error: Misdirected Request
+links_w_redirect_errors = {
+    "10.1101/2020.10.29.359778",
+    "10.1101/2023.05.17.541168",
+    "10.1101/2023.10.27.564468",
+    "10.1101/2024.02.13.580150",
+    "10.1101/2024.12.02.626449",
+    "10.1101/2025.06.23.661173",
+    "10.1101/2023.08.30.23294850",
+}
+
 
 @pytest.mark.parametrize(["func", "link"], links)
 def test_refine(func, link, data_regression):
     typ, link = link.split(":", 1)
-    result = func(typ, link)
-    assert result.authors
-    data = serialize(Paper, result)
-    data_regression.check(data)
+    try:
+        result = func(typ, link)
+        assert result.authors
+        data = serialize(Paper, result)
+        data_regression.check(data)
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 421 and link in links_w_redirect_errors:
+            pytest.skip(
+                f"{link} fails with a misdirected request ending in error {e.response.status_code}"
+            )
+        else:
+            raise
 
 
 @pytest.mark.parametrize(

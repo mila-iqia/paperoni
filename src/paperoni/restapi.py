@@ -61,7 +61,7 @@ class PagingMixin:
     # Max number of results to return
     size: int = field(default=100)
 
-    _count: NoneType = field(repr=False, compare=False, default=0)
+    _count: NoneType = field(repr=False, compare=False, default=None)
     _next_offset: NoneType = field(repr=False, compare=False, default=None)
 
     @property
@@ -93,7 +93,7 @@ class PagingMixin:
             self._next_offset += 1
             yield entry
 
-        if self._count < self.size:
+        if self._count < size:
             # No more results
             self._next_offset = None
 
@@ -404,6 +404,13 @@ def _download_fulltext(request: dict):
 
 
 async def run_in_process_pool(func, *args):
+    # TODO: find a way to serialize a dynamically modified config using
+    # gifnoc.overlay such that we serialize / deserialize quickly properties
+    # like collection. Currently, serialize(config) fails with
+    # serieux.exc.ValidationError: At path (at root): Cannot serialize object of type 'Proxy'
+    if config.server.process_pool is None:
+        return func(*args)
+
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(config.server.process_pool, func, *args)
 
@@ -658,10 +665,8 @@ def create_app() -> FastAPI:
         response_model=SearchResponse,
         dependencies=[Depends(get_current_user)],
     )
-    async def search_papers(request: SearchRequest = None):
+    async def search_papers(request: SearchRequest = Depends()):
         """Search for papers in the collection."""
-        request = request or SearchRequest()
-
         results, count, next_offset, total = await run_in_process_pool(
             _search, serialize(SearchRequest, request)
         )
@@ -684,10 +689,8 @@ def create_app() -> FastAPI:
 
     @app.get("/work/view", response_model=ViewResponse)
     async def work_view_papers(
-        request: ViewRequest = None, user: User = Depends(get_current_user)
+        request: ViewRequest = Depends(), user: User = Depends(get_current_user)
     ):
-        request = request or ViewRequest()
-
         papers, count, next_offset, total = await run_in_process_pool(
             _work_view, serialize(ViewRequest, request), user
         )
@@ -714,9 +717,7 @@ def create_app() -> FastAPI:
         response_model=Focuses,
         dependencies=[Depends(acquire_current_admin)],
     )
-    async def autofocus(request: AutoFocusRequest = None):
-        request = request or AutoFocusRequest()
-
+    async def autofocus(request: AutoFocusRequest = Depends()):
         """Autofocus the collection."""
         focus = Focus(command=None)
 

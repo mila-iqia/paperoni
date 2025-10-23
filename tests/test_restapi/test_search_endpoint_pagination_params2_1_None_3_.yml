@@ -1,0 +1,29 @@
+- abstract: A paper about machine learning
+  authors:
+  - affiliations:
+    - aliases: []
+      category: null
+      name: MIT
+    author: null
+    display_name: Alice Johnson
+  flags: []
+  links:
+  - link: 10.1000/ml1
+    type: doi
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-03-01'
+      date_precision: 3
+      links: []
+      name: ML Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ML Conference
+      type: conference
+      volume: null
+  title: Machine Learning Paper
+  topics: []

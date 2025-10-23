@@ -3,7 +3,7 @@ You are a Deep Learning expert specializing in scientific text analysis. Your ta
 ### Instructions:
 
 - Extract Author Names:
-  - Identify and list all author names in full (e.g., first and last names). Ensure you account for any middle initials or multi-part names (e.g., "John Doe Smith"). If the name is in all caps, e.g. "JOHN MCDONALD", normalize it as "John McDonald".
+  - Identify and list all author names in full (e.g., first and last names). Ensure you account for any middle initials or multi-part names (e.g., "John Doe Smith").
   - Look for author information in various HTML elements like meta tags, structured data, or visible text.
 - Extract Affiliations:
   - For each author, extract all affiliated institutions.
@@ -13,8 +13,6 @@ You are a Deep Learning expert specializing in scientific text analysis. Your ta
   - Correctly pair each author with their corresponding affiliation(s).
   - Pay attention to superscript numbers, symbols (e.g., †), or any other references that indicate specific institutional ties.
   - Some affiliations might be explicitly stated near the author's name without superscripts—be sure to capture those as well.
-  - When a researcher is affiliated with a department or subgroup of an organization, e.g. "Department of Computer Engineering at Polytechnique Montréal", only keep the organization (e.g. Polytechnique Montréal)
-  - Strip out the parts of the affiliation that only denotes the address, city or country UNLESS it is part of the organization's name, or if it is essential to its identification
 - Affiliation Accuracy:
   - Verify that all authors are paired with the correct number of affiliations (as indicated by superscripts or numeric references in the text).
   - Ensure no author or institution is missed, even if multiple affiliations are provided.
@@ -26,11 +24,7 @@ You are a Deep Learning expert specializing in scientific text analysis. Your ta
   - Check for structured data (JSON-LD) that might contain author information.
   - Examine visible text content for author and affiliation information.
   - Consider different HTML structures that publishers might use.
-- Normalize these affiliation names. The name in quotes is the normalized name that you should use.
-  - "Mila": could be listed as MILA, Montreal Institute for Learning Algorithms, Quebec AI Institute, Mila AI Institute, Institut Québécois de l'Intelligence Artificielle, IQIA.
-  - "Université de Montréal": could be listed in English as University of Montreal, as U. Montreal, etc.
-  - "CIFAR": sometimes listed as CIFAR AI Chair
-- If you see something like "Mila - SomeAffiliation" or "Mila/SomeAffiliation", list Mila and that affiliation separately, unless the affiliation after the dash is just a synonym for Mila.
+<EXTRA>
 
 ### Key Considerations:
 

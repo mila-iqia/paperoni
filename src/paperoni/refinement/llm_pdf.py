@@ -3,6 +3,7 @@ from pathlib import Path
 import gifnoc
 from outsight import send
 from paperazzi.platforms.utils import Message
+from paperazzi.utils import DiskStoreFunc
 
 from ..config import config
 from ..fulltext.pdf import PDF, CachePolicies, get_pdf
@@ -11,6 +12,7 @@ from ..model.merge import qual
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
 from .llm_common import Analysis, PromptConfig
+from .llm_utils import force_prompt
 
 
 def _make_key(_, kwargs: dict) -> str:
@@ -30,7 +32,7 @@ def _make_key(_, kwargs: dict) -> str:
 
 
 def prompt(pdf: PDF, force: bool = False) -> Paper:
-    pdf_prompt = config.refine.prompt.prompt.update(
+    pdf_prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
         serializer=ParsedResponseSerializer[Analysis],
         cache_dir=pdf.directory / "prompt",
         make_key=_make_key,
@@ -48,15 +50,7 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
     }
 
     if force:
-        _, cache_file = pdf_prompt.exists(**prompt_kwargs)
-        tmp_pdf_prompt = pdf_prompt.update(prefix=f".{pdf_prompt.info.store.prefix}")
-        _, tmp_cache_file = tmp_pdf_prompt.exists(**prompt_kwargs)
-        tmp_cache_file.unlink(missing_ok=True)
-        try:
-            analysis = tmp_pdf_prompt(**prompt_kwargs).parsed
-        finally:
-            if tmp_cache_file.exists():
-                tmp_cache_file.rename(cache_file)
+        analysis: Analysis = force_prompt(pdf_prompt, **prompt_kwargs).parsed
     else:
         analysis: Analysis = pdf_prompt(**prompt_kwargs).parsed
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, replace
 from heapq import heapify, heappush, heappushpop
-from typing import Counter, Iterable
+from typing import Counter, Iterable, Literal
 
 from outsight import send
 from ovld import ovld
@@ -17,7 +17,7 @@ from .merge import PaperWorkingSet
 
 @dataclass
 class Focus:
-    type: str
+    type: Literal["author", "institution"]
     name: str
     score: float
     drive_discovery: bool = False
@@ -56,7 +56,15 @@ class Focuses:
     focuses: list[Focus] = field(default_factory=list)
 
     def __post_init__(self):
-        self.score_index = {(f.type, f.name.lower()): f.score for f in self.focuses}
+        self.score_index = {}
+        for f in self.focuses:
+            match f.type.split("_")[0]:
+                case "author":
+                    self.score_index[(f.type, normalize_name(f.name))] = f.score
+                case "institution":
+                    self.score_index[(f.type, normalize_institution(f.name))] = f.score
+                case _:
+                    raise ValueError(f"Invalid focus type: {f.type}")
 
     @classmethod
     def serieux_deserialize(cls, obj, ctx, call_next):

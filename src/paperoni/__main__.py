@@ -29,6 +29,8 @@ from serieux import (
 )
 from serieux.features.tagset import FromEntryPoint
 
+from paperoni.refinement.llm_normalize import normalize_paper
+
 from .collection.abc import PaperCollection
 from .collection.filecoll import FileCollection
 from .collection.finder import Finder
@@ -331,6 +333,9 @@ class Work:
         # Whether to force re-running the refine
         force: bool = False
 
+        # Whether to normalize the paper
+        norm: bool = False
+
         # Number of refinement loops to perform for each paper
         loops: int = 1
 
@@ -360,6 +365,8 @@ class Work:
                         statuses=statuses,
                     ):
                         send(refinement=pinfo)
+                        if self.norm:
+                            pinfo.paper = normalize_paper(pinfo.paper, force=self.force)
                         sws.value.add(pinfo)
                         sws.score = work.focuses.score(sws.value)
 
@@ -586,8 +593,11 @@ class Focus:
     # List of focuses
     # [alias: -f]
     focus_file: Path = field(
-        default_factory=lambda: config.metadata.focuses.file.exists()
+        default_factory=lambda: (
+            config.metadata.focuses.file and config.metadata.focuses.file.exists()
+        )
         and config.metadata.focuses.file
+        or None
     )
 
     # Collection dir

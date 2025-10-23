@@ -6,7 +6,7 @@ from serieux import CommentRec, deserialize, dump, serialize
 
 from paperoni.__main__ import Work
 from paperoni.discovery.semantic_scholar import SemanticScholar
-from paperoni.model.classes import Institution, Paper, PaperAuthor, PaperInfo
+from paperoni.model.classes import Author, Institution, Paper, PaperAuthor, PaperInfo
 from paperoni.model.focus import Focus, Focuses, Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 from tests.test_work import work
@@ -66,6 +66,67 @@ def test_focus_scoring():
     # Test paper info scoring
     paper_info = PaperInfo(paper=paper, key="xyz")
     assert focuses.score(paper_info) == 1.5
+
+
+def test_focuses_institution_scoring():
+    with gifnoc.overlay(
+        {
+            "paperoni.focuses": [
+                "!institution :: Mila :: 10",
+                "!author :: Alice Smith :: 1",
+            ]
+        }
+    ) as config:
+        from paperoni.config import PaperoniConfig
+
+        config: PaperoniConfig = config.paperoni
+
+        author = PaperAuthor(
+            display_name="Alice Smith",
+            author=Author(name="Alice Smith"),
+            affiliations=[Institution(name="MILA")],
+        )
+
+        assert config.focuses.score(author) == 11.0
+
+        # If the institution is not in the focuses, the score should be 0
+        author = PaperAuthor(
+            display_name="Alice Smith",
+            author=Author(name="Alice Smith"),
+            affiliations=[Institution(name="MIT")],
+        )
+
+        assert config.focuses.score(author) == 0.0
+
+
+def test_focuses_normalization():
+    with gifnoc.overlay(
+        {
+            "paperoni.focuses": [
+                "!institution :: Mila :: 10",
+                "!institution :: Université de Montréal :: 1",
+            ]
+        }
+    ) as config:
+        from paperoni.config import PaperoniConfig
+
+        config: PaperoniConfig = config.paperoni
+
+        author = PaperAuthor(
+            display_name="Alice Smith",
+            author=Author(name="Alice Smith"),
+            affiliations=[Institution(name="MILA")],
+        )
+
+        assert config.focuses.score(author) == 10.0
+
+        author = PaperAuthor(
+            display_name="Alice Smith",
+            author=Author(name="Alice Smith"),
+            affiliations=[Institution(name="UNIVERSITE DE MONTREAL")],
+        )
+
+        assert config.focuses.score(author) == 1.0
 
 
 def test_score_non_ascii_title():
@@ -130,64 +191,7 @@ def test_focuses_top():
     assert snd.value.paper.title == "Paper from Alice"
 
 
-def _top(n, key, elems):
-    t = Top(n)
-    t.add_all(Scored(key(x), x) for x in elems)
-    return [x.value for x in t]
-
-
-def test_top():
-    strs = "This is a delightful string".split()
-    assert _top(0, len, strs) == []
-    assert _top(1, len, strs) == ["delightful"]
-    assert _top(2, len, strs) == ["delightful", "string"]
-    assert _top(3, len, strs) == ["delightful", "string", "This"]
-    assert _top(4, len, strs) == ["delightful", "string", "This", "is"]
-    assert _top(5, len, strs) == ["delightful", "string", "This", "is", "a"]
-
-
-def test_top_incremental():
-    ints = [5, 1, 4, 9, 13]
-    t = Top(3)
-    t.add_all(ints)
-    assert list(t) == [13, 9, 5]
-    t.add_all([12, -1])
-    assert list(t) == [13, 12, 9]
-
-
-def test_top_resort():
-    strs = [Scored(len(x), x) for x in "This is a delightful string".split()]
-    t = Top(3, strs)
-    assert [x.value for x in t] == ["delightful", "string", "This"]
-    strs[4].score = 150
-    strs[4].value = "supercalifragilisticexpialidocious"
-    t.resort()
-    assert [x.value for x in t] == [
-        "supercalifragilisticexpialidocious",
-        "delightful",
-        "This",
-    ]
-
-
-def test_serialization():
-    strs = [Scored(len(x), x) for x in "This is a delightful string".split()]
-    t = Top(3, strs)
-    expected = {
-        "n": 3,
-        "entries": [
-            {"score": 4.0, "value": "This"},
-            {"score": 6.0, "value": "string"},
-            {"score": 10.0, "value": "delightful"},
-        ],
-        "drop_zero": True,
-    }
-    assert serialize(Top[Scored[str]], t) == expected
-    deser = deserialize(Top[Scored[str]], expected)
-    assert isinstance(deser, Top)
-    assert deser == t
-
-
-def test_update(tmp_path: Path, data_regression: DataRegressionFixture):
+def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
     with gifnoc.overlay(
         {
             "paperoni.focuses": [
@@ -267,3 +271,60 @@ def test_update(tmp_path: Path, data_regression: DataRegressionFixture):
         )
 
         data_regression.check(serialize(Focuses, config.focuses))
+
+
+def _top(n, key, elems):
+    t = Top(n)
+    t.add_all(Scored(key(x), x) for x in elems)
+    return [x.value for x in t]
+
+
+def test_top():
+    strs = "This is a delightful string".split()
+    assert _top(0, len, strs) == []
+    assert _top(1, len, strs) == ["delightful"]
+    assert _top(2, len, strs) == ["delightful", "string"]
+    assert _top(3, len, strs) == ["delightful", "string", "This"]
+    assert _top(4, len, strs) == ["delightful", "string", "This", "is"]
+    assert _top(5, len, strs) == ["delightful", "string", "This", "is", "a"]
+
+
+def test_top_incremental():
+    ints = [5, 1, 4, 9, 13]
+    t = Top(3)
+    t.add_all(ints)
+    assert list(t) == [13, 9, 5]
+    t.add_all([12, -1])
+    assert list(t) == [13, 12, 9]
+
+
+def test_top_resort():
+    strs = [Scored(len(x), x) for x in "This is a delightful string".split()]
+    t = Top(3, strs)
+    assert [x.value for x in t] == ["delightful", "string", "This"]
+    strs[4].score = 150
+    strs[4].value = "supercalifragilisticexpialidocious"
+    t.resort()
+    assert [x.value for x in t] == [
+        "supercalifragilisticexpialidocious",
+        "delightful",
+        "This",
+    ]
+
+
+def test_serialization():
+    strs = [Scored(len(x), x) for x in "This is a delightful string".split()]
+    t = Top(3, strs)
+    expected = {
+        "n": 3,
+        "entries": [
+            {"score": 4.0, "value": "This"},
+            {"score": 6.0, "value": "string"},
+            {"score": 10.0, "value": "delightful"},
+        ],
+        "drop_zero": True,
+    }
+    assert serialize(Top[Scored[str]], t) == expected
+    deser = deserialize(Top[Scored[str]], expected)
+    assert isinstance(deser, Top)
+    assert deser == t
