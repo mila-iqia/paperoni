@@ -593,8 +593,11 @@ class Focus:
     # List of focuses
     # [alias: -f]
     focus_file: Path = field(
-        default_factory=lambda: config.metadata.focuses.file.exists()
+        default_factory=lambda: (
+            config.metadata.focuses.file and config.metadata.focuses.file.exists()
+        )
         and config.metadata.focuses.file
+        or None
     )
 
     # Collection dir

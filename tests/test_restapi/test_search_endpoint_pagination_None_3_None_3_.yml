@@ -1,0 +1,87 @@
+- abstract: This is a test paper
+  authors:
+  - affiliations:
+    - aliases: []
+      category: null
+      name: MIT
+    author: null
+    display_name: John Doe
+  flags: []
+  links:
+  - link: 10.1000/test1
+    type: doi
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-01-01'
+      date_precision: 3
+      links: []
+      name: Test Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: Test Conference
+      type: conference
+      volume: null
+  title: Test Paper 1
+  topics: []
+- abstract: This is another test paper
+  authors:
+  - affiliations:
+    - aliases: []
+      category: null
+      name: Stanford
+    author: null
+    display_name: Jane Smith
+  flags: []
+  links:
+  - link: 10.1000/test2
+    type: doi
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-02-01'
+      date_precision: 3
+      links: []
+      name: Test Journal
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: Test Journal
+      type: journal
+      volume: null
+  title: Test Paper 2
+  topics: []
+- abstract: A paper about machine learning
+  authors:
+  - affiliations:
+    - aliases: []
+      category: null
+      name: MIT
+    author: null
+    display_name: Alice Johnson
+  flags: []
+  links:
+  - link: 10.1000/ml1
+    type: doi
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-03-01'
+      date_precision: 3
+      links: []
+      name: ML Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ML Conference
+      type: conference
+      volume: null
+  title: Machine Learning Paper
+  topics: []

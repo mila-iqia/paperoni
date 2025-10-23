@@ -46,7 +46,10 @@ class Server:
     admin_emails: set[str] = field(default_factory=set)
 
     def __post_init__(self):
-        self.process_pool = ProcessPoolExecutor(**self.process_pool_executor)
+        if self.process_pool_executor.get("max_workers") == 0:
+            self.process_pool = None
+        else:
+            self.process_pool = ProcessPoolExecutor(**self.process_pool_executor)
 
 
 @dataclass

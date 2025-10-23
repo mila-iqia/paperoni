@@ -26,3 +26,13 @@ paperoni:
       $class: GenAIPrompt
       model: gemini-2.5-pro
       api_key: DUMMY_GEMINI_API_KEY
+  server:
+    max_results: 10000
+    process_pool_executor:
+      # Disable process pool for testing
+      max_workers: 0
+    secret_key: _
+    client_dir: ${paperoni.data_path}/serve
+    client_id: _
+    client_secret: _
+    jwt_secret_key: _

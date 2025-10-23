@@ -58,7 +58,7 @@ class Focuses:
     def __post_init__(self):
         self.score_index = {}
         for f in self.focuses:
-            match f.type:
+            match f.type.split("_")[0]:
                 case "author":
                     self.score_index[(f.type, normalize_name(f.name))] = f.score
                 case "institution":
