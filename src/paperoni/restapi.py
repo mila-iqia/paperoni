@@ -426,6 +426,7 @@ def create_app() -> FastAPI:
     # Add session middleware for OAuth
     app.add_middleware(
         SessionMiddleware,
+        # NOTE: The `secret_key` should be at least 32 bytes long.
         secret_key=config.server.secret_key,
         max_age=14 * 24 * 60 * 60,  # 14 days
     )
@@ -636,7 +637,10 @@ def create_app() -> FastAPI:
             + datetime.timedelta(days=14),
         }
         access_token = jwt.encode(
-            payload, config.server.jwt_secret_key, algorithm="HS256"
+            payload,
+            # NOTE: The `jwt_secret_key` should be at least 32 bytes long.
+            config.server.jwt_secret_key,
+            algorithm="HS256",
         )
 
         # Clear OAuth state

@@ -9,12 +9,6 @@ authors:
       Singapore, Singapore.
   - aliases: []
     category: unknown
-    name: Department of Electrical and Computer Engineering, Centre for Sleep and
-      Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
-      for Health and Institute for Digital Medicine, National University of Singapore,
-      Singapore, Singapore.
-  - aliases: []
-    category: unknown
     name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
       Düsseldorf, Düsseldorf, Germany.
   author:
@@ -23,10 +17,6 @@ authors:
     name: Jingwei Li
   display_name: Jingwei Li
 - affiliations:
-  - aliases: []
-    category: unknown
-    name: Department of Biomedical Engineering, Montreal Neurological Institute (MNI),
-      McConnell Brain Imaging Institute (BIC), McGill University, Montreal, QC, Canada.
   - aliases: []
     category: unknown
     name: Department of Biomedical Engineering, Montreal Neurological Institute (MNI),
@@ -90,10 +80,6 @@ authors:
     name: Avram J. Holmes
   display_name: Avram J. Holmes
 - affiliations:
-  - aliases: []
-    category: unknown
-    name: Department of Psychiatry, Massachusetts General Hospital, Harvard Medical
-      School, Boston, MA, USA.
   - aliases: []
     category: unknown
     name: Department of Psychiatry, Massachusetts General Hospital, Harvard Medical

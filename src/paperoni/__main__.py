@@ -186,11 +186,14 @@ class Refine:
     # [alias: -t]
     tags: set[str] = field(default_factory=set)
 
-    # Whether to force re-running the refine
-    force: bool = False
+    # Whether to normalize the paper
+    norm: bool = False
 
     # Whether to merge the results
     merge: bool = False
+
+    # Whether to force re-running the refine
+    force: bool = False
 
     # Output format
     format: Formatter = TerminalFormatter
@@ -206,8 +209,14 @@ class Refine:
 
         results = list(fetch_all(links, tags=self.tags, force=self.force))
 
+        if self.norm:
+            results = [
+                normalize_paper(pinfo.paper, force=self.force) for pinfo in results
+            ]
+
         if self.merge:
             results = [merge_all(results)]
+
         self.format(results)
 
 
@@ -330,14 +339,14 @@ class Work:
         # [alias: -t]
         tags: set[str] = field(default_factory=set)
 
-        # Whether to force re-running the refine
-        force: bool = False
-
         # Whether to normalize the paper
         norm: bool = False
 
         # Number of refinement loops to perform for each paper
         loops: int = 1
+
+        # Whether to force re-running the refine
+        force: bool = False
 
         def run(self, work: "Work"):
             statuses = {}
