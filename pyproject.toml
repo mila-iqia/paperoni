@@ -177,7 +177,7 @@ MONGOPOD_NAME = "{env:MONGOPOD_NAME:pap_mongopod_test}"
 start = [
     "- podman machine init",
     "- podman machine start",
-    "podman run -dt --name {env:MONGOPOD_NAME} -p {env:MONGO_INITDB_PORT}:27017/tcp docker.io/library/mongo:noble",
+    "podman start {env:MONGOPOD_NAME} || podman run -dt --name {env:MONGOPOD_NAME} -p {env:MONGO_INITDB_PORT}:27017/tcp docker.io/library/mongo:noble",
     "echo 'MongoDB should now be available at mongodb://localhost:{env:MONGO_INITDB_PORT}'"
 ]
 stop = [

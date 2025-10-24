@@ -1,0 +1,69 @@
+- info:
+    refined_by:
+      pdf: composite
+  key: composite
+  paper:
+    abstract: null
+    authors:
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Borealis AI
+      - aliases:
+        - Mila - Université de Montréal
+        category: unknown
+        name: Mila
+      - aliases:
+        - Mila - Université de Montréal
+        category: unknown
+        name: Université de Montréal
+      author:
+        aliases: []
+        links: []
+        name: Leo Feng
+      display_name: Leo Feng
+    - affiliations:
+      - aliases: []
+        category: unknown
+        name: Borealis AI
+      author:
+        aliases: []
+        links: []
+        name: Hossein Hajimirsadeghi
+      display_name: Hossein Hajimirsadeghi
+    - affiliations:
+      - aliases:
+        - Mila - Université de Montréal
+        category: unknown
+        name: Mila
+      - aliases:
+        - Mila - Université de Montréal
+        category: unknown
+        name: Université de Montréal
+      author:
+        aliases: []
+        links: []
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    - affiliations:
+      - aliases:
+        - Mila - Université de Montréal
+        category: unknown
+        name: Mila
+      - aliases:
+        - Mila - Université de Montréal
+        category: unknown
+        name: Université de Montréal
+      author:
+        aliases: []
+        links: []
+        name: Mohamed Osama Ahmed
+      display_name: Mohamed Osama Ahmed
+    flags: []
+    links:
+    - link: _3FyT_W1DW
+      type: openreview
+    releases: []
+    title: Efficient Queries Transformer Neural Processes
+    topics: []
+  score: 0.0

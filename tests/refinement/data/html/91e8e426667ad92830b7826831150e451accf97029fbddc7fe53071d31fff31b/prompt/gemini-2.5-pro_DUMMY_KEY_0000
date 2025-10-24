@@ -4,12 +4,12 @@
       "content-type": "application/json; charset=UTF-8",
       "vary": "Origin, X-Origin, Referer",
       "content-encoding": "gzip",
-      "date": "Wed, 03 Sep 2025 21:01:50 GMT",
+      "date": "Fri, 24 Oct 2025 15:41:24 GMT",
       "server": "scaffolding on HTTPServer2",
       "x-xss-protection": "0",
       "x-frame-options": "SAMEORIGIN",
       "x-content-type-options": "nosniff",
-      "server-timing": "gfet4t7; dur=97717",
+      "server-timing": "gfet4t7; dur=86937",
       "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
       "transfer-encoding": "chunked"
     },
@@ -25,11 +25,11 @@
             "inline_data": null,
             "file_data": null,
             "thought_signature": null,
+            "function_call": null,
             "code_execution_result": null,
             "executable_code": null,
-            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"title\": {\n    \"$value\": \"Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days\",\n    \"$comment\": {\n      \"reasoning\": \"The title was extracted from the main `<h1>` element of the article, which is a standard and reliable location for the article's title.\",\n      \"quote\": \"<h1 class=\\\"c-article-title\\\" data-test=\\\"article-title\\\" data-article-title=\\\"\\\">Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days</h1>\"\n    }\n  },\n  \"authors_affiliations\": [\n    {\n      \"author\": {\n        \"$value\": \"Colleen J. Gillon\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Colleen J. Gillon\\\",\\\"url\\\":\\\"http://orcid.org/0000-0002-2253-7816\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"University of Toronto\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'University of Toronto' was extracted from the structured JSON-LD data for this author. The specific department was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"University of Toronto, Toronto\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"University of Toronto Scarborough\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'University of Toronto Scarborough' was extracted from the structured JSON-LD data for this author. The specific department was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"University of Toronto Scarborough, Toronto\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Mila\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Mila' was extracted and normalized from the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jérôme A. Lecoq\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Jérôme A. Lecoq\\\",\\\"url\\\":\\\"http://orcid.org/0000-0002-0131-0938\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jason E. Pina\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Jason E. Pina\\\",\\\"url\\\":\\\"http://orcid.org/0000-0003-1385-8762\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"York University\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'York University' was extracted from the structured JSON-LD data for this author. Two separate affiliations listed for this author were both subgroups of 'York University', so they were consolidated into one.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Ruweida Ahmed\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Ruweida Ahmed\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yazan N. Billeh\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Yazan N. Billeh\\\",\\\"url\\\":\\\"http://orcid.org/0000-0001-5200-4992\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Shiella Caldejon\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Shiella Caldejon\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Peter Groblewski\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Peter Groblewski\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Timothy M. Henley\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Timothy M. Henley\\\",\\\"url\\\":\\\"http://orcid.org/0000-0001-7327-9055\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"York University\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'York University' was extracted from the structured JSON-LD data for this author. Two separate affiliations listed for this author were both subgroups of 'York University', so they were consolidated into one.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"India Kato\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"India Kato\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Eric Lee\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Eric Lee\\\",\\\"url\\\":\\\"http://orcid.org/0000-0002-7166-0909\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jennifer Luviano\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Jennifer Luviano\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Kyla Mace\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Kyla Mace\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Chelsea Nayan\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Chelsea Nayan\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Thuyanh V. Nguyen\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Thuyanh V. Nguyen\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Kat North\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Kat North\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jed Perkins\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Jed Perkins\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Sam Seid\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Sam Seid\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Matthew T. Valley\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Matthew T. Valley\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Ali Williford\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Ali Williford\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yoshua Bengio\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Yoshua Bengio\\\",\\\"url\\\":\\\"http://orcid.org/0000-0002-9322-3515\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Mila' was extracted and normalized from the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Université de Montréal' was extracted and normalized from the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Université de Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"CIFAR\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'CIFAR' was extracted and normalized from 'Canadian Institute for Advanced Research' as found in the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Timothy P. Lillicrap\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Timothy P. Lillicrap\\\",\\\"affiliation\\\":[...],\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"DeepMind\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'DeepMind' was extracted from the structured JSON-LD data for this author, normalizing from 'DeepMind, Inc'.\",\n            \"quote\": \"{\\\"name\\\":\\\"DeepMind, Inc\\\",\\\"address\\\":{\\\"name\\\":\\\"DeepMind, Inc, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"University College London\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'University College London' was extracted from the structured JSON-LD data for this author. The specific department was removed as per instructions.\",\n            \"quote\": \"{\\\"name\\\":\\\"University College London\\\",\\\"address\\\":{\\\"name\\\":\\\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Joel Zylberberg\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Joel Zylberberg\\\",\\\"affiliation\\\":[...],\\\"email\\\":\\\"joelzy@yorku.ca\\\",\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"York University\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'York University' was extracted from the structured JSON-LD data for this author. Two separate affiliations listed for this author were both subgroups of 'York University', so they were consolidated into one.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"CIFAR\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'CIFAR' was extracted and normalized from 'Canadian Institute for Advanced Research' as found in the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Vector Institute for Artificial Intelligence\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Vector Institute for Artificial Intelligence' was extracted from the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence\\\",\\\"address\\\":{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Blake A. Richards\",\n        \"$comment\": {\n          \"reasoning\": \"The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.\",\n          \"quote\": \"{\\\"name\\\":\\\"Blake A. Richards\\\",\\\"url\\\":\\\"http://orcid.org/0000-0001-9662-2151\\\",\\\"affiliation\\\":[...],\\\"email\\\":\\\"blake.richards@mila.quebec\\\",\\\"@type\\\":\\\"Person\\\"}\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'Mila' was extracted and normalized from the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"CIFAR\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'CIFAR' was extracted and normalized from 'Canadian Institute for Advanced Research' as found in the structured JSON-LD data for this author.\",\n            \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"McGill University\",\n          \"$comment\": {\n            \"reasoning\": \"The affiliation 'McGill University' was extracted from the structured JSON-LD data for this author. Three separate affiliations listed for this author were all subgroups of 'McGill University', so they were consolidated into one.\",\n            \"quote\": \"{\\\"name\\\":\\\"McGill University\\\",\\\"address\\\":{\\\"name\\\":\\\"School of Computer Science, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"affiliations\": [\n    {\n      \"$value\": \"University of Toronto\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data.\",\n        \"quote\": \"{\\\"name\\\":\\\"University of Toronto, Toronto\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"University of Toronto Scarborough\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data.\",\n        \"quote\": \"{\\\"name\\\":\\\"University of Toronto Scarborough, Toronto\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Mila\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for multiple authors in the structured JSON-LD data and has been normalized.\",\n        \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Allen Institute\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for multiple authors in the structured JSON-LD data and has been normalized from 'Allen Institute, MindScope Program'.\",\n        \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"York University\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for multiple authors in the structured JSON-LD data.\",\n        \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Université de Montréal\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data and has been normalized.\",\n        \"quote\": \"{\\\"name\\\":\\\"Université de Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"CIFAR\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for multiple authors in the structured JSON-LD data and has been normalized from 'Canadian Institute for Advanced Research'.\",\n        \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"DeepMind\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data and has been normalized from 'DeepMind, Inc'.\",\n        \"quote\": \"{\\\"name\\\":\\\"DeepMind, Inc\\\",\\\"address\\\":{\\\"name\\\":\\\"DeepMind, Inc, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"University College London\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data.\",\n        \"quote\": \"{\\\"name\\\":\\\"University College London\\\",\\\"address\\\":{\\\"name\\\":\\\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Vector Institute for Artificial Intelligence\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data.\",\n        \"quote\": \"{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence\\\",\\\"address\\\":{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"McGill University\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed for an author in the structured JSON-LD data.\",\n        \"quote\": \"{\\\"name\\\":\\\"McGill University\\\",\\\"address\\\":{\\\"name\\\":\\\"School of Computer Science, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n      }\n    }\n  ]\n}"
+            "text": "{\n  \"title\": {\n    \"$value\": \"Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days\",\n    \"$comment\": {\n      \"reasoning\": \"The title was extracted from the JSON-LD script embedded in the HTML head. This structured data is a reliable source for the article's metadata, specifically from the 'headline' field within the 'mainEntity' object.\",\n      \"quote\": \"\\\"headline\\\":\\\"Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days\\\"\"\n    }\n  },\n  \"authors_affiliations\": [\n    {\n      \"author\": {\n        \"$value\": \"Colleen J. Gillon\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Colleen J. Gillon\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"University of Toronto, Toronto\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"University of Toronto Scarborough, Toronto\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Mila, Montréal, Québec, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jérôme A. Lecoq\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Jérôme A. Lecoq\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jason E. Pina\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Jason E. Pina\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Department of Physics and Astronomy, York University, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Centre for Vision Research, York University, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Centre for Vision Research, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Ruweida Ahmed\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Ruweida Ahmed\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yazan N. Billeh\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Yazan N. Billeh\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Shiella Caldejon\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Shiella Caldejon\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Peter Groblewski\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Peter Groblewski\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Timothy M. Henley\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Timothy M. Henley\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Department of Physics and Astronomy, York University, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Centre for Vision Research, York University, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Centre for Vision Research, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"India Kato\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"India Kato\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Eric Lee\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Eric Lee\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jennifer Luviano\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Jennifer Luviano\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Kyla Mace\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Kyla Mace\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Chelsea Nayan\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Chelsea Nayan\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Thuyanh V. Nguyen\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Thuyanh V. Nguyen\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Kat North\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Kat North\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Jed Perkins\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Jed Perkins\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Sam Seid\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Sam Seid\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Matthew T. Valley\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Matthew T. Valley\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Ali Williford\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Ali Williford\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Allen Institute, MindScope Program\\\",\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yoshua Bengio\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Yoshua Bengio\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila, Montréal, Québec, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Université de Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Timothy P. Lillicrap\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Timothy P. Lillicrap\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"DeepMind, Inc, London, UK\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"DeepMind, Inc\\\",\\\"address\\\":{\\\"name\\\":\\\"DeepMind, Inc, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"University College London\\\",\\\"address\\\":{\\\"name\\\":\\\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Joel Zylberberg\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Joel Zylberberg\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Department of Physics and Astronomy, York University, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Centre for Vision Research, York University, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"York University\\\",\\\"address\\\":{\\\"name\\\":\\\"Centre for Vision Research, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence\\\",\\\"address\\\":{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Blake A. Richards\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.\",\n          \"quote\": \"\\\"name\\\":\\\"Blake A. Richards\\\"\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila, Montréal, Québec, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Mila, Montréal\\\",\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"Canadian Institute for Advanced Research\\\",\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"School of Computer Science, McGill University, Montréal, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"McGill University\\\",\\\"address\\\":{\\\"name\\\":\\\"School of Computer Science, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Department of Neurology & Neurosurgery, McGill University, Montréal, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"McGill University\\\",\\\"address\\\":{\\\"name\\\":\\\"Department of Neurology & Neurosurgery, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        },\n        {\n          \"$value\": \"Montreal Neurological Institute, McGill University, Montréal, Canada\",\n          \"$comment\": {\n            \"reasoning\": \"The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.\",\n            \"quote\": \"{\\\"name\\\":\\\"McGill University\\\",\\\"address\\\":{\\\"name\\\":\\\"Montreal Neurological Institute, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"},\\\"@type\\\":\\\"Organization\\\"}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"affiliations\": [\n    {\n      \"$value\": \"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Mila, Montréal, Québec, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Mila, Montréal, Québec, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Allen Institute, MindScope Program, Seattle, USA\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Allen Institute, MindScope Program, Seattle, USA\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Department of Physics and Astronomy, York University, Toronto, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Department of Physics and Astronomy, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Centre for Vision Research, York University, Toronto, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Centre for Vision Research, York University, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"DeepMind, Inc, London, UK\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"DeepMind, Inc, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Vector Institute for Artificial Intelligence, Toronto, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"School of Computer Science, McGill University, Montréal, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"School of Computer Science, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Department of Neurology & Neurosurgery, McGill University, Montréal, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Department of Neurology & Neurosurgery, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    },\n    {\n      \"$value\": \"Montreal Neurological Institute, McGill University, Montréal, Canada\",\n      \"$comment\": {\n        \"reasoning\": \"The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.\",\n        \"quote\": \"\\\"address\\\":{\\\"name\\\":\\\"Montreal Neurological Institute, McGill University, Montréal, Canada\\\",\\\"@type\\\":\\\"PostalAddress\\\"}\"\n      }\n    }\n  ]\n}"
           }
         ],
         "role": "model"
@@ -49,32 +49,32 @@
   "create_time": null,
   "model_version": "gemini-2.5-pro",
   "prompt_feedback": null,
-  "response_id": "vqy4aOe2Lvye_uMP76yDwAk",
+  "response_id": "JJ77aL_SCJ-8_uMPk7LEyQs",
   "usage_metadata": {
     "cache_tokens_details": null,
     "cached_content_token_count": null,
-    "candidates_token_count": 7401,
+    "candidates_token_count": 8518,
     "candidates_tokens_details": null,
-    "prompt_token_count": 188852,
+    "prompt_token_count": 188508,
     "prompt_tokens_details": [
       {
         "modality": "TEXT",
-        "token_count": 188852
+        "token_count": 188508
       }
     ],
-    "thoughts_token_count": 3456,
+    "thoughts_token_count": 3032,
     "tool_use_prompt_token_count": null,
     "tool_use_prompt_tokens_details": null,
-    "total_token_count": 199709,
+    "total_token_count": 200058,
     "traffic_type": null
   },
   "automatic_function_calling_history": [],
   "parsed": {
     "title": {
-      "$value": "Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days",
+      "$value": "Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days",
       "$comment": {
-        "reasoning": "The title was extracted from the main `<h1>` element of the article, which is a standard and reliable location for the article's title.",
-        "quote": "<h1 class=\"c-article-title\" data-test=\"article-title\" data-article-title=\"\">Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days</h1>"
+        "reasoning": "The title was extracted from the JSON-LD script embedded in the HTML head. This structured data is a reliable source for the article's metadata, specifically from the 'headline' field within the 'mainEntity' object.",
+        "quote": "\"headline\":\"Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over multiple days\""
       }
     },
     "authors_affiliations": [
@@ -82,29 +82,29 @@
         "author": {
           "$value": "Colleen J. Gillon",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Colleen J. Gillon\",\"url\":\"http://orcid.org/0000-0002-2253-7816\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Colleen J. Gillon\""
           }
         },
         "affiliations": [
           {
-            "$value": "University of Toronto",
+            "$value": "Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'University of Toronto' was extracted from the structured JSON-LD data for this author. The specific department was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"University of Toronto, Toronto\",\"address\":{\"name\":\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "University of Toronto Scarborough",
+            "$value": "Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'University of Toronto Scarborough' was extracted from the structured JSON-LD data for this author. The specific department was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"University of Toronto Scarborough, Toronto\",\"address\":{\"name\":\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "Mila",
+            "$value": "Mila, Montréal, Québec, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'Mila' was extracted and normalized from the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Mila, Montréal\",\"address\":{\"name\":\"Mila, Montréal, Québec, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -114,15 +114,15 @@
         "author": {
           "$value": "Jérôme A. Lecoq",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Jérôme A. Lecoq\",\"url\":\"http://orcid.org/0000-0002-0131-0938\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Jérôme A. Lecoq\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -132,16 +132,23 @@
         "author": {
           "$value": "Jason E. Pina",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Jason E. Pina\",\"url\":\"http://orcid.org/0000-0003-1385-8762\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Jason E. Pina\""
           }
         },
         "affiliations": [
           {
-            "$value": "York University",
+            "$value": "Department of Physics and Astronomy, York University, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'York University' was extracted from the structured JSON-LD data for this author. Two separate affiliations listed for this author were both subgroups of 'York University', so they were consolidated into one.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Department of Physics and Astronomy, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+            }
+          },
+          {
+            "$value": "Centre for Vision Research, York University, Toronto, Canada",
+            "$comment": {
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
+              "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Centre for Vision Research, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
         ]
@@ -150,15 +157,15 @@
         "author": {
           "$value": "Ruweida Ahmed",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Ruweida Ahmed\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Ruweida Ahmed\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -168,15 +175,15 @@
         "author": {
           "$value": "Yazan N. Billeh",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Yazan N. Billeh\",\"url\":\"http://orcid.org/0000-0001-5200-4992\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Yazan N. Billeh\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -186,15 +193,15 @@
         "author": {
           "$value": "Shiella Caldejon",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Shiella Caldejon\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Shiella Caldejon\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -204,15 +211,15 @@
         "author": {
           "$value": "Peter Groblewski",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Peter Groblewski\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Peter Groblewski\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -222,16 +229,23 @@
         "author": {
           "$value": "Timothy M. Henley",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Timothy M. Henley\",\"url\":\"http://orcid.org/0000-0001-7327-9055\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Timothy M. Henley\""
           }
         },
         "affiliations": [
           {
-            "$value": "York University",
+            "$value": "Department of Physics and Astronomy, York University, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'York University' was extracted from the structured JSON-LD data for this author. Two separate affiliations listed for this author were both subgroups of 'York University', so they were consolidated into one.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Department of Physics and Astronomy, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+            }
+          },
+          {
+            "$value": "Centre for Vision Research, York University, Toronto, Canada",
+            "$comment": {
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
+              "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Centre for Vision Research, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
         ]
@@ -240,15 +254,15 @@
         "author": {
           "$value": "India Kato",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"India Kato\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"India Kato\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -258,15 +272,15 @@
         "author": {
           "$value": "Eric Lee",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Eric Lee\",\"url\":\"http://orcid.org/0000-0002-7166-0909\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Eric Lee\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -276,15 +290,15 @@
         "author": {
           "$value": "Jennifer Luviano",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Jennifer Luviano\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Jennifer Luviano\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -294,15 +308,15 @@
         "author": {
           "$value": "Kyla Mace",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Kyla Mace\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Kyla Mace\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -312,15 +326,15 @@
         "author": {
           "$value": "Chelsea Nayan",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Chelsea Nayan\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Chelsea Nayan\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -330,15 +344,15 @@
         "author": {
           "$value": "Thuyanh V. Nguyen",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Thuyanh V. Nguyen\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Thuyanh V. Nguyen\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -348,15 +362,15 @@
         "author": {
           "$value": "Kat North",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Kat North\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Kat North\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -366,15 +380,15 @@
         "author": {
           "$value": "Jed Perkins",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Jed Perkins\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Jed Perkins\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -384,15 +398,15 @@
         "author": {
           "$value": "Sam Seid",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Sam Seid\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Sam Seid\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -402,15 +416,15 @@
         "author": {
           "$value": "Matthew T. Valley",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Matthew T. Valley\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Matthew T. Valley\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -420,15 +434,15 @@
         "author": {
           "$value": "Ali Williford",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Ali Williford\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Ali Williford\""
           }
         },
         "affiliations": [
           {
-            "$value": "Allen Institute",
+            "$value": "Allen Institute, MindScope Program, Seattle, USA",
             "$comment": {
-              "reasoning": "The affiliation 'Allen Institute' was extracted and normalized from the structured JSON-LD data for this author. The specific program name was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -438,29 +452,29 @@
         "author": {
           "$value": "Yoshua Bengio",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Yoshua Bengio\",\"url\":\"http://orcid.org/0000-0002-9322-3515\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Yoshua Bengio\""
           }
         },
         "affiliations": [
           {
-            "$value": "Mila",
+            "$value": "Mila, Montréal, Québec, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'Mila' was extracted and normalized from the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Mila, Montréal\",\"address\":{\"name\":\"Mila, Montréal, Québec, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "Université de Montréal",
+            "$value": "Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'Université de Montréal' was extracted and normalized from the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Université de Montréal\",\"address\":{\"name\":\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "CIFAR",
+            "$value": "Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'CIFAR' was extracted and normalized from 'Canadian Institute for Advanced Research' as found in the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Canadian Institute for Advanced Research\",\"address\":{\"name\":\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -470,22 +484,22 @@
         "author": {
           "$value": "Timothy P. Lillicrap",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Timothy P. Lillicrap\",\"affiliation\":[...],\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Timothy P. Lillicrap\""
           }
         },
         "affiliations": [
           {
-            "$value": "DeepMind",
+            "$value": "DeepMind, Inc, London, UK",
             "$comment": {
-              "reasoning": "The affiliation 'DeepMind' was extracted from the structured JSON-LD data for this author, normalizing from 'DeepMind, Inc'.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"DeepMind, Inc\",\"address\":{\"name\":\"DeepMind, Inc, London, UK\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "University College London",
+            "$value": "Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK",
             "$comment": {
-              "reasoning": "The affiliation 'University College London' was extracted from the structured JSON-LD data for this author. The specific department was removed as per instructions.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"University College London\",\"address\":{\"name\":\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -495,29 +509,36 @@
         "author": {
           "$value": "Joel Zylberberg",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Joel Zylberberg\",\"affiliation\":[...],\"email\":\"joelzy@yorku.ca\",\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Joel Zylberberg\""
           }
         },
         "affiliations": [
           {
-            "$value": "York University",
+            "$value": "Department of Physics and Astronomy, York University, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'York University' was extracted from the structured JSON-LD data for this author. Two separate affiliations listed for this author were both subgroups of 'York University', so they were consolidated into one.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Department of Physics and Astronomy, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "CIFAR",
+            "$value": "Centre for Vision Research, York University, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'CIFAR' was extracted and normalized from 'Canadian Institute for Advanced Research' as found in the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
+              "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Centre for Vision Research, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+            }
+          },
+          {
+            "$value": "Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada",
+            "$comment": {
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Canadian Institute for Advanced Research\",\"address\":{\"name\":\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "Vector Institute for Artificial Intelligence",
+            "$value": "Vector Institute for Artificial Intelligence, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'Vector Institute for Artificial Intelligence' was extracted from the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Vector Institute for Artificial Intelligence\",\"address\":{\"name\":\"Vector Institute for Artificial Intelligence, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
@@ -527,30 +548,44 @@
         "author": {
           "$value": "Blake A. Richards",
           "$comment": {
-            "reasoning": "The author's full name is explicitly listed in the structured JSON-LD data within the HTML, which is a reliable source for metadata.",
-            "quote": "{\"name\":\"Blake A. Richards\",\"url\":\"http://orcid.org/0000-0001-9662-2151\",\"affiliation\":[...],\"email\":\"blake.richards@mila.quebec\",\"@type\":\"Person\"}"
+            "reasoning": "The author's name was extracted from the JSON-LD script embedded in the HTML head. This structured data provides a clear list of authors under the 'author' array within the 'mainEntity' object.",
+            "quote": "\"name\":\"Blake A. Richards\""
           }
         },
         "affiliations": [
           {
-            "$value": "Mila",
+            "$value": "Mila, Montréal, Québec, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'Mila' was extracted and normalized from the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Mila, Montréal\",\"address\":{\"name\":\"Mila, Montréal, Québec, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "CIFAR",
+            "$value": "Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'CIFAR' was extracted and normalized from 'Canadian Institute for Advanced Research' as found in the structured JSON-LD data for this author.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"Canadian Institute for Advanced Research\",\"address\":{\"name\":\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           },
           {
-            "$value": "McGill University",
+            "$value": "School of Computer Science, McGill University, Montréal, Canada",
             "$comment": {
-              "reasoning": "The affiliation 'McGill University' was extracted from the structured JSON-LD data for this author. Three separate affiliations listed for this author were all subgroups of 'McGill University', so they were consolidated into one.",
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
               "quote": "{\"name\":\"McGill University\",\"address\":{\"name\":\"School of Computer Science, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+            }
+          },
+          {
+            "$value": "Department of Neurology & Neurosurgery, McGill University, Montréal, Canada",
+            "$comment": {
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
+              "quote": "{\"name\":\"McGill University\",\"address\":{\"name\":\"Department of Neurology & Neurosurgery, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+            }
+          },
+          {
+            "$value": "Montreal Neurological Institute, McGill University, Montréal, Canada",
+            "$comment": {
+              "reasoning": "The author's affiliation was extracted from the JSON-LD script embedded in the HTML head. Each author object contains an 'affiliation' array with detailed address information.",
+              "quote": "{\"name\":\"McGill University\",\"address\":{\"name\":\"Montreal Neurological Institute, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
             }
           }
         ]
@@ -558,80 +593,101 @@
     ],
     "affiliations": [
       {
-        "$value": "University of Toronto",
+        "$value": "Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data.",
-          "quote": "{\"name\":\"University of Toronto, Toronto\",\"address\":{\"name\":\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "University of Toronto Scarborough",
+        "$value": "Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data.",
-          "quote": "{\"name\":\"University of Toronto Scarborough, Toronto\",\"address\":{\"name\":\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "Mila",
+        "$value": "Mila, Montréal, Québec, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for multiple authors in the structured JSON-LD data and has been normalized.",
-          "quote": "{\"name\":\"Mila, Montréal\",\"address\":{\"name\":\"Mila, Montréal, Québec, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Mila, Montréal, Québec, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "Allen Institute",
+        "$value": "Allen Institute, MindScope Program, Seattle, USA",
         "$comment": {
-          "reasoning": "This affiliation is listed for multiple authors in the structured JSON-LD data and has been normalized from 'Allen Institute, MindScope Program'.",
-          "quote": "{\"name\":\"Allen Institute, MindScope Program\",\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Allen Institute, MindScope Program, Seattle, USA\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "York University",
+        "$value": "Department of Physics and Astronomy, York University, Toronto, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for multiple authors in the structured JSON-LD data.",
-          "quote": "{\"name\":\"York University\",\"address\":{\"name\":\"Department of Physics and Astronomy, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Department of Physics and Astronomy, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "Université de Montréal",
+        "$value": "Centre for Vision Research, York University, Toronto, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data and has been normalized.",
-          "quote": "{\"name\":\"Université de Montréal\",\"address\":{\"name\":\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Centre for Vision Research, York University, Toronto, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "CIFAR",
+        "$value": "Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for multiple authors in the structured JSON-LD data and has been normalized from 'Canadian Institute for Advanced Research'.",
-          "quote": "{\"name\":\"Canadian Institute for Advanced Research\",\"address\":{\"name\":\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "DeepMind",
+        "$value": "Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data and has been normalized from 'DeepMind, Inc'.",
-          "quote": "{\"name\":\"DeepMind, Inc\",\"address\":{\"name\":\"DeepMind, Inc, London, UK\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Learning in Machines and Brains Program, Canadian Institute for Advanced Research, Toronto, Canada\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "University College London",
+        "$value": "DeepMind, Inc, London, UK",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data.",
-          "quote": "{\"name\":\"University College London\",\"address\":{\"name\":\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"DeepMind, Inc, London, UK\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "Vector Institute for Artificial Intelligence",
+        "$value": "Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data.",
-          "quote": "{\"name\":\"Vector Institute for Artificial Intelligence\",\"address\":{\"name\":\"Vector Institute for Artificial Intelligence, Toronto, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental Biology, University College London, London, UK\",\"@type\":\"PostalAddress\"}"
         }
       },
       {
-        "$value": "McGill University",
+        "$value": "Vector Institute for Artificial Intelligence, Toronto, Canada",
         "$comment": {
-          "reasoning": "This affiliation is listed for an author in the structured JSON-LD data.",
-          "quote": "{\"name\":\"McGill University\",\"address\":{\"name\":\"School of Computer Science, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"},\"@type\":\"Organization\"}"
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Vector Institute for Artificial Intelligence, Toronto, Canada\",\"@type\":\"PostalAddress\"}"
+        }
+      },
+      {
+        "$value": "School of Computer Science, McGill University, Montréal, Canada",
+        "$comment": {
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"School of Computer Science, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"}"
+        }
+      },
+      {
+        "$value": "Department of Neurology & Neurosurgery, McGill University, Montréal, Canada",
+        "$comment": {
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Department of Neurology & Neurosurgery, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"}"
+        }
+      },
+      {
+        "$value": "Montreal Neurological Institute, McGill University, Montréal, Canada",
+        "$comment": {
+          "reasoning": "The affiliation was extracted from the JSON-LD script embedded in the HTML head. The script provides a structured list of authors and their corresponding affiliations.",
+          "quote": "\"address\":{\"name\":\"Montreal Neurological Institute, McGill University, Montréal, Canada\",\"@type\":\"PostalAddress\"}"
         }
       }
     ]

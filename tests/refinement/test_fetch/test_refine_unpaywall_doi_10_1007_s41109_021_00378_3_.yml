@@ -4,9 +4,6 @@ authors:
   - aliases: []
     category: unknown
     name: School of Computer Science, McGill University, Montreal, Canada
-  - aliases: []
-    category: unknown
-    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
   author:
     aliases: []
     links: []
@@ -16,9 +13,6 @@ authors:
   - aliases: []
     category: unknown
     name: School of Computer Science, McGill University, Montreal, Canada
-  - aliases: []
-    category: unknown
-    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
   author:
     aliases: []
     links: []
@@ -28,18 +22,12 @@ authors:
   - aliases: []
     category: unknown
     name: School of Computer Science, McGill University, Montreal, Canada
-  - aliases: []
-    category: unknown
-    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
   author:
     aliases: []
     links: []
     name: Abby Leung
   display_name: Abby Leung
 - affiliations:
-  - aliases: []
-    category: unknown
-    name: School of Computer Science, McGill University, Montreal, Canada
   - aliases: []
     category: unknown
     name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
