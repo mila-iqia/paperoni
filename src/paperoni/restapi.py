@@ -578,6 +578,11 @@ def create_app() -> FastAPI:
 
         request.session["oauth_state"] = state
 
+        # As the session must survive through the whole redirection process
+        # (/auth/login -> google oauth -> /auth) to avoid a CSRF protection
+        # error, a url containing the state parameter is generated to start a
+        # new session when open in the browser which will survive the whole
+        # redirection process.
         if headless and not check_headless_state(state):
             url_params = {"headless": headless, "state": state}
             headless_url_params = urllib.parse.urlencode(url_params)
@@ -588,13 +593,6 @@ def create_app() -> FastAPI:
             return LoginResponse(
                 headless_url=f"{request.url_for('login')}?{headless_url_params}",
                 token_url=f"{request.url_for('token')}?{token_url_params}",
-            )
-
-        elif headless:
-            return await oauth.google.authorize_redirect(
-                request,
-                request.url_for("auth_headless"),
-                state=state,
             )
 
         else:
@@ -612,9 +610,9 @@ def create_app() -> FastAPI:
         headless_login(state)["status"] = None
         return serialize(AuthorizedUser, user)
 
-    @app.get("/auth/headless")
-    async def auth_headless(request: Request, state: str = Depends(get_oauth_state)):
-        """Handle Google OAuth callback for headless mode."""
+    @app.get("/auth")
+    async def auth(request: Request, state: str = Depends(get_oauth_state)):
+        """Handle Google OAuth callback."""
         try:
             token = await oauth.google.authorize_access_token(request)
 
@@ -649,15 +647,6 @@ def create_app() -> FastAPI:
         if check_headless_state(state):
             headless_login(state)["user"] = user
             headless_login(state)["event"].set()
-
-        request.session.pop("oauth_state", None)
-
-        return user
-
-    @app.get("/auth")
-    async def auth(request: Request, state: str = Depends(get_oauth_state)):
-        """Handle Google OAuth callback."""
-        user = await auth_headless(request, state)
 
         # Clear OAuth state
         request.session.pop("oauth_state", None)
