@@ -1,8 +1,44 @@
-abstract: LimbusAI could not adapt well to pediatric anatomy for the esophagus and
-  the kidneys. When commercial products do not suit the study population, the nnU‐Net
-  is a viable option but requires adjustments. In resource‐constrained settings, the
-  in‐house model provides an alternative. Implementing an automated segmentation tool
-  requires careful monitoring and quality assurance regardless of the approach.
+abstract: "\n                  \n                    \n                    As auto‐segmentation\
+  \ tools become integral to radiotherapy, more commercial products emerge. However,\
+  \ they may not always suit our needs. One notable example is the use of adult‐trained\
+  \ commercial software for the contouring of organs at risk (OARs) of pediatric patients.\n\
+  \                  \n                  \n                    \n                \
+  \    This study aimed to compare three auto‐segmentation approaches in the context\
+  \ of pediatric craniospinal irradiation (CSI): commercial, out‐of‐the‐box, and in‐house.\n\
+  \                  \n                  \n                    \n                \
+  \    CT scans from 142 pediatric patients undergoing CSI were obtained from St.\
+  \ Jude Children's Research Hospital (training: 115; validation: 27). A test dataset\
+  \ comprising 16 CT scans was collected from the McGill University Health Centre.\
+  \ All images underwent manual delineation of 18 OARs. LimbusAI v1.7 served as the\
+  \ commercial product, while nnU‐Net was trained for benchmarking. Additionally,\
+  \ a two‐step in‐house approach was pursued where smaller 3D CT scans containing\
+  \ the OAR of interest were first recovered and then used as input to train organ‐specific\
+  \ models. Three variants of the U‐Net architecture were explored: a basic U‐Net,\
+  \ an attention U‐Net, and a 2.5D U‐Net. The dice similarity coefficient (DSC) assessed\
+  \ segmentation accuracy, and the DSC trend with age was investigated (Mann–Kendall\
+  \ test). A radiation oncologist determined the clinical acceptability of all contours\
+  \ using a five‐point Likert scale.\n                  \n                  \n   \
+  \                 \n                    Differences in the contours between the\
+  \ validation and test datasets reflected the distinct institutional standards. The\
+  \ lungs and left kidney displayed an increasing age‐related trend of the DSC values\
+  \ with LimbusAI on the validation and test datasets. LimbusAI contours of the esophagus\
+  \ were often truncated distally and mistaken for the trachea for younger patients,\
+  \ resulting in a DSC score of less than 0.5 on both datasets. Additionally, the\
+  \ kidneys frequently exhibited false negatives, leading to mean DSC values that\
+  \ were up to 0.11 lower on the validation set and 0.07 on the test set compared\
+  \ to the other models. Overall, nnU‐Net achieved good performance for body organs\
+  \ but exhibited difficulty differentiating the laterality of head structures, resulting\
+  \ in a large variation of DSC values with the standard deviation reaching 0.35 for\
+  \ the lenses. All in‐house models generally had similar DSC values when compared\
+  \ against each other and nnU‐Net. Inference time on the test data was between 47–55 min\
+  \ on a Central Processing Unit (CPU) for the in‐house models, while it was 1h 21m\
+  \ with a V100 Graphics Processing Unit (GPU) for nnU‐Net.\n                  \n\
+  \                  \n                    \n                    LimbusAI could not\
+  \ adapt well to pediatric anatomy for the esophagus and the kidneys. When commercial\
+  \ products do not suit the study population, the nnU‐Net is a viable option but\
+  \ requires adjustments. In resource‐constrained settings, the in‐house model provides\
+  \ an alternative. Implementing an automated segmentation tool requires careful monitoring\
+  \ and quality assurance regardless of the approach.\n                  "
 authors:
 - affiliations:
   - aliases: []
