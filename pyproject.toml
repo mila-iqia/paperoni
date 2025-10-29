@@ -113,11 +113,7 @@ mongo = [
 installer = "uv"
 post-install-commands = [
     "sync",
-]
-
-[tool.hatch.envs.hatch-test.overrides]
-platform.macos.pre-install-commands = [
-    "hatch run podman:install-macos",
+    "hatch run podman:install",
 ]
 
 [tool.hatch.envs.pixi]
@@ -141,27 +137,28 @@ PODMAN_VERSION = "{env:PODMAN_VERSION:5.6.1}"
 
 [tool.hatch.envs.podman.scripts]
 install-linux = [
-    """which podman && exit 0 \
+    """which podman >/dev/null && exit 0 \
         || hatch run pixi:install-linux""",
-    """which podman && exit 0 \
+    """which podman >/dev/null && exit 0 \
         || which pixi >/dev/null 2>&1 || echo 'Please restart or source your shell.' && which pixi >/dev/null 2>&1""",
-    """which podman && exit 0 \
+    """which podman >/dev/null && exit 0 \
         || pixi global install -c conda-forge 'podman=={env:PODMAN_VERSION}'"""
 ]
 install-macos = [
-    """which podman && exit 0 \
+    """which podman >/dev/null && exit 0 \
         || curl -sL https://github.com/containers/podman/releases/download/v{env:PODMAN_VERSION}/podman-installer-macos-universal.pkg \
         -o /tmp/podman-installer-macos-universal.pkg""",
-    """which podman && exit 0 \
+    """which podman >/dev/null && exit 0 \
         || sudo installer -pkg /tmp/podman-installer-macos-universal.pkg -target /""",
+    "podman machine inspect >/dev/null 2>&1 || podman machine init",
 ]
 
 [tool.hatch.envs.podman.overrides]
-platform.linux.pre-install-commands = [
-    "install-linux",
+platform.linux.scripts = [
+  "install=install-linux",
 ]
-platform.macos.pre-install-commands = [
-    "install-macos",
+platform.macos.scripts = [
+  "install=install-macos",
 ]
 
 [tool.hatch.envs.mongo]
@@ -175,8 +172,8 @@ MONGOPOD_NAME = "{env:MONGOPOD_NAME:pap_mongopod_test}"
 
 [tool.hatch.envs.mongo.scripts]
 start = [
-    "- podman machine init",
-    "- podman machine start",
+    "hatch run podman:install",
+    "- podman machine inspect >/dev/null 2>&1 && podman machine start",
     "podman start {env:MONGOPOD_NAME} || podman run -dt --name {env:MONGOPOD_NAME} -p {env:MONGO_INITDB_PORT}:27017/tcp docker.io/library/mongo:noble",
     "echo 'MongoDB should now be available at mongodb://localhost:{env:MONGO_INITDB_PORT}'"
 ]
@@ -186,6 +183,6 @@ stop = [
     "- podman rm pap_mongopod_test",
 ]
 restart = [
-    "stop",
+    "- stop",
     "start",
 ]
