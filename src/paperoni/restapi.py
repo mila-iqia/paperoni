@@ -557,6 +557,30 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=403, detail="Admin access required")
         yield user
 
+    def is_headless(request: Request, headless: bool = False) -> bool:
+        """Detect if request should use headless mode based on User-Agent.
+
+        Returns True for CLI tools (curl, wget, etc.) and False for browsers.
+        If explicit_headless is provided, it takes precedence.
+        """
+        user_agent = request.headers.get("user-agent", "").lower()
+
+        # Common browser identifiers
+        browser_indicators = [
+            "mozilla",
+            "chrome",
+            "firefox",
+            "safari",
+            "edge",
+            "opera",
+            "webkit",
+            "gecko",
+        ]
+
+        return headless or not any(
+            indicator in user_agent for indicator in browser_indicators
+        )
+
     @app.get("/")
     async def root():
         """Root endpoint with API information."""
@@ -569,10 +593,15 @@ def create_app() -> FastAPI:
     @app.get("/auth/login", response_model=LoginResponse)
     async def login(
         request: Request,
-        headless: bool = False,
+        headless: bool = Depends(is_headless),
         state: str = Depends(get_oauth_state),
     ):
-        """Initiate Google OAuth login."""
+        """Initiate Google OAuth login.
+
+        The headless parameter can be explicitly set, or it will be automatically
+        detected based on the User-Agent header:
+        - Browser User-Agents (Firefox, Chrome, Safari, etc.) -> headless=False
+        """
         # Generate state parameter for CSRF protection
         request.session.clear()
 
