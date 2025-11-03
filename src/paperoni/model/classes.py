@@ -240,7 +240,9 @@ class CollectionMixin:
         next_id: Callable[[], int] = lambda: None,
         **defaults,
     ) -> "CollectionMixin":
-        item = cls(**{**defaults, **vars(item)})
+        # Avoid errors coming from extra fields like '_id'
+        kwargs = {k: v for k, v in vars(item).items() if k in cls.__dataclass_fields__}
+        item = cls(**{**defaults, **kwargs})
         item.id = next_id() if item.id is None else item.id
         item.version = datetime.now() if item.version is None else item.version
         return item

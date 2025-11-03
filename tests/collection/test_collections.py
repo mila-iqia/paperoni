@@ -4,13 +4,16 @@ from typing import Generator
 
 import pytest
 from ovld import ovld
+from pytest_regressions.data_regression import DataRegressionFixture
+from serieux import serialize
 
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
-from paperoni.collection.mongocoll import MongoCollection
+from paperoni.collection.mongocoll import MongoCollection, MongoPaper
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model.classes import (
+    CollectionPaper,
     Institution,
     InstitutionCategory,
     Link,
@@ -110,6 +113,7 @@ def collection(request, tmp_path: Path) -> Generator[PaperCollection, None, None
     elif request.param == FileCollection:
         yield FileCollection(file=tmp_path / "collection.json")
     elif request.param == MongoCollection:
+        safe_to_drop = False
         try:
             mongo_collection = MongoCollection(database=tmp_path.name)
             assert (
@@ -119,9 +123,11 @@ def collection(request, tmp_path: Path) -> Generator[PaperCollection, None, None
                 empty the database before running the tests to avoid unwanted loss
                 of data."""
             )
+            safe_to_drop = True
             yield mongo_collection
         finally:
-            mongo_collection._client.drop_database(mongo_collection.database)
+            if safe_to_drop:
+                mongo_collection._client.drop_database(mongo_collection.database)
 
 
 def test_add_papers_multiple(collection, sample_papers: list[Paper]):
@@ -327,3 +333,33 @@ def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list[Paper
         # Reload the collection from the file
         FileCollection(file=tmp_path / "collection.json").search()
     )
+
+
+@pytest.mark.parametrize("paper_cls", [CollectionPaper, MongoPaper])
+def test_make_collection(
+    data_regression: DataRegressionFixture,
+    collection: PaperCollection,
+    sample_papers: list[Paper],
+    paper_cls: type[CollectionPaper],
+):
+    """Test making a collection."""
+    collection.add_papers(sample_papers)
+
+    papers = list(collection.search())
+    assert eq(papers, sample_papers)
+
+    paper = paper_cls.make_collection_item(papers[0])
+
+    if paper_cls is type(papers[0]):
+        assert paper == papers[0]
+    else:
+        assert paper.id == papers[0].id
+        assert eq(paper, papers[0])
+
+    paper = serialize(paper_cls, paper)
+    # MongoPaper uses ObjectId which will not be the same each time the test is
+    # run
+    paper["id"] = None if not isinstance(paper["id"], int) else paper["id"]
+    paper.pop("_id", None)
+    paper.pop("version")
+    data_regression.check(paper)
