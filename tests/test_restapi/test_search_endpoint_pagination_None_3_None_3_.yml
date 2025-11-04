@@ -3,6 +3,7 @@
   - affiliations:
     - aliases: []
       category: null
+      country: null
       name: MIT
     author: null
     display_name: John Doe
@@ -32,6 +33,7 @@
   - affiliations:
     - aliases: []
       category: null
+      country: null
       name: Stanford
     author: null
     display_name: Jane Smith
@@ -61,6 +63,7 @@
   - affiliations:
     - aliases: []
       category: null
+      country: null
       name: MIT
     author: null
     display_name: Alice Johnson

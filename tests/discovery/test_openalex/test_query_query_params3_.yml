@@ -17,6 +17,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -36,6 +37,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -47,6 +49,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: HEC Montréal
       author:
         aliases: []
@@ -60,6 +63,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -73,6 +77,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -86,6 +91,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []

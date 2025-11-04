@@ -3,6 +3,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Medical Physics Unit Department of Oncology McGill University  Montreal
       Quebec Canada
   author:
@@ -13,6 +14,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Medical Physics Unit Department of Oncology McGill University  Montreal
       Quebec Canada
   author:
@@ -23,6 +25,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Radiation Oncology St. Jude Children's Research Hospital  Memphis
       USA
   author:
@@ -33,6 +36,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Radiation Oncology St. Jude Children's Research Hospital  Memphis
       USA
   author:
@@ -43,6 +47,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Radiation Oncology Jewish General Hospital  Montreal Canada
   author:
     aliases: []
@@ -52,6 +57,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Gerald Bronfman Department of Oncology McGill University  Montreal Quebec
       Canada
   author:
@@ -62,6 +68,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Gerald Bronfman Department of Oncology McGill University  Montreal Quebec
       Canada
   author:
@@ -72,10 +79,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Lady Davis Institute for Medical Research Jewish General Hospital  Montreal
       Quebec Canada
   - aliases: []
     category: unknown
+    country: null
     name: Medical Physics Unit Department of Oncology McGill University  Montreal
       Quebec Canada
   author:
@@ -86,6 +95,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Gerald Bronfman Department of Oncology McGill University  Montreal Quebec
       Canada
   author:

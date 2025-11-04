@@ -8,9 +8,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Borealis AI
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Université de Montréal
       author:
         aliases: []
@@ -20,6 +22,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Borealis AI
       author:
         aliases: []
@@ -29,6 +32,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Université de Montréal
       author:
         aliases: []
@@ -38,6 +42,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Université de Montréal
       author:
         aliases: []

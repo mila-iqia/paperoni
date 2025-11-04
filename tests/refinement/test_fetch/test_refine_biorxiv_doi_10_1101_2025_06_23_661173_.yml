@@ -20,9 +20,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Physiology, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Mila, Université de Montréal
   author:
     aliases: []
@@ -32,6 +34,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Physiology, McGill University
   author:
     aliases: []
@@ -41,6 +44,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Biology, York University
   author:
     aliases: []
@@ -50,6 +54,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Neuroscience, Icahn School of Medicine at Mount Sinai
   author:
     aliases: []
@@ -59,6 +64,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Physiology and Pharmacology, University of Western Ontario
   author:
     aliases: []
@@ -68,12 +74,15 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Physiology, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Mila, Université de Montréal
   - aliases: []
     category: unknown
+    country: null
     name: Department of Computer Science, McGill University
   author:
     aliases: []

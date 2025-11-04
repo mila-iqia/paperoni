@@ -3,13 +3,16 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medical Evaluation and Epidemiology, Nantes University Hospital,
       Nantes, France
   - aliases: []
     category: unknown
+    country: null
     name: MiHAR Laboratory, University of Nantes, Nantes, France
   - aliases: []
     category: unknown
+    country: null
     name: Department of Epidemiology and Biostatistics, McGill University, Montreal,
       Québec, Canada
   author:
@@ -20,6 +23,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Epidemiology and Biostatistics, McGill University, Montreal,
       Québec, Canada
   author:
@@ -30,9 +34,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: MiHAR Laboratory, University of Nantes, Nantes, France
   - aliases: []
     category: unknown
+    country: null
     name: Department of Bacteriology and Infection Control, Nantes University Hospital,
       Nantes, France
   author:

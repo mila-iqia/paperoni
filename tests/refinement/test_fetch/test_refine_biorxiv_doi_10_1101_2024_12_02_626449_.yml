@@ -17,13 +17,16 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Mathematics and Statistics, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Department of Computer Science, Columbia University
   author:
     aliases: []
@@ -33,13 +36,16 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medicine, Division of Experimental Medicine, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Suzhou Institute of Systems Medicine, Chinese Academy of Medical Sciences
       & Peking Union Medical College
   author:
@@ -50,10 +56,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medicine, Division of Experimental Medicine, McGill University
   author:
     aliases: []
@@ -63,10 +71,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medicine, Division of Experimental Medicine, McGill University
   author:
     aliases: []
@@ -76,10 +86,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medicine, Division of Experimental Medicine, McGill University
   author:
     aliases: []
@@ -89,10 +101,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medicine, Division of Experimental Medicine, McGill University
   author:
     aliases: []
@@ -102,19 +116,24 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Meakins-Christie Laboratories, Research Institute of McGill University Health
       Centre
   - aliases: []
     category: unknown
+    country: null
     name: Department of Medicine, Division of Experimental Medicine, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Quantitative Life Sciences, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: School of Computer Science, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Mila-Quebec AI Institute, 6666 Rue Saint-Urbain, Montreal
   author:
     aliases: []

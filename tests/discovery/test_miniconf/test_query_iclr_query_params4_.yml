@@ -35,6 +35,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: TUDelft - Mila
       author:
         aliases: []
@@ -46,6 +47,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: School of Informatics, University of Edinburgh
       author:
         aliases: []
@@ -57,6 +59,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: MILA, University of Montreal
       author:
         aliases: []
@@ -68,6 +71,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Delft University of Technology
       author:
         aliases: []
@@ -125,6 +129,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université Paris-Saclay CNRS CentraleSupélec
       author:
         aliases: []
@@ -136,6 +141,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: New York University
       author:
         aliases: []
@@ -147,6 +153,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: TU Wien Vienna University of Technology
       author:
         aliases: []
@@ -158,6 +165,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: 'MILA - Quebec AI Institute '
       author:
         aliases: []
@@ -217,6 +225,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila
       author:
         aliases: []
@@ -228,6 +237,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, Université de Montréal
       author:
         aliases: []
@@ -239,6 +249,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila
       author:
         aliases: []
@@ -250,6 +261,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of Oxford
       author:
         aliases: []
@@ -261,6 +273,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, Quebec AI institute
       author:
         aliases: []
@@ -272,6 +285,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, University of Montreal
       author:
         aliases: []
@@ -283,6 +297,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila / Université de Montréal
       author:
         aliases: []
@@ -345,6 +360,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: MILA
       author:
         aliases: []
@@ -356,6 +372,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila &amp;amp;amp;amp; U. of Montreal
       author:
         aliases: []
@@ -367,6 +384,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - University dé Montréal
       author:
         aliases: []
@@ -378,6 +396,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -389,6 +408,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, Université de Montréal & Samsung SAIL Montreal
       author:
         aliases: []
@@ -400,6 +420,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, University of Montreal
       author:
         aliases: []
@@ -460,6 +481,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila -- Quebec AI Institute
       author:
         aliases: []
@@ -471,6 +493,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Carnegie Mellon University
       author:
         aliases: []
@@ -490,6 +513,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, University of Montreal
       author:
         aliases: []
@@ -501,6 +525,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Massachusetts Institute of Technology
       author:
         aliases: []
@@ -512,6 +537,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -523,6 +549,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal, Mila
       author:
         aliases: []

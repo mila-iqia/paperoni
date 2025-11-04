@@ -24,9 +24,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Institute for Research in Immunology and Cancer
   - aliases: []
     category: unknown
+    country: null
     name: DIRO, Université de Montréal
   author:
     aliases: []
@@ -36,9 +38,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Institute for Research in Immunology and Cancer
   - aliases: []
     category: unknown
+    country: null
     name: Department of Biochemistry, Université de Montréal
   author:
     aliases: []
