@@ -53,7 +53,11 @@ def openalex_title(type: Literal["title"], link: str):
     qm = OpenAlexQueryManager(mailto=config.mailto)
 
     papers = list(
-        qm.works(filter=f"display_name.search:{title.strip().replace(',', '')}", limit=1)
+        qm.works(
+            filter=f"display_name.search:{title.strip().replace(',', '')}",
+            data_version="1",
+            limit=1,
+        )
     )
 
     if not papers:
