@@ -2,7 +2,7 @@ import pprint
 import sys
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Literal, Optional
 
 from ..config import config
 from ..model.classes import (
@@ -212,15 +212,17 @@ class OpenAlexQueryManager:
             return None
 
         locations = data["locations"]
-        if locations:
-            assert locations[0] == data["primary_location"]
-        else:
-            assert data["primary_location"] is None
-            assert data["best_oa_location"] is None
 
-        # Assert consistency in paper ids
-        if data.get("doi"):
-            assert data["doi"] == data["ids"]["doi"]
+        ## These asserts start failing in the v2 of the data version
+        # if locations:
+        #     assert locations[0] == data["primary_location"]
+        # else:
+        #     assert data["primary_location"] is None
+        #     assert data["best_oa_location"] is None
+
+        # # Assert consistency in paper ids
+        # if data.get("doi"):
+        #     assert data["doi"] == data["ids"]["doi"]
 
         # NB: From locations we can collect links that directly lead to paper.
         # We collect them here so that they can also be added to paper "links" field.
@@ -236,13 +238,21 @@ class OpenAlexQueryManager:
             if location["pdf_url"]:
                 links_from_locations.append(_get_link("pdf", location["pdf_url"]))
 
-        # For releases, we will use only primary location
+        def venue_name(loc):
+            vn = candidate.get("raw_source_name", None)
+            if vn is None and loc["source"]:
+                vn = loc["source"]["display_name"]
+            if vn and vn.startswith("http"):
+                return None
+            return vn
+
+        # For releases, we will use only primary location if there is a source name
         release_locations = []
-        if (
-            data["primary_location"] is not None
-            and data["primary_location"]["source"] is not None
-        ):
-            release_locations = [data["primary_location"]]
+        candidates = [data["primary_location"], *locations]
+        for candidate in candidates:
+            if candidate is not None and venue_name(candidate) is not None:
+                release_locations = [candidate]
+                break
 
         # We will use work publication date with primary location to set release
         publication_date = date.fromisoformat(data["publication_date"])
@@ -286,6 +296,7 @@ class OpenAlexQueryManager:
                             aliases=[],
                         )
                         for author_inst in authorship["institutions"]
+                        if author_inst["display_name"]
                     ],
                 )
                 for authorship in data["authorships"]
@@ -293,13 +304,15 @@ class OpenAlexQueryManager:
             releases=[
                 Release(
                     venue=Venue(
-                        type=VENUE_TYPE_MAPPING[location["source"]["type"]],
-                        name=location["source"]["display_name"],
+                        type=VENUE_TYPE_MAPPING[
+                            (lsrc := location["source"] or {}).get("type", "repository")
+                        ],
+                        name=venue_name(location),
                         series="",
                         date=publication_date,
                         date_precision=DatePrecision.day,
                         volume=None,
-                        publisher=location["source"]["host_organization_name"],
+                        publisher=lsrc.get("host_organization_name", None),
                         aliases=[],
                         links=(
                             [
@@ -320,7 +333,8 @@ class OpenAlexQueryManager:
                         open=location["is_oa"],
                         # https://docs.openalex.org/api-entities/works/work-object/location-object#version
                         peer_reviewed=(
-                            location["version"] in ("acceptedVersion", "publishedVersion")
+                            location.get("version", None)
+                            in ("acceptedVersion", "publishedVersion")
                         ),
                     ),
                     status=(
@@ -395,6 +409,8 @@ class OpenAlex(Discoverer):
         # If specified, display debug info
         # [alias: -v]
         verbose: bool = False,
+        # Data version
+        data_version: Literal["1", "2"] = "1",
         # A list of focuses
         focuses: Focuses = None,
     ):
@@ -421,6 +437,7 @@ class OpenAlex(Discoverer):
                                 author=name,
                                 institution=institution,
                                 title=title,
+                                data_version=data_version,
                                 page=page,
                                 per_page=per_page,
                                 verbose=verbose,
@@ -434,6 +451,7 @@ class OpenAlex(Discoverer):
                                 author_id=aid,
                                 institution=institution,
                                 title=title,
+                                data_version=data_version,
                                 page=page,
                                 per_page=per_page,
                                 verbose=verbose,
@@ -447,6 +465,7 @@ class OpenAlex(Discoverer):
                                 author=author,
                                 institution=name,
                                 title=title,
+                                data_version=data_version,
                                 page=page,
                                 per_page=per_page,
                                 verbose=verbose,
@@ -487,7 +506,7 @@ class OpenAlex(Discoverer):
         if title:
             filters.append(f"display_name.search:{title}")
 
-        params = {}
+        params = {"data_version": str(data_version)}
         if filters:
             params["filter"] = ",".join(filters)
             if verbose:
