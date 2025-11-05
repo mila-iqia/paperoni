@@ -242,7 +242,7 @@ class OpenAlexQueryManager:
             vn = candidate.get("raw_source_name", None)
             if vn is None and loc["source"]:
                 vn = loc["source"]["display_name"]
-            if vn and vn.startswith("http"):
+            if vn and (vn.startswith("http") or "CiteSeer" in vn):
                 return None
             return vn
 
