@@ -213,12 +213,15 @@ class OpenAlexQueryManager:
 
         locations = data["locations"]
 
-        ## These asserts start failing in the v2 of the data version
-        # if locations:
-        #     assert locations[0] == data["primary_location"]
-        # else:
-        #     assert data["primary_location"] is None
-        #     assert data["best_oa_location"] is None
+        if locations:
+            # data["primary_location"] apparently has more keys than
+            # locations[0]. In particular, it has the additional "version" and
+            # "is_accepted" keys.
+            for key in locations[0].keys():
+                assert locations[0][key] == data["primary_location"][key]
+        else:
+            assert data["primary_location"] is None
+            assert data["best_oa_location"] is None
 
         # # Assert consistency in paper ids
         # if data.get("doi"):
