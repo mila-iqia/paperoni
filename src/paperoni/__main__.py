@@ -539,8 +539,34 @@ class Coll:
             self.format(papers)
             return papers
 
+    @dataclass
+    class Import:
+        """Import papers from a file."""
+
+        # File to import from
+        # [positional]
+        file: Path
+
+        def run(self, coll: "Coll"):
+            coll.collection.add_papers(deserialize(list[Paper], self.file))
+
+    @dataclass
+    class Export:
+        """Export papers to a file."""
+
+        # File to export to
+        # [positional]
+        file: Path = None
+
+        def run(self, coll: "Coll"):
+            papers = list(coll.collection.search())
+            if self.file:
+                dump(list[Paper], papers, dest=self.file)
+            else:
+                print(json.dumps(serialize(list[Paper], papers), indent=4))
+
     # Command to execute
-    command: TaggedUnion[Search]
+    command: TaggedUnion[Search, Import, Export]
 
     # Collection dir
     # [alias: -c]
