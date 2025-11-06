@@ -61,8 +61,8 @@ class PagingMixin:
     # Max number of results to return
     size: int = field(default=100)
 
-    _count: NoneType = field(repr=False, compare=False, default=None)
-    _next_offset: NoneType = field(repr=False, compare=False, default=None)
+    _count: int | None = field(repr=False, compare=False, default=None)
+    _next_offset: int | None = field(repr=False, compare=False, default=None)
 
     @property
     def count(self) -> int:
@@ -97,16 +97,6 @@ class PagingMixin:
             # No more results
             self._next_offset = None
 
-    @classmethod
-    def serieux_deserialize(cls, obj: dict, ctx, call_next):
-        deserialized = cls(**{k: v for k, v in obj.items() if k in vars(PagingMixin())})
-        return deserialized
-
-    @classmethod
-    def serieux_serialize(cls, obj: "PagingMixin", ctx, call_next):
-        serialized = {k: v for k, v in vars(obj).items() if k in vars(PagingMixin())}
-        return serialized
-
 
 @dataclass
 class PagingResponseMixin:
@@ -125,6 +115,9 @@ class User:
 
     email: str
     as_user: bool = False
+
+    class SerieuxConfig:
+        allow_extras = True
 
     @cached_property
     def is_admin(self) -> bool:
@@ -164,28 +157,16 @@ class SearchRequest(PagingMixin, Coll.Search):
 
     # TODO: hide the format field from the api endpoint schema
     format: NoneType = field(
-        init=False, repr=False, compare=False, default_factory=lambda: VoidFormatter
+        init=False,
+        repr=False,
+        compare=False,
+        default_factory=lambda: VoidFormatter,
+        metadata={"ignore": True},
     )
 
     def __post_init__(self):
         # Type hinting for format
         self.format: VoidFormatter = self.format
-
-    @classmethod
-    def serieux_deserialize(cls, obj: dict, ctx, call_next):
-        fields: dict = {}
-        for parent in cls.__bases__:
-            fields.update(vars(deserialize(parent, obj, ctx)))
-        fields.pop("format")
-        return cls(**fields)
-
-    @classmethod
-    def serieux_serialize(cls, obj: "SearchRequest", ctx, call_next):
-        serialized = {}
-        for parent in cls.__bases__:
-            serialized.update(serialize(parent, obj, ctx))
-        serialized.pop("format")
-        return serialized
 
 
 @dataclass
@@ -200,21 +181,7 @@ class LocateFulltextRequest(PagingMixin, Fulltext.Locate):
     """Request model for fulltext locate."""
 
     def format(self, urls: list[URL]):
-        VoidFormatter(urls)
-
-    @classmethod
-    def serieux_deserialize(cls, obj: dict, ctx, call_next):
-        fields: dict = {}
-        for parent in cls.__bases__:
-            fields.update(vars(deserialize(parent, obj, ctx)))
-        return cls(**fields)
-
-    @classmethod
-    def serieux_serialize(cls, obj: "LocateFulltextRequest", ctx, call_next):
-        serialized = {}
-        for parent in cls.__bases__:
-            serialized.update(serialize(parent, obj, ctx))
-        return serialized
+        return VoidFormatter(urls)
 
 
 @dataclass
@@ -273,37 +240,25 @@ class IncludeResponse:
 class ViewRequest(PagingMixin, Work.View):
     """Request model for work state paper view."""
 
-    what: Literal["paper"] = field(init=False, repr=False, compare=False, default="paper")
-    n: NoneType = field(init=False, repr=False, compare=False, default=None)
+    what: Literal["paper"] = field(
+        init=False, repr=False, compare=False, default="paper", metadata={"ignore": True}
+    )
+    n: NoneType = field(
+        init=False, repr=False, compare=False, default=None, metadata={"ignore": True}
+    )
 
     # TODO: hide the format field from the api endpoint schema
     format: NoneType = field(
-        init=False, repr=False, compare=False, default_factory=lambda: VoidFormatter
+        init=False,
+        repr=False,
+        compare=False,
+        default_factory=lambda: VoidFormatter,
+        metadata={"ignore": True},
     )
 
     def __post_init__(self):
         # Type hinting for format
         self.format: VoidFormatter = self.format
-
-    @classmethod
-    def serieux_deserialize(cls, obj: dict, ctx, call_next):
-        fields: dict = {}
-        for parent in cls.__bases__:
-            fields.update(vars(deserialize(parent, obj, ctx)))
-        fields.pop("format")
-        fields.pop("n")
-        fields.pop("what")
-        return cls(**fields)
-
-    @classmethod
-    def serieux_serialize(cls, obj: "ViewRequest", ctx, call_next):
-        serialized = {}
-        for parent in cls.__bases__:
-            serialized.update(serialize(parent, obj, ctx))
-        serialized.pop("format")
-        serialized.pop("n")
-        serialized.pop("what")
-        return serialized
 
 
 @dataclass
