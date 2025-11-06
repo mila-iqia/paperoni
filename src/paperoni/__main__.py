@@ -29,11 +29,10 @@ from serieux import (
 )
 from serieux.features.tagset import FromEntryPoint
 
-from paperoni.refinement.llm_normalize import normalize_paper
-
 from .collection.abc import PaperCollection
 from .collection.filecoll import FileCollection
 from .collection.finder import Finder
+from .collection.remotecoll import RemoteCollection
 from .config import config
 from .dash import History
 from .display import display, terminal_width
@@ -45,6 +44,7 @@ from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
+from .refinement.llm_normalize import normalize_paper
 from .utils import deprox, prog, soft_fail, url_to_id
 
 
@@ -570,12 +570,15 @@ class Coll:
 
     # Collection dir
     # [alias: -c]
-    collection_file: Path = None
+    collection_path: str = None
 
     @cached_property
     def collection(self) -> PaperCollection:
-        if self.collection_file:
-            return FileCollection(file=self.collection_file)
+        if self.collection_path:
+            if self.collection_path.startswith("http"):
+                return RemoteCollection(endpoint=self.collection_path)
+            else:
+                return FileCollection(file=Path(self.collection_path))
         else:
             return config.collection
 
