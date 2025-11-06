@@ -10,10 +10,9 @@ from paperazzi.platforms.utils import Message
 from paperazzi.utils import _make_key, disk_cache, disk_store
 from serieux.features.encrypt import Secret
 
-# TODO: Move this to serieux
 _JSON_SCHEMA_TYPES = {
     "string": lambda x: isinstance(x, str),
-    # Enums are currently only supported for string types:
+    # NOTE: For now, in GenAI, enums are currently only supported for string types:
     # google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code':
     # 400, 'message': '*
     # GenerateContentRequest.generation_config.response_schema.properties[affiliations].items.properties[category].properties[$value].enum:
@@ -22,7 +21,7 @@ _JSON_SCHEMA_TYPES = {
     # "number": lambda x: isinstance(x, (int, float)),
     # "boolean": lambda x: isinstance(x, bool),
     # "array": lambda x: isinstance(x, (list, tuple)),
-    # "object": lambda x: True,
+    # "object": lambda x: isinstance(x, dict),
 }
 
 
@@ -34,7 +33,6 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
         # $schema is removed by root=False
         schema = serieux.schema(schema).compile(ref_policy="never", root=False)
 
-    # TODO: Move this to serieux
     if "enum" in schema and "type" not in schema:
         for json_type, is_type in _JSON_SCHEMA_TYPES.items():
             if all(is_type(item) for item in schema["enum"]):

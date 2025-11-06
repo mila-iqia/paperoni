@@ -29,7 +29,7 @@ FIRST_MESSAGE = """### The academic affiliation names to process:
 
 
 llm_config: PromptConfig = gifnoc.define(
-    f"paperoni.{Path(__file__).parent.name}",
+    "paperoni.llm_process_affiliation",
     PromptConfig,
     defaults={"system_prompt_template": DEFAULT_SYSTEM_MESSAGE},
 )

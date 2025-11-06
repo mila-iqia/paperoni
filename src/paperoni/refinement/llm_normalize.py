@@ -1,3 +1,4 @@
+import logging
 import re
 
 from outsight import send
@@ -129,6 +130,9 @@ def normalize_paper(paper: Paper, *, force: bool = False) -> Paper:
     for author in paper.authors:
         for i, affiliation in enumerate(author.affiliations[:]):
             affiliations = process_affiliations_prompt(affiliation, force)
+            if not affiliations:
+                logging.warning(f"LLM returned no affiliations from {affiliation.name}")
+                continue
             if affiliations[0] != author.affiliations[i]:
                 author.affiliations[i] = affiliations[0]
             author.affiliations.extend(affiliations[1:])
