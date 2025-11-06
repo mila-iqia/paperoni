@@ -11,11 +11,13 @@ import itertools
 import logging
 import secrets
 import urllib.parse
+import webbrowser
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache, partial
 from types import NoneType
 from typing import AsyncGenerator, Generator, Iterable, Literal
 
+import requests
 from anyio import Path
 from authlib.integrations.base_client import OAuthError
 from authlib.integrations.starlette_client import OAuth
@@ -739,3 +741,22 @@ def create_app() -> FastAPI:
         )
 
     return app
+
+
+def login(endpoint: str = "http://localhost:8000", headless: bool = False) -> str:
+    """Login to the paperoni server."""
+    if headless:
+        response = requests.get(f"{endpoint}/auth/login?headless=true").json()
+        print(
+            "Open the following URL in the browser:",
+            f"{response['headless_url']}",
+            sep="\n",
+        )
+    else:
+        response = requests.get(f"{endpoint}/auth/login").json()
+        # Open the URL in the browser
+        webbrowser.open(response["headless_url"])
+
+    # Wait for the user to login and get the access token
+    response = requests.get(response["token_url"]).json()
+    return response["access_token"]

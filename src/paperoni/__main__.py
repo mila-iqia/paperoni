@@ -668,7 +668,7 @@ class Serve:
     """Serve paperoni through a Rest API."""
 
     # Host to bind to
-    host: str = "127.0.0.1"
+    host: str = "localhost"
 
     # Port to bind to
     # [alias: -p]
@@ -688,7 +688,25 @@ class Serve:
         return True
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve]
+@dataclass
+class Login:
+    """Login to the paperoni server."""
+
+    # Endpoint to login to
+    endpoint: str = "http://localhost:8000"
+
+    # Whether to use headless mode
+    headless: bool = False
+
+    def run(self):
+        from paperoni.restapi import login
+
+        print(f"Access token: {login(self.endpoint, self.headless)}")
+
+
+PaperoniCommand = TaggedUnion[
+    Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve, Login
+]
 
 
 @dataclass
