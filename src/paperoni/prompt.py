@@ -37,7 +37,7 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
     # TODO: Move this to serieux
     if "enum" in schema and "type" not in schema:
         for json_type, is_type in _JSON_SCHEMA_TYPES.items():
-            if any(is_type(item) for item in schema["enum"]):
+            if all(is_type(item) for item in schema["enum"]):
                 schema["type"] = json_type
                 break
 
