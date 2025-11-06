@@ -11,7 +11,7 @@ from motor.motor_asyncio import (
     AsyncIOMotorDatabase,
 )
 from pymongo.errors import DuplicateKeyError
-from serieux import deserialize, serialize
+from serieux import AllowExtras, deserialize, serialize
 from serieux.features.encrypt import Secret
 
 from ..model.classes import (
@@ -50,7 +50,7 @@ class MongoMixin(CollectionMixin):
     def serieux_deserialize(cls, obj: dict, ctx, call_next):
         obj = obj.copy()
         obj["_id"] = str(obj["_id"]) if obj.get("_id", None) else None
-        return call_next(cls, obj, ctx)
+        return call_next(AllowExtras[cls], obj, ctx)
 
     @classmethod
     def serieux_serialize(cls, obj, ctx, call_next):
@@ -123,7 +123,7 @@ class MongoPaper(CollectionPaper, NormalizedPaper, MongoMixin):
     def serieux_deserialize(cls, obj, ctx, call_next):
         fields: dict = {}
         for parent in cls.__bases__:
-            fields.update(vars(deserialize(parent, obj, ctx)))
+            fields.update(vars(deserialize(AllowExtras[parent], obj, ctx)))
         return cls(**fields)
 
     @classmethod

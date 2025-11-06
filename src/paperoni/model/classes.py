@@ -141,6 +141,11 @@ class DatePrecision(int, Enum):
                 assert False
 
 
+class Base:
+    class SerieuxConfig:
+        allow_extras = True
+
+
 @dataclass(frozen=True)
 class Link:
     type: str
@@ -159,14 +164,14 @@ class Topic:
 
 
 @dataclass
-class Author:
+class Author(Base):
     name: str
     aliases: list[str] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
 
 
 @dataclass
-class Institution:
+class Institution(Base):
     name: str
     category: InstitutionCategory = InstitutionCategory.unknown
     country: str = None
@@ -196,14 +201,14 @@ class Release:
 
 
 @dataclass
-class PaperAuthor:
+class PaperAuthor(Base):
     author: Author
     display_name: str
     affiliations: list[Institution] = field(default_factory=list)
 
 
 @dataclass
-class Paper:
+class Paper(Base):
     title: str
     abstract: str = None
     authors: list[PaperAuthor] = field(default_factory=list)
