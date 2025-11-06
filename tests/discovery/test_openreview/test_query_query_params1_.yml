@@ -66,6 +66,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -74,6 +75,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: '$C^2M^3$: Cycle-Consistent Multi-Model Merging'
@@ -133,6 +135,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -141,6 +144,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: '3-in-1: 2D Rotary Adaptation for Efficient Finetuning, Efficient Batching
@@ -226,6 +230,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -234,6 +239,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: 3D Focusing-and-Matching Network for Multi-Instance Point Cloud Registration
@@ -352,6 +358,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -360,6 +367,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: '4M-21: An Any-to-Any Vision Model for Tens of Tasks and Modalities'
@@ -445,6 +453,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -453,6 +462,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: A Bayesian Approach to Data Point Selection

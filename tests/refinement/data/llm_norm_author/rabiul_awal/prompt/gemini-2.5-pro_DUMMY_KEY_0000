@@ -1,0 +1,81 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Thu, 06 Nov 2025 17:29:36 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=4411",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "video_metadata": null,
+            "thought": null,
+            "inline_data": null,
+            "file_data": null,
+            "thought_signature": null,
+            "function_call": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "function_response": null,
+            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Rabiul Awal\",\n    \"$comment\": {\n      \"reasoning\": \"The author's name is already correctly formatted in title case. No normalization is required as it adheres to the specified rules.\",\n      \"quote\": \"Rabiul Awal\"\n    }\n  }\n}"
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "url_context_metadata": null,
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "ANsMaYKLHtKk_uMPqdqemQU",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 79,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 468,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 468
+      }
+    ],
+    "thoughts_token_count": 212,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 759,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "normalized_author": {
+      "$value": "Rabiul Awal",
+      "$comment": {
+        "reasoning": "The author's name is already correctly formatted in title case. No normalization is required as it adheres to the specified rules.",
+        "quote": "Rabiul Awal"
+      }
+    }
+  }
+}

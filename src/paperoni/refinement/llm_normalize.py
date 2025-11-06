@@ -6,10 +6,11 @@ from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
 from ..config import config
-from ..model.classes import Institution, InstitutionCategory, Paper
+from ..model.classes import Institution, InstitutionCategory, Paper, Venue
 from ..prompt import ParsedResponseSerializer
-from ..utils import normalize_institution, normalize_name
+from ..utils import normalize_institution, normalize_name, normalize_venue
 from .llm_norm_author import model as norm_author_model
+from .llm_norm_venues import model as norm_venue_model
 from .llm_process_affiliation import model as process_affiliation_model
 from .llm_utils import force_prompt
 
@@ -126,6 +127,58 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
     return str(analysis.normalized_author)
 
 
+def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
+    send(
+        prompt=norm_venue_model.Analysis.__module__,
+        model=config.refine.prompt.model,
+        input=venue.name,
+    )
+
+    cache_dir = (
+        config.data_path
+        / norm_venue_model.__package__.split(".")[-1]
+        / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_venue(venue.name))
+    )
+
+    prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
+        serializer=ParsedResponseSerializer[norm_venue_model.Analysis],
+        cache_dir=cache_dir / "prompt",
+        make_key=config.refine.prompt._make_key,
+        prefix=config.refine.prompt.model,
+        index=0,
+    )
+    prompt_kwargs = {
+        "client": config.refine.prompt.client,
+        "messages": [
+            Message(
+                type="system",
+                prompt=norm_venue_model.llm_config.system_prompt,
+            ),
+            Message(
+                type="user",
+                prompt=norm_venue_model.FIRST_MESSAGE,
+                args=(venue.name,),
+            ),
+        ],
+        "model": config.refine.prompt.model,
+        "structured_model": norm_venue_model.Analysis,
+    }
+
+    if force:
+        analysis: norm_venue_model.Analysis = force_prompt(prompt, **prompt_kwargs).parsed
+    else:
+        analysis: norm_venue_model.Analysis = prompt(**prompt_kwargs).parsed
+
+    return Venue(
+        **{
+            **vars(venue),
+            "name": str(analysis.name),
+            "short_name": str(analysis.short_name) or venue.short_name,
+            "index": str(analysis.index) or venue.index,
+        }
+    )
+
+
 def normalize_paper(paper: Paper, *, force: bool = False) -> Paper:
     for author in paper.authors:
         for i, affiliation in enumerate(author.affiliations[:]):
@@ -142,5 +195,15 @@ def normalize_paper(paper: Paper, *, force: bool = False) -> Paper:
             author.author.aliases = [author.author.name, *author.author.aliases]
             author.author.name = author.display_name
             author.display_name = display_name
+
+    for release in paper.releases:
+        venue = norm_venue_prompt(release.venue, force)
+        if venue != release.venue:
+            if (
+                venue.name != release.venue.name
+                and release.venue.name not in venue.aliases
+            ):
+                venue.aliases = [release.venue.name, *venue.aliases]
+            release.venue = venue
 
     return paper

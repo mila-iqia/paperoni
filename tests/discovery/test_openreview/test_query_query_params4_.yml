@@ -154,6 +154,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -162,6 +163,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: Amortizing intractable inference in diffusion models for vision, language,
@@ -277,6 +279,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -285,6 +288,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: Improved off-policy training of diffusion samplers
@@ -411,6 +415,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -419,6 +424,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: 'Metacognitive Capabilities of LLMs: An Exploration in Mathematical Problem
@@ -531,6 +537,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -539,6 +546,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: 'RGFN: Synthesizable Molecular Generation Using GFlowNets'
@@ -636,6 +644,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -644,6 +653,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: Trajectory Flow Matching with Applications to Clinical Time Series Modelling

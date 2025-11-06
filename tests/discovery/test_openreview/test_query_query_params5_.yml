@@ -98,6 +98,7 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue
@@ -106,6 +107,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: Improved off-policy training of diffusion samplers

@@ -83,6 +83,7 @@ releases:
     aliases: []
     date: '2018-01-01'
     date_precision: 3
+    index: null
     links:
     - link: '1810.04805'
       type: arxiv
@@ -91,6 +92,7 @@ releases:
     peer_reviewed: false
     publisher: Cornell University
     series: ''
+    short_name: null
     type: unknown
     volume: null
 title: 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding'

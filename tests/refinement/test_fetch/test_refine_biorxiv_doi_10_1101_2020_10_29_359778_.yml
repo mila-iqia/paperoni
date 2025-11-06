@@ -131,12 +131,14 @@ releases:
     aliases: []
     date: '2020-10-29'
     date_precision: 3
+    index: null
     links: []
     name: bioRxiv
     open: false
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory
     series: bioRxiv
+    short_name: null
     type: journal
     volume: null
 title: 'Neuroimaging: into the Multiverse'

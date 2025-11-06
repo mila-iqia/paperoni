@@ -98,12 +98,14 @@ releases:
     aliases: []
     date: '2025-06-01'
     date_precision: 2
+    index: null
     links: []
     name: IEEE Communications Surveys &amp; Tutorials
     open: false
     peer_reviewed: false
     publisher: null
     series: IEEE Communications Surveys &amp; Tutorials
+    short_name: null
     type: journal
     volume: null
 title: 'Evolution of High-Throughput Satellite Systems: A Vision of Programmable Regenerative

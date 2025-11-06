@@ -18,12 +18,14 @@
       aliases: []
       date: '2023-03-01'
       date_precision: 3
+      index: null
       links: []
       name: ML Conference
       open: false
       peer_reviewed: false
       publisher: null
       series: ML Conference
+      short_name: null
       type: conference
       volume: null
   title: Machine Learning Paper

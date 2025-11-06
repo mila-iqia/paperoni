@@ -59,12 +59,14 @@ releases:
     aliases: []
     date: '2019-05-13'
     date_precision: 3
+    index: null
     links: []
     name: Journal of Hospital Infection
     open: false
     peer_reviewed: true
     publisher: Elsevier BV
     series: Journal of Hospital Infection
+    short_name: null
     type: journal
     volume: null
 title: 'Evaluation of a web-based tool for labelling potential hospital outbreaks:

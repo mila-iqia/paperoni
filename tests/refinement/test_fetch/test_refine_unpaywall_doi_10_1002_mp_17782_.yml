@@ -116,12 +116,14 @@ releases:
     aliases: []
     date: '2025-04-01'
     date_precision: 3
+    index: null
     links: []
     name: Medical Physics
     open: false
     peer_reviewed: true
     publisher: Wiley
     series: Medical Physics
+    short_name: null
     type: journal
     volume: null
 title: Trade‐off of different deep learning‐based auto‐segmentation approaches for

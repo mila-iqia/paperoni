@@ -101,12 +101,14 @@ releases:
     aliases: []
     date: '2024-06-01'
     date_precision: 2
+    index: null
     links: []
     name: Value in Health
     open: false
     peer_reviewed: false
     publisher: null
     series: Value in Health
+    short_name: null
     type: journal
     volume: null
 title: 'PCR191 Patient-Centric Assessment of Treatment Experience in Breast Cancer:

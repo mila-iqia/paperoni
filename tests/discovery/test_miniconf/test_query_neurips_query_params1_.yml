@@ -226,12 +226,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in diffusion models for vision, language,
@@ -387,12 +389,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Improved off-policy training of diffusion samplers
@@ -563,12 +567,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: 'Metacognitive Capabilities of LLMs: An Exploration in Mathematical Problem
@@ -729,12 +735,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: 'RGFN: Synthesizable Molecular Generation Using GFlowNets'
@@ -867,12 +875,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Trajectory Flow Matching with Applications to Clinical Time Series Modelling

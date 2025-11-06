@@ -74,12 +74,14 @@
         aliases: []
         date: '2021-03-03'
         date_precision: 3
+        index: null
         links: []
         name: IEEE Transactions on Neural Networks and Learning Systems
         open: false
         peer_reviewed: false
         publisher: null
         series: IEEE Transactions on Neural Networks and Learning Systems
+        short_name: null
         type: journal
         volume: '33'
     title: A Two-Stream Continual Learning System With Variational Domain-Agnostic
@@ -1501,12 +1503,14 @@
         aliases: []
         date: '2023-10-13'
         date_precision: 3
+        index: null
         links: []
         name: Molecular Informatics
         open: false
         peer_reviewed: false
         publisher: null
         series: Molecular Informatics
+        short_name: null
         type: journal
         volume: '43'
     title: A community effort in SARS-CoV-2 drug discovery
@@ -1575,12 +1579,14 @@
         aliases: []
         date: '1990-04-03'
         date_precision: 3
+        index: null
         links: []
         name: IEEE International Conference on Acoustics, Speech, and Signal Processing
         open: false
         peer_reviewed: false
         publisher: null
         series: IEEE International Conference on Acoustics, Speech, and Signal Processing
+        short_name: null
         type: journal
         volume: null
     title: A hybrid coder for hidden Markov models using a recurrent neural networks
@@ -1704,12 +1710,14 @@
         aliases: []
         date: '2024-09-23'
         date_precision: 3
+        index: null
         links: []
         name: bioRxiv
         open: false
         peer_reviewed: false
         publisher: null
         series: bioRxiv
+        short_name: null
         type: journal
         volume: '12'
     title: A neuronal least-action principle for real-time learning in cortical circuits
@@ -1755,12 +1763,14 @@
         aliases: []
         date: '2023-10-01'
         date_precision: 3
+        index: null
         links: []
         name: Journal of Democracy
         open: false
         peer_reviewed: false
         publisher: null
         series: Journal of Democracy
+        short_name: null
         type: journal
         volume: '34'
     title: AI and Catastrophic Risk

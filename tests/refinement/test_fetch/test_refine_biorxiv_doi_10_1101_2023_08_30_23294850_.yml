@@ -87,12 +87,14 @@ releases:
     aliases: []
     date: '2023-09-01'
     date_precision: 3
+    index: null
     links: []
     name: medRxiv
     open: false
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory Press
     series: medRxiv
+    short_name: null
     type: journal
     volume: null
 title: Using Artificial Intelligence To Label Free-Text Operative And Ultrasound Reports

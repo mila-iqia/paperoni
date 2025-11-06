@@ -106,12 +106,14 @@
         aliases: []
         date: '2024-07-23'
         date_precision: 3
+        index: null
         links: []
         name: ICML
         open: true
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Computational Framework for Solving Wasserstein Lagrangian Flows
@@ -248,12 +250,14 @@
         aliases: []
         date: '2024-07-23'
         date_precision: 3
+        index: null
         links: []
         name: ICML
         open: true
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Distributional Analogue to the Successor Representation
@@ -345,12 +349,14 @@
         aliases: []
         date: '2024-07-23'
         date_precision: 3
+        index: null
         links: []
         name: ICML
         open: true
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Persuasive Approach to Combating Misinformation
@@ -476,12 +482,14 @@
         aliases: []
         date: '2024-07-23'
         date_precision: 3
+        index: null
         links: []
         name: ICML
         open: true
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Sparsity Principle for Partially Observable Causal Representation Learning
@@ -569,12 +577,14 @@
         aliases: []
         date: '2024-07-23'
         date_precision: 3
+        index: null
         links: []
         name: ICML
         open: true
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Tensor Decomposition Perspective on Second-order RNNs

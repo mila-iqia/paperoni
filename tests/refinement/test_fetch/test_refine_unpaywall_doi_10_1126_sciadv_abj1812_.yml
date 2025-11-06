@@ -212,12 +212,14 @@ releases:
     aliases: []
     date: '2022-03-16'
     date_precision: 3
+    index: null
     links: []
     name: Science Advances
     open: true
     peer_reviewed: true
     publisher: American Association for the Advancement of Science (AAAS)
     series: Science Advances
+    short_name: null
     type: journal
     volume: null
 title: Cross-ethnicity/race generalization failure of behavioral prediction from resting-state

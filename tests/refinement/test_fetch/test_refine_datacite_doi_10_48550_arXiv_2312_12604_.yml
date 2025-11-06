@@ -88,12 +88,14 @@ releases:
     aliases: []
     date: '2023-12-01'
     date_precision: 2
+    index: null
     links: []
     name: arXiv
     open: false
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: An empirical study of testing machine learning in the wild

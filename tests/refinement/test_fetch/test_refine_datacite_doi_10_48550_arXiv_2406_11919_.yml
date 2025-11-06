@@ -38,12 +38,14 @@ releases:
     aliases: []
     date: '2024-06-01'
     date_precision: 2
+    index: null
     links: []
     name: arXiv
     open: false
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: Graph Knowledge Distillation to Mixture of Experts

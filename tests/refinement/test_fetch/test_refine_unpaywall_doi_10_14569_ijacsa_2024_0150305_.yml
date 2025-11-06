@@ -31,12 +31,14 @@ releases:
     aliases: []
     date: '2024-01-01'
     date_precision: 3
+    index: null
     links: []
     name: International Journal of Advanced Computer Science and Applications
     open: true
     peer_reviewed: true
     publisher: The Science and Information Organization
     series: International Journal of Advanced Computer Science and Applications
+    short_name: null
     type: journal
     volume: null
 title: Generative Adversarial Neural Networks for Realistic Stock Market Simulations

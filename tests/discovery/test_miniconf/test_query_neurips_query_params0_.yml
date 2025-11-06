@@ -99,12 +99,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: A Foundation Model for Zero-shot Logical Query Reasoning
@@ -213,12 +215,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Action Gaps and Advantages in Continuous-Time Distributional Reinforcement
@@ -304,12 +308,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Adaptive Exploration for Data-Efficient General Value Function Evaluations
@@ -544,12 +550,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in diffusion models for vision, language,
@@ -650,12 +658,14 @@
         aliases: []
         date: '2024-12-11'
         date_precision: 3
+        index: null
         links: []
         name: NEURIPS
         open: true
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Balancing Context Length and Mixing Times for Reinforcement Learning at

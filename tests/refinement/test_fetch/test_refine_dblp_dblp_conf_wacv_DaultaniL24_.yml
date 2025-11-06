@@ -29,12 +29,14 @@ releases:
     aliases: []
     date: '2024-01-01'
     date_precision: 1
+    index: null
     links: []
     name: WACV (Workshops)
     open: false
     peer_reviewed: false
     publisher: null
     series: WACV (Workshops)
+    short_name: null
     type: journal
     volume: null
 title: Consolidating Separate Degradations Model via Weights Fusion and Distillation.

@@ -476,12 +476,14 @@ releases:
     aliases: []
     date: '2023-05-17'
     date_precision: 3
+    index: null
     links: []
     name: bioRxiv
     open: false
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory
     series: bioRxiv
+    short_name: null
     type: journal
     volume: null
 title: 'Modeling and Simulation of Neocortical Micro- and Mesocircuitry. Part II:

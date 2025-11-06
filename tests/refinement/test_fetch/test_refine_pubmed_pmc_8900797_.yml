@@ -138,12 +138,14 @@ releases:
     aliases: []
     date: '2022-02-14'
     date_precision: 3
+    index: null
     links: []
     name: 'CMAJ : Canadian Medical Association Journal'
     open: false
     peer_reviewed: false
     publisher: Canadian Medical Association
     series: 'CMAJ : Canadian Medical Association Journal'
+    short_name: null
     type: journal
     volume: null
 title: 'Geographic concentration of SARS-CoV-2 cases by social determinants of health

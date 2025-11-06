@@ -35,12 +35,14 @@ releases:
     aliases: []
     date: '2022-10-01'
     date_precision: 2
+    index: null
     links: []
     name: Neurocomputing
     open: false
     peer_reviewed: false
     publisher: null
     series: Neurocomputing
+    short_name: null
     type: journal
     volume: null
 title: Interpretable domain adaptation using unsupervised feature selection on pre-trained

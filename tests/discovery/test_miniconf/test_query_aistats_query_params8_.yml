@@ -67,12 +67,14 @@
         aliases: []
         date: '2024-05-02'
         date_precision: 3
+        index: null
         links: []
         name: AISTATS
         open: true
         peer_reviewed: true
         publisher: null
         series: AISTATS
+        short_name: null
         type: conference
         volume: null
     title: Conditions on Preference Relations that Guarantee the Existence of Optimal
@@ -181,12 +183,14 @@
         aliases: []
         date: '2024-05-02'
         date_precision: 3
+        index: null
         links: []
         name: AISTATS
         open: true
         peer_reviewed: true
         publisher: null
         series: AISTATS
+        short_name: null
         type: conference
         volume: null
     title: E(3)-Equivariant Mesh Neural Networks
@@ -259,12 +263,14 @@
         aliases: []
         date: '2024-05-02'
         date_precision: 3
+        index: null
         links: []
         name: AISTATS
         open: true
         peer_reviewed: true
         publisher: null
         series: AISTATS
+        short_name: null
         type: conference
         volume: null
     title: Generating and Imputing Tabular Data via Diffusion and Flow-based Gradient-Boosted
@@ -377,12 +383,14 @@
         aliases: []
         date: '2024-05-02'
         date_precision: 3
+        index: null
         links: []
         name: AISTATS
         open: true
         peer_reviewed: true
         publisher: null
         series: AISTATS
+        short_name: null
         type: conference
         volume: null
     title: Length independent PAC-Bayes bounds for Simple RNNs
@@ -465,12 +473,14 @@
         aliases: []
         date: '2024-05-02'
         date_precision: 3
+        index: null
         links: []
         name: AISTATS
         open: true
         peer_reviewed: true
         publisher: null
         series: AISTATS
+        short_name: null
         type: conference
         volume: null
     title: Maximum entropy GFlowNets with soft Q-learning

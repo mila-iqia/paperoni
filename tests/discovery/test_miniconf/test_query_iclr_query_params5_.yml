@@ -122,12 +122,14 @@
         aliases: []
         date: '2024-05-07'
         date_precision: 3
+        index: null
         links: []
         name: ICLR
         open: true
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in large language models
@@ -238,12 +240,14 @@
         aliases: []
         date: '2024-05-07'
         date_precision: 3
+        index: null
         links: []
         name: ICLR
         open: true
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Consciousness-Inspired Spatio-Temporal Abstractions for Better Generalization
@@ -329,12 +333,14 @@
         aliases: []
         date: '2024-05-07'
         date_precision: 3
+        index: null
         links: []
         name: ICLR
         open: true
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Cycle Consistency Driven Object Discovery
@@ -475,12 +481,14 @@
         aliases: []
         date: '2024-05-07'
         date_precision: 3
+        index: null
         links: []
         name: ICLR
         open: true
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: 'Delta-AI: Local objectives for amortized inference in sparse graphical
@@ -583,12 +591,14 @@
         aliases: []
         date: '2024-05-07'
         date_precision: 3
+        index: null
         links: []
         name: ICLR
         open: true
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: 'Diffusion Generative Flow Samplers: Improving learning signals through

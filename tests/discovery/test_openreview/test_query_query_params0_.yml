@@ -52,6 +52,7 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -60,6 +61,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: '3D Multi-bodies: Fitting Sets of Plausible 3D Human Models to Ambiguous
@@ -114,6 +116,7 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -122,6 +125,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Combinatorial Perspective on Transfer Learning
@@ -157,6 +161,7 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -165,6 +170,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
@@ -206,6 +212,7 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -214,6 +221,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Contour Stochastic  Gradient Langevin Dynamics Algorithm for Simulations
@@ -262,6 +270,7 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
+        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -270,6 +279,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Dynamical Central Limit Theorem for Shallow Neural Networks

@@ -18,12 +18,14 @@
       aliases: []
       date: '2023-01-01'
       date_precision: 3
+      index: null
       links: []
       name: Test Conference
       open: false
       peer_reviewed: false
       publisher: null
       series: Test Conference
+      short_name: null
       type: conference
       volume: null
   title: Test Paper 1
@@ -48,12 +50,14 @@
       aliases: []
       date: '2023-02-01'
       date_precision: 3
+      index: null
       links: []
       name: Test Journal
       open: false
       peer_reviewed: false
       publisher: null
       series: Test Journal
+      short_name: null
       type: journal
       volume: null
   title: Test Paper 2
@@ -78,12 +82,14 @@
       aliases: []
       date: '2023-03-01'
       date_precision: 3
+      index: null
       links: []
       name: ML Conference
       open: false
       peer_reviewed: false
       publisher: null
       series: ML Conference
+      short_name: null
       type: conference
       volume: null
   title: Machine Learning Paper

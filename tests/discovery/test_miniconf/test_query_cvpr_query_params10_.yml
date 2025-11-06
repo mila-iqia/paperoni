@@ -63,12 +63,14 @@
         aliases: []
         date: '2024-06-19'
         date_precision: 3
+        index: null
         links: []
         name: CVPR
         open: true
         peer_reviewed: true
         publisher: null
         series: CVPR
+        short_name: null
         type: conference
         volume: null
     title: Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance
@@ -159,12 +161,14 @@
         aliases: []
         date: '2024-06-19'
         date_precision: 3
+        index: null
         links: []
         name: CVPR
         open: true
         peer_reviewed: true
         publisher: null
         series: CVPR
+        short_name: null
         type: conference
         volume: null
     title: Overcoming Generic Knowledge Loss with Selective Parameter Update

@@ -54,12 +54,14 @@ releases:
     aliases: []
     date: '2023-01-01'
     date_precision: 1
+    index: null
     links: []
     name: Journal of Machine Learning Research
     open: false
     peer_reviewed: true
     publisher: JMLR
     series: JMLR
+    short_name: null
     type: journal
     volume: null
 title: Benchmarking Graph Neural Networks

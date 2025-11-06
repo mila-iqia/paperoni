@@ -102,6 +102,7 @@ releases:
     aliases: []
     date: '2017-01-01'
     date_precision: 3
+    index: null
     links:
     - link: '1706.03762'
       type: arxiv
@@ -110,6 +111,7 @@ releases:
     peer_reviewed: false
     publisher: Cornell University
     series: ''
+    short_name: null
     type: unknown
     volume: null
 title: Attention Is All You Need

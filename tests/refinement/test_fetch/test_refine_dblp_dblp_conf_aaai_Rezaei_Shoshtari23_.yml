@@ -53,12 +53,14 @@ releases:
     aliases: []
     date: '2023-01-01'
     date_precision: 1
+    index: null
     links: []
     name: AAAI
     open: false
     peer_reviewed: false
     publisher: null
     series: AAAI
+    short_name: null
     type: journal
     volume: null
 title: Hypernetworks for Zero-Shot Transfer in Reinforcement Learning.

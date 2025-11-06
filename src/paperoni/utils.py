@@ -193,6 +193,10 @@ def normalize_title(title: str) -> str:
     return plainify(title).replace(" ", "")
 
 
+def normalize_venue(venue: str) -> str:
+    return unidecode(venue).lower()
+
+
 def split_institution(name: str) -> list[str]:
     return re.split(r" *[,;/-] *", name)
 

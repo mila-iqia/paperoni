@@ -69,12 +69,14 @@ releases:
     aliases: []
     date: '2023-01-01'
     date_precision: 1
+    index: null
     links: []
     name: ICML
     open: false
     peer_reviewed: false
     publisher: null
     series: ICML
+    short_name: null
     type: journal
     volume: null
 title: 'Synergies between Disentanglement and Sparsity: Generalization and Identifiability

@@ -48,12 +48,14 @@ releases:
     aliases: []
     date: '2023-10-01'
     date_precision: 2
+    index: null
     links: []
     name: arXiv
     open: false
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: Faithfulness Measurable Masked Language Models

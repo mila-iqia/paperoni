@@ -92,12 +92,14 @@ releases:
     aliases: []
     date: '2024-11-11'
     date_precision: 3
+    index: null
     links: []
     name: Cerebral Cortex (New York, NY)
     open: false
     peer_reviewed: false
     publisher: Oxford University Press
     series: Cerebral Cortex (New York, NY)
+    short_name: null
     type: journal
     volume: null
 title: Specific inhibition and disinhibition in the higher-order structure of a cortical

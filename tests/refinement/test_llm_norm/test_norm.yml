@@ -1,0 +1,67 @@
+- info:
+    refined_by:
+      unpaywall: doi:10.1109/cvpr52733.2024.01307
+  key: doi:10.1109/cvpr52733.2024.01307
+  paper:
+    abstract: null
+    authors:
+    - affiliations:
+      - aliases:
+        - Mila - Quebec AI Institute
+        category: academia
+        country: Canada
+        name: Mila
+      author:
+        aliases: []
+        links: []
+        name: Le Zhang
+      display_name: Le Zhang
+    - affiliations:
+      - aliases:
+        - Mila - Quebec AI Institute
+        category: academia
+        country: Canada
+        name: Mila
+      author:
+        aliases: []
+        links: []
+        name: Rabiul Awal
+      display_name: Rabiul Awal
+    - affiliations:
+      - aliases:
+        - Mila - Quebec AI Institute
+        category: academia
+        country: Canada
+        name: Mila
+      author:
+        aliases: []
+        links: []
+        name: Aishwarya Agrawal
+      display_name: Aishwarya Agrawal
+    flags: []
+    links:
+    - link: 10.1109/cvpr52733.2024.01307
+      type: doi
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases:
+        - 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
+        date: '2024-06-16'
+        date_precision: 3
+        index: '2024'
+        links: []
+        name: IEEE / CVF Conference on Computer Vision and Pattern Recognition
+        open: false
+        peer_reviewed: true
+        publisher: IEEE
+        series: 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition
+          (CVPR)
+        short_name: CVPR
+        type: journal
+        volume: null
+    title: Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance
+      Visio-Linguistic Compositional Understanding
+    topics: []
+  score: 0.0

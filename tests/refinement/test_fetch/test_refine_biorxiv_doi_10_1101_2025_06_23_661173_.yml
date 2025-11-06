@@ -100,12 +100,14 @@ releases:
     aliases: []
     date: '2025-06-24'
     date_precision: 3
+    index: null
     links: []
     name: bioRxiv
     open: false
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory
     series: bioRxiv
+    short_name: null
     type: journal
     volume: null
 title: Spatially and non-spatially tuned hippocampal neurons are linear perceptual
