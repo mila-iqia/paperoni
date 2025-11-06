@@ -147,7 +147,7 @@ def generate_latest_html(start, end, serial, lang):
             continue
         if order >= 1:
             result.peers.append(paper)
-        elif order == 0:
+        elif order >= -1:
             pre_send = paper.latest_send["preprint"]
             if pre_send < serial:
                 continue
