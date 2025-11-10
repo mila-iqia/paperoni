@@ -101,7 +101,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
     )
 
     state = work(
-        Work.Get(command=SemanticScholar().query),
+        Work.Get(command=SemanticScholar().query, check_paper_updates=True),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
     )
@@ -128,7 +128,7 @@ def test_work_updates_collection_papers(tmp_path: Path):
     )
 
     state = work(
-        Work.Get(command=SemanticScholar().query),
+        Work.Get(command=SemanticScholar().query, check_paper_updates=True),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
     )

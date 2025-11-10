@@ -230,6 +230,9 @@ class Work:
     class Get(Productor):
         """Get articles from various sources."""
 
+        # [alias: -U]
+        check_paper_updates: bool = False
+
         def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions
 
@@ -257,7 +260,10 @@ class Work:
                 if (
                     work.collection
                     and (col_paper := work.collection.find_paper(pinfo.paper))
-                    and not paper_has_updated(col_paper, pinfo.paper)
+                    and (
+                        not self.check_paper_updates
+                        or not paper_has_updated(col_paper, pinfo.paper)
+                    )
                 ):
                     continue
 
