@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Annotated, Any
 
-from serieux import Auto
+from serieux import Auto, Field, Model
 from serieux.features.tagset import FromEntryPoint
 
 from ..model.focus import Focuses
@@ -21,12 +21,12 @@ class DiscoBag:
     discoverers: list[DiscoT]
 
     @classmethod
-    def serieux_deserialize(cls, obj, ctx, call_next):
-        return cls(call_next(list[DiscoT], obj, ctx))
-
-    @classmethod
-    def serieux_serialize(cls, obj, ctx, call_next):
-        return call_next(list[DiscoT], obj.discoverers, ctx)
+    def serieux_model(cls, call_next):
+        return Model(
+            original_type=cls,
+            element_field=Field(name="_", type=DiscoT),
+            list_constructor=cls,
+        )
 
 
 @dataclass

@@ -194,11 +194,6 @@ def test_focuses_top():
 def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
     with gifnoc.overlay(
         {
-            "paperoni.focuses": [
-                "!institution :: Mila :: 10",
-                "!institution :: McGill University :: 1",
-                "!author :: Irina Rish :: 3",
-            ],
             "paperoni.autofocus": {
                 "author": {
                     "score": 1,
@@ -211,6 +206,15 @@ def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
         from paperoni.config import PaperoniConfig
 
         config: PaperoniConfig = config.paperoni
+
+        config.focuses = deserialize(
+            Focuses,
+            [
+                "!institution :: Mila :: 10",
+                "!institution :: McGill University :: 1",
+                "!author :: Irina Rish :: 3",
+            ],
+        )
 
         state = work(
             Work.Get(command=SemanticScholar().query),
