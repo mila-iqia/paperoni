@@ -4,6 +4,7 @@ from typing import Counter, Iterable, Literal
 
 from outsight import send
 from ovld import ovld
+from serieux import Field, Model
 
 from ..utils import (
     mostly_latin,
@@ -67,12 +68,15 @@ class Focuses:
                     raise ValueError(f"Invalid focus type: {f.type}")
 
     @classmethod
-    def serieux_deserialize(cls, obj, ctx, call_next):
-        return cls(call_next(list[Focus], obj, ctx))
+    def serieux_model(cls, call_next):
+        return Model(
+            original_type=cls,
+            element_field=Field(name="_", type=Focus),
+            list_constructor=lambda xs: cls(list(xs)),
+        )
 
-    @classmethod
-    def serieux_serialize(cls, obj, ctx, call_next):
-        return call_next(list[Focus], obj.focuses, ctx)
+    def __iter__(self):
+        return iter(self.focuses)
 
     @ovld
     def score(self, p: PaperInfo):
