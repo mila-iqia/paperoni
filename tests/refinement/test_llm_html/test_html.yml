@@ -8,14 +8,17 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Department of Cell & Systems Biology, University of Toronto, Toronto,
           Ontario, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Department of Biological Sciences, University of Toronto Scarborough,
           Toronto, Ontario, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Mila, Montréal, Québec, Canada
       author:
         aliases: []
@@ -25,6 +28,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -34,9 +38,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Department of Physics and Astronomy, York University, Toronto, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Centre for Vision Research, York University, Toronto, Canada
       author:
         aliases: []
@@ -46,6 +52,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -55,6 +62,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -64,6 +72,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -73,6 +82,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -82,9 +92,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Department of Physics and Astronomy, York University, Toronto, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Centre for Vision Research, York University, Toronto, Canada
       author:
         aliases: []
@@ -94,6 +106,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -103,6 +116,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -112,6 +126,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -121,6 +136,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -130,6 +146,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -139,6 +156,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -148,6 +166,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -157,6 +176,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -166,6 +186,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -175,6 +196,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -184,6 +206,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Allen Institute, MindScope Program, Seattle, USA
       author:
         aliases: []
@@ -193,13 +216,16 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, Montréal, Québec, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Département d’informatique et de recherche opérationnelle, Université
           de Montréal, Montréal, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Learning in Machines and Brains Program, Canadian Institute for Advanced
           Research, Toronto, Canada
       author:
@@ -210,9 +236,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: DeepMind, Inc, London, UK
       - aliases: []
         category: unknown
+        country: null
         name: Centre for Computation, Mathematics and Physics in the Life Sciences
           and Experimental Biology, University College London, London, UK
       author:
@@ -223,16 +251,20 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Department of Physics and Astronomy, York University, Toronto, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Centre for Vision Research, York University, Toronto, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Learning in Machines and Brains Program, Canadian Institute for Advanced
           Research, Toronto, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Vector Institute for Artificial Intelligence, Toronto, Canada
       author:
         aliases: []
@@ -242,20 +274,25 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila, Montréal, Québec, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Learning in Machines and Brains Program, Canadian Institute for Advanced
           Research, Toronto, Canada
       - aliases: []
         category: unknown
+        country: null
         name: School of Computer Science, McGill University, Montréal, Canada
       - aliases: []
         category: unknown
+        country: null
         name: Department of Neurology & Neurosurgery, McGill University, Montréal,
           Canada
       - aliases: []
         category: unknown
+        country: null
         name: Montreal Neurological Institute, McGill University, Montréal, Canada
       author:
         aliases: []

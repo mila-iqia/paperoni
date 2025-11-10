@@ -21,6 +21,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila-Quebec AI Institute
       author:
         aliases: []
@@ -96,6 +97,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: King Abdullah University of Science and Technology
       author:
         aliases: []
@@ -107,6 +109,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Concordia University/ MILA
       author:
         aliases: []
@@ -118,6 +121,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Toyota Motor Europe
       author:
         aliases: []
@@ -129,6 +133,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: KAUST
       author:
         aliases: []

@@ -1,0 +1,122 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Wed, 05 Nov 2025 03:51:17 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=9017",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "video_metadata": null,
+            "thought": null,
+            "inline_data": null,
+            "file_data": null,
+            "thought_signature": null,
+            "function_call": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "function_response": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Mila\",\n        \"$comment\": {\n          \"reasoning\": \"The affiliation string 'Mila - Université de Montréal' lists two distinct but related entities. 'Mila' is the primary entity listed and is a well-known AI research institute.\",\n          \"quote\": \"Mila - Université de Montréal\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"Mila, the Quebec AI Institute, is a research institute founded by university professors and is a partnership between universities, making it an academic institution.\",\n          \"quote\": \"Mila - Université de Montréal\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"Mila is located in Montreal, Quebec, which is in Canada. This is based on common knowledge about the institute.\",\n          \"quote\": \"Mila - Université de Montréal\"\n        }\n      }\n    },\n    {\n      \"name\": {\n        \"$value\": \"Université de Montréal\",\n        \"$comment\": {\n          \"reasoning\": \"The affiliation string 'Mila - Université de Montréal' explicitly names 'Université de Montréal' as an associated institution.\",\n          \"quote\": \"Mila - Université de Montréal\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"'Université de Montréal' is a public university, which falls under the 'academia' category.\",\n          \"quote\": \"Mila - Université de Montréal\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"'Université de Montréal' is a major university located in Montreal, Quebec, Canada. This is inferred from common knowledge.\",\n          \"quote\": \"Mila - Université de Montréal\"\n        }\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "url_context_metadata": null,
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "tckKaZKsFuPRjrEP2ZetkQY",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 458,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 431,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 431
+      }
+    ],
+    "thoughts_token_count": 776,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 1665,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "affiliations": [
+      {
+        "name": {
+          "$value": "Mila",
+          "$comment": {
+            "reasoning": "The affiliation string 'Mila - Université de Montréal' lists two distinct but related entities. 'Mila' is the primary entity listed and is a well-known AI research institute.",
+            "quote": "Mila - Université de Montréal"
+          }
+        },
+        "category": {
+          "$value": "academia",
+          "$comment": {
+            "reasoning": "Mila, the Quebec AI Institute, is a research institute founded by university professors and is a partnership between universities, making it an academic institution.",
+            "quote": "Mila - Université de Montréal"
+          }
+        },
+        "country": {
+          "$value": "Canada",
+          "$comment": {
+            "reasoning": "Mila is located in Montreal, Quebec, which is in Canada. This is based on common knowledge about the institute.",
+            "quote": "Mila - Université de Montréal"
+          }
+        }
+      },
+      {
+        "name": {
+          "$value": "Université de Montréal",
+          "$comment": {
+            "reasoning": "The affiliation string 'Mila - Université de Montréal' explicitly names 'Université de Montréal' as an associated institution.",
+            "quote": "Mila - Université de Montréal"
+          }
+        },
+        "category": {
+          "$value": "academia",
+          "$comment": {
+            "reasoning": "'Université de Montréal' is a public university, which falls under the 'academia' category.",
+            "quote": "Mila - Université de Montréal"
+          }
+        },
+        "country": {
+          "$value": "Canada",
+          "$comment": {
+            "reasoning": "'Université de Montréal' is a major university located in Montreal, Quebec, Canada. This is inferred from common knowledge.",
+            "quote": "Mila - Université de Montréal"
+          }
+        }
+      }
+    ]
+  }
+}

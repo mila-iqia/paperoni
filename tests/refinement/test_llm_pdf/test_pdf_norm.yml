@@ -7,15 +7,18 @@
     authors:
     - affiliations:
       - aliases: []
-        category: unknown
+        category: industry
+        country: Canada
         name: Borealis AI
       - aliases:
         - Mila - Université de Montréal
-        category: unknown
+        category: academia
+        country: Canada
         name: Mila
       - aliases:
         - Mila - Université de Montréal
-        category: unknown
+        category: academia
+        country: Canada
         name: Université de Montréal
       author:
         aliases: []
@@ -24,7 +27,8 @@
       display_name: Leo Feng
     - affiliations:
       - aliases: []
-        category: unknown
+        category: industry
+        country: Canada
         name: Borealis AI
       author:
         aliases: []
@@ -34,11 +38,13 @@
     - affiliations:
       - aliases:
         - Mila - Université de Montréal
-        category: unknown
+        category: academia
+        country: Canada
         name: Mila
       - aliases:
         - Mila - Université de Montréal
-        category: unknown
+        category: academia
+        country: Canada
         name: Université de Montréal
       author:
         aliases: []
@@ -48,11 +54,13 @@
     - affiliations:
       - aliases:
         - Mila - Université de Montréal
-        category: unknown
+        category: academia
+        country: Canada
         name: Mila
       - aliases:
         - Mila - Université de Montréal
-        category: unknown
+        category: academia
+        country: Canada
         name: Université de Montréal
       author:
         aliases: []

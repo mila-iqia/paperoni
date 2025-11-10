@@ -1,3 +1,4 @@
+import logging
 import re
 
 from outsight import send
@@ -5,31 +6,31 @@ from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
 from ..config import config
-from ..model.classes import Institution, Paper
+from ..model.classes import Institution, InstitutionCategory, Paper
 from ..prompt import ParsedResponseSerializer
 from ..utils import normalize_institution, normalize_name
-from .llm_norm_affiliation import model as norm_affiliation_model
 from .llm_norm_author import model as norm_author_model
+from .llm_process_affiliation import model as process_affiliation_model
 from .llm_utils import force_prompt
 
 
-def norm_affiliations_prompt(
+def process_affiliations_prompt(
     affiliation: Institution, force: bool = False
 ) -> list[Institution]:
     send(
-        prompt=norm_affiliation_model.Analysis.__module__,
+        prompt=process_affiliation_model.Analysis.__module__,
         model=config.refine.prompt.model,
         input=affiliation.name,
     )
 
     cache_dir = (
         config.data_path
-        / norm_affiliation_model.__package__.split(".")[-1]
+        / process_affiliation_model.__package__.split(".")[-1]
         / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_institution(affiliation.name))
     )
 
     prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
-        serializer=ParsedResponseSerializer[norm_affiliation_model.Analysis],
+        serializer=ParsedResponseSerializer[process_affiliation_model.Analysis],
         cache_dir=cache_dir / "prompt",
         make_key=config.refine.prompt._make_key,
         prefix=config.refine.prompt.model,
@@ -40,32 +41,41 @@ def norm_affiliations_prompt(
         "messages": [
             Message(
                 type="system",
-                prompt=norm_affiliation_model.llm_config.system_prompt,
+                prompt=process_affiliation_model.llm_config.system_prompt,
             ),
             Message(
                 type="user",
-                prompt=norm_affiliation_model.FIRST_MESSAGE,
+                prompt=process_affiliation_model.FIRST_MESSAGE,
                 args=(affiliation.name,),
             ),
         ],
         "model": config.refine.prompt.model,
-        "structured_model": norm_affiliation_model.Analysis,
+        "structured_model": process_affiliation_model.Analysis,
     }
 
     if force:
-        analysis: norm_affiliation_model.Analysis = force_prompt(
+        analysis: process_affiliation_model.Analysis = force_prompt(
             prompt, **prompt_kwargs
         ).parsed
     else:
-        analysis: norm_affiliation_model.Analysis = prompt(**prompt_kwargs).parsed
+        analysis: process_affiliation_model.Analysis = prompt(**prompt_kwargs).parsed
 
     return [
         Institution(
-            name=str(aff),
-            category=affiliation.category,
-            aliases=[affiliation.name, *affiliation.aliases],
+            name=str(aff.name),
+            category=(
+                affiliation.category
+                if affiliation.category != InstitutionCategory.unknown
+                else InstitutionCategory(aff.category)
+            ),
+            country=str(aff.country) or None,
+            aliases=[
+                aff_name
+                for aff_name in [affiliation.name, *affiliation.aliases]
+                if aff_name != aff.name
+            ],
         )
-        for aff in analysis.normalized_affiliations
+        for aff in analysis.affiliations
     ]
 
 
@@ -119,8 +129,11 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
 def normalize_paper(paper: Paper, *, force: bool = False) -> Paper:
     for author in paper.authors:
         for i, affiliation in enumerate(author.affiliations[:]):
-            affiliations = norm_affiliations_prompt(affiliation, force)
-            if affiliations[0].name != author.affiliations[i].name:
+            affiliations = process_affiliations_prompt(affiliation, force)
+            if not affiliations:
+                logging.warning(f"LLM returned no affiliations from {affiliation.name}")
+                continue
+            if affiliations[0] != author.affiliations[i]:
                 author.affiliations[i] = affiliations[0]
             author.affiliations.extend(affiliations[1:])
 

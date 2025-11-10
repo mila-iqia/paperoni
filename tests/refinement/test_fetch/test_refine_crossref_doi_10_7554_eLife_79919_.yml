@@ -23,6 +23,7 @@ authors:
     - McGill University
     - Université McGill
     category: academia
+    country: null
     name: McGill University
   author:
     aliases: []
@@ -36,9 +37,11 @@ authors:
     - Stanford University
     - Universidad Stanford
     category: academia
+    country: null
     name: Stanford University
   - aliases: []
     category: unknown
+    country: null
     name: Chan Zuckerberg Biohub, San Francisco
   author:
     aliases: []
@@ -50,6 +53,7 @@ authors:
     - McGill University
     - Université McGill
     category: academia
+    country: null
     name: McGill University
   author:
     aliases: []

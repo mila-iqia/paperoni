@@ -13,6 +13,8 @@ from tests.utils import check_papers
 
 @pytest.fixture(scope="session")
 def paper_info():
+    # Prepared with:
+    # paperoni refine --link "openreview:_3FyT_W1DW" --tags pdf --norm
     with (
         gifnoc.overlay({"paperoni.data_path": str(Path(__file__).parent / "data")}),
         patch(

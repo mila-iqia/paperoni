@@ -1,0 +1,99 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Wed, 05 Nov 2025 04:24:39 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=8521",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "video_metadata": null,
+            "thought": null,
+            "inline_data": null,
+            "file_data": null,
+            "thought_signature": null,
+            "function_call": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "function_response": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Allen Institute\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation 'Allen Institute, MindScope Program, Seattle, USA' was normalized by removing the specific program ('MindScope Program') and the address ('Seattle, USA') to retain only the parent organization's name.\",\n          \"quote\": \"Allen Institute, MindScope Program, Seattle, USA\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The Allen Institute is a non-profit research institute. Although it is private, its primary function is fundamental research, which aligns it more closely with the 'academia' category (universities, colleges, public research institutes) than the 'industry' category (private companies, for-profit organizations).\",\n          \"quote\": \"Allen Institute\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"USA\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'USA' is explicitly mentioned at the end of the affiliation string.\",\n          \"quote\": \"Allen Institute, MindScope Program, Seattle, USA\"\n        }\n      }\n    }\n  ]\n}"
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "url_context_metadata": null,
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "h9EKadPiBqOS_uMP8snuwAc",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 283,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 435,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 435
+      }
+    ],
+    "thoughts_token_count": 800,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 1518,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "affiliations": [
+      {
+        "name": {
+          "$value": "Allen Institute",
+          "$comment": {
+            "reasoning": "The original affiliation 'Allen Institute, MindScope Program, Seattle, USA' was normalized by removing the specific program ('MindScope Program') and the address ('Seattle, USA') to retain only the parent organization's name.",
+            "quote": "Allen Institute, MindScope Program, Seattle, USA"
+          }
+        },
+        "category": {
+          "$value": "academia",
+          "$comment": {
+            "reasoning": "The Allen Institute is a non-profit research institute. Although it is private, its primary function is fundamental research, which aligns it more closely with the 'academia' category (universities, colleges, public research institutes) than the 'industry' category (private companies, for-profit organizations).",
+            "quote": "Allen Institute"
+          }
+        },
+        "country": {
+          "$value": "USA",
+          "$comment": {
+            "reasoning": "The country 'USA' is explicitly mentioned at the end of the affiliation string.",
+            "quote": "Allen Institute, MindScope Program, Seattle, USA"
+          }
+        }
+      }
+    ]
+  }
+}

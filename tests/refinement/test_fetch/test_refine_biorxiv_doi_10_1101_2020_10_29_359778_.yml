@@ -19,6 +19,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Neuroimaging Sciences, King’s College London
   author:
     aliases: []
@@ -28,6 +29,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Neuroimaging Sciences, King’s College London
   author:
     aliases: []
@@ -37,6 +39,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Neuroimaging Sciences, King’s College London
   author:
     aliases: []
@@ -46,6 +49,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Gatsby Computational Neuroscience, University College London
   author:
     aliases: []
@@ -55,9 +59,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Biomedical Engineering, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Mila – Quebec Artificial Intelligence Institute
   author:
     aliases: []
@@ -67,6 +73,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Neuroimaging Sciences, King’s College London
   author:
     aliases: []
@@ -76,6 +83,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Neuroimaging Sciences, King’s College London
   author:
     aliases: []
@@ -85,6 +93,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Psychology, Queen’s University, Kingston
   author:
     aliases: []
@@ -94,6 +103,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Brain and Cognitive Development, Birkbeck College
   author:
     aliases: []
@@ -103,6 +113,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Centre for Neuroimaging Sciences, King’s College London
   author:
     aliases: []

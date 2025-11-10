@@ -3,6 +3,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Royal Military College of Canada, Electrical and Computer Engineering,Kingston,Canada
   author:
     aliases: []
@@ -12,6 +13,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Polytechnique Montreal, Computer and Software Engineering,Quebec,Canada
   author:
     aliases: []
@@ -21,6 +23,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Royal Military College of Canada, Electrical and Computer Engineering,Kingston,Canada
   author:
     aliases: []

@@ -3,6 +3,7 @@
   - affiliations:
     - aliases: []
       category: null
+      country: null
       name: MIT
     author: null
     display_name: Alice Johnson

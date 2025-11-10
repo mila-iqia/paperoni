@@ -3,6 +3,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Physics, McGill University
   author:
     aliases: []
@@ -12,9 +13,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Chan Zuckerberg Biohub, San Francisco
   - aliases: []
     category: unknown
+    country: null
     name: Department of Biology, Stanford University
   author:
     aliases: []
@@ -24,6 +27,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Physics, McGill University
   author:
     aliases: []

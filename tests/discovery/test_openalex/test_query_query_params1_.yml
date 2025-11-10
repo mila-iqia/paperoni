@@ -17,6 +17,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -36,6 +37,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -47,6 +49,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: HEC Montréal
       author:
         aliases: []
@@ -60,6 +63,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -73,6 +77,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -86,6 +91,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -169,9 +175,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       - aliases: []
         category: unknown
+        country: null
         name: Concordia University
       author:
         aliases: []
@@ -183,6 +191,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Jagiellonian University
       author:
         aliases: []
@@ -196,9 +205,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       - aliases: []
         category: unknown
+        country: null
         name: Concordia University
       author:
         aliases: []
@@ -210,9 +221,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       - aliases: []
         category: unknown
+        country: null
         name: Concordia University
       author:
         aliases: []
@@ -226,6 +239,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -239,6 +253,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of California, Berkeley
       author:
         aliases: []
@@ -250,6 +265,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Polytechnique Montréal
       author:
         aliases: []
@@ -263,6 +279,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of Bonn
       author:
         aliases: []
@@ -276,9 +293,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Canadian Institute for Advanced Research
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -292,9 +311,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       - aliases: []
         category: unknown
+        country: null
         name: Canadian Institute for Advanced Research
       author:
         aliases: []
@@ -308,9 +329,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       - aliases: []
         category: unknown
+        country: null
         name: Concordia University
       author:
         aliases: []
@@ -391,6 +414,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Technion – Israel Institute of Technology
       author:
         aliases: []
@@ -402,6 +426,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -413,6 +438,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Columbia University
       author:
         aliases: []
@@ -426,6 +452,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Technion – Israel Institute of Technology
       author:
         aliases: []
@@ -437,6 +464,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -516,6 +544,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -527,6 +556,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -538,6 +568,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -551,6 +582,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -564,6 +596,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -659,6 +692,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -670,6 +704,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -681,6 +716,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -692,6 +728,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -705,6 +742,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []

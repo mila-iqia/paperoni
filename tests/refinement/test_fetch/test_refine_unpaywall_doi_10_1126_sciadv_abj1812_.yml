@@ -3,12 +3,14 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, Centre for Sleep and
       Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
       for Health and Institute for Digital Medicine, National University of Singapore,
       Singapore, Singapore.
   - aliases: []
     category: unknown
+    country: null
     name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
       Düsseldorf, Düsseldorf, Germany.
   author:
@@ -19,10 +21,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Biomedical Engineering, Montreal Neurological Institute (MNI),
       McConnell Brain Imaging Institute (BIC), McGill University, Montreal, QC, Canada.
   - aliases: []
     category: unknown
+    country: null
     name: Mila-Quebec Artificial Intelligence Institute, Montreal, QC, Canada.
   author:
     aliases: []
@@ -32,6 +36,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, Centre for Sleep and
       Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
       for Health and Institute for Digital Medicine, National University of Singapore,
@@ -44,6 +49,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, Centre for Sleep and
       Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
       for Health and Institute for Digital Medicine, National University of Singapore,
@@ -56,6 +62,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, Centre for Sleep and
       Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
       for Health and Institute for Digital Medicine, National University of Singapore,
@@ -68,10 +75,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Departments of Psychology and Psychiatry, Yale University, New Haven, CT,
       USA.
   - aliases: []
     category: unknown
+    country: null
     name: Psychiatric and Neurodevelopmental Genetics Unit, Center for Genomic Medicine,
       Massachusetts General Hospital, Boston, MA, USA.
   author:
@@ -82,14 +91,17 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Psychiatry, Massachusetts General Hospital, Harvard Medical
       School, Boston, MA, USA.
   - aliases: []
     category: unknown
+    country: null
     name: Psychiatric and Neurodevelopmental Genetics Unit, Center for Genomic Medicine,
       Massachusetts General Hospital, Boston, MA, USA.
   - aliases: []
     category: unknown
+    country: null
     name: Stanley Center for Psychiatric Research, Broad Institute of MIT and Harvard,
       Cambridge, MA, USA.
   author:
@@ -100,10 +112,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
       Düsseldorf, Düsseldorf, Germany.
   - aliases: []
     category: unknown
+    country: null
     name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
       Center Jülich, Jülich, Germany.
   author:
@@ -114,16 +128,20 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Psychiatry, Dell Medical School, University of Texas at Austin,
       Austin, TX, USA.
   - aliases: []
     category: unknown
+    country: null
     name: Department of Psychology, University of Texas at Austin, Austin, TX, USA.
   - aliases: []
     category: unknown
+    country: null
     name: Institute of Neuroscience, University of Texas at Austin, Austin, TX, USA.
   - aliases: []
     category: unknown
+    country: null
     name: The Mulva Clinic for Neurosciences, Dell Medical School, University of Texas
       at Austin, Austin, TX, USA.
   author:
@@ -134,10 +152,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
       Düsseldorf, Düsseldorf, Germany.
   - aliases: []
     category: unknown
+    country: null
     name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
       Center Jülich, Jülich, Germany.
   author:
@@ -148,12 +168,14 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, Centre for Sleep and
       Cognition, Centre for Translational Magnetic Resonance Research, and N.1 Institute
       for Health and Institute for Digital Medicine, National University of Singapore,
       Singapore, Singapore.
   - aliases: []
     category: unknown
+    country: null
     name: Integrative Sciences and Engineering Programme (ISEP), National University
       of Singapore, Singapore, Singapore.
   author:
@@ -164,10 +186,12 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Institute for Systems Neuroscience, Medical Faculty, Heinrich-Heine University
       Düsseldorf, Düsseldorf, Germany.
   - aliases: []
     category: unknown
+    country: null
     name: Institute of Neuroscience and Medicine, Brain and Behavior (INM-7), Research
       Center Jülich, Jülich, Germany.
   author:

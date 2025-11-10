@@ -20,9 +20,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Mila, Quebec AI Institute
   author:
     aliases: []
@@ -32,12 +34,15 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Department of Electrical and Computer Engineering, McGill University
   - aliases: []
     category: unknown
+    country: null
     name: Mila, Quebec AI Institute
   - aliases: []
     category: unknown
+    country: null
     name: The Rosalind and Morris Goodman Cancer Institute
   author:
     aliases: []

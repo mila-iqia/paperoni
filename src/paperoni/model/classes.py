@@ -169,6 +169,7 @@ class Author:
 class Institution:
     name: str
     category: InstitutionCategory = InstitutionCategory.unknown
+    country: str = None
     aliases: list[str] = field(default_factory=list)
 
 

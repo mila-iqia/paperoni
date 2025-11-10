@@ -32,6 +32,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -41,6 +42,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -50,6 +52,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -59,6 +62,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -68,6 +72,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -77,6 +82,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -86,6 +92,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -95,6 +102,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -104,6 +112,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -113,6 +122,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -122,9 +132,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   - aliases: []
     category: unknown
+    country: null
     name: Department of Basic Neurosciences, University of Geneva
   author:
     aliases: []
@@ -134,6 +146,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -143,6 +156,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -152,6 +166,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -161,6 +176,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -170,6 +186,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -179,6 +196,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -188,6 +206,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -197,6 +216,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -206,6 +226,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -215,6 +236,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -224,6 +246,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -233,6 +256,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -242,6 +266,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -251,6 +276,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -260,6 +286,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -269,12 +296,15 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   - aliases: []
     category: unknown
+    country: null
     name: Department of Neurosciences, Faculty of Medicine, Université de Montŕeal
   - aliases: []
     category: unknown
+    country: null
     name: CHU Sainte-Justine Research Center
   author:
     aliases: []
@@ -284,6 +314,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -293,6 +324,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -302,6 +334,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -311,6 +344,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -320,6 +354,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -329,6 +364,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -338,6 +374,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -347,6 +384,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -356,6 +394,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -365,6 +404,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -374,6 +414,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -383,6 +424,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -392,6 +434,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []
@@ -401,9 +444,11 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   - aliases: []
     category: unknown
+    country: null
     name: Neural Circuits Laboratory, Newcastle University
   author:
     aliases: []
@@ -413,6 +458,7 @@ authors:
 - affiliations:
   - aliases: []
     category: unknown
+    country: null
     name: Blue Brain Project, École polytechnique fédérale de Lausanne (EPFL)
   author:
     aliases: []

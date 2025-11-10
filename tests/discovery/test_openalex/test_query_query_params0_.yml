@@ -21,6 +21,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -34,6 +35,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -47,6 +49,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Marche Polytechnic University
       author:
         aliases: []
@@ -60,6 +63,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -71,6 +75,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of Rochester
       author:
         aliases: []
@@ -145,6 +150,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -158,6 +164,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -171,6 +178,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Massachusetts Institute of Technology
       author:
         aliases: []
@@ -184,6 +192,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Université de Montréal
       author:
         aliases: []
@@ -195,6 +204,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -208,6 +218,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Aalto University
       author:
         aliases: []
@@ -221,6 +232,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -306,6 +318,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Iran University of Science and Technology
       author:
         aliases: []
@@ -319,6 +332,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Iran University of Science and Technology
       author:
         aliases: []
@@ -332,6 +346,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Iran University of Science and Technology
       author:
         aliases: []
@@ -343,6 +358,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: RWTH Aachen University
       author:
         aliases: []
@@ -356,6 +372,7 @@
     - affiliations:
       - aliases: []
         category: academia
+        country: null
         name: Shahid Beheshti University
       author:
         aliases: []
@@ -369,6 +386,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -380,9 +398,11 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of Regensburg
       - aliases: []
         category: unknown
+        country: null
         name: Fraunhofer Institute for Digital Medicine
       author:
         aliases: []
@@ -464,6 +484,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -477,6 +498,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of California San Diego
       author:
         aliases: []
@@ -490,6 +512,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -503,6 +526,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Quebec Artificial Intelligence Institute
       author:
         aliases: []
@@ -516,6 +540,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of California San Diego
       author:
         aliases: []
@@ -529,6 +554,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of California San Diego
       author:
         aliases: []

@@ -21,6 +21,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University and Mila
       author:
         aliases: []
@@ -32,6 +33,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -43,6 +45,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -96,6 +99,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: FPTSoftware
       author:
         aliases: []
@@ -107,6 +111,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: FPT Software AI Center
       author:
         aliases: []
@@ -118,6 +123,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill - Mila
       author:
         aliases: []
@@ -129,6 +135,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Ton Duc Thang University
       author:
         aliases: []
@@ -140,6 +147,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill - Mila
       author:
         aliases: []
@@ -151,6 +159,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Indiana State University
       author:
         aliases: []
@@ -204,6 +213,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: SAIT AI Lab Montreal
       author:
         aliases: []
@@ -215,6 +225,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila
       author:
         aliases: []
@@ -226,6 +237,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: 'Radboud university '
       author:
         aliases: []
@@ -283,6 +295,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University Jean Monnet Laboratoire Hubert Curien
       author:
         aliases: []
@@ -294,6 +307,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: McGill University
       author:
         aliases: []
@@ -305,6 +319,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Hubert Curien Laboratory
       author:
         aliases: []
@@ -316,6 +331,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Unversité Saint-Etienne
       author:
         aliases: []
@@ -327,6 +343,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: University of St-Etienne, Lab. H. Curien
       author:
         aliases: []
@@ -338,6 +355,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila - Université de Montréal
       author:
         aliases: []
@@ -389,6 +407,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: MIT
       author:
         aliases: []
@@ -400,6 +419,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Valence Labs
       author:
         aliases: []
@@ -411,6 +431,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Univeristy of Montreal
       author:
         aliases: []
@@ -422,6 +443,7 @@
     - affiliations:
       - aliases: []
         category: unknown
+        country: null
         name: Mila
       author:
         aliases: []

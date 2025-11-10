@@ -17,7 +17,7 @@ FIRST_MESSAGE = """### The author name to normalize:
 {}"""
 
 llm_config: PromptConfig = gifnoc.define(
-    f"paperoni.{Path(__file__).parent.name}",
+    "paperoni.llm_norm_author",
     PromptConfig,
     defaults={"system_prompt_template": DEFAULT_SYSTEM_MESSAGE},
 )
