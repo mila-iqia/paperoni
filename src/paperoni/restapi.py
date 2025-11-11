@@ -11,13 +11,11 @@ import itertools
 import logging
 import secrets
 import urllib.parse
-import webbrowser
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache, partial
 from types import NoneType
 from typing import AsyncGenerator, Generator, Iterable, Literal
 
-import requests
 from anyio import Path
 from authlib.integrations.base_client import OAuthError
 from authlib.integrations.starlette_client import OAuth
@@ -308,9 +306,9 @@ class AutoFocusRequest(Focus.AutoFocus):
 
 @dataclass
 class LoginResponse:
-    """Response model for login."""
+    """Response model for headless login."""
 
-    headless_url: str
+    login_url: str
     token_url: str
 
 
@@ -577,7 +575,7 @@ def create_app() -> FastAPI:
 
             headless_login(state)["status"] = HeadlessLoginFlag.ACTIVE
             return LoginResponse(
-                headless_url=f"{request.url_for('login')}?{headless_url_params}",
+                login_url=f"{request.url_for('login')}?{headless_url_params}",
                 token_url=f"{request.url_for('token')}?{token_url_params}",
             )
 
@@ -741,22 +739,3 @@ def create_app() -> FastAPI:
         )
 
     return app
-
-
-def login(endpoint: str = "http://localhost:8000", headless: bool = False) -> str:
-    """Login to the paperoni server."""
-    if headless:
-        response = requests.get(f"{endpoint}/auth/login?headless=true").json()
-        print(
-            "Open the following URL in the browser:",
-            f"{response['headless_url']}",
-            sep="\n",
-        )
-    else:
-        response = requests.get(f"{endpoint}/auth/login").json()
-        # Open the URL in the browser
-        webbrowser.open(response["headless_url"])
-
-    # Wait for the user to login and get the access token
-    response = requests.get(response["token_url"]).json()
-    return response["access_token"]
