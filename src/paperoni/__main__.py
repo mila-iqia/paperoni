@@ -29,13 +29,14 @@ from serieux import (
 )
 from serieux.features.tagset import FromEntryPoint
 
+from .client.utils import login
 from .collection.abc import PaperCollection
 from .collection.filecoll import FileCollection
 from .collection.finder import Finder
 from .collection.remotecoll import RemoteCollection
 from .config import config
 from .dash import History
-from .display import display, terminal_width
+from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .model import PaperInfo
@@ -668,7 +669,7 @@ class Serve:
     """Serve paperoni through a Rest API."""
 
     # Host to bind to
-    host: str = "127.0.0.1"
+    host: str = "localhost"
 
     # Port to bind to
     # [alias: -p]
@@ -688,7 +689,23 @@ class Serve:
         return True
 
 
-PaperoniCommand = TaggedUnion[Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve]
+@dataclass
+class Login:
+    """Retrieve an access token from the paperoni server."""
+
+    # Endpoint to login to
+    endpoint: str = "http://localhost:8000"
+
+    # Whether to use headless mode
+    headless: bool = False
+
+    def run(self):
+        print_field("Access token", login(self.endpoint, self.headless))
+
+
+PaperoniCommand = TaggedUnion[
+    Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve, Login
+]
 
 
 @dataclass

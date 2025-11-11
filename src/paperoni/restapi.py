@@ -306,9 +306,9 @@ class AutoFocusRequest(Focus.AutoFocus):
 
 @dataclass
 class LoginResponse:
-    """Response model for login."""
+    """Response model for headless login."""
 
-    headless_url: str
+    login_url: str
     token_url: str
 
 
@@ -575,7 +575,7 @@ def create_app() -> FastAPI:
 
             headless_login(state)["status"] = HeadlessLoginFlag.ACTIVE
             return LoginResponse(
-                headless_url=f"{request.url_for('login')}?{headless_url_params}",
+                login_url=f"{request.url_for('login')}?{headless_url_params}",
                 token_url=f"{request.url_for('token')}?{token_url_params}",
             )
 
