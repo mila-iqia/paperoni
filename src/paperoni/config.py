@@ -38,6 +38,7 @@ class Refine:
 class Server:
     max_results: int = 10000
     process_pool_executor: dict = field(default_factory=dict)
+    use_auth: bool = True
     client_dir: Path = None
     secret_key: Secret[str] = None
     jwt_secret_key: Secret[str] = None
@@ -65,7 +66,7 @@ class PaperoniConfig:
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
-    server: Server = None
+    server: Server = field(default_factory=Server)
 
     def __post_init__(self):
         self.metadata: Meta[Path | list[Path] | Meta | Any] = Meta()
