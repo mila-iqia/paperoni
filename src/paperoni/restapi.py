@@ -339,9 +339,9 @@ def _work_view(request: dict, user: User):
     request: ViewRequest = deserialize(ViewRequest, request)
 
     """Search for papers in the collection."""
-    work = Work(command=None, work_file=user.work_file)
+    work = Work(command=request, work_file=user.work_file)
 
-    papers: list[Scored[Paper]] = list(request.slice(request.run(work)))
+    papers: list[Scored[Paper]] = list(request.slice(work.run()))
 
     return papers, request.count, request.next_offset, len(work.top)
 
@@ -403,10 +403,6 @@ def create_app() -> FastAPI:
             return None
 
         return {"event": asyncio.Event(), "user": None, "status": None}
-
-    @lru_cache(maxsize=100000)
-    def active_logins(work_file: Path) -> asyncio.Lock:
-        return asyncio.Lock()
 
     def check_headless_state(state: str) -> bool:
         return state and headless_login(state)["status"] is not None
@@ -476,36 +472,10 @@ def create_app() -> FastAPI:
         else:
             raise HTTPException(status_code=401, detail="Authentication required")
 
-    async def acquire_current_user(
+    get_current_user_as_user = partial(get_current_user, as_user=True)
+
+    async def get_current_admin(
         user: User = Depends(get_current_user),
-    ) -> AsyncGenerator[User, None]:
-        """Acquire current user lock."""
-        locked = False
-        # As all admins share the same work file, the lock is also shared by all
-        # admins.
-        lock = active_logins(user.work_file)
-
-        try:
-            async with asyncio.timeout(5):
-                locked = await lock.acquire()
-            yield user
-
-        except TimeoutError:
-            raise HTTPException(
-                status_code=403,
-                detail="User is already logged in and running operations. Please logout from other sessions or wait for the operation to finish and try again.",
-            )
-
-        finally:
-            if locked:
-                lock.release()
-
-    acquire_current_user_as_user = partial(
-        acquire_current_user, user=Depends(partial(get_current_user, as_user=True))
-    )
-
-    async def acquire_current_admin(
-        user: User = Depends(acquire_current_user),
     ) -> AsyncGenerator[User, None]:
         """Get current admin user."""
         if not user.is_admin:
@@ -653,14 +623,14 @@ def create_app() -> FastAPI:
 
     @app.post("/work/add", response_model=AddResponse)
     async def work_add_papers(
-        request: AddRequest, user: User = Depends(acquire_current_user_as_user)
+        request: AddRequest, user: User = Depends(get_current_user_as_user)
     ):
         """Add papers to the user's work."""
 
         request.user = user
 
-        work = Work(command=None, work_file=user.work_file)
-        request.run(work)
+        work = Work(command=request, work_file=user.work_file)
+        work.run()
 
         return AddResponse(total=len(work.top))
 
@@ -680,19 +650,19 @@ def create_app() -> FastAPI:
 
     @app.get("/work/include", response_model=IncludeResponse)
     async def work_include_papers(
-        request: IncludeRequest, user: User = Depends(acquire_current_user_as_user)
+        request: IncludeRequest, user: User = Depends(get_current_user_as_user)
     ):
         """Search for papers in the collection."""
-        work = Work(command=None, work_file=user.work_file)
+        work = Work(command=request, work_file=user.work_file)
 
-        added = request.run(work)
+        added = work.run()
 
         return IncludeResponse(total=added)
 
     @app.get(
         "/focus/auto",
         response_model=Focuses,
-        dependencies=[Depends(acquire_current_admin)],
+        dependencies=[Depends(get_current_admin)],
     )
     async def autofocus(request: AutoFocusRequest = Depends()):
         """Autofocus the collection."""
