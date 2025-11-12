@@ -603,7 +603,16 @@ def create_app() -> FastAPI:
 
         return await http_exception_handler(request, exc)
 
-    user_with_role = add_auth(app)
+    if config.server.use_auth and config.server.secret_key:
+        user_with_role = add_auth(app)
+
+    else:
+
+        def user_with_role(role=None):
+            async def get_user(as_user=False):
+                return User(email="admin", as_user=as_user)
+
+            return get_user
 
     get_current_user = user_with_role()
     get_current_admin = user_with_role("admin")
