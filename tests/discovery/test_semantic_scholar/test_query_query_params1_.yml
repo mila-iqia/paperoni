@@ -50,6 +50,7 @@
         peer_reviewed: false
         publisher: null
         series: IEEE Transactions on Pattern Analysis and Machine Intelligence
+        short_name: null
         type: journal
         volume: '20'
     title: A Hierarchical Latent Variable Model for Data Visualization
@@ -157,6 +158,7 @@
         peer_reviewed: false
         publisher: null
         series: International Joint Conference on Artificial Intelligence
+        short_name: null
         type: journal
         volume: null
     title: A Structured Latent Variable Recurrent Network With Stochastic Attention
@@ -223,6 +225,7 @@
         peer_reviewed: false
         publisher: null
         series: Genetic Epidemiology
+        short_name: null
         type: journal
         volume: '41'
     title: Bayesian latent variable models for hierarchical clustered count outcomes

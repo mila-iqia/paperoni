@@ -133,6 +133,7 @@
         peer_reviewed: true
         publisher: null
         series: AISTATS
+        short_name: null
         type: conference
         volume: null
     title: Simulation-Free Schrödinger Bridges via Score and Flow Matching

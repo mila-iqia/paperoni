@@ -105,6 +105,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: A Foundation Model for Zero-shot Logical Query Reasoning
@@ -219,6 +220,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Action Gaps and Advantages in Continuous-Time Distributional Reinforcement
@@ -310,6 +312,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Adaptive Exploration for Data-Efficient General Value Function Evaluations
@@ -550,6 +553,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in diffusion models for vision, language,
@@ -656,6 +660,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Balancing Context Length and Mixing Times for Reinforcement Learning at

@@ -65,6 +65,7 @@ releases:
     peer_reviewed: true
     publisher: Elsevier BV
     series: Journal of Hospital Infection
+    short_name: null
     type: journal
     volume: null
 title: 'Evaluation of a web-based tool for labelling potential hospital outbreaks:

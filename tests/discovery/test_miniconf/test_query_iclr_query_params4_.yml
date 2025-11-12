@@ -101,6 +101,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: '$\alpha$TC-VAE: On the relationship between Disentanglement and Diversity'
@@ -195,6 +196,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: A Data-Driven Measure of Relative Uncertainty for Misclassification Detection
@@ -331,6 +333,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in large language models
@@ -452,6 +455,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: 'Balancing Act: Constraining Disparate Impact in Sparse Models'
@@ -579,6 +583,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: 'Bridging State and History Representations: Understanding Self-Predictive

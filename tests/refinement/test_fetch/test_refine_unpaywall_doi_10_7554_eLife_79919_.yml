@@ -51,6 +51,7 @@ releases:
     peer_reviewed: true
     publisher: eLife Sciences Publications, Ltd
     series: eLife
+    short_name: null
     type: journal
     volume: null
 title: Evolution of cell size control is canalized towards adders or sizers by cell

@@ -133,6 +133,7 @@
         peer_reviewed: true
         publisher: Association for the Advancement of Artificial Intelligence
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues

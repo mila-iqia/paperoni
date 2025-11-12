@@ -107,6 +107,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: Value in Health
+    short_name: null
     type: journal
     volume: null
 title: 'PCR191 Patient-Centric Assessment of Treatment Experience in Breast Cancer:

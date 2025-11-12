@@ -24,6 +24,7 @@
       peer_reviewed: false
       publisher: null
       series: Test Conference
+      short_name: null
       type: conference
       volume: null
   title: Test Paper 1
@@ -54,6 +55,7 @@
       peer_reviewed: false
       publisher: null
       series: Test Journal
+      short_name: null
       type: journal
       volume: null
   title: Test Paper 2

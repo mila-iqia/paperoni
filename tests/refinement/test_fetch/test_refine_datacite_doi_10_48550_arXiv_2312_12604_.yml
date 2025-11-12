@@ -94,6 +94,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: An empirical study of testing machine learning in the wild

@@ -110,6 +110,7 @@ releases:
     peer_reviewed: false
     publisher: Cornell University
     series: ''
+    short_name: null
     type: unknown
     volume: null
 title: Attention Is All You Need

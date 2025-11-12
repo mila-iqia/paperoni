@@ -128,6 +128,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in large language models
@@ -244,6 +245,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Consciousness-Inspired Spatio-Temporal Abstractions for Better Generalization
@@ -335,6 +337,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: Cycle Consistency Driven Object Discovery
@@ -481,6 +484,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: 'Delta-AI: Local objectives for amortized inference in sparse graphical
@@ -589,6 +593,7 @@
         peer_reviewed: true
         publisher: null
         series: ICLR
+        short_name: null
         type: conference
         volume: null
     title: 'Diffusion Generative Flow Samplers: Improving learning signals through

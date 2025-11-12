@@ -75,6 +75,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: Characterizing and Classifying Developer Forum Posts with their Intentions

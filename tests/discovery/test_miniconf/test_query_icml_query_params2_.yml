@@ -112,6 +112,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Computational Framework for Solving Wasserstein Lagrangian Flows
@@ -254,6 +255,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Distributional Analogue to the Successor Representation
@@ -351,6 +353,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Persuasive Approach to Combating Misinformation
@@ -482,6 +485,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Sparsity Principle for Partially Observable Causal Representation Learning
@@ -575,6 +579,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: A Tensor Decomposition Perspective on Second-order RNNs

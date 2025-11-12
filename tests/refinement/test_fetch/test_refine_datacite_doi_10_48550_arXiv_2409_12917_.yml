@@ -148,6 +148,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: Training Language Models to Self-Correct via Reinforcement Learning

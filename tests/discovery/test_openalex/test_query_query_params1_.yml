@@ -133,6 +133,7 @@
         peer_reviewed: true
         publisher: Association for the Advancement of Artificial Intelligence
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues
@@ -367,6 +368,7 @@
         peer_reviewed: false
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: A closer look at memorization in deep networks
@@ -498,6 +500,7 @@
         peer_reviewed: false
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: Binarized Neural Networks
@@ -638,6 +641,7 @@
         peer_reviewed: true
         publisher: Association for the Advancement of Artificial Intelligence
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: Building End-To-End Dialogue Systems Using Generative Hierarchical Neural
@@ -776,6 +780,7 @@
         peer_reviewed: false
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: 'Contractive Auto-Encoders: Explicit Invariance During Feature Extraction'

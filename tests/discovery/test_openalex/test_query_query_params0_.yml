@@ -110,6 +110,7 @@
         peer_reviewed: false
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: Attention Is All You Need In Speech Separation
@@ -267,6 +268,7 @@
         peer_reviewed: false
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: ECAPA-TDNN Embeddings for Speaker Diarization
@@ -437,6 +439,7 @@
         peer_reviewed: true
         publisher: Association for the Advancement of Artificial Intelligence
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: 'GraphMix: Improved Training of GNNs for Semi-Supervised Learning'
@@ -593,6 +596,7 @@
         peer_reviewed: false
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: 'HiFormer: Hierarchical Multi-scale Representations Using Transformers
@@ -750,6 +754,7 @@
         peer_reviewed: true
         publisher: null
         series: ''
+        short_name: null
         type: conference
         volume: null
     title: Large-Scale Contrastive Language-Audio Pretraining with Feature Fusion

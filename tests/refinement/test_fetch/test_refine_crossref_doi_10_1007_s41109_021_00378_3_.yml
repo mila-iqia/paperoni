@@ -53,6 +53,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: Applied Network Science
+    short_name: null
     type: journal
     volume: null
 title: Incorporating dynamic flight network in SEIR to model mobility between populations

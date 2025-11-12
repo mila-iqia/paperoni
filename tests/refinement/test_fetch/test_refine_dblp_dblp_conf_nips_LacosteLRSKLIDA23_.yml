@@ -155,6 +155,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: NeurIPS
+    short_name: null
     type: journal
     volume: null
 title: 'GEO-Bench: Toward Foundation Models for Earth Monitoring.'

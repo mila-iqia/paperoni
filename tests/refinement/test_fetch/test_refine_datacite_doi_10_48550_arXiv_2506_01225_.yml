@@ -68,6 +68,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: preprint
     volume: null
 title: Self-Refining Training for Amortized Density Functional Theory

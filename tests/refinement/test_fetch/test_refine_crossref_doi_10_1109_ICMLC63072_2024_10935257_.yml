@@ -47,6 +47,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: 2024 International Conference on Machine Learning and Cybernetics (ICMLC)
+    short_name: null
     type: conference
     volume: null
 title: 'The Bifurcation Method: White-Box Observation Perturbation Attacks on Reinforcement

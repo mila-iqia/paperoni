@@ -187,6 +187,7 @@ class Venue:
     date_precision: DatePrecision
     volume: str = None
     publisher: str = None
+    short_name: str = None
     aliases: list[str] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
     open: bool = False

@@ -744,6 +744,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: Magnetic Resonance in Medicine
+    short_name: null
     type: journal
     volume: null
 title: 'Considerations and recommendations from the ISMRM diffusion study group for

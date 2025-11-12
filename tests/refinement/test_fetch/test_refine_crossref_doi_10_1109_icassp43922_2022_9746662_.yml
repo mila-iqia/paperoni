@@ -59,6 +59,7 @@ releases:
     publisher: null
     series: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
       and Signal Processing (ICASSP)
+    short_name: null
     type: conference
     volume: null
 title: 'Real-M: Towards Speech Separation on Real Mixtures'

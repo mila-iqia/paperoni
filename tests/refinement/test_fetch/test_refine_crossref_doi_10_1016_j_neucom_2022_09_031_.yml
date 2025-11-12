@@ -41,6 +41,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: Neurocomputing
+    short_name: null
     type: journal
     volume: null
 title: Interpretable domain adaptation using unsupervised feature selection on pre-trained

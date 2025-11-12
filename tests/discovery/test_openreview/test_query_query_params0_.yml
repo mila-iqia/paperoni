@@ -60,6 +60,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: '3D Multi-bodies: Fitting Sets of Plausible 3D Human Models to Ambiguous
@@ -122,6 +123,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Combinatorial Perspective on Transfer Learning
@@ -165,6 +167,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
@@ -214,6 +217,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Contour Stochastic  Gradient Langevin Dynamics Algorithm for Simulations
@@ -270,6 +274,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2020
     title: A Dynamical Central Limit Theorem for Shallow Neural Networks

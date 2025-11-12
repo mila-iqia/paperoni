@@ -218,6 +218,7 @@ releases:
     peer_reviewed: true
     publisher: American Association for the Advancement of Science (AAAS)
     series: Science Advances
+    short_name: null
     type: journal
     volume: null
 title: Cross-ethnicity/race generalization failure of behavioral prediction from resting-state

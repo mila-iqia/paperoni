@@ -82,6 +82,7 @@
         publisher: PMLR
         series: Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial
           Intelligence
+        short_name: null
         type: unknown
         volume: '180'
     title: Bayesian structure learning with generative flow networks
@@ -175,6 +176,7 @@
         publisher: PMLR
         series: Proceedings of the Thirty-Eighth Conference on Uncertainty in Artificial
           Intelligence
+        short_name: null
         type: unknown
         volume: '180'
     title: 'Temporal abstractions-augmented temporally contrastive learning: An alternative

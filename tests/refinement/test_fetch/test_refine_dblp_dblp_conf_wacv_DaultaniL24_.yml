@@ -35,6 +35,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: WACV (Workshops)
+    short_name: null
     type: journal
     volume: null
 title: Consolidating Separate Degradations Model via Weights Fusion and Distillation.

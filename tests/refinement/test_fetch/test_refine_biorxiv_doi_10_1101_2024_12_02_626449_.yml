@@ -159,6 +159,7 @@ releases:
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory
     series: bioRxiv
+    short_name: null
     type: journal
     volume: null
 title: 'CellSexID: Sex-Based Computational Tracking of Cellular Origins in Chimeric

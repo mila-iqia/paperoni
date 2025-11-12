@@ -482,6 +482,7 @@ releases:
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory
     series: bioRxiv
+    short_name: null
     type: journal
     volume: null
 title: 'Modeling and Simulation of Neocortical Micro- and Mesocircuitry. Part II:

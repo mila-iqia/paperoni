@@ -59,6 +59,7 @@ releases:
     peer_reviewed: true
     publisher: Springer Science and Business Media LLC
     series: Applied Network Science
+    short_name: null
     type: journal
     volume: null
 title: Incorporating dynamic flight network in SEIR to model mobility between populations

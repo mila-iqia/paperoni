@@ -53,6 +53,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: ''
+    short_name: null
     type: unknown
     volume: null
 title: 'Sparse Bayesian Networks: Efficient Uncertainty Quantification in Medical

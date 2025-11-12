@@ -68,7 +68,9 @@ def display(paper: Paper):
     for release in paper.releases:
         venue = release.venue
         d = DatePrecision.format(venue.date, venue.date_precision)
-        v = venue.name
+        v = ", ".join(
+            part for part in [venue.short_name or venue.name, venue.volume] if part
+        )
         print(f"  {T.bold_green(d)} {T.bold_magenta(release.status)} {v}")
     print_field("Topics", ", ".join(t.name for t in paper.topics))
     print_field("Sources", "")
@@ -101,7 +103,15 @@ def display(author: Author):
 @ovld
 def display(venue: Venue):
     """Print a release on the terminal."""
-    print_field("Venue", T.bold(venue.name))
+    print_field(
+        "Venue",
+        ", ".join(
+            map(
+                T.bold,
+                [part for part in [venue.short_name or venue.name, venue.volume] if part],
+            )
+        ),
+    )
     print_field("Series", T.bold(venue.series))
     print_field("Type", T.bold(venue.type))
     if venue.aliases:

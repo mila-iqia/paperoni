@@ -98,6 +98,7 @@ releases:
     peer_reviewed: false
     publisher: Oxford University Press
     series: Cerebral Cortex (New York, NY)
+    short_name: null
     type: journal
     volume: null
 title: Specific inhibition and disinhibition in the higher-order structure of a cortical

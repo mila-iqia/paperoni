@@ -37,6 +37,7 @@ releases:
     peer_reviewed: true
     publisher: The Science and Information Organization
     series: International Journal of Advanced Computer Science and Applications
+    short_name: null
     type: journal
     volume: null
 title: Generative Adversarial Neural Networks for Realistic Stock Market Simulations

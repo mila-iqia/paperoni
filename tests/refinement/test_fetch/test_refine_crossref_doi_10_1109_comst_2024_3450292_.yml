@@ -104,6 +104,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: IEEE Communications Surveys &amp; Tutorials
+    short_name: null
     type: journal
     volume: null
 title: 'Evolution of High-Throughput Satellite Systems: A Vision of Programmable Regenerative

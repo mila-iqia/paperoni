@@ -80,6 +80,7 @@
         peer_reviewed: false
         publisher: null
         series: IEEE Transactions on Neural Networks and Learning Systems
+        short_name: null
         type: journal
         volume: '33'
     title: A Two-Stream Continual Learning System With Variational Domain-Agnostic
@@ -1507,6 +1508,7 @@
         peer_reviewed: false
         publisher: null
         series: Molecular Informatics
+        short_name: null
         type: journal
         volume: '43'
     title: A community effort in SARS-CoV-2 drug discovery
@@ -1581,6 +1583,7 @@
         peer_reviewed: false
         publisher: null
         series: IEEE International Conference on Acoustics, Speech, and Signal Processing
+        short_name: null
         type: journal
         volume: null
     title: A hybrid coder for hidden Markov models using a recurrent neural networks
@@ -1710,6 +1713,7 @@
         peer_reviewed: false
         publisher: null
         series: bioRxiv
+        short_name: null
         type: journal
         volume: '12'
     title: A neuronal least-action principle for real-time learning in cortical circuits
@@ -1761,6 +1765,7 @@
         peer_reviewed: false
         publisher: null
         series: Journal of Democracy
+        short_name: null
         type: journal
         volume: '34'
     title: AI and Catastrophic Risk

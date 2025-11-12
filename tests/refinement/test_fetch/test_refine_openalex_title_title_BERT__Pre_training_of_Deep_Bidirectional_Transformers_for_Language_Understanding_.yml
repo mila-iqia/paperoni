@@ -91,6 +91,7 @@ releases:
     peer_reviewed: false
     publisher: Cornell University
     series: ''
+    short_name: null
     type: unknown
     volume: null
 title: 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding'

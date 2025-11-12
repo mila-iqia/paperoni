@@ -232,6 +232,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Amortizing intractable inference in diffusion models for vision, language,
@@ -393,6 +394,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Improved off-policy training of diffusion samplers
@@ -569,6 +571,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: 'Metacognitive Capabilities of LLMs: An Exploration in Mathematical Problem
@@ -735,6 +738,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: 'RGFN: Synthesizable Molecular Generation Using GFlowNets'
@@ -873,6 +877,7 @@
         peer_reviewed: true
         publisher: null
         series: NEURIPS
+        short_name: null
         type: conference
         volume: null
     title: Trajectory Flow Matching with Applications to Clinical Time Series Modelling

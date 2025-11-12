@@ -75,6 +75,7 @@ releases:
     peer_reviewed: false
     publisher: null
     series: ICML
+    short_name: null
     type: journal
     volume: null
 title: 'Synergies between Disentanglement and Sparsity: Generalization and Identifiability

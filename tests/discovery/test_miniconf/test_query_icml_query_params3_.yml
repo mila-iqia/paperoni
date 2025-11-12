@@ -107,6 +107,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: Improving Gradient-Guided Nested Sampling for Posterior Inference
@@ -302,6 +303,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: Iterated Denoising Energy Matching for Sampling from Boltzmann Densities
@@ -459,6 +461,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: Learning to Scale Logits for Temperature-Conditional GFlowNets
@@ -564,6 +567,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: Memory Efficient Neural Processes via Constant Memory Attention Block
@@ -683,6 +687,7 @@
         peer_reviewed: true
         publisher: null
         series: ICML
+        short_name: null
         type: conference
         volume: null
     title: 'PhAST: Physics-Aware, Scalable, and Task-Specific GNNs for Accelerated

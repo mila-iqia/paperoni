@@ -162,6 +162,7 @@
         peer_reviewed: false
         publisher: null
         series: NeurIPS.cc/Conference
+        short_name: null
         type: conference
         volume: NeurIPS 2024
     title: Amortizing intractable inference in diffusion models for vision, language,

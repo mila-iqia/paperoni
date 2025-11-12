@@ -67,6 +67,7 @@ releases:
     peer_reviewed: true
     publisher: JMLR
     series: JMLR
+    short_name: null
     type: journal
     volume: null
 title: Benchmarking Graph Neural Networks

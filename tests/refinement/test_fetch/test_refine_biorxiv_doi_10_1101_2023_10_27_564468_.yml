@@ -66,6 +66,7 @@ releases:
     peer_reviewed: false
     publisher: Cold Spring Harbor Laboratory
     series: bioRxiv
+    short_name: null
     type: journal
     volume: null
 title: Mining Mass Spectra for Peptide Facts

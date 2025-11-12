@@ -207,6 +207,7 @@ releases:
     peer_reviewed: false
     publisher: Nature Publishing Group
     series: Nature Communications
+    short_name: null
     type: journal
     volume: null
 title: Learning few-shot imitation as cultural transmission

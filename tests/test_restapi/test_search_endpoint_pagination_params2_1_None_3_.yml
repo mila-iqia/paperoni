@@ -24,6 +24,7 @@
       peer_reviewed: false
       publisher: null
       series: ML Conference
+      short_name: null
       type: conference
       volume: null
   title: Machine Learning Paper
