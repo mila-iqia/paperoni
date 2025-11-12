@@ -11,6 +11,7 @@ from typing import Annotated, Any, Generator, Literal
 
 import uvicorn
 import yaml
+from filelock import FileLock
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from outsight.ops import ticktock
@@ -506,7 +507,10 @@ class Work:
         )
 
     def run(self):
-        self.command.run(self)
+        wf = self.work_file or config.work_file
+        lf = wf.with_suffix(".lock")
+        with FileLock(lf):
+            return self.command.run(self)
 
 
 @dataclass
