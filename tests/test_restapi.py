@@ -141,7 +141,7 @@ def client(tmp_path: Path, test_user: User) -> TestClient:
             "paperoni.work_file": str(tmp_path / "work.yaml"),
             "paperoni.collection.$class": "paperoni.collection.memcoll:MemCollection",
             "paperoni.server.jwt_secret_key": "test-secret-key",
-            "paperoni.server.admin_emails": [f"admin_{test_user.email}"],
+            "paperoni.server.user_roles": {f"admin_{test_user.email}": ["admin"]},
         }
     ):
         with patch("paperoni.restapi.config.metadata") as mock_meta:
@@ -212,7 +212,7 @@ def test_endpoint_requires_admin_authentication(
     headers = {"Authorization": f"Bearer {mock_user_token}"}
     response = client.get(endpoint, params={}, headers=headers)
     assert response.status_code == 403
-    assert "Admin access required" in response.json()["detail"]
+    assert "admin role required" in response.json()["detail"]
 
     headers = {"Authorization": f"Bearer {mock_admin_token}"}
     response = client.get(endpoint, params={}, headers=headers)

@@ -120,9 +120,13 @@ class User:
         allow_extras = True
 
     @cached_property
+    def roles(self) -> set[str]:
+        return config.server.user_roles.get(self.email, set())
+
+    @cached_property
     def is_admin(self) -> bool:
         """Get user id."""
-        return not self.as_user and self.email in config.server.admin_emails
+        return not self.as_user and "admin" in self.roles
 
     @cached_property
     def work_file(self) -> Path:
@@ -370,14 +374,7 @@ async def run_in_process_pool(func, *args):
     return await loop.run_in_executor(config.server.process_pool, func, *args)
 
 
-def create_app() -> FastAPI:
-    """Create and configure the FastAPI application."""
-    app = FastAPI(
-        title="Paperoni API",
-        description="API for searching scientific papers",
-        version=importlib.metadata.version(paperoni.__name__),
-        root_path="/api/v1",
-    )
+def add_auth(app):
     # Add session middleware for OAuth
     app.add_middleware(
         SessionMiddleware,
@@ -385,15 +382,6 @@ def create_app() -> FastAPI:
         secret_key=config.server.secret_key,
         max_age=14 * 24 * 60 * 60,  # 14 days
     )
-
-    @app.exception_handler(Exception)
-    async def exception_handler(request, exc):
-        restapi_logger.exception(exc)
-
-        if getattr(exc, "status_code", None) is None:
-            exc = HTTPException(status_code=500, detail="Internal Server Error")
-
-        return await http_exception_handler(request, exc)
 
     @lru_cache(maxsize=100)
     def headless_login(
@@ -442,45 +430,40 @@ def create_app() -> FastAPI:
     )
 
     # Authentication dependencies
-    async def get_current_user(
-        request: Request,
-        as_user: bool = False,
-        credentials: HTTPAuthorizationCredentials = Depends(security),
-    ) -> AsyncGenerator[User, None]:
-        """Get current user from JWT token or session."""
-        user = None
+    def user_with_role(role=None):
+        async def get_user(
+            request: Request,
+            as_user: bool = False,
+            credentials: HTTPAuthorizationCredentials = Depends(security),
+        ) -> AsyncGenerator[User, None]:
+            """Get current user from JWT token or session."""
+            user = None
 
-        # Try to get user from Authorization header first
-        if credentials:
-            try:
-                user = jwt.decode(
-                    credentials.credentials,
-                    config.server.jwt_secret_key,
-                    algorithms=["HS256"],
-                )
-            except JWTError:
-                pass
+            # Try to get user from Authorization header first
+            if credentials:
+                try:
+                    user = jwt.decode(
+                        credentials.credentials,
+                        config.server.jwt_secret_key,
+                        algorithms=["HS256"],
+                    )
+                except JWTError:
+                    pass
 
-        # Try to get user from session
-        user = user or request.session.get("user")
+            # Try to get user from session
+            user = user or request.session.get("user")
 
-        if user:
-            user = {**user, "as_user": as_user}
-            user = deserialize(User, user)
-            yield user
+            if user:
+                user = {**user, "as_user": as_user}
+                user = deserialize(User, user)
+                if role is None or role in user.roles:
+                    yield user
+                else:
+                    raise HTTPException(status_code=403, detail=f"{role} role required")
+            else:
+                raise HTTPException(status_code=401, detail="Authentication required")
 
-        else:
-            raise HTTPException(status_code=401, detail="Authentication required")
-
-    get_current_user_as_user = partial(get_current_user, as_user=True)
-
-    async def get_current_admin(
-        user: User = Depends(get_current_user),
-    ) -> AsyncGenerator[User, None]:
-        """Get current admin user."""
-        if not user.is_admin:
-            raise HTTPException(status_code=403, detail="Admin access required")
-        yield user
+        return get_user
 
     def is_headless(request: Request, headless: bool = False) -> bool:
         """Detect if request should use headless mode based on User-Agent.
@@ -505,14 +488,6 @@ def create_app() -> FastAPI:
         return headless or not any(
             indicator in user_agent for indicator in browser_indicators
         )
-
-    @app.get("/")
-    async def root():
-        """Root endpoint with API information."""
-        return {
-            "message": app.title,
-            "version": app.version,
-        }
 
     # OAuth Authentication Endpoints
     @app.get("/auth/login", response_model=LoginResponse)
@@ -606,6 +581,41 @@ def create_app() -> FastAPI:
         request.session.pop("oauth_state", None)
 
         return user
+
+    return user_with_role
+
+
+def create_app() -> FastAPI:
+    """Create and configure the FastAPI application."""
+    app = FastAPI(
+        title="Paperoni API",
+        description="API for searching scientific papers",
+        version=importlib.metadata.version(paperoni.__name__),
+        root_path="/api/v1",
+    )
+
+    @app.exception_handler(Exception)
+    async def exception_handler(request, exc):
+        restapi_logger.exception(exc)
+
+        if getattr(exc, "status_code", None) is None:
+            exc = HTTPException(status_code=500, detail="Internal Server Error")
+
+        return await http_exception_handler(request, exc)
+
+    user_with_role = add_auth(app)
+
+    get_current_user = user_with_role()
+    get_current_admin = user_with_role("admin")
+    get_current_user_as_user = partial(get_current_user, as_user=True)
+
+    @app.get("/")
+    async def root():
+        """Root endpoint with API information."""
+        return {
+            "message": app.title,
+            "version": app.version,
+        }
 
     @app.get(
         "/search",

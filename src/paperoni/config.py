@@ -43,7 +43,7 @@ class Server:
     jwt_secret_key: Secret[str] = None
     client_id: Secret[str] = None
     client_secret: Secret[str] = None
-    admin_emails: set[str] = field(default_factory=set)
+    user_roles: dict[str, set[str]] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.process_pool_executor.get("max_workers") == 0:
