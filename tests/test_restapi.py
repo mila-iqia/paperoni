@@ -29,7 +29,7 @@ from paperoni.restapi import User, create_app
 @pytest.fixture(scope="session")
 def test_user():
     """Create a test user for authentication."""
-    yield User(email="test@example.com", as_user=False)
+    yield User(email="test@example.com")
 
 
 @pytest.fixture(scope="session")
@@ -154,8 +154,6 @@ def client(tmp_path: Path, test_user: User) -> TestClient:
     "endpoint",
     [
         "/search",
-        "/work/view",
-        "/work/include",
         "/fulltext/locate",
         "/fulltext/download",
     ],

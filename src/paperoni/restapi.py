@@ -5,18 +5,16 @@ FastAPI interface for paperoni collection search functionality.
 import asyncio
 import datetime
 import enum
-import hashlib
 import importlib.metadata
 import itertools
 import logging
 import secrets
 import urllib.parse
 from dataclasses import dataclass, field
-from functools import cached_property, lru_cache, partial
+from functools import cached_property, lru_cache
 from types import NoneType
 from typing import AsyncGenerator, Generator, Iterable, Literal
 
-from anyio import Path
 from authlib.integrations.base_client import OAuthError
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -114,7 +112,6 @@ class User:
     """User model for authentication."""
 
     email: str
-    as_user: bool = False
 
     class SerieuxConfig:
         allow_extras = True
@@ -122,30 +119,6 @@ class User:
     @cached_property
     def roles(self) -> set[str]:
         return config.server.user_roles.get(self.email, set())
-
-    @cached_property
-    def is_admin(self) -> bool:
-        """Get user id."""
-        return not self.as_user and "admin" in self.roles
-
-    @cached_property
-    def work_file(self) -> Path:
-        """Get user work file."""
-        if self.is_admin:
-            # Admin user work file is the config file. That file is thus shared
-            # by all admins.
-            work_file = config.work_file
-
-        else:
-            email_hash = hashlib.sha256(self.email.encode()).hexdigest()
-            work_file = (
-                config.server.client_dir
-                / f"{self.email.split('@')[0]}_{email_hash[:8]}"
-                / "work.yaml"
-            )
-
-        work_file.parent.mkdir(parents=True, exist_ok=True)
-        return work_file
 
 
 @dataclass(frozen=True)
@@ -339,11 +312,11 @@ def _search(request: dict):
     return results, request.count, request.next_offset, len(all_matches)
 
 
-def _work_view(request: dict, user: User):
+def _work_view(request: dict):
     request: ViewRequest = deserialize(ViewRequest, request)
 
     """Search for papers in the collection."""
-    work = Work(command=request, work_file=user.work_file)
+    work = Work(command=request, work_file=config.work_file)
 
     papers: list[Scored[Paper]] = list(request.slice(work.run()))
 
@@ -616,7 +589,6 @@ def create_app() -> FastAPI:
 
     get_current_user = user_with_role()
     get_current_admin = user_with_role("admin")
-    get_current_user_as_user = partial(get_current_user, as_user=True)
 
     @app.get("/")
     async def root():
@@ -642,20 +614,18 @@ def create_app() -> FastAPI:
 
     @app.post("/work/add", response_model=AddResponse)
     async def work_add_papers(
-        request: AddRequest, user: User = Depends(get_current_user_as_user)
+        request: AddRequest, user: User = Depends(get_current_admin)
     ):
-        """Add papers to the user's work."""
-
         request.user = user
 
-        work = Work(command=request, work_file=user.work_file)
+        work = Work(command=request, work_file=config.work_file)
         work.run()
 
         return AddResponse(total=len(work.top))
 
     @app.get("/work/view", response_model=ViewResponse)
     async def work_view_papers(
-        request: ViewRequest = Depends(), user: User = Depends(get_current_user)
+        request: ViewRequest = Depends(), user: User = Depends(get_current_admin)
     ):
         papers, count, next_offset, total = await run_in_process_pool(
             _work_view, serialize(ViewRequest, request), user
@@ -667,12 +637,14 @@ def create_app() -> FastAPI:
             total=total,
         )
 
-    @app.get("/work/include", response_model=IncludeResponse)
-    async def work_include_papers(
-        request: IncludeRequest, user: User = Depends(get_current_user_as_user)
-    ):
+    @app.get(
+        "/work/include",
+        response_model=IncludeResponse,
+        dependencies=[Depends(get_current_admin)],
+    )
+    async def work_include_papers(request: IncludeRequest):
         """Search for papers in the collection."""
-        work = Work(command=request, work_file=user.work_file)
+        work = Work(command=request, work_file=config.work_file)
 
         added = work.run()
 
