@@ -201,7 +201,6 @@ releases:
     aliases: []
     date: '2023-11-28'
     date_precision: 3
-    index: null
     links: []
     name: Nature Communications
     open: false

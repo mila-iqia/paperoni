@@ -52,7 +52,6 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
-        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -116,7 +115,6 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
-        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -161,7 +159,6 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
-        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -212,7 +209,6 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
-        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue
@@ -270,7 +266,6 @@
         aliases: []
         date: '2020-11-13'
         date_precision: 3
-        index: null
         links:
         - link: NeurIPS.cc/2020/Conference
           type: openreview-venue

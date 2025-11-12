@@ -101,7 +101,6 @@
         aliases: []
         date: '2021-05-13'
         date_precision: 3
-        index: null
         links:
         - link: 10.1109/icassp39728.2021.9413901
           type: doi
@@ -261,7 +260,6 @@
         aliases: []
         date: '2021-08-27'
         date_precision: 3
-        index: null
         links:
         - link: 10.21437/interspeech.2021-941
           type: doi
@@ -431,7 +429,6 @@
         aliases: []
         date: '2021-05-18'
         date_precision: 3
-        index: null
         links:
         - link: 10.1609/aaai.v35i11.17203
           type: doi
@@ -591,7 +588,6 @@
         aliases: []
         date: '2023-01-01'
         date_precision: 3
-        index: null
         links:
         - link: 10.1109/wacv56688.2023.00614
           type: doi
@@ -749,7 +745,6 @@
         aliases: []
         date: '2023-05-05'
         date_precision: 3
-        index: null
         links:
         - link: 10.1109/icassp49357.2023.10095969
           type: doi

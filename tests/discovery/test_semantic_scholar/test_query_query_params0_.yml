@@ -74,7 +74,6 @@
         aliases: []
         date: '2021-03-03'
         date_precision: 3
-        index: null
         links: []
         name: IEEE Transactions on Neural Networks and Learning Systems
         open: false
@@ -1503,7 +1502,6 @@
         aliases: []
         date: '2023-10-13'
         date_precision: 3
-        index: null
         links: []
         name: Molecular Informatics
         open: false
@@ -1579,7 +1577,6 @@
         aliases: []
         date: '1990-04-03'
         date_precision: 3
-        index: null
         links: []
         name: IEEE International Conference on Acoustics, Speech, and Signal Processing
         open: false
@@ -1710,7 +1707,6 @@
         aliases: []
         date: '2024-09-23'
         date_precision: 3
-        index: null
         links: []
         name: bioRxiv
         open: false
@@ -1763,7 +1759,6 @@
         aliases: []
         date: '2023-10-01'
         date_precision: 3
-        index: null
         links: []
         name: Journal of Democracy
         open: false

@@ -71,7 +71,6 @@ releases:
     aliases: []
     date: '2022-06-01'
     date_precision: 2
-    index: null
     links: []
     name: arXiv
     open: false

@@ -188,7 +188,6 @@ class Venue:
     volume: str = None
     publisher: str = None
     short_name: str = None
-    index: str = None
     aliases: list[str] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
     open: bool = False

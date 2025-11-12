@@ -212,7 +212,6 @@ releases:
     aliases: []
     date: '2022-03-16'
     date_precision: 3
-    index: null
     links: []
     name: Science Advances
     open: true

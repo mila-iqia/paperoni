@@ -127,7 +127,6 @@
         aliases: []
         date: '2024-05-02'
         date_precision: 3
-        index: null
         links: []
         name: AISTATS
         open: true

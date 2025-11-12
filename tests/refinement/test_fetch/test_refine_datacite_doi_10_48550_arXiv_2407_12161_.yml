@@ -85,7 +85,6 @@ releases:
     aliases: []
     date: '2024-07-01'
     date_precision: 2
-    index: null
     links: []
     name: arXiv
     open: false

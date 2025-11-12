@@ -138,7 +138,6 @@ releases:
     aliases: []
     date: '2022-02-14'
     date_precision: 3
-    index: null
     links: []
     name: 'CMAJ : Canadian Medical Association Journal'
     open: false

@@ -116,7 +116,6 @@ releases:
     aliases: []
     date: '2025-04-01'
     date_precision: 3
-    index: null
     links: []
     name: Medical Physics
     open: false

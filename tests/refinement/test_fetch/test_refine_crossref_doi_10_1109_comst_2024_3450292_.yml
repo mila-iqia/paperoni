@@ -98,7 +98,6 @@ releases:
     aliases: []
     date: '2025-06-01'
     date_precision: 2
-    index: null
     links: []
     name: IEEE Communications Surveys &amp; Tutorials
     open: false

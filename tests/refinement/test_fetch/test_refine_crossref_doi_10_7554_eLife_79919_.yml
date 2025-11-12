@@ -71,7 +71,6 @@ releases:
     aliases: []
     date: '2022-09-30'
     date_precision: 3
-    index: null
     links: []
     name: eLife
     open: false

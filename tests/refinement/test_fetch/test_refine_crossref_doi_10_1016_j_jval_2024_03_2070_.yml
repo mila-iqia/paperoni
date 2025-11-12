@@ -101,7 +101,6 @@ releases:
     aliases: []
     date: '2024-06-01'
     date_precision: 2
-    index: null
     links: []
     name: Value in Health
     open: false

@@ -8,12 +8,14 @@ from ..llm_common import Explained, PromptConfig
 
 @dataclass
 class Analysis:
-    # The normalized venue long name
+    # The normalized full official venue name
     name: Explained[str]
-    # The normalized venue short name
+    # The normalized widely used short or abbreviated name
     short_name: Explained[str]
-    # The extracted venue index
-    index: Explained[str]
+    # The extracted numeric marker
+    numeric_marker: Explained[str]
+    # The extracted year
+    year: Explained[str]
 
 
 DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "system-prompt.md").read_text()

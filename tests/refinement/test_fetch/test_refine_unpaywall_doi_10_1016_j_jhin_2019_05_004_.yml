@@ -59,7 +59,6 @@ releases:
     aliases: []
     date: '2019-05-13'
     date_precision: 3
-    index: null
     links: []
     name: Journal of Hospital Infection
     open: false

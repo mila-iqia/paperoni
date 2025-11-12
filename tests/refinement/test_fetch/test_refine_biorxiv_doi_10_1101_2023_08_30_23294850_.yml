@@ -87,7 +87,6 @@ releases:
     aliases: []
     date: '2023-09-01'
     date_precision: 3
-    index: null
     links: []
     name: medRxiv
     open: false

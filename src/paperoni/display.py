@@ -69,7 +69,7 @@ def display(paper: Paper):
         venue = release.venue
         d = DatePrecision.format(venue.date, venue.date_precision)
         v = ", ".join(
-            part for part in [venue.short_name or venue.name, venue.index] if part
+            part for part in [venue.short_name or venue.name, venue.volume] if part
         )
         print(f"  {T.bold_green(d)} {T.bold_magenta(release.status)} {v}")
     print_field("Topics", ", ".join(t.name for t in paper.topics))
@@ -108,7 +108,7 @@ def display(venue: Venue):
         ", ".join(
             map(
                 T.bold,
-                [part for part in [venue.short_name or venue.name, venue.index] if part],
+                [part for part in [venue.short_name or venue.name, venue.volume] if part],
             )
         ),
     )

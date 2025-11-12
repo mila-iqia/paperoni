@@ -44,7 +44,6 @@
         aliases: []
         date: '1998-03-01'
         date_precision: 3
-        index: null
         links: []
         name: IEEE Transactions on Pattern Analysis and Machine Intelligence
         open: false
@@ -153,7 +152,6 @@
         aliases: []
         date: '2020-07-01'
         date_precision: 3
-        index: null
         links: []
         name: International Joint Conference on Artificial Intelligence
         open: false
@@ -221,7 +219,6 @@
         aliases: []
         date: '2017-04-01'
         date_precision: 3
-        index: null
         links: []
         name: Genetic Epidemiology
         open: false

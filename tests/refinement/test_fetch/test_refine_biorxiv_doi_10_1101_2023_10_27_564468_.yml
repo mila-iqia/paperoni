@@ -60,7 +60,6 @@ releases:
     aliases: []
     date: '2023-11-01'
     date_precision: 3
-    index: null
     links: []
     name: bioRxiv
     open: false

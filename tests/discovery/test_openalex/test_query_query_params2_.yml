@@ -123,7 +123,6 @@
         aliases: []
         date: '2017-02-12'
         date_precision: 3
-        index: null
         links:
         - link: 10.1609/aaai.v31i1.10983
           type: doi
@@ -361,7 +360,6 @@
         aliases: []
         date: '2017-08-06'
         date_precision: 3
-        index: null
         links:
         - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
           type: url
@@ -494,7 +492,6 @@
         aliases: []
         date: '2016-02-08'
         date_precision: 3
-        index: null
         links:
         - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
           type: url
@@ -634,7 +631,6 @@
         aliases: []
         date: '2016-03-05'
         date_precision: 3
-        index: null
         links:
         - link: 10.1609/aaai.v30i1.9883
           type: doi
@@ -776,7 +772,6 @@
         aliases: []
         date: '2011-06-28'
         date_precision: 3
-        index: null
         links:
         - link: https://icml.cc/2011/papers/455_icmlpaper.pdf
           type: url

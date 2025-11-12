@@ -98,7 +98,6 @@
         aliases: []
         date: '2024-09-25'
         date_precision: 3
-        index: null
         links:
         - link: NeurIPS.cc/2024/Conference
           type: openreview-venue

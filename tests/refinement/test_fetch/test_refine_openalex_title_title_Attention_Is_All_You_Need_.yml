@@ -102,7 +102,6 @@ releases:
     aliases: []
     date: '2017-01-01'
     date_precision: 3
-    index: null
     links:
     - link: '1706.03762'
       type: arxiv

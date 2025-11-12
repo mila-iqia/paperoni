@@ -145,7 +145,6 @@ releases:
     aliases: []
     date: '2025-02-01'
     date_precision: 2
-    index: null
     links: []
     name: arXiv
     open: false

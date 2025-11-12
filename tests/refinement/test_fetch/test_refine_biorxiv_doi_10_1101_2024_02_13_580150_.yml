@@ -62,7 +62,6 @@ releases:
     aliases: []
     date: '2024-02-16'
     date_precision: 3
-    index: null
     links: []
     name: bioRxiv
     open: false

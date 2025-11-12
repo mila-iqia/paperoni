@@ -18,7 +18,6 @@
       aliases: []
       date: '2023-01-01'
       date_precision: 3
-      index: null
       links: []
       name: Test Conference
       open: false
@@ -50,7 +49,6 @@
       aliases: []
       date: '2023-02-01'
       date_precision: 3
-      index: null
       links: []
       name: Test Journal
       open: false
@@ -82,7 +80,6 @@
       aliases: []
       date: '2023-03-01'
       date_precision: 3
-      index: null
       links: []
       name: ML Conference
       open: false

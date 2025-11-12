@@ -738,7 +738,6 @@ releases:
     aliases: []
     date: '2025-03-04'
     date_precision: 3
-    index: null
     links: []
     name: Magnetic Resonance in Medicine
     open: false

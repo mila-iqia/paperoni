@@ -131,7 +131,6 @@ releases:
     aliases: []
     date: '2020-10-29'
     date_precision: 3
-    index: null
     links: []
     name: bioRxiv
     open: false

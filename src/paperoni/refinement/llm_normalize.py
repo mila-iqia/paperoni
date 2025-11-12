@@ -1,11 +1,13 @@
 import logging
 import re
+from datetime import datetime
 
 from outsight import send
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
 from ..config import config
+from ..model import DatePrecision
 from ..model.classes import Institution, InstitutionCategory, Paper, Venue
 from ..prompt import ParsedResponseSerializer
 from ..utils import normalize_institution, normalize_name, normalize_venue
@@ -169,12 +171,25 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
     else:
         analysis: norm_venue_model.Analysis = prompt(**prompt_kwargs).parsed
 
+    year = {}
+    if analysis.year:
+        try:
+            year = {
+                "date": datetime.strptime(str(analysis.year), "%Y").date(),
+                "date_precision": DatePrecision.year,
+            }
+        except ValueError:
+            logging.warning(
+                f"Failed to parse year {analysis.year} from venue llm analysis for {venue.name}"
+            )
+
     return Venue(
         **{
             **vars(venue),
             "name": str(analysis.name),
             "short_name": str(analysis.short_name) or venue.short_name,
-            "index": str(analysis.index) or venue.index,
+            "volume": str(analysis.numeric_marker) or venue.volume,
+            **year,
         }
     )
 

@@ -69,7 +69,6 @@ releases:
     aliases: []
     date: '2023-12-01'
     date_precision: 2
-    index: null
     links: []
     name: arXiv
     open: false

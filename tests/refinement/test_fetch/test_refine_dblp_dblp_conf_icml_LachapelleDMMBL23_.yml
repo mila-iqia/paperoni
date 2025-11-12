@@ -69,7 +69,6 @@ releases:
     aliases: []
     date: '2023-01-01'
     date_precision: 1
-    index: null
     links: []
     name: ICML
     open: false

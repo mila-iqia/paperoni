@@ -29,7 +29,6 @@ releases:
     aliases: []
     date: '2019-10-01'
     date_precision: 2
-    index: null
     links: []
     name: Journal of Hospital Infection
     open: false

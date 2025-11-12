@@ -37,7 +37,6 @@ releases:
     aliases: []
     date: '2025-01-01'
     date_precision: 1
-    index: null
     links: []
     name: CHASE@ICSE
     open: false
