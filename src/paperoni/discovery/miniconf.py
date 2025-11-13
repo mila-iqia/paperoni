@@ -259,15 +259,17 @@ class MiniConf(Discoverer):
         base_url = f"https://{base_url}"
 
         url = f"{base_url}/static/virtual/data/{conference}-{year}-orals-posters.json"
-        data = config.fetch.read(
-            url,
-            format="json",
-            cache_into=cache
+        cache_path = (
+            cache
             and config.cache_path
-            and config.cache_path / "miniconf" / f"{conference}-{year}.json",
+            and config.cache_path / "miniconf" / f"{conference}-{year}.json"
         )
+        data = config.fetch.read(url, format="json", cache_into=cache_path)
 
         uid_groups = {}
+
+        if not data.get("results", None) and cache_path and cache_path.exists():
+            cache_path.unlink()
 
         for paper_data in data["results"]:
             uid = paper_data.get("uid")
