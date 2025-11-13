@@ -89,7 +89,7 @@ def term_display(x: str, i: int):
 
 @auto_singleton("terminal")
 class TerminalFormatter(Formatter):
-    def __call__(self, things):
+    def __call__(self, things, typ=None):
         for i, thing in enumerate(things):
             term_display(thing, i)
 
@@ -117,10 +117,12 @@ class Discover(Productor):
     top: int = 0
 
     def run(self):
+        typ = PaperInfo
         papers = self.iterate()
         if self.top:
             papers = config.focuses.top(n=self.top, pinfos=papers)
-        self.format(papers)
+            typ = Scored[PaperInfo]
+        self.format(papers, typ=typ)
 
 
 @dataclass
