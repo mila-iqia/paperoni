@@ -211,12 +211,19 @@ def datacite(type: Literal["doi", "arxiv"], link: str):
             )
             links.append(Link(type=f"{identifier_type}", link=normalized_identifier))
 
+    def display_name(creator):
+        parts = [
+            creator.get("givenName"),
+            creator.get("familyName"),
+        ]
+        return " ".join(p for p in parts if p)
+
     return Paper(
         title=raw_paper.titles[0]["title"],
         abstract=abstract,
         authors=[
             PaperAuthor(
-                display_name=(dn := f"{creator['givenName']} {creator['familyName']}"),
+                display_name=(dn := display_name(creator)),
                 author=Author(
                     name=dn,
                     aliases=[],
