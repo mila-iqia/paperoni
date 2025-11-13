@@ -631,33 +631,39 @@ class Focus:
         def run(self, focus: "Focus"):
             start_date = datetime.now() - self.timespan
             start_date = start_date.date().replace(month=1, day=1)
+            focuses = Focuses()
             focus.focuses.update(
-                focus.collection.search(start_date=start_date), config.autofocus
+                focus.collection.search(start_date=start_date),
+                config.autofocus,
+                dest=focuses,
             )
-
-            dump(Focuses, focus.focuses, dest=focus._autofocus_file)
+            dump(Focuses, focuses, dest=focus.autofocus_file)
             return focus.focuses
 
     # Command to execute
     command: TaggedUnion[AutoFocus]
 
     # List of focuses
-    # [alias: -f]
-    focus_file: Path = field(
-        default_factory=lambda: (
-            config.metadata.focuses.file and config.metadata.focuses.file.exists()
-        )
-        and config.metadata.focuses.file
-        or None
-    )
+    # [option: -f]
+    _focus_file: Path = None
 
     # Collection dir
     # [alias: -c]
     collection_file: Path = None
 
-    def __post_init__(self):
-        self._autofocus_file = (
-            self.focus_file.parent / f"auto{self.focus_file.name}"
+    @cached_property
+    def focus_file(self):
+        focus_file = self._focus_file
+        if focus_file is None:
+            f = config.metadata.focuses.file
+            focus_file = f if f.exists() else None
+        return focus_file
+
+    @cached_property
+    def autofocus_file(self):
+        focus_file = self.focus_file
+        return (
+            focus_file.parent / f"auto{focus_file.name}"
             or config.metadata.focuses.autofile
         )
 

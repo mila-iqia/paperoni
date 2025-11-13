@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field, replace
 from heapq import heapify, heappush, heappushpop
 from typing import Counter, Iterable, Literal
@@ -119,9 +121,12 @@ class Focuses:
             t.add(scored)
         return t
 
-    def update(self, papers: Iterable[Paper], autofocus: "AutoFocus") -> "Focuses":
+    def update(
+        self, papers: Iterable[Paper], autofocus: "AutoFocus", dest: Focuses = None
+    ) -> Focuses:
         # TODO: store each auto focus with a start / end date to avoid
         # considering the papers of authors not at Mila anymore
+        dest = dest or self
         focused_institutions_cnts = {
             normalize_institution(f.name): Counter()
             for f in self.focuses
@@ -147,7 +152,7 @@ class Focuses:
                     count >= autofocus.author.threshold
                     and author_name not in focused_authors
                 ):
-                    self.focuses.append(
+                    dest.focuses.append(
                         Focus(
                             type="author", name=author_name, score=autofocus.author.score
                         )
@@ -155,12 +160,12 @@ class Focuses:
                     focused_authors.add(author_name)
 
         # sort focuses by institution first, then author
-        self.focuses = sorted(
-            (f for f in self.focuses if f.type == "institution"),
+        dest.focuses = sorted(
+            (f for f in dest.focuses if f.type == "institution"),
             key=lambda x: x.score,
             reverse=True,
         ) + sorted(
-            (f for f in self.focuses if f.type == "author"),
+            (f for f in dest.focuses if f.type == "author"),
             key=lambda x: x.score,
             reverse=True,
         )
