@@ -1,0 +1,49 @@
+abstract: null
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Mohamed Mohamed
+  display_name: Mohamed Mohamed
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Brennan Nichyporuk
+  display_name: Brennan Nichyporuk
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Douglas L. Arnold
+  display_name: Douglas L. Arnold
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Tal Arbel
+  display_name: Tal Arbel
+flags: []
+links:
+- link: 10.1007/978-3-032-07502-4_10
+  type: doi
+releases:
+- pages: null
+  status: published
+  venue:
+    aliases: []
+    date: '2025-10-12'
+    date_precision: 3
+    links: []
+    name: International Workshop on Emerging LLM/LMM Applications in Medical Imaging
+    open: false
+    peer_reviewed: false
+    publisher: null
+    series: International Workshop on Emerging LLM/LMM Applications in Medical Imaging
+    short_name: ELAMI
+    type: conference
+    volume: null
+title: 'Imagining Alternatives: Towards High-Resolution 3D Counterfactual Medical
+  Image Generation via Language Guidance'
+topics: []
