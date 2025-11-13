@@ -34,6 +34,7 @@ links = [
     # Crossref
     (crossref, "doi:10.1002/mp.17782"),
     (crossref, "doi:10.1007/s41109-021-00378-3"),
+    (crossref, "doi:10.1007/978-3-032-07502-4_10"),
     (crossref, "doi:10.1016/j.jhin.2019.05.004"),
     (crossref, "doi:10.1016/j.jval.2024.03.2070"),
     (crossref, "doi:10.1016/j.neucom.2022.09.031"),

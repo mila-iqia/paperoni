@@ -50,6 +50,14 @@ def paper_from_crossref(data):
                     date_parts = dateholder["date-parts"][0]
                     break
 
+        short_venue_name = None
+
+        for assertion in getattr(data, "assertion", []):
+            if assertion["name"] == "conference_name":
+                venue_name = assertion["value"]
+            if assertion["name"] == "conference_acronym":
+                short_venue_name = assertion["value"]
+
         precision = [
             DatePrecision.year,
             DatePrecision.month,
@@ -60,6 +68,7 @@ def paper_from_crossref(data):
             venue=Venue(
                 aliases=[],
                 name=venue_name,
+                short_name=short_venue_name,
                 type=venue_type,
                 series=venue_name,
                 links=[],
