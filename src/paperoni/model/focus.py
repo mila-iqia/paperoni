@@ -74,7 +74,7 @@ class Focuses:
         return Model(
             original_type=cls,
             element_field=Field(name="_", type=Focus),
-            list_constructor=lambda xs: cls(list(xs)),
+            from_list=cls,
         )
 
     def __iter__(self):
