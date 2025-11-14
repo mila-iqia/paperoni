@@ -25,7 +25,7 @@ class DiscoBag:
         return Model(
             original_type=cls,
             element_field=Field(name="_", type=DiscoT),
-            list_constructor=cls,
+            from_list=cls,
         )
 
 
