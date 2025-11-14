@@ -1,7 +1,8 @@
 import json
+import os
 import re
 from dataclasses import dataclass
-from datetime import timedelta
+from datetime import datetime, timedelta
 from functools import cached_property
 from pathlib import Path
 from typing import Literal
@@ -103,8 +104,18 @@ class Fetcher:
                 send(progress=(Path(url).name, sofar, total))
         print(f"Saved {filename}")
 
-    def read(self, url, format=None, cache_into=None, **kwargs):
-        if cache_into and cache_into.exists():
+    def read(
+        self, url, format=None, cache_into=None, cache_expiry: timedelta = None, **kwargs
+    ):
+        def is_cache_valid(path: Path, expiry: timedelta):
+            if not path.exists():
+                return False
+            if expiry is None:
+                return True
+            mtime = datetime.fromtimestamp(os.path.getmtime(path))
+            return (datetime.now() - mtime) < expiry
+
+        if cache_into and is_cache_valid(cache_into, cache_expiry):
             content = cache_into.read_text()
         else:
             resp = self.get(url, **kwargs)

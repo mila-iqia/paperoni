@@ -1,6 +1,6 @@
 import math
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from enum import Enum
 
 import requests
@@ -228,6 +228,8 @@ class MiniConf(Discoverer):
         limit: int = None,
         # Whether to cache the download
         cache: bool = True,
+        # Cache expiry
+        cache_expiry: timedelta = None,
         # Whether to raise an error if a paper cannot be converted
         error_policy: ErrorPolicy = ErrorPolicy.LOG,
         # A list of focuses
@@ -264,7 +266,9 @@ class MiniConf(Discoverer):
             and config.cache_path
             and config.cache_path / "miniconf" / f"{conference}-{year}.json"
         )
-        data = config.fetch.read(url, format="json", cache_into=cache_path)
+        data = config.fetch.read(
+            url, format="json", cache_into=cache_path, cache_expiry=cache_expiry
+        )
 
         uid_groups = {}
 
