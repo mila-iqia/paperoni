@@ -345,7 +345,7 @@ async def run_in_process_pool(func, *args):
     return await loop.run_in_executor(config.server.process_pool, func, *args)
 
 
-def add_auth(app):
+def add_auth(app: FastAPI):
     # Add session middleware for OAuth
     app.add_middleware(
         SessionMiddleware,
@@ -572,16 +572,16 @@ def create_app() -> FastAPI:
 
         return await http_exception_handler(request, exc)
 
-    if config.server.use_auth and config.server.secret_key:
-        user_with_role = add_auth(app)
-
-    else:
+    if config.server.no_auth:
 
         def user_with_role(role=None):
             async def get_user():
                 return User(email="admin")
 
             return get_user
+
+    else:
+        user_with_role = add_auth(app)
 
     get_current_user = user_with_role()
     get_current_admin = user_with_role("admin")

@@ -117,7 +117,7 @@ def server_process(cfg_src: list[str | dict], memcol: dict):
         *cfg_src,
         {
             "paperoni.collection": memcol,
-            "paperoni.server.use_auth": False,
+            "paperoni.server.no_auth": True,
             "paperoni.server.max_results": 5,
         },
     ):

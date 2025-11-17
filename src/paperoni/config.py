@@ -38,7 +38,7 @@ class Refine:
 class Server:
     max_results: int = 10000
     process_pool_executor: dict = field(default_factory=dict)
-    use_auth: bool = True
+    no_auth: bool = False
     client_dir: Path = None
     secret_key: Secret[str] = None
     jwt_secret_key: Secret[str] = None
