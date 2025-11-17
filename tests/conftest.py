@@ -12,11 +12,16 @@ os.environ["GEMINI_API_KEY"] = "DUMMY_GEMINI_API_KEY"
 os.environ.pop("GOOGLE_API_KEY", None)
 
 
-@fixture(scope="session", autouse=True)
-def set_config():
+@fixture(scope="session")
+def cfg_src():
     with TemporaryDirectory() as tmpdir:
-        with gifnoc.use(
+        return [
             TESTS_PATH / "config/test-config.yaml",
             {"paperoni.data_path": str(Path(tmpdir) / "data")},
-        ):
-            yield
+        ]
+
+
+@fixture(scope="session", autouse=True)
+def set_config(cfg_src: list[str | dict]):
+    with gifnoc.use(*cfg_src):
+        yield

@@ -84,8 +84,9 @@ timeout = 20
 
 [tool.hatch.envs.default]
 installer = "uv"
+dependency-groups = ["dev"]
 post-install-commands = [
-    "sync",
+    "uv sync",
 ]
 
 [tool.hatch.envs.default.env-vars]
@@ -94,27 +95,28 @@ SERIEUX_PASSWORD = "{env:SERIEUX_PASSWORD:_}"
 PAPERONI_SECRETS = "{env:PAPERONI_SECRETS:{home:real}/secrets/paperoni/config.yaml}"
 
 [tool.hatch.envs.default.scripts]
-sync = "uv sync --active --all-extras"
+uv = 'UV_PROJECT_ENVIRONMENT="{env:VIRTUAL_ENV}" "$(which uv)" {args}'
 make-secrets = [
-    "sync",
+    "uv sync",
     'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" {args}',
     'cp $(dirname "{env:PAPERONI_SECRETS}")/*focuses*.yaml "$(dirname "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)")"',
 ]
 
+[tool.hatch.envs.hatch-test]
+installer = "uv"
+dependency-groups = ["dev"]
+post-install-commands = [
+    "uv sync --inexact",
+    "hatch run podman:install",
+]
+
 [tool.hatch.envs.hatch-test.extra-scripts]
-sync = "uv sync --active --inexact --all-extras"
+uv = 'UV_PROJECT_ENVIRONMENT="{env:VIRTUAL_ENV}" "$(which uv)" {args}'
 mongo = [
-    "sync",
+    "uv sync --inexact",
     "hatch run mongo:restart",
     "run {args}",
     "hatch run mongo:stop",
-]
-
-[tool.hatch.envs.hatch-test]
-installer = "uv"
-post-install-commands = [
-    "sync",
-    "hatch run podman:install",
 ]
 
 [tool.hatch.envs.pixi]
@@ -128,6 +130,14 @@ install-linux = [
 ]
 install-macos = [
    "install-linux"
+]
+
+[tool.hatch.envs.pixi.overrides]
+platform.linux.scripts = [
+  "install=install-linux",
+]
+platform.macos.scripts = [
+  "install=install-macos",
 ]
 
 [tool.hatch.envs.podman]

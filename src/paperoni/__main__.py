@@ -1,6 +1,7 @@
 import argparse
 import itertools
 import json
+import logging
 import shlex
 import sys
 from dataclasses import dataclass, field
@@ -578,8 +579,29 @@ class Coll:
             else:
                 print(json.dumps(serialize(list[Paper], papers), indent=4))
 
+    @dataclass
+    class Drop:
+        """Drop the paper collection."""
+
+        # Whether to force dropping the collection
+        force: bool = False
+
+        def run(self, coll: "Coll"):
+            if not self.force:
+                # Ask the user for confirmation
+                answer = input("Are you sure you want to drop the collection? (Y/n): ")
+                if len(answer) > 1:
+                    answer = answer.lower()
+
+                self.force = answer in ["Y", "yes"]
+
+            if self.force:
+                coll.collection.drop()
+            elif not len(coll.collection) and not len(coll.collection.exclusions):
+                logging.warning("Collection is not empty. Use --force to drop it.")
+
     # Command to execute
-    command: TaggedUnion[Search, Import, Export]
+    command: TaggedUnion[Search, Import, Export, Drop]
 
     # Collection dir
     # [alias: -c]
