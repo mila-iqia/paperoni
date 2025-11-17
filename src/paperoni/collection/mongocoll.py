@@ -269,6 +269,15 @@ class MongoCollection(PaperCollection):
 
         return deserialize(MongoPaper, doc) if doc else None
 
+    def drop(self) -> None:
+        """Drop the collection."""
+        self._ensure_connection()
+        self._client.drop_database(self.database)
+        self._client = None
+        self._database = None
+        self._collection = None
+        self._exclusions = None
+
     def search(
         self,
         title: str = None,

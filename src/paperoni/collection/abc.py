@@ -34,6 +34,9 @@ class PaperCollection:
     def commit(self) -> None:
         raise NotImplementedError()
 
+    def drop(self) -> None:
+        raise NotImplementedError()
+
     def search(
         self,
         # Title of the paper

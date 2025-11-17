@@ -293,8 +293,6 @@ class LoginResponse:
 class AuthResponse(AuthorizedUser):
     """Response model for authentication."""
 
-    as_user: NoneType = field(init=False, repr=False, compare=False, default=False)
-
 
 # Security scheme for API documentation
 security = HTTPBearer(auto_error=False)
@@ -406,7 +404,6 @@ def add_auth(app):
     def user_with_role(role=None):
         async def get_user(
             request: Request,
-            as_user: bool = False,
             credentials: HTTPAuthorizationCredentials = Depends(security),
         ) -> AsyncGenerator[User, None]:
             """Get current user from JWT token or session."""
@@ -427,7 +424,6 @@ def add_auth(app):
             user = user or request.session.get("user")
 
             if user:
-                user = {**user, "as_user": as_user}
                 user = deserialize(User, user)
                 if role is None or role in user.roles:
                     yield user
@@ -582,8 +578,8 @@ def create_app() -> FastAPI:
     else:
 
         def user_with_role(role=None):
-            async def get_user(as_user=False):
-                return User(email="admin", as_user=as_user)
+            async def get_user():
+                return User(email="admin")
 
             return get_user
 

@@ -1,17 +1,25 @@
+import copy
+import multiprocessing
+import time
 from pathlib import Path
 from textwrap import dedent
 from typing import Generator
 
+import gifnoc
 import pytest
+import requests
 from ovld import ovld
 from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import serialize
 
+from paperoni.__main__ import Serve
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
 from paperoni.collection.mongocoll import MongoCollection, MongoPaper
+from paperoni.collection.remotecoll import RemoteCollection
 from paperoni.discovery.jmlr import JMLR
+from paperoni.get import RequestsFetcher
 from paperoni.model.classes import (
     CollectionPaper,
     Institution,
@@ -93,6 +101,7 @@ def excluded_papers(
     sample_papers: list[Paper],
 ) -> Generator[list[Paper], None, None]:
     # add supported exclusion link types to the last 2 papers
+    sample_papers = copy.deepcopy(sample_papers)
     papers = sample_papers[-2:]
     for p in papers:
         for lnk_type in _id_types:
@@ -101,17 +110,57 @@ def excluded_papers(
     yield papers
 
 
+def server_process(cfg_src: list[str | dict], memcol: dict):
+    memcol["$class"] = "paperoni.collection.memcoll:MemCollection"
+
+    with gifnoc.use(
+        *cfg_src,
+        {
+            "paperoni.collection": memcol,
+            "paperoni.server.use_auth": False,
+            "paperoni.server.max_results": 5,
+        },
+    ):
+        Serve(host="localhost", port=18888).run()
+
+
 @pytest.fixture(scope="session")
-def sample_mongo_papers() -> Generator[list[Paper], None, None]:
-    yield sample_papers
+def start_server(sample_papers: list[Paper], cfg_src: list[str | dict]):
+    memcol = MemCollection()
+    memcol.add_papers(sample_papers)
+    memcol = serialize(MemCollection, memcol)
+    try:
+        server_p = multiprocessing.Process(target=server_process, args=(cfg_src, memcol))
+        server_p.start()
+        # Wait for about 5 seconds for the server to start
+        for _ in range(5):
+            try:
+                RequestsFetcher().read(
+                    "http://localhost:18888", format="json", cache_into=None
+                )
+                break
+            except requests.exceptions.ConnectionError as e:
+                exc = e
+                time.sleep(1)
+                continue
+        else:
+            raise exc
+        yield
+    finally:
+        server_p.terminate()
+        server_p.join()
 
 
-@pytest.fixture(params=[MemCollection, FileCollection, MongoCollection])
-def collection(request, tmp_path: Path) -> Generator[PaperCollection, None, None]:
+@pytest.fixture(params=[MemCollection, FileCollection, MongoCollection, RemoteCollection])
+def collection(
+    request, tmp_path: Path, start_server
+) -> Generator[PaperCollection, None, None]:
     if request.param == MemCollection:
         yield MemCollection()
+
     elif request.param == FileCollection:
         yield FileCollection(file=tmp_path / "collection.json")
+
     elif request.param == MongoCollection:
         safe_to_drop = False
         try:
@@ -125,20 +174,54 @@ def collection(request, tmp_path: Path) -> Generator[PaperCollection, None, None
             )
             safe_to_drop = True
             yield mongo_collection
+
         finally:
             if safe_to_drop:
                 mongo_collection._client.drop_database(mongo_collection.database)
 
+    elif request.param == RemoteCollection:
+        if request.node.get_closest_marker("coll_w_remote"):
+            coll = RemoteCollection(endpoint="http://localhost:18888")
 
-def test_add_papers_multiple(collection, sample_papers: list[Paper]):
+            class Proxy:
+                def __getattr__(self, name):
+                    attr = getattr(coll, name)
+                    if name in ["search"]:
+                        return attr
+
+                    if callable(attr):
+                        return lambda *args, **kwargs: None
+                    else:
+                        return None
+
+            yield Proxy()
+
+        else:
+            pytest.skip(
+                "RemoteCollection does not implement all collection methods needed for this test"
+            )
+
+
+def test_add_papers(collection: PaperCollection, sample_papers: list[Paper]):
     """Test adding multiple papers."""
     collection.add_papers(sample_papers)
 
     assert eq(list(collection.search()), sample_papers)
 
 
+def test_drop_collection(collection: PaperCollection, sample_papers: list[Paper]):
+    """Test dropping a collection."""
+    collection.add_papers(sample_papers)
+
+    collection.drop()
+
+    assert not list(collection.search())
+
+
 def test_exclude_papers_multiple(
-    collection, sample_papers: list[Paper], excluded_papers: list[Paper]
+    collection: PaperCollection,
+    sample_papers: list[Paper],
+    excluded_papers: list[Paper],
 ):
     """Test excluding multiple papers."""
     collection.exclude_papers(excluded_papers)
@@ -149,7 +232,7 @@ def test_exclude_papers_multiple(
         assert not list(collection.search(title=excluded_paper.title))
 
 
-def test_exclude_papers_unknown_link_type(collection):
+def test_exclude_papers_unknown_link_type(collection: PaperCollection):
     """Test excluding papers with unknown link types."""
     paper = Paper(
         title="Unknown Links",
@@ -164,7 +247,9 @@ def test_exclude_papers_unknown_link_type(collection):
     assert eq(list(collection.search()), [paper])
 
 
-def test_find_paper_by_link(collection, sample_papers: list[Paper], sample_paper: Paper):
+def test_find_paper_by_link(
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
+):
     """Test finding a paper by its link."""
     collection.add_papers(sample_papers)
 
@@ -175,7 +260,9 @@ def test_find_paper_by_link(collection, sample_papers: list[Paper], sample_paper
     assert eq(found, sample_paper)
 
 
-def test_find_paper_by_title(collection, sample_papers: list[Paper], sample_paper: Paper):
+def test_find_paper_by_title(
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
+):
     """Test finding a paper by its title."""
     collection.add_papers(sample_papers)
 
@@ -186,7 +273,7 @@ def test_find_paper_by_title(collection, sample_papers: list[Paper], sample_pape
     assert eq(found, sample_paper)
 
 
-def test_find_paper_not_found(collection, sample_papers: list[Paper]):
+def test_find_paper_not_found(collection: PaperCollection, sample_papers: list[Paper]):
     """Test finding a paper that doesn't exist."""
     collection.add_papers(sample_papers)
 
@@ -200,7 +287,9 @@ def test_find_paper_not_found(collection, sample_papers: list[Paper]):
     assert found is None
 
 
-def test_find_paper_prioritizes_links_over_title(collection, sample_paper: Paper):
+def test_find_paper_prioritizes_links_over_title(
+    collection: PaperCollection, sample_paper: Paper
+):
     """Test that find_paper prioritizes link matches over title matches."""
     # Add a paper with a specific title
     paper1 = Paper(title=sample_paper.title, links=sample_paper.links)
@@ -218,7 +307,10 @@ def test_find_paper_prioritizes_links_over_title(collection, sample_paper: Paper
     assert eq(found, paper1)
 
 
-def test_search_by_title(collection, sample_papers: list[Paper], sample_paper: Paper):
+@pytest.mark.coll_w_remote
+def test_search_by_title(
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
+):
     """Test searching by title."""
     collection.add_papers(sample_papers)
 
@@ -226,7 +318,8 @@ def test_search_by_title(collection, sample_papers: list[Paper], sample_paper: P
     assert any(eq(p, sample_paper) for p in results)
 
 
-def test_search_by_author(collection, sample_papers: list[Paper]):
+@pytest.mark.coll_w_remote
+def test_search_by_author(collection: PaperCollection, sample_papers: list[Paper]):
     """Test searching by author."""
     collection.add_papers(sample_papers)
 
@@ -243,7 +336,8 @@ def test_search_by_author(collection, sample_papers: list[Paper]):
     assert len(results) == 1
 
 
-def test_search_by_institution(collection, sample_papers: list[Paper]):
+@pytest.mark.coll_w_remote
+def test_search_by_institution(collection: PaperCollection, sample_papers: list[Paper]):
     """Test searching by institution."""
     collection.add_papers(sample_papers)
 
@@ -257,8 +351,9 @@ def test_search_by_institution(collection, sample_papers: list[Paper]):
         )
 
 
+@pytest.mark.coll_w_remote
 def test_search_multiple_criteria(
-    collection, sample_papers: list[Paper], sample_paper: Paper
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test searching with multiple criteria."""
     collection.add_papers(sample_papers)
@@ -274,8 +369,9 @@ def test_search_multiple_criteria(
     assert eq(results, list(collection.search(author="Pascal Vincent")))
 
 
+@pytest.mark.coll_w_remote
 def test_search_case_insensitive(
-    collection, sample_papers: list[Paper], sample_paper: Paper
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test that search is case insensitive."""
     collection.add_papers(sample_papers)
@@ -293,7 +389,8 @@ def test_search_case_insensitive(
     assert eq(results, list(collection.search(institution="Hugo Larochelle Uni")))
 
 
-def test_search_no_criteria(collection, sample_papers: list[Paper]):
+@pytest.mark.coll_w_remote
+def test_search_no_criteria(collection: PaperCollection, sample_papers: list[Paper]):
     """Test searching with no criteria returns all papers."""
     collection.add_papers(sample_papers)
 
@@ -301,8 +398,9 @@ def test_search_no_criteria(collection, sample_papers: list[Paper]):
     assert eq(results, sample_papers)
 
 
+@pytest.mark.coll_w_remote
 def test_search_partial_matches(
-    collection, sample_papers: list[Paper], sample_paper: Paper
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test that search finds partial matches."""
     collection.add_papers(sample_papers)
@@ -336,7 +434,7 @@ def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list[Paper
 
 
 @pytest.mark.parametrize("paper_cls", [CollectionPaper, MongoPaper])
-def test_make_collection(
+def test_make_collection_item(
     data_regression: DataRegressionFixture,
     collection: PaperCollection,
     sample_papers: list[Paper],

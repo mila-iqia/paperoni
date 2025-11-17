@@ -1,7 +1,9 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 
 from paperoni.model import Link
-from paperoni.utils import asciiify, expand_links_dict, mostly_latin
+from paperoni.utils import asciiify, expand_links_dict, mostly_latin, soft_fail
 
 
 @pytest.mark.parametrize(
@@ -168,3 +170,61 @@ def test_mostly_latin_default(input_str, expected):
 )
 def test_mostly_latin_threshold(input_str, threshold, expected):
     assert mostly_latin(input_str, threshold=threshold) == expected
+
+
+def test_soft_fail_no_exception():
+    """Test that soft_fail works normally when no exception is raised."""
+    with soft_fail("test message"):
+        result = 42
+    assert result == 42
+
+
+@pytest.mark.parametrize("message", [None, "Custom test message"])
+def test_soft_fail_suppresses_exception(message: str | None):
+    """Test that soft_fail suppresses regular exceptions."""
+    err = ValueError("test error")
+    if message is None:
+        log_message = repr(err)
+    else:
+        log_message = message
+
+    mock_logger = MagicMock()
+    with (
+        patch("paperoni.utils.logging.getLogger", return_value=mock_logger),
+        patch("paperoni.utils.send") as mock_send,
+    ):
+        with soft_fail(message):
+            raise err
+
+        # Exception should be logged
+        mock_logger.exception.assert_called_once()
+        assert log_message in [
+            *mock_logger.exception.call_args.args,
+            *mock_logger.exception.call_args.kwargs.values(),
+        ]
+
+        # Exception should be sent
+        mock_send.assert_called_once()
+        assert mock_send.call_args.kwargs["exception"] is err
+
+
+@pytest.mark.parametrize("exception", [KeyboardInterrupt, GeneratorExit, SystemExit])
+def test_soft_fail_exception_propagates(exception: type[BaseException]):
+    """Test that KeyboardInterrupt, GeneratorExit, and SystemExit are not
+    suppressed and propagate."""
+    with pytest.raises(exception):
+        with soft_fail():
+            raise exception()
+
+
+def test_generator_exit_propagates():
+    """Test that GeneratorExit is not suppressed and propagates."""
+
+    def gen_func():
+        with pytest.raises(GeneratorExit):
+            with soft_fail():
+                yield 1
+
+    gen = gen_func()
+    next(gen)
+    gen.close()

@@ -82,6 +82,17 @@ class MemCollection(PaperCollection):
     def find_paper(self, paper: Paper) -> CollectionPaper | None:
         return self._finder.find(paper)
 
+    def commit(self) -> None:
+        # MemCollection, nothing to commit
+        pass
+
+    def drop(self) -> None:
+        self._last_id = -1
+        self._papers.clear()
+        self._exclusions.clear()
+        self._finder = Finder()
+        self.commit()
+
     def search(
         self,
         # Title of the paper
@@ -118,10 +129,6 @@ class MemCollection(PaperCollection):
             if end_date and all(end_date < release.venue.date for release in p.releases):
                 continue
             yield p
-
-    def commit(self) -> None:
-        # MemCollection, nothing to commit
-        pass
 
     def __len__(self) -> int:
         return len(self._papers)

@@ -232,7 +232,9 @@ class soft_fail:
         pass
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is KeyboardInterrupt:
+        # Don't suppress KeyboardInterrupt, GeneratorExit or SystemExit - these
+        # must propagate
+        if exc_type in (KeyboardInterrupt, GeneratorExit, SystemExit):
             return None
         if exc_type is not None:
             logging.getLogger().exception(
