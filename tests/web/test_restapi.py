@@ -37,7 +37,7 @@ def _wrap(cfg_src: list[str | dict]):
         "paperoni.collection.$class": "paperoni.collection.memcoll:MemCollection",
     }
     with gifnoc.use(*cfg_src, additional):
-        with patch("paperoni.restapi.config.metadata") as mock_meta:
+        with patch("paperoni.web.restapi.config.metadata") as mock_meta:
             mock_meta.focuses.file = config.work_file.parent / "focuses.yaml"
             mock_meta.focuses.file.write_text("[]")
             yield
@@ -45,7 +45,7 @@ def _wrap(cfg_src: list[str | dict]):
 
 @pytest.fixture(scope="session")
 def app(oauth_mock, cfg_src):
-    from paperoni.restapi import create_app
+    from paperoni.web import create_app
 
     with AppTester(create_app(), oauth_mock, wrap=partial(_wrap, cfg_src)) as appt:
         yield appt
@@ -53,7 +53,7 @@ def app(oauth_mock, cfg_src):
 
 @pytest.fixture
 def app_factory(oauth_mock, cfg_src):
-    from paperoni.restapi import create_app
+    from paperoni.web import create_app
 
     @contextmanager
     def make(overlay):
@@ -208,7 +208,7 @@ def test_search_endpoint(
     """Test search endpoint with valid authentication."""
     user = app.client("seeker@website.web")
 
-    with patch("paperoni.restapi._search") as mock_search:
+    with patch("paperoni.web.restapi._search") as mock_search:
         mock_search.return_value = (mock_papers, 3, None, 3)
 
         response = user.get("/api/v1/search", **params)
@@ -239,7 +239,7 @@ def test_search_endpoint_pagination(
     """Test search endpoint pagination."""
     user = app.client("seeker@website.web")
 
-    with patch("paperoni.restapi.SearchRequest.run") as mock_run:
+    with patch("paperoni.web.restapi.SearchRequest.run") as mock_run:
         mock_run.return_value = mock_papers
 
         response = user.get("/api/v1/search", **params)
@@ -261,7 +261,7 @@ def test_search_endpoint_max_results_limit(
     """Test that search respects max_results limit."""
     with app_factory({"paperoni.server.max_results": 2}) as app:
         user = app.client("seeker@website.web")
-        with patch("paperoni.restapi.SearchRequest.run") as mock_run:
+        with patch("paperoni.web.restapi.SearchRequest.run") as mock_run:
             mock_run.return_value = mock_papers
 
             # Request more than max_results
@@ -282,7 +282,7 @@ def test_search_endpoint_empty_results(app):
     """Test search endpoint with empty results."""
     user = app.client("seeker@website.web")
 
-    with patch("paperoni.restapi.SearchRequest.run") as mock_run:
+    with patch("paperoni.web.restapi.SearchRequest.run") as mock_run:
         mock_run.return_value = []
 
         response = user.get("/api/v1/search")

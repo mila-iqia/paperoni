@@ -734,7 +734,7 @@ class Serve:
     auth: bool = True
 
     def run(self):
-        from paperoni.restapi import create_app
+        from .web import create_app
 
         if self.auth:
             overrides = {}

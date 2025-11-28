@@ -4,31 +4,22 @@ FastAPI interface for paperoni collection search functionality.
 
 import asyncio
 import datetime
-import importlib.metadata
 import itertools
-import logging
 from dataclasses import dataclass, field
 from types import NoneType
 from typing import Generator, Iterable, Literal
 
-from easy_oauth import OAuthManager
-from fastapi import Depends, FastAPI, HTTPException
-from fastapi.exception_handlers import http_exception_handler
+from fastapi import Depends, FastAPI
 from fastapi.responses import StreamingResponse
 from serieux import auto_singleton, deserialize, serialize
-from starlette.exceptions import HTTPException
 
-import paperoni
-
-from .__main__ import Coll, Focus, Formatter, Fulltext, Work
-from .config import config
-from .fulltext.locate import URL
-from .fulltext.pdf import PDF
-from .model.classes import Paper, PaperInfo
-from .model.focus import Focuses, Scored
-from .utils import url_to_id
-
-restapi_logger = logging.getLogger(__name__)
+from ..__main__ import Coll, Focus, Formatter, Fulltext, Work
+from ..config import config
+from ..fulltext.locate import URL
+from ..fulltext.pdf import PDF
+from ..model.classes import Paper, PaperInfo
+from ..model.focus import Focuses, Scored
+from ..utils import url_to_id
 
 
 @auto_singleton("void")
@@ -293,28 +284,10 @@ async def run_in_process_pool(func, *args):
     return await loop.run_in_executor(config.server.process_pool, func, *args)
 
 
-def create_app() -> FastAPI:
-    """Create and configure the FastAPI application."""
+def install_api(app) -> FastAPI:
     prefix = "/api/v1"
 
-    app = FastAPI(
-        title="Paperoni API",
-        description="API for searching scientific papers",
-        version=importlib.metadata.version(paperoni.__name__),
-    )
-
-    @app.exception_handler(Exception)
-    async def exception_handler(request, exc):
-        restapi_logger.exception(exc)
-
-        if getattr(exc, "status_code", None) is None:
-            exc = HTTPException(status_code=500, detail="Internal Server Error")
-
-        return await http_exception_handler(request, exc)
-
-    auth = config.server.auth or OAuthManager(server_metadata_url="n/a")
-    auth.install(app)
-    get_current_admin = auth.get_email_capability("admin")
+    hascap = app.auth.get_email_capability
 
     @app.get(f"{prefix}")
     async def root():
@@ -327,7 +300,7 @@ def create_app() -> FastAPI:
     @app.get(
         f"{prefix}/search",
         response_model=SearchResponse,
-        dependencies=[Depends(auth.get_email_capability("search"))],
+        dependencies=[Depends(hascap("search"))],
     )
     async def search_papers(request: SearchRequest = Depends()):
         """Search for papers in the collection."""
@@ -339,9 +312,7 @@ def create_app() -> FastAPI:
         )
 
     @app.post(f"{prefix}/work/add", response_model=AddResponse)
-    async def work_add_papers(
-        request: AddRequest, user: str = Depends(get_current_admin)
-    ):
+    async def work_add_papers(request: AddRequest, user: str = Depends(hascap("admin"))):
         request.user = user
 
         work = Work(command=request, work_file=config.work_file)
@@ -351,7 +322,7 @@ def create_app() -> FastAPI:
 
     @app.get(f"{prefix}/work/view", response_model=ViewResponse)
     async def work_view_papers(
-        request: ViewRequest = Depends(), user: str = Depends(get_current_admin)
+        request: ViewRequest = Depends(), user: str = Depends(hascap("admin"))
     ):
         papers, count, next_offset, total = await run_in_process_pool(
             _work_view, serialize(ViewRequest, request)
@@ -366,7 +337,7 @@ def create_app() -> FastAPI:
     @app.get(
         f"{prefix}/work/include",
         response_model=IncludeResponse,
-        dependencies=[Depends(get_current_admin)],
+        dependencies=[Depends(hascap("admin"))],
     )
     async def work_include_papers(request: IncludeRequest):
         """Search for papers in the collection."""
@@ -379,7 +350,7 @@ def create_app() -> FastAPI:
     @app.get(
         f"{prefix}/focus/auto",
         response_model=Focuses,
-        dependencies=[Depends(get_current_admin)],
+        dependencies=[Depends(hascap("admin"))],
     )
     async def autofocus(request: AutoFocusRequest = Depends()):
         """Autofocus the collection."""
@@ -390,7 +361,7 @@ def create_app() -> FastAPI:
     @app.get(
         f"{prefix}/fulltext/locate",
         response_model=LocateFulltextResponse,
-        dependencies=[Depends(auth.get_email_capability("user"))],
+        dependencies=[Depends(hascap("user"))],
     )
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
@@ -406,7 +377,7 @@ def create_app() -> FastAPI:
 
     @app.get(
         f"{prefix}/fulltext/download",
-        dependencies=[Depends(auth.get_email_capability("user"))],
+        dependencies=[Depends(hascap("user"))],
     )
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
