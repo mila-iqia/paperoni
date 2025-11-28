@@ -117,7 +117,7 @@ def _wrap(cfg_src: list[str | dict]):
 
 @pytest.fixture(scope="module")
 def app_coll(oauth_mock, cfg_src, sample_papers):
-    from paperoni.restapi import create_app
+    from paperoni.web import create_app
 
     memcol = MemCollection()
     memcol.add_papers(sample_papers)
