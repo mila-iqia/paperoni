@@ -69,6 +69,9 @@ synth = "paperoni.discovery.synth:Synth"
 [project.entry-points."outsight.fixtures"]
 dash = "paperoni.dash:Dash"
 
+[project.entry-points."serieux.default_features"]
+exc = "paperoni.srx:ExceptionSerialization"
+
 [tool.uv.sources]
 easy-oauth = { git = "https://github.com/mila-iqia/easy-oauth", rev = "v0.0.2" }
 
