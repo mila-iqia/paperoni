@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException
 import paperoni
 
 from ..config import config
+from .reports import install_reports
 from .restapi import install_api
 
 app_logger = logging.getLogger(__name__)
@@ -34,4 +35,5 @@ def create_app():
     auth.install(app)
     app.auth = auth
     install_api(app)
+    install_reports(app)
     return app
