@@ -48,3 +48,4 @@ paperoni:
           user: []
           search: [user]
           validate: [search]
+          dev: []

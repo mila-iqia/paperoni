@@ -75,6 +75,7 @@ paperoni:
         user_file: ${paperoni.data_path}/permissions.yaml
         graph:
           user_management: []
+          user: []
           search: []
           validate: [search]
-
+          dev: []
