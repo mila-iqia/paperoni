@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import gifnoc
+from easy_oauth import OAuthManager
 from rapporteur.report import Reporter
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
@@ -34,20 +35,14 @@ class Refine:
     prompt: TaggedSubclass[Prompt] = field(default_factory=GenAIPrompt)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Server:
     max_results: int = 10000
     process_pool_executor: dict = field(default_factory=dict)
-    no_auth: bool = False
-    client_dir: Path = None
-    secret_key: Secret[str] = None
-    jwt_secret_key: Secret[str] = None
-    client_id: Secret[str] = None
-    client_secret: Secret[str] = None
-    user_roles: dict[str, set[str]] = field(default_factory=dict)
+    auth: OAuthManager = None
 
     def __post_init__(self):
-        if self.process_pool_executor.get("max_workers") == 0:
+        if self.process_pool_executor.get("max_workers", 0) == 0:
             self.process_pool = None
         else:
             self.process_pool = ProcessPoolExecutor(**self.process_pool_executor)

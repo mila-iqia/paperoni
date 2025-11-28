@@ -34,11 +34,10 @@ dependencies = [
     "fastapi>=0.116.1",
     "uvicorn[standard]>=0.35.0",
     "authlib>=1.6.4",
-    "python-jose[cryptography]>=3.5.0",
-    "itsdangerous>=2.2.0",
     "pymongo>=4.15.0",
     "motor>=3.7.1",
     "filelock>=3.20.0",
+    "easy-oauth",
 ]
 
 [project.urls]
@@ -54,6 +53,7 @@ dev = [
     "pytest-cov>=6.1.0",
     "pytest-regressions>=2.7.0",
     "pytest-timeout>=2.4.0",
+    "python-multipart>=0.0.20",
     "ruff>=0.11.3",
 ]
 
@@ -68,6 +68,9 @@ synth = "paperoni.discovery.synth:Synth"
 
 [project.entry-points."outsight.fixtures"]
 dash = "paperoni.dash:Dash"
+
+[tool.uv.sources]
+easy-oauth = { git = "https://github.com/mila-iqia/easy-oauth", rev = "v0.0.2" }
 
 [tool.ruff]
 line-length = 90
