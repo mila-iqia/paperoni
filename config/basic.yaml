@@ -59,10 +59,22 @@ paperoni:
     max_results: 10000
     process_pool_executor:
       max_workers: 4
-    secret_key: _
-    client_dir: ${paperoni.data_path}/serve
-    client_id: _
-    client_secret: _
-    jwt_secret_key: _
-    user_roles:
-      satya.ortiz-gagne@mila.quebec: ["admin"]
+    auth:
+      server_metadata_url: https://accounts.google.com/.well-known/openid-configuration
+      secret_key: _
+      client_id: _
+      client_secret: _
+      client_kwargs:
+        scope: openid email
+        prompt: select_account
+      force_user:
+        email: __admin__
+      capabilities:
+        user_overrides:
+          __admin__: [admin]
+        user_file: ${paperoni.data_path}/permissions.yaml
+        graph:
+          user_management: []
+          search: []
+          validate: [search]
+

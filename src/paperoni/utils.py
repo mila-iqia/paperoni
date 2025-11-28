@@ -4,7 +4,7 @@ import re
 import unicodedata
 
 from outsight import send
-from serieux.features.proxy import ProxyBase
+from serieux.proxy import ProxyBase
 from unidecode import unidecode
 
 link_generators = {

@@ -2,17 +2,19 @@
 Tests for the FastAPI REST API endpoints.
 """
 
-from datetime import date, datetime, timezone
+import tempfile
+from contextlib import contextmanager
+from datetime import date
+from functools import partial
+from pathlib import Path
 from unittest.mock import patch
 
 import gifnoc
+import httpx
 import pytest
-from anyio import Path
-from fastapi.testclient import TestClient
-from jose import jwt
+from easy_oauth.testing.utils import AppTester
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from paperoni.config import config
 from paperoni.model.classes import (
     DatePrecision,
     Institution,
@@ -23,35 +25,44 @@ from paperoni.model.classes import (
     Venue,
     VenueType,
 )
-from paperoni.restapi import User, create_app
 
 
-@pytest.fixture(scope="session")
-def test_user():
-    """Create a test user for authentication."""
-    yield User(email="test@example.com")
+@contextmanager
+def _wrap(cfg_src: list[str | dict]):
+    from paperoni.config import config
 
-
-@pytest.fixture(scope="session")
-def mock_user_token(test_user):
-    """Create a mock JWT token for testing."""
-    payload = {
-        "email": test_user.email,
-        "as_user": False,
-        "exp": datetime.now(timezone.utc).timestamp() + 3600,  # 1 hour from now
+    tmp_path = Path(tempfile.mkdtemp())
+    additional = {
+        "paperoni.work_file": str(tmp_path / "work.yaml"),
+        "paperoni.collection.$class": "paperoni.collection.memcoll:MemCollection",
     }
-    yield jwt.encode(payload, "test-secret-key", algorithm="HS256")
+    with gifnoc.use(*cfg_src, additional):
+        with patch("paperoni.restapi.config.metadata") as mock_meta:
+            mock_meta.focuses.file = config.work_file.parent / "focuses.yaml"
+            mock_meta.focuses.file.write_text("[]")
+            yield
 
 
 @pytest.fixture(scope="session")
-def mock_admin_token(test_user: User):
-    """Create a mock JWT token for testing."""
-    payload = {
-        "email": f"admin_{test_user.email}",
-        "as_user": False,
-        "exp": datetime.now(timezone.utc).timestamp() + 3600,  # 1 hour from now
-    }
-    yield jwt.encode(payload, "test-secret-key", algorithm="HS256")
+def app(oauth_mock, cfg_src):
+    from paperoni.restapi import create_app
+
+    with AppTester(create_app(), oauth_mock, wrap=partial(_wrap, cfg_src)) as appt:
+        yield appt
+
+
+@pytest.fixture
+def app_factory(oauth_mock, cfg_src):
+    from paperoni.restapi import create_app
+
+    @contextmanager
+    def make(overlay):
+        with AppTester(
+            create_app(), oauth_mock, wrap=partial(_wrap, [*cfg_src, overlay])
+        ) as appt:
+            yield appt
+
+    yield make
 
 
 @pytest.fixture(scope="session")
@@ -133,94 +144,55 @@ def mock_papers():
     ]
 
 
-@pytest.fixture()
-def client(tmp_path: Path, test_user: User) -> TestClient:
-    """Create a test client for the FastAPI app."""
-    with gifnoc.overlay(
-        {
-            "paperoni.work_file": str(tmp_path / "work.yaml"),
-            "paperoni.collection.$class": "paperoni.collection.memcoll:MemCollection",
-            "paperoni.server.jwt_secret_key": "test-secret-key",
-            "paperoni.server.user_roles": {f"admin_{test_user.email}": ["admin"]},
-        }
-    ):
-        with patch("paperoni.restapi.config.metadata") as mock_meta:
-            mock_meta.focuses.file = config.work_file.parent / "focuses.yaml"
-            mock_meta.focuses.file.write_text("[]")
-            yield TestClient(create_app())
-
-
 @pytest.mark.parametrize(
-    "endpoint",
+    "endpoint,expected",
     [
-        "/search",
-        "/fulltext/locate",
-        "/fulltext/download",
+        ("/api/v1/search", 200),
+        ("/api/v1/fulltext/locate", 422),
+        ("/api/v1/fulltext/download", 422),
     ],
 )
 def test_get_endpoint_requires_user_authentication(
-    client: TestClient, endpoint, mock_user_token
+    app,
+    endpoint,
+    expected,
 ):
     """Test that the GET endpoints require authentication."""
-    response = client.get(endpoint)
+    response = httpx.get(f"{app}{endpoint}")
     assert response.status_code == 401
     assert "Authentication required" in response.json()["detail"]
 
     headers = {"Authorization": "Bearer invalid-token"}
-    response = client.get(endpoint, headers=headers)
+    response = httpx.get(f"{app}{endpoint}", headers=headers)
 
     assert response.status_code == 401
-    assert "Authentication required" in response.json()["detail"]
+    assert "Malformed authorization" in response.json()["detail"]
 
-    headers = {"Authorization": f"Bearer {mock_user_token}"}
-    response = client.get(endpoint, headers=headers)
+    user = app.client("admin@website.web")
 
-    assert response.status_code in [200, 422]
-
-
-@pytest.mark.parametrize("endpoint", ["/work/add"])
-def test_post_endpoint_requires_user_authentication(client: TestClient, endpoint):
-    """Test that the search endpoint requires authentication."""
-    response = client.post(endpoint, params={})
-    assert response.status_code == 401
-    assert "Authentication required" in response.json()["detail"]
-
-    headers = {"Authorization": "Bearer invalid-token"}
-    response = client.post(endpoint, params={}, headers=headers)
-
-    assert response.status_code == 401
-    assert "Authentication required" in response.json()["detail"]
+    response = user.get(endpoint, expect=expected)
 
 
-@pytest.mark.parametrize("endpoint", ["/focus/auto"])
-def test_endpoint_requires_admin_authentication(
-    client: TestClient, endpoint, mock_user_token, mock_admin_token
-):
+@pytest.mark.parametrize("endpoint", ["/api/v1/focus/auto"])
+def test_endpoint_requires_admin_authentication(app, endpoint):
     """Test that the admin GET endpoints require admin authentication."""
-    response = client.get(endpoint)
-    assert response.status_code == 401
+
+    unlogged = app.client()
+    response = unlogged.get(endpoint, expect=401)
     assert "Authentication required" in response.json()["detail"]
 
-    headers = {"Authorization": "Bearer invalid-token"}
-    response = client.get(endpoint, headers=headers)
+    user = app.client("seeker@website.web")
+    response = user.get(endpoint, expect=403)
+    assert "admin capability required" in response.json()["detail"]
 
-    assert response.status_code == 401
-    assert "Authentication required" in response.json()["detail"]
-
-    headers = {"Authorization": f"Bearer {mock_user_token}"}
-    response = client.get(endpoint, params={}, headers=headers)
-    assert response.status_code == 403
-    assert "admin role required" in response.json()["detail"]
-
-    headers = {"Authorization": f"Bearer {mock_admin_token}"}
-    response = client.get(endpoint, params={}, headers=headers)
-    assert response.status_code == 200
+    admin = app.client("admin@website.web")
+    response = admin.get(endpoint)
 
 
 @pytest.mark.parametrize(
     "params",
     [
-        None,
+        {},
         {"title": "Machine Learning"},
         {"author": "John Doe"},
         {"institution": "MIT"},
@@ -229,18 +201,17 @@ def test_endpoint_requires_admin_authentication(
 )
 def test_search_endpoint(
     data_regression: DataRegressionFixture,
-    client: TestClient,
-    mock_user_token,
+    app,
     mock_papers,
     params,
 ):
     """Test search endpoint with valid authentication."""
-    headers = {"Authorization": f"Bearer {mock_user_token}"}
+    user = app.client("seeker@website.web")
 
     with patch("paperoni.restapi._search") as mock_search:
         mock_search.return_value = (mock_papers, 3, None, 3)
 
-        response = client.get("/search", params=params, headers=headers)
+        response = user.get("/api/v1/search", **params)
 
     assert response.status_code == 200
     assert mock_search.call_count == 1
@@ -251,15 +222,14 @@ def test_search_endpoint(
 @pytest.mark.parametrize(
     ["params", "count", "next_offset", "total"],
     [
-        (None, 3, None, 3),
+        ({}, 3, None, 3),
         ({"offset": 0, "size": 2}, 2, 2, 3),
         ({"offset": 2, "size": 2}, 1, None, 3),
     ],
 )
 def test_search_endpoint_pagination(
     data_regression: DataRegressionFixture,
-    client: TestClient,
-    mock_user_token,
+    app,
     mock_papers,
     params,
     count,
@@ -267,12 +237,12 @@ def test_search_endpoint_pagination(
     total,
 ):
     """Test search endpoint pagination."""
-    headers = {"Authorization": f"Bearer {mock_user_token}"}
+    user = app.client("seeker@website.web")
 
     with patch("paperoni.restapi.SearchRequest.run") as mock_run:
         mock_run.return_value = mock_papers
 
-        response = client.get("/search", params=params, headers=headers)
+        response = user.get("/api/v1/search", **params)
 
     assert response.status_code == 200
     data = response.json()
@@ -285,39 +255,37 @@ def test_search_endpoint_pagination(
 
 def test_search_endpoint_max_results_limit(
     data_regression: DataRegressionFixture,
-    client: TestClient,
-    mock_user_token,
+    app_factory,
     mock_papers,
 ):
     """Test that search respects max_results limit."""
-    headers = {"Authorization": f"Bearer {mock_user_token}"}
-
-    with gifnoc.overlay({"paperoni.server.max_results": 2}):
+    with app_factory({"paperoni.server.max_results": 2}) as app:
+        user = app.client("seeker@website.web")
         with patch("paperoni.restapi.SearchRequest.run") as mock_run:
             mock_run.return_value = mock_papers
 
             # Request more than max_results
-            response = client.get("/search", params={"size": 100}, headers=headers)
+            response = user.get("/api/v1/search", size=100)
 
-    assert response.status_code == 200
-    data = response.json()
-    # The size should be limited to max_results
-    assert data["count"] == 2
-    assert data["total"] == 3
-    assert data["next_offset"] == 2
-    assert len(data["results"]) == 2
+        assert response.status_code == 200
+        data = response.json()
+        # The size should be limited to max_results
+        assert data["count"] == 2
+        assert data["total"] == 3
+        assert data["next_offset"] == 2
+        assert len(data["results"]) == 2
 
-    data_regression.check(data["results"])
+        data_regression.check(data["results"])
 
 
-def test_search_endpoint_empty_results(client: TestClient, mock_user_token):
+def test_search_endpoint_empty_results(app):
     """Test search endpoint with empty results."""
-    headers = {"Authorization": f"Bearer {mock_user_token}"}
+    user = app.client("seeker@website.web")
 
     with patch("paperoni.restapi.SearchRequest.run") as mock_run:
         mock_run.return_value = []
 
-        response = client.get("/search", headers=headers)
+        response = user.get("/api/v1/search")
 
         assert response.status_code == 200
         data = response.json()

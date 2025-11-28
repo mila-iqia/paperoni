@@ -19,9 +19,10 @@ class RemoteCollection(PaperCollection):
 
     def __post_init__(self):
         self.headers = {
-            "Authorization": f"Bearer {self.token}",
             "Accept": "application/json",
         }
+        if self.token is not None:
+            self.headers["Authorization"] = f"Bearer {self.token}"
 
     @property
     def exclusions(self) -> set[str]:

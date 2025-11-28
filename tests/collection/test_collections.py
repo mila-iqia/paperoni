@@ -1,25 +1,23 @@
 import copy
-import multiprocessing
-import time
+from contextlib import contextmanager
+from functools import partial
 from pathlib import Path
 from textwrap import dedent
 from typing import Generator
 
 import gifnoc
 import pytest
-import requests
+from easy_oauth.testing.utils import AppTester
 from ovld import ovld
 from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import serialize
 
-from paperoni.__main__ import Serve
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
 from paperoni.collection.mongocoll import MongoCollection, MongoPaper
 from paperoni.collection.remotecoll import RemoteCollection
 from paperoni.discovery.jmlr import JMLR
-from paperoni.get import RequestsFetcher
 from paperoni.model.classes import (
     CollectionPaper,
     Institution,
@@ -110,50 +108,40 @@ def excluded_papers(
     yield papers
 
 
-def server_process(cfg_src: list[str | dict], memcol: dict):
-    memcol["$class"] = "paperoni.collection.memcoll:MemCollection"
-
-    with gifnoc.use(
-        *cfg_src,
-        {
-            "paperoni.collection": memcol,
-            "paperoni.server.no_auth": True,
-            "paperoni.server.max_results": 5,
-        },
-    ):
-        Serve(host="localhost", port=18888).run()
+@contextmanager
+def _wrap(cfg_src: list[str | dict]):
+    # This needs to run in the thread to reapply the configurations
+    with gifnoc.use(*cfg_src):
+        yield
 
 
-@pytest.fixture(scope="session")
-def start_server(sample_papers: list[Paper], cfg_src: list[str | dict]):
+@pytest.fixture(scope="module")
+def app_coll(oauth_mock, cfg_src, sample_papers):
+    from paperoni.restapi import create_app
+
     memcol = MemCollection()
     memcol.add_papers(sample_papers)
     memcol = serialize(MemCollection, memcol)
-    try:
-        server_p = multiprocessing.Process(target=server_process, args=(cfg_src, memcol))
-        server_p.start()
-        # Wait for about 5 seconds for the server to start
-        for _ in range(5):
-            try:
-                RequestsFetcher().read(
-                    "http://localhost:18888", format="json", cache_into=None
-                )
-                break
-            except requests.exceptions.ConnectionError as e:
-                exc = e
-                time.sleep(1)
-                continue
-        else:
-            raise exc
-        yield
-    finally:
-        server_p.terminate()
-        server_p.join()
+
+    memcol["$class"] = "paperoni.collection.memcoll:MemCollection"
+    overrides = {
+        "paperoni.collection": memcol,
+        "paperoni.server.max_results": 5,
+        "paperoni.server.auth.capabilities.guest_capabilities": ["search"],
+    }
+
+    cfg = [*cfg_src, overrides]
+
+    with gifnoc.use(*cfg):
+        with AppTester(
+            create_app(), oauth_mock, port=18888, wrap=partial(_wrap, cfg)
+        ) as appt:
+            yield appt
 
 
 @pytest.fixture(params=[MemCollection, FileCollection, MongoCollection, RemoteCollection])
 def collection(
-    request, tmp_path: Path, start_server
+    request, tmp_path: Path, app_coll
 ) -> Generator[PaperCollection, None, None]:
     if request.param == MemCollection:
         yield MemCollection()
@@ -181,7 +169,7 @@ def collection(
 
     elif request.param == RemoteCollection:
         if request.node.get_closest_marker("coll_w_remote"):
-            coll = RemoteCollection(endpoint="http://localhost:18888")
+            coll = RemoteCollection(endpoint="http://localhost:18888/api/v1")
 
             class Proxy:
                 def __getattr__(self, name):
