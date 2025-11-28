@@ -10,6 +10,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Generator, Literal
 
+import gifnoc
 import uvicorn
 import yaml
 from filelock import FileLock
@@ -719,11 +720,24 @@ class Serve:
     # [alias: -r]
     reload: bool = False
 
+    # Whether to enable auth
+    auth: bool = True
+
     def run(self):
         from paperoni.restapi import create_app
 
-        app = create_app()
-        uvicorn.run(app, host=self.host, port=self.port, reload=self.reload)
+        if self.auth:
+            overrides = {}
+        else:
+            overrides = {
+                "paperoni.server.auth.force_user": {"email": "__admin__"},
+                "paperoni.server.auth.capabilities.user_overrides": {
+                    "__admin__": ["admin"]
+                },
+            }
+        with gifnoc.overlay(overrides):
+            app = create_app()
+            uvicorn.run(app, host=self.host, port=self.port, reload=self.reload)
 
     def no_dash(self):
         return True
