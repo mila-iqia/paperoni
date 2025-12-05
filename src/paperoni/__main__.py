@@ -176,6 +176,7 @@ class Fulltext:
     command: TaggedUnion[Locate, Download]
 
     def run(self):
+        __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         self.command.run()
 
 
@@ -517,6 +518,7 @@ class Work:
         )
 
     def run(self):
+        __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         wf = self.work_file or config.work_file
         lf = wf.with_suffix(".lock")
         with FileLock(lf):
@@ -633,6 +635,7 @@ class Batch:
     def run(self):
         batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
         for name, cmd in batch.items():
+            __trace__ = f"step:{name}"  # noqa: F841
             batch_descr = f"Batch: start step {name}"
             with soft_fail(batch_descr):
                 send(event=batch_descr)
@@ -783,6 +786,7 @@ class PaperoniInterface:
             self.dash = sys.stdout.isatty()
 
     def run(self):
+        __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         if self.dash and not getattr(self.command, "no_dash", lambda: False)():
             enable_dash()
         if self.log:
