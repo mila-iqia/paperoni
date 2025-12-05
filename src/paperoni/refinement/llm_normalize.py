@@ -2,7 +2,6 @@ import logging
 import re
 from datetime import datetime
 
-from outsight import send
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
@@ -14,18 +13,12 @@ from ..utils import normalize_institution, normalize_name, normalize_venue
 from .llm_norm_author import model as norm_author_model
 from .llm_norm_venues import model as norm_venue_model
 from .llm_process_affiliation import model as process_affiliation_model
-from .llm_utils import force_prompt
+from .llm_utils import prompt_wrapper
 
 
 def process_affiliations_prompt(
     affiliation: Institution, force: bool = False
 ) -> list[Institution]:
-    send(
-        prompt=process_affiliation_model.Analysis.__module__,
-        model=config.refine.prompt.model,
-        input=affiliation.name,
-    )
-
     cache_dir = (
         config.data_path
         / process_affiliation_model.__package__.split(".")[-1]
@@ -39,9 +32,12 @@ def process_affiliations_prompt(
         prefix=config.refine.prompt.model,
         index=0,
     )
-    prompt_kwargs = {
-        "client": config.refine.prompt.client,
-        "messages": [
+    analysis: process_affiliation_model.Analysis = prompt_wrapper(
+        prompt,
+        force=force,
+        input=affiliation.name,
+        client=config.refine.prompt.client,
+        messages=[
             Message(
                 type="system",
                 prompt=process_affiliation_model.llm_config.system_prompt,
@@ -52,16 +48,9 @@ def process_affiliations_prompt(
                 args=(affiliation.name,),
             ),
         ],
-        "model": config.refine.prompt.model,
-        "structured_model": process_affiliation_model.Analysis,
-    }
-
-    if force:
-        analysis: process_affiliation_model.Analysis = force_prompt(
-            prompt, **prompt_kwargs
-        ).parsed
-    else:
-        analysis: process_affiliation_model.Analysis = prompt(**prompt_kwargs).parsed
+        model=config.refine.prompt.model,
+        structured_model=process_affiliation_model.Analysis,
+    ).parsed
 
     return [
         Institution(
@@ -83,12 +72,6 @@ def process_affiliations_prompt(
 
 
 def norm_author_display_name_prompt(display_name: str, force: bool = False) -> str:
-    send(
-        prompt=norm_author_model.Analysis.__module__,
-        model=config.refine.prompt.model,
-        input=display_name,
-    )
-
     cache_dir = (
         config.data_path
         / norm_author_model.__package__.split(".")[-1]
@@ -102,9 +85,12 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
         prefix=config.refine.prompt.model,
         index=0,
     )
-    prompt_kwargs = {
-        "client": config.refine.prompt.client,
-        "messages": [
+    analysis: norm_author_model.Analysis = prompt_wrapper(
+        prompt,
+        force=force,
+        input=display_name,
+        client=config.refine.prompt.client,
+        messages=[
             Message(
                 type="system",
                 prompt=norm_author_model.llm_config.system_prompt,
@@ -115,27 +101,14 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
                 args=(display_name,),
             ),
         ],
-        "model": config.refine.prompt.model,
-        "structured_model": norm_author_model.Analysis,
-    }
-
-    if force:
-        analysis: norm_author_model.Analysis = force_prompt(
-            prompt, **prompt_kwargs
-        ).parsed
-    else:
-        analysis: norm_author_model.Analysis = prompt(**prompt_kwargs).parsed
+        model=config.refine.prompt.model,
+        structured_model=norm_author_model.Analysis,
+    ).parsed
 
     return str(analysis.normalized_author)
 
 
 def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
-    send(
-        prompt=norm_venue_model.Analysis.__module__,
-        model=config.refine.prompt.model,
-        input=venue.name,
-    )
-
     cache_dir = (
         config.data_path
         / norm_venue_model.__package__.split(".")[-1]
@@ -149,9 +122,12 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
         prefix=config.refine.prompt.model,
         index=0,
     )
-    prompt_kwargs = {
-        "client": config.refine.prompt.client,
-        "messages": [
+    analysis: norm_venue_model.Analysis = prompt_wrapper(
+        prompt,
+        force=force,
+        input=venue.name,
+        client=config.refine.prompt.client,
+        messages=[
             Message(
                 type="system",
                 prompt=norm_venue_model.llm_config.system_prompt,
@@ -162,14 +138,9 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
                 args=(venue.name,),
             ),
         ],
-        "model": config.refine.prompt.model,
-        "structured_model": norm_venue_model.Analysis,
-    }
-
-    if force:
-        analysis: norm_venue_model.Analysis = force_prompt(prompt, **prompt_kwargs).parsed
-    else:
-        analysis: norm_venue_model.Analysis = prompt(**prompt_kwargs).parsed
+        model=config.refine.prompt.model,
+        structured_model=norm_venue_model.Analysis,
+    ).parsed
 
     year = {}
     if analysis.year:

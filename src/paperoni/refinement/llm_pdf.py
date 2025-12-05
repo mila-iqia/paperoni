@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import gifnoc
-from outsight import send
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
@@ -12,7 +11,7 @@ from ..model.merge import qual
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
 from .llm_common import Analysis, PromptConfig
-from .llm_utils import force_prompt
+from .llm_utils import prompt_wrapper
 
 
 def _make_key(_, kwargs: dict) -> str:
@@ -39,20 +38,18 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
         prefix=config.refine.prompt.model,
         index=0,
     )
-    prompt_kwargs = {
-        "client": config.refine.prompt.client,
-        "messages": [
+    analysis: Analysis = prompt_wrapper(
+        pdf_prompt,
+        force=force,
+        input=pdf.source.url,
+        client=config.refine.prompt.client,
+        messages=[
             Message(type="system", prompt=llm_pdf_config.system_prompt),
             Message(type="application/pdf", prompt=pdf.pdf_path),
         ],
-        "model": config.refine.prompt.model,
-        "structured_model": Analysis,
-    }
-
-    if force:
-        analysis: Analysis = force_prompt(pdf_prompt, **prompt_kwargs).parsed
-    else:
-        analysis: Analysis = pdf_prompt(**prompt_kwargs).parsed
+        model=config.refine.prompt.model,
+        structured_model=Analysis,
+    ).parsed
 
     return Paper(
         title=str(analysis.title),
@@ -82,7 +79,6 @@ def pdf(refs: list, *, force: bool = False) -> Paper:
     if p is None:
         return None
 
-    send(prompt=Analysis.__module__, model=config.refine.prompt.model, input=p.source.url)
     paper = prompt(p, force=force)
 
     if ":" in p.ref:

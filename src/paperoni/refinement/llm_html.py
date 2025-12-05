@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Literal
 
 import gifnoc
-from outsight import send
 from paperazzi.platforms.utils import Message
 from requests import HTTPError
 
@@ -12,7 +11,7 @@ from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import ParsedResponseSerializer
 from .fetch import register_fetch
 from .llm_common import Analysis, PromptConfig
-from .llm_utils import force_prompt
+from .llm_utils import prompt_wrapper
 
 FIRST_MESSAGE = """### The HTML web page of the scientific paper:
 
@@ -36,7 +35,7 @@ def _make_key(_, kwargs: dict) -> str:
     return config.refine.prompt._make_key(None, kwargs)
 
 
-def prompt(link: str, force: bool = False) -> Paper:
+def prompt(link: str, input, force: bool = False) -> Paper:
     """Analyze HTML content to extract author and affiliation information."""
     try:
         html_content = config.fetch.read(link, format="txt")
@@ -55,20 +54,18 @@ def prompt(link: str, force: bool = False) -> Paper:
         prefix=config.refine.prompt.model,
         index=0,
     )
-    prompt_kwargs = {
-        "client": config.refine.prompt.client,
-        "messages": [
+    analysis: Analysis = prompt_wrapper(
+        html_prompt,
+        force=force,
+        input=input,
+        client=config.refine.prompt.client,
+        messages=[
             Message(type="system", prompt=llm_html_config.system_prompt),
             Message(type="user", prompt=FIRST_MESSAGE, args=(html_content,)),
         ],
-        "model": config.refine.prompt.model,
-        "structured_model": Analysis,
-    }
-
-    if force:
-        analysis: Analysis = force_prompt(html_prompt, **prompt_kwargs).parsed
-    else:
-        analysis: Analysis = html_prompt(**prompt_kwargs).parsed
+        model=config.refine.prompt.model,
+        structured_model=Analysis,
+    ).parsed
 
     return Paper(
         title=str(analysis.title),
@@ -88,15 +85,8 @@ def prompt(link: str, force: bool = False) -> Paper:
 
 @register_fetch(tags={"prompt", "html"})
 def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
-    send(
-        prompt=Analysis.__module__,
-        model=config.refine.prompt.model,
-        input=f"{type}:{link}",
-    )
-
-    paper = prompt(f"https://doi.org/{link}", force=force)
+    paper = prompt(f"https://doi.org/{link}", input=f"{type}:{link}", force=force)
     paper.links.append(Link(type=type, link=link))
-
     return paper.authors and paper or None
 
 
