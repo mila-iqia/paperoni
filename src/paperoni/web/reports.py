@@ -2,10 +2,15 @@
 FastAPI route for serving HTML reports from the data path.
 """
 
-from fastapi import Depends, FastAPI, HTTPException
+from pathlib import Path
+
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
+from fastapi.templating import Jinja2Templates
 
 from ..config import config
+
+here = Path(__file__).parent
 
 
 def install_reports(app: FastAPI) -> FastAPI:
@@ -13,14 +18,14 @@ def install_reports(app: FastAPI) -> FastAPI:
 
     hascap = app.auth.get_email_capability
 
-    @app.get("/reports/{path:path}", dependencies=[Depends(hascap("dev"))])
-    async def route_reports(path: str):
-        reports_dir = (config.data_path / "reports").resolve()
-        report_path = (reports_dir / path).resolve()
+    @app.get("/logs/{path:path}", dependencies=[Depends(hascap("dev"))])
+    async def route_logs(path: str):
+        logs_dir = (config.data_path / "logs").resolve()
+        report_path = (logs_dir / path).resolve()
 
-        # Security check: ensure the path is within the reports directory
+        # Security check: ensure the path is within the logs directory
         try:
-            report_path.relative_to(reports_dir)
+            report_path.relative_to(logs_dir)
         except ValueError:
             raise HTTPException(status_code=404, detail="Report not found")
 
@@ -28,5 +33,29 @@ def install_reports(app: FastAPI) -> FastAPI:
             raise HTTPException(status_code=404, detail="Report not found")
 
         return FileResponse(report_path)
+
+    @app.get("/report/{path:path}", dependencies=[Depends(hascap("dev"))])
+    async def route_report(request: Request, path: str):
+        templates = Jinja2Templates(directory=str((here / "templates").resolve()))
+        if not path:
+            logs_dir = (config.data_path / "logs").resolve()
+            # Sort newest to oldest by file modification time (descending)
+            log_files = sorted(
+                (f for f in logs_dir.glob("*.jsonl") if f.is_file()),
+                key=lambda f: f.stat().st_mtime,
+                reverse=True,
+            )
+            report_basenames = [f.stem for f in log_files]
+            links = [
+                {"name": basename, "url": f"/report/{basename}"}
+                for basename in report_basenames
+            ]
+            return templates.TemplateResponse(
+                "report_list.html", {"request": request, "logs": links}
+            )
+        else:
+            return templates.TemplateResponse(
+                "report.html", {"request": request, "report_name": path}
+            )
 
     return app

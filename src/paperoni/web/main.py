@@ -1,9 +1,11 @@
 import importlib.metadata
 import logging
+from pathlib import Path
 
 from easy_oauth import OAuthManager
 from fastapi import FastAPI, HTTPException
 from fastapi.exception_handlers import http_exception_handler
+from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
 import paperoni
@@ -13,6 +15,8 @@ from .reports import install_reports
 from .restapi import install_api
 
 app_logger = logging.getLogger(__name__)
+
+here = Path(__file__).parent
 
 
 def create_app():
@@ -34,6 +38,9 @@ def create_app():
     auth = config.server.auth or OAuthManager(server_metadata_url="n/a")
     auth.install(app)
     app.auth = auth
+
+    app.mount("/assets", StaticFiles(directory=(here / "assets")), name="assets")
+
     install_api(app)
     install_reports(app)
     return app

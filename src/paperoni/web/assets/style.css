@@ -1,0 +1,368 @@
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Report List Container */
+#report-list-container {
+    padding: 40px;
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#report-list-container h1 {
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.report-list-item {
+    margin: 10px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.report-list-item:hover {
+    background: #f0f0f0;
+}
+
+.report-link {
+    color: #2c5aa0;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+.report-link:hover {
+    color: #1e3a6f;
+    text-decoration: underline;
+}
+
+.no-reports {
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Error Reports Container */
+#error-reports-container {
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.error-summary {
+    margin-bottom: 20px;
+}
+
+/* Error Report Box */
+.error-report {
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.error-header {
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 5px 5px 0 0;
+}
+
+.error-header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.error-header-title {
+    /* title content styling handled inline for now due to dynamic content */
+}
+
+.error-exception-name {
+    color: #d32f2f;
+}
+
+.error-occurrence-count {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.error-header-message {
+    font-size: 0.9em;
+    color: #444;
+}
+
+.error-toggle {
+    font-size: 12px;
+    transition: transform 0.3s;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.error-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.error-content {
+    display: none;
+    padding: 15px;
+}
+
+.error-content.expanded {
+    display: block;
+}
+
+/* Error Details */
+.error-detail-section {
+    margin-bottom: 10px;
+}
+
+.error-contexts-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.error-traceback {
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+    font-size: 12px;
+}
+
+/* Error Loading/Error State */
+.error-message {
+    color: red;
+    padding: 20px;
+}
+
+.context-command {
+    display: inline-block;
+    margin: 1px;
+    background: purple;
+    color: white;
+    font-weight: bold;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+}
+
+.context-richlog {
+    display: inline-block;
+    margin: 1px;
+    background: red;
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.context-richlog::before {
+    content: "In richlog: ";
+}
+
+/* Log Header */
+.log-header {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.log-title {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.log-title a {
+    color: #2c5aa0;
+    text-decoration: none;
+}
+
+.log-title a:hover {
+    text-decoration: underline;
+}
+
+.running-indicator {
+    color: #ff8c00;
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+.log-time-info {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Statistics Section */
+.statistics-section,
+.progressive-counts-section {
+    margin: 20px 0;
+}
+
+.statistics-section h2,
+.progressive-counts-section h2 {
+    margin-bottom: 10px;
+}
+
+.statistics-table,
+.progressive-counts-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #ccc;
+}
+
+.statistics-table th,
+.statistics-table td,
+.progressive-counts-table th,
+.progressive-counts-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.statistics-table th,
+.progressive-counts-table th {
+    background: #f0f0f0;
+    font-weight: bold;
+}
+
+.statistics-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+/* Progressive Counts Collapsible */
+.category-row {
+    cursor: pointer;
+}
+
+.category-row:hover {
+    background: #f9f9f9;
+}
+
+.category-cell {
+    display: flex;
+    align-items: center;
+}
+
+.category-toggle {
+    font-size: 12px;
+    transition: transform 0.3s;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.category-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.category-detail-row {
+    display: none;
+}
+
+.category-detail-row.expanded {
+    display: table-row;
+}
+
+.category-detail-row td {
+    padding: 0;
+    background: #f9f9f9;
+}
+
+.origin-breakdown-table {
+    width: calc(100% - 20px);
+    border-collapse: collapse;
+    margin: 10px;
+}
+
+.origin-breakdown-table th,
+.origin-breakdown-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.origin-breakdown-table th {
+    background: #e8e8e8;
+    font-size: 0.9em;
+}
+
+.origin-breakdown-table tbody tr:hover {
+    background: #fff;
+}
+
+/* Command Description Section */
+.command-description-section {
+    margin: 20px 0;
+}
+
+.command-description {
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.command-header {
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0f0f0;
+    border-radius: 5px 5px 0 0;
+}
+
+.command-header-content {
+    flex: 1;
+    font-weight: 500;
+    color: #333;
+}
+
+.command-toggle {
+    font-size: 12px;
+    transition: transform 0.3s;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.command-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.command-content {
+    display: none;
+    padding: 15px;
+}
+
+.command-content.expanded {
+    display: block;
+}
+
+.command-json {
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+    font-size: 12px;
+    margin: 0;
+}
