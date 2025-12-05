@@ -1,9 +1,12 @@
+import inspect
 import itertools
 import logging
 import re
 import unicodedata
+from types import FrameType, TracebackType
 
 from outsight import send
+from ovld import ovld, recurse
 from serieux.proxy import ProxyBase
 from unidecode import unidecode
 
@@ -224,6 +227,35 @@ def prog(it, name="progress", total=None):
         send(progress=(name, i + 1, total))
 
 
+@ovld
+def dyntrace():
+    return recurse(inspect.currentframe())
+
+
+@ovld
+def dyntrace(_: None):
+    return []
+
+
+@ovld
+def dyntrace(frame: FrameType):
+    tr = []
+    current = frame
+    while current is not None:
+        if t := current.f_locals.get("__trace__", None):
+            tr.append(t)
+        current = current.f_back
+    tr.reverse()
+    return tr
+
+
+@ovld
+def dyntrace(tb: TracebackType):
+    while tb.tb_next is not None:
+        tb = tb.tb_next
+    return dyntrace(tb.tb_frame)
+
+
 class soft_fail:
     def __init__(self, message=None):
         self.message = message
@@ -237,10 +269,13 @@ class soft_fail:
         if exc_type in (KeyboardInterrupt, GeneratorExit, SystemExit):
             return None
         if exc_type is not None:
+            dt = dyntrace(traceback)
             logging.getLogger().exception(
-                msg=self.message or repr(exc_value), exc_info=exc_value
+                msg=self.message or repr(exc_value),
+                extra={"context": dt},
+                exc_info=exc_value,
             )
-            send(exception=exc_value)
+            send(exception=exc_value, message=self.message, context=dt)
             return True
 
 

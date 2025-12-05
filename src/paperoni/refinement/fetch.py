@@ -63,6 +63,7 @@ def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
         funcs.append((f"{type}:{link}", (type, link), fetch.resolve_all(type, link)))
 
     for key, args, fs in funcs:
+        __trace__ = f"refine:{key}"  # noqa: F841
         for f in fs:
             with soft_fail(f"Refinement of {key}"):
                 if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
