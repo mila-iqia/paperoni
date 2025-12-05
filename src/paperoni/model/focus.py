@@ -203,15 +203,20 @@ class Top[T]:
 
     def add(self, x):
         if self.drop_zero and not x:
-            return
+            return False
         if len(self.entries) >= self.n:
-            heappushpop(self.entries, x)
+            replaced = heappushpop(self.entries, x)
+            return replaced is not x
         else:
             heappush(self.entries, x)
+            return True
 
     def add_all(self, elems):
+        count = 0
         for elem in elems:
-            self.add(elem)
+            if self.add(elem):
+                count += 1
+        return count
 
     def discard_all(self, elems):
         ids = {id(e) for e in elems}

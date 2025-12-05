@@ -5,9 +5,9 @@ from dataclasses import dataclass
 from typing import Any
 
 from ovld import Medley, ovld, recurse
-from serieux import JSON
+from serieux import JSON, TaggedSubclass
 from serieux.ctx import Context
-from serieux.priority import STD
+from serieux.priority import HI1, STD
 
 
 @dataclass
@@ -165,9 +165,16 @@ class ExceptionSerialization(Medley):
 
         return exc
 
-    @ovld(priority=STD)
-    def schema(self, t: type[BaseException], ctx: Context, /):
+    @ovld(priority=HI1)
+    def schema(
+        self,
+        t: type[BaseException] | type[TaggedSubclass[BaseException]],
+        ctx: Context,
+        /,
+    ):
         """Generate JSON schema for exception serialization."""
+        # We also override TaggedSubclass because there's a gazillion exception
+        # types and it'll create an entry for each...
         return {
             "type": "object",
             "properties": {
@@ -193,9 +200,10 @@ class ExceptionSerialization(Medley):
                         "required": ["filename", "lineno", "name"],
                     },
                 },
+                "$class": {
+                    "type": "string",
+                    "description": "Reference to the exception type",
+                },
             },
-            "oneOf": [
-                {"required": ["args"]},
-                {"required": ["message"]},
-            ],
+            "required": [],
         }

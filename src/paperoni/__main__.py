@@ -2,8 +2,11 @@ import argparse
 import itertools
 import json
 import logging
+import random
 import shlex
 import sys
+import time
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from functools import cached_property
@@ -16,7 +19,7 @@ import yaml
 from filelock import FileLock
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
-from outsight.ops import ticktock
+from outsight.ops import merge, ticktock
 from ovld import ovld
 from rapporteur.report import Report
 from serieux import (
@@ -49,6 +52,7 @@ from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
 from .refinement.llm_normalize import normalize_paper
+from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statistic
 from .utils import deprox, prog, soft_fail, url_to_id
 
 
@@ -289,7 +293,8 @@ class Work:
                         work.focuses.score(pinfo), PaperWorkingSet.make(pinfo)
                     )
 
-                work.top.add(scored)
+                if work.top.add(scored):
+                    send(workset_added=1)
                 find.add([scored])
             work.save()
 
@@ -435,6 +440,7 @@ class Work:
                 # file
                 work.save()
 
+            send(collection_include=added)
             return added
 
     @dataclass
@@ -458,6 +464,7 @@ class Work:
                 work.collection.exclude_papers(selected)
             finally:
                 work.save()
+            send(collection_exclude=len(selected))
 
     @dataclass
     class Clear(Extractor):
@@ -781,6 +788,9 @@ class PaperoniInterface:
     # Report the execution results
     report: bool = False
 
+    # Store a rich JSONL log
+    rich_log: bool = False
+
     def __post_init__(self):
         if self.dash is None and not self.log:
             self.dash = sys.stdout.isatty()
@@ -791,6 +801,12 @@ class PaperoniInterface:
             enable_dash()
         if self.log:
             enable_log()
+        if self.rich_log:
+            enable_rich_log()
+        # The program hangs if it ends before outsight can set itself up,
+        # so we'll sleep a bit until that's solved.
+        time.sleep(0.1)
+        send(root_command=self)
         if self.report:
             if not config.reporters:
                 sys.exit("No reporters are defined in the config for --report")
@@ -831,6 +847,111 @@ def enable_log():
                         if k in entry:
                             x[0] += 1
             checkpoint()
+
+
+@dataclass
+class CommandDescription(LogEvent):
+    command: PaperoniInterface
+
+
+def enable_rich_log():
+    def erryield(fn):
+        async def wrapped(*args, **kwargs):
+            try:
+                async for x in fn(*args, **kwargs):
+                    yield x
+            except Exception as exc:
+                yield ErrorOccurred(
+                    context=[f"richlog:{fn.__name__}"],
+                    exception=exc,
+                )
+
+        return wrapped
+
+    @erryield
+    def group(name, stream, key_fn, count_fn=lambda x: 1):
+        async def func(stream):
+            async for group in stream.buffer(ticktock(1)):
+                origins = Counter()
+                for entry in group:
+                    origin = key_fn(entry) or "unspecified"
+                    origins[origin] += count_fn(entry)
+                for origin, count in origins.items():
+                    event = ProgressiveCount(
+                        category=name,
+                        origin=origin,
+                        count=count,
+                    )
+                    yield event
+
+        return func(stream)
+
+    @erryield
+    async def exceptions(sent):
+        async for exc, ctx in sent:
+            yield ErrorOccurred(context=ctx, exception=exc)
+
+    @erryield
+    def progcount(name, stream):
+        async def count(stream):
+            async for group in stream.buffer(ticktock(1)):
+                yield ProgressiveCount(
+                    category=name,
+                    origin="all",
+                    count=len(group),
+                )
+
+        return count(stream)
+
+    def statistic(name, stream):
+        async def make(stream):
+            async for x in stream:
+                yield Statistic(name=name, value=x)
+
+        return make(stream)
+
+    async def root_command(sent):
+        async for x in sent["root_command"]:
+            yield CommandDescription(command=x)
+
+    @outsight.add
+    async def rich_log(sent):
+        logdir = config.data_path / "logs"
+        logdir.mkdir(exist_ok=True, parents=True)
+        now = datetime.now()
+        rand = random.randint(0, 9999)
+        logname = now.strftime("%Y%m%d_%H%M%S") + f"_{rand:04d}.jsonl"
+        logfile = logdir / logname
+
+        def _discover_origin(pinfo):
+            for src in pinfo.info.get("discovered_by", {}):
+                return src
+            else:
+                return None
+
+        with Logger(logfile) as logger:
+            async for event in merge(
+                group("Discovered", sent["discover"], _discover_origin),
+                group("Prompts", sent["prompt"], lambda p: p),
+                group("Tokens", sent["prompt", "tokens"], lambda p: p[0], lambda p: p[1]),
+                progcount("Attempted refinements", sent["to_refine"]),
+                progcount("Successful refinements", sent["refinement"]),
+                progcount("Added to workset", sent["workset_added"]),
+                statistic("Included in collection", sent["collection_include"]),
+                statistic("Excluded from collection", sent["collection_exclude"]),
+                exceptions(sent["exception", "context"]),
+                root_command(sent),
+            ):
+                try:
+                    logger.log(event)
+                except Exception as exc:
+                    logger.log(
+                        ErrorOccurred(
+                            context=["richlog:logging"],
+                            exception=exc,
+                        )
+                    )
+        print("Log file:", logfile.resolve())
 
 
 def enable_dash():
