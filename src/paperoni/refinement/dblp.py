@@ -29,7 +29,9 @@ def _author_links(author_span):
 
 @register_fetch
 def dblp(type: Literal["dblp"], link: str):
-    data = config.fetch.read(f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml")
+    data = config.fetch.read_retry(
+        f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml"
+    )
     ee = data.find("ee")
     extra_links = []
     if ee and ee.text.startswith("https://doi.org/"):
