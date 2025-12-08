@@ -1,3 +1,4 @@
+import { html } from './common.js';
 
 export async function fetchReportJSONL(report_name) {
     const url = `/logs/${encodeURIComponent(report_name)}.jsonl`;
@@ -62,111 +63,49 @@ export function error_report(objects) {
 }
 
 function formatErrorAsHTML(errorSummary) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-report';
-
-    const header = document.createElement('div');
-    header.className = 'error-header';
-
-    const headerContent = document.createElement('div');
-    headerContent.className = 'error-header-content';
-
-    const headerTitle = document.createElement('div');
-    headerTitle.className = 'error-header-title';
     const exceptionName = errorSummary.exception_type.split(':').pop() || errorSummary.exception_type;
-    headerTitle.innerHTML = `<strong class="error-exception-name">${exceptionName}</strong> <span class="error-occurrence-count">(${errorSummary.occurrences} occurrence${errorSummary.occurrences !== 1 ? 's' : ''})</span>`;
-    headerContent.appendChild(headerTitle);
+    const occurrenceText = `(${errorSummary.occurrences} occurrence${errorSummary.occurrences !== 1 ? 's' : ''})`;
 
-    const headerMessage = document.createElement('div');
-    headerMessage.className = 'error-header-message';
-    headerMessage.textContent = errorSummary.message;
-    headerContent.appendChild(headerMessage);
+    const toggle = html`<span class="error-toggle">▶</span>`;
 
-    header.appendChild(headerContent);
+    const header = html`<div class="error-header">
+        <div class="error-header-content">
+            <div class="error-header-title">
+                <strong class="error-exception-name">${exceptionName}</strong>
+                <span class="error-occurrence-count">${occurrenceText}</span>
+            </div>
+            <div class="error-header-message">${errorSummary.message}</div>
+        </div>
+        ${toggle}
+    </div>`;
 
-    const toggle = document.createElement('span');
-    toggle.className = 'error-toggle';
-    toggle.textContent = '▶';
-    header.appendChild(toggle);
+    // Build contexts list items using array interpolation
+    const contextItems = errorSummary.contexts.map(context => {
+        if (Array.isArray(context)) {
+            // Build breadcrumb elements using flatMap for arrays
+            const breadcrumbParts = context.flatMap((item, index) => {
+                const parts = [];
+                if (index > 0) {
+                    parts.push(html`<span class="breadcrumb-separator"> › </span>`);
+                }
 
-    const content = document.createElement('div');
-    content.className = 'error-content';
+                const colonIndex = item.indexOf(':');
+                if (colonIndex !== -1) {
+                    const prefix = item.substring(0, colonIndex);
+                    const text = item.substring(colonIndex + 1);
+                    parts.push(html`<span class="breadcrumb-item context-${prefix}">${text}</span>`);
+                } else {
+                    parts.push(html`<span class="breadcrumb-item">${item}</span>`);
+                }
+                return parts;
+            });
 
-    // const exceptionType = document.createElement('p');
-    // exceptionType.className = 'error-detail-section';
-    // exceptionType.innerHTML = `<strong>Exception Type:</strong> ${errorSummary.exception_type}`;
-    // content.appendChild(exceptionType);
+            return html`<li><div class="breadcrumb">${breadcrumbParts}</div></li>`;
+        } else {
+            return html`<li>${context}</li>`;
+        }
+    });
 
-    // const message = document.createElement('p');
-    // message.className = 'error-detail-section';
-    // message.innerHTML = `<strong>Message:</strong> ${JSON.stringify(errorSummary.message)}`;
-    // content.appendChild(message);
-
-    // const occurrences = document.createElement('p');
-    // occurrences.className = 'error-detail-section';
-    // occurrences.innerHTML = `<strong>Occurrences:</strong> ${errorSummary.occurrences}`;
-    // content.appendChild(occurrences);
-
-    if (errorSummary.contexts.length > 0) {
-        // const contextsHeader = document.createElement('p');
-        // contextsHeader.className = 'error-detail-section';
-        // contextsHeader.innerHTML = '<strong>Contexts:</strong>';
-        // content.appendChild(contextsHeader);
-
-        const contextsList = document.createElement('ul');
-        contextsList.className = 'error-contexts-list';
-        errorSummary.contexts.forEach(context => {
-            const contextItem = document.createElement('li');
-
-            // If context is an array (dynamic_trace), display as breadcrumbs
-            if (Array.isArray(context)) {
-                const breadcrumbDiv = document.createElement('div');
-                breadcrumbDiv.className = 'breadcrumb';
-
-                context.forEach((item, index) => {
-                    if (index > 0) {
-                        const separator = document.createElement('span');
-                        separator.className = 'breadcrumb-separator';
-                        separator.textContent = ' › ';
-                        breadcrumbDiv.appendChild(separator);
-                    }
-
-                    const crumb = document.createElement('span');
-                    crumb.className = 'breadcrumb-item';
-
-                    // Extract prefix before first colon and apply as CSS class
-                    const colonIndex = item.indexOf(':');
-                    if (colonIndex !== -1) {
-                        const prefix = item.substring(0, colonIndex);
-                        crumb.classList.add(`context-${prefix}`);
-                        // Display only the part after the colon
-                        crumb.textContent = item.substring(colonIndex + 1);
-                    } else {
-                        // No colon found, display the whole item
-                        crumb.textContent = item;
-                    }
-
-                    breadcrumbDiv.appendChild(crumb);
-                });
-
-                contextItem.appendChild(breadcrumbDiv);
-            } else {
-                // Fallback for string contexts
-                contextItem.textContent = context;
-            }
-
-            contextsList.appendChild(contextItem);
-        });
-        content.appendChild(contextsList);
-    }
-
-    const tracebackHeader = document.createElement('p');
-    tracebackHeader.className = 'error-detail-section';
-    tracebackHeader.innerHTML = '<strong>Traceback:</strong>';
-    content.appendChild(tracebackHeader);
-
-    const tracebackPre = document.createElement('pre');
-    tracebackPre.className = 'error-traceback';
     const tracebackText = errorSummary.traceback.map(frame => {
         let text = `  ${frame.filename}:${frame.lineno} in ${frame.name}`;
         if (frame.line) {
@@ -174,19 +113,25 @@ function formatErrorAsHTML(errorSummary) {
         }
         return text;
     }).join('\n');
-    tracebackPre.textContent = tracebackText;
-    content.appendChild(tracebackPre);
+
+    // Use null for empty contexts so nothing renders
+    const contextsList = errorSummary.contexts.length > 0
+        ? html`<ul class="error-contexts-list">${contextItems}</ul>`
+        : null;
+
+    // Build content with array and null handling
+    const content = html`<div class="error-content">
+        ${contextsList}
+        <p class="error-detail-section"><strong>Traceback:</strong></p>
+        <pre class="error-traceback">${tracebackText}</pre>
+    </div>`;
 
     header.addEventListener('click', () => {
-        const isCollapsed = !content.classList.contains('expanded');
         content.classList.toggle('expanded');
         toggle.classList.toggle('expanded');
     });
 
-    errorDiv.appendChild(header);
-    errorDiv.appendChild(content);
-
-    return errorDiv;
+    return html`<div class="error-report">${header}${content}</div>`;
 }
 
 function createStatisticsTable(objects) {
@@ -202,26 +147,15 @@ function createStatisticsTable(objects) {
         latestStats.set(stat.name, stat);
     });
 
-    const section = document.createElement('div');
-    section.className = 'statistics-section';
+    const rows = Array.from(latestStats.values()).map(stat =>
+        html`<tr><td>${stat.name}</td><td>${stat.value}</td></tr>`
+    );
 
-    // const header = document.createElement('h2');
-    // header.textContent = 'Statistics';
-    // section.appendChild(header);
-
-    const table = document.createElement('table');
-    table.className = 'statistics-table';
-
-    const tbody = document.createElement('tbody');
-    Array.from(latestStats.values()).forEach(stat => {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>${stat.name}</td><td>${stat.value}</td>`;
-        tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
-
-    section.appendChild(table);
-    return section;
+    return html`<div class="statistics-section">
+        <table class="statistics-table">
+            <tbody>${rows}</tbody>
+        </table>
+    </div>`;
 }
 
 function createProgressiveCountsTable(objects) {
@@ -249,83 +183,56 @@ function createProgressiveCountsTable(objects) {
         data.byOrigin.set(pc.origin, data.byOrigin.get(pc.origin) + pc.count);
     });
 
-    const section = document.createElement('div');
-    section.className = 'progressive-counts-section';
-
-    // const header = document.createElement('h2');
-    // header.textContent = 'Progressive Counts';
-    // section.appendChild(header);
-
-    const table = document.createElement('table');
-    table.className = 'progressive-counts-table';
-
-    const tbody = document.createElement('tbody');
+    const rows = [];
 
     // Sort categories by total count (descending)
     const sortedCategories = Array.from(categoryData.entries()).sort((a, b) => b[1].total - a[1].total);
 
     sortedCategories.forEach(([category, data]) => {
-        const row = document.createElement('tr');
-        row.className = 'category-row';
+        const toggle = html`<span class="category-toggle">▶</span>`;
 
-        const categoryCell = document.createElement('td');
-        categoryCell.className = 'category-cell';
-
-        const toggle = document.createElement('span');
-        toggle.className = 'category-toggle';
-        toggle.textContent = '▶';
-        categoryCell.appendChild(toggle);
-
-        const categoryText = document.createElement('span');
-        categoryText.textContent = ` ${category}`;
-        categoryCell.appendChild(categoryText);
-
-        row.appendChild(categoryCell);
-
-        const countCell = document.createElement('td');
-        countCell.textContent = data.total;
-        row.appendChild(countCell);
-
-        tbody.appendChild(row);
+        const row = html`
+            <tr class="category-row">
+                <td class="category-cell">${toggle} ${category}</td>
+                <td>${data.total}</td>
+            </tr>
+        `;
 
         // Create detail row for origin breakdown
-        const detailRow = document.createElement('tr');
-        detailRow.className = 'category-detail-row';
-
-        const detailCell = document.createElement('td');
-        detailCell.colSpan = 2;
-
-        const detailTable = document.createElement('table');
-        detailTable.className = 'origin-breakdown-table';
-
-        const detailTbody = document.createElement('tbody');
-
-        // Sort origins by count (descending)
         const sortedOrigins = Array.from(data.byOrigin.entries()).sort((a, b) => b[1] - a[1]);
+        const originRows = sortedOrigins.map(([origin, count]) =>
+            html`<tr><td>${origin}</td><td>${count}</td></tr>`
+        );
 
-        sortedOrigins.forEach(([origin, count]) => {
-            const originRow = document.createElement('tr');
-            originRow.innerHTML = `<td>${origin}</td><td>${count}</td>`;
-            detailTbody.appendChild(originRow);
-        });
+        const detailTable = html`
+            <table class="origin-breakdown-table">
+                <tbody>${originRows}</tbody>
+            </table>
+        `;
 
-        detailTable.appendChild(detailTbody);
-        detailCell.appendChild(detailTable);
-        detailRow.appendChild(detailCell);
+        const detailRow = html`
+            <tr class="category-detail-row">
+                <td colspan="2">${detailTable}</td>
+            </tr>
+        `;
 
-        tbody.appendChild(detailRow);
+        rows.push(row);
+        rows.push(detailRow);
 
         // Add click handler to toggle details
         row.addEventListener('click', () => {
-            const isExpanded = detailRow.classList.contains('expanded');
             detailRow.classList.toggle('expanded');
             toggle.classList.toggle('expanded');
         });
     });
 
-    table.appendChild(tbody);
-    section.appendChild(table);
-    return section;
+    return html`
+        <div class="progressive-counts-section">
+            <table class="progressive-counts-table">
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
 }
 
 function formatDateTime(date) {
@@ -366,68 +273,41 @@ function createCommandDescriptionSection(objects) {
         return null;
     }
 
-    const section = document.createElement('div');
-    section.className = 'command-description-section';
-
-    commandDescs.forEach(desc => {
-        const commandDiv = document.createElement('div');
-        commandDiv.className = 'command-description';
-
-        const header = document.createElement('div');
-        header.className = 'command-header';
-
-        const headerContent = document.createElement('div');
-        headerContent.className = 'command-header-content';
-        headerContent.innerHTML = `<strong>Command:</strong> ${getCommandClassSequence(desc.command)}`;
-        header.appendChild(headerContent);
-
-        const toggle = document.createElement('span');
-        toggle.className = 'command-toggle';
-        toggle.textContent = '▶';
-        header.appendChild(toggle);
-
-        const content = document.createElement('div');
-        content.className = 'command-content';
-
-        const pre = document.createElement('pre');
-        pre.className = 'command-json';
-        pre.textContent = JSON.stringify(desc.command, null, 2);
-
-        content.appendChild(pre);
+    const commandDivs = commandDescs.map(desc => {
+        const toggle = html`<span class="command-toggle">▶</span>`;
+        const commandSequence = getCommandClassSequence(desc.command);
+        const jsonText = JSON.stringify(desc.command, null, 2);
+        const header = html`
+            <div class="command-header">
+                <div class="command-header-content"><strong>Command:</strong> ${commandSequence}</div>
+                ${toggle}
+            </div>
+        `;
+        const content = html`
+            <div class="command-content">
+                <pre class="command-json">${jsonText}</pre>
+            </div>
+        `;
 
         header.addEventListener('click', () => {
-            const isCollapsed = !content.classList.contains('expanded');
             content.classList.toggle('expanded');
             toggle.classList.toggle('expanded');
         });
 
-        commandDiv.appendChild(header);
-        commandDiv.appendChild(content);
-        section.appendChild(commandDiv);
+        return html`<div class="command-description">${header}${content}</div>`;
     });
 
-    return section;
+    return html`<div class="command-description-section">${commandDivs}</div>`;
 }
 
 function createLogHeader(objects, report_name) {
-    const header = document.createElement('div');
-    header.className = 'log-header';
-
-    const title = document.createElement('h1');
-    title.className = 'log-title';
-    const link = document.createElement('a');
-    link.href = `/logs/${encodeURIComponent(report_name)}.jsonl`;
-    link.textContent = report_name;
-    title.appendChild(link);
+    const link = html`<a href="/logs/${encodeURIComponent(report_name)}.jsonl">${report_name}</a>`;
+    const title = html`<h1 class="log-title">${link}</h1>`;
 
     if (objects.length === 0) {
         // Empty log - show only title with running indicator
-        const runningIndicator = document.createElement('span');
-        runningIndicator.className = 'running-indicator';
-        runningIndicator.textContent = ' (still running)';
-        title.appendChild(runningIndicator);
-        header.appendChild(title);
-        return header;
+        title.appendChild(html`<span class="running-indicator"> (still running)</span>`);
+        return html`<div class="log-header">${title}</div>`;
     }
 
     // Check if there's a TimeStamp with label="end"
@@ -449,76 +329,43 @@ function createLogHeader(objects, report_name) {
     const durationStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
     if (!hasEndTimestamp) {
-        const runningIndicator = document.createElement('span');
-        runningIndicator.className = 'running-indicator';
-        runningIndicator.textContent = ' (still running)';
-        title.appendChild(runningIndicator);
+        title.appendChild(html`<span class="running-indicator"> (still running)</span>`);
     }
 
-    header.appendChild(title);
-
-    const timeInfo = document.createElement('div');
-    timeInfo.className = 'log-time-info';
     const endLabel = hasEndTimestamp ? 'End' : 'Last log entry';
-    timeInfo.innerHTML = `<strong>Start:</strong> ${formatDateTime(firstTimestamp)} | <strong>${endLabel}:</strong> ${formatDateTime(lastTimestamp)} | <strong>Duration:</strong> ${durationStr}`;
-    header.appendChild(timeInfo);
+    const startStr = formatDateTime(firstTimestamp);
+    const endStr = formatDateTime(lastTimestamp);
+    const timeInfo = html`<div class="log-time-info"><strong>Start:</strong> ${startStr} | <strong>${endLabel}:</strong> ${endStr} | <strong>Duration:</strong> ${durationStr}</div>`;
 
-    return header;
+    return html`<div class="log-header">${title}${timeInfo}</div>`;
 }
 
 export async function main(report_name) {
-    const container = document.createElement('div');
-    container.id = 'error-reports-container';
-
     try {
         const objects = await fetchReportJSONL(report_name);
 
-        // Create log header with time info
-        const logHeader = createLogHeader(objects, report_name);
-        if (logHeader) {
-            container.appendChild(logHeader);
-        }
-
-        // Create command description section
-        const commandDescSection = createCommandDescriptionSection(objects);
-        if (commandDescSection) {
-            container.appendChild(commandDescSection);
-        }
-
-        // Create statistics tables
-        const statisticsTable = createStatisticsTable(objects);
-        if (statisticsTable) {
-            container.appendChild(statisticsTable);
-        }
-
-        const progressiveCountsTable = createProgressiveCountsTable(objects);
-        if (progressiveCountsTable) {
-            container.appendChild(progressiveCountsTable);
-        }
-
         // Create error reports
         const report = error_report(objects);
-
-        // Sort by number of occurrences (descending)
         report.sort((a, b) => b.occurrences - a.occurrences);
 
-        const summary = document.createElement('h2');
-        summary.className = 'error-summary';
-        summary.textContent = `Found ${report.length} distinct errors`;
-        container.appendChild(summary);
+        const errorReports = report.map(errorSummary => formatErrorAsHTML(errorSummary));
 
-        report.forEach(errorSummary => {
-            const errorHTML = formatErrorAsHTML(errorSummary);
-            container.appendChild(errorHTML);
-        });
+        // Build entire container at once using arrays and null handling
+        const container = html`<div id="error-reports-container">
+            ${createLogHeader(objects, report_name)}
+            ${createCommandDescriptionSection(objects)}
+            ${createStatisticsTable(objects)}
+            ${createProgressiveCountsTable(objects)}
+            <h2 class="error-summary">Found ${report.length} distinct errors</h2>
+            ${errorReports}
+        </div>`;
 
         document.body.appendChild(container);
     } catch (err) {
         console.error("Failed to fetch report:", err);
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = `Error loading report: ${err.message}`;
-        container.appendChild(errorDiv);
+        const container = html`<div id="error-reports-container">
+            <div class="error-message">Error loading report: ${err.message}</div>
+        </div>`;
         document.body.appendChild(container);
     }
 }
