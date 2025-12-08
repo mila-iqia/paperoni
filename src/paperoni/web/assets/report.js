@@ -1,4 +1,4 @@
-import { html } from './common.js';
+import { html, toggle } from './common.js';
 
 export async function fetchReportJSONL(report_name) {
     const url = `/logs/${encodeURIComponent(report_name)}.jsonl`;
@@ -66,19 +66,6 @@ function formatErrorAsHTML(errorSummary) {
     const exceptionName = errorSummary.exception_type.split(':').pop() || errorSummary.exception_type;
     const occurrenceText = `(${errorSummary.occurrences} occurrence${errorSummary.occurrences !== 1 ? 's' : ''})`;
 
-    const toggle = html`<span class="error-toggle">▶</span>`;
-
-    const header = html`<div class="error-header">
-        <div class="error-header-content">
-            <div class="error-header-title">
-                <strong class="error-exception-name">${exceptionName}</strong>
-                <span class="error-occurrence-count">${occurrenceText}</span>
-            </div>
-            <div class="error-header-message">${errorSummary.message}</div>
-        </div>
-        ${toggle}
-    </div>`;
-
     // Build contexts list items using array interpolation
     const contextItems = errorSummary.contexts.map(context => {
         if (Array.isArray(context)) {
@@ -119,19 +106,25 @@ function formatErrorAsHTML(errorSummary) {
         ? html`<ul class="error-contexts-list">${contextItems}</ul>`
         : null;
 
-    // Build content with array and null handling
-    const content = html`<div class="error-content">
-        ${contextsList}
-        <p class="error-detail-section"><strong>Traceback:</strong></p>
-        <pre class="error-traceback">${tracebackText}</pre>
-    </div>`;
-
-    header.addEventListener('click', () => {
-        content.classList.toggle('expanded');
-        toggle.classList.toggle('expanded');
-    });
-
-    return html`<div class="error-report">${header}${content}</div>`;
+    return toggle`
+        <div class="error-report">
+            <div class="error-header" toggler>
+                <div class="error-header-content">
+                    <div class="error-header-title">
+                        <strong class="error-exception-name">${exceptionName}</strong>
+                        <span class="error-occurrence-count">${occurrenceText}</span>
+                    </div>
+                    <div class="error-header-message">${errorSummary.message}</div>
+                </div>
+                <span class="item-toggle">▶</span>
+            </div>
+            <div class="error-content" toggled>
+                ${contextsList}
+                <p class="error-detail-section"><strong>Traceback:</strong></p>
+                <pre class="error-traceback">${tracebackText}</pre>
+            </div>
+        </div>
+    `;
 }
 
 function createStatisticsTable(objects) {
@@ -183,47 +176,31 @@ function createProgressiveCountsTable(objects) {
         data.byOrigin.set(pc.origin, data.byOrigin.get(pc.origin) + pc.count);
     });
 
-    const rows = [];
-
     // Sort categories by total count (descending)
     const sortedCategories = Array.from(categoryData.entries()).sort((a, b) => b[1].total - a[1].total);
 
-    sortedCategories.forEach(([category, data]) => {
-        const toggle = html`<span class="category-toggle">▶</span>`;
-
-        const row = html`
-            <tr class="category-row">
-                <td class="category-cell">${toggle} ${category}</td>
-                <td>${data.total}</td>
-            </tr>
-        `;
-
+    const rows = sortedCategories.map(([category, data]) => {
         // Create detail row for origin breakdown
         const sortedOrigins = Array.from(data.byOrigin.entries()).sort((a, b) => b[1] - a[1]);
         const originRows = sortedOrigins.map(([origin, count]) =>
             html`<tr><td>${origin}</td><td>${count}</td></tr>`
         );
 
-        const detailTable = html`
-            <table class="origin-breakdown-table">
-                <tbody>${originRows}</tbody>
-            </table>
-        `;
-
-        const detailRow = html`
-            <tr class="category-detail-row">
-                <td colspan="2">${detailTable}</td>
+        return toggle`
+            <tr class="category-row" toggler>
+                <td class="category-cell">
+                    <span class="item-toggle">▶</span> ${category}
+                </td>
+                <td>${data.total}</td>
+            </tr>
+            <tr class="category-detail-row" toggled>
+                <td colspan="2">
+                    <table class="origin-breakdown-table">
+                        <tbody>${originRows}</tbody>
+                    </table>
+                </td>
             </tr>
         `;
-
-        rows.push(row);
-        rows.push(detailRow);
-
-        // Add click handler to toggle details
-        row.addEventListener('click', () => {
-            detailRow.classList.toggle('expanded');
-            toggle.classList.toggle('expanded');
-        });
     });
 
     return html`
@@ -274,27 +251,18 @@ function createCommandDescriptionSection(objects) {
     }
 
     const commandDivs = commandDescs.map(desc => {
-        const toggle = html`<span class="command-toggle">▶</span>`;
         const commandSequence = getCommandClassSequence(desc.command);
         const jsonText = JSON.stringify(desc.command, null, 2);
-        const header = html`
-            <div class="command-header">
+
+        return toggle`
+            <div class="command-header" toggler>
                 <div class="command-header-content"><strong>Command:</strong> ${commandSequence}</div>
-                ${toggle}
+                <span class="item-toggle">▶</span>
             </div>
-        `;
-        const content = html`
-            <div class="command-content">
+            <div class="command-content" toggled>
                 <pre class="command-json">${jsonText}</pre>
             </div>
         `;
-
-        header.addEventListener('click', () => {
-            content.classList.toggle('expanded');
-            toggle.classList.toggle('expanded');
-        });
-
-        return html`<div class="command-description">${header}${content}</div>`;
     });
 
     return html`<div class="command-description-section">${commandDivs}</div>`;

@@ -12,7 +12,6 @@
 export function html(strings, ...values) {
     // Create unique markers for each value
     // Use HTML comments for content (allowed everywhere) and text for attributes
-    const markers = values.map((_, i) => `__HTML_PLACEHOLDER_${i}__`);
     const commentMarkers = values.map((_, i) => `<!--__HTML_PLACEHOLDER_${i}__-->`);
 
     // Build the HTML string with comment markers
@@ -36,7 +35,7 @@ export function html(strings, ...values) {
         if (node.nodeType === Node.ELEMENT_NODE) {
             Array.from(node.attributes).forEach(attr => {
                 values.forEach((value, index) => {
-                    if (attr.value.includes(markers[index])) {
+                    if (attr.value.includes(commentMarkers[index])) {
                         let replacement;
                         if (value == null) {
                             replacement = '';
@@ -45,7 +44,7 @@ export function html(strings, ...values) {
                         } else {
                             replacement = String(value);
                         }
-                        attr.value = attr.value.replace(markers[index], replacement);
+                        attr.value = attr.value.replace(commentMarkers[index], replacement);
                     }
                 });
             });
@@ -97,4 +96,47 @@ export function html(strings, ...values) {
 
     // Return the first child if there's only one, otherwise return the fragment
     return fragment.childNodes.length === 1 ? fragment.firstChild : fragment;
+}
+
+/**
+ * Create a toggleable pair of elements. Mark elements with `toggler` and `toggled` attributes
+ * to indicate which element is clickable and which is toggled. These attributes are removed
+ * after the toggle behavior is set up.
+ *
+ * @example
+ * const pair = toggle`
+ *   <div class="header" toggler>
+ *     <span class="item-toggle">▶</span>
+ *     Title
+ *   </div>
+ *   <div class="content" toggled>Hidden content</div>
+ * `;
+ */
+export function toggle(strings, ...values) {
+    // Use html to create the structure
+    const fragment = html(strings, ...values);
+
+    // Find elements with toggler and toggled attributes
+    const togglerElement = fragment.querySelector('[toggler]');
+    const toggledElement = fragment.querySelector('[toggled]');
+
+    if (!togglerElement) {
+        throw new Error('toggle`` requires an element with the "toggler" attribute');
+    }
+    if (!toggledElement) {
+        throw new Error('toggle`` requires an element with the "toggled" attribute');
+    }
+
+    // Add click handler to the toggler element
+    togglerElement.addEventListener('click', () => {
+        toggledElement.classList.toggle('expanded');
+        togglerElement.classList.toggle('expanded');
+    });
+
+    // Remove the temporary attributes
+    togglerElement.removeAttribute('toggler');
+    toggledElement.removeAttribute('toggled');
+
+    // Return fragment containing all elements
+    return fragment;
 }
