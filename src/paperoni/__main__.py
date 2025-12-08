@@ -100,6 +100,10 @@ class TerminalFormatter(Formatter):
             term_display(thing, i)
 
 
+def norm_args(norm):
+    return {which: (which in norm) for which in ("author", "venue", "institution")}
+
+
 @dataclass
 class Productor:
     command: Annotated[
@@ -197,8 +201,8 @@ class Refine:
     # [alias: -t]
     tags: set[str] = field(default_factory=set)
 
-    # Whether to normalize the paper
-    norm: bool = False
+    # Fields to normalize
+    norm: set[Literal["author", "venue", "institution"]] = None
 
     # Whether to merge the results
     merge: bool = False
@@ -222,7 +226,8 @@ class Refine:
 
         if self.norm:
             results = [
-                normalize_paper(pinfo.paper, force=self.force) for pinfo in results
+                normalize_paper(pinfo.paper, force=self.force, **norm_args(self.norm))
+                for pinfo in results
             ]
 
         if self.merge:
@@ -357,8 +362,8 @@ class Work:
         # [alias: -t]
         tags: set[str] = field(default_factory=set)
 
-        # Whether to normalize the paper
-        norm: bool = False
+        # Fields to normalize
+        norm: set[Literal["author", "venue", "institution"]] = field(default_factory=set)
 
         # Number of refinement loops to perform for each paper
         loops: int = 1
@@ -393,7 +398,9 @@ class Work:
                     ):
                         send(refinement=pinfo)
                         if self.norm:
-                            pinfo.paper = normalize_paper(pinfo.paper, force=self.force)
+                            pinfo.paper = normalize_paper(
+                                pinfo.paper, **norm_args(self.norm), force=self.force
+                            )
                         sws.value.add(pinfo)
                         sws.score = work.focuses.score(sws.value)
 

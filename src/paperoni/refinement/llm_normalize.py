@@ -165,31 +165,42 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
     )
 
 
-def normalize_paper(paper: Paper, *, force: bool = False) -> Paper:
+def normalize_paper(
+    paper: Paper, *, author=True, venue=True, institution=True, force: bool = False
+) -> Paper:
+    norm_authors = author
+    norm_venues = venue
+    norm_institutions = institution
+
     for author in paper.authors:
-        for i, affiliation in enumerate(author.affiliations[:]):
-            affiliations = process_affiliations_prompt(affiliation, force)
-            if not affiliations:
-                logging.warning(f"LLM returned no affiliations from {affiliation.name}")
-                continue
-            if affiliations[0] != author.affiliations[i]:
-                author.affiliations[i] = affiliations[0]
-            author.affiliations.extend(affiliations[1:])
+        if norm_institutions:
+            for i, affiliation in enumerate(author.affiliations[:]):
+                affiliations = process_affiliations_prompt(affiliation, force)
+                if not affiliations:
+                    logging.warning(
+                        f"LLM returned no affiliations from {affiliation.name}"
+                    )
+                    continue
+                if affiliations[0] != author.affiliations[i]:
+                    author.affiliations[i] = affiliations[0]
+                author.affiliations.extend(affiliations[1:])
 
-        display_name = norm_author_display_name_prompt(author.display_name, force)
-        if display_name != author.display_name:
-            author.author.aliases = [author.author.name, *author.author.aliases]
-            author.author.name = author.display_name
-            author.display_name = display_name
+        if norm_authors:
+            display_name = norm_author_display_name_prompt(author.display_name, force)
+            if display_name != author.display_name:
+                author.author.aliases = [author.author.name, *author.author.aliases]
+                author.author.name = author.display_name
+                author.display_name = display_name
 
-    for release in paper.releases:
-        venue = norm_venue_prompt(release.venue, force)
-        if venue != release.venue:
-            if (
-                venue.name != release.venue.name
-                and release.venue.name not in venue.aliases
-            ):
-                venue.aliases = [release.venue.name, *venue.aliases]
-            release.venue = venue
+    if norm_venues:
+        for release in paper.releases:
+            venue = norm_venue_prompt(release.venue, force)
+            if venue != release.venue:
+                if (
+                    venue.name != release.venue.name
+                    and release.venue.name not in venue.aliases
+                ):
+                    venue.aliases = [release.venue.name, *venue.aliases]
+                release.venue = venue
 
     return paper
