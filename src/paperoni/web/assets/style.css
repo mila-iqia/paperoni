@@ -107,14 +107,14 @@ body {
     color: #444;
 }
 
-.error-toggle {
+.item-toggle {
     font-size: 12px;
     transition: transform 0.3s;
     display: inline-block;
     margin-left: 10px;
 }
 
-.error-toggle.expanded {
+.expanded .item-toggle {
     transform: rotate(90deg);
 }
 
@@ -264,16 +264,11 @@ body {
     align-items: center;
 }
 
-.category-toggle {
-    font-size: 12px;
-    transition: transform 0.3s;
-    display: inline-block;
+.category-cell .item-toggle {
+    margin-left: 0;
     margin-right: 5px;
 }
 
-.category-toggle.expanded {
-    transform: rotate(90deg);
-}
 
 .category-detail-row {
     display: none;
@@ -338,16 +333,6 @@ body {
     color: #333;
 }
 
-.command-toggle {
-    font-size: 12px;
-    transition: transform 0.3s;
-    display: inline-block;
-    margin-left: 10px;
-}
-
-.command-toggle.expanded {
-    transform: rotate(90deg);
-}
 
 .command-content {
     display: none;
