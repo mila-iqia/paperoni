@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"York University\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation 'Department of Physics and Astronomy, York University, Toronto, Canada' was normalized by removing the department-level information ('Department of Physics and Astronomy') and the location details ('Toronto, Canada') to isolate the parent institution's name.\",\n          \"quote\": \"Department of Physics and Astronomy, York University, Toronto, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"York University is a public research university, which falls under the 'academia' category.\",\n          \"quote\": \"York University\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The affiliation string explicitly includes 'Canada' as the country.\",\n          \"quote\": \"Department of Physics and Astronomy, York University, Toronto, Canada\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"York University\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation 'Department of Physics and Astronomy, York University, Toronto, Canada' was normalized by removing the department-level information ('Department of Physics and Astronomy') and the location details ('Toronto, Canada') to isolate the parent institution's name.\",\n          \"quote\": \"Department of Physics and Astronomy, York University, Toronto, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"York University is a public research university, which falls under the 'academia' category.\",\n          \"quote\": \"York University\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The affiliation string explicitly includes 'Canada' as the country.\",\n          \"quote\": \"Department of Physics and Astronomy, York University, Toronto, Canada\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 437,
+    "output_tokens": 941,
+    "total_tokens": 1378,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "York University",
+            "$comment": {
+              "reasoning": "The original affiliation 'Department of Physics and Astronomy, York University, Toronto, Canada' was normalized by removing the department-level information ('Department of Physics and Astronomy') and the location details ('Toronto, Canada') to isolate the parent institution's name.",
+              "quote": "Department of Physics and Astronomy, York University, Toronto, Canada"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "York University is a public research university, which falls under the 'academia' category.",
+              "quote": "York University"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "The affiliation string explicitly includes 'Canada' as the country.",
+              "quote": "Department of Physics and Astronomy, York University, Toronto, Canada"
+            }
+          }
+        }
+      ]
+    }
   }
 }

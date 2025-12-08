@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"York University\",\n        \"$comment\": {\n          \"reasoning\": \"The provided text 'Centre for Vision Research, York University, Toronto, Canada' mentions a specific research center ('Centre for Vision Research') which is part of a larger institution. The parent institution, 'York University', is the normalized affiliation name.\",\n          \"quote\": \"Centre for Vision Research, York University\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"York University is a public research university, which is an academic institution.\",\n          \"quote\": \"York University\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly mentioned at the end of the affiliation string.\",\n          \"quote\": \"Centre for Vision Research, York University, Toronto, Canada\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"York University\",\n        \"$comment\": {\n          \"reasoning\": \"The provided text 'Centre for Vision Research, York University, Toronto, Canada' mentions a specific research center ('Centre for Vision Research') which is part of a larger institution. The parent institution, 'York University', is the normalized affiliation name.\",\n          \"quote\": \"Centre for Vision Research, York University\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"York University is a public research university, which is an academic institution.\",\n          \"quote\": \"York University\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly mentioned at the end of the affiliation string.\",\n          \"quote\": \"Centre for Vision Research, York University, Toronto, Canada\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 436,
+    "output_tokens": 597,
+    "total_tokens": 1033,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "York University",
+            "$comment": {
+              "reasoning": "The provided text 'Centre for Vision Research, York University, Toronto, Canada' mentions a specific research center ('Centre for Vision Research') which is part of a larger institution. The parent institution, 'York University', is the normalized affiliation name.",
+              "quote": "Centre for Vision Research, York University"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "York University is a public research university, which is an academic institution.",
+              "quote": "York University"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "The country 'Canada' is explicitly mentioned at the end of the affiliation string.",
+              "quote": "Centre for Vision Research, York University, Toronto, Canada"
+            }
+          }
+        }
+      ]
+    }
   }
 }

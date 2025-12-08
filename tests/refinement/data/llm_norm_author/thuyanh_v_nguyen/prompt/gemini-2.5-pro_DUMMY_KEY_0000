@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Thuyanh V. Nguyen\",\n    \"$comment\": {\n      \"reasoning\": \"The provided author name is already in a standard, normalized format. The first name 'Thuyanh' and last name 'Nguyen' are properly capitalized. The middle initial 'V' is capitalized and followed by a period. No changes are required.\",\n      \"quote\": \"Thuyanh V. Nguyen\"\n    }\n  }\n}"
+            "inline_data": null,
+            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Thuyanh V. Nguyen\",\n    \"$comment\": {\n      \"reasoning\": \"The provided author name is already in a standard, normalized format. The first name 'Thuyanh' and last name 'Nguyen' are properly capitalized. The middle initial 'V' is capitalized and followed by a period. No changes are required.\",\n      \"quote\": \"Thuyanh V. Nguyen\"\n    }\n  }\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -75,6 +76,20 @@
       "$comment": {
         "reasoning": "The provided author name is already in a standard, normalized format. The first name 'Thuyanh' and last name 'Nguyen' are properly capitalized. The middle initial 'V' is capitalized and followed by a period. No changes are required.",
         "quote": "Thuyanh V. Nguyen"
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 469,
+    "output_tokens": 582,
+    "total_tokens": 1051,
+    "parsed": {
+      "normalized_author": {
+        "$value": "Thuyanh V. Nguyen",
+        "$comment": {
+          "reasoning": "The provided author name is already in a standard, normalized format. The first name 'Thuyanh' and last name 'Nguyen' are properly capitalized. The middle initial 'V' is capitalized and followed by a period. No changes are required.",
+          "quote": "Thuyanh V. Nguyen"
+        }
       }
     }
   }

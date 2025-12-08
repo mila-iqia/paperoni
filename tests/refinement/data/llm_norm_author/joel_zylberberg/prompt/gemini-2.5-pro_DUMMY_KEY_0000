@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Joel Zylberberg\",\n    \"$comment\": {\n      \"reasoning\": \"The provided author name 'Joel Zylberberg' is already in the correct format. It follows standard title case capitalization and does not contain initials, hyphens, or other elements that would require normalization. Therefore, the name is returned as is.\",\n      \"quote\": \"Joel Zylberberg\"\n    }\n  }\n}"
+            "inline_data": null,
+            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Joel Zylberberg\",\n    \"$comment\": {\n      \"reasoning\": \"The provided author name 'Joel Zylberberg' is already in the correct format. It follows standard title case capitalization and does not contain initials, hyphens, or other elements that would require normalization. Therefore, the name is returned as is.\",\n      \"quote\": \"Joel Zylberberg\"\n    }\n  }\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -75,6 +76,20 @@
       "$comment": {
         "reasoning": "The provided author name 'Joel Zylberberg' is already in the correct format. It follows standard title case capitalization and does not contain initials, hyphens, or other elements that would require normalization. Therefore, the name is returned as is.",
         "quote": "Joel Zylberberg"
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 468,
+    "output_tokens": 385,
+    "total_tokens": 853,
+    "parsed": {
+      "normalized_author": {
+        "$value": "Joel Zylberberg",
+        "$comment": {
+          "reasoning": "The provided author name 'Joel Zylberberg' is already in the correct format. It follows standard title case capitalization and does not contain initials, hyphens, or other elements that would require normalization. Therefore, the name is returned as is.",
+          "quote": "Joel Zylberberg"
+        }
       }
     }
   }

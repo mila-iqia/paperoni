@@ -20,10 +20,11 @@
       "content": {
         "parts": [
           {
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
             "file_data": null,
+            "function_call": null,
             "function_response": null,
             "inline_data": null,
             "text": "{\n  \"name\": {\n    \"$value\": \"IEEE/CVF Conference on Computer Vision and Pattern Recognition\",\n    \"$comment\": {\n      \"reasoning\": \"The full official name of the conference is extracted from the input string. The year and the short name in parentheses are removed, and the name is normalized to Title Case.\",\n      \"quote\": \"IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)\"\n    }\n  },\n  \"short_name\": {\n    \"$value\": \"CVPR\",\n    \"$comment\": {\n      \"reasoning\": \"The short name for the conference is explicitly provided in parentheses at the end of the input string.\",\n      \"quote\": \"(CVPR)\"\n    }\n  },\n  \"numeric_marker\": {\n    \"$value\": \"\",\n    \"$comment\": {\n      \"reasoning\": \"The input string does not contain any numeric marker indicating an edition, volume, or index. The number present is the year, which is handled in a separate field.\",\n      \"quote\": \"2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)\"\n    }\n  },\n  \"year\": {\n    \"$value\": \"2024\",\n    \"$comment\": {\n      \"reasoning\": \"The year is explicitly mentioned at the beginning of the input string.\",\n      \"quote\": \"2024\"\n    }\n  }\n}",
@@ -96,6 +97,41 @@
       "$comment": {
         "reasoning": "The year is explicitly mentioned at the beginning of the input string.",
         "quote": "2024"
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 484,
+    "output_tokens": 1040,
+    "total_tokens": 1524,
+    "parsed": {
+      "name": {
+        "$value": "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+        "$comment": {
+          "reasoning": "The full official name of the conference is extracted from the input string. The year and the short name in parentheses are removed, and the name is normalized to Title Case.",
+          "quote": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)"
+        }
+      },
+      "short_name": {
+        "$value": "CVPR",
+        "$comment": {
+          "reasoning": "The short name for the conference is explicitly provided in parentheses at the end of the input string.",
+          "quote": "(CVPR)"
+        }
+      },
+      "numeric_marker": {
+        "$value": "",
+        "$comment": {
+          "reasoning": "The input string does not contain any numeric marker indicating an edition, volume, or index. The number present is the year, which is handled in a separate field.",
+          "quote": "2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)"
+        }
+      },
+      "year": {
+        "$value": "2024",
+        "$comment": {
+          "reasoning": "The year is explicitly mentioned at the beginning of the input string.",
+          "quote": "2024"
+        }
       }
     }
   }

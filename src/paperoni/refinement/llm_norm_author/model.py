@@ -3,7 +3,8 @@ from pathlib import Path
 
 import gifnoc
 
-from ..llm_common import Explained, PromptConfig
+from ...prompt import PromptConfig
+from ...prompt_utils import Explained
 
 
 @dataclass
@@ -14,6 +15,7 @@ class Analysis:
 
 DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "system-prompt.md").read_text()
 FIRST_MESSAGE = """### The author name to normalize:
+
 {}"""
 
 llm_config: PromptConfig = gifnoc.define(

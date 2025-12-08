@@ -9,11 +9,11 @@ from ..config import config
 from ..model import DatePrecision
 from ..model.classes import Institution, InstitutionCategory, Paper, Venue
 from ..prompt import ParsedResponseSerializer
+from ..prompt_utils import prompt_wrapper
 from ..utils import normalize_institution, normalize_name, normalize_venue
 from .llm_norm_author import model as norm_author_model
 from .llm_norm_venues import model as norm_venue_model
 from .llm_process_affiliation import model as process_affiliation_model
-from .llm_utils import prompt_wrapper
 
 
 def process_affiliations_prompt(
@@ -28,14 +28,13 @@ def process_affiliations_prompt(
     prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
         serializer=ParsedResponseSerializer[process_affiliation_model.Analysis],
         cache_dir=cache_dir / "prompt",
-        make_key=config.refine.prompt._make_key,
         prefix=config.refine.prompt.model,
         index=0,
     )
     analysis: process_affiliation_model.Analysis = prompt_wrapper(
         prompt,
         force=force,
-        input=affiliation.name,
+        send_input=affiliation.name,
         client=config.refine.prompt.client,
         messages=[
             Message(
@@ -50,7 +49,7 @@ def process_affiliations_prompt(
         ],
         model=config.refine.prompt.model,
         structured_model=process_affiliation_model.Analysis,
-    ).parsed
+    )._.parsed
 
     return [
         Institution(
@@ -81,14 +80,13 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
     prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
         serializer=ParsedResponseSerializer[norm_author_model.Analysis],
         cache_dir=cache_dir / "prompt",
-        make_key=config.refine.prompt._make_key,
         prefix=config.refine.prompt.model,
         index=0,
     )
     analysis: norm_author_model.Analysis = prompt_wrapper(
         prompt,
         force=force,
-        input=display_name,
+        send_input=display_name,
         client=config.refine.prompt.client,
         messages=[
             Message(
@@ -103,7 +101,7 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
         ],
         model=config.refine.prompt.model,
         structured_model=norm_author_model.Analysis,
-    ).parsed
+    )._.parsed
 
     return str(analysis.normalized_author)
 
@@ -118,14 +116,13 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
     prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
         serializer=ParsedResponseSerializer[norm_venue_model.Analysis],
         cache_dir=cache_dir / "prompt",
-        make_key=config.refine.prompt._make_key,
         prefix=config.refine.prompt.model,
         index=0,
     )
     analysis: norm_venue_model.Analysis = prompt_wrapper(
         prompt,
         force=force,
-        input=venue.name,
+        send_input=venue.name,
         client=config.refine.prompt.client,
         messages=[
             Message(
@@ -140,7 +137,7 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
         ],
         model=config.refine.prompt.model,
         structured_model=norm_venue_model.Analysis,
-    ).parsed
+    )._.parsed
 
     year = {}
     if analysis.year:

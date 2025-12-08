@@ -1,0 +1,167 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Tue, 20 Jan 2026 18:56:40 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=12156",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "media_resolution": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "file_data": null,
+            "function_call": null,
+            "function_response": null,
+            "inline_data": null,
+            "text": "{\n  \"paper\": {\n    \"title\": \"mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks\",\n    \"authors\": [\n      {\n        \"display_name\": \"Luel Hagos Beyene\"\n      },\n      {\n        \"display_name\": \"Vivek Verma\"\n      },\n      {\n        \"display_name\": \"Min Ma\"\n      },\n      {\n        \"display_name\": \"Jesujoba O. Alabi\"\n      },\n      {\n        \"display_name\": \"Fabian David Schmidt\"\n      },\n      {\n        \"display_name\": \"Joyce Nakatumba-Nabende\"\n      },\n      {\n        \"display_name\": \"David Ifeoluwa Adelani\"\n      }\n    ],\n    \"releases\": [\n      {\n        \"venue\": {\n          \"type\": \"workshop\",\n          \"name\": \"IEEE Workshop on Automatic Speech Recognition and Understanding\",\n          \"series\": \"ASRU\",\n          \"date\": \"2025\"\n        }\n      }\n    ],\n    \"topics\": [],\n    \"$comment\": {\n      \"reasoning\": \"The citation is in a plain text format. The title is the initial part of the string, followed by the author list. The authors are a comma-separated list of names ending with a period. The publication venue is indicated by 'In ASRU, 2025'. 'ASRU' is a well-known acronym for the 'IEEE Workshop on Automatic Speech Recognition and Understanding', so the type is 'workshop', the name is the full expanded name, and the series is the acronym. The year of publication is clearly stated as '2025'. No page numbers or volume are provided.\",\n      \"quote\": \"mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks  Luel Hagos Beyene, Vivek Verma, Min Ma, Jesujoba O. Alabi, Fabian David Schmidt, Joyce Nakatumba-Nabende, David Ifeoluwa Adelani . In ASRU, 2025.\"\n    }\n  }\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null,
+      "url_context_metadata": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "6M9vaabRILPf_uMPsLSqiAU",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 475,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 1024,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 1024
+      }
+    ],
+    "thoughts_token_count": 1035,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 2534,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "paper": {
+      "title": "mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks",
+      "authors": [
+        {
+          "display_name": "Luel Hagos Beyene"
+        },
+        {
+          "display_name": "Vivek Verma"
+        },
+        {
+          "display_name": "Min Ma"
+        },
+        {
+          "display_name": "Jesujoba O. Alabi"
+        },
+        {
+          "display_name": "Fabian David Schmidt"
+        },
+        {
+          "display_name": "Joyce Nakatumba-Nabende"
+        },
+        {
+          "display_name": "David Ifeoluwa Adelani"
+        }
+      ],
+      "releases": [
+        {
+          "venue": {
+            "type": "workshop",
+            "name": "IEEE Workshop on Automatic Speech Recognition and Understanding",
+            "series": "ASRU",
+            "date": "2025"
+          }
+        }
+      ],
+      "topics": [],
+      "$comment": {
+        "reasoning": "The citation is in a plain text format. The title is the initial part of the string, followed by the author list. The authors are a comma-separated list of names ending with a period. The publication venue is indicated by 'In ASRU, 2025'. 'ASRU' is a well-known acronym for the 'IEEE Workshop on Automatic Speech Recognition and Understanding', so the type is 'workshop', the name is the full expanded name, and the series is the acronym. The year of publication is clearly stated as '2025'. No page numbers or volume are provided.",
+        "quote": "mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks  Luel Hagos Beyene, Vivek Verma, Min Ma, Jesujoba O. Alabi, Fabian David Schmidt, Joyce Nakatumba-Nabende, David Ifeoluwa Adelani . In ASRU, 2025."
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 1024,
+    "output_tokens": 1510,
+    "total_tokens": 2534,
+    "parsed": {
+      "paper": {
+        "title": "mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks",
+        "authors": [
+          {
+            "display_name": "Luel Hagos Beyene"
+          },
+          {
+            "display_name": "Vivek Verma"
+          },
+          {
+            "display_name": "Min Ma"
+          },
+          {
+            "display_name": "Jesujoba O. Alabi"
+          },
+          {
+            "display_name": "Fabian David Schmidt"
+          },
+          {
+            "display_name": "Joyce Nakatumba-Nabende"
+          },
+          {
+            "display_name": "David Ifeoluwa Adelani"
+          }
+        ],
+        "releases": [
+          {
+            "venue": {
+              "type": "workshop",
+              "name": "IEEE Workshop on Automatic Speech Recognition and Understanding",
+              "series": "ASRU",
+              "date": "2025",
+              "volume": "",
+              "publisher": ""
+            },
+            "pages": ""
+          }
+        ],
+        "topics": [],
+        "$comment": {
+          "reasoning": "The citation is in a plain text format. The title is the initial part of the string, followed by the author list. The authors are a comma-separated list of names ending with a period. The publication venue is indicated by 'In ASRU, 2025'. 'ASRU' is a well-known acronym for the 'IEEE Workshop on Automatic Speech Recognition and Understanding', so the type is 'workshop', the name is the full expanded name, and the series is the acronym. The year of publication is clearly stated as '2025'. No page numbers or volume are provided.",
+          "quote": "mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks  Luel Hagos Beyene, Vivek Verma, Min Ma, Jesujoba O. Alabi, Fabian David Schmidt, Joyce Nakatumba-Nabende, David Ifeoluwa Adelani . In ASRU, 2025."
+        }
+      }
+    }
+  }
+}

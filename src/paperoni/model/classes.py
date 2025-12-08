@@ -60,21 +60,22 @@ class DatePrecision(int, Enum):
                 }
             case str() as year if re.match("^[0-9]{4}$", date):
                 return {
-                    "date": datetime(year, 1, 1).date(),
+                    "date": datetime(int(year), 1, 1).date(),
                     "date_precision": DatePrecision.year,
                 }
-            case str() if m := re.match("^(....)-(..)-(..).*", date):
+            case str() if m := re.match("^(....)-(..)(-..)?.*", date):
                 match m.groups():
                     case (year, month, day):
+                        day = day and day[1:] or "01"
                         if infer_precision and day == "01":
                             if month == "01":
                                 precision = DatePrecision.year
                             else:
-                                precision = DatePrecision.day
+                                precision = DatePrecision.month
                         else:
                             precision = DatePrecision.day
                         return {
-                            "date": datetime(year, month, day).date(),
+                            "date": datetime(int(year), int(month), int(day)).date(),
                             "date_precision": precision,
                         }
                     case _:  # pragma: no cover

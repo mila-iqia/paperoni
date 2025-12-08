@@ -66,6 +66,7 @@ miniconf = "paperoni.discovery.miniconf:MiniConf"
 pmlr = "paperoni.discovery.pmlr:PMLR"
 jmlr = "paperoni.discovery.jmlr:JMLR"
 synth = "paperoni.discovery.synth:Synth"
+scrape = "paperoni.discovery.scrape:Scrape"
 
 [project.entry-points."outsight.fixtures"]
 dash = "paperoni.dash:Dash"
