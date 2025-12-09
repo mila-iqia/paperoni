@@ -940,7 +940,18 @@ def enable_rich_log():
             async for event in merge(
                 group("Discovered", sent["discover"], _discover_origin),
                 group("Prompts", sent["prompt"], lambda p: p),
-                group("Tokens", sent["prompt", "tokens"], lambda p: p[0], lambda p: p[1]),
+                group(
+                    "Input tokens",
+                    sent["prompt", "input_tokens"],
+                    lambda p: p[0],
+                    lambda p: p[1],
+                ),
+                group(
+                    "Output tokens",
+                    sent["prompt", "output_tokens"],
+                    lambda p: p[0],
+                    lambda p: p[1],
+                ),
                 progcount("Attempted refinements", sent["to_refine"]),
                 progcount("Successful refinements", sent["refinement"]),
                 progcount("Added to workset", sent["workset_added"]),
