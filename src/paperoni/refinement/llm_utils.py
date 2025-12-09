@@ -20,6 +20,9 @@ def prompt_wrapper(prompt: DiskStoreFunc, *, force=False, input, **kwargs):
                 prompt=structured_model.__module__,
                 model=model,
                 input=input,
+                input_tokens=value.usage_metadata.prompt_token_count,
+                output_tokens=value.usage_metadata.candidates_token_count
+                + value.usage_metadata.thoughts_token_count,
                 tokens=value.usage_metadata.total_token_count,
             )
         return value
