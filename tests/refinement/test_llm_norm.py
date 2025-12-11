@@ -11,7 +11,7 @@ from paperoni.refinement.llm_normalize import normalize_paper
 from tests.utils import check_papers
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def paper_info():
     # Prepared with:
     # paperoni refine --link "doi:10.1109/cvpr52733.2024.01307" --norm

@@ -10,7 +10,7 @@ log_content = '{"event": "test", "timestamp": "2024-01-01T00:00:00"}'
 
 
 @pytest.fixture
-def logs_dir(tmp_path):
+def logs_dir():
     logs_dir = config.data_path / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     yield logs_dir
