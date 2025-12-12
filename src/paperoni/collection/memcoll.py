@@ -82,6 +82,9 @@ class MemCollection(PaperCollection):
     def find_paper(self, paper: Paper) -> CollectionPaper | None:
         return self._finder.find(paper)
 
+    def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+        return self._finder.by_id.get(paper_id)
+
     def commit(self) -> None:
         # MemCollection, nothing to commit
         pass
@@ -95,6 +98,8 @@ class MemCollection(PaperCollection):
 
     def search(
         self,
+        # Paper ID
+        paper_id: int | None = None,
         # Title of the paper
         title: str = None,
         # Institution of an author
@@ -106,6 +111,10 @@ class MemCollection(PaperCollection):
         # End date to consider
         end_date: date = None,
     ) -> Generator[CollectionPaper, None, None]:
+        if paper_id is not None:
+            yield self.find_by_id(paper_id)
+            return
+
         title = title and normalize_title(title)
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)

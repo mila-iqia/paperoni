@@ -6,10 +6,10 @@ import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.model.classes import (
+    CollectionPaper,
     DatePrecision,
     Institution,
     Link,
-    Paper,
     PaperAuthor,
     Release,
     Venue,
@@ -21,7 +21,8 @@ from paperoni.model.classes import (
 def mock_papers():
     """Create mock papers for testing."""
     yield [
-        Paper(
+        CollectionPaper(
+            id=1,
             title="Test Paper 1",
             abstract="This is a test paper",
             authors=[
@@ -45,7 +46,8 @@ def mock_papers():
             ],
             links=[Link(type="doi", link="10.1000/test1")],
         ),
-        Paper(
+        CollectionPaper(
+            id=2,
             title="Test Paper 2",
             abstract="This is another test paper",
             authors=[
@@ -69,7 +71,8 @@ def mock_papers():
             ],
             links=[Link(type="doi", link="10.1000/test2")],
         ),
-        Paper(
+        CollectionPaper(
+            id=3,
             title="Machine Learning Paper",
             abstract="A paper about machine learning",
             authors=[

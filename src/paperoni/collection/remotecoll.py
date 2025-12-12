@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from typing import Iterable
 
+from fastapi import HTTPException
 from serieux import deserialize
 from serieux.features.encrypt import Secret
 
@@ -37,6 +38,21 @@ class RemoteCollection(PaperCollection):
     def find_paper(self, paper: Paper) -> CollectionPaper | None:
         raise NotImplementedError()
 
+    def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+        url = f"{self.endpoint}/paper/{paper_id}"
+        try:
+            resp = self.fetch.read(
+                url,
+                format="json",
+                cache_into=None,
+                headers=self.headers,
+            )
+            return deserialize(CollectionPaper, resp)
+        except HTTPException as e:
+            if e.status_code == 404:
+                return None
+            raise
+
     def commit(self) -> None:
         raise NotImplementedError()
 
@@ -45,6 +61,8 @@ class RemoteCollection(PaperCollection):
 
     def search(
         self,
+        # Paper ID
+        paper_id: int = None,
         # Title of the paper
         title: str = None,
         # Institution of an author
@@ -57,6 +75,8 @@ class RemoteCollection(PaperCollection):
         end_date: date = None,
     ):
         params = {}
+        if paper_id:
+            params["paper_id"] = paper_id
         if title:
             params["title"] = title
         if institution:
