@@ -153,12 +153,6 @@ class Link:
 
 
 @dataclass
-class Flag:
-    flag_name: str
-    flag: bool
-
-
-@dataclass
 class Topic:
     name: str
 
@@ -216,7 +210,7 @@ class Paper(Base):
     releases: list[Release] = field(default_factory=list)
     topics: list[Topic] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
-    flags: list[Flag] = field(default_factory=list)
+    flags: set[str] = field(default_factory=set)
 
 
 @dataclass
