@@ -1,7 +1,6 @@
 from .classes import (
     Author,
     DatePrecision,
-    Flag,
     Institution,
     InstitutionCategory,
     Link,
@@ -20,7 +19,6 @@ from .merge import PaperWorkingSet
 __all__ = [
     "Author",
     "DatePrecision",
-    "Flag",
     "Institution",
     "InstitutionCategory",
     "Link",
