@@ -21,7 +21,7 @@ class Finder[T]:
             for lnk in self.links_finder(entry):
                 self.by_link[lnk] = entry
             self.by_title[normalize_title(self.title_finder(entry))] = entry
-            if i := self.id_finder(entry):
+            if (i := self.id_finder(entry)) is not None:
                 self.by_id[i] = entry
 
     def find(self, p: Paper):
