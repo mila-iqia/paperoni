@@ -547,6 +547,9 @@ class Coll:
     class Search:
         """Search the paper collection."""
 
+        # Paper ID
+        paper_id: int = None
+
         # Title of the paper
         title: str = None
 
@@ -564,7 +567,10 @@ class Coll:
         def run(self, coll: "Coll") -> list[Paper]:
             papers = list(
                 coll.collection.search(
-                    title=self.title, author=self.author, institution=self.institution
+                    paper_id=self.paper_id,
+                    title=self.title,
+                    author=self.author,
+                    institution=self.institution,
                 )
             )
             self.format(papers)

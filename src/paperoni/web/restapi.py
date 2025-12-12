@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from types import NoneType
 from typing import Generator, Iterable, Literal
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from serieux import auto_singleton, deserialize, serialize
 
@@ -17,7 +17,7 @@ from ..__main__ import Coll, Focus, Formatter, Fulltext, Work
 from ..config import config
 from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
-from ..model.classes import Paper, PaperInfo
+from ..model.classes import CollectionPaper, Paper, PaperInfo
 from ..model.focus import Focuses, Scored
 from ..utils import url_to_id
 
@@ -106,7 +106,7 @@ class SearchRequest(PagingMixin, Coll.Search):
 class SearchResponse(PagingResponseMixin):
     """Response model for paper search."""
 
-    results: list[Paper]
+    results: list[CollectionPaper]
 
 
 @dataclass
@@ -310,6 +310,21 @@ def install_api(app) -> FastAPI:
         return SearchResponse(
             results=results, count=count, next_offset=next_offset, total=total
         )
+
+    @app.get(
+        f"{prefix}/paper/{{paper_id}}",
+        response_model=CollectionPaper,
+        dependencies=[Depends(hascap("search"))],
+    )
+    async def get_paper(paper_id: int):
+        """Get a single paper by ID."""
+        coll = Coll(command=None)
+        paper = coll.collection.find_by_id(paper_id)
+        if paper is None:
+            raise HTTPException(
+                status_code=404, detail=f"Paper with ID {paper_id} not found"
+            )
+        return paper
 
     @app.post(f"{prefix}/work/add", response_model=AddResponse)
     async def work_add_papers(request: AddRequest, user: str = Depends(hascap("admin"))):

@@ -31,6 +31,9 @@ class PaperCollection:
     def find_paper(self, paper: Paper) -> CollectionPaper | None:
         raise NotImplementedError()
 
+    def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+        raise NotImplementedError()
+
     def commit(self) -> None:
         raise NotImplementedError()
 
@@ -39,6 +42,8 @@ class PaperCollection:
 
     def search(
         self,
+        # Paper ID
+        paper_id: str = None,
         # Title of the paper
         title: str = None,
         # Institution of an author

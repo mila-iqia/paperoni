@@ -269,6 +269,12 @@ class MongoCollection(PaperCollection):
 
         return deserialize(MongoPaper, doc) if doc else None
 
+    def find_by_id(self, paper_id: int) -> MongoPaper | None:
+        """Find a paper in the collection by id."""
+        self._ensure_connection()
+        doc = self._collection.find_one({"_id": ObjectId(paper_id)})
+        return deserialize(MongoPaper, doc) if doc else None
+
     def drop(self) -> None:
         """Drop the collection."""
         self._ensure_connection()
@@ -280,6 +286,7 @@ class MongoCollection(PaperCollection):
 
     def search(
         self,
+        paper_id: int = None,
         title: str = None,
         institution: str = None,
         author: str = None,
@@ -291,6 +298,9 @@ class MongoCollection(PaperCollection):
         title = title and normalize_title(title)
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
+
+        if paper_id:
+            query["id"] = paper_id
 
         if title:
             query["_norm_title"] = {"$regex": f".*{title}.*", "$options": "i"}
@@ -446,8 +456,15 @@ class MongoCollectionAsync(MongoCollection):
 
         return deserialize(MongoPaper, doc) if doc else None
 
+    async def find_by_id(self, paper_id: int) -> MongoPaper | None:
+        """Find a paper in the collection by id."""
+        await self._ensure_connection()
+        doc = await self._collection.find_one({"_id": ObjectId(paper_id)})
+        return deserialize(MongoPaper, doc) if doc else None
+
     async def search(
         self,
+        paper_id: str = None,
         title: str = None,
         institution: str = None,
         author: str = None,
@@ -459,6 +476,9 @@ class MongoCollectionAsync(MongoCollection):
         title = title and normalize_title(title)
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
+
+        if paper_id:
+            query["id"] = paper_id
 
         if title:
             query["_norm_title"] = {"$regex": f".*{title}.*", "$options": "i"}
