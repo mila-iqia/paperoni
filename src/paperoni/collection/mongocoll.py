@@ -197,6 +197,9 @@ class MongoCollection(PaperCollection):
         # Index on release dates for fast date-based searches
         self._collection.create_index("releases.venue.date")
 
+        # Index on flags for fast flag-based searches
+        self._collection.create_index("flags")
+
         # Index on exclusions
         self._exclusions.create_index("link", unique=True)
 
@@ -306,6 +309,8 @@ class MongoCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
     ) -> Generator[MongoPaper, None, None]:
         """Search for papers in the collection."""
         self._ensure_connection()
@@ -351,6 +356,23 @@ class MongoCollection(PaperCollection):
 
             # Match papers where at least one release date is in the range
             query["releases.venue.date"] = date_query
+
+        # Flag filtering
+        if include_flags:
+            # All flags in include_flags must be present
+            query["flags"] = {"$all": list(include_flags)}
+
+        if exclude_flags:
+            # None of the flags in exclude_flags should be present
+            if "flags" in query:
+                # If we already have a flags query from include_flags, combine them
+                query["$and"] = [
+                    {"flags": query["flags"]},
+                    {"flags": {"$nin": list(exclude_flags)}},
+                ]
+                del query["flags"]
+            else:
+                query["flags"] = {"$nin": list(exclude_flags)}
 
         if institution:
             query["authors.affiliations._norm_name"] = {
@@ -417,6 +439,9 @@ class MongoCollectionAsync(MongoCollection):
 
         # Index on release dates for fast date-based searches
         await self._collection.create_index("releases.venue.date")
+
+        # Index on flags for fast flag-based searches
+        await self._collection.create_index("flags")
 
         # Index on exclusions
         await self._exclusions.create_index("link", unique=True)
@@ -520,6 +545,8 @@ class MongoCollectionAsync(MongoCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
     ) -> Generator[MongoPaper, None, None]:
         """Search for papers in the collection."""
         await self._ensure_connection()
@@ -565,6 +592,23 @@ class MongoCollectionAsync(MongoCollection):
 
             # Match papers where at least one release date is in the range
             query["releases.venue.date"] = date_query
+
+        # Flag filtering
+        if include_flags:
+            # All flags in include_flags must be present
+            query["flags"] = {"$all": list(include_flags)}
+
+        if exclude_flags:
+            # None of the flags in exclude_flags should be present
+            if "flags" in query:
+                # If we already have a flags query from include_flags, combine them
+                query["$and"] = [
+                    {"flags": query["flags"]},
+                    {"flags": {"$nin": list(exclude_flags)}},
+                ]
+                del query["flags"]
+            else:
+                query["flags"] = {"$nin": list(exclude_flags)}
 
         if institution:
             query["authors.affiliations._norm_name"] = {

@@ -75,6 +75,10 @@ class RemoteCollection(PaperCollection):
         start_date: date = None,
         # End date to consider
         end_date: date = None,
+        # Flags that must be True
+        include_flags: list[str] = None,
+        # Flags that must be False
+        exclude_flags: list[str] = None,
     ):
         params = {}
         if paper_id:
@@ -91,6 +95,10 @@ class RemoteCollection(PaperCollection):
             params["start_date"] = start_date.isoformat()
         if end_date:
             params["end_date"] = end_date.isoformat()
+        if include_flags:
+            params["include_flags"] = ",".join(include_flags)
+        if exclude_flags:
+            params["exclude_flags"] = ",".join(exclude_flags)
         url = f"{self.endpoint}/search"
         offset = 0
         while True:

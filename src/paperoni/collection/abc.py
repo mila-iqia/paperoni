@@ -56,6 +56,10 @@ class PaperCollection:
         start_date: date = None,
         # End date to consider
         end_date: date = None,
+        # Flags that must be True
+        include_flags: list[str] = None,
+        # Flags that must be False
+        exclude_flags: list[str] = None,
     ) -> Iterable[CollectionPaper]:
         raise NotImplementedError()
 

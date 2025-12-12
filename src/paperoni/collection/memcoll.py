@@ -117,6 +117,10 @@ class MemCollection(PaperCollection):
         start_date: date = None,
         # End date to consider
         end_date: date = None,
+        # Flags that must be present
+        include_flags: list[str] = None,
+        # Flags that must not be present
+        exclude_flags: list[str] = None,
     ) -> Generator[CollectionPaper, None, None]:
         if paper_id is not None:
             yield self.find_by_id(paper_id)
@@ -138,6 +142,10 @@ class MemCollection(PaperCollection):
                 for a in p.authors
                 for aff in a.affiliations
             ):
+                continue
+            if include_flags and (set(include_flags) - p.flags):
+                continue
+            if exclude_flags and (set(exclude_flags) & p.flags):
                 continue
             matching_releases = p.releases
             if venue:

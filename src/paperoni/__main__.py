@@ -573,10 +573,15 @@ class Coll:
         # [alias --end]
         end_date: date = None
 
+        # Flag search
+        # [alias: -f]
+        flags: set[str] = None
+
         # Output format
         format: Formatter = TerminalFormatter
 
         def run(self, coll: "Coll") -> list[Paper]:
+            flags = set() if self.flags is None else self.flags
             papers = list(
                 coll.collection.search(
                     paper_id=self.paper_id,
@@ -586,6 +591,8 @@ class Coll:
                     venue=self.venue,
                     start_date=self.start_date,
                     end_date=self.end_date,
+                    include_flags={f for f in flags if not f.startswith("~")},
+                    exclude_flags={f for f in flags if f.startswith("~")},
                 )
             )
             self.format(papers)
