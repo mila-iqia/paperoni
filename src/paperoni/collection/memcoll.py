@@ -3,7 +3,12 @@ from datetime import date, datetime
 from typing import Generator, Iterable
 
 from ..model.classes import CollectionMixin, CollectionPaper, Paper
-from ..utils import normalize_institution, normalize_name, normalize_title
+from ..utils import (
+    normalize_institution,
+    normalize_name,
+    normalize_title,
+    normalize_venue,
+)
 from .abc import PaperCollection, _id_types
 from .finder import Finder
 
@@ -106,6 +111,8 @@ class MemCollection(PaperCollection):
         institution: str = None,
         # Author of the paper
         author: str = None,
+        # Venue name (long or short)
+        venue: str = None,
         # Start date to consider
         start_date: date = None,
         # End date to consider
@@ -118,6 +125,7 @@ class MemCollection(PaperCollection):
         title = title and normalize_title(title)
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
+        venue = venue and normalize_venue(venue)
         for p in self._papers:
             if title and title not in normalize_title(p.title):
                 continue
@@ -131,11 +139,32 @@ class MemCollection(PaperCollection):
                 for aff in a.affiliations
             ):
                 continue
+            matching_releases = p.releases
+            if venue:
+                matching_releases = [
+                    release
+                    for release in p.releases
+                    if (
+                        venue in normalize_venue(release.venue.name)
+                        or (
+                            release.venue.short_name
+                            and venue in normalize_venue(release.venue.short_name)
+                        )
+                        or any(
+                            venue in normalize_venue(alias)
+                            for alias in release.venue.aliases
+                        )
+                    )
+                ]
+                if not matching_releases:
+                    continue
             if start_date and all(
-                release.venue.date < start_date for release in p.releases
+                release.venue.date < start_date for release in matching_releases
             ):
                 continue
-            if end_date and all(end_date < release.venue.date for release in p.releases):
+            if end_date and all(
+                end_date < release.venue.date for release in matching_releases
+            ):
                 continue
             yield p
 

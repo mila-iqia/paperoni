@@ -50,6 +50,8 @@ class PaperCollection:
         institution: str = None,
         # Author of the paper
         author: str = None,
+        # Venue name (long or short)
+        venue: str = None,
         # Start date to consider
         start_date: date = None,
         # End date to consider
