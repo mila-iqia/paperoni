@@ -8,7 +8,7 @@ import sys
 import time
 from collections import Counter
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from functools import cached_property
 from pathlib import Path
 from typing import Annotated, Any, Generator, Literal
@@ -561,6 +561,18 @@ class Coll:
         # [alias: -i]
         institution: str = None
 
+        # Venue name (long or short)
+        # [alias: -v]
+        venue: str = None
+
+        # Start date (YYYY-MM-DD)
+        # [alias --start]
+        start_date: date = None
+
+        # End date (YYYY-MM-DD)
+        # [alias --end]
+        end_date: date = None
+
         # Output format
         format: Formatter = TerminalFormatter
 
@@ -571,6 +583,9 @@ class Coll:
                     title=self.title,
                     author=self.author,
                     institution=self.institution,
+                    venue=self.venue,
+                    start_date=self.start_date,
+                    end_date=self.end_date,
                 )
             )
             self.format(papers)

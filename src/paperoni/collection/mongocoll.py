@@ -1,5 +1,5 @@
 from dataclasses import field
-from datetime import datetime
+from datetime import date, datetime
 from typing import Generator, Iterable, Union
 
 import pymongo
@@ -23,7 +23,12 @@ from ..model.classes import (
     PaperAuthor,
     dataclass,
 )
-from ..utils import normalize_institution, normalize_name, normalize_title
+from ..utils import (
+    normalize_institution,
+    normalize_name,
+    normalize_title,
+    normalize_venue,
+)
 from .abc import PaperCollection, _id_types
 
 
@@ -184,6 +189,14 @@ class MongoCollection(PaperCollection):
         # Index on institution names for fast institution searches
         self._collection.create_index("authors.affiliations._norm_name")
 
+        # Index on venue names for fast venue searches
+        self._collection.create_index("releases.venue.name")
+        self._collection.create_index("releases.venue.short_name")
+        self._collection.create_index("releases.venue.aliases")
+
+        # Index on release dates for fast date-based searches
+        self._collection.create_index("releases.venue.date")
+
         # Index on exclusions
         self._exclusions.create_index("link", unique=True)
 
@@ -290,6 +303,9 @@ class MongoCollection(PaperCollection):
         title: str = None,
         institution: str = None,
         author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
     ) -> Generator[MongoPaper, None, None]:
         """Search for papers in the collection."""
         self._ensure_connection()
@@ -298,6 +314,7 @@ class MongoCollection(PaperCollection):
         title = title and normalize_title(title)
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
+        venue = venue and normalize_venue(venue)
 
         if paper_id:
             query["id"] = paper_id
@@ -310,6 +327,30 @@ class MongoCollection(PaperCollection):
                 "$regex": f".*{author}.*",
                 "$options": "i",
             }
+
+        if venue:
+            # Match papers where any release has a venue name, short_name, or alias matching the search
+            query["$or"] = [
+                {"releases.venue.name": {"$regex": f".*{venue}.*", "$options": "i"}},
+                {
+                    "releases.venue.short_name": {
+                        "$regex": f".*{venue}.*",
+                        "$options": "i",
+                    }
+                },
+                {"releases.venue.aliases": {"$regex": f".*{venue}.*", "$options": "i"}},
+            ]
+
+        # Date filtering: papers match if at least one release falls within the date range
+        if start_date or end_date:
+            date_query = {}
+            if start_date:
+                date_query["$gte"] = start_date
+            if end_date:
+                date_query["$lte"] = end_date
+
+            # Match papers where at least one release date is in the range
+            query["releases.venue.date"] = date_query
 
         if institution:
             query["authors.affiliations._norm_name"] = {
@@ -368,6 +409,14 @@ class MongoCollectionAsync(MongoCollection):
 
         # Index on institution names for fast institution searches
         await self._collection.create_index("authors.affiliations._norm_name")
+
+        # Index on venue names for fast venue searches
+        await self._collection.create_index("releases.venue.name")
+        await self._collection.create_index("releases.venue.short_name")
+        await self._collection.create_index("releases.venue.aliases")
+
+        # Index on release dates for fast date-based searches
+        await self._collection.create_index("releases.venue.date")
 
         # Index on exclusions
         await self._exclusions.create_index("link", unique=True)
@@ -468,6 +517,9 @@ class MongoCollectionAsync(MongoCollection):
         title: str = None,
         institution: str = None,
         author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
     ) -> Generator[MongoPaper, None, None]:
         """Search for papers in the collection."""
         await self._ensure_connection()
@@ -476,6 +528,7 @@ class MongoCollectionAsync(MongoCollection):
         title = title and normalize_title(title)
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
+        venue = venue and normalize_venue(venue)
 
         if paper_id:
             query["id"] = paper_id
@@ -488,6 +541,30 @@ class MongoCollectionAsync(MongoCollection):
                 "$regex": f".*{author}.*",
                 "$options": "i",
             }
+
+        if venue:
+            # Match papers where any release has a venue name, short_name, or alias matching the search
+            query["$or"] = [
+                {"releases.venue.name": {"$regex": f".*{venue}.*", "$options": "i"}},
+                {
+                    "releases.venue.short_name": {
+                        "$regex": f".*{venue}.*",
+                        "$options": "i",
+                    }
+                },
+                {"releases.venue.aliases": {"$regex": f".*{venue}.*", "$options": "i"}},
+            ]
+
+        # Date filtering: papers match if at least one release falls within the date range
+        if start_date or end_date:
+            date_query = {}
+            if start_date:
+                date_query["$gte"] = start_date
+            if end_date:
+                date_query["$lte"] = end_date
+
+            # Match papers where at least one release date is in the range
+            query["releases.venue.date"] = date_query
 
         if institution:
             query["authors.affiliations._norm_name"] = {
