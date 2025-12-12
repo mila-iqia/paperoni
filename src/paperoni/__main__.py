@@ -910,6 +910,7 @@ def enable_rich_log():
 
         return count(stream)
 
+    @erryield
     def statistic(name, stream):
         async def make(stream):
             async for x in stream:
@@ -917,6 +918,7 @@ def enable_rich_log():
 
         return make(stream)
 
+    @erryield
     async def root_command(sent):
         async for x in sent["root_command"]:
             yield CommandDescription(command=x)
