@@ -8,6 +8,7 @@
     author: null
     display_name: John Doe
   flags: []
+  id: 1
   links:
   - link: 10.1000/test1
     type: doi
@@ -29,6 +30,7 @@
       volume: null
   title: Test Paper 1
   topics: []
+  version: null
 - abstract: This is another test paper
   authors:
   - affiliations:
@@ -39,6 +41,7 @@
     author: null
     display_name: Jane Smith
   flags: []
+  id: 2
   links:
   - link: 10.1000/test2
     type: doi
@@ -60,3 +63,4 @@
       volume: null
   title: Test Paper 2
   topics: []
+  version: null
