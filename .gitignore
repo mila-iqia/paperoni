@@ -20,4 +20,3 @@ requests-cache.sqlite
 .cursorignore
 /cache
 /data
-/tests/cache

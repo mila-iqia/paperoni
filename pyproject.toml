@@ -108,6 +108,14 @@ make-secrets = [
     'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" {args}',
     'cp $(dirname "{env:PAPERONI_SECRETS}")/*focuses*.yaml "$(dirname "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)")"',
 ]
+setup-cache = [
+    "gzip --decompress --force --keep {root:real}/tests/cache/cache.tar.gz",
+    "tar -xf {root:real}/tests/cache/cache.tar -C {root:real}/tests/cache",
+]
+save-cache = [
+    "cd {root:real}/tests/cache && tar -cf cache.tar --exclude 'cache.tar*' --uid 0 --gid 0 $(find * -type f | sort)",
+    "gzip --force --keep --no-name -1 {root:real}/tests/cache/cache.tar",
+]
 
 [tool.hatch.envs.hatch-test]
 installer = "uv"
@@ -120,8 +128,8 @@ post-install-commands = [
 [tool.hatch.envs.hatch-test.extra-scripts]
 uv = 'UV_PROJECT_ENVIRONMENT="{env:VIRTUAL_ENV}" "$(which uv)" {args}'
 mongo = [
-    "uv sync --inexact",
     "hatch run mongo:restart",
+    "uv sync --inexact",
     "run {args}",
     "hatch run mongo:stop",
 ]

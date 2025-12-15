@@ -1,0 +1,3 @@
+[submodule "tests/cache"]
+	path = tests/cache
+	url = https://github.com/satyaog/paperoni-testscache.git
