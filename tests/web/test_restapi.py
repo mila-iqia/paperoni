@@ -248,3 +248,44 @@ def test_search_endpoint_empty_results(app):
         assert data["total"] == 0
         assert data["results"] == []
         assert data["next_offset"] is None
+
+
+def test_get_paper_endpoint(app, mock_papers):
+    """Test get paper by ID endpoint."""
+    user = app.client("seeker@website.web")
+
+    with patch("paperoni.web.restapi.Coll") as mock_coll:
+        # Create a mock collection paper with an ID
+        from paperoni.model.classes import CollectionPaper
+
+        mock_paper = CollectionPaper(**mock_papers[0].__dict__)
+        mock_paper.id = 123
+
+        mock_coll.return_value.collection.find_by_id.return_value = mock_paper
+
+        response = user.get("/api/v1/paper/123")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "Test Paper 1"
+        assert data["id"] == 123
+
+
+def test_get_paper_endpoint_not_found(app):
+    """Test get paper by ID endpoint returns 404 when paper not found."""
+    user = app.client("seeker@website.web")
+
+    with patch("paperoni.web.restapi.Coll") as mock_coll:
+        mock_coll.return_value.collection.find_by_id.return_value = None
+
+        response = user.get("/api/v1/paper/999", expect=404)
+
+        assert response.status_code == 404
+        assert "Paper with ID 999 not found" in response.json()["detail"]
+
+
+def test_get_paper_requires_authentication(app):
+    """Test that the get paper endpoint requires authentication."""
+    response = httpx.get(f"{app}/api/v1/paper/123")
+    assert response.status_code == 401
+    assert "Authentication required" in response.json()["detail"]
