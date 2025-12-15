@@ -1,5 +1,6 @@
 import hashlib
 import json
+import threading
 from dataclasses import dataclass
 from functools import cached_property
 from typing import Any, BinaryIO, Type
@@ -26,14 +27,23 @@ _JSON_SCHEMA_TYPES = {
     # "object": lambda x: isinstance(x, dict),
 }
 
+# Hack: use a thread-safe lock to avoid schema compilation conflicts in
+# multi-threaded environments. Errors can look like the following:
+# E ovld.utils.ResolutionError: Ambiguous resolution in <Ovld schema> for argument types [type[Analysis]]
+# E Candidates are:
+# E * schema[*]  (priority: (0,), specificity: [0])
+# E * schema[*]  (priority: (0,), specificity: [0])
+# E Note: you can use @ovld(priority=X) to give higher priority to an overload.
+SERIEUX_LOCK = threading.Lock()
+
 
 def cleanup_schema(schema: dict | Type[Any]) -> dict:
     """
     output_tokens: int = 0
     """
     if not isinstance(schema, dict):
-        # $schema is removed by root=False
-        schema = serieux.schema(schema).compile(ref_policy="never", root=False)
+        with SERIEUX_LOCK:
+            schema = serieux.schema(schema).compile(ref_policy="never", root=False)
 
     if "enum" in schema and "type" not in schema:
         for json_type, is_type in _JSON_SCHEMA_TYPES.items():
@@ -50,20 +60,6 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
             cleanup_schema(value)
 
     return schema
-
-
-@dataclass
-class Raw:
-    # Avoid errors like:
-    # serieux.exc.ValidationError: At path ._obj: Cannot serialize object of type 'str' into expected type 'object'.
-    # when attempting to serialize a serialized dict
-    @classmethod
-    def serieux_deserialize(cls, obj, ctx, call_next):
-        return obj
-
-    @classmethod
-    def serieux_serialize(cls, obj, ctx, call_next):
-        return obj
 
 
 @dataclass
@@ -94,9 +90,11 @@ class ParsedResponseSerializer:
         else:
             metadata_type = PromptMetadata
 
-        model_dump = serieux.serialize(
-            serieux.Comment[Raw, metadata_type], CommentProxy(model_dump, response._)
-        )
+        with SERIEUX_LOCK:
+            model_dump = serieux.serialize(
+                serieux.Comment[serieux.JSON, metadata_type],
+                CommentProxy(model_dump, response._),
+            )
 
         return file_obj.write(
             json.dumps(model_dump, indent=2, ensure_ascii=False).encode("utf-8")
@@ -110,7 +108,10 @@ class ParsedResponseSerializer:
         else:
             metadata_type = PromptMetadata
 
-        response = serieux.deserialize(serieux.Comment[Raw, metadata_type], data)
+        with SERIEUX_LOCK:
+            response = serieux.deserialize(
+                serieux.Comment[serieux.JSON, metadata_type], data
+            )
         response: types.GenerateContentResponse = CommentProxy(
             types.GenerateContentResponse.model_validate(response), response._
         )

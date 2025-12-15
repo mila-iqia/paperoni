@@ -1,12 +1,15 @@
 import logging
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
 from ..config import config
-from ..model import DatePrecision
+from ..model import DatePrecision, PaperAuthor, Release
 from ..model.classes import Institution, InstitutionCategory, Paper, Venue
 from ..prompt import ParsedResponseSerializer
 from ..prompt_utils import prompt_wrapper
@@ -17,25 +20,31 @@ from .llm_process_affiliation import model as process_affiliation_model
 
 
 def process_affiliations_prompt(
-    affiliation: Institution, force: bool = False
+    affiliation: Institution,
+    force: bool = False,
+    *,
+    client: Any = None,
+    prompt: DiskStoreFunc = None,
+    model: str = None,
+    data_path: Path = None,
 ) -> list[Institution]:
     cache_dir = (
-        config.data_path
+        (data_path or config.data_path)
         / process_affiliation_model.__package__.split(".")[-1]
         / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_institution(affiliation.name))
     )
 
-    prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
+    prompt: DiskStoreFunc = (prompt or config.refine.prompt.prompt).update(
         serializer=ParsedResponseSerializer[process_affiliation_model.Analysis],
         cache_dir=cache_dir / "prompt",
-        prefix=config.refine.prompt.model,
+        prefix=(model or config.refine.prompt.model),
         index=0,
     )
     analysis: process_affiliation_model.Analysis = prompt_wrapper(
         prompt,
         force=force,
         send_input=affiliation.name,
-        client=config.refine.prompt.client,
+        client=(client or config.refine.prompt.client),
         messages=[
             Message(
                 type="system",
@@ -47,7 +56,7 @@ def process_affiliations_prompt(
                 args=(affiliation.name,),
             ),
         ],
-        model=config.refine.prompt.model,
+        model=(model or config.refine.prompt.model),
         structured_model=process_affiliation_model.Analysis,
     )._.parsed
 
@@ -70,24 +79,32 @@ def process_affiliations_prompt(
     ]
 
 
-def norm_author_display_name_prompt(display_name: str, force: bool = False) -> str:
+def norm_author_display_name_prompt(
+    display_name: str,
+    force: bool = False,
+    *,
+    client: Any = None,
+    prompt: DiskStoreFunc = None,
+    model: str = None,
+    data_path: Path = None,
+) -> str:
     cache_dir = (
-        config.data_path
+        (data_path or config.data_path)
         / norm_author_model.__package__.split(".")[-1]
         / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_name(display_name))
     )
 
-    prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
+    prompt: DiskStoreFunc = (prompt or config.refine.prompt.prompt).update(
         serializer=ParsedResponseSerializer[norm_author_model.Analysis],
         cache_dir=cache_dir / "prompt",
-        prefix=config.refine.prompt.model,
+        prefix=(model or config.refine.prompt.model),
         index=0,
     )
     analysis: norm_author_model.Analysis = prompt_wrapper(
         prompt,
         force=force,
         send_input=display_name,
-        client=config.refine.prompt.client,
+        client=(client or config.refine.prompt.client),
         messages=[
             Message(
                 type="system",
@@ -99,31 +116,39 @@ def norm_author_display_name_prompt(display_name: str, force: bool = False) -> s
                 args=(display_name,),
             ),
         ],
-        model=config.refine.prompt.model,
+        model=(model or config.refine.prompt.model),
         structured_model=norm_author_model.Analysis,
     )._.parsed
 
     return str(analysis.normalized_author)
 
 
-def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
+def norm_venue_prompt(
+    venue: Venue,
+    force: bool = False,
+    *,
+    client: Any = None,
+    prompt: DiskStoreFunc = None,
+    model: str = None,
+    data_path: Path = None,
+) -> Venue:
     cache_dir = (
-        config.data_path
+        (data_path or config.data_path)
         / norm_venue_model.__package__.split(".")[-1]
         / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_venue(venue.name))
     )
 
-    prompt: DiskStoreFunc = config.refine.prompt.prompt.update(
+    prompt: DiskStoreFunc = (prompt or config.refine.prompt.prompt).update(
         serializer=ParsedResponseSerializer[norm_venue_model.Analysis],
         cache_dir=cache_dir / "prompt",
-        prefix=config.refine.prompt.model,
+        prefix=(model or config.refine.prompt.model),
         index=0,
     )
     analysis: norm_venue_model.Analysis = prompt_wrapper(
         prompt,
         force=force,
         send_input=venue.name,
-        client=config.refine.prompt.client,
+        client=(client or config.refine.prompt.client),
         messages=[
             Message(
                 type="system",
@@ -135,7 +160,7 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
                 args=(venue.name,),
             ),
         ],
-        model=config.refine.prompt.model,
+        model=(model or config.refine.prompt.model),
         structured_model=norm_venue_model.Analysis,
     )._.parsed
 
@@ -165,39 +190,88 @@ def norm_venue_prompt(venue: Venue, force: bool = False) -> Venue:
 def normalize_paper(
     paper: Paper, *, author=True, venue=True, institution=True, force: bool = False
 ) -> Paper:
+    client = config.refine.prompt.client
+    prompt = config.refine.prompt.prompt
+    model = config.refine.prompt.model
+    data_path = config.data_path
+
     norm_authors = author
     norm_venues = venue
     norm_institutions = institution
 
-    for author in paper.authors:
-        if norm_institutions:
-            for i, affiliation in enumerate(author.affiliations[:]):
-                affiliations = process_affiliations_prompt(affiliation, force)
-                if not affiliations:
-                    logging.warning(
-                        f"LLM returned no affiliations from {affiliation.name}"
+    futures = []
+
+    with ThreadPoolExecutor() as executor:
+        for author in paper.authors:
+            if norm_institutions:
+                for i, affiliation in enumerate(author.affiliations[:]):
+
+                    def task(author: PaperAuthor, affiliation: Institution, i: int):
+                        affiliations = process_affiliations_prompt(
+                            affiliation,
+                            force,
+                            client=client,
+                            prompt=prompt,
+                            model=model,
+                            data_path=data_path,
+                        )
+                        if not affiliations:
+                            logging.warning(
+                                f"LLM returned no affiliations from {affiliation.name}"
+                            )
+                            return
+                        if affiliations[0] != author.affiliations[i]:
+                            author.affiliations[i] = affiliations[0]
+                        author.affiliations.extend(affiliations[1:])
+
+                    futures.append(
+                        executor.submit(task, author=author, affiliation=affiliation, i=i)
                     )
-                    continue
-                if affiliations[0] != author.affiliations[i]:
-                    author.affiliations[i] = affiliations[0]
-                author.affiliations.extend(affiliations[1:])
 
-        if norm_authors:
-            display_name = norm_author_display_name_prompt(author.display_name, force)
-            if display_name != author.display_name:
-                author.author.aliases = [author.author.name, *author.author.aliases]
-                author.author.name = author.display_name
-                author.display_name = display_name
+            if norm_authors:
 
-    if norm_venues:
-        for release in paper.releases:
-            venue = norm_venue_prompt(release.venue, force)
-            if venue != release.venue:
-                if (
-                    venue.name != release.venue.name
-                    and release.venue.name not in venue.aliases
-                ):
-                    venue.aliases = [release.venue.name, *venue.aliases]
-                release.venue = venue
+                def task(author: PaperAuthor):
+                    display_name = norm_author_display_name_prompt(
+                        author.display_name,
+                        force,
+                        client=client,
+                        prompt=prompt,
+                        model=model,
+                        data_path=data_path,
+                    )
+                    if display_name != author.display_name:
+                        author.author.aliases = [
+                            author.author.name,
+                            *author.author.aliases,
+                        ]
+                        author.author.name = author.display_name
+                        author.display_name = display_name
+
+                futures.append(executor.submit(task, author=author))
+
+        if norm_venues:
+            for release in paper.releases:
+
+                def task(release: Release):
+                    venue = norm_venue_prompt(
+                        release.venue,
+                        force,
+                        client=client,
+                        prompt=prompt,
+                        model=model,
+                        data_path=data_path,
+                    )
+                    if venue != release.venue:
+                        if (
+                            venue.name != release.venue.name
+                            and release.venue.name not in venue.aliases
+                        ):
+                            venue.aliases = [release.venue.name, *venue.aliases]
+                        release.venue = venue
+
+                futures.append(executor.submit(task, release=release))
+
+    for fut in as_completed(futures):
+        fut.result()
 
     return paper

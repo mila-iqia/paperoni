@@ -9,10 +9,9 @@ from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 from serieux import deserialize, serialize
 
-from paperoni.prompt import ParsedResponseSerializer
-
 from ..config import config
 from ..model.classes import DatePrecision, Link, Paper, PaperInfo
+from ..prompt import ParsedResponseSerializer
 from ..prompt_utils import prompt_html, prompt_wrapper
 from ..utils import url_to_id
 from .base import Discoverer
