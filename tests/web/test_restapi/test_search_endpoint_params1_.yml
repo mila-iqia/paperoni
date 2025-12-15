@@ -1,7 +1,12 @@
 - _count: null
   _next_offset: null
   author: null
+  end_date: null
+  flags: null
   institution: null
   offset: 0
+  paper_id: null
   size: 100
+  start_date: null
   title: Machine Learning
+  venue: null
