@@ -321,8 +321,8 @@ class MongoCollection(PaperCollection):
         institution = institution and normalize_institution(institution)
         venue = venue and normalize_venue(venue)
 
-        if paper_id:
-            query["id"] = paper_id
+        if paper_id is not None:
+            query["_id"] = ObjectId(paper_id)
 
         if title:
             query["_norm_title"] = {"$regex": f".*{title}.*", "$options": "i"}
@@ -557,8 +557,8 @@ class MongoCollectionAsync(MongoCollection):
         institution = institution and normalize_institution(institution)
         venue = venue and normalize_venue(venue)
 
-        if paper_id:
-            query["id"] = paper_id
+        if paper_id is not None:
+            query["_id"] = ObjectId(paper_id)
 
         if title:
             query["_norm_title"] = {"$regex": f".*{title}.*", "$options": "i"}
