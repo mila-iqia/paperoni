@@ -5,6 +5,8 @@ const PAGE_SIZE = 50;
 let currentOffset = 0;
 let currentParams = {};
 let totalResults = 0;
+let isValidator = false;
+let showValidationButtons = false;
 
 function setResults(...elements) {
     const container = document.getElementById('resultsContainer');
@@ -521,8 +523,8 @@ function createEditIcon(paper) {
 }
 
 function createPaperElement(paper, searchParams = {}) {
-    const validationButtons = createValidationButtons(paper);
-    const editIcon = createEditIcon(paper);
+    const validationButtons = showValidationButtons ? createValidationButtons(paper) : null;
+    const editIcon = isValidator ? createEditIcon(paper) : null;
 
     // Get the first link URL if available
     const firstLink = paper.links && paper.links.length > 0 ? paper.links[0] : null;
@@ -663,7 +665,11 @@ const debouncedSearch = debounce((params) => {
     performSearch(params, 0);
 }, 300);
 
-export function searchPapers() {
+export function searchPapers(hasValidateCapability = false, enableValidationButtons = false) {
+    // Store the capability flags
+    isValidator = hasValidateCapability;
+    showValidationButtons = enableValidationButtons;
+
     const form = document.getElementById('searchForm');
     const titleInput = document.getElementById('title');
     const authorInput = document.getElementById('author');
