@@ -14,15 +14,15 @@ export async function fetchReportJSONL(report_name) {
 }
 
 function getErrorKey(errorObj) {
-    if (!errorObj.exception || !errorObj.exception.traceback || errorObj.exception.traceback.length === 0) {
+    if (!errorObj.exception?.traceback?.length) {
         return null;
     }
     const lastFrame = errorObj.exception.traceback[errorObj.exception.traceback.length - 1];
     let key = `${lastFrame.filename}:${lastFrame.lineno}:${lastFrame.name}`;
 
     // For HTTPError, include the error code (first word of message) in the key
-    if (errorObj.exception.$class && errorObj.exception.$class.includes('HTTPError')) {
-        const message = errorObj.exception.message || errorObj.exception.args;
+    if (errorObj.exception?.$class?.includes('HTTPError')) {
+        const message = errorObj.exception.message ?? errorObj.exception.args;
         if (message) {
             const messageStr = Array.isArray(message) ? message[0] : message;
             const firstWord = messageStr.toString().split(/\s+/)[0];
@@ -55,7 +55,7 @@ export function error_report(objects) {
     return Array.from(distinctErrors.entries()).map(([key, data]) => ({
         key: key,
         exception_type: data.error.exception.$class,
-        message: data.error.exception.message || data.error.exception.args,
+        message: data.error.exception.message ?? data.error.exception.args,
         contexts: data.contexts,
         occurrences: data.contexts.length,
         traceback: data.error.exception.traceback
@@ -63,7 +63,7 @@ export function error_report(objects) {
 }
 
 function formatErrorAsHTML(errorSummary) {
-    const exceptionName = errorSummary.exception_type.split(':').pop() || errorSummary.exception_type;
+    const exceptionName = errorSummary.exception_type.split(':').pop() ?? errorSummary.exception_type;
     const occurrenceText = `(${errorSummary.occurrences} occurrence${errorSummary.occurrences !== 1 ? 's' : ''})`;
 
     // Build contexts list items using array interpolation
@@ -101,11 +101,6 @@ function formatErrorAsHTML(errorSummary) {
         return text;
     }).join('\n');
 
-    // Use null for empty contexts so nothing renders
-    const contextsList = errorSummary.contexts.length > 0
-        ? html`<ul class="error-contexts-list">${contextItems}</ul>`
-        : null;
-
     return toggle`
         <div class="error-report">
             <div class="error-header" toggler>
@@ -119,7 +114,7 @@ function formatErrorAsHTML(errorSummary) {
                 <span class="item-toggle">▶</span>
             </div>
             <div class="error-content" toggled>
-                ${contextsList}
+                <ul class="error-contexts-list">${contextItems}</ul>
                 <p class="error-detail-section"><strong>Traceback:</strong></p>
                 <pre class="error-traceback">${tracebackText}</pre>
             </div>

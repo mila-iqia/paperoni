@@ -11,8 +11,10 @@ from starlette.exceptions import HTTPException
 import paperoni
 
 from ..config import config
+from .edit import install_edit
 from .reports import install_reports
 from .restapi import install_api
+from .search import install_search
 
 app_logger = logging.getLogger(__name__)
 
@@ -43,4 +45,6 @@ def create_app():
 
     install_api(app)
     install_reports(app)
+    install_search(app)
+    install_edit(app)
     return app

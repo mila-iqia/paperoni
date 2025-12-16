@@ -1,6 +1,35 @@
 /**
+ * Join an array of nodes with a separator.
+ *
+ * @param {string|Node} separator - The separator to insert between items
+ * @param {Array} items - Array of items (strings, nodes, or arrays of nodes)
+ * @returns {Array} Flat array with separators inserted between items
+ *
+ * @example
+ * join(', ', ['Alice', 'Bob', 'Charlie']) // ['Alice', ', ', 'Bob', ', ', 'Charlie']
+ * join('; ', authors.map(a => html`<span>${a}</span>`))
+ */
+export function join(separator, items) {
+    if (!items || items.length === 0) return [];
+
+    const result = [];
+    items.forEach((item, index) => {
+        if (index > 0) {
+            result.push(separator);
+        }
+        if (Array.isArray(item)) {
+            result.push(...item);
+        } else {
+            result.push(item);
+        }
+    });
+    return result;
+}
+
+/**
  * Convert an HTML tagged template literal to a DOM node.
  * Supports interpolating strings, DOM nodes, and arrays in both content and attributes.
+ * Boolean attributes (where value is only the interpolation) are added/removed based on truthiness.
  *
  * @example
  * const node = html`<div class="container">Hello ${name}</div>`;
@@ -8,6 +37,7 @@
  * const link = html`<a href="/path/${id}">Link</a>`;
  * const list = html`<ul>${items.map(i => html`<li>${i}</li>`)}</ul>`;
  * const optional = html`<div>${maybeNull}</div>`; // null/undefined renders nothing
+ * const button = html`<button disabled=${isDisabled}>Click</button>`; // boolean attribute
  */
 export function html(strings, ...values) {
     // Create unique markers for each value
@@ -33,9 +63,21 @@ export function html(strings, ...values) {
     function walkAndReplace(node) {
         // Replace markers in attributes
         if (node.nodeType === Node.ELEMENT_NODE) {
+            const attrsToRemove = [];
             Array.from(node.attributes).forEach(attr => {
                 values.forEach((value, index) => {
+                    if (attr.value === commentMarkers[index]) {
+                        if (value === null || value === false || value === undefined) {
+                            attrsToRemove.push(attr.name);
+                            return;
+                        }
+                        else if (value === true) {
+                            attr.value = '';
+                            return;
+                        }
+                    }
                     if (attr.value.includes(commentMarkers[index])) {
+                        // Regular attribute: replace marker with value
                         let replacement;
                         if (value == null) {
                             replacement = '';
@@ -48,6 +90,9 @@ export function html(strings, ...values) {
                     }
                 });
             });
+
+            // Remove boolean attributes that should not be present
+            attrsToRemove.forEach(attrName => node.removeAttribute(attrName));
 
             // Recursively process child nodes
             Array.from(node.childNodes).forEach(child => walkAndReplace(child));
@@ -139,4 +184,16 @@ export function toggle(strings, ...values) {
 
     // Return fragment containing all elements
     return fragment;
+}
+
+export function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
