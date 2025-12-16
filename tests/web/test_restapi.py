@@ -4,8 +4,10 @@ from unittest.mock import patch
 import httpx
 import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
+from serieux import serialize
 
 from paperoni.model.classes import (
+    Author,
     CollectionPaper,
     DatePrecision,
     Institution,
@@ -289,3 +291,218 @@ def test_get_paper_requires_authentication(app):
     response = httpx.get(f"{app}/api/v1/paper/123")
     assert response.status_code == 401
     assert "Authentication required" in response.json()["detail"]
+
+
+def test_edit_paper_endpoint(app):
+    """Test edit paper endpoint."""
+    admin = app.client("admin@website.web")
+
+    with patch("paperoni.web.restapi.Coll") as mock_coll:
+        # Create a properly formed paper with all required fields
+        original_paper = CollectionPaper(
+            id=123,
+            title="Test Paper 1",
+            abstract="This is a test paper",
+            authors=[
+                PaperAuthor(
+                    display_name="John Doe",
+                    author=Author(name="John Doe"),
+                    affiliations=[Institution(name="MIT")],
+                )
+            ],
+            releases=[
+                Release(
+                    venue=Venue(
+                        name="Test Conference",
+                        type=VenueType.conference,
+                        series="Test Conference",
+                        date=date(2023, 1, 1),
+                        date_precision=DatePrecision.day,
+                    ),
+                    status="published",
+                )
+            ],
+            links=[Link(type="doi", link="10.1000/test1")],
+        )
+
+        # Create an edited version
+        edited_paper = CollectionPaper(
+            id=123,
+            title="Updated Test Paper 1",
+            abstract="This is an updated test paper",
+            authors=[
+                PaperAuthor(
+                    display_name="John Doe",
+                    author=Author(name="John Doe"),
+                    affiliations=[Institution(name="MIT")],
+                )
+            ],
+            releases=[
+                Release(
+                    venue=Venue(
+                        name="Test Conference",
+                        type=VenueType.conference,
+                        series="Test Conference",
+                        date=date(2023, 1, 1),
+                        date_precision=DatePrecision.day,
+                    ),
+                    status="published",
+                )
+            ],
+            links=[Link(type="doi", link="10.1000/test1")],
+        )
+
+        mock_coll.return_value.collection.find_by_id.return_value = original_paper
+
+        response = admin.post(
+            "/api/v1/edit",
+            paper=serialize(CollectionPaper, edited_paper),
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+        assert data["message"] == "Paper 123 updated successfully"
+        assert data["paper"]["title"] == "Updated Test Paper 1"
+        assert data["paper"]["abstract"] == "This is an updated test paper"
+
+        # Verify that edit_paper was called
+        mock_coll.return_value.collection.edit_paper.assert_called_once()
+
+
+def test_edit_paper_endpoint_not_found(app):
+    """Test edit paper endpoint returns error when paper not found."""
+    admin = app.client("admin@website.web")
+
+    with patch("paperoni.web.restapi.Coll") as mock_coll:
+        # Create a paper with an ID that doesn't exist
+        paper = CollectionPaper(
+            id=999,
+            title="Test Paper",
+            abstract="This is a test paper",
+            authors=[
+                PaperAuthor(
+                    display_name="John Doe",
+                    author=Author(name="John Doe"),
+                    affiliations=[Institution(name="MIT")],
+                )
+            ],
+            releases=[
+                Release(
+                    venue=Venue(
+                        name="Test Conference",
+                        type=VenueType.conference,
+                        series="Test Conference",
+                        date=date(2023, 1, 1),
+                        date_precision=DatePrecision.day,
+                    ),
+                    status="published",
+                )
+            ],
+            links=[Link(type="doi", link="10.1000/test1")],
+        )
+
+        mock_coll.return_value.collection.find_by_id.return_value = None
+
+        response = admin.post(
+            "/api/v1/edit",
+            paper=serialize(CollectionPaper, paper),
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is False
+        assert "Paper with ID 999 not found" in data["message"]
+        assert data["paper"] is None
+
+
+def test_edit_paper_endpoint_no_id(app):
+    """Test edit paper endpoint returns error when paper has no ID."""
+    admin = app.client("admin@website.web")
+
+    paper = CollectionPaper(
+        id=None,
+        title="Test Paper",
+        abstract="This is a test paper",
+        authors=[
+            PaperAuthor(
+                display_name="John Doe",
+                author=Author(name="John Doe"),
+                affiliations=[Institution(name="MIT")],
+            )
+        ],
+        releases=[
+            Release(
+                venue=Venue(
+                    name="Test Conference",
+                    type=VenueType.conference,
+                    series="Test Conference",
+                    date=date(2023, 1, 1),
+                    date_precision=DatePrecision.day,
+                ),
+                status="published",
+            )
+        ],
+        links=[Link(type="doi", link="10.1000/test1")],
+    )
+
+    response = admin.post(
+        "/api/v1/edit",
+        paper=serialize(CollectionPaper, paper),
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is False
+    assert "Paper must have an ID to be edited" in data["message"]
+    assert data["paper"] is None
+
+
+def test_edit_paper_requires_validate_authentication(app):
+    """Test that the edit paper endpoint requires validate authentication."""
+    # Create a properly formed paper
+    paper = CollectionPaper(
+        id=123,
+        title="Test Paper",
+        abstract="This is a test paper",
+        authors=[
+            PaperAuthor(
+                display_name="John Doe",
+                author=Author(name="John Doe"),
+                affiliations=[Institution(name="MIT")],
+            )
+        ],
+        releases=[
+            Release(
+                venue=Venue(
+                    name="Test Conference",
+                    type=VenueType.conference,
+                    series="Test Conference",
+                    date=date(2023, 1, 1),
+                    date_precision=DatePrecision.day,
+                ),
+                status="published",
+            )
+        ],
+        links=[Link(type="doi", link="10.1000/test1")],
+    )
+
+    # Test with no authentication
+    unlogged = app.client()
+    response = unlogged.post(
+        "/api/v1/edit",
+        paper=serialize(CollectionPaper, paper),
+        expect=401,
+    )
+    assert response.status_code == 401
+    assert "Authentication required" in response.json()["detail"]
+
+    # Test with user without validate capability
+    user = app.client("seeker@website.web")
+    response = user.post(
+        "/api/v1/edit",
+        paper=serialize(CollectionPaper, paper),
+        expect=403,
+    )
+    assert response.status_code == 403
+    assert "validate capability required" in response.json()["detail"]

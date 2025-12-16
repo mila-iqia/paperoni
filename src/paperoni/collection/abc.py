@@ -34,6 +34,9 @@ class PaperCollection:
     def find_by_id(self, paper_id: int) -> CollectionPaper | None:
         raise NotImplementedError()
 
+    def edit_paper(self, paper: CollectionPaper) -> None:
+        raise NotImplementedError()
+
     def commit(self) -> None:
         raise NotImplementedError()
 

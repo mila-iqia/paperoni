@@ -291,6 +291,22 @@ class MongoCollection(PaperCollection):
         doc = self._collection.find_one({"_id": ObjectId(paper_id)})
         return deserialize(MongoPaper, doc) if doc else None
 
+    def edit_paper(self, paper: MongoPaper) -> None:
+        """Edit an existing paper in the collection."""
+        self._ensure_connection()
+
+        existing_paper = self._collection.find_one({"_id": paper.id})
+        if not existing_paper:
+            raise ValueError(f"Paper with ID {paper.id} not found in collection")
+
+        paper.version = datetime.now()
+        result = self._collection.replace_one(
+            {"_id": paper.id}, serialize(MongoPaper, paper)
+        )
+
+        if result.matched_count == 0:
+            raise ValueError(f"Paper with ID {paper.id} not found in collection")
+
     def drop(self) -> None:
         """Drop the collection."""
         self._ensure_connection()
@@ -535,6 +551,22 @@ class MongoCollectionAsync(MongoCollection):
         await self._ensure_connection()
         doc = await self._collection.find_one({"_id": ObjectId(paper_id)})
         return deserialize(MongoPaper, doc) if doc else None
+
+    async def edit_paper(self, paper: MongoPaper) -> None:
+        """Edit an existing paper in the collection."""
+        await self._ensure_connection()
+
+        existing_paper = await self._collection.find_one({"_id": paper.id})
+        if not existing_paper:
+            raise ValueError(f"Paper with ID {paper.id} not found in collection")
+
+        paper.version = datetime.now()
+        result = await self._collection.replace_one(
+            {"_id": paper.id}, serialize(MongoPaper, paper)
+        )
+
+        if result.matched_count == 0:
+            raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
     async def search(
         self,

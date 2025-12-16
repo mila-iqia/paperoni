@@ -90,6 +90,19 @@ class MemCollection(PaperCollection):
     def find_by_id(self, paper_id: int) -> CollectionPaper | None:
         return self._finder.by_id.get(paper_id)
 
+    def edit_paper(self, paper: CollectionPaper) -> None:
+        for i, existing_paper in enumerate(self._papers):
+            # TODO: we have to do this loop to find the index in the list,
+            # this is not acceptable, but we'll fix it later
+            if existing_paper.id == paper.id:
+                paper.version = datetime.now()
+                self._papers[i] = paper
+                self._finder.replace(paper)
+                self.commit()
+                return
+
+        raise ValueError(f"Paper with ID {paper.id} not found in collection")
+
     def commit(self) -> None:
         # MemCollection, nothing to commit
         pass

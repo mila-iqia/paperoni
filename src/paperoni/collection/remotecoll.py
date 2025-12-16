@@ -53,6 +53,9 @@ class RemoteCollection(PaperCollection):
                 return None
             raise
 
+    def edit_paper(self, paper: CollectionPaper) -> None:
+        raise NotImplementedError()
+
     def commit(self) -> None:
         raise NotImplementedError()
 
