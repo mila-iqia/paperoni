@@ -361,9 +361,6 @@ class Work:
         # [alias: -t]
         tags: set[str] = field(default_factory=set)
 
-        # Fields to normalize
-        norm: set[Literal["author", "venue", "institution"]] = field(default_factory=set)
-
         # Number of refinement loops to perform for each paper
         loops: int = 1
 
@@ -396,12 +393,36 @@ class Work:
                         statuses=statuses,
                     ):
                         send(refinement=pinfo)
-                        if self.norm:
-                            pinfo.paper = normalize_paper(
-                                pinfo.paper, **norm_args(self.norm), force=self.force
-                            )
                         sws.value.add(pinfo)
                         sws.score = work.focuses.score(sws.value)
+
+            work.top.resort()
+            work.save()
+
+    @dataclass
+    class Normalize:
+        """Normalize the articles in the workset."""
+
+        # Number of papers to normalize, starting from top
+        n: int = None
+
+        # Fields not to normalize
+        # [alias: -x]
+        exclude: set[Literal["author", "venue", "institution"]] = field(
+            default_factory=set
+        )
+
+        # Whether to force re-running the normalization
+        force: bool = False
+
+        def run(self, work: "Work"):
+            kwargs = {k: not v for k, v in norm_args(self.exclude).items()}
+            it = itertools.islice(work.top, self.n) if self.n else work.top
+
+            for sws in prog(list(it), name="normalize"):
+                sws.value.current = normalize_paper(
+                    sws.value.current, **kwargs, force=self.force
+                )
 
             work.top.resort()
             work.save()
@@ -481,7 +502,7 @@ class Work:
             work.save()
 
     # Command
-    command: TaggedUnion[Get, View, Refine, Include, Exclude, Clear]
+    command: TaggedUnion[Get, View, Refine, Normalize, Include, Exclude, Clear]
 
     # File containing the working set
     # [alias: -w]
