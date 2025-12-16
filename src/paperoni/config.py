@@ -2,7 +2,7 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import gifnoc
 from easy_oauth import OAuthManager
@@ -37,6 +37,9 @@ class Refine:
 
 @dataclass(kw_only=True)
 class Server:
+    host: str = "localhost"
+    port: int = 8000
+    protocol: Literal["http", "https"] = "http"
     max_results: int = 10000
     process_pool_executor: dict = field(default_factory=dict)
     auth: OAuthManager = None
