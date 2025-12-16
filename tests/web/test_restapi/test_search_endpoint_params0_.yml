@@ -2,6 +2,7 @@
   _next_offset: null
   author: null
   end_date: null
+  expand_links: false
   flags: null
   institution: null
   offset: 0

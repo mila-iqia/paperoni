@@ -7,7 +7,7 @@ import shlex
 import sys
 import time
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from functools import cached_property
 from pathlib import Path
@@ -45,15 +45,14 @@ from .dash import History
 from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
-from .model import PaperInfo
-from .model.classes import Paper
+from .model import Link, Paper, PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
 from .refinement.llm_normalize import normalize_paper
 from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statistic
-from .utils import deprox, prog, soft_fail, url_to_id
+from .utils import deprox, expand_links_dict, prog, soft_fail, url_to_id
 
 
 class Formatter(AutoRegistered):
@@ -577,13 +576,26 @@ class Coll:
         # [alias: -f]
         flags: set[str] = None
 
+        # Whether to expand links
+        expand_links: bool = False
+
         # Output format
         format: Formatter = TerminalFormatter
 
         def run(self, coll: "Coll") -> list[Paper]:
             flags = set() if self.flags is None else self.flags
-            papers = list(
-                coll.collection.search(
+            papers = [
+                replace(
+                    p,
+                    links=[
+                        Link(type=l["type"], link=l["url"])
+                        for l in expand_links_dict(p.links)
+                        if "url" in l
+                    ],
+                )
+                if self.expand_links
+                else p
+                for p in coll.collection.search(
                     paper_id=self.paper_id,
                     title=self.title,
                     author=self.author,
@@ -594,7 +606,7 @@ class Coll:
                     include_flags={f for f in flags if not f.startswith("~")},
                     exclude_flags={f for f in flags if f.startswith("~")},
                 )
-            )
+            ]
             self.format(papers)
             return papers
 
