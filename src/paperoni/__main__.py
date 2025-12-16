@@ -788,11 +788,11 @@ class Serve:
     """Serve paperoni through a Rest API."""
 
     # Host to bind to
-    host: str = "localhost"
+    host: str = None
 
     # Port to bind to
     # [alias: -p]
-    port: int = 8000
+    port: int = None
 
     # Enable auto-reload for development
     # [alias: -r]
@@ -815,7 +815,12 @@ class Serve:
             }
         with gifnoc.overlay(overrides):
             app = create_app()
-            uvicorn.run(app, host=self.host, port=self.port, reload=self.reload)
+            uvicorn.run(
+                app,
+                host=config.server.host if self.host is None else self.host,
+                port=config.server.port if self.port is None else self.port,
+                reload=self.reload,
+            )
 
     def no_dash(self):
         return True
@@ -863,14 +868,24 @@ class PaperoniInterface:
         if self.dash is None and not self.log:
             self.dash = sys.stdout.isatty()
 
+    def get_logfile(self):
+        logdir = config.data_path / "logs"
+        logdir.mkdir(exist_ok=True, parents=True)
+        now = datetime.now()
+        rand = random.randint(0, 9999)
+        logname = now.strftime("%Y%m%d_%H%M%S") + f"_{rand:04d}.jsonl"
+        return logdir / logname
+
     def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
+        logfile = None
         if self.dash and not getattr(self.command, "no_dash", lambda: False)():
             enable_dash()
         if self.log:
             enable_log()
         if self.rich_log:
-            enable_rich_log()
+            logfile = self.get_logfile()
+            enable_rich_log(logfile)
         # The program hangs if it ends before outsight can set itself up,
         # so we'll sleep a bit until that's solved.
         time.sleep(0.1)
@@ -881,8 +896,13 @@ class PaperoniInterface:
             with Report(
                 description="`" + " ".join(map(shlex.quote, sys.argv)) + "`",
                 reporters=config.reporters,
-            ):
+            ) as report:
                 self.command.run()
+                if logfile and config.server:
+                    url = f"{config.server.protocol}://{config.server.host}"
+                    if config.server.port not in (80, 443):
+                        url += f":{config.server.port}"
+                    report.set_message(f"[View report]({url}/report/{logfile.stem})")
         else:
             self.command.run()
 
@@ -922,7 +942,7 @@ class CommandDescription(LogEvent):
     command: PaperoniInterface
 
 
-def enable_rich_log():
+def enable_rich_log(logfile):
     def erryield(fn):
         async def wrapped(*args, **kwargs):
             try:
@@ -986,13 +1006,6 @@ def enable_rich_log():
 
     @outsight.add
     async def rich_log(sent):
-        logdir = config.data_path / "logs"
-        logdir.mkdir(exist_ok=True, parents=True)
-        now = datetime.now()
-        rand = random.randint(0, 9999)
-        logname = now.strftime("%Y%m%d_%H%M%S") + f"_{rand:04d}.jsonl"
-        logfile = logdir / logname
-
         def _discover_origin(pinfo):
             for src in pinfo.info.get("discovered_by", {}):
                 return src
