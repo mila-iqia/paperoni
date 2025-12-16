@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Edit Paper</title>
+        <link rel="stylesheet" href="/assets/style.css">
+    </head>
+    <body>
+        <div class="edit-container">
+            <div class="edit-header">
+                <h1>Edit Paper</h1>
+                <a href="/search" class="back-link">← Back to Search</a>
+            </div>
+
+            <div id="messageContainer"></div>
+            <div id="formContainer"></div>
+        </div>
+
+        <script type="module">
+            import { editPaper } from '/assets/edit.js';
+            const paperId = {{ paper_id }};
+            editPaper(paperId);
+        </script>
+    </body>
+</html>
