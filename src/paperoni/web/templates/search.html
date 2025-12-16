@@ -70,7 +70,7 @@
 
         <script type="module">
             import { searchPapers } from '/assets/search.js';
-            searchPapers();
+            searchPapers({{ is_validator|tojson }}, {{ validation_buttons|tojson }});
         </script>
     </body>
 </html>
