@@ -224,6 +224,39 @@ class AddResponse:
 
 
 @dataclass
+class SetFlagRequest:
+    """Request model for setting a flag on a paper."""
+
+    paper_id: int
+    flag: str
+    value: bool = True
+
+
+@dataclass
+class SetFlagResponse:
+    """Response model for setting a flag on a paper."""
+
+    success: bool
+    message: str
+
+
+@dataclass
+class EditRequest:
+    """Request model for editing a paper."""
+
+    paper: dict
+
+
+@dataclass
+class EditResponse:
+    """Response model for editing a paper."""
+
+    success: bool
+    message: str
+    paper: CollectionPaper | None = None
+
+
+@dataclass
 class ViewResponse(PagingResponseMixin):
     """Response model for work state paper view."""
 
@@ -361,6 +394,71 @@ def install_api(app) -> FastAPI:
         added = work.run()
 
         return IncludeResponse(total=added)
+
+    @app.post(
+        f"{prefix}/set_flag",
+        response_model=SetFlagResponse,
+        dependencies=[Depends(hascap("admin"))],
+    )
+    async def set_flag(request: SetFlagRequest):
+        """Set a flag on a paper in the collection."""
+        coll = Coll(command=None)
+
+        paper = coll.collection.find_by_id(request.paper_id)
+        if paper is None:
+            return SetFlagResponse(
+                success=False, message=f"Paper with ID {request.paper_id} not found"
+            )
+
+        if request.value:
+            paper.flags.add(request.flag)
+        else:
+            paper.flags.discard(request.flag)
+
+        coll.collection.edit_paper(paper)
+
+        return SetFlagResponse(
+            success=True,
+            message=f"Flag '{request.flag}' {'set' if request.value else 'unset'} for paper {request.paper_id}",
+        )
+
+    @app.post(
+        f"{prefix}/edit",
+        response_model=EditResponse,
+        dependencies=[Depends(hascap("validate"))],
+    )
+    async def edit_paper(request: EditRequest):
+        """Edit an existing paper in the collection."""
+        coll = Coll(command=None)
+
+        # Deserialize the paper from the request
+        paper = deserialize(CollectionPaper, request.paper)
+
+        # Verify the paper has an ID
+        if paper.id is None:
+            return EditResponse(
+                success=False,
+                message="Paper must have an ID to be edited",
+                paper=None,
+            )
+
+        # Verify the paper exists in the collection
+        existing_paper = coll.collection.find_by_id(paper.id)
+        if existing_paper is None:
+            return EditResponse(
+                success=False,
+                message=f"Paper with ID {paper.id} not found",
+                paper=None,
+            )
+
+        # Update the paper in the collection
+        coll.collection.edit_paper(paper)
+
+        return EditResponse(
+            success=True,
+            message=f"Paper {paper.id} updated successfully",
+            paper=paper,
+        )
 
     @app.get(
         f"{prefix}/focus/auto",

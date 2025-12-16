@@ -40,3 +40,17 @@ class Finder[T]:
                     f"Title match but low author similarity ({sim:.2f}) for paper '{p.title}': {au1} vs {au2}"
                 )
         return None
+
+    def remove(self, entry: T):
+        for lnk in self.links_finder(entry):
+            self.by_link.pop(lnk, None)
+        title_key = normalize_title(self.title_finder(entry))
+        self.by_title.pop(title_key, None)
+        if i := self.id_finder(entry):
+            self.by_id.pop(i, None)
+
+    def replace(self, entry: T):
+        entry_id = self.id_finder(entry)
+        if entry_id and (old_entry := self.by_id.get(entry_id)):
+            self.remove(old_entry)
+        self.add([entry])
