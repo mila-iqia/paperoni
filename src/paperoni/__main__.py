@@ -240,6 +240,30 @@ class Work:
     """Discover and work on prospective papers."""
 
     @dataclass
+    class Configure:
+        """Configure the workset."""
+
+        n: int
+        clear: bool = False
+
+        def run(self, work: "Work"):
+            work_file = work.work_file or config.work_file
+            if work_file.exists():
+                top = deserialize(
+                    Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file
+                )
+                if self.clear:
+                    top.entries = []
+                elif top.n > self.n:
+                    top.entries = list(top)[: self.n]
+                    top.resort()
+                top.n = self.n
+            else:
+                top = Top(self.n)
+            work.save(top)
+            print(f"Configured {work_file.resolve()} for n={self.n}")
+
+    @dataclass
     class Get(Productor):
         """Get articles from various sources."""
 
@@ -502,7 +526,7 @@ class Work:
             work.save()
 
     # Command
-    command: TaggedUnion[Get, View, Refine, Normalize, Include, Exclude, Clear]
+    command: TaggedUnion[Configure, View, Get, Refine, Normalize, Include, Exclude, Clear]
 
     # File containing the working set
     # [alias: -w]
@@ -515,9 +539,6 @@ class Work:
     # Collection dir
     # [alias: -c]
     collection_file: Path = None
-
-    # Number of papers to keep in the working set
-    n: int = 1000
 
     @cached_property
     def focuses(self):
@@ -536,18 +557,18 @@ class Work:
     @cached_property
     def top(self):
         work_file = self.work_file or config.work_file
-        if work_file.exists():
-            top = deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
-        else:
-            top = Top(self.n)
-        return top
+        if not work_file.exists():
+            sys.exit(
+                f"ERROR: {work_file.resolve()} does not exist. Try running\n    paperoni work configure -n N"
+            )
+        return deserialize(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
 
-    def save(self):
+    def save(self, top=None):
         wfile = deprox(self.work_file or config.work_file)
         wfile.parent.mkdir(exist_ok=True, parents=True)
         dump(
             Top[Scored[CommentRec[PaperWorkingSet, float]]],
-            self.top,
+            self.top if top is None else top,
             dest=wfile,
         )
 
