@@ -67,7 +67,8 @@ function formatAuthorsWithAffiliations(authors) {
                 const affName = aff.display_name || aff.name || '';
                 return institutionMap.get(affName);
             })
-            .filter(num => num !== undefined);
+            .filter(num => num !== undefined)
+            .sort((a, b) => a - b);
 
         return { name, affNumbers };
     });
