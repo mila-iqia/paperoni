@@ -45,6 +45,7 @@ from .dash import History
 from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
+from .heuristics import simplify_paper
 from .model import Link, Paper, PaperInfo
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
@@ -444,9 +445,8 @@ class Work:
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
             for sws in prog(list(it), name="normalize"):
-                sws.value.current = normalize_paper(
-                    sws.value.current, **kwargs, force=self.force
-                )
+                p = normalize_paper(sws.value.current, **kwargs, force=self.force)
+                sws.value.current = simplify_paper(p)
 
             work.top.resort()
             work.save()

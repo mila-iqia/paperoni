@@ -171,6 +171,9 @@ class Institution(Base):
     country: str = None
     aliases: list[str] = field(default_factory=list)
 
+    def __hash__(self):
+        return hash((self.name, self.category, self.country, tuple(self.aliases)))
+
 
 @dataclass
 class Venue:
