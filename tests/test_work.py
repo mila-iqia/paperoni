@@ -15,11 +15,17 @@ from paperoni.model.merge import PaperWorkingSet
 
 def work(command, **kwargs):
     work_file = kwargs.pop("work_file")
-    kwargs["n"] = kwargs.pop("n", 10)
+    cf = kwargs.pop("collection_file")
+    Work(
+        command=Work.Configure(n=kwargs.pop("n", 10)),
+        work_file=work_file,
+        collection_file=cf,
+        **kwargs,
+    ).run()
     Work(
         command=command,
         work_file=work_file,
-        collection_file=kwargs.pop("collection_file"),
+        collection_file=cf,
         **kwargs,
     ).run()
     return load(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
