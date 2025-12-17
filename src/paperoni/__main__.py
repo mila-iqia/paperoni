@@ -201,7 +201,8 @@ class Refine:
     tags: set[str] = field(default_factory=set)
 
     # Fields to normalize
-    norm: set[Literal["author", "venue", "institution"]] = None
+    # [action: append]
+    norm: set[str] = None
 
     # Whether to merge the results
     merge: bool = False
@@ -431,10 +432,9 @@ class Work:
         n: int = None
 
         # Fields not to normalize
+        # [action: append]
         # [alias: -x]
-        exclude: set[Literal["author", "venue", "institution"]] = field(
-            default_factory=set
-        )
+        exclude: set[str] = field(default_factory=set)
 
         # Whether to force re-running the normalization
         force: bool = False
