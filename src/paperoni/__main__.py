@@ -420,7 +420,7 @@ class Work:
                     ):
                         send(refinement=pinfo)
                         sws.value.add(pinfo)
-                        sws.score = work.focuses.score(sws.value)
+                sws.score = work.focuses.score(sws.value)
 
             work.top.resort()
             work.save()
@@ -447,6 +447,7 @@ class Work:
             for sws in prog(list(it), name="normalize"):
                 p = normalize_paper(sws.value.current, **kwargs, force=self.force)
                 sws.value.current = simplify_paper(p)
+                sws.score = work.focuses.score(sws.value)
 
             work.top.resort()
             work.save()
