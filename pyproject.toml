@@ -40,6 +40,7 @@ dependencies = [
     "jinja2>=3.1.6",
     "easy-oauth",
     "markdown>=3.10",
+    "fastmcp>=2.14.2",
 ]
 
 [project.urls]

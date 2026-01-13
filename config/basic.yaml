@@ -90,3 +90,7 @@ paperoni:
           search: []
           validate: [search]
           dev: []
+  mcp:
+    api_client:
+      $class: paperoni.mcp.client:PaperoniAPIClient
+      endpoint: ${paperoni.server.protocol}://${paperoni.server.host}:${paperoni.server.port}

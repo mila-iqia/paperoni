@@ -869,7 +869,7 @@ class Login:
     """Retrieve an access token from the paperoni server."""
 
     # Endpoint to login to
-    endpoint: str = "http://localhost:8000"
+    endpoint: str = None
 
     # Whether to use headless mode
     headless: bool = False
@@ -878,8 +878,29 @@ class Login:
         print_field("Access token", login(self.endpoint, self.headless))
 
 
+@dataclass
+class MCP:
+    """MCP server for paperoni."""
+
+    # Paperoni API
+    endpoint: str = None
+
+    transport: Literal["stdio", "http"] = "stdio"
+    host: str = "localhost"
+    port: int = 9000
+
+    def run(self):
+        from .mcp.server import create_mcp
+
+        mcp = create_mcp(self.endpoint)
+        if self.transport == "stdio":
+            mcp.run(transport="stdio")
+        elif self.transport == "http":
+            mcp.run(transport="http", host=self.host, port=self.port)
+
+
 PaperoniCommand = TaggedUnion[
-    Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve, Login
+    Discover, Refine, Fulltext, Work, Coll, Batch, Focus, Serve, Login, MCP
 ]
 
 
