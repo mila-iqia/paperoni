@@ -51,11 +51,25 @@ def install_reports(app: FastAPI) -> FastAPI:
                 for basename in report_basenames
             ]
             return templates.TemplateResponse(
-                "report_list.html", {"request": request, "logs": links}
+                "report_list.html",
+                {
+                    "request": request,
+                    "logs": links,
+                    "has_logo": app.has_logo,
+                    "has_custom_css": app.has_custom_css,
+                    "help_section": "reports",
+                },
             )
         else:
             return templates.TemplateResponse(
-                "report.html", {"request": request, "report_name": path}
+                "report.html",
+                {
+                    "request": request,
+                    "report_name": path,
+                    "has_logo": app.has_logo,
+                    "has_custom_css": app.has_custom_css,
+                    "help_section": "report",
+                },
             )
 
     return app

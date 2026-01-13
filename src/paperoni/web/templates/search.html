@@ -1,76 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Search Papers</title>
-        <link rel="stylesheet" href="/assets/style.css">
-    </head>
-    <body>
-        <div class="search-container">
-            <div class="search-header">
-                <h1>Search Papers</h1>
+{% extends "main.html" %}
+
+{% block title %}Search Papers{% endblock %}
+
+{% block page_title %}Search Papers{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <form class="search-form" id="searchForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="Search by title...">
             </div>
-
-            <form class="search-form" id="searchForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" id="title" name="title" placeholder="Search by title...">
-                    </div>
-                    <div class="form-group">
-                        <label for="author">Author</label>
-                        <input type="text" id="author" name="author" placeholder="Search by author...">
-                    </div>
-                    <div class="form-group">
-                        <label for="institution">Institution</label>
-                        <input type="text" id="institution" name="institution" placeholder="Search by institution...">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="venue">Venue</label>
-                        <input type="text" id="venue" name="venue" placeholder="Search by venue...">
-                    </div>
-                    <div class="form-group">
-                        <label for="start_date">Start Date</label>
-                        <input type="date" id="start_date" name="start_date">
-                    </div>
-                    <div class="form-group">
-                        <label for="end_date">End Date</label>
-                        <input type="date" id="end_date" name="end_date">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Validation status</label>
-                        <div class="radio-group">
-                            <label>
-                                <input type="radio" name="validated" value="" checked> All
-                            </label>
-                            <label>
-                                <input type="radio" name="validated" value="true"> Validated
-                            </label>
-                            <label>
-                                <input type="radio" name="validated" value="false"> Invalidated
-                            </label>
-                            <label>
-                                <input type="radio" name="validated" value="unset"> Unprocessed
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group" style="flex: 0; align-self: flex-end;">
-                        <button type="button" id="clearSearch" class="btn-clear">Clear</button>
-                    </div>
-                </div>
-            </form>
-
-            <div id="resultsContainer"></div>
+            <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" placeholder="Search by author...">
+            </div>
+            <div class="form-group">
+                <label for="institution">Institution</label>
+                <input type="text" id="institution" name="institution" placeholder="Search by institution...">
+            </div>
         </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="venue">Venue</label>
+                <input type="text" id="venue" name="venue" placeholder="Search by venue...">
+            </div>
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date">
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end_date">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Validation status</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="validated" value="" checked> All
+                    </label>
+                    <label>
+                        <input type="radio" name="validated" value="true"> Validated
+                    </label>
+                    <label>
+                        <input type="radio" name="validated" value="false"> Invalidated
+                    </label>
+                    <label>
+                        <input type="radio" name="validated" value="unset"> Unprocessed
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" style="flex: 0; align-self: flex-end;">
+                <button type="button" id="clearSearch" class="btn-clear">Clear</button>
+            </div>
+        </div>
+    </form>
 
-        <script type="module">
-            import { searchPapers } from '/assets/search.js';
-            searchPapers({{ is_validator|tojson }}, {{ validation_buttons|tojson }});
-        </script>
-    </body>
-</html>
+    <div id="resultsContainer"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { searchPapers } from '/assets/search.js';
+    searchPapers({{ is_validator|tojson }}, {{ validation_buttons|tojson }});
+</script>
+{% endblock %}

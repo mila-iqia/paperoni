@@ -28,6 +28,9 @@ def install_search(app: FastAPI) -> FastAPI:
                 "request": request,
                 "is_validator": is_validator,
                 "validation_buttons": False,
+                "has_logo": app.has_logo,
+                "has_custom_css": app.has_custom_css,
+                "help_section": "search",
             },
         )
 
@@ -40,6 +43,9 @@ def install_search(app: FastAPI) -> FastAPI:
                 "request": request,
                 "is_validator": True,
                 "validation_buttons": True,
+                "has_logo": app.has_logo,
+                "has_custom_css": app.has_custom_css,
+                "help_section": "validate",
             },
         )
 

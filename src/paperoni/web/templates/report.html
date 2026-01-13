@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Report</title>
-        <link rel="stylesheet" href="/assets/style.css">
-    </head>
-    <body>
-        <script type="module">
-            import { main } from '/assets/report.js';
-            main("{{report_name}}");
-        </script>
-    </body>
-</html>
+{% extends "main.html" %}
+
+{% block title %}Report{% endblock %}
+
+{% block page_title %}Report{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { main } from '/assets/report.js';
+    main("{{report_name}}");
+</script>
+{% endblock %}

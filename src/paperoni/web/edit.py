@@ -20,7 +20,14 @@ def install_edit(app: FastAPI) -> FastAPI:
     async def edit_page(request: Request, paper_id: int):
         """Render the paper edit page."""
         return templates.TemplateResponse(
-            "edit.html", {"request": request, "paper_id": paper_id}
+            "edit.html",
+            {
+                "request": request,
+                "paper_id": paper_id,
+                "has_logo": app.has_logo,
+                "has_custom_css": app.has_custom_css,
+                "help_section": "edit",
+            },
         )
 
     return app

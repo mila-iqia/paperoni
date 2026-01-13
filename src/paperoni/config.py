@@ -43,6 +43,7 @@ class Server:
     max_results: int = 10000
     process_pool_executor: dict = field(default_factory=dict)
     auth: OAuthManager = None
+    assets: Path = None
 
     def __post_init__(self):
         if self.process_pool_executor.get("max_workers", 0) == 0:
