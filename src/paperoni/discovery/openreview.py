@@ -109,6 +109,15 @@ def extract_date(txt: str) -> dict | None:
         return None
 
 
+def get_invitation(note):
+    if hasattr(note, "invitation"):
+        return note.invitation
+    elif inv := getattr(note, "invitations", None):
+        return inv[0]
+    else:
+        return "Unknown"
+
+
 def venue_to_series(venueid):
     return re.sub(pattern=r"/[0-4]{4}", string=venueid, repl="")
 
@@ -159,7 +168,7 @@ class OpenReview(Discoverer):
     def get_venue_id(self, note):
         vid = self.get_content_field(note, "venueid")
         if not vid:
-            vid = note.invitation.split("/-/")[0]
+            vid = get_invitation(note).split("/-/")[0]
         if not vid or vid.startswith("dblp.org") or vid == "OpenReview.net/Archive":
             return None
         return vid
@@ -295,7 +304,7 @@ class OpenReview(Discoverer):
                 if "code" in note.content:
                     Link(type="git", link=self.get_content_field(note, "code"))
 
-                venue = self.get_content_field(note, "venue") or note.invitation
+                venue = self.get_content_field(note, "venue") or get_invitation(note)
                 venue_data = parse_openreview_venue(venue)
                 decision = self.figure_out_the_fking_decision(note) or "unknown"
 
