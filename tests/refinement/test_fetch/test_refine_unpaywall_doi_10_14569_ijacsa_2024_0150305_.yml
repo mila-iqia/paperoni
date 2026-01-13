@@ -1,18 +1,33 @@
 abstract: null
 authors:
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: AMIPS Research Team, Ecole Mohammadia d'Ingénieurs, Mohammed V University
+      in Rabat, Morocco
   author:
     aliases: []
     links: []
     name: Badre Labiad
   display_name: Badre Labiad
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Département Sciences de la Gestion, Universit du Québec Rimouski (UQAR),
+      Campus de Lévis, Québec Canada
   author:
     aliases: []
     links: []
     name: Abdelaziz Berrado
   display_name: Abdelaziz Berrado
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: AMIPS Research Team, Ecole Mohammadia d'Ingénieurs, Mohammed V University
+      in Rabat, Morocco
   author:
     aliases: []
     links: []
