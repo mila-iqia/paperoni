@@ -5,10 +5,10 @@ FastAPI routes for serving markdown-based pages (index, help).
 from pathlib import Path
 
 import markdown
-from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, HTTPException, Request
 
 from ..config import config
+from .helpers import render_template
 
 here = Path(__file__).parent
 
@@ -32,10 +32,7 @@ def get_markdown_content(filename: str) -> str:
 def install_pages(app: FastAPI) -> FastAPI:
     """Install the markdown page routes."""
 
-    hascap = app.auth.get_email_capability
-    templates = Jinja2Templates(directory=str((here / "templates").resolve()))
-
-    @app.get("/", dependencies=[Depends(hascap("search"))])
+    @app.get("/")
     async def index_page(request: Request):
         """Render the index page from markdown."""
         md_content = get_markdown_content("index.md")
@@ -46,19 +43,15 @@ def install_pages(app: FastAPI) -> FastAPI:
             md_content, extensions=["extra", "codehilite", "toc", "attr_list"]
         )
 
-        return templates.TemplateResponse(
+        return render_template(
             "markdown.html",
-            {
-                "request": request,
-                "has_logo": app.has_logo,
-                "has_custom_css": app.has_custom_css,
-                "help_section": "",
-                "page_title": "Home",
-                "content": html_content,
-            },
+            request,
+            help_section=False,
+            page_title="Home",
+            content=html_content,
         )
 
-    @app.get("/help", dependencies=[Depends(hascap("search"))])
+    @app.get("/help")
     async def help_page(request: Request):
         """Render the help page."""
         md_content = get_markdown_content("help.md")
@@ -69,16 +62,12 @@ def install_pages(app: FastAPI) -> FastAPI:
             md_content, extensions=["extra", "codehilite", "toc", "attr_list"]
         )
 
-        return templates.TemplateResponse(
+        return render_template(
             "markdown.html",
-            {
-                "request": request,
-                "has_logo": app.has_logo,
-                "has_custom_css": app.has_custom_css,
-                "help_section": "",
-                "page_title": "Help",
-                "content": html_content,
-            },
+            request,
+            help_section=False,
+            page_title="Help",
+            content=html_content,
         )
 
     return app

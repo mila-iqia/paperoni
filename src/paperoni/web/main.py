@@ -47,12 +47,6 @@ def create_app():
     # Mount custom assets if configured
     if config.server.assets and Path(config.server.assets).exists():
         app.mount("/custom", StaticFiles(directory=config.server.assets), name="custom")
-        custom_assets_path = Path(config.server.assets)
-        app.has_logo = (custom_assets_path / "logo.png").exists()
-        app.has_custom_css = (custom_assets_path / "style.css").exists()
-    else:
-        app.has_logo = False
-        app.has_custom_css = False
 
     install_api(app)
     install_reports(app)

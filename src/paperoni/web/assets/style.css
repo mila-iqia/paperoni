@@ -79,10 +79,6 @@ body {
     text-decoration: underline;
 }
 
-.main-content {
-    min-height: calc(100vh - 94px);
-}
-
 /* Markdown Content Container */
 .markdown-container {
     padding: 40px;

@@ -2,15 +2,11 @@
 FastAPI route for serving HTML reports from the data path.
 """
 
-from pathlib import Path
-
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
-from fastapi.templating import Jinja2Templates
 
 from ..config import config
-
-here = Path(__file__).parent
+from .helpers import render_template
 
 
 def install_reports(app: FastAPI) -> FastAPI:
@@ -36,7 +32,6 @@ def install_reports(app: FastAPI) -> FastAPI:
 
     @app.get("/report/{path:path}", dependencies=[Depends(hascap("dev"))])
     async def route_report(request: Request, path: str):
-        templates = Jinja2Templates(directory=str((here / "templates").resolve()))
         if not path:
             logs_dir = (config.data_path / "logs").resolve()
             # Sort newest to oldest by file modification time (descending)
@@ -50,26 +45,13 @@ def install_reports(app: FastAPI) -> FastAPI:
                 {"name": basename, "url": f"/report/{basename}"}
                 for basename in report_basenames
             ]
-            return templates.TemplateResponse(
+            return render_template(
                 "report_list.html",
-                {
-                    "request": request,
-                    "logs": links,
-                    "has_logo": app.has_logo,
-                    "has_custom_css": app.has_custom_css,
-                    "help_section": "reports",
-                },
+                request,
+                logs=links,
+                help_section="reports",
             )
         else:
-            return templates.TemplateResponse(
-                "report.html",
-                {
-                    "request": request,
-                    "report_name": path,
-                    "has_logo": app.has_logo,
-                    "has_custom_css": app.has_custom_css,
-                    "help_section": "report",
-                },
-            )
+            return render_template("report.html", request, report_name=path)
 
     return app
