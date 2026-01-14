@@ -344,21 +344,18 @@ class Work:
 
         def run(self, work: "Work"):
             worksets = itertools.islice(work.top, self.n) if self.n else work.top
-            papers: list[Scored[Paper]] = [
-                Scored(ws.score, ws.value.current) for ws in worksets
-            ]
             match self.what:
                 case "title":
-                    self.format(p.value.title for p in papers)
+                    self.format(ws.value.current.title for ws in worksets)
                 case "paper":
-                    self.format(papers)
+                    self.format(worksets)
                 case "has_pdf":
                     n = total = 0
 
                     def gen():
                         nonlocal n, total
-                        for p in papers:
-                            paper = p.value
+                        for ws in worksets:
+                            paper = ws.value.current
                             pdf = None
                             total += 1
                             try:
@@ -373,7 +370,7 @@ class Work:
                     self.format(gen(), dict[str, JSON])
                     print(f"{n}/{total} papers have PDFs")
 
-            return papers
+            return worksets
 
     @dataclass
     class Refine:
