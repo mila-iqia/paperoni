@@ -19,6 +19,7 @@ from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
 from ..model.classes import CollectionPaper, Paper, PaperInfo
 from ..model.focus import Focuses, Scored
+from ..model.merge import PaperWorkingSet
 from ..utils import url_to_id
 
 
@@ -288,9 +289,9 @@ def _work_view(request: dict):
     """Search for papers in the collection."""
     work = Work(command=request, work_file=config.work_file)
 
-    papers: list[Scored[Paper]] = list(request.slice(work.run()))
+    worksets: list[Scored[PaperWorkingSet]] = list(request.slice(work.run()))
 
-    return papers, request.count, request.next_offset, len(work.top)
+    return worksets, request.count, request.next_offset, len(work.top)
 
 
 def _locate_fulltext(request: dict):
@@ -372,11 +373,11 @@ def install_api(app) -> FastAPI:
     async def work_view_papers(
         request: ViewRequest = Depends(), user: str = Depends(hascap("admin"))
     ):
-        papers, count, next_offset, total = await run_in_process_pool(
+        worksets, count, next_offset, total = await run_in_process_pool(
             _work_view, serialize(ViewRequest, request)
         )
         return ViewResponse(
-            results=serialize(list[Scored[Paper]], papers),
+            results=serialize(list[Scored[PaperWorkingSet]], worksets),
             count=count,
             next_offset=next_offset,
             total=total,

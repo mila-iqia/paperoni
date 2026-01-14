@@ -5,6 +5,7 @@ from blessed import Terminal
 from ovld import ovld, recurse
 
 from .model import Author, DatePrecision, Paper, PaperInfo, Scored, Venue
+from .model.merge import PaperWorkingSet
 from .utils import expand_links_dict
 
 T = Terminal()
@@ -123,3 +124,14 @@ def display(venue: Venue):
     print_field("Links", "")
     for typ, link in expand_links(venue.links):
         print(f"  {T.bold_green(typ):20} {link}")
+
+
+@ovld
+def display(x: PaperWorkingSet):
+    recurse(x.current)
+    print_field("Versions", len(x.collected))
+
+
+@ovld
+def display(x: object):
+    print(x)
