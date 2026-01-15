@@ -1841,7 +1841,6 @@ body {
 .info-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
     font-size: 14px;
 }
 
@@ -1850,16 +1849,8 @@ body {
     border-bottom: 2px solid #ddd;
 }
 
-.info-table th {
-    padding: 10px;
-    text-align: left;
-    font-weight: 600;
-    color: #333;
-}
-
 .info-table td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+    padding: 5px;
 }
 
 .info-table .info-key {

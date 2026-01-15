@@ -29,29 +29,37 @@ async function fetchWorksets(offset = 0, size = 100) {
     return await response.json();
 }
 
+function createInfoValue(value) {
+    if (value === null || value === undefined) {
+        return html`<span class="info-null">null</span>`;
+    }
+    if (typeof value === 'object' && !Array.isArray(value)) {
+        // Recursively create a table for nested objects
+        return createInfoTable(value);
+    }
+    if (Array.isArray(value)) {
+        // For arrays, stringify them
+        return html`<span>${JSON.stringify(value)}</span>`;
+    }
+    return html`<span>${String(value)}</span>`;
+}
+
 function createInfoTable(info) {
     if (!info || Object.keys(info).length === 0) {
         return null;
     }
 
     const rows = Object.entries(info).map(([key, value]) => {
-        const valueStr = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
         return html`
             <tr>
                 <td class="info-key">${key}</td>
-                <td class="info-value">${valueStr}</td>
+                <td class="info-value">${createInfoValue(value)}</td>
             </tr>
         `;
     });
 
     return html`
         <table class="info-table">
-            <thead>
-                <tr>
-                    <th>Key</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
             <tbody>
                 ${rows}
             </tbody>
