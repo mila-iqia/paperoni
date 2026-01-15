@@ -38,4 +38,19 @@ def install_search(app: FastAPI) -> FastAPI:
             validation_buttons=True,
         )
 
+    @app.get("/workset")
+    async def workset_page(
+        request: Request,
+        user: str = Depends(hascap("admin", redirect=True)),
+    ):
+        """Render the workset page."""
+        validate = deserialize(app.auth.capabilities.captype, "validate")
+        is_validator = app.auth.capabilities.check(user, validate)
+        return render_template(
+            "workset.html",
+            request,
+            is_validator=is_validator,
+            validation_buttons=False,
+        )
+
     return app
