@@ -1,7 +1,9 @@
-import { html, toggle, join } from './common.js';
-
-let isValidator = false;
-let showValidationButtons = false;
+import { html } from './common.js';
+import {
+    createAuthorsSection,
+    createReleasesSection,
+    createDetailsSection
+} from './paper.js';
 
 function setResults(...elements) {
     const container = document.getElementById('worksetContainer');
@@ -25,196 +27,6 @@ async function fetchWorksets(offset = 0, size = 100) {
     }
 
     return await response.json();
-}
-
-function formatAuthorsWithAffiliations(authors) {
-    const institutionMap = new Map();
-    let institutionCounter = 1;
-
-    authors.forEach(author => {
-        const affiliations = author.affiliations ?? [];
-        affiliations.forEach(aff => {
-            const name = aff.display_name || aff.name || '';
-            if (name && !institutionMap.has(name)) {
-                institutionMap.set(name, institutionCounter++);
-            }
-        });
-    });
-
-    const authorData = authors.map(author => {
-        const name = author.display_name ?? 'Unknown';
-        const affiliations = author.affiliations ?? [];
-        const affNumbers = affiliations
-            .map(aff => {
-                const affName = aff.display_name || aff.name || '';
-                return institutionMap.get(affName);
-            })
-            .filter(num => num !== undefined)
-            .sort((a, b) => a - b);
-
-        return { name, affNumbers };
-    });
-
-    return {
-        authorData,
-        institutions: Array.from(institutionMap.entries()).sort((a, b) => a[1] - b[1])
-    };
-}
-
-function formatDate(dateString, precision) {
-    if (!dateString) return null;
-    const parts = dateString.split('-');
-    const year = parts[0];
-    const month = parts[1].padStart(2, '0');
-    const day = parts[2].padStart(2, '0');
-
-    if (precision === 2 || precision === '2') {
-        return `${year}`;
-    } else if (precision === 1 || precision === '1') {
-        return `${year}-${month}`;
-    } else {
-        return `${year}-${month}-${day}`;
-    }
-}
-
-function formatRelease(release) {
-    const date = release.venue?.date
-        ? formatDate(release.venue.date, release.venue.date_precision)
-        : null;
-    const venueName = release.venue?.name ?? null;
-    const status = release.status ?? null;
-    return { date, venueName, status };
-}
-
-function sortReleasesByDate(releases) {
-    return [...releases].sort((a, b) => {
-        const parseDate = (dateString) => {
-            if (!dateString) return new Date(0);
-            const parts = dateString.split('-');
-            if (parts.length === 3) {
-                return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-            }
-            return new Date(dateString);
-        };
-        const dateA = parseDate(a.venue?.date);
-        const dateB = parseDate(b.venue?.date);
-        return dateB - dateA;
-    });
-}
-
-function createAuthorsSection(authors) {
-    if (!authors || authors.length === 0) {
-        return html`<div class="paper-authors-container"><div class="paper-authors">No authors</div></div>`;
-    }
-    const { authorData, institutions } = formatAuthorsWithAffiliations(authors);
-    const authorElements = authorData.map(({ name, affNumbers }) => {
-        const superscriptsWithCommas = affNumbers.length > 0
-            ? html`<sup>${join(',', affNumbers)}</sup>`
-            : null;
-        const authorSpan = html`<span class="author-name" data-affiliations="${affNumbers.join(',')}" data-name="${name}">${name}${superscriptsWithCommas}</span>`;
-        return authorSpan;
-    });
-    const authorNodes = join(', ', authorElements);
-    const institutionElements = institutions.map(([name, num]) => {
-        const instSpan = html`<span class="institution-item" data-affiliation="${num}" data-name="${name}"><sup>${num}</sup>${name}</span>`;
-        return instSpan;
-    });
-    const institutionsHtml = institutions.length > 0
-        ? html`<div class="paper-institutions">${join('; ', institutionElements)}</div>`
-        : null;
-    return html`
-        <div class="paper-authors-container">
-            <div class="paper-authors">${authorNodes}</div>
-            ${institutionsHtml}
-        </div>
-    `;
-}
-
-function createReleasesSection(releases) {
-    if (!releases || releases.length === 0) {
-        return html`<div class="paper-meta-item"><div class="paper-releases">No releases</div></div>`;
-    }
-    const sortedReleases = sortReleasesByDate(releases);
-    const releaseItems = sortedReleases.map(release => {
-        const { date, venueName, status } = formatRelease(release);
-        const venueSpan = html`<span class="release-venue">${venueName ?? 'Unknown'}</span>`;
-        let dateElement;
-        if (date && date.length >= 4) {
-            const year = date.substring(0, 4);
-            const rest = date.substring(4);
-            dateElement = html`<strong class="release-date">${year}${rest}</strong>`;
-        } else {
-            dateElement = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
-        }
-        const statusSpan = status
-            ? html`<span class="release-status">${status}</span>`
-            : null;
-        return html`
-            <div class="release-item">
-                ${dateElement}
-                ${statusSpan}
-                ${venueSpan}
-            </div>
-        `;
-    });
-    return html`
-        <div class="paper-meta-item">
-            <div class="paper-releases">${releaseItems}</div>
-        </div>
-    `;
-}
-
-function extractDomain(url) {
-    try {
-        const hostname = new URL(url).hostname;
-        // Remove www. prefix and get the domain without TLD
-        const parts = hostname.replace(/^www\./, '').split('.');
-        // Return the main domain name (without TLD like .com, .org, .net, etc.)
-        return parts.length > 1 ? parts.slice(0, -1).join('.') : parts[0];
-    } catch {
-        return null;
-    }
-}
-
-function createLinksSection(links) {
-    if (!links || links.length === 0) return null;
-
-    const linkBadges = links.map(link => {
-        const linkType = link.type ?? 'unknown';
-        const linkUrl = link.link;
-        const domain = extractDomain(linkUrl);
-        
-        // Check if the domain name (minus TLD) is already in the type
-        const typeContainsDomain = domain && linkType.toLowerCase().includes(domain.toLowerCase());
-        const badgeText = (domain && !typeContainsDomain) ? `${linkType} (${domain})` : linkType;
-        
-        return html`<a href="${linkUrl}" target="_blank" class="badge link" title="${linkUrl}">${badgeText}</a>`;
-    });
-
-    return html`<div class="paper-links">${linkBadges}</div>`;
-}
-
-function createDetailsSection(paper) {
-    const abstractHtml = paper.abstract ? html`<div class="paper-abstract">${paper.abstract}</div>` : null;
-    const topicsHtml = paper.topics && paper.topics.length > 0
-        ? html`<div class="paper-topics">${paper.topics.map(topic =>
-            html`<span class="badge topic">${topic.name ?? topic.display_name ?? 'Unknown'}</span>`
-        )}</div>`
-        : null;
-    const linksHtml = createLinksSection(paper.links);
-
-    return toggle`
-        <div class="paper-collapsible-section">
-            <button class="toggle-details-button" toggler>
-                <span class="item-toggle">▶</span> Details
-            </button>
-            <div class="details-content" toggled>
-                ${abstractHtml}
-                ${topicsHtml}
-                ${linksHtml}
-            </div>
-        </div>
-    `;
 }
 
 function createInfoTable(info) {
@@ -247,11 +59,9 @@ function createInfoTable(info) {
     `;
 }
 
-function createPaperElement(paperInfo) {
+function createWorksetPaperElement(paperInfo) {
     const paper = paperInfo.paper;
-    const key = paperInfo.key;
     const info = paperInfo.info || {};
-    const score = paperInfo.score;
 
     // Get the first link URL if available
     const firstLink = paper.links && paper.links.length > 0 ? paper.links[0] : null;
@@ -383,7 +193,7 @@ function createWorksetElement(scoredWorkset, index) {
     const tabContent = allPapers.map((paperInfo, tabIndex) => {
         const content = html`
             <div class="tab-content ${tabIndex === 0 ? 'active' : ''}" data-tab-index="${tabIndex}">
-                ${createPaperElement(paperInfo)}
+                ${createWorksetPaperElement(paperInfo)}
             </div>
         `;
         return content;
@@ -523,10 +333,7 @@ function displayError(error) {
     setResults(html`<div class="error-message">Error loading worksets: ${error.message}</div>`);
 }
 
-export async function displayWorksets(hasValidateCapability = false, enableValidationButtons = false) {
-    isValidator = hasValidateCapability;
-    showValidationButtons = enableValidationButtons;
-
+export async function displayWorksets() {
     displayLoading();
 
     try {
