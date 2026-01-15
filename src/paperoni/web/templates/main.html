@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Paperoni{% endblock %}</title>
+        <link rel="stylesheet" href="/assets/style.css">
+        {% if has_custom_css %}
+        <link rel="stylesheet" href="/custom/style.css">
+        {% endif %}
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        <header class="main-header">
+            <div class="header-left">
+                <h1 class="page-title">{% block page_title %}Paperoni{% endblock %}</h1>
+                {% if help_section %}
+                <a href="/help#{{ help_section }}" class="help-link" title="Help">?</a>
+                {% endif %}
+            </div>
+            <div class="header-right">
+                {% if has_logo %}
+                <img src="/custom/logo.png" alt="Logo" class="header-logo">
+                {% endif %}
+                <nav class="header-nav">
+                    <a href="/" class="nav-link">Home</a>
+                    {% if logged_in %}
+                    <a href="/logout" class="nav-link">Logout</a>
+                    {% else %}
+                    <a href="/login" class="nav-link">Login</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

@@ -1,25 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Available Reports</title>
-        <link rel="stylesheet" href="/assets/style.css">
-    </head>
-    <body>
-        <div id="report-list-container">
-            <h1>Available Reports</h1>
+{% extends "main.html" %}
 
-            {% if logs %}
-                <ul class="report-list">
-                    {% for log in logs %}
-                        <li class="report-list-item">
-                            <a href="{{ log.url }}" class="report-link">{{ log.name }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="no-reports">No reports available.</p>
-            {% endif %}
-        </div>
-    </body>
-</html>
+{% block title %}Available Reports{% endblock %}
+
+{% block page_title %}Available Reports{% endblock %}
+
+{% block content %}
+<div id="report-list-container">
+    {% if logs %}
+        <ul class="report-list">
+            {% for log in logs %}
+                <li class="report-list-item">
+                    <a href="{{ log.url }}" class="report-link">{{ log.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-reports">No reports available.</p>
+    {% endif %}
+</div>
+{% endblock %}

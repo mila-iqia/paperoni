@@ -12,6 +12,7 @@ import paperoni
 
 from ..config import config
 from .edit import install_edit
+from .pages import install_pages
 from .reports import install_reports
 from .restapi import install_api
 from .search import install_search
@@ -43,8 +44,13 @@ def create_app():
 
     app.mount("/assets", StaticFiles(directory=(here / "assets")), name="assets")
 
+    # Mount custom assets if configured
+    if config.server.assets and Path(config.server.assets).exists():
+        app.mount("/custom", StaticFiles(directory=config.server.assets), name="custom")
+
     install_api(app)
     install_reports(app)
     install_search(app)
     install_edit(app)
+    install_pages(app)
     return app
