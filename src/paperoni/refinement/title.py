@@ -37,7 +37,7 @@ async def crossref_title(type: Literal["title"], link: str):
         return None
 
     work_data = SimpleNamespace(**items[0])
-    paper = paper_from_crossref(work_data)
+    paper = await paper_from_crossref(work_data)
     if paper is None or paper.title != title:
         return None
     return paper

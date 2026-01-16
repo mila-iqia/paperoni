@@ -46,7 +46,7 @@ async def crossref(type: Literal["doi"], link: str):
         raise Exception("Request failed", data)
 
     data = SimpleNamespace(**data["message"])
-    return paper_from_crossref(data)
+    return await paper_from_crossref(data)
 
 
 @register_fetch

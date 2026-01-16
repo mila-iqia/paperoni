@@ -18,7 +18,7 @@ from ..model import (
 from ..utils import url_to_id
 
 
-def paper_from_crossref(data):
+async def paper_from_crossref(data):
     if not getattr(data, "author", None):
         return None
     releases = []
@@ -85,7 +85,7 @@ def paper_from_crossref(data):
 
     required_keys = {"given", "family", "affiliation"}
 
-    def extract_affiliation(aff):
+    async def extract_affiliation(aff):
         if "id" in aff and isinstance(aff["id"], list):
             for id_entry in aff["id"]:
                 if (
@@ -95,7 +95,7 @@ def paper_from_crossref(data):
                 ):
                     ror_url = id_entry["id"]
                     _, ror_id = url_to_id(ror_url)
-                    return institution_from_ror(ror_id)
+                    return await institution_from_ror(ror_id)
 
         else:
             return Institution(
@@ -116,7 +116,7 @@ def paper_from_crossref(data):
                 display_name=(dn := f"{author['given']} {author['family']}"),
                 author=Author(name=dn),
                 affiliations=[
-                    extract_affiliation(aff)
+                    await extract_affiliation(aff)
                     for aff in author["affiliation"]
                     if "name" in aff
                 ],
@@ -337,12 +337,12 @@ def paper_from_jats(soup, links):
     )
 
 
-def institution_from_ror(ror_id):
+async def institution_from_ror(ror_id):
     """
     Given a ROR ID (e.g., '025wfj672'), fetch institution info from ROR API and return an Institution object.
     """
     url = f"https://api.ror.org/v2/organizations/{ror_id}"
-    data = config.fetch.read_retry(url, format="json")
+    data = await config.fetch.aread_retry(url, format="json")
 
     name = None
     for n in data.get("names", []):
