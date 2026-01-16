@@ -11,7 +11,7 @@ from ..utils import check_papers
 async def test_query(data_regression: DataRegressionFixture):
     discoverer = PMLR()
 
-    assert "v180" in discoverer.list_volumes(), "Could not find volume v180"
+    assert "v180" in (await discoverer.list_volumes()), "Could not find volume v180"
 
     papers: list[PaperInfo] = sorted(
         [p async for p in discoverer.query(volume="v180", name="Yoshua Bengio")],

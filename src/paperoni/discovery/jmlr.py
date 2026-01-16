@@ -41,13 +41,12 @@ class JMLR(Discoverer):
     ):
         """Query Journal of Machine Learning Research."""
         if volume is None:
-            for v in self.list_volumes():
+            for v in await self.list_volumes():
                 async for paper in self.query(v, name, cache, focuses):
                     yield paper
             return
         name = name and asciiify(name).lower()
-        results = self.get_volume(volume, cache)
-        for paper_info in results:
+        async for paper_info in self.get_volume(volume, cache):
             try:
                 if (
                     paper_info
@@ -64,10 +63,10 @@ class JMLR(Discoverer):
             except Exception as exc:
                 traceback.print_exception(exc)
 
-    def get_volume(self, volume, cache=False):
+    async def get_volume(self, volume, cache=False):
         send(event=f"Fetching JMLR {volume}")
         try:
-            index = config.fetch.read(
+            index = await config.fetch.aread(
                 f"{self.urlbase}/papers/{volume}",
                 format="html",
                 cache_into=cache
@@ -173,13 +172,13 @@ class JMLR(Discoverer):
                 info={"discovered_by": {"jmlr": jmlr_key}},
             )
 
-    def extract_volumes(self, index, selector, map=None, filter=None):
-        main = config.fetch.read(index, format="html")
+    async def extract_volumes(self, index, selector, map=None, filter=None):
+        main = await config.fetch.aread(index, format="html")
         urls = [lnk.attrs["href"] for lnk in main.select(selector)]
         return [map(url) if map else url for url in urls if filter is None or filter(url)]
 
-    def list_volumes(self):
-        return self.extract_volumes(
+    async def list_volumes(self):
+        return await self.extract_volumes(
             index=f"{self.urlbase}/papers",
             selector="a",
             filter=lambda url: url.startswith("v"),

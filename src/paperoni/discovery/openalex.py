@@ -124,24 +124,24 @@ class OpenAlexQueryManager:
         self.mailto = mailto
         self.work_types = work_types
 
-    def find_author_id(self, author: str) -> Optional[str]:
-        found = self._evaluate("authors", filter=f"display_name.search:{author}")
+    async def find_author_id(self, author: str) -> Optional[str]:
+        found = await self._evaluate("authors", filter=f"display_name.search:{author}")
         results = found["results"]
         return results[0]["id"] if results else None
 
-    def find_institution_id(self, institution: str) -> Optional[str]:
-        found = self._evaluate(
+    async def find_institution_id(self, institution: str) -> Optional[str]:
+        found = await self._evaluate(
             "institutions", filter=f"display_name.search:{institution}"
         )
         results = found["results"]
         return results[0]["id"] if results else None
 
-    def works(self, **params):
-        for entry in self._list("works", **params):
+    async def works(self, **params):
+        async for entry in self._list("works", **params):
             if result := self._try_wrapping_paper(entry):
                 yield result
 
-    def _list(
+    async def _list(
         self,
         path: str,
         per_page: int = None,
@@ -158,7 +158,7 @@ class OpenAlexQueryManager:
             per_page = 100
         while True:
             local_params = {"page": page, "per-page": per_page, **params}
-            results = self._evaluate(path, **local_params)
+            results = await self._evaluate(path, **local_params)
             if not results["results"]:
                 # No more results.
                 break
@@ -180,10 +180,10 @@ class OpenAlexQueryManager:
             # Next page
             page += 1
 
-    def _evaluate(self, path: str, **params):
+    async def _evaluate(self, path: str, **params):
         if self.mailto:
             params["mailto"] = self.mailto
-        jdata = config.fetch.read_retry(
+        jdata = await config.fetch.aread_retry(
             f"https://api.openalex.org/{path}", params=params, format="json"
         )
         if jdata is None:
@@ -484,7 +484,7 @@ class OpenAlex(Discoverer):
         elif author:
             if verbose:
                 print("[search author]", author)
-            author_id = qm.find_author_id(author)
+            author_id = await qm.find_author_id(author)
             if author_id is None:
                 if verbose:
                     print("[no author found]", author)
@@ -495,7 +495,7 @@ class OpenAlex(Discoverer):
         if institution:
             if verbose:
                 print("[query institution]", institution)
-            institution_id = qm.find_institution_id(institution)
+            institution_id = await qm.find_institution_id(institution)
             if institution_id is None:
                 if verbose:
                     print("[no institution found]", institution)
@@ -522,5 +522,5 @@ class OpenAlex(Discoverer):
                 "Need both page and per_page for pagination, or none of them to display all results"
             )
 
-        for paper in qm.works(**params, limit=limit, verbose=verbose):
+        async for paper in qm.works(**params, limit=limit, verbose=verbose):
             yield paper

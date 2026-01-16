@@ -93,12 +93,11 @@ class PMLR(Discoverer):
         """Query Proceedings of Machine Learning Research."""
         name = name and asciiify(name).lower()
         if volume is None:
-            for v in self.list_volumes():
+            for v in await self.list_volumes():
                 async for paper in self.query(v, name, cache, focuses):
                     yield paper
             return
-        results = self.get_volume(volume, cache)
-        for paper_info in results:
+        async for paper_info in self.get_volume(volume, cache):
             try:
                 if (
                     paper_info
@@ -115,10 +114,10 @@ class PMLR(Discoverer):
             except Exception as exc:
                 traceback.print_exception(exc)
 
-    def get_volume(self, volume, cache=False):
+    async def get_volume(self, volume, cache=False):
         send(event=f"Fetching PMLR {volume}")
         try:
-            papers = config.fetch.read(
+            papers = await config.fetch.aread(
                 f"https://proceedings.mlr.press/{volume}/assets/bib/citeproc.yaml",
                 format="yaml",
                 cache_into=cache
@@ -130,13 +129,13 @@ class PMLR(Discoverer):
         except Exception:
             print_exc()
 
-    def extract_volumes(self, index, selector, map=None, filter=None):
-        main = config.fetch.read(index, format="html")
+    async def extract_volumes(self, index, selector, map=None, filter=None):
+        main = await config.fetch.aread(index, format="html")
         urls = [lnk.attrs["href"] for lnk in main.select(selector)]
         return [map(url) if map else url for url in urls if filter is None or filter(url)]
 
-    def list_volumes(self):
-        return self.extract_volumes(
+    async def list_volumes(self):
+        return await self.extract_volumes(
             index="https://proceedings.mlr.press",
             selector=".proceedings-list a",
         )

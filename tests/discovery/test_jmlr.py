@@ -11,7 +11,7 @@ from ..utils import check_papers
 async def test_query(data_regression: DataRegressionFixture):
     discoverer = JMLR()
 
-    assert "v24" in discoverer.list_volumes()
+    assert "v24" in (await discoverer.list_volumes())
 
     papers: list[PaperInfo] = sorted(
         [p async for p in discoverer.query(volume="v24", name="Yoshua Bengio")],
