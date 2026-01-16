@@ -445,9 +445,10 @@ class Work:
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
             for sws in prog(list(it), name="normalize"):
-                p = normalize_paper(sws.value.current, **kwargs, force=self.force)
-                sws.value.current = simplify_paper(p)
-                sws.score = work.focuses.score(sws.value)
+                with soft_fail():
+                    p = normalize_paper(sws.value.current, **kwargs, force=self.force)
+                    sws.value.current = simplify_paper(p)
+                    sws.score = work.focuses.score(sws.value)
 
             work.top.resort()
             work.save()
