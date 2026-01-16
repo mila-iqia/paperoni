@@ -70,7 +70,7 @@ def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
                     continue
 
                 name = getattr(f.func, "description", "???")
-                nk = name, key
+                nk = f"{name}/{key}"
                 if nk in statuses:
                     continue
                 statuses[nk] = "pending"
@@ -80,7 +80,7 @@ def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
                         statuses[nk] = "found"
                         yield PaperInfo(
                             paper=paper,
-                            key=key,
+                            key=nk,
                             info={"refined_by": {name: key}},
                         )
                     else:

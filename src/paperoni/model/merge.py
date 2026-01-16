@@ -21,6 +21,8 @@ class PaperWorkingSet:
         return self
 
     def add(self, p: PaperInfo):
+        if any(p2.key == p.key for p2 in self.collected):
+            return
         self.collected.append(p)
         if self.current is None:
             self.current = CollectionPaper.make_collection_item(p.paper)
