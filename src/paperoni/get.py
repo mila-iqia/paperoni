@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import re
@@ -22,6 +23,7 @@ from requests import Session
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 
+ERRORS = (httpx.HTTPStatusError, requests.RequestException)
 ua = UserAgent()
 
 
@@ -143,7 +145,7 @@ class Fetcher:
 
     @backoff.on_exception(
         backoff.expo,
-        (httpx.HTTPError, requests.RequestException),
+        ERRORS,
         giveup=_giveup,
         max_time=30,
         logger=None,
@@ -180,7 +182,7 @@ class Fetcher:
 
     @backoff.on_exception(
         backoff.expo,
-        (httpx.HTTPError, requests.RequestException),
+        ERRORS,
         giveup=_giveup,
         max_time=30,
         logger=None,
@@ -238,6 +240,11 @@ class HTTPXFetcher(Fetcher):
     user_agent: str = None
     timeout: int = 60
 
+    # [serieux: ignore]
+    _aclient: httpx.AsyncClient = None
+    # [serieux: ignore]
+    _aclient_loop = None
+
     def __post_init__(self):
         if self.user_agent is not None:
             try:
@@ -249,9 +256,18 @@ class HTTPXFetcher(Fetcher):
     def client(self):
         return httpx.Client(follow_redirects=True, default_encoding=detect_encoding)
 
-    @cached_property
+    @property
     def aclient(self):
-        return httpx.AsyncClient(follow_redirects=True, default_encoding=detect_encoding)
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if self._aclient is None or self._aclient_loop is not loop:
+            self._aclient = httpx.AsyncClient(
+                follow_redirects=True, default_encoding=detect_encoding
+            )
+            self._aclient_loop = loop
+        return self._aclient
 
     def _prepare_kwargs(self, headers={}, **kwargs):
         kwargs.setdefault("timeout", self.timeout)
@@ -305,23 +321,31 @@ class CachedFetcher(HTTPXFetcher):
             policy=self._cache_policy(),
         )
 
-    @cached_property
+    @property
     def aclient(self):
-        if not self.cache_path:
-            return httpx.AsyncClient(
-                follow_redirects=True, default_encoding=detect_encoding
-            )
-        ttl = self.expire_after.total_seconds() if self.expire_after else None
-        storage = hishel.AsyncSqliteStorage(
-            database_path=str(self.cache_path) + ".db",
-            default_ttl=ttl,
-        )
-        return AsyncCacheClient(
-            storage=storage,
-            follow_redirects=True,
-            default_encoding=detect_encoding,
-            policy=self._cache_policy(),
-        )
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if self._aclient is None or self._aclient_loop is not loop:
+            if not self.cache_path:
+                self._aclient = httpx.AsyncClient(
+                    follow_redirects=True, default_encoding=detect_encoding
+                )
+            else:
+                ttl = self.expire_after.total_seconds() if self.expire_after else None
+                storage = hishel.AsyncSqliteStorage(
+                    database_path=str(self.cache_path) + ".db",
+                    default_ttl=ttl,
+                )
+                self._aclient = AsyncCacheClient(
+                    storage=storage,
+                    follow_redirects=True,
+                    default_encoding=detect_encoding,
+                    policy=self._cache_policy(),
+                )
+            self._aclient_loop = loop
+        return self._aclient
 
 
 @dataclass
@@ -430,7 +454,7 @@ class SequenceFetcher(Fetcher):
         for fetcher in self.fetchers:
             try:
                 return fetcher.generic(method, url, **kwargs)
-            except (httpx.HTTPError, requests.RequestException) as e:
+            except ERRORS as e:
                 if e.response.status_code == 403:
                     continue
                 else:
@@ -441,7 +465,7 @@ class SequenceFetcher(Fetcher):
         for fetcher in self.fetchers:
             try:
                 return await fetcher.ageneric(method, url, **kwargs)
-            except (httpx.HTTPError, requests.RequestException) as e:
+            except ERRORS as e:
                 if e.response.status_code == 403:
                     continue
                 else:

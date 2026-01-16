@@ -2,7 +2,14 @@ from pathlib import Path
 from typing import Literal
 
 import gifnoc
+<<<<<<< HEAD
 
+=======
+from paperazzi.platforms.utils import Message
+
+from ..config import config
+from ..get import ERRORS
+>>>>>>> 63b3c26 (Make fetch_all async)
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import PromptConfig
 from ..prompt_utils import prompt_html
@@ -14,7 +21,7 @@ FIRST_MESSAGE = """### The HTML web page of the scientific paper:
 {}"""
 
 
-def prompt(link: str, send_input, force: bool = False) -> Paper:
+async def prompt(link: str, send_input, force: bool = False) -> Paper:
     """Analyze HTML content to extract author and affiliation information."""
     analysis: Analysis = prompt_html(
         system_prompt=llm_html_config.system_prompt,
@@ -42,8 +49,8 @@ def prompt(link: str, send_input, force: bool = False) -> Paper:
 
 
 @register_fetch(tags={"prompt", "html"})
-def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
-    paper = prompt(f"https://doi.org/{link}", send_input=f"{type}:{link}", force=force)
+async def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
+    paper = await prompt(f"https://doi.org/{link}", send_input=f"{type}:{link}", force=force)
     paper.links.append(Link(type=type, link=link))
     return paper.authors and paper or None
 

@@ -224,7 +224,7 @@ class Refine:
             else:
                 links.append(link.split(":", 1))
 
-        results = list(fetch_all(links, tags=self.tags, force=self.force))
+        results = [p async for p in fetch_all(links, tags=self.tags, force=self.force)]
 
         if self.norm:
             results = [
@@ -394,9 +394,10 @@ class Work:
         async def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
+            sets = list(it)
 
-            for sws in prog(list(it), name="refine"):
-                for i in range(self.loops):
+            for i in range(self.loops):
+                for sws in prog(sets, name=f"refine{i + 1 if i else ''}"):
                     statuses.update(
                         {
                             (name, key): "done"
@@ -409,7 +410,7 @@ class Work:
                     links.append(("title", sws.value.current.title))
                     if i == 0:
                         send(to_refine=links)
-                    for pinfo in fetch_all(
+                    async for pinfo in fetch_all(
                         links,
                         group=";".join([f"{type}:{link}" for type, link in links]),
                         tags=self.tags,

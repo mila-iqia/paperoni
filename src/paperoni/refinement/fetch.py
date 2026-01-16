@@ -8,12 +8,13 @@ from ..utils import soft_fail
 
 
 @ovld
-def fetch(type: str, link: str):
+async def fetch(type: str, link: str):
     return None
 
 
 def register_fetch(f=None, *, tags=None):
     def decorator(f):
+        assert inspect.iscoroutinefunction(f), "Registered fetch function must be async"
         f.description = f.__name__
         f.tags = tags or {"normal"}
         f.tags.add(f.__name__)
@@ -30,12 +31,12 @@ def _test_tags(f_tags: set, tags: set) -> bool:
     return "all" in tags or not (tags - f_tags)
 
 
-def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
+async def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
     f_sig = inspect.signature(f)
     if "force" in f_sig.parameters:
-        return f(*args, force=force, **kwargs)
+        return await f(*args, force=force, **kwargs)
     else:
-        return f(*args, **kwargs)
+        return await f(*args, **kwargs)
 
 
 # TODO: refactor this to simplify the logic and use pdf refine the same way
@@ -54,7 +55,7 @@ def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
 #         FOR EACH link IN sws.value.links:
 #             IF refine(link, tags=tags)
 #                 BREAK
-def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
+async def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
     statuses = statuses or {}
     tags = tags or {"normal"}
 
@@ -62,29 +63,33 @@ def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
     for type, link in links:
         funcs.append((f"{type}:{link}", (type, link), fetch.resolve_all(type, link)))
 
-    for key, args, fs in funcs:
+    async def go(key, args, f):
         __trace__ = f"refine:{key}"  # noqa: F841
-        for f in fs:
-            with soft_fail(f"Refinement of {key}"):
-                if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
-                    continue
+        with soft_fail(f"Refinement of {key}"):
+            try:
+                paper = await _call(f.func, *args, force=force)
+                if paper is not None:
+                    statuses[nk] = "found"
+                    return PaperInfo(
+                        paper=paper,
+                        key=nk,
+                        info={"refined_by": {name: key}},
+                    )
+                else:
+                    statuses[nk] = "not_found"
+            except Exception:
+                statuses[nk] = "error"
+                raise
 
-                name = getattr(f.func, "description", "???")
-                nk = f"{name}/{key}"
-                if nk in statuses:
-                    continue
-                statuses[nk] = "pending"
-                try:
-                    paper = _call(f.func, *args, force=force)
-                    if paper is not None:
-                        statuses[nk] = "found"
-                        yield PaperInfo(
-                            paper=paper,
-                            key=nk,
-                            info={"refined_by": {name: key}},
-                        )
-                    else:
-                        statuses[nk] = "not_found"
-                except Exception:
-                    statuses[nk] = "error"
-                    raise
+    for key, args, fs in funcs:
+        for f in fs:
+            if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
+                continue
+            name = getattr(f.func, "description", "???")
+            nk = f"{name}/{key}"
+            if nk in statuses:
+                continue
+            statuses[nk] = "pending"
+            result = await go(key, args, f)
+            if result is not None:
+                yield result

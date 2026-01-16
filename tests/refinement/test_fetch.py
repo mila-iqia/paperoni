@@ -107,11 +107,12 @@ links_w_redirect_errors = {
 }
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(["func", "link"], links)
-def test_refine(func, link, data_regression):
+async def test_refine(func, link, data_regression):
     typ, link = link.split(":", 1)
     try:
-        result = func(typ, link)
+        result = await func(typ, link)
         assert result.authors
         data = serialize(Paper, result)
         data_regression.check(data)
@@ -124,6 +125,7 @@ def test_refine(func, link, data_regression):
             raise
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["func", "link"],
     [
@@ -135,7 +137,7 @@ def test_refine(func, link, data_regression):
         (openalex_title, "title:Pre-training of Deep Bidirectional"),
     ],
 )
-def test_ignored_links(func, link):
+async def test_ignored_links(func, link):
     typ, link = link.split(":")
-    result = func(typ, link)
+    result = await func(typ, link)
     assert result is None

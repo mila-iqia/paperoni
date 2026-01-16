@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,8 +16,14 @@ from tests.utils import check_papers
 def paper_info():
     # Prepared with:
     # paperoni refine --link "doi:10.1109/cvpr52733.2024.01307" --norm
-    with gifnoc.overlay({"paperoni.data_path": str(Path(__file__).parent / "data")}):
-        yield next(fetch_all([("doi", "10.1109/cvpr52733.2024.01307")], tags={}))
+    with (gifnoc.overlay({"paperoni.data_path": str(Path(__file__).parent / "data")})):
+
+        async def get():
+            return await anext(
+                fetch_all([("doi", "10.1109/cvpr52733.2024.01307")], tags={})
+            )
+
+        yield asyncio.run(get())
 
 
 def test_norm(data_regression: DataRegressionFixture, paper_info: PaperInfo):

@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 from unittest.mock import patch
 
@@ -23,23 +24,37 @@ def paper_info():
             lambda *args, **kwargs: "DUMMY_KEY",
         ),
     ):
-        assert (
-            next(
+
+        async def get():
+            assert (
+                next(
+                    filter(
+                        lambda pinfo: "html" in pinfo.info["refined_by"],
+                        [
+                            p
+                            async for p in fetch_all(
+                                [("doi", "10.1038/s41597-023-02214-y")], tags={}
+                            )
+                        ],
+                    ),
+                    None,
+                )
+                is None
+            )
+
+            return next(
                 filter(
                     lambda pinfo: "html" in pinfo.info["refined_by"],
-                    fetch_all([("doi", "10.1038/s41597-023-02214-y")], tags={}),
-                ),
-                None,
+                    [
+                        p
+                        async for p in fetch_all(
+                            [("doi", "10.1038/s41597-023-02214-y")], tags={"html"}
+                        )
+                    ],
+                )
             )
-            is None
-        )
 
-        yield next(
-            filter(
-                lambda pinfo: "html" in pinfo.info["refined_by"],
-                fetch_all([("doi", "10.1038/s41597-023-02214-y")], tags={"html"}),
-            )
-        )
+        yield asyncio.run(get())
 
 
 def test_html(data_regression: DataRegressionFixture, paper_info: PaperInfo):

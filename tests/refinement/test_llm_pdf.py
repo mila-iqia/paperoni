@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 from unittest.mock import patch
 
@@ -22,23 +23,37 @@ def paper_info():
             "paperoni.refinement.llm_pdf._make_key", lambda *args, **kwargs: "DUMMY_KEY"
         ),
     ):
-        assert (
-            next(
+
+        async def get():
+            assert (
+                next(
+                    filter(
+                        lambda pinfo: "pdf" in pinfo.info["refined_by"],
+                        [
+                            p
+                            async for p in fetch_all(
+                                [("openreview", "_3FyT_W1DW")], tags={}
+                            )
+                        ],
+                    ),
+                    None,
+                )
+                is None
+            )
+
+            return next(
                 filter(
                     lambda pinfo: "pdf" in pinfo.info["refined_by"],
-                    fetch_all([("openreview", "_3FyT_W1DW")], tags={}),
-                ),
-                None,
+                    [
+                        p
+                        async for p in fetch_all(
+                            [("openreview", "_3FyT_W1DW")], tags={"pdf"}
+                        )
+                    ],
+                )
             )
-            is None
-        )
 
-        yield next(
-            filter(
-                lambda pinfo: "pdf" in pinfo.info["refined_by"],
-                fetch_all([("openreview", "_3FyT_W1DW")], tags={"pdf"}),
-            )
-        )
+        yield asyncio.run(get())
 
 
 def test_pdf(data_regression: DataRegressionFixture, paper_info: PaperInfo):
