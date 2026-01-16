@@ -271,39 +271,44 @@ class AutoFocusRequest(Focus.AutoFocus):
     pass
 
 
-def _search(request: dict):
+async def _search(request: dict):
     request: SearchRequest = deserialize(SearchRequest, request)
 
     coll = Coll(command=None)
 
     # Perform search using the collection's search method
-    all_matches = request.run(coll)
+    all_matches = await request.run(coll)
     results = list(request.slice(all_matches))
 
     return results, request.count, request.next_offset, len(all_matches)
 
 
-def _work_view(request: dict):
+async def _work_view(request: dict):
     request: ViewRequest = deserialize(ViewRequest, request)
 
     """Search for papers in the collection."""
     work = Work(command=request, work_file=config.work_file)
 
-    worksets: list[Scored[PaperWorkingSet]] = list(request.slice(work.run()))
+    worksets: list[Scored[PaperWorkingSet]] = list(request.slice(await work.run()))
 
     return worksets, request.count, request.next_offset, len(work.top)
 
 
-def _locate_fulltext(request: dict):
+async def _locate_fulltext(request: dict):
     request: LocateFulltextRequest = deserialize(LocateFulltextRequest, request)
-    all_urls = request.run()
+    all_urls = await request.run()
     urls = list(request.slice(all_urls))
     return urls, request.count, request.next_offset, len(all_urls)
 
 
-def _download_fulltext(request: dict):
+async def _download_fulltext(request: dict):
     request: DownloadFulltextRequest = deserialize(DownloadFulltextRequest, request)
-    return request.run()
+    return await request.run()
+
+
+def _run_async_in_new_loop(func, *args):
+    """Run an async function in a new event loop (for use in process pool)."""
+    return asyncio.run(func(*args))
 
 
 async def run_in_process_pool(func, *args):
@@ -312,10 +317,12 @@ async def run_in_process_pool(func, *args):
     # like collection. Currently, serialize(config) fails with
     # serieux.exc.ValidationError: At path (at root): Cannot serialize object of type 'Proxy'
     if config.server.process_pool is None:
-        return func(*args)
+        return await func(*args)
 
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(config.server.process_pool, func, *args)
+    return await loop.run_in_executor(
+        config.server.process_pool, _run_async_in_new_loop, func, *args
+    )
 
 
 def install_api(app) -> FastAPI:
@@ -376,7 +383,7 @@ def install_api(app) -> FastAPI:
         request.user = user
 
         work = Work(command=request, work_file=config.work_file)
-        work.run()
+        await work.run()
 
         return AddResponse(total=len(work.top))
 
@@ -403,7 +410,7 @@ def install_api(app) -> FastAPI:
         """Search for papers in the collection."""
         work = Work(command=request, work_file=config.work_file)
 
-        added = work.run()
+        added = await work.run()
 
         return IncludeResponse(total=added)
 
@@ -481,7 +488,7 @@ def install_api(app) -> FastAPI:
         """Autofocus the collection."""
         focus = Focus(command=None)
 
-        return request.run(focus)
+        return await request.run(focus)
 
     @app.get(
         f"{prefix}/fulltext/locate",

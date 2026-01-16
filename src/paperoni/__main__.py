@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 import itertools
 import json
 import logging
@@ -126,7 +127,7 @@ class Discover(Productor):
     # Top n entries
     top: int = 0
 
-    def run(self):
+    async def run(self):
         typ = PaperInfo
         papers = self.iterate()
         if self.top:
@@ -149,7 +150,7 @@ class Fulltext:
             for url in urls:
                 print(f"\033[36m[{url.info}]\033[0m {url.url}")
 
-        def run(self):
+        async def run(self):
             if self.ref.startswith("http"):
                 ref = ":".join(url_to_id(self.ref) or ["", ""])
             else:
@@ -173,7 +174,7 @@ class Fulltext:
         def format(self, pdf: PDF):
             print("Downloaded into:", pdf.pdf_path.resolve())
 
-        def run(self):
+        async def run(self):
             p = get_pdf(
                 self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
             )
@@ -183,9 +184,9 @@ class Fulltext:
     # Command to execute
     command: TaggedUnion[Locate, Download]
 
-    def run(self):
+    async def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
-        self.command.run()
+        await self.command.run()
 
 
 @dataclass
@@ -214,7 +215,7 @@ class Refine:
     # Output format
     format: Formatter = TerminalFormatter
 
-    def run(self):
+    async def run(self):
         results = []
         links = []
         for link in self.link:
@@ -248,7 +249,7 @@ class Work:
         n: int
         clear: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             work_file = work.work_file or config.work_file
             if work_file.exists():
                 top = deserialize(
@@ -272,7 +273,7 @@ class Work:
         # [alias: -U]
         check_paper_updates: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             ex = work.collection and work.collection.exclusions
 
             find = Finder(
@@ -342,7 +343,7 @@ class Work:
         # Number of papers to view
         n: int = None
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             worksets = itertools.islice(work.top, self.n) if self.n else work.top
             match self.what:
                 case "title":
@@ -390,7 +391,7 @@ class Work:
         # Whether to force re-running the refine
         force: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             statuses = {}
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
@@ -437,7 +438,7 @@ class Work:
         # Whether to force re-running the normalization
         force: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             kwargs = {k: not v for k, v in norm_args(self.exclude).items()}
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
@@ -471,7 +472,7 @@ class Work:
         # Minimum score for saving
         score: float = 0.1
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 stop=self.n,
@@ -503,7 +504,7 @@ class Work:
         # Maximum score for excluding
         score: float = 0.0
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 stop=None if self.n is None else -self.n,
@@ -520,7 +521,7 @@ class Work:
     class Clear(Extractor):
         """Clear the workset."""
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             self.extract(work, filter=lambda _: True)
             work.save()
 
@@ -571,12 +572,12 @@ class Work:
             dest=wfile,
         )
 
-    def run(self):
+    async def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         wf = self.work_file or config.work_file
         lf = wf.with_suffix(".lock")
         with FileLock(lf):
-            return self.command.run(self)
+            return await self.command.run(self)
 
 
 @dataclass
@@ -623,7 +624,7 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
-        def run(self, coll: "Coll") -> list[Paper]:
+        async def run(self, coll: "Coll") -> list[Paper]:
             flags = set() if self.flags is None else self.flags
             papers = [
                 replace(
@@ -659,7 +660,7 @@ class Coll:
         # [positional]
         file: Path
 
-        def run(self, coll: "Coll"):
+        async def run(self, coll: "Coll"):
             coll.collection.add_papers(deserialize(list[Paper], self.file))
 
     @dataclass
@@ -670,7 +671,7 @@ class Coll:
         # [positional]
         file: Path = None
 
-        def run(self, coll: "Coll"):
+        async def run(self, coll: "Coll"):
             papers = list(coll.collection.search())
             if self.file:
                 dump(list[Paper], papers, dest=self.file)
@@ -684,7 +685,7 @@ class Coll:
         # Whether to force dropping the collection
         force: bool = False
 
-        def run(self, coll: "Coll"):
+        async def run(self, coll: "Coll"):
             if not self.force:
                 # Ask the user for confirmation
                 answer = input("Are you sure you want to drop the collection? (Y/n): ")
@@ -715,8 +716,8 @@ class Coll:
         else:
             return config.collection
 
-    def run(self):
-        self.command.run(self)
+    async def run(self):
+        await self.command.run(self)
 
 
 @dataclass
@@ -727,14 +728,14 @@ class Batch:
     # [positional]
     batch_file: Path
 
-    def run(self):
+    async def run(self):
         batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
         for name, cmd in batch.items():
             __trace__ = f"step:{name}"  # noqa: F841
             batch_descr = f"Batch: start step {name}"
             with soft_fail(batch_descr):
                 send(event=batch_descr)
-                cmd.run()
+                await cmd.run()
 
 
 @dataclass
@@ -749,7 +750,7 @@ class Focus:
         # [alias: -t]
         timespan: timedelta = timedelta(weeks=52)
 
-        def run(self, focus: "Focus"):
+        async def run(self, focus: "Focus"):
             start_date = datetime.now() - self.timespan
             start_date = start_date.date().replace(month=1, day=1)
             focuses = Focuses()
@@ -799,8 +800,8 @@ class Focus:
         else:
             return config.collection
 
-    def run(self):
-        self.command.run(self)
+    async def run(self):
+        await self.command.run(self)
 
 
 @dataclass
@@ -821,7 +822,7 @@ class Serve:
     # Whether to enable auth
     auth: bool = True
 
-    def run(self):
+    async def run(self):
         from .web import create_app
 
         if self.auth:
@@ -856,7 +857,7 @@ class Login:
     # Whether to use headless mode
     headless: bool = False
 
-    def run(self):
+    async def run(self):
         print_field("Access token", login(self.endpoint, self.headless))
 
 
@@ -896,7 +897,7 @@ class PaperoniInterface:
         logname = now.strftime("%Y%m%d_%H%M%S") + f"_{rand:04d}.jsonl"
         return logdir / logname
 
-    def run(self):
+    async def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         logfile = None
         if self.dash and not getattr(self.command, "no_dash", lambda: False)():
@@ -917,14 +918,14 @@ class PaperoniInterface:
                 description="`" + " ".join(map(shlex.quote, sys.argv)) + "`",
                 reporters=config.reporters,
             ) as report:
-                self.command.run()
+                await self.command.run()
                 if logfile and config.server:
                     url = f"{config.server.protocol}://{config.server.host}"
                     if config.server.port not in (80, 443):
                         url += f":{config.server.port}"
                     report.set_message(f"[View report]({url}/report/{logfile.stem})")
         else:
-            self.command.run()
+            await self.command.run()
 
 
 def enable_log():
@@ -1126,7 +1127,7 @@ def main():
         if args.config:
             add_overlay(Path(args.config))
         command = cli(field="paperoni.cli", type=PaperoniInterface, argv=remaining)
-        command.run()
+        asyncio.run(command.run())
 
 
 if __name__ == "__main__":
