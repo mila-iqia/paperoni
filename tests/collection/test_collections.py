@@ -1,3 +1,4 @@
+import asyncio
 import copy
 from contextlib import contextmanager
 from functools import partial
@@ -55,8 +56,7 @@ def eq(a: dict, b: dict):
     return True
 
 
-@pytest.fixture(scope="session")
-def sample_papers() -> Generator[list[Paper], None, None]:
+async def _get_sample_papers():
     discoverer = JMLR()
 
     volumes: list[str] = []
@@ -67,7 +67,15 @@ def sample_papers() -> Generator[list[Paper], None, None]:
 
     papers: list[PaperInfo] = []
     for volume in volumes:
-        papers.extend(discoverer.query(volume=volume, name="Yoshua Bengio"))
+        async for p in discoverer.query(volume=volume, name="Yoshua Bengio"):
+            papers.append(p)
+
+    return papers
+
+
+@pytest.fixture(scope="session")
+def sample_papers() -> Generator[list[Paper], None, None]:
+    papers = asyncio.run(_get_sample_papers())
 
     papers: list[Paper] = sorted((p.paper for p in papers), key=lambda x: x.title)[:10]
     assert len(papers) == 10

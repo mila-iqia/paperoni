@@ -20,6 +20,7 @@ PAPERS = [
 ]
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "query_params",
     [
@@ -29,16 +30,21 @@ PAPERS = [
         {"title": "Hierarchical Latent Variable"},
     ],
 )
-def test_query(data_regression: DataRegressionFixture, query_params: dict[str, str]):
+async def test_query(
+    data_regression: DataRegressionFixture, query_params: dict[str, str]
+):
     discoverer = OpenAlex()
 
     papers: list[PaperInfo] = sorted(
-        discoverer.query(
-            **query_params,
-            page=1,
-            per_page=100,
-            limit=10000,
-        ),
+        [
+            p
+            async for p in discoverer.query(
+                **query_params,
+                page=1,
+                per_page=100,
+                limit=10000,
+            )
+        ],
         key=lambda x: x.paper.title,
     )
 
@@ -77,9 +83,15 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                     p.paper
                     for p in sorted(
                         filter_test_papers(
-                            discoverer.query(
-                                author="Yoshua Bengio", page=1, per_page=100, limit=100
-                            ),
+                            [
+                                pp
+                                async for pp in discoverer.query(
+                                    author="Yoshua Bengio",
+                                    page=1,
+                                    per_page=100,
+                                    limit=100,
+                                )
+                            ],
                             PAPERS,
                         ),
                         key=lambda x: x.paper.title,
@@ -106,6 +118,7 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
     check_papers(data_regression, papers)
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "query_params",
     [
@@ -120,16 +133,18 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
         {"page": 1, "per_page": None},
     ],
 )
-def test_query_error(query_params):
+async def test_query_error(query_params):
     discoverer = OpenAlex()
     with pytest.raises(QueryError):
-        next(discoverer.query(**query_params))
+        await anext(discoverer.query(**query_params))
 
 
-def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
+@pytest.mark.asyncio
+async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
     discoverer = OpenAlex()
-    results = list(
-        discoverer.query(
+    results = [
+        p
+        async for p in discoverer.query(
             institution="mila",
             focuses=Focuses(
                 [
@@ -146,7 +161,7 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
             limit=1,
             work_types=WORK_TYPES,
         )
-    )
+    ]
 
     assert len(results) == 10
     assert (
@@ -155,23 +170,26 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
     )
 
 
-def test_focuses_drive_discovery_false():
+@pytest.mark.asyncio
+async def test_focuses_drive_discovery_false():
     """Test that focuses with drive_discovery=False are skipped."""
     discoverer = OpenAlex()
 
     # This should return no results because the focus is skipped
-    results = list(
-        discoverer.query(
+    results = [
+        p
+        async for p in discoverer.query(
             institution="mila",
             focuses=Focuses([Focus(type="author", name="Yoshua Bengio", score=1.0)]),
             page=1,
             per_page=10,
             work_types=WORK_TYPES,
         )
-    )
+    ]
     assert len(results) == 0
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["query_params", "focused_params"],
     [
@@ -216,7 +234,7 @@ def test_focuses_drive_discovery_false():
         ],
     ],
 )
-def test_focuses(query_params, focused_params):
+async def test_focuses(query_params, focused_params):
     """Test that focuses."""
     discoverer = OpenAlex()
 
@@ -231,21 +249,23 @@ def test_focuses(query_params, focused_params):
     )
 
     # Query with focuses should return the same results as direct author query
-    direct_results = list(
-        discoverer.query(
+    direct_results = [
+        p
+        async for p in discoverer.query(
             **query_params, page=1, per_page=10, limit=100, work_types=WORK_TYPES
         )
-    )
+    ]
 
-    focus_results = list(
-        discoverer.query(
+    focus_results = [
+        p
+        async for p in discoverer.query(
             **focused_params,
             focuses=focuses,
             page=1,
             per_page=10,
             work_types=WORK_TYPES,
         )
-    )
+    ]
 
     # Both should return the same papers
     direct_papers = [p.paper.title for p in direct_results]
@@ -259,7 +279,8 @@ def test_focuses(query_params, focused_params):
         assert result.score == 10.0
 
 
-def test_focuses_multiple_focuses():
+@pytest.mark.asyncio
+async def test_focuses_multiple_focuses():
     """Test multiple focuses with different types."""
     discoverer = OpenAlex()
 
@@ -272,9 +293,12 @@ def test_focuses_multiple_focuses():
         ]
     )
 
-    results = list(
-        discoverer.query(focuses=focuses, page=1, per_page=10, work_types=WORK_TYPES)
-    )
+    results = [
+        p
+        async for p in discoverer.query(
+            focuses=focuses, page=1, per_page=10, work_types=WORK_TYPES
+        )
+    ]
 
     # Should get results from both author and institution queries
     assert len(results) == 30

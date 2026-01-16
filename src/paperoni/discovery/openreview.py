@@ -19,7 +19,6 @@ from ..model import (
     Venue,
     VenueType,
 )
-from ..model.classes import rescore
 from ..model.focus import Focus, Focuses
 from .base import Discoverer
 
@@ -447,7 +446,7 @@ class OpenReview(Discoverer):
                 if fnmatch(pat=pattern.lower(), name=member.lower())
             ]
 
-    def query(
+    async def query(
         self,
         # Venue of publication
         venue: str = None,
@@ -492,15 +491,14 @@ class OpenReview(Discoverer):
                                 score,
                             )
                     case Focus(type="author_openreview", name=aid, score=score):
-                        yield from rescore(
-                            self.query(
-                                venue=venue,
-                                author_id=aid,
-                                title=title,
-                                block_size=block_size,
-                            ),
-                            score,
-                        )
+                        async for paper in self.query(
+                            venue=venue,
+                            author_id=aid,
+                            title=title,
+                            block_size=block_size,
+                        ):
+                            paper.score = score
+                            yield paper
             return
 
         params = {
@@ -535,14 +533,15 @@ class OpenReview(Discoverer):
                 "content": {**params["content"], "title": title},
             }
 
-        yield from self._query_papers_from_venues(params, venue, 0, limit)
+        for paper in self._query_papers_from_venues(params, venue, 0, limit):
+            yield paper
 
 
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
 
-    def query(
+    async def query(
         self,
         # Venue of publication
         venue: str = None,
@@ -579,7 +578,7 @@ class OpenReviewDispatch(Discoverer):
 
             exception = None
             try:
-                for paper in q:
+                async for paper in q:
                     has_papers = True
                     yield paper
 

@@ -214,7 +214,7 @@ class MiniConf(Discoverer):
             info={"discovered_by": {"miniconf": mid}},
         )
 
-    def query(
+    async def query(
         self,
         # Conference name (e.g. "neurips", "icml", "iclr", "mlsys", "aistats", "cvpr")
         conference: str,
@@ -241,7 +241,7 @@ class MiniConf(Discoverer):
             consecutive_failures = 0
             while consecutive_failures <= 2:
                 try:
-                    yield from self.query(
+                    async for paper in self.query(
                         conference,
                         year=current,
                         affiliation=affiliation,
@@ -249,7 +249,8 @@ class MiniConf(Discoverer):
                         limit=limit,
                         cache=cache,
                         error_policy=error_policy,
-                    )
+                    ):
+                        yield paper
                     consecutive_failures = 0
                 except requests.HTTPError:
                     consecutive_failures += 1

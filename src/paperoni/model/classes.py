@@ -226,12 +226,6 @@ class PaperInfo:
     score: float = 0.0
 
 
-def rescore(stream, score):
-    for pinfo in stream:
-        pinfo.score = score
-        yield pinfo
-
-
 @dataclass
 class CollectionMixin:
     id: int = None

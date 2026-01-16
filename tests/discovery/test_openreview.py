@@ -9,6 +9,7 @@ from paperoni.model.focus import Focus, Focuses
 from ..utils import check_papers, iter_links_ids, iter_releases
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "query_params",
     [
@@ -23,7 +24,9 @@ from ..utils import check_papers, iter_links_ids, iter_releases
         },
     ],
 )
-def test_query(data_regression: DataRegressionFixture, query_params: dict[str, str]):
+async def test_query(
+    data_regression: DataRegressionFixture, query_params: dict[str, str]
+):
     query_params = {**query_params, "block_size": 100, "limit": 1000}
     openreview_dispatch: OpenReviewDispatch = OpenReviewDispatch()
     api_versions: list[int] = openreview_dispatch.api_versions
@@ -34,7 +37,7 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
 
         try:
             papers_per_version[api_version] = sorted(
-                discoverer.query(**query_params),
+                [p async for p in discoverer.query(**query_params)],
                 key=lambda x: x.paper.title,
             )
         except openreview.openreview.OpenReviewException:
@@ -52,7 +55,7 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
     assert [p.paper for p in papers] == [
         p.paper
         for p in sorted(
-            openreview_dispatch.query(**query_params),
+            [p async for p in openreview_dispatch.query(**query_params)],
             key=lambda x: x.paper.title,
         )
     ], (
@@ -97,12 +100,15 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
                 assert [p.paper for p in papers] == [
                     p.paper
                     for p in sorted(
-                        openreview_dispatch.query(
-                            author="Yoshua Bengio",
-                            venue=query_params["venue"],
-                            block_size=100,
-                            limit=100,
-                        ),
+                        [
+                            pp
+                            async for pp in openreview_dispatch.query(
+                                author="Yoshua Bengio",
+                                venue=query_params["venue"],
+                                block_size=100,
+                                limit=100,
+                            )
+                        ],
                         key=lambda x: x.paper.title,
                     )
                 ], (
@@ -125,10 +131,12 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
     check_papers(data_regression, papers)
 
 
-def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
+@pytest.mark.asyncio
+async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
     discoverer = OpenReviewDispatch()
-    results = list(
-        discoverer.query(
+    results = [
+        p
+        async for p in discoverer.query(
             focuses=Focuses(
                 [
                     Focus(
@@ -141,7 +149,7 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
             ),
             limit=1,
         )
-    )
+    ]
 
     assert (
         len(results) > 1
@@ -152,20 +160,23 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
     )
 
 
-def test_focuses_drive_discovery_false():
+@pytest.mark.asyncio
+async def test_focuses_drive_discovery_false():
     """Test that focuses with drive_discovery=False are skipped."""
     discoverer = OpenReviewDispatch()
 
     # This should return no results because the focus is skipped
-    results = list(
-        discoverer.query(
+    results = [
+        p
+        async for p in discoverer.query(
             venue="NeurIPS.cc/2024/Conference",
             focuses=Focuses([Focus(type="author", name="Yoshua Bengio", score=1.0)]),
         )
-    )
+    ]
     assert len(results) == 0
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["query_params", "focused_params"],
     [
@@ -194,7 +205,7 @@ def test_focuses_drive_discovery_false():
         ],
     ],
 )
-def test_focuses(query_params, focused_params):
+async def test_focuses(query_params, focused_params):
     """Test that focuses."""
     discoverer = OpenReviewDispatch()
 
@@ -209,9 +220,9 @@ def test_focuses(query_params, focused_params):
     )
 
     # Query with focuses should return the same results as direct author query
-    direct_results = list(discoverer.query(**query_params))
+    direct_results = [p async for p in discoverer.query(**query_params)]
 
-    focus_results = list(discoverer.query(**focused_params, focuses=focuses))
+    focus_results = [p async for p in discoverer.query(**focused_params, focuses=focuses)]
 
     # Both should return the same papers
     direct_papers = [p.paper.title for p in direct_results]

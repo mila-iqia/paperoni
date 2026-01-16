@@ -15,7 +15,6 @@ from ..model import (
     Topic,
     Venue,
     VenueType,
-    rescore,
 )
 from ..model.focus import Focus, Focuses
 from ..model.merge import qual
@@ -302,7 +301,7 @@ class SemanticScholar(Discoverer):
         papers = self._list(f"author/{author_id}/papers", fields=fields, **params)
         yield from map(self._wrap_paper, papers)
 
-    def query(
+    async def query(
         self,
         # Author of the article
         author: str = None,
@@ -329,12 +328,11 @@ class SemanticScholar(Discoverer):
                         case Focus(drive_discovery=False):
                             continue
                         case Focus(type="author", name=name, score=score):
-                            yield from rescore(
-                                self.query(
-                                    author=name, title=title, block_size=block_size
-                                ),
-                                score,
-                            )
+                            async for paper in self.query(
+                                author=name, title=title, block_size=block_size
+                            ):
+                                paper.score = score
+                                yield paper
             return
 
         if isinstance(author, list):
@@ -346,10 +344,12 @@ class SemanticScholar(Discoverer):
             raise QueryError("Cannot query both author and title")
 
         if title:
-            yield from self.search(title, block_size=block_size, limit=limit)
+            for paper in self.search(title, block_size=block_size, limit=limit):
+                yield paper
 
         elif author:
             for _, papers in self.author_with_papers(
                 author, block_size=block_size, limit=limit
             ):
-                yield from papers
+                for paper in papers:
+                    yield paper

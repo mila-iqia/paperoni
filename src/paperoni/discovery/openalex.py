@@ -18,7 +18,6 @@ from ..model.classes import (
     Topic,
     Venue,
     VenueType,
-    rescore,
 )
 from ..model.focus import Focus, Focuses
 from ..utils import QueryError, link_generators as LINK_GENERATORS, url_to_id
@@ -388,7 +387,7 @@ class OpenAlex(Discoverer):
     # Email associated with the query, for politeness
     mailto: str = field(default_factory=lambda: config.mailto)
 
-    def query(
+    async def query(
         self,
         # Name of author to query (mutually exclusive with "author-id")
         # [alias: -a]
@@ -435,47 +434,44 @@ class OpenAlex(Discoverer):
                     case Focus(drive_discovery=False):
                         continue
                     case Focus(type="author", name=name, score=score):
-                        yield from rescore(
-                            self.query(
-                                author=name,
-                                institution=institution,
-                                title=title,
-                                data_version=data_version,
-                                page=page,
-                                per_page=per_page,
-                                verbose=verbose,
-                                work_types=work_types,
-                            ),
-                            score,
-                        )
+                        async for paper in self.query(
+                            author=name,
+                            institution=institution,
+                            title=title,
+                            data_version=data_version,
+                            page=page,
+                            per_page=per_page,
+                            verbose=verbose,
+                            work_types=work_types,
+                        ):
+                            paper.score = score
+                            yield paper
                     case Focus(type="author_openalex", name=aid, score=score):
-                        yield from rescore(
-                            self.query(
-                                author_id=aid,
-                                institution=institution,
-                                title=title,
-                                data_version=data_version,
-                                page=page,
-                                per_page=per_page,
-                                verbose=verbose,
-                                work_types=work_types,
-                            ),
-                            score,
-                        )
+                        async for paper in self.query(
+                            author_id=aid,
+                            institution=institution,
+                            title=title,
+                            data_version=data_version,
+                            page=page,
+                            per_page=per_page,
+                            verbose=verbose,
+                            work_types=work_types,
+                        ):
+                            paper.score = score
+                            yield paper
                     case Focus(type="institution", name=name, score=score):
-                        yield from rescore(
-                            self.query(
-                                author=author,
-                                institution=name,
-                                title=title,
-                                data_version=data_version,
-                                page=page,
-                                per_page=per_page,
-                                verbose=verbose,
-                                work_types=work_types,
-                            ),
-                            score,
-                        )
+                        async for paper in self.query(
+                            author=author,
+                            institution=name,
+                            title=title,
+                            data_version=data_version,
+                            page=page,
+                            per_page=per_page,
+                            verbose=verbose,
+                            work_types=work_types,
+                        ):
+                            paper.score = score
+                            yield paper
             return
 
         if verbose and self.mailto:
@@ -526,4 +522,5 @@ class OpenAlex(Discoverer):
                 "Need both page and per_page for pagination, or none of them to display all results"
             )
 
-        yield from qm.works(**params, limit=limit, verbose=verbose)
+        for paper in qm.works(**params, limit=limit, verbose=verbose):
+            yield paper

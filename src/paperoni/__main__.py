@@ -12,7 +12,7 @@ from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from functools import cached_property
 from pathlib import Path
-from typing import Annotated, Any, Generator, Literal
+from typing import Annotated, Any, AsyncGenerator, Literal
 
 import gifnoc
 import uvicorn
@@ -111,8 +111,8 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
-    def iterate(self, **kwargs) -> Generator[PaperInfo, None, None]:
-        for p in self.command(**kwargs):
+    async def iterate(self, **kwargs) -> AsyncGenerator[PaperInfo, None]:
+        async for p in self.command(**kwargs):
             send(discover=p)
             yield p
 
@@ -129,7 +129,7 @@ class Discover(Productor):
 
     async def run(self):
         typ = PaperInfo
-        papers = self.iterate()
+        papers = [p async for p in self.iterate()]
         if self.top:
             papers = config.focuses.top(n=self.top, pinfos=papers)
             typ = Scored[PaperInfo]
@@ -284,7 +284,7 @@ class Work:
             )
             find.add(list(work.top))
 
-            for pinfo in self.iterate(focuses=work.focuses):
+            async for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
 

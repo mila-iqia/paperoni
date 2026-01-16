@@ -77,7 +77,7 @@ def parse_paper(entry):
 
 
 class PMLR(Discoverer):
-    def query(
+    async def query(
         self,
         # Volume to query
         # [alias: -v]
@@ -94,7 +94,8 @@ class PMLR(Discoverer):
         name = name and asciiify(name).lower()
         if volume is None:
             for v in self.list_volumes():
-                yield from self.query(v, name, cache, focuses)
+                async for paper in self.query(v, name, cache, focuses):
+                    yield paper
             return
         results = self.get_volume(volume, cache)
         for paper_info in results:

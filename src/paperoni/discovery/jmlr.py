@@ -26,7 +26,7 @@ from .base import Discoverer
 class JMLR(Discoverer):
     urlbase = "https://jmlr.org"
 
-    def query(
+    async def query(
         self,
         # Volume to query
         # [alias: -v]
@@ -42,7 +42,8 @@ class JMLR(Discoverer):
         """Query Journal of Machine Learning Research."""
         if volume is None:
             for v in self.list_volumes():
-                yield from self.query(v, name, cache, focuses)
+                async for paper in self.query(v, name, cache, focuses):
+                    yield paper
             return
         name = name and asciiify(name).lower()
         results = self.get_volume(volume, cache)
