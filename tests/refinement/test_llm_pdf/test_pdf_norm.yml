@@ -1,7 +1,7 @@
 - info:
     refined_by:
       pdf: composite
-  key: composite
+  key: pdf/composite
   paper:
     abstract: null
     authors:

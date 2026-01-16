@@ -1,7 +1,7 @@
 - info:
     refined_by:
       html: doi:10.1038/s41597-023-02214-y
-  key: doi:10.1038/s41597-023-02214-y
+  key: html/doi:10.1038/s41597-023-02214-y
   paper:
     abstract: null
     authors:
