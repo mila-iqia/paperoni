@@ -1,4 +1,4 @@
-import { html, toggle, join } from './common.js';
+import { html, join } from './common.js';
 
 export function formatAuthorsWithAffiliations(authors) {
     // Map institutions to unique numbers
@@ -344,27 +344,80 @@ export function createLinksSection(links) {
     return html`<div class="paper-links">${linkBadges}</div>`;
 }
 
+export function createAbstractSection(abstract) {
+    if (!abstract) return null;
+
+    const container = html`
+        <div class="paper-abstract-section">
+            <div class="paper-abstract collapsed">${abstract}</div>
+        </div>
+    `;
+
+    const abstractDiv = container.querySelector('.paper-abstract');
+    
+    abstractDiv.addEventListener('click', () => {
+        abstractDiv.classList.toggle('collapsed');
+        abstractDiv.classList.toggle('expanded');
+    });
+
+    return container;
+}
+
+export function createTopicsSection(topics) {
+    if (!topics || topics.length === 0) return null;
+
+    const VISIBLE_COUNT = 5;
+    const hasMore = topics.length > VISIBLE_COUNT;
+    const visibleTopics = topics.slice(0, VISIBLE_COUNT);
+    const hiddenTopics = topics.slice(VISIBLE_COUNT);
+
+    const visibleBadges = visibleTopics.map(topic =>
+        html`<span class="badge topic">${topic.name ?? topic.display_name ?? 'Unknown'}</span>`
+    );
+
+    const hiddenBadges = hiddenTopics.map(topic =>
+        html`<span class="badge topic">${topic.name ?? topic.display_name ?? 'Unknown'}</span>`
+    );
+
+    const moreLink = hasMore
+        ? html`<span class="topics-more-link">More (${hiddenTopics.length})</span>`
+        : null;
+
+    const hiddenContainer = hasMore
+        ? html`<span class="topics-hidden">${hiddenBadges}</span>`
+        : null;
+
+    const container = html`
+        <div class="paper-topics">
+            ${visibleBadges}
+            ${moreLink}
+            ${hiddenContainer}
+        </div>
+    `;
+
+    if (hasMore) {
+        const moreLinkEl = container.querySelector('.topics-more-link');
+        const hiddenContainerEl = container.querySelector('.topics-hidden');
+
+        moreLinkEl.addEventListener('click', () => {
+            hiddenContainerEl.classList.add('visible');
+            moreLinkEl.style.display = 'none';
+        });
+    }
+
+    return container;
+}
+
 export function createDetailsSection(paper) {
-    const abstractHtml = paper.abstract 
-        ? html`<div class="paper-abstract">${paper.abstract}</div>`
-        : null;
-    const topicsHtml = paper.topics && paper.topics.length > 0
-        ? html`<div class="paper-topics">${paper.topics.map(topic =>
-            html`<span class="badge topic">${topic.name ?? topic.display_name ?? 'Unknown'}</span>`
-        )}</div>`
-        : null;
+    const abstractHtml = createAbstractSection(paper.abstract);
+    const topicsHtml = createTopicsSection(paper.topics);
     const linksHtml = createLinksSection(paper.links);
 
-    return toggle`
-        <div class="paper-collapsible-section">
-            <button class="toggle-details-button" toggler>
-                <span class="item-toggle">▶</span> Details
-            </button>
-            <div class="details-content" toggled>
-                ${abstractHtml}
-                ${topicsHtml}
-                ${linksHtml}
-            </div>
+    return html`
+        <div class="paper-details-section">
+            ${abstractHtml}
+            ${topicsHtml}
+            ${linksHtml}
         </div>
     `;
 }

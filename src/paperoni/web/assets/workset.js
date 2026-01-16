@@ -153,18 +153,6 @@ function createWorksetElement(scoredWorkset, index) {
             tabTitle = key;
         }
         
-        // Get the first key from info.refined_by if it exists
-        let refinedByKey = null;
-        if (info.refined_by && typeof info.refined_by === 'object') {
-            const keys = Object.keys(info.refined_by);
-            if (keys.length > 0) {
-                refinedByKey = keys[0];
-            }
-        }
-        
-        // Combine title with refined_by key using "/" separator
-        const displayTitle = refinedByKey ? `${tabTitle} / ${refinedByKey}` : tabTitle;
-        
         // Determine badge classes based on paper content
         const badgeClasses = [];
         if (paper.releases && paper.releases.length > 0) {
@@ -188,10 +176,10 @@ function createWorksetElement(scoredWorkset, index) {
         
         const buttonContent = tabSubtitle
             ? html`
-                <span class="tab-title">${displayTitle}</span>
+                <span class="tab-title">${tabTitle}</span>
                 <span class="tab-subtitle">${tabSubtitle}</span>
             `
-            : html`<span class="tab-title">${displayTitle}</span>`;
+            : html`<span class="tab-title">${tabTitle}</span>`;
         
         const allClasses = ['tab-button', ...badgeClasses, tabIndex === 0 ? 'active' : ''].filter(Boolean).join(' ');
         const button = html`<button class="${allClasses}" data-tab-index="${tabIndex}">${buttonContent}</button>`;
