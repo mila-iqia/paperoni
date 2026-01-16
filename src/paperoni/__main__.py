@@ -398,14 +398,14 @@ class Work:
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
             for sws in prog(list(it), name="refine"):
-                statuses.update(
-                    {
-                        (name, key): "done"
-                        for pinfo in sws.value.collected
-                        for name, key in pinfo.info.get("refined_by", {}).items()
-                    }
-                )
                 for i in range(self.loops):
+                    statuses.update(
+                        {
+                            (name, key): "done"
+                            for pinfo in sws.value.collected
+                            for name, key in pinfo.info.get("refined_by", {}).items()
+                        }
+                    )
                     # Loop a bit because refiners can add new links to refine further
                     links = [(lnk.type, lnk.link) for lnk in sws.value.current.links]
                     links.append(("title", sws.value.current.title))
