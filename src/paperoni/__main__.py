@@ -156,7 +156,7 @@ class Fulltext:
             else:
                 ref = self.ref
 
-            urls = list(locate_all(ref))
+            urls = [url async for url in locate_all(ref)]
             self.format(urls)
 
             return urls
@@ -175,7 +175,7 @@ class Fulltext:
             print("Downloaded into:", pdf.pdf_path.resolve())
 
         async def run(self):
-            p = get_pdf(
+            p = await get_pdf(
                 self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
             )
             self.format(p)
@@ -353,14 +353,14 @@ class Work:
                 case "has_pdf":
                     n = total = 0
 
-                    def gen():
+                    async def gen():
                         nonlocal n, total
                         for ws in worksets:
                             paper = ws.value.current
                             pdf = None
                             total += 1
                             try:
-                                pdf = get_pdf(
+                                pdf = await get_pdf(
                                     [f"{lnk.type}:{lnk.link}" for lnk in paper.links]
                                 )
                                 n += 1

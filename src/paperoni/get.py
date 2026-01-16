@@ -220,7 +220,7 @@ class Fetcher:
                     pass
 
         print(f"Downloading {url}")
-        async with self.ageneric("GET", url, stream=True, **kwargs) as r:
+        async with await self.ageneric("GET", url, stream=True, **kwargs) as r:
             r.raise_for_status()
             total = int(r.headers.get("content-length") or 1024**2)
             sofar = 0

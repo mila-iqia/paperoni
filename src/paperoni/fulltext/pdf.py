@@ -68,10 +68,10 @@ class PDF:
         assert self.directory.is_relative_to(config.data_path.resolve())
         shutil.rmtree(self.directory, ignore_errors=True)
 
-    def fetch(self):
+    async def fetch(self):
         self.ensure()
         try:
-            config.fetch.download(
+            await config.fetch.adownload(
                 url=self.source.url,
                 filename=self.pdf_path,
             )
@@ -95,33 +95,33 @@ class PDF:
         finally:
             self.dump()
 
-    def fulltext(self, cache_policy: CachePolicy = CachePolicies.USE):
+    async def fulltext(self, cache_policy: CachePolicy = CachePolicies.USE):
         if not cache_policy.use or not self.success or not self.pdf_path.exists():
             if not cache_policy.download:
                 raise Exception(
                     f"No PDF for {self.source.url} and cache policy prevents downloading"
                 )
-            return self.fetch()
+            return await self.fetch()
         else:
             return self.pdf_path
 
 
-def get_pdf(refs, cache_policy: CachePolicy = CachePolicies.USE):
+async def get_pdf(refs, cache_policy: CachePolicy = CachePolicies.USE):
     if isinstance(refs, str):
         refs = [refs]
 
     if cache_policy.use and not cache_policy.best:
-        urls = [(url, ref) for ref in refs for url in locate_all(ref)]
+        urls = [(url, ref) for ref in refs async for url in locate_all(ref)]
         for url, ref in urls:
             if (p := PDF(url, ref=ref).load()).success:
                 return p
 
     exceptions = []
     for ref in refs:
-        for url in locate_all(ref):
+        async for url in locate_all(ref):
             p = PDF(url, ref=ref).load()
             try:
-                p.fulltext(cache_policy=cache_policy)
+                await p.fulltext(cache_policy=cache_policy)
                 return p
             except Exception as exc:
                 exceptions.append(exc)
