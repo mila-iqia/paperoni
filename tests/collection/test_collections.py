@@ -60,7 +60,9 @@ async def _get_sample_papers():
     discoverer = JMLR()
 
     volumes: list[str] = []
-    for volume in sorted(discoverer.list_volumes(), key=lambda x: int(x.lstrip("v"))):
+    for volume in sorted(
+        await discoverer.list_volumes(), key=lambda x: int(x.lstrip("v"))
+    ):
         if volume == "v25":
             break
         volumes.append(volume)
