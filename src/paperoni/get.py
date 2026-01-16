@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from functools import cached_property
@@ -8,18 +9,24 @@ from pathlib import Path
 from typing import Literal
 
 import backoff
+import chardet
+import hishel
+import httpx
 import requests
-import requests_cache
 from eventlet.timeout import Timeout
 from fake_useragent import UserAgent
+from hishel.httpx import SyncCacheClient
 from outsight import send
 from ovld import ovld
-from requests import HTTPError, Session
-from requests.exceptions import RequestException
+from requests import Session
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 
 ua = UserAgent()
+
+
+def detect_encoding(content):
+    return chardet.detect(content).get("encoding")
 
 
 @ovld
@@ -61,14 +68,17 @@ def parse(content: str, format: Literal["txt"]):
 
 
 def _giveup(exc):
-    return getattr(exc, "response", None) is None or exc.response.status_code not in (
-        403,
-        429,
-    )
+    response = getattr(exc, "response", None)
+    if response is None:
+        return True
+    status_code = getattr(response, "status_code", None)
+    if status_code is None:
+        return True
+    return status_code not in (403, 429)
 
 
 class Fetcher:
-    def generic(self, method, url, **kwargs):
+    def generic(self, method, url, stream=False, **kwargs):
         raise NotImplementedError()
 
     def head(self, url, **kwargs):
@@ -80,28 +90,30 @@ class Fetcher:
     def download(self, url, filename, **kwargs):
         """Download the given url into the given filename."""
 
-        def iter_with_timeout(r: requests.Response, chunk_size: int, timeout: float):
-            it = r.iter_content(chunk_size=chunk_size)
+        def iter_with_timeout(response, chunk_size: int, timeout: float):
+            # Works with both httpx (iter_bytes) and requests (iter_content)
+            iter_fn = getattr(response, "iter_bytes", None) or response.iter_content
+            it = iter_fn(chunk_size=chunk_size)
             try:
                 while True:
                     with Timeout(timeout):
                         yield next(it)
             except StopIteration:
                 pass
-            finally:
-                it.close()
 
         print(f"Downloading {url}")
-        r = self.get(url, stream=True, **kwargs)
-        r.raise_for_status()
-        total = int(r.headers.get("content-length") or 1024**2)
-        sofar = 0
-        with open(filename, "wb") as f:
-            for chunk in iter_with_timeout(r, chunk_size=max(total // 100, 1), timeout=5):
-                f.write(chunk)
-                f.flush()
-                sofar += len(chunk)
-                send(progress=(Path(url).name, sofar, total))
+        with self.generic("GET", url, stream=True, **kwargs) as r:
+            r.raise_for_status()
+            total = int(r.headers.get("content-length") or 1024**2)
+            sofar = 0
+            with open(filename, "wb") as f:
+                for chunk in iter_with_timeout(
+                    r, chunk_size=max(total // 100, 1), timeout=5
+                ):
+                    f.write(chunk)
+                    f.flush()
+                    sofar += len(chunk)
+                    send(progress=(Path(url).name, sofar, total))
         print(f"Saved {filename}")
 
     def read(
@@ -121,10 +133,7 @@ class Fetcher:
             resp = self.get(url, **kwargs)
             send(url=url, params=kwargs.get("params", {}), response=resp)
             resp.raise_for_status()
-            if resp.encoding == resp.apparent_encoding:
-                content = resp.text
-            else:
-                content = resp.content.decode(resp.apparent_encoding, errors="ignore")
+            content = resp.text
 
             if cache_into:
                 cache_into.parent.mkdir(parents=True, exist_ok=True)
@@ -134,13 +143,75 @@ class Fetcher:
 
     @backoff.on_exception(
         backoff.expo,
-        RequestException,
+        (httpx.HTTPError, requests.RequestException),
         giveup=_giveup,
         max_time=30,
         logger=None,
     )
     def read_retry(self, *args, **kwargs):
         return self.read(*args, **kwargs)
+
+
+@dataclass
+class HTTPXFetcher(Fetcher):
+    user_agent: str = None
+    timeout: int = 60
+
+    def __post_init__(self):
+        if self.user_agent is not None:
+            try:
+                self.user_agent = getattr(ua, self.user_agent)
+            except AttributeError:
+                pass
+
+    @cached_property
+    def client(self):
+        return httpx.Client(follow_redirects=True, default_encoding=detect_encoding)
+
+    def generic(self, method, url, stream=False, headers={}, **kwargs):
+        kwargs.setdefault("timeout", self.timeout)
+        headers = {k: v for k, v in headers.items() if v is not None}
+        if self.user_agent:
+            headers["User-Agent"] = self.user_agent
+        if headers:
+            kwargs["headers"] = headers
+        if stream:
+            return self.client.stream(method.upper(), url, **kwargs)
+        return getattr(self.client, method)(url, **kwargs)
+
+
+@dataclass
+class CachedFetcher(HTTPXFetcher):
+    cache_path: Path = None
+    expire_after: timedelta = None
+
+    @cached_property
+    def client(self):
+        if not self.cache_path:
+            return httpx.Client(follow_redirects=True, default_encoding=detect_encoding)
+        ttl = self.expire_after.total_seconds() if self.expire_after else None
+        storage = hishel.SyncSqliteStorage(
+            database_path=str(self.cache_path) + ".db",
+            default_ttl=ttl,
+        )
+        return SyncCacheClient(
+            storage=storage,
+            follow_redirects=True,
+            default_encoding=detect_encoding,
+            policy=hishel.SpecificationPolicy(
+                cache_options=hishel.CacheOptions(
+                    shared=False,
+                    supported_methods=["GET", "HEAD", "POST"],
+                    allow_stale=True,
+                )
+            ),
+        )
+
+
+@dataclass
+class BannedFetcher(Fetcher):
+    def generic(self, method, url, **kwargs):
+        raise Exception(f"Will not try to fetch {url}")
 
 
 @dataclass
@@ -159,33 +230,23 @@ class RequestsFetcher(Fetcher):
     def session(self):
         return Session()
 
-    def generic(self, method, url, **kwargs):
+    def generic(self, method, url, stream=False, **kwargs):
         kwargs.setdefault("timeout", self.timeout)
         if self.user_agent:
             headers = kwargs.setdefault("headers", {})
             headers["UserAgent"] = headers["User-Agent"] = self.user_agent
+        if stream:
+            return self._stream_context(method, url, **kwargs)
         return getattr(self.session, method)(url, **kwargs)
 
-
-@dataclass
-class CachedFetcher(RequestsFetcher):
-    cache_path: Path = None
-    expire_after: timedelta = None
-
-    @cached_property
-    def session(self):
-        if not self.cache_path:
-            return Session()
-        exp = self.expire_after
-        if exp is None:
-            exp = requests_cache.NEVER_EXPIRE
-        return requests_cache.CachedSession(self.cache_path, expire_after=exp)
-
-
-@dataclass
-class BannedFetcher(Fetcher):
-    def generic(self, method, url, **kwargs):
-        raise Exception(f"Will not try to fetch {url}")
+    @contextmanager
+    def _stream_context(self, method, url, **kwargs):
+        kwargs["stream"] = True
+        response = getattr(self.session, method.lower())(url, **kwargs)
+        try:
+            yield response
+        finally:
+            response.close()
 
 
 @dataclass
@@ -222,7 +283,7 @@ class SequenceFetcher(Fetcher):
         for fetcher in self.fetchers:
             try:
                 return fetcher.generic(method, url, **kwargs)
-            except HTTPError as e:
+            except (httpx.HTTPError, requests.RequestException) as e:
                 if e.response.status_code == 403:
                     continue
                 else:
@@ -235,9 +296,11 @@ class RulesFetcher(Fetcher):
     rules: dict[re.Pattern, str]
     fetchers: dict[str, TaggedSubclass[Fetcher]]
 
-    def generic(self, method, url, **kwargs):
+    def _get_fetcher(self, url):
         for pattern, fetcher_key in self.rules.items():
             if pattern.search(url):
-                fetcher = self.fetchers[fetcher_key]
-                return fetcher.generic(method, url, **kwargs)
+                return self.fetchers[fetcher_key]
         raise ValueError(f"No fetcher rule matches URL: {url}")
+
+    def generic(self, method, url, **kwargs):
+        return self._get_fetcher(url).generic(method, url, **kwargs)
