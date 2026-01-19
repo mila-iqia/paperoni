@@ -2,7 +2,6 @@
 FastAPI interface for paperoni collection search functionality.
 """
 
-import asyncio
 import datetime
 import itertools
 from dataclasses import dataclass, field
@@ -271,60 +270,6 @@ class AutoFocusRequest(Focus.AutoFocus):
     pass
 
 
-async def _search(request: dict):
-    request: SearchRequest = deserialize(SearchRequest, request)
-
-    coll = Coll(command=None)
-
-    # Perform search using the collection's search method
-    all_matches = await request.run(coll)
-    results = list(request.slice(all_matches))
-
-    return results, request.count, request.next_offset, len(all_matches)
-
-
-async def _work_view(request: dict):
-    request: ViewRequest = deserialize(ViewRequest, request)
-
-    """Search for papers in the collection."""
-    work = Work(command=request, work_file=config.work_file)
-
-    worksets: list[Scored[PaperWorkingSet]] = list(request.slice(await work.run()))
-
-    return worksets, request.count, request.next_offset, len(work.top)
-
-
-async def _locate_fulltext(request: dict):
-    request: LocateFulltextRequest = deserialize(LocateFulltextRequest, request)
-    all_urls = await request.run()
-    urls = list(request.slice(all_urls))
-    return urls, request.count, request.next_offset, len(all_urls)
-
-
-async def _download_fulltext(request: dict):
-    request: DownloadFulltextRequest = deserialize(DownloadFulltextRequest, request)
-    return await request.run()
-
-
-def _run_async_in_new_loop(func, *args):
-    """Run an async function in a new event loop (for use in process pool)."""
-    return asyncio.run(func(*args))
-
-
-async def run_in_process_pool(func, *args):
-    # TODO: find a way to serialize a dynamically modified config using
-    # gifnoc.overlay such that we serialize / deserialize quickly properties
-    # like collection. Currently, serialize(config) fails with
-    # serieux.exc.ValidationError: At path (at root): Cannot serialize object of type 'Proxy'
-    if config.server.process_pool is None:
-        return await func(*args)
-
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(
-        config.server.process_pool, _run_async_in_new_loop, func, *args
-    )
-
-
 def install_api(app) -> FastAPI:
     prefix = "/api/v1"
 
@@ -356,11 +301,14 @@ def install_api(app) -> FastAPI:
     )
     async def search_papers(request: SearchRequest = Depends(parse_search_request)):
         """Search for papers in the collection."""
-        results, count, next_offset, total = await run_in_process_pool(
-            _search, serialize(SearchRequest, request)
-        )
+        coll = Coll(command=None)
+        all_matches = await request.run(coll)
+        results = list(request.slice(all_matches))
         return SearchResponse(
-            results=results, count=count, next_offset=next_offset, total=total
+            results=results,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(all_matches),
         )
 
     @app.get(
@@ -391,14 +339,14 @@ def install_api(app) -> FastAPI:
     async def work_view_papers(
         request: ViewRequest = Depends(), user: str = Depends(hascap("admin"))
     ):
-        worksets, count, next_offset, total = await run_in_process_pool(
-            _work_view, serialize(ViewRequest, request)
-        )
+        work = Work(command=request, work_file=config.work_file)
+        worksets: list[Scored[PaperWorkingSet]] = list(request.slice(await work.run()))
+
         return ViewResponse(
             results=serialize(list[Scored[PaperWorkingSet]], worksets),
-            count=count,
-            next_offset=next_offset,
-            total=total,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(work.top),
         )
 
     @app.get(
@@ -497,14 +445,13 @@ def install_api(app) -> FastAPI:
     )
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
-        results, count, next_offset, total = await run_in_process_pool(
-            _locate_fulltext, serialize(LocateFulltextRequest, request)
-        )
+        all_urls = await request.run()
+        urls = list(request.slice(all_urls))
         return LocateFulltextResponse(
-            results=results,
-            count=count,
-            next_offset=next_offset,
-            total=total,
+            results=urls,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(all_urls),
         )
 
     @app.get(
@@ -513,9 +460,7 @@ def install_api(app) -> FastAPI:
     )
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
-        pdf = await run_in_process_pool(
-            _download_fulltext, serialize(DownloadFulltextRequest, request)
-        )
+        pdf = await request.run()
 
         # Return as file download
         async def async_iter_pdf():

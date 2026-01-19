@@ -837,12 +837,15 @@ class Serve:
             }
         with gifnoc.overlay(overrides):
             app = create_app()
-            uvicorn.run(
-                app,
-                host=config.server.host if self.host is None else self.host,
-                port=config.server.port if self.port is None else self.port,
-                reload=self.reload,
+            server = uvicorn.Server(
+                uvicorn.Config(
+                    app,
+                    host=config.server.host if self.host is None else self.host,
+                    port=config.server.port if self.port is None else self.port,
+                    reload=self.reload,
+                )
             )
+            await server.serve()
 
     def no_dash(self):
         return True
