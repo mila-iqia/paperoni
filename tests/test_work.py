@@ -60,8 +60,8 @@ async def test_work_get_does_not_duplicate(tmp_path: Path):
 
     mem_col = MemCollection()
     for paper in (scored.value.current for scored in state):
-        assert mem_col.find_paper(paper) is None
-        mem_col.add_papers([paper])
+        assert await mem_col.find_paper(paper) is None
+        await mem_col.add_papers([paper])
 
 
 @pytest.mark.asyncio
@@ -84,7 +84,7 @@ async def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
 
     col = FileCollection(file=tmp_path / "collection.json")
     for paper in (scored.value.current for scored in state):
-        assert col.find_paper(paper) is None
+        assert await col.find_paper(paper) is None
 
 
 @pytest.mark.asyncio
@@ -119,17 +119,17 @@ async def test_work_updates_collection_papers(tmp_path: Path):
     col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
 
-    mem_col.add_papers([scored.value.current for scored in state])
-    assert mem_col.find_paper(paper_to_update) is not None
+    await mem_col.add_papers([scored.value.current for scored in state])
+    assert await mem_col.find_paper(paper_to_update) is not None
 
     # At this point, if work-include is run, the paper should be updated in the
     # collection. Fake a concurrent update of the paper to discard the current
     # update inclusion
-    assert col.find_paper(paper_to_update) is not None
-    paper = CollectionPaper(**vars(col.find_paper(paper_to_update)))
+    assert await col.find_paper(paper_to_update) is not None
+    paper = CollectionPaper(**vars(await col.find_paper(paper_to_update)))
     sleep(1)
     paper.version = datetime.now()
-    col.add_papers([paper])
+    await col.add_papers([paper])
 
     await work(
         Work.Include(),
@@ -145,5 +145,5 @@ async def test_work_updates_collection_papers(tmp_path: Path):
 
     col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
-    mem_col.add_papers([scored.value.current for scored in state])
-    assert mem_col.find_paper(paper_to_update) is not None
+    await mem_col.add_papers([scored.value.current for scored in state])
+    assert await mem_col.find_paper(paper_to_update) is not None

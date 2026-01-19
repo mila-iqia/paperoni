@@ -19,6 +19,13 @@ from paperoni.model.classes import (
 )
 
 
+def _promise(x):
+    async def _():
+        return x
+
+    return _()
+
+
 @pytest.fixture(scope="session")
 def mock_papers():
     """Create mock papers for testing."""
@@ -263,7 +270,7 @@ def test_get_paper_endpoint(app, mock_papers):
         mock_paper = CollectionPaper(**mock_papers[0].__dict__)
         mock_paper.id = 123
 
-        mock_coll.return_value.collection.find_by_id.return_value = mock_paper
+        mock_coll.return_value.collection.find_by_id.return_value = _promise(mock_paper)
 
         response = user.get("/api/v1/paper/123")
 
@@ -278,7 +285,7 @@ def test_get_paper_endpoint_not_found(app):
     user = app.client("seeker@website.web")
 
     with patch("paperoni.web.restapi.Coll") as mock_coll:
-        mock_coll.return_value.collection.find_by_id.return_value = None
+        mock_coll.return_value.collection.find_by_id.return_value = _promise(None)
 
         response = user.get("/api/v1/paper/999", expect=404)
 
@@ -352,7 +359,9 @@ def test_edit_paper_endpoint(app):
             links=[Link(type="doi", link="10.1000/test1")],
         )
 
-        mock_coll.return_value.collection.find_by_id.return_value = original_paper
+        mock_coll.return_value.collection.find_by_id.return_value = _promise(
+            original_paper
+        )
 
         response = admin.post(
             "/api/v1/edit",
@@ -402,7 +411,7 @@ def test_edit_paper_endpoint_not_found(app):
             links=[Link(type="doi", link="10.1000/test1")],
         )
 
-        mock_coll.return_value.collection.find_by_id.return_value = None
+        mock_coll.return_value.collection.find_by_id.return_value = _promise(None)
 
         response = admin.post(
             "/api/v1/edit",

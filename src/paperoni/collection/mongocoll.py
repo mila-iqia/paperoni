@@ -203,14 +203,13 @@ class MongoCollection(PaperCollection):
         # Index on exclusions
         self._exclusions.create_index("link", unique=True)
 
-    @property
-    def exclusions(self) -> set[str]:
+    async def exclusions(self) -> set[str]:
         """Get the set of excluded paper identifiers."""
         self._ensure_connection()
         exclusions = {doc["link"] for doc in self._exclusions.find({})}
         return exclusions
 
-    def add_papers(self, papers: Iterable[Paper | MongoPaper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper | MongoPaper]) -> int:
         """Add papers to the collection."""
         self._ensure_connection()
         added = 0
@@ -243,7 +242,7 @@ class MongoCollection(PaperCollection):
 
         return added
 
-    def exclude_papers(self, papers: Iterable[Paper]) -> None:
+    async def exclude_papers(self, papers: Iterable[Paper]) -> None:
         """Exclude papers from the collection."""
         self._ensure_connection()
 
@@ -262,7 +261,7 @@ class MongoCollection(PaperCollection):
                 # Some exclusions already exist, that's fine
                 pass
 
-    def find_paper(self, paper: Paper) -> MongoPaper | None:
+    async def find_paper(self, paper: Paper) -> MongoPaper | None:
         """Find a paper in the collection by links or title."""
         self._ensure_connection()
 
@@ -285,13 +284,13 @@ class MongoCollection(PaperCollection):
 
         return deserialize(MongoPaper, doc) if doc else None
 
-    def find_by_id(self, paper_id: int) -> MongoPaper | None:
+    async def find_by_id(self, paper_id: int) -> MongoPaper | None:
         """Find a paper in the collection by id."""
         self._ensure_connection()
         doc = self._collection.find_one({"_id": ObjectId(paper_id)})
         return deserialize(MongoPaper, doc) if doc else None
 
-    def edit_paper(self, paper: MongoPaper) -> None:
+    async def edit_paper(self, paper: MongoPaper) -> None:
         """Edit an existing paper in the collection."""
         self._ensure_connection()
 
@@ -307,7 +306,7 @@ class MongoCollection(PaperCollection):
         if result.matched_count == 0:
             raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
-    def drop(self) -> None:
+    async def drop(self) -> None:
         """Drop the collection."""
         self._ensure_connection()
         self._client.drop_database(self.database)
@@ -316,7 +315,7 @@ class MongoCollection(PaperCollection):
         self._collection = None
         self._exclusions = None
 
-    def search(
+    async def search(
         self,
         paper_id: int = None,
         title: str = None,
@@ -399,7 +398,7 @@ class MongoCollection(PaperCollection):
         for doc in self._collection.find(query):
             yield deserialize(MongoPaper, doc)
 
-    def commit(self) -> None:
+    async def commit(self) -> None:
         # Commits are done synchronously to collections operations
         pass
 

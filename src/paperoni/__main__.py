@@ -274,7 +274,7 @@ class Work:
         check_paper_updates: bool = False
 
         async def run(self, work: "Work"):
-            ex = work.collection and work.collection.exclusions
+            ex = work.collection and (await work.collection.exclusions())
 
             find = Finder(
                 title_finder=lambda scored: scored.value.current.title,
@@ -299,7 +299,7 @@ class Work:
                 col_paper = None
                 if (
                     work.collection
-                    and (col_paper := work.collection.find_paper(pinfo.paper))
+                    and (col_paper := await work.collection.find_paper(pinfo.paper))
                     and (
                         not self.check_paper_updates
                         or not paper_has_updated(col_paper, pinfo.paper)
@@ -481,7 +481,7 @@ class Work:
             )
 
             try:
-                added = work.collection.add_papers(selected)
+                added = await work.collection.add_papers(selected)
             finally:
                 # As some papers could be added to the collection before an
                 # error is raised, causing a new paper to exists in the
@@ -513,7 +513,7 @@ class Work:
             )
 
             try:
-                work.collection.exclude_papers(selected)
+                await work.collection.exclude_papers(selected)
             finally:
                 work.save()
             send(collection_exclude=len(selected))
@@ -638,7 +638,7 @@ class Coll:
                 )
                 if self.expand_links
                 else p
-                for p in coll.collection.search(
+                async for p in coll.collection.search(
                     paper_id=self.paper_id,
                     title=self.title,
                     author=self.author,
@@ -662,7 +662,7 @@ class Coll:
         file: Path
 
         async def run(self, coll: "Coll"):
-            coll.collection.add_papers(deserialize(list[Paper], self.file))
+            await coll.collection.add_papers(deserialize(list[Paper], self.file))
 
     @dataclass
     class Export:
@@ -673,7 +673,7 @@ class Coll:
         file: Path = None
 
         async def run(self, coll: "Coll"):
-            papers = list(coll.collection.search())
+            papers = [p async for p in coll.collection.search()]
             if self.file:
                 dump(list[Paper], papers, dest=self.file)
             else:
@@ -696,8 +696,8 @@ class Coll:
                 self.force = answer in ["Y", "yes"]
 
             if self.force:
-                coll.collection.drop()
-            elif not len(coll.collection) and not len(coll.collection.exclusions):
+                await coll.collection.drop()
+            elif not len(coll.collection) and not len(await coll.collection.exclusions()):
                 logging.warning("Collection is not empty. Use --force to drop it.")
 
     # Command to execute
@@ -756,7 +756,7 @@ class Focus:
             start_date = start_date.date().replace(month=1, day=1)
             focuses = Focuses()
             focus.focuses.update(
-                focus.collection.search(start_date=start_date),
+                [p async for p in focus.collection.search(start_date=start_date)],
                 config.autofocus,
                 dest=focuses,
             )

@@ -371,7 +371,7 @@ def install_api(app) -> FastAPI:
     async def get_paper(paper_id: int):
         """Get a single paper by ID."""
         coll = Coll(command=None)
-        paper = coll.collection.find_by_id(paper_id)
+        paper = await coll.collection.find_by_id(paper_id)
         if paper is None:
             raise HTTPException(
                 status_code=404, detail=f"Paper with ID {paper_id} not found"
@@ -423,7 +423,7 @@ def install_api(app) -> FastAPI:
         """Set a flag on a paper in the collection."""
         coll = Coll(command=None)
 
-        paper = coll.collection.find_by_id(request.paper_id)
+        paper = await coll.collection.find_by_id(request.paper_id)
         if paper is None:
             return SetFlagResponse(
                 success=False, message=f"Paper with ID {request.paper_id} not found"
@@ -434,7 +434,7 @@ def install_api(app) -> FastAPI:
         else:
             paper.flags.discard(request.flag)
 
-        coll.collection.edit_paper(paper)
+        await coll.collection.edit_paper(paper)
 
         return SetFlagResponse(
             success=True,
@@ -462,7 +462,7 @@ def install_api(app) -> FastAPI:
             )
 
         # Verify the paper exists in the collection
-        existing_paper = coll.collection.find_by_id(paper.id)
+        existing_paper = await coll.collection.find_by_id(paper.id)
         if existing_paper is None:
             return EditResponse(
                 success=False,
@@ -471,7 +471,7 @@ def install_api(app) -> FastAPI:
             )
 
         # Update the paper in the collection
-        coll.collection.edit_paper(paper)
+        await coll.collection.edit_paper(paper)
 
         return EditResponse(
             success=True,
