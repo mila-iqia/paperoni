@@ -5,6 +5,7 @@ paperoni:
   fetch:
     $class: RulesFetcher
     rules:
+      "^https://api.biorxiv.org/": cloudflare
       "^https://www.biorxiv.org/": cloudflare
       "^https://www.medrxiv.org/": cloudflare
       "^https://pmc.ncbi.nlm.nih.gov/": cached

@@ -96,7 +96,7 @@ links = [
 
 # biorxiv links sometimes fails with requests.exceptions.HTTPError: 421 Client
 # Error: Misdirected Request
-links_w_redirect_errors = {
+links_w_errors = {
     "10.1101/2020.10.29.359778",
     "10.1101/2023.05.17.541168",
     "10.1101/2023.10.27.564468",
@@ -116,7 +116,11 @@ def test_refine(func, link, data_regression):
         data = serialize(Paper, result)
         data_regression.check(data)
     except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 421 and link in links_w_redirect_errors:
+        if e.response.status_code == 403 and link in links_w_errors:
+            pytest.skip(
+                f"{link} fails with a forbidden request ending in error {e.response.status_code}"
+            )
+        elif e.response.status_code == 421 and link in links_w_errors:
             pytest.skip(
                 f"{link} fails with a misdirected request ending in error {e.response.status_code}"
             )
