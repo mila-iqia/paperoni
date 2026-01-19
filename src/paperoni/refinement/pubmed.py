@@ -9,7 +9,7 @@ from .formats import paper_from_jats
 @register_fetch
 async def pubmed(type: Literal["pmc"], link: str):
     pmc_id = link
-    soup = await config.fetch.aread(
+    soup = await config.fetch.read(
         # PubMed Central OAI-PMH API : https://pmc.ncbi.nlm.nih.gov/tools/oai/
         f"https://pmc.ncbi.nlm.nih.gov/api/oai/v1/mh/?verb=GetRecord&identifier=oai:pubmedcentral.nih.gov:{pmc_id}&metadataPrefix=pmc_fm",
         format="xml",

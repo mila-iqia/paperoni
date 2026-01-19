@@ -40,7 +40,7 @@ class RemoteCollection(PaperCollection):
     async def find_by_id(self, paper_id: int) -> CollectionPaper | None:
         url = f"{self.endpoint}/paper/{paper_id}"
         try:
-            resp = await self.fetch.aread(
+            resp = await self.fetch.read(
                 url,
                 format="json",
                 cache_into=None,
@@ -106,7 +106,7 @@ class RemoteCollection(PaperCollection):
         while True:
             query_params = params.copy()
             query_params["offset"] = offset
-            resp = await self.fetch.aread(
+            resp = await self.fetch.read(
                 url,
                 format="json",
                 cache_into=None,

@@ -117,7 +117,7 @@ class PMLR(Discoverer):
     async def get_volume(self, volume, cache=False):
         send(event=f"Fetching PMLR {volume}")
         try:
-            papers = await config.fetch.aread(
+            papers = await config.fetch.read(
                 f"https://proceedings.mlr.press/{volume}/assets/bib/citeproc.yaml",
                 format="yaml",
                 cache_into=cache
@@ -130,7 +130,7 @@ class PMLR(Discoverer):
             print_exc()
 
     async def extract_volumes(self, index, selector, map=None, filter=None):
-        main = await config.fetch.aread(index, format="html")
+        main = await config.fetch.read(index, format="html")
         urls = [lnk.attrs["href"] for lnk in main.select(selector)]
         return [map(url) if map else url for url in urls if filter is None or filter(url)]
 

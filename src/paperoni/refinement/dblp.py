@@ -29,7 +29,7 @@ def _author_links(author_span):
 
 @register_fetch
 async def dblp(type: Literal["dblp"], link: str):
-    data = await config.fetch.aread_retry(
+    data = await config.fetch.read_retry(
         f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml"
     )
     ee = data.find("ee")

@@ -14,7 +14,7 @@ class URL:
     headers: dict[str, str] = field(default_factory=dict)
 
     async def readable(self):
-        hd = await config.fetch.ahead(self.url, headers=self.headers)
+        hd = await config.fetch.head(self.url, headers=self.headers)
         try:
             hd.raise_for_status()
         except Exception:
@@ -76,7 +76,7 @@ async def find_download_links(typ: Literal["doi"], link: str):
 async def find_download_links(typ: Literal["doi"], link: str):
     """Find links from CrossRef DOI entry."""
     try:
-        data = await config.fetch.aread(
+        data = await config.fetch.read(
             f"https://api.crossref.org/v1/works/{link}",
             format="json",
         )
@@ -97,7 +97,7 @@ async def find_download_links(typ: Literal["doi"], link: str):
     mailto = f"mailto={config.mailto}" if config.mailto else ""
     url = f"https://api.openalex.org/works/doi:{link}?{mailto}&select=open_access,title"
     try:
-        results = await config.fetch.aread(url, format="json")
+        results = await config.fetch.read(url, format="json")
     except ERRORS:
         return
     oa = results["open_access"]
@@ -108,10 +108,10 @@ async def find_download_links(typ: Literal["doi"], link: str):
 @ovld(priority=1)
 async def find_download_links(typ: Literal["doi"], link: str):
     """Find links from whatever the DOI handle redirects to."""
-    info = await config.fetch.aread(f"https://doi.org/api/handles/{link}", format="json")
+    info = await config.fetch.read(f"https://doi.org/api/handles/{link}", format="json")
     target = [v for v in info["values"] if v["type"] == "URL"][0]["data"]["value"]
     try:
-        soup = await config.fetch.aread(target, format="html")
+        soup = await config.fetch.read(target, format="html")
     except ERRORS:
         return
     possible_selectors = {

@@ -267,7 +267,7 @@ class MiniConf(Discoverer):
             and config.cache_path
             and config.cache_path / "miniconf" / f"{conference}-{year}.json"
         )
-        data = await config.fetch.aread(
+        data = await config.fetch.read(
             url, format="json", cache_into=cache_path, cache_expiry=cache_expiry
         )
 

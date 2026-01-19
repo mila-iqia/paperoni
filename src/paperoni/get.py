@@ -80,7 +80,7 @@ def _giveup(exc):
 
 
 class Fetcher:
-    async def aread(
+    async def read(
         self, url, format=None, cache_into=None, cache_expiry: timedelta = None, **kwargs
     ):
         def is_cache_valid(path: Path, expiry: timedelta):
@@ -94,7 +94,7 @@ class Fetcher:
         if cache_into and is_cache_valid(cache_into, cache_expiry):
             content = cache_into.read_text()
         else:
-            resp = await self.aget(url, **kwargs)
+            resp = await self.get(url, **kwargs)
             send(url=url, params=kwargs.get("params", {}), response=resp)
             resp.raise_for_status()
             content = resp.text
@@ -112,19 +112,19 @@ class Fetcher:
         max_time=30,
         logger=None,
     )
-    async def aread_retry(self, *args, **kwargs):
-        return await self.aread(*args, **kwargs)
+    async def read_retry(self, *args, **kwargs):
+        return await self.read(*args, **kwargs)
 
-    async def ageneric(self, method, url, stream=False, **kwargs):
+    async def generic(self, method, url, stream=False, **kwargs):
         raise NotImplementedError()
 
-    async def ahead(self, url, **kwargs):
-        return await self.ageneric("head", url, **kwargs)
+    async def head(self, url, **kwargs):
+        return await self.generic("head", url, **kwargs)
 
-    async def aget(self, url, **kwargs):
-        return await self.ageneric("get", url, **kwargs)
+    async def get(self, url, **kwargs):
+        return await self.generic("get", url, **kwargs)
 
-    async def adownload(self, url, filename, **kwargs):
+    async def download(self, url, filename, **kwargs):
         """Download the given url into the given filename (async)."""
 
         async def aiter_with_timeout(response, chunk_size: int, timeout: float):
@@ -145,7 +145,7 @@ class Fetcher:
                     pass
 
         print(f"Downloading {url}")
-        async with await self.ageneric("GET", url, stream=True, **kwargs) as r:
+        async with await self.generic("GET", url, stream=True, **kwargs) as r:
             r.raise_for_status()
             total = int(r.headers.get("content-length") or 1024**2)
             sofar = 0
@@ -190,23 +190,13 @@ class HTTPXFetcher(Fetcher):
             self._aclient_loop = loop
         return self._aclient
 
-    def _prepare_kwargs(self, headers={}, **kwargs):
+    async def generic(self, method, url, stream=False, headers={}, **kwargs):
         kwargs.setdefault("timeout", self.timeout)
         headers = {k: v for k, v in headers.items() if v is not None}
         if self.user_agent:
             headers["User-Agent"] = self.user_agent
         if headers:
             kwargs["headers"] = headers
-        return kwargs
-
-    def generic(self, method, url, stream=False, headers={}, **kwargs):
-        kwargs = self._prepare_kwargs(headers=headers, **kwargs)
-        if stream:
-            return self.client.stream(method.upper(), url, **kwargs)
-        return getattr(self.client, method)(url, **kwargs)
-
-    async def ageneric(self, method, url, stream=False, headers={}, **kwargs):
-        kwargs = self._prepare_kwargs(headers=headers, **kwargs)
         if stream:
             return self.aclient.stream(method.upper(), url, **kwargs)
         return await getattr(self.aclient, method)(url, **kwargs)
@@ -255,7 +245,7 @@ class CachedFetcher(HTTPXFetcher):
 
 @dataclass
 class BannedFetcher(Fetcher):
-    async def ageneric(self, method, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         raise Exception(f"Will not try to fetch {url}")
 
 
@@ -275,16 +265,12 @@ class RequestsFetcher(Fetcher):
     def session(self):
         return Session()
 
-    def _prepare_kwargs(self, **kwargs):
+    async def generic(self, method, url, stream=False, **kwargs):
+        # Requests is sync-only, so we just call the sync version
         kwargs.setdefault("timeout", self.timeout)
         if self.user_agent:
             headers = kwargs.setdefault("headers", {})
             headers["UserAgent"] = headers["User-Agent"] = self.user_agent
-        return kwargs
-
-    async def ageneric(self, method, url, stream=False, **kwargs):
-        # Requests is sync-only, so we just call the sync version
-        kwargs = self._prepare_kwargs(**kwargs)
         if stream:
             return self._astream_context(method, url, **kwargs)
         return getattr(self.session, method)(url, **kwargs)
@@ -314,7 +300,7 @@ class CloudFlareFetcher(RequestsFetcher):
 class ScraperAPIFetcher(CachedFetcher):
     api_key: Secret[str] = None
 
-    def _prepare_scraper_kwargs(self, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         assert self.api_key is not None
         payload = {
             "api_key": str(self.api_key),
@@ -322,21 +308,17 @@ class ScraperAPIFetcher(CachedFetcher):
         }
         assert "params" not in kwargs
         kwargs["params"] = payload
-        return kwargs
-
-    async def ageneric(self, method, url, **kwargs):
-        kwargs = self._prepare_scraper_kwargs(url, **kwargs)
-        return await super().ageneric(method, "https://api.scraperapi.com/", **kwargs)
+        return await super().generic(method, "https://api.scraperapi.com/", **kwargs)
 
 
 @dataclass
 class SequenceFetcher(Fetcher):
     fetchers: list[TaggedSubclass[Fetcher]]
 
-    async def ageneric(self, method, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         for fetcher in self.fetchers:
             try:
-                return await fetcher.ageneric(method, url, **kwargs)
+                return await fetcher.generic(method, url, **kwargs)
             except ERRORS as e:
                 if e.response.status_code == 403:
                     continue
@@ -350,11 +332,9 @@ class RulesFetcher(Fetcher):
     rules: dict[re.Pattern, str]
     fetchers: dict[str, TaggedSubclass[Fetcher]]
 
-    def _get_fetcher(self, url):
+    async def generic(self, method, url, **kwargs):
         for pattern, fetcher_key in self.rules.items():
             if pattern.search(url):
-                return self.fetchers[fetcher_key]
+                f = self.fetchers[fetcher_key]
+                return await f.generic(method, url, **kwargs)
         raise ValueError(f"No fetcher rule matches URL: {url}")
-
-    async def ageneric(self, method, url, **kwargs):
-        return await self._get_fetcher(url).ageneric(method, url, **kwargs)

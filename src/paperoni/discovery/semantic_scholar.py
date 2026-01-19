@@ -135,7 +135,7 @@ class SemanticScholar(Discoverer):
     api_key: str = field(default_factory=lambda: config.api_keys.semantic_scholar)
 
     async def _evaluate(self, path: str, **params):
-        jdata = await config.fetch.aread_retry(
+        jdata = await config.fetch.read_retry(
             f"https://api.semanticscholar.org/graph/v1/{path}",
             params=params,
             headers={"x-api-key": self.api_key and str(self.api_key)},

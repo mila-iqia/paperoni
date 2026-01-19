@@ -66,7 +66,7 @@ class JMLR(Discoverer):
     async def get_volume(self, volume, cache=False):
         send(event=f"Fetching JMLR {volume}")
         try:
-            index = await config.fetch.aread(
+            index = await config.fetch.read(
                 f"{self.urlbase}/papers/{volume}",
                 format="html",
                 cache_into=cache
@@ -173,7 +173,7 @@ class JMLR(Discoverer):
             )
 
     async def extract_volumes(self, index, selector, map=None, filter=None):
-        main = await config.fetch.aread(index, format="html")
+        main = await config.fetch.read(index, format="html")
         urls = [lnk.attrs["href"] for lnk in main.select(selector)]
         return [map(url) if map else url for url in urls if filter is None or filter(url)]
 

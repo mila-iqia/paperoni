@@ -71,7 +71,7 @@ class PDF:
     async def fetch(self):
         self.ensure()
         try:
-            await config.fetch.adownload(
+            await config.fetch.download(
                 url=self.source.url,
                 filename=self.pdf_path,
             )

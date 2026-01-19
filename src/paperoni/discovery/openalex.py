@@ -183,7 +183,7 @@ class OpenAlexQueryManager:
     async def _evaluate(self, path: str, **params):
         if self.mailto:
             params["mailto"] = self.mailto
-        jdata = await config.fetch.aread_retry(
+        jdata = await config.fetch.read_retry(
             f"https://api.openalex.org/{path}", params=params, format="json"
         )
         if jdata is None:

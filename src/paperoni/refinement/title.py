@@ -19,7 +19,7 @@ async def crossref_title(type: Literal["title"], link: str):
     encoded_title = quote(title.strip())
 
     try:
-        data = await config.fetch.aread(
+        data = await config.fetch.read(
             f"https://api.crossref.org/works?query.title={encoded_title}&rows=1",
             format="json",
         )
