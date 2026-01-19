@@ -1,67 +1,68 @@
-abstract: null
-authors:
-- affiliations: []
-  author:
-    aliases: []
-    links: []
-    name: Vijay Prakash Dwivedi
-  display_name: Vijay Prakash Dwivedi
-- affiliations: []
-  author:
-    aliases: []
-    links: []
-    name: Chaitanya K. Joshi
-  display_name: Chaitanya K. Joshi
-- affiliations: []
-  author:
-    aliases: []
-    links: []
-    name: Anh Tuan Luu
-  display_name: Anh Tuan Luu
-- affiliations: []
-  author:
-    aliases: []
-    links: []
-    name: Thomas Laurent
-  display_name: Thomas Laurent
-- affiliations: []
-  author:
-    aliases: []
-    links: []
-    name: Yoshua Bengio
-  display_name: Yoshua Bengio
-- affiliations: []
-  author:
-    aliases: []
-    links: []
-    name: Xavier Bresson
-  display_name: Xavier Bresson
-flags: []
-id: null
-links:
-- link: https://jmlr.org/papers/volume24/22-0567/22-0567.pdf
-  type: pdf.official
-- link: https://jmlr.org/papers/v24/22-0567.bib
-  type: bibtex
-- link: https://jmlr.org/papers/v24/22-0567.html
-  type: abstract.official
-- link: https://jmlr.org/papers/v24/22-0567.html
-  type: uid
-releases:
-- pages: 1-48
-  status: published
-  venue:
-    aliases: []
-    date: '2023-01-01'
-    date_precision: 1
-    links: []
-    name: Journal of Machine Learning Research
-    open: false
-    peer_reviewed: true
-    publisher: JMLR
-    series: JMLR
-    short_name: null
-    type: journal
-    volume: null
-title: Benchmarking Graph Neural Networks
-topics: []
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Vijay Prakash Dwivedi
+    display_name: Vijay Prakash Dwivedi
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Chaitanya K. Joshi
+    display_name: Chaitanya K. Joshi
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Anh Tuan Luu
+    display_name: Anh Tuan Luu
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Thomas Laurent
+    display_name: Thomas Laurent
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Xavier Bresson
+    display_name: Xavier Bresson
+  flags:
+  - valid
+  id: null
+  links:
+  - link: https://jmlr.org/papers/volume24/22-0567/22-0567.pdf
+    type: pdf.official
+  - link: https://jmlr.org/papers/v24/22-0567.bib
+    type: bibtex
+  - link: https://jmlr.org/papers/v24/22-0567.html
+    type: abstract.official
+  - link: https://jmlr.org/papers/v24/22-0567.html
+    type: uid
+  releases:
+  - pages: 1-48
+    status: published
+    venue:
+      aliases: []
+      date: '2023-01-01'
+      date_precision: 1
+      links: []
+      name: Journal of Machine Learning Research
+      open: false
+      peer_reviewed: true
+      publisher: JMLR
+      series: JMLR
+      short_name: null
+      type: journal
+      volume: null
+  title: Benchmarking Graph Neural Networks
+  topics: []

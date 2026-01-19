@@ -645,7 +645,7 @@ class Coll:
                     start_date=self.start_date,
                     end_date=self.end_date,
                     include_flags={f for f in flags if not f.startswith("~")},
-                    exclude_flags={f for f in flags if f.startswith("~")},
+                    exclude_flags={f[1:] for f in flags if f.startswith("~")},
                 )
             ]
             self.format(papers)

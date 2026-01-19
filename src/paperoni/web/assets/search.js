@@ -31,7 +31,23 @@ async function fetchSearchResults(params, offset = 0) {
     if (params.venue) queryParams.append('venue', params.venue);
     if (params.start_date) queryParams.append('start_date', params.start_date);
     if (params.end_date) queryParams.append('end_date', params.end_date);
-    if (params.validated) queryParams.append('validated', params.validated);
+
+    // Convert validated parameter to flags
+    switch (params.validated) {
+        case 'true':
+            // Include papers with 'valid' flag
+            queryParams.append('flags', 'valid');
+            break;
+        case 'false':
+            // Include papers with 'invalid' flag
+            queryParams.append('flags', 'invalid');
+            break;
+        case 'unset':
+            // Exclude papers with both 'valid' and 'invalid' flags (unprocessed)
+            queryParams.append('flags', '~valid');
+            queryParams.append('flags', '~invalid');
+            break;
+    }
 
     const url = `/api/v1/search?${queryParams.toString()}`;
     const response = await fetch(url);

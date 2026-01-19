@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from types import NoneType
 from typing import Generator, Iterable, Literal
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from serieux import auto_singleton, deserialize, serialize
 
@@ -331,12 +331,23 @@ def install_api(app) -> FastAPI:
             "version": app.version,
         }
 
+    def parse_search_request(
+        request: SearchRequest = Depends(),
+        flags: set[str] = Query(default=None),
+    ) -> SearchRequest:
+        """Parse search request with proper handling of flags list parameter."""
+        # Add flags if provided (FastAPI's Query() handles set parsing)
+        if flags:
+            request.flags = flags
+
+        return request
+
     @app.get(
         f"{prefix}/search",
         response_model=SearchResponse,
         dependencies=[Depends(hascap("search"))],
     )
-    async def search_papers(request: SearchRequest = Depends()):
+    async def search_papers(request: SearchRequest = Depends(parse_search_request)):
         """Search for papers in the collection."""
         results, count, next_offset, total = await run_in_process_pool(
             _search, serialize(SearchRequest, request)

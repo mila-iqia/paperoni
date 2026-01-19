@@ -99,9 +99,9 @@ class RemoteCollection(PaperCollection):
         if end_date:
             params["end_date"] = end_date.isoformat()
         if include_flags:
-            params["include_flags"] = ",".join(include_flags)
+            params.setdefault("flags", []).extend(include_flags)
         if exclude_flags:
-            params["exclude_flags"] = ",".join(exclude_flags)
+            params.setdefault("flags", []).extend([f"~{f}" for f in exclude_flags])
         url = f"{self.endpoint}/search"
         offset = 0
         while True:
