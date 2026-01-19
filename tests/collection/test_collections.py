@@ -175,6 +175,10 @@ def collection(
                 exclusions = await mongo_collection.exclusions()
                 return not results and not exclusions
 
+            async def _drop_db():
+                await mongo_collection._ensure_connection()
+                await mongo_collection._client.drop_database(mongo_collection.database)
+
             assert asyncio.get_event_loop().run_until_complete(_check_empty()), dedent(
                 """Mongo collection is not empty. As tests will purge the database,
                 empty the database before running the tests to avoid unwanted loss
@@ -185,7 +189,7 @@ def collection(
 
         finally:
             if safe_to_drop:
-                mongo_collection._client.drop_database(mongo_collection.database)
+                asyncio.get_event_loop().run_until_complete(_drop_db())
 
     elif request.param == RemoteCollection:
         if request.node.get_closest_marker("coll_w_remote"):

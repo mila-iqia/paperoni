@@ -1,9 +1,7 @@
 from dataclasses import field
 from datetime import date, datetime
-from typing import Generator, Iterable, Union
+from typing import AsyncGenerator, Iterable, Union
 
-import pymongo
-import pymongo.synchronous.collection
 from bson import ObjectId
 from motor.motor_asyncio import (
     AsyncIOMotorClient,
@@ -140,9 +138,8 @@ class MongoPaper(CollectionPaper, NormalizedPaper, MongoMixin):
 
 
 @dataclass
-# TODO: Migrate to an sync implementation of the collection
 class MongoCollection(PaperCollection):
-    """MongoDB implementation of PaperCollection."""
+    """Async MongoDB implementation of PaperCollection using motor."""
 
     cluster_uri: str = "localhost:27017"
     user: Secret[str] = None
@@ -158,264 +155,6 @@ class MongoCollection(PaperCollection):
             password=self.password,
             cluster_uri=self.cluster_uri,
         )
-        self._client: pymongo.MongoClient = None
-        self._database: pymongo.database.Database = None
-        self._collection: pymongo.synchronous.collection.Collection = None
-        self._exclusions: pymongo.synchronous.collection.Collection = None
-
-    def _ensure_connection(self):
-        """Ensure MongoDB connection is established."""
-        if self._client is None:
-            self._client = pymongo.MongoClient(self.connection_string)
-            self._database = self._client[self.database]
-            self._collection = self._database[self.collection]
-            self._exclusions = self._database[self.exclusions_collection]
-
-            # Create indexes for efficient searching
-            self._create_indexes()
-
-    def _create_indexes(self):
-        """Create MongoDB indexes for efficient searching."""
-        # Index on normalized title for fast title searches
-        self._collection.create_index("_norm_title")
-
-        # Index on links for fast link-based lookups
-        self._collection.create_index("links.type")
-        self._collection.create_index("links.link")
-
-        # Index on author names for fast author searches
-        self._collection.create_index("authors._norm_display_name")
-
-        # Index on institution names for fast institution searches
-        self._collection.create_index("authors.affiliations._norm_name")
-
-        # Index on venue names for fast venue searches
-        self._collection.create_index("releases.venue.name")
-        self._collection.create_index("releases.venue.short_name")
-        self._collection.create_index("releases.venue.aliases")
-
-        # Index on release dates for fast date-based searches
-        self._collection.create_index("releases.venue.date")
-
-        # Index on flags for fast flag-based searches
-        self._collection.create_index("flags")
-
-        # Index on exclusions
-        self._exclusions.create_index("link", unique=True)
-
-    async def exclusions(self) -> set[str]:
-        """Get the set of excluded paper identifiers."""
-        self._ensure_connection()
-        exclusions = {doc["link"] for doc in self._exclusions.find({})}
-        return exclusions
-
-    async def add_papers(self, papers: Iterable[Paper | MongoPaper]) -> int:
-        """Add papers to the collection."""
-        self._ensure_connection()
-        added = 0
-
-        for p in papers:
-            for link in p.links:
-                if self._exclusions.find_one({"link": f"{link.type}:{link.link}"}):
-                    break
-
-            else:
-                # Handle existing papers
-                existing_paper: MongoPaper = None
-                if isinstance(p, MongoMixin) and (
-                    existing_paper := self._collection.find_one({"_id": p.id})
-                ):
-                    existing_paper = deserialize(MongoPaper, existing_paper)
-                    if existing_paper.version >= p.version:
-                        # Paper has been updated since last time it was fetched.
-                        # Do not replace it.
-                        continue
-                    p.version = datetime.now()
-                    self._collection.replace_one({"_id": p.id}, serialize(MongoPaper, p))
-
-                else:
-                    p = MongoPaper.make_collection_item(p)
-                    assert not self._collection.find_one({"_id": p.id})
-                    self._collection.insert_one(serialize(MongoPaper, p))
-
-                added += 1
-
-        return added
-
-    async def exclude_papers(self, papers: Iterable[Paper]) -> None:
-        """Exclude papers from the collection."""
-        self._ensure_connection()
-
-        papers_links = set()
-        for paper in papers:
-            for link in getattr(paper, "links", []):
-                if link.type in _id_types:
-                    papers_links.add(f"{link.type}:{link.link}")
-
-        if papers_links:
-            try:
-                self._exclusions.insert_many(
-                    map(lambda x: {"link": x}, papers_links), ordered=False
-                )
-            except DuplicateKeyError:
-                # Some exclusions already exist, that's fine
-                pass
-
-    async def find_paper(self, paper: Paper) -> MongoPaper | None:
-        """Find a paper in the collection by links or title."""
-        self._ensure_connection()
-
-        # First try to find by links
-        for link in paper.links:
-            if doc := self._collection.find_one(
-                {"links": {"$elemMatch": serialize(Link, link)}}
-            ):
-                break
-        else:
-            # Then try to find by normalized title
-            doc = self._collection.find_one(
-                {
-                    "_norm_title": {
-                        "$regex": normalize_title(paper.title),
-                        "$options": "i",
-                    }
-                }
-            )
-
-        return deserialize(MongoPaper, doc) if doc else None
-
-    async def find_by_id(self, paper_id: int) -> MongoPaper | None:
-        """Find a paper in the collection by id."""
-        self._ensure_connection()
-        doc = self._collection.find_one({"_id": ObjectId(paper_id)})
-        return deserialize(MongoPaper, doc) if doc else None
-
-    async def edit_paper(self, paper: MongoPaper) -> None:
-        """Edit an existing paper in the collection."""
-        self._ensure_connection()
-
-        existing_paper = self._collection.find_one({"_id": paper.id})
-        if not existing_paper:
-            raise ValueError(f"Paper with ID {paper.id} not found in collection")
-
-        paper.version = datetime.now()
-        result = self._collection.replace_one(
-            {"_id": paper.id}, serialize(MongoPaper, paper)
-        )
-
-        if result.matched_count == 0:
-            raise ValueError(f"Paper with ID {paper.id} not found in collection")
-
-    async def drop(self) -> None:
-        """Drop the collection."""
-        self._ensure_connection()
-        self._client.drop_database(self.database)
-        self._client = None
-        self._database = None
-        self._collection = None
-        self._exclusions = None
-
-    async def search(
-        self,
-        paper_id: int = None,
-        title: str = None,
-        institution: str = None,
-        author: str = None,
-        venue: str = None,
-        start_date: date = None,
-        end_date: date = None,
-        include_flags: list[str] = None,
-        exclude_flags: list[str] = None,
-    ) -> Generator[MongoPaper, None, None]:
-        """Search for papers in the collection."""
-        self._ensure_connection()
-
-        query = {}
-        title = title and normalize_title(title)
-        author = author and normalize_name(author)
-        institution = institution and normalize_institution(institution)
-        venue = venue and normalize_venue(venue)
-
-        if paper_id is not None:
-            query["_id"] = ObjectId(paper_id)
-
-        if title:
-            query["_norm_title"] = {"$regex": f".*{title}.*", "$options": "i"}
-
-        if author:
-            query["authors._norm_display_name"] = {
-                "$regex": f".*{author}.*",
-                "$options": "i",
-            }
-
-        if venue:
-            # Match papers where any release has a venue name, short_name, or alias matching the search
-            query["$or"] = [
-                {"releases.venue.name": {"$regex": f".*{venue}.*", "$options": "i"}},
-                {
-                    "releases.venue.short_name": {
-                        "$regex": f".*{venue}.*",
-                        "$options": "i",
-                    }
-                },
-                {"releases.venue.aliases": {"$regex": f".*{venue}.*", "$options": "i"}},
-            ]
-
-        # Date filtering: papers match if at least one release falls within the date range
-        if start_date or end_date:
-            date_query = {}
-            if start_date:
-                date_query["$gte"] = start_date
-            if end_date:
-                date_query["$lte"] = end_date
-
-            # Match papers where at least one release date is in the range
-            query["releases.venue.date"] = date_query
-
-        # Flag filtering
-        if include_flags:
-            # All flags in include_flags must be present
-            query["flags"] = {"$all": list(include_flags)}
-
-        if exclude_flags:
-            # None of the flags in exclude_flags should be present
-            if "flags" in query:
-                # If we already have a flags query from include_flags, combine them
-                query["$and"] = [
-                    {"flags": query["flags"]},
-                    {"flags": {"$nin": list(exclude_flags)}},
-                ]
-                del query["flags"]
-            else:
-                query["flags"] = {"$nin": list(exclude_flags)}
-
-        if institution:
-            query["authors.affiliations._norm_name"] = {
-                "$regex": f".*{institution}.*",
-                "$options": "i",
-            }
-
-        for doc in self._collection.find(query):
-            yield deserialize(MongoPaper, doc)
-
-    async def commit(self) -> None:
-        # Commits are done synchronously to collections operations
-        pass
-
-    def __len__(self) -> int:
-        """Get the number of papers in the collection."""
-        self._ensure_connection()
-        return self._collection.count_documents({})
-
-
-@dataclass
-class MongoCollectionAsync(MongoCollection):
-    """Async MongoDB implementation of PaperCollection."""
-
-    def __post_init__(self):
-        MongoCollection.__post_init__(self)
-
-        # Set type hints for MongoCollectionAsync
         self._client: AsyncIOMotorClient = None
         self._database: AsyncIOMotorDatabase = None
         self._collection: AsyncIOMotorCollection = None
@@ -461,11 +200,10 @@ class MongoCollectionAsync(MongoCollection):
         # Index on exclusions
         await self._exclusions.create_index("link", unique=True)
 
-    @property
     async def exclusions(self) -> set[str]:
         """Get the set of excluded paper identifiers."""
         await self._ensure_connection()
-        exclusions = {doc["link"] for doc in await self._exclusions.find({})}
+        exclusions = {doc["link"] async for doc in self._exclusions.find({})}
         return exclusions
 
     async def add_papers(self, papers: Iterable[Paper | MongoPaper]) -> int:
@@ -481,8 +219,8 @@ class MongoCollectionAsync(MongoCollection):
             else:
                 # Handle existing papers
                 existing_paper: MongoPaper = None
-                if isinstance(p, CollectionMixin) and (
-                    existing_paper := await self._collection.find_one({"id": p.id})
+                if isinstance(p, MongoMixin) and (
+                    existing_paper := await self._collection.find_one({"_id": p.id})
                 ):
                     existing_paper = deserialize(MongoPaper, existing_paper)
                     if existing_paper.version >= p.version:
@@ -491,12 +229,12 @@ class MongoCollectionAsync(MongoCollection):
                         continue
                     p.version = datetime.now()
                     await self._collection.replace_one(
-                        {"id": p.id}, serialize(MongoPaper, p)
+                        {"_id": p.id}, serialize(MongoPaper, p)
                     )
 
                 else:
                     p = MongoPaper.make_collection_item(p)
-                    assert not await self._collection.find_one({"id": p.id})
+                    assert not await self._collection.find_one({"_id": p.id})
                     await self._collection.insert_one(serialize(MongoPaper, p))
 
                 added += 1
@@ -516,7 +254,7 @@ class MongoCollectionAsync(MongoCollection):
         if papers_links:
             try:
                 await self._exclusions.insert_many(
-                    map(lambda x: {"link": x}, papers_links), ordered=False
+                    [{"link": x} for x in papers_links], ordered=False
                 )
             except DuplicateKeyError:
                 # Some exclusions already exist, that's fine
@@ -527,12 +265,14 @@ class MongoCollectionAsync(MongoCollection):
         await self._ensure_connection()
 
         # First try to find by links
+        doc = None
         for link in paper.links:
             if doc := await self._collection.find_one(
                 {"links": {"$elemMatch": serialize(Link, link)}}
             ):
                 break
-        else:
+
+        if doc is None:
             # Then try to find by normalized title
             doc = await self._collection.find_one(
                 {
@@ -567,9 +307,18 @@ class MongoCollectionAsync(MongoCollection):
         if result.matched_count == 0:
             raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
+    async def drop(self) -> None:
+        """Drop the collection."""
+        await self._ensure_connection()
+        await self._client.drop_database(self.database)
+        self._client = None
+        self._database = None
+        self._collection = None
+        self._exclusions = None
+
     async def search(
         self,
-        paper_id: str = None,
+        paper_id: int = None,
         title: str = None,
         institution: str = None,
         author: str = None,
@@ -578,7 +327,7 @@ class MongoCollectionAsync(MongoCollection):
         end_date: date = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
-    ) -> Generator[MongoPaper, None, None]:
+    ) -> AsyncGenerator[MongoPaper, None]:
         """Search for papers in the collection."""
         await self._ensure_connection()
 
@@ -654,7 +403,13 @@ class MongoCollectionAsync(MongoCollection):
         # Commits are done synchronously to collections operations
         pass
 
-    async def __len__(self) -> int:
+    def __len__(self) -> int:
+        """Get the number of papers in the collection."""
+        raise NotImplementedError(
+            "Use 'await collection.count()' instead of len() for async MongoDB collection"
+        )
+
+    async def count(self) -> int:
         """Get the number of papers in the collection."""
         await self._ensure_connection()
         return await self._collection.count_documents({})
