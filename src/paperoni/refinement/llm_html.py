@@ -2,14 +2,7 @@ from pathlib import Path
 from typing import Literal
 
 import gifnoc
-<<<<<<< HEAD
 
-=======
-from paperazzi.platforms.utils import Message
-
-from ..config import config
-from ..get import ERRORS
->>>>>>> 63b3c26 (Make fetch_all async)
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import PromptConfig
 from ..prompt_utils import prompt_html
@@ -50,7 +43,9 @@ async def prompt(link: str, send_input, force: bool = False) -> Paper:
 
 @register_fetch(tags={"prompt", "html"})
 async def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
-    paper = await prompt(f"https://doi.org/{link}", send_input=f"{type}:{link}", force=force)
+    paper = await prompt(
+        f"https://doi.org/{link}", send_input=f"{type}:{link}", force=force
+    )
     paper.links.append(Link(type=type, link=link))
     return paper.authors and paper or None
 

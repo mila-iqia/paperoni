@@ -1,6 +1,3 @@
-count: 10
-next_offset: null
-results:
 - abstract: We present a novel computer vision system for automated strawberry ripeness
     classification, achieving 94% accuracy across five ripeness stages.
   authors:
@@ -471,4 +468,3 @@ results:
   title: Texture Analysis Standards for Kiwifruit Quality Control
   topics: []
   version: '2026-01-19T00:00:00'
-total: 10

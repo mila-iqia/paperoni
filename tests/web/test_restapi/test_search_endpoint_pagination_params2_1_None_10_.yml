@@ -1,0 +1,45 @@
+- abstract: International texture analysis standards for kiwifruit are proposed and
+    validated across laboratories in five countries.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Zhejiang University
+    author:
+      aliases: []
+      links: []
+      name: Wei Zhang
+    display_name: Wei Zhang
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: New Zealand Kiwifruit Board
+    author:
+      aliases: []
+      links: []
+      name: Sarah Mitchell
+    display_name: Sarah Mitchell
+  flags: []
+  id: 9
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-12-01'
+      date_precision: 3
+      links: []
+      name: Food Standards International
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: FSI
+      short_name: null
+      type: journal
+      volume: null
+  title: Texture Analysis Standards for Kiwifruit Quality Control
+  topics: []
+  version: '2026-01-19T00:00:00'

@@ -1,13 +1,214 @@
-- _count: null
-  _next_offset: null
-  author: John Doe
-  end_date: null
-  expand_links: false
-  flags: null
-  institution: null
-  limit: 100
-  offset: 0
-  paper_id: null
-  start_date: null
-  title: null
-  venue: null
+count: 4
+next_offset: null
+results:
+- abstract: We present a novel computer vision system for automated strawberry ripeness
+    classification, achieving 94% accuracy across five ripeness stages.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Kevin Juicy
+    display_name: Kevin Juicy
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: Berry Analytics Corp
+    author:
+      aliases: []
+      links: []
+      name: James Rodriguez
+    display_name: James Rodriguez
+  flags: []
+  id: 0
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-03-15'
+      date_precision: 3
+      links: []
+      name: Journal of Agricultural Testing
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: JAT
+      short_name: null
+      type: journal
+      volume: null
+  title: Automated Ripeness Detection in Strawberries Using Computer Vision
+  topics: []
+  version: '2026-01-19T00:00:00'
+- abstract: We establish standardized firmness testing protocols for mangoes destined
+    for international markets, reducing rejection rates by 23%.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Huge University
+    author:
+      aliases: []
+      links: []
+      name: Milo Meloni
+    display_name: Milo Meloni
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: Global Fruit Standards Organization
+    author:
+      aliases: []
+      links: []
+      name: Robert Williams
+    display_name: Robert Williams
+  flags: []
+  id: 2
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-01-10'
+      date_precision: 3
+      links: []
+      name: Postharvest Biology and Technology
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: PBT
+      short_name: null
+      type: journal
+      volume: null
+  title: Firmness Testing Protocols for Mango Export Quality Assessment
+  topics: []
+  version: '2026-01-19T00:00:00'
+- abstract: Novel accelerated testing methods are combined with machine learning to
+    predict banana shelf life with 3-day accuracy.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Nigerian Agricultural Research Council
+    author:
+      aliases: []
+      links: []
+      name: Emmanuel Okonkwo
+    display_name: Emmanuel Okonkwo
+  flags: []
+  id: 5
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-11-12'
+      date_precision: 3
+      links: []
+      name: Food Quality and Preference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: FQP
+      short_name: null
+      type: journal
+      volume: null
+  title: Shelf Life Prediction Models for Bananas Based on Accelerated Testing
+  topics: []
+  version: '2026-01-19T00:00:00'
+- abstract: A deep learning pipeline is trained on 50,000 grape images to automate
+    quality grading for wine production.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Bordeaux Wine Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Pierre Dubois
+    display_name: Pierre Dubois
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: VineTech AI
+    author:
+      aliases: []
+      links: []
+      name: Claire Martin
+    display_name: Claire Martin
+  flags: []
+  id: 8
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-05-30'
+      date_precision: 3
+      links: []
+      name: International Conference on Agricultural AI
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ICAAI
+      short_name: null
+      type: conference
+      volume: null
+  title: Machine Learning Approaches for Grape Quality Grading from Visual Features
+  topics: []
+  version: '2026-01-19T00:00:00'
+total: 4
