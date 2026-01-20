@@ -87,7 +87,7 @@ class Scrape(Discoverer):
     # Whether to force re-running the llm prompts
     force: bool = False
 
-    def query(self):
+    async def query(self):
         for link in self.links:
             analysis: Analysis = prompt_html(
                 system_prompt=llm_config.system_prompt,
@@ -135,7 +135,7 @@ class Scrape(Discoverer):
                     yield from []
 
             # Fetch the cached HTML content
-            soup: BeautifulSoup = config.fetch.read(
+            soup: BeautifulSoup = await config.fetch.read(
                 link,
                 format="html",
                 cache_into=config.data_path

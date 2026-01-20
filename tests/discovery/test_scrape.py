@@ -16,7 +16,8 @@ def touch_cache():
         _f.touch()
 
 
-def test_query(data_regression: DataRegressionFixture):
+@pytest.mark.asyncio
+async def test_query(data_regression: DataRegressionFixture):
     discoverer = Scrape()
 
     with (
@@ -28,6 +29,6 @@ def test_query(data_regression: DataRegressionFixture):
     ):
         # Prepared with:
         # paperoni discover scrape --links "https://dadelani.github.io/publications"
-        paper = next(discoverer.query())
+        paper = await anext(discoverer.query())
 
     check_papers(data_regression, [paper])
