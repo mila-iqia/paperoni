@@ -15,7 +15,6 @@ class Analysis:
 
 DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "system-prompt.md").read_text()
 FIRST_MESSAGE = """### The author name to normalize:
-
 {}"""
 
 llm_config: PromptConfig = gifnoc.define(

@@ -26,7 +26,6 @@ class Analysis:
 
 DEFAULT_SYSTEM_MESSAGE = (Path(__file__).parent / "system-prompt.md").read_text()
 FIRST_MESSAGE = """### The academic affiliation names to process:
-
 {}"""
 
 

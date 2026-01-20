@@ -7,18 +7,13 @@ paperoni:
     rules:
       "^https://www.biorxiv.org/": cloudflare
       "^https://www.medrxiv.org/": cloudflare
-      "^https://pmc.ncbi.nlm.nih.gov/": cached
-      ".*": cached_ua
+      ".*": cached
     fetchers:
-      cached_ua:
-        $class: CachedFetcher
-        cache_path: ${paperoni.cache_path}/requests-cache.sql
-        expire_after: 7d
-        user_agent: chrome
       cached:
         $class: CachedFetcher
         cache_path: ${paperoni.cache_path}/requests-cache.sql
         expire_after: 7d
+        user_agent: chrome
       cloudflare:
         $class: CloudFlareFetcher
         user_agent: chrome
