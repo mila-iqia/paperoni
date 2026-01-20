@@ -379,6 +379,10 @@ class OpenReview(Discoverer):
                 total += 1
                 yield paper
 
+    def _query_authors(self, author_or_email: str, /):
+        for profile in self.client.search_profiles(term=author_or_email, use_ES=True):
+            yield profile.id
+
     def _query_venues(self, venues):
         patterns = {
             "date": [
@@ -474,6 +478,19 @@ class OpenReview(Discoverer):
                 match focus:
                     case Focus(drive_discovery=False):
                         continue
+                    case Focus(type="author", name=name, score=score):
+                        # OpenReview API does not support searching by author
+                        # name, so first search for the possible author IDs
+                        for author_id in self._query_authors(name):
+                            yield from rescore(
+                                self.query(
+                                    venue=venue,
+                                    author_id=author_id,
+                                    title=title,
+                                    block_size=block_size,
+                                ),
+                                score,
+                            )
                     case Focus(type="author_openreview", name=aid, score=score):
                         yield from rescore(
                             self.query(

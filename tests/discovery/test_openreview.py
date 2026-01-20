@@ -174,6 +174,17 @@ def test_focuses_drive_discovery_false():
                 "author_id": "~Yoshua_Bengio1",
             },
             {
+                "focuses": {
+                    "type": "author",
+                    "name": "Yoshua Bengio",
+                },
+            },
+        ],
+        [
+            {
+                "author_id": "~Yoshua_Bengio1",
+            },
+            {
                 "author_id": "~INVALID",  # Focuses should take precedence over other parameters
                 "focuses": {
                     "type": "author_openreview",
