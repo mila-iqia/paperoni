@@ -1421,11 +1421,50 @@ body {
     display: block;
 }
 
+.paper-abstract-section {
+    margin-top: 8px;
+    margin-bottom: 10px;
+}
+
 .paper-abstract {
     color: #666;
     font-size: 14px;
     line-height: 1.5;
-    margin-bottom: 10px;
+    cursor: pointer;
+    transition: max-height 0.3s ease;
+    position: relative;
+}
+
+.paper-abstract.collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.paper-abstract.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 1.5em;
+    background: linear-gradient(to right, transparent, white);
+    pointer-events: none;
+}
+
+.paper-abstract.expanded {
+    display: block;
+    overflow: visible;
+}
+
+.paper-abstract.expanded::after {
+    display: none;
+}
+
+.paper-abstract:hover {
+    color: #444;
 }
 
 .paper-meta {
@@ -1493,6 +1532,26 @@ body {
     flex-wrap: wrap;
     gap: 5px;
     margin-top: 10px;
+    align-items: center;
+}
+
+.topics-more-link {
+    color: #2c5aa0;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 8px;
+}
+
+.topics-more-link:hover {
+    text-decoration: underline;
+}
+
+.topics-hidden {
+    display: none;
+}
+
+.topics-hidden.visible {
+    display: contents;
 }
 
 .badge {
@@ -1672,4 +1731,201 @@ body {
 
 .btn-clear:hover {
     background: #5a6268;
+}
+
+/* Workset Styles */
+.workset-container {
+    padding: 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.workset-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.workset-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.workset-content {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+}
+
+.score-band {
+    background: linear-gradient(180deg, #2c5aa0 0%, #1e3a6f 100%);
+    color: white;
+    padding: 20px 15px;
+    min-width: 80px;
+    width: 80px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 8px 0 0 8px;
+    font-weight: 600;
+}
+
+.score-value {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    word-break: break-word;
+}
+
+.workset-tabs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.tab-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 8px 12px;
+    border-bottom: 2px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 0 8px 0 0;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.tab-button {
+    padding: 6px 12px;
+    margin: 6px 4px;
+    border: none;
+    background: #e0e0e0;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: #555;
+    border-radius: 12px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    line-height: 1.2;
+    position: relative;
+}
+
+/* Badge classes for paper content indicators */
+.tab-button.has-releases {
+    background: #d4edda;
+    color: #155724;
+}
+
+.tab-button.has-affiliations {
+    background: #e0ccff;
+    color: #5a189a;
+}
+
+/* Combined states - use the most prominent feature */
+.tab-button.has-releases.has-affiliations {
+    background: linear-gradient(135deg, #d4edda 0%, #e0ccff 100%);
+    color: #333;
+}
+
+.tab-button .tab-title {
+    display: block;
+    line-height: 1.3;
+}
+
+.tab-button .tab-subtitle {
+    display: block;
+    font-size: 9px;
+    opacity: 0.75;
+    line-height: 1.1;
+    margin-top: 1px;
+}
+
+.tab-button::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.tab-button.has-pdf::after {
+    background: #dc3545;
+}
+
+.tab-button:hover {
+    filter: brightness(0.92);
+    transform: scale(1.05);
+}
+
+.tab-button.active {
+    box-shadow: 0 0 0 2px #2c5aa0;
+    transform: scale(1.05);
+}
+
+.tab-contents {
+    position: relative;
+    min-height: 200px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.paper-content {
+    padding: 0;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.info-table thead {
+    background: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+}
+
+.info-table td {
+    padding: 5px;
+}
+
+.info-table .info-key {
+    font-weight: 500;
+    color: #2c5aa0;
+    width: 200px;
+}
+
+.info-table .info-value {
+    color: #666;
+    word-break: break-word;
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.info-table tbody tr:hover {
+    background: #f9f9f9;
 }
