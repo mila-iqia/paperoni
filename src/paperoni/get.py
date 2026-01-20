@@ -80,41 +80,6 @@ def _giveup(exc):
 
 
 class Fetcher:
-    async def read(
-        self, url, format=None, cache_into=None, cache_expiry: timedelta = None, **kwargs
-    ):
-        def is_cache_valid(path: Path, expiry: timedelta):
-            if not path.exists():
-                return False
-            if expiry is None:
-                return True
-            mtime = datetime.fromtimestamp(os.path.getmtime(path))
-            return (datetime.now() - mtime) < expiry
-
-        if cache_into and is_cache_valid(cache_into, cache_expiry):
-            content = cache_into.read_text()
-        else:
-            resp = await self.get(url, **kwargs)
-            send(url=url, params=kwargs.get("params", {}), response=resp)
-            resp.raise_for_status()
-            content = resp.text
-
-            if cache_into:
-                cache_into.parent.mkdir(parents=True, exist_ok=True)
-                cache_into.write_text(content)
-
-        return parse(content, format)
-
-    @backoff.on_exception(
-        backoff.expo,
-        ERRORS,
-        giveup=_giveup,
-        max_time=30,
-        logger=None,
-    )
-    async def read_retry(self, *args, **kwargs):
-        return await self.read(*args, **kwargs)
-
     async def generic(self, method, url, stream=False, **kwargs):
         raise NotImplementedError()
 
@@ -159,6 +124,41 @@ class Fetcher:
                     send(progress=(Path(url).name, sofar, total))
         print(f"Saved {filename}")
 
+    async def read(
+        self, url, format=None, cache_into=None, cache_expiry: timedelta = None, **kwargs
+    ):
+        def is_cache_valid(path: Path, expiry: timedelta):
+            if not path.exists():
+                return False
+            if expiry is None:
+                return True
+            mtime = datetime.fromtimestamp(os.path.getmtime(path))
+            return (datetime.now() - mtime) < expiry
+
+        if cache_into and is_cache_valid(cache_into, cache_expiry):
+            content = cache_into.read_text()
+        else:
+            resp = await self.get(url, **kwargs)
+            send(url=url, params=kwargs.get("params", {}), response=resp)
+            resp.raise_for_status()
+            content = resp.text
+
+            if cache_into:
+                cache_into.parent.mkdir(parents=True, exist_ok=True)
+                cache_into.write_text(content)
+
+        return parse(content, format)
+
+    @backoff.on_exception(
+        backoff.expo,
+        ERRORS,
+        giveup=_giveup,
+        max_time=30,
+        logger=None,
+    )
+    async def read_retry(self, *args, **kwargs):
+        return await self.read(*args, **kwargs)
+
 
 @dataclass
 class HTTPXFetcher(Fetcher):
@@ -166,9 +166,9 @@ class HTTPXFetcher(Fetcher):
     timeout: int = 60
 
     # [serieux: ignore]
-    _aclient: httpx.AsyncClient = None
+    _client: httpx.AsyncClient = None
     # [serieux: ignore]
-    _aclient_loop = None
+    _client_loop = None
 
     def __post_init__(self):
         if self.user_agent is not None:
@@ -178,17 +178,17 @@ class HTTPXFetcher(Fetcher):
                 pass
 
     @property
-    def aclient(self):
+    def client(self):
         try:
             loop = asyncio.get_running_loop()
         except RuntimeError:
             loop = None
-        if self._aclient is None or self._aclient_loop is not loop:
-            self._aclient = httpx.AsyncClient(
+        if self._client is None or self._client_loop is not loop:
+            self._client = httpx.AsyncClient(
                 follow_redirects=True, default_encoding=detect_encoding
             )
-            self._aclient_loop = loop
-        return self._aclient
+            self._client_loop = loop
+        return self._client
 
     async def generic(self, method, url, stream=False, headers={}, **kwargs):
         kwargs.setdefault("timeout", self.timeout)
@@ -198,8 +198,8 @@ class HTTPXFetcher(Fetcher):
         if headers:
             kwargs["headers"] = headers
         if stream:
-            return self.aclient.stream(method.upper(), url, **kwargs)
-        return await getattr(self.aclient, method)(url, **kwargs)
+            return self.client.stream(method.upper(), url, **kwargs)
+        return await getattr(self.client, method)(url, **kwargs)
 
 
 @dataclass
@@ -217,14 +217,14 @@ class CachedFetcher(HTTPXFetcher):
         )
 
     @property
-    def aclient(self):
+    def client(self):
         try:
             loop = asyncio.get_running_loop()
         except RuntimeError:
             loop = None
-        if self._aclient is None or self._aclient_loop is not loop:
+        if self._client is None or self._client_loop is not loop:
             if not self.cache_path:
-                self._aclient = httpx.AsyncClient(
+                self._client = httpx.AsyncClient(
                     follow_redirects=True, default_encoding=detect_encoding
                 )
             else:
@@ -233,14 +233,14 @@ class CachedFetcher(HTTPXFetcher):
                     database_path=str(self.cache_path) + ".db",
                     default_ttl=ttl,
                 )
-                self._aclient = AsyncCacheClient(
+                self._client = AsyncCacheClient(
                     storage=storage,
                     follow_redirects=True,
                     default_encoding=detect_encoding,
                     policy=self._cache_policy(),
                 )
-            self._aclient_loop = loop
-        return self._aclient
+            self._client_loop = loop
+        return self._client
 
 
 @dataclass
