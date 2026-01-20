@@ -11,6 +11,7 @@ from serieux import JSON, TaggedSubclass
 from serieux.features.encrypt import Secret
 
 from .collection.abc import PaperCollection
+from .embed.cfg import Embedding
 from .get import Fetcher, RequestsFetcher
 from .model.focus import AutoFocus, Focuses
 from .prompt import GenAIPrompt, Prompt
@@ -66,6 +67,7 @@ class PaperoniConfig:
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
+    embedding: TaggedSubclass[Embedding] = field(default_factory=Embedding)
     server: Server = field(default_factory=Server)
 
     def __post_init__(self):

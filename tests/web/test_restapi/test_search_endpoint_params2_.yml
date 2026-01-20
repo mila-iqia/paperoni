@@ -8,6 +8,8 @@
   limit: 100
   offset: 0
   paper_id: null
+  query: null
+  similarity_threshold: 0.75
   start_date: null
   title: null
   venue: null

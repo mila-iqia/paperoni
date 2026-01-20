@@ -59,7 +59,14 @@ paperoni:
   collection:
     $class: paperoni.collection.filecoll:FileCollection
     file: ${paperoni.data_path}/collection.json
+  embedding:
+    $class: paperoni.embed.cfg:Embedding
+    model: gemini-embedding-001
+    api_key: ${paperoni.api_keys.gemini}
   server:
+    host: localhost
+    port: 8000
+    protocol: http
     max_results: 10000
     process_pool_executor:
       max_workers: 4

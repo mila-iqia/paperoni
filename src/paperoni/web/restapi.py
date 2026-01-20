@@ -108,6 +108,7 @@ class SearchResponse(PagingResponseMixin):
     """Response model for paper search."""
 
     results: list[CollectionPaper]
+    similarities: list[float] | None
 
 
 @dataclass
@@ -277,10 +278,14 @@ def _search(request: dict):
     coll = Coll(command=None)
 
     # Perform search using the collection's search method
-    all_matches = request.run(coll)
+    all_matches, similarities = request.run(coll)
+
+    if similarities is not None:
+        similarities = list(request.slice(similarities))
+
     results = list(request.slice(all_matches))
 
-    return results, request.count, request.next_offset, len(all_matches)
+    return results, similarities, request.count, request.next_offset, len(all_matches)
 
 
 def _work_view(request: dict):
@@ -338,11 +343,15 @@ def install_api(app) -> FastAPI:
     )
     async def search_papers(request: SearchRequest = Depends()):
         """Search for papers in the collection."""
-        results, count, next_offset, total = await run_in_process_pool(
+        results, similarities, count, next_offset, total = await run_in_process_pool(
             _search, serialize(SearchRequest, request)
         )
         return SearchResponse(
-            results=results, count=count, next_offset=next_offset, total=total
+            results=results,
+            similarities=similarities,
+            count=count,
+            next_offset=next_offset,
+            total=total,
         )
 
     @app.get(
