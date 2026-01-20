@@ -8,17 +8,15 @@ import gifnoc
 import pytest
 from easy_oauth.testing.utils import AppTester
 from ovld import ovld
-from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import serialize
 
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
-from paperoni.collection.mongocoll import MongoCollection, MongoPaper, srx
+from paperoni.collection.mongocoll import MongoCollection
 from paperoni.collection.remotecoll import RemoteCollection
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model.classes import (
-    CollectionPaper,
     Institution,
     InstitutionCategory,
     Link,
@@ -546,27 +544,3 @@ async def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list
 
     reloaded = FileCollection(file=tmp_path / "collection.json")
     assert [p async for p in collection.search()] == [p async for p in reloaded.search()]
-
-
-@pytest.mark.parametrize("paper_cls", [CollectionPaper, MongoPaper])
-async def test_make_collection_item(
-    collection: PaperCollection,
-    data_regression: DataRegressionFixture,
-    sample_papers: list[Paper],
-    paper_cls: type[CollectionPaper],
-):
-    """Test making a collection paper."""
-    await collection.add_papers(sample_papers)
-
-    papers = [p async for p in collection.search()]
-    assert eq(papers, sample_papers)
-
-    paper = paper_cls.make_collection_item(papers[0])
-
-    if paper_cls is type(papers[0]):
-        assert paper == papers[0]
-    else:
-        assert paper.id == papers[0].id
-        assert eq(paper, papers[0])
-
-    check_papers(data_regression, [paper])

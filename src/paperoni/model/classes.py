@@ -228,7 +228,7 @@ class PaperInfo:
 
 @dataclass
 class CollectionMixin:
-    id: int = None
+    id: int | str = None
     version: datetime = None
 
     @classmethod
@@ -236,7 +236,7 @@ class CollectionMixin:
         cls,
         item,
         *,
-        next_id: Callable[[], int] = lambda: None,
+        next_id: Callable[[], int | str] = lambda: None,
         **defaults,
     ) -> "CollectionMixin":
         # Avoid errors coming from extra fields like '_id'
