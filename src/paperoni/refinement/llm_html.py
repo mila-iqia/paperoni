@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Literal
 
 import gifnoc
+
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..prompt import PromptConfig
 from ..prompt_utils import prompt_html
