@@ -43,6 +43,7 @@ from .collection.remotecoll import RemoteCollection
 from .config import config
 from .dash import History
 from .display import display, print_field, terminal_width
+from .embed.embeddings import PaperEmbedding
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .heuristics import simplify_paper
@@ -617,6 +618,12 @@ class Coll:
         # [alias: -f]
         flags: set[str] = None
 
+        # Semantic search query
+        query: str = None
+
+        # Similarity threshold
+        similarity_threshold: float = 0.75
+
         # Whether to expand links
         expand_links: bool = False
 
@@ -648,8 +655,19 @@ class Coll:
                     exclude_flags={f for f in flags if f.startswith("~")},
                 )
             ]
+
+            if self.query:
+                papers, similarities = zip(
+                    *PaperEmbedding.semantic_search(
+                        papers, self.query, self.similarity_threshold
+                    )
+                )
+            else:
+                similarities = None
+
             self.format(papers)
-            return papers
+
+            return papers, similarities
 
     @dataclass
     class Import:
