@@ -44,7 +44,6 @@ paperoni:
   discovery:
     scrape:
       urls:
-        - https://cim.mcgill.ca/~pvg/publications
         - https://dadelani.github.io/publications
   refine:
     prompt:
