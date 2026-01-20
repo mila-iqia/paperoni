@@ -14,7 +14,7 @@ from serieux import serialize
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
-from paperoni.collection.mongocoll import MongoCollection, MongoPaper
+from paperoni.collection.mongocoll import MongoCollection, MongoPaper, srx
 from paperoni.collection.remotecoll import RemoteCollection
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model.classes import (

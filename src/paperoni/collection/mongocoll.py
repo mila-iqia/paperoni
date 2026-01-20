@@ -1,6 +1,5 @@
-from dataclasses import field
 from datetime import date, datetime
-from typing import AsyncGenerator, Iterable, Union
+from typing import AsyncGenerator, Iterable
 
 from bson import ObjectId
 from motor.motor_asyncio import (
@@ -8,8 +7,9 @@ from motor.motor_asyncio import (
     AsyncIOMotorCollection,
     AsyncIOMotorDatabase,
 )
+from ovld import Medley, call_next
 from pymongo.errors import DuplicateKeyError
-from serieux import AllowExtras, deserialize, serialize
+from serieux import AllowExtras, Context, Serieux, deserialize
 from serieux.features.encrypt import Secret
 
 from ..model.classes import (
@@ -42,8 +42,9 @@ class MongoMixin(CollectionMixin):
 
     def __post_init__(self):
         _id = self._id or self.id
-        self._id: ObjectId = ObjectId(_id) if _id else None
-        self.id = self._id
+        if isinstance(self.id, str):
+            self._id: ObjectId = ObjectId(_id)
+            self.id = self._id
 
     @classmethod
     def _filter_fields(cls, obj: dict) -> dict:
@@ -67,74 +68,29 @@ class MongoMixin(CollectionMixin):
         return serialized
 
 
-@dataclass
-class NormalizedMixin:
-    @classmethod
-    def cast(cls, obj: Union["NormalizedMixin", dict]) -> "NormalizedMixin":
-        if isinstance(obj, cls):
-            return obj
+class MongoSerieux(Medley):
+    def serialize(self, t: type[Institution], obj: Institution, ctx: Context):
+        rval = call_next(t, obj, ctx)
+        rval["_norm_name"] = normalize_institution(obj.name)
+        return rval
 
-        try:
-            fields = vars(obj)
-        except TypeError:
-            fields = obj
+    def serialize(self, t: type[PaperAuthor], obj: PaperAuthor, ctx: Context):
+        rval = call_next(t, obj, ctx)
+        rval["_norm_display_name"] = normalize_name(obj.display_name)
+        return rval
 
-        return cls(**cls._filter_fields(fields))
-
-    @classmethod
-    def _filter_fields(cls, obj: dict) -> dict:
-        return {k: v for k, v in obj.items() if k in cls.__dataclass_fields__}
+    def serialize(self, t: type[Paper], obj: Paper, ctx: Context):
+        rval = call_next(t, obj, ctx)
+        rval["_norm_title"] = normalize_title(obj.title)
+        return rval
 
 
-@dataclass
-class NormalizedInstitution(Institution, NormalizedMixin):
-    _norm_name: str = field(repr=False, compare=False, default=None)
-
-    def __post_init__(self):
-        self._norm_name = normalize_institution(self.name)
+srx = (Serieux + MongoSerieux)()
 
 
 @dataclass
-class NormalizedPaperAuthor(PaperAuthor, NormalizedMixin):
-    affiliations: list[NormalizedInstitution] = field(default_factory=list)
-    _norm_display_name: str = field(repr=False, compare=False, default=None)
-
-    def __post_init__(self):
-        self.affiliations: list[NormalizedInstitution] = [
-            NormalizedInstitution.cast(a) for a in self.affiliations
-        ]
-        self._norm_display_name = normalize_name(self.display_name)
-
-
-@dataclass
-class NormalizedPaper(Paper, NormalizedMixin):
-    authors: list[NormalizedPaperAuthor] = field(default_factory=list)
-    _norm_title: str = field(repr=False, compare=False, default=None)
-
-    def __post_init__(self):
-        self.authors: list[NormalizedPaperAuthor] = [
-            NormalizedPaperAuthor.cast(a) for a in self.authors
-        ]
-        self._norm_title = normalize_title(self.title)
-
-
-@dataclass
-class MongoPaper(CollectionPaper, NormalizedPaper, MongoMixin):
-    # TODO: check if there is a way to use serieux_deserialize recursively
-    # through all the parents
-    @classmethod
-    def serieux_deserialize(cls, obj, ctx, call_next):
-        fields: dict = {}
-        for parent in cls.__bases__:
-            fields.update(vars(deserialize(AllowExtras[parent], obj, ctx)))
-        return cls(**fields)
-
-    @classmethod
-    def serieux_serialize(cls, obj: "MongoPaper", ctx, call_next):
-        serialized = {}
-        for parent in cls.__bases__:
-            serialized.update(serialize(parent, obj, ctx))
-        return serialized
+class MongoPaper(CollectionPaper, MongoMixin):
+    pass
 
 
 @dataclass
@@ -229,13 +185,13 @@ class MongoCollection(PaperCollection):
                         continue
                     p.version = datetime.now()
                     await self._collection.replace_one(
-                        {"_id": p.id}, serialize(MongoPaper, p)
+                        {"_id": p.id}, srx.serialize(MongoPaper, p)
                     )
 
                 else:
                     p = MongoPaper.make_collection_item(p)
                     assert not await self._collection.find_one({"_id": p.id})
-                    await self._collection.insert_one(serialize(MongoPaper, p))
+                    await self._collection.insert_one(srx.serialize(MongoPaper, p))
 
                 added += 1
 
@@ -267,7 +223,7 @@ class MongoCollection(PaperCollection):
         # First try to find by links
         for link in paper.links:
             if doc := await self._collection.find_one(
-                {"links": {"$elemMatch": serialize(Link, link)}}
+                {"links": {"$elemMatch": srx.serialize(Link, link)}}
             ):
                 break
         else:
@@ -299,7 +255,7 @@ class MongoCollection(PaperCollection):
 
         paper.version = datetime.now()
         result = await self._collection.replace_one(
-            {"_id": paper.id}, serialize(MongoPaper, paper)
+            {"_id": paper.id}, srx.serialize(MongoPaper, paper)
         )
 
         if result.matched_count == 0:
