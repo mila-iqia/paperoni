@@ -190,6 +190,10 @@ def norm_venue_prompt(
 def normalize_paper(
     paper: Paper, *, author=True, venue=True, institution=True, force: bool = False
 ) -> Paper:
+    # Explicitly pass `client`, `prompt`, `model`, and `data_path` as `config`
+    # will get reinitialized in each thread, losing any overlays applied.
+    # `config` is also currently not serializable, including with
+    # `serieux.serialize`, so we can't use it directly.
     client = config.refine.prompt.client
     prompt = config.refine.prompt.prompt
     model = config.refine.prompt.model
