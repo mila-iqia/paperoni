@@ -180,8 +180,8 @@ def test_search_endpoint(
     ["params", "count", "next_offset", "total"],
     [
         ({}, 3, None, 3),
-        ({"offset": 0, "size": 2}, 2, 2, 3),
-        ({"offset": 2, "size": 2}, 1, None, 3),
+        ({"offset": 0, "limit": 2}, 2, 2, 3),
+        ({"offset": 2, "limit": 2}, 1, None, 3),
     ],
 )
 def test_search_endpoint_pagination(
@@ -197,7 +197,7 @@ def test_search_endpoint_pagination(
     user = app.client("seeker@website.web")
 
     with patch("paperoni.web.restapi.SearchRequest.run") as mock_run:
-        mock_run.return_value = mock_papers
+        mock_run.return_value = mock_papers, None
 
         response = user.get("/api/v1/search", **params)
 
@@ -219,7 +219,7 @@ def test_search_endpoint_max_results_limit(
     with app_factory({"paperoni.server.max_results": 2}) as app:
         user = app.client("seeker@website.web")
         with patch("paperoni.web.restapi.SearchRequest.run") as mock_run:
-            mock_run.return_value = mock_papers
+            mock_run.return_value = mock_papers, None
 
             # Request more than max_results
             response = user.get("/api/v1/search", size=100)
@@ -240,7 +240,7 @@ def test_search_endpoint_empty_results(app):
     user = app.client("seeker@website.web")
 
     with patch("paperoni.web.restapi.SearchRequest.run") as mock_run:
-        mock_run.return_value = []
+        mock_run.return_value = [], None
 
         response = user.get("/api/v1/search")
 

@@ -11,7 +11,9 @@ from serieux import JSON, TaggedSubclass
 from serieux.features.encrypt import Secret
 
 from .collection.abc import PaperCollection
+from .embed.cfg import Embedding
 from .get import Fetcher, RequestsFetcher
+from .mcp.client import PaperoniAPIClient
 from .model.focus import AutoFocus, Focuses
 from .prompt import GenAIPrompt, Prompt
 
@@ -52,6 +54,13 @@ class Server:
             self.process_pool = ProcessPoolExecutor(**self.process_pool_executor)
 
 
+@dataclass(kw_only=True)
+class MCP:
+    api_client: TaggedSubclass[PaperoniAPIClient] = field(
+        default_factory=PaperoniAPIClient
+    )
+
+
 @dataclass
 class PaperoniConfig:
     cache_path: Path = None
@@ -66,7 +75,9 @@ class PaperoniConfig:
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
+    embedding: TaggedSubclass[Embedding] = field(default_factory=Embedding)
     server: Server = field(default_factory=Server)
+    mcp: MCP = field(default_factory=MCP)
 
     def __post_init__(self):
         self.metadata: Meta[Path | list[Path] | Meta | Any] = Meta()

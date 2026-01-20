@@ -33,10 +33,10 @@ class VoidFormatter(Formatter):
 class PagingMixin:
     """Mixin for paging."""
 
-    # Results offset
+    # Pagination offset
     offset: int = field(default=0)
-    # Max number of results to return
-    size: int = field(default=100)
+    # Maximum number of results to return
+    limit: int = field(default=100)
 
     _count: int | None = field(repr=False, compare=False, default=None)
     _next_offset: int | None = field(repr=False, compare=False, default=None)
@@ -54,23 +54,23 @@ class PagingMixin:
         iterable: Iterable,
         *,
         offset: int = None,
-        size: int = None,
+        limit: int = None,
     ) -> Iterable:
         if offset is None:
             offset = self.offset or 0
-        if size is None:
-            size = self.size or 100
+        if limit is None:
+            limit = self.limit or 100
 
-        size = min(size, config.server.max_results)
+        limit = min(limit, config.server.max_results)
 
         self._count = 0
         self._next_offset = offset
-        for entry in itertools.islice(iterable, offset, offset + size):
+        for entry in itertools.islice(iterable, offset, offset + limit):
             self._count += 1
             self._next_offset += 1
             yield entry
 
-        if self._count < size:
+        if self._count < limit:
             # No more results
             self._next_offset = None
 
@@ -108,6 +108,7 @@ class SearchResponse(PagingResponseMixin):
     """Response model for paper search."""
 
     results: list[CollectionPaper]
+    similarities: list[float] | None
 
 
 @dataclass
@@ -277,10 +278,14 @@ def _search(request: dict):
     coll = Coll(command=None)
 
     # Perform search using the collection's search method
-    all_matches = request.run(coll)
+    all_matches, similarities = request.run(coll)
+
+    if similarities is not None:
+        similarities = list(request.slice(similarities))
+
     results = list(request.slice(all_matches))
 
-    return results, request.count, request.next_offset, len(all_matches)
+    return results, similarities, request.count, request.next_offset, len(all_matches)
 
 
 def _work_view(request: dict):
@@ -338,11 +343,15 @@ def install_api(app) -> FastAPI:
     )
     async def search_papers(request: SearchRequest = Depends()):
         """Search for papers in the collection."""
-        results, count, next_offset, total = await run_in_process_pool(
+        results, similarities, count, next_offset, total = await run_in_process_pool(
             _search, serialize(SearchRequest, request)
         )
         return SearchResponse(
-            results=results, count=count, next_offset=next_offset, total=total
+            results=results,
+            similarities=similarities,
+            count=count,
+            next_offset=next_offset,
+            total=total,
         )
 
     @app.get(
