@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Vector Institute for Artificial Intelligence\",\n        \"$comment\": {\n          \"reasoning\": \"The core institution name is 'Vector Institute for Artificial Intelligence'. The city and country ('Toronto, Canada') have been removed as per the normalization guidelines.\",\n          \"quote\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The Vector Institute is a well-known independent, not-for-profit research institution dedicated to artificial intelligence, which aligns with the 'academia' category as a public research institute.\",\n          \"quote\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly mentioned at the end of the affiliation string.\",\n          \"quote\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Vector Institute for Artificial Intelligence\",\n        \"$comment\": {\n          \"reasoning\": \"The core institution name is 'Vector Institute for Artificial Intelligence'. The city and country ('Toronto, Canada') have been removed as per the normalization guidelines.\",\n          \"quote\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The Vector Institute is a well-known independent, not-for-profit research institution dedicated to artificial intelligence, which aligns with the 'academia' category as a public research institute.\",\n          \"quote\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly mentioned at the end of the affiliation string.\",\n          \"quote\": \"Vector Institute for Artificial Intelligence, Toronto, Canada\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 434,
+    "output_tokens": 757,
+    "total_tokens": 1191,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "Vector Institute for Artificial Intelligence",
+            "$comment": {
+              "reasoning": "The core institution name is 'Vector Institute for Artificial Intelligence'. The city and country ('Toronto, Canada') have been removed as per the normalization guidelines.",
+              "quote": "Vector Institute for Artificial Intelligence, Toronto, Canada"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "The Vector Institute is a well-known independent, not-for-profit research institution dedicated to artificial intelligence, which aligns with the 'academia' category as a public research institute.",
+              "quote": "Vector Institute for Artificial Intelligence, Toronto, Canada"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "The country 'Canada' is explicitly mentioned at the end of the affiliation string.",
+              "quote": "Vector Institute for Artificial Intelligence, Toronto, Canada"
+            }
+          }
+        }
+      ]
+    }
   }
 }

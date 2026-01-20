@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"University of Toronto\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation is 'Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada'. Departmental and location information has been removed to isolate the parent institution's name.\",\n          \"quote\": \"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The University of Toronto is a well-known public research university, which falls under the 'academia' category.\",\n          \"quote\": \"University of Toronto\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly stated at the end of the affiliation string.\",\n          \"quote\": \"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"University of Toronto\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation is 'Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada'. Departmental and location information has been removed to isolate the parent institution's name.\",\n          \"quote\": \"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The University of Toronto is a well-known public research university, which falls under the 'academia' category.\",\n          \"quote\": \"University of Toronto\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly stated at the end of the affiliation string.\",\n          \"quote\": \"Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 441,
+    "output_tokens": 723,
+    "total_tokens": 1164,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "University of Toronto",
+            "$comment": {
+              "reasoning": "The original affiliation is 'Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada'. Departmental and location information has been removed to isolate the parent institution's name.",
+              "quote": "Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "The University of Toronto is a well-known public research university, which falls under the 'academia' category.",
+              "quote": "University of Toronto"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "The country 'Canada' is explicitly stated at the end of the affiliation string.",
+              "quote": "Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario, Canada"
+            }
+          }
+        }
+      ]
+    }
   }
 }

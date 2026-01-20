@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Ruweida Ahmed\",\n    \"$comment\": {\n      \"reasoning\": \"The provided author name 'Ruweida Ahmed' is already correctly formatted in title case. It does not contain any elements that require normalization, such as all-caps text, unformatted initials, or special prefixes. Therefore, it is returned unchanged as per the instructions.\",\n      \"quote\": \"Ruweida Ahmed\"\n    }\n  }\n}"
+            "inline_data": null,
+            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Ruweida Ahmed\",\n    \"$comment\": {\n      \"reasoning\": \"The provided author name 'Ruweida Ahmed' is already correctly formatted in title case. It does not contain any elements that require normalization, such as all-caps text, unformatted initials, or special prefixes. Therefore, it is returned unchanged as per the instructions.\",\n      \"quote\": \"Ruweida Ahmed\"\n    }\n  }\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -75,6 +76,20 @@
       "$comment": {
         "reasoning": "The provided author name 'Ruweida Ahmed' is already correctly formatted in title case. It does not contain any elements that require normalization, such as all-caps text, unformatted initials, or special prefixes. Therefore, it is returned unchanged as per the instructions.",
         "quote": "Ruweida Ahmed"
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 467,
+    "output_tokens": 934,
+    "total_tokens": 1401,
+    "parsed": {
+      "normalized_author": {
+        "$value": "Ruweida Ahmed",
+        "$comment": {
+          "reasoning": "The provided author name 'Ruweida Ahmed' is already correctly formatted in title case. It does not contain any elements that require normalization, such as all-caps text, unformatted initials, or special prefixes. Therefore, it is returned unchanged as per the instructions.",
+          "quote": "Ruweida Ahmed"
+        }
       }
     }
   }

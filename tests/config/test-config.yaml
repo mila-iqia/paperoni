@@ -21,6 +21,10 @@ paperoni:
     - "!institution :: Mila :: 10"
     - "!author :: Yoshua Bengio :: 3"
     - "!author :: Aaron Courville :: 3"
+  discovery:
+    scrape:
+      urls:
+        - https://dadelani.github.io/publications
   refine:
     prompt:
       $class: GenAIPrompt

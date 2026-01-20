@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Chelsea Nayan\",\n    \"$comment\": {\n      \"reasoning\": \"The author's name is already correctly formatted in title case. No normalization is necessary.\",\n      \"quote\": \"Chelsea Nayan\"\n    }\n  }\n}"
+            "inline_data": null,
+            "text": "{\n  \"normalized_author\": {\n    \"$value\": \"Chelsea Nayan\",\n    \"$comment\": {\n      \"reasoning\": \"The author's name is already correctly formatted in title case. No normalization is necessary.\",\n      \"quote\": \"Chelsea Nayan\"\n    }\n  }\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -75,6 +76,20 @@
       "$comment": {
         "reasoning": "The author's name is already correctly formatted in title case. No normalization is necessary.",
         "quote": "Chelsea Nayan"
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 466,
+    "output_tokens": 332,
+    "total_tokens": 798,
+    "parsed": {
+      "normalized_author": {
+        "$value": "Chelsea Nayan",
+        "$comment": {
+          "reasoning": "The author's name is already correctly formatted in title case. No normalization is necessary.",
+          "quote": "Chelsea Nayan"
+        }
       }
     }
   }

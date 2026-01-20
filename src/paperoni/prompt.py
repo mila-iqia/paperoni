@@ -1,13 +1,16 @@
 import hashlib
 import json
+import threading
 from dataclasses import dataclass
+from functools import cached_property
 from typing import Any, BinaryIO, Type
 
 import serieux
 from google import genai
 from google.genai import types
 from paperazzi.platforms.utils import Message
-from paperazzi.utils import _make_key, disk_cache, disk_store
+from paperazzi.utils import _make_key as paperazzi_make_key, disk_cache, disk_store
+from serieux.features.comment import CommentProxy
 from serieux.features.encrypt import Secret
 
 _JSON_SCHEMA_TYPES = {
@@ -24,14 +27,23 @@ _JSON_SCHEMA_TYPES = {
     # "object": lambda x: isinstance(x, dict),
 }
 
+# Hack: use a thread-safe lock to avoid schema compilation conflicts in
+# multi-threaded environments. Errors can look like the following:
+# E ovld.utils.ResolutionError: Ambiguous resolution in <Ovld schema> for argument types [type[Analysis]]
+# E Candidates are:
+# E * schema[*]  (priority: (0,), specificity: [0])
+# E * schema[*]  (priority: (0,), specificity: [0])
+# E Note: you can use @ovld(priority=X) to give higher priority to an overload.
+SERIEUX_LOCK = threading.Lock()
+
 
 def cleanup_schema(schema: dict | Type[Any]) -> dict:
     """
-    Recursively clean up the schema removing $schema and unsupported additionalProperties
+    output_tokens: int = 0
     """
     if not isinstance(schema, dict):
-        # $schema is removed by root=False
-        schema = serieux.schema(schema).compile(ref_policy="never", root=False)
+        with SERIEUX_LOCK:
+            schema = serieux.schema(schema).compile(ref_policy="never", root=False)
 
     if "enum" in schema and "type" not in schema:
         for json_type, is_type in _JSON_SCHEMA_TYPES.items():
@@ -51,25 +63,62 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
 
 
 @dataclass
+class PromptMetadata[T]:
+    # The number of input tokens in the prompt
+    input_tokens: int = None
+    # The number of output tokens of the prompt
+    output_tokens: int = None
+    # The total number of tokens in the prompt
+    total_tokens: int = None
+
+    # The parsed output of the prompt
+    parsed: T = None
+
+
+@dataclass
 class ParsedResponseSerializer:
-    content_type: Any
+    content_type: type
 
     def __class_getitem__(cls, content_type):
         return cls(content_type=content_type)
 
     def dump(self, response: types.GenerateContentResponse, file_obj: BinaryIO):
         model_dump = response.model_dump()
+
         if self.content_type is not None:
-            model_dump["parsed"] = serieux.serialize(self.content_type, response.parsed)
+            metadata_type = PromptMetadata[self.content_type]
+        else:
+            metadata_type = PromptMetadata
+
+        with SERIEUX_LOCK:
+            model_dump = serieux.serialize(
+                serieux.Comment[serieux.JSON, metadata_type],
+                CommentProxy(model_dump, response._),
+            )
+
         return file_obj.write(
             json.dumps(model_dump, indent=2, ensure_ascii=False).encode("utf-8")
         )
 
     def load(self, file_obj: BinaryIO) -> types.GenerateContentResponse:
         data = json.load(file_obj)
-        response = types.GenerateContentResponse.model_validate(data)
+
         if self.content_type is not None:
-            response.parsed = serieux.deserialize(self.content_type, data["parsed"])
+            metadata_type = PromptMetadata[self.content_type]
+        else:
+            metadata_type = PromptMetadata
+
+        with SERIEUX_LOCK:
+            response = serieux.deserialize(
+                serieux.Comment[serieux.JSON, metadata_type], data
+            )
+        response: types.GenerateContentResponse = CommentProxy(
+            types.GenerateContentResponse.model_validate(response), response._
+        )
+        # response.parsed is reset to a generic Pydantic BaseModel. Restore the
+        # parsed value.
+        response.parsed = data["parsed"]
+
         return response
 
 
@@ -104,6 +153,24 @@ class GenAIPrompt(Prompt):
         if self.client is None:
             self.client = genai.Client(api_key=self.api_key or None)
 
+    @staticmethod
+    def _make_key(_: tuple, kwargs: dict) -> str:
+        kwargs = kwargs.copy()
+        kwargs.pop("client", None)
+        kwargs["messages"] = kwargs["messages"][:]
+        for i, message in enumerate(kwargs["messages"]):
+            message: Message
+            if message.type == "application/pdf":
+                kwargs["messages"][i] = Message(
+                    type=message.type,
+                    prompt=hashlib.sha256(message.content.read_bytes()).hexdigest(),
+                    args=message.args,
+                    kwargs=message.kwargs,
+                )
+        kwargs["structured_model"] = cleanup_schema(kwargs.pop("structured_model", None))
+
+        return paperazzi_make_key(None, kwargs)
+
     @disk_store
     @disk_cache(
         serializer=ParsedResponseSerializer(content_type=None),
@@ -115,7 +182,7 @@ class GenAIPrompt(Prompt):
         *,
         messages: list[Message],
         model: str,
-        structured_model: Type[Any] = None,
+        structured_model: type = None,
     ) -> types.GenerateContentResponse:
         """Generate a prompt for a list of messages.
 
@@ -157,25 +224,40 @@ class GenAIPrompt(Prompt):
             contents=contents, model=model, config=config
         )
 
-        if structured_model:
-            response.parsed = serieux.deserialize(structured_model, response.parsed)
+        # Extract token information from usage_metadata
+        input_tokens = response.usage_metadata.prompt_token_count
+        output_tokens = (
+            response.usage_metadata.candidates_token_count
+            + response.usage_metadata.thoughts_token_count
+        )
+        total_tokens = response.usage_metadata.total_token_count
+
+        if structured_model is not None:
+            metadata_type = PromptMetadata[structured_model]
+            parsed = serieux.deserialize(structured_model, response.parsed)
+        else:
+            metadata_type = PromptMetadata
+            parsed = None
+
+        response = CommentProxy(
+            response,
+            metadata_type(
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                total_tokens=total_tokens,
+                parsed=parsed,
+            ),
+        )
 
         return response
 
-    @staticmethod
-    def _make_key(_: tuple, kwargs: dict) -> str:
-        kwargs = kwargs.copy()
-        kwargs.pop("client", None)
-        kwargs["messages"] = kwargs["messages"][:]
-        for i, message in enumerate(kwargs["messages"]):
-            message: Message
-            if message.type == "application/pdf":
-                kwargs["messages"][i] = Message(
-                    type=message.type,
-                    prompt=hashlib.sha256(message.content.read_bytes()).hexdigest(),
-                    args=message.args,
-                    kwargs=message.kwargs,
-                )
-        kwargs["structured_model"] = cleanup_schema(kwargs.pop("structured_model", None))
 
-        return _make_key(None, kwargs)
+@dataclass
+class PromptConfig:
+    system_prompt_template: str
+    extra_instructions: str = ""
+
+    @cached_property
+    def system_prompt(self):
+        extra = self.extra_instructions.rstrip("\n")
+        return self.system_prompt_template.replace("<EXTRA>", extra)

@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"University of Toronto Scarborough\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation 'Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada' was normalized by removing the department ('Department of Biological Sciences') and the address information ('Toronto, Ontario, Canada') to isolate the parent institution's name.\",\n          \"quote\": \"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The 'University of Toronto Scarborough' is a campus of a public university, which is an academic institution.\",\n          \"quote\": \"University of Toronto Scarborough\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly stated at the end of the affiliation string.\",\n          \"quote\": \"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"University of Toronto Scarborough\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation 'Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada' was normalized by removing the department ('Department of Biological Sciences') and the address information ('Toronto, Ontario, Canada') to isolate the parent institution's name.\",\n          \"quote\": \"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The 'University of Toronto Scarborough' is a campus of a public university, which is an academic institution.\",\n          \"quote\": \"University of Toronto Scarborough\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly stated at the end of the affiliation string.\",\n          \"quote\": \"Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 440,
+    "output_tokens": 1089,
+    "total_tokens": 1529,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "University of Toronto Scarborough",
+            "$comment": {
+              "reasoning": "The original affiliation 'Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada' was normalized by removing the department ('Department of Biological Sciences') and the address information ('Toronto, Ontario, Canada') to isolate the parent institution's name.",
+              "quote": "Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "The 'University of Toronto Scarborough' is a campus of a public university, which is an academic institution.",
+              "quote": "University of Toronto Scarborough"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "The country 'Canada' is explicitly stated at the end of the affiliation string.",
+              "quote": "Department of Biological Sciences, University of Toronto Scarborough, Toronto, Ontario, Canada"
+            }
+          }
+        }
+      ]
+    }
   }
 }

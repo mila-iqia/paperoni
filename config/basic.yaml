@@ -41,6 +41,10 @@ paperoni:
     author:
       score: 1
       institution_score_threshold: 1
+  discovery:
+    scrape:
+      urls:
+        - https://dadelani.github.io/publications
   refine:
     prompt:
       $class: paperoni.prompt:GenAIPrompt

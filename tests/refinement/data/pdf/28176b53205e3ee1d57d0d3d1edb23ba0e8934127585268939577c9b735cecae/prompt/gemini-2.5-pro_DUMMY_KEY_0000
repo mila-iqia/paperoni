@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"title\": {\n    \"$value\": \"Efficient Queries Transformer Neural Processes\",\n    \"$comment\": {\n      \"reasoning\": \"The title is prominently displayed at the beginning of the paper.\",\n      \"quote\": \"Efficient Queries Transformer Neural Processes\"\n    }\n  },\n  \"authors_affiliations\": [\n    {\n      \"author\": {\n        \"$value\": \"Leo Feng\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed first in the author section. The asterisk denotes correspondence and is not part of the name.\",\n          \"quote\": \"Leo Feng* 1,2\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Borealis AI\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '1' next to the author's name corresponds to the affiliation 'Borealis AI'.\",\n            \"quote\": \"Leo Feng* 1,2 ... 1 Borealis AΙ\"\n          }\n        },\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '2' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"Leo Feng* 1,2 ... 2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Hossein Hajimirsadeghi\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed second in the author section.\",\n          \"quote\": \"Hossein Hajimirsadeghi ¹\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Borealis AI\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '¹' next to the author's name corresponds to the affiliation 'Borealis AI'.\",\n            \"quote\": \"Hossein Hajimirsadeghi ¹ ... 1 Borealis AΙ\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yoshua Bengio\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed third in the author section.\",\n          \"quote\": \"Yoshua Bengio²\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '²' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"Yoshua Bengio² ... 2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Mohamed Osama Ahmed\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed fourth in the author section.\",\n          \"quote\": \"Mohamed Osama Ahmed ²\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '²' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"Mohamed Osama Ahmed ² ... 2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    }\n  ],\n  \"affiliations\": [\n    {\n      \"$value\": \"Borealis AI\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed under the authors' names and is associated with superscript '1'.\",\n        \"quote\": \"1 Borealis AΙ\"\n      }\n    },\n    {\n      \"$value\": \"Mila - Université de Montréal\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed under the authors' names and is associated with superscript '2'.\",\n        \"quote\": \"2 Mila - Université de Montréal\"\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"title\": {\n    \"$value\": \"Efficient Queries Transformer Neural Processes\",\n    \"$comment\": {\n      \"reasoning\": \"The title is prominently displayed at the beginning of the paper.\",\n      \"quote\": \"Efficient Queries Transformer Neural Processes\"\n    }\n  },\n  \"authors_affiliations\": [\n    {\n      \"author\": {\n        \"$value\": \"Leo Feng\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed first in the author section. The asterisk denotes correspondence and is not part of the name.\",\n          \"quote\": \"Leo Feng* 1,2\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Borealis AI\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '1' next to the author's name corresponds to the affiliation 'Borealis AI'.\",\n            \"quote\": \"Leo Feng* 1,2 ... 1 Borealis AΙ\"\n          }\n        },\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '2' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"Leo Feng* 1,2 ... 2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Hossein Hajimirsadeghi\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed second in the author section.\",\n          \"quote\": \"Hossein Hajimirsadeghi ¹\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Borealis AI\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '¹' next to the author's name corresponds to the affiliation 'Borealis AI'.\",\n            \"quote\": \"Hossein Hajimirsadeghi ¹ ... 1 Borealis AΙ\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Yoshua Bengio\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed third in the author section.\",\n          \"quote\": \"Yoshua Bengio²\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '²' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"Yoshua Bengio² ... 2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    },\n    {\n      \"author\": {\n        \"$value\": \"Mohamed Osama Ahmed\",\n        \"$comment\": {\n          \"reasoning\": \"The author's name is listed fourth in the author section.\",\n          \"quote\": \"Mohamed Osama Ahmed ²\"\n        }\n      },\n      \"affiliations\": [\n        {\n          \"$value\": \"Mila - Université de Montréal\",\n          \"$comment\": {\n            \"reasoning\": \"The superscript '²' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.\",\n            \"quote\": \"Mohamed Osama Ahmed ² ... 2 Mila - Université de Montréal\"\n          }\n        }\n      ]\n    }\n  ],\n  \"affiliations\": [\n    {\n      \"$value\": \"Borealis AI\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed under the authors' names and is associated with superscript '1'.\",\n        \"quote\": \"1 Borealis AΙ\"\n      }\n    },\n    {\n      \"$value\": \"Mila - Université de Montréal\",\n      \"$comment\": {\n        \"reasoning\": \"This affiliation is listed under the authors' names and is associated with superscript '2'.\",\n        \"quote\": \"2 Mila - Université de Montréal\"\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -178,5 +179,116 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 2007,
+    "output_tokens": 2281,
+    "total_tokens": 4288,
+    "parsed": {
+      "title": {
+        "$value": "Efficient Queries Transformer Neural Processes",
+        "$comment": {
+          "reasoning": "The title is prominently displayed at the beginning of the paper.",
+          "quote": "Efficient Queries Transformer Neural Processes"
+        }
+      },
+      "authors_affiliations": [
+        {
+          "author": {
+            "$value": "Leo Feng",
+            "$comment": {
+              "reasoning": "The author's name is listed first in the author section. The asterisk denotes correspondence and is not part of the name.",
+              "quote": "Leo Feng* 1,2"
+            }
+          },
+          "affiliations": [
+            {
+              "$value": "Borealis AI",
+              "$comment": {
+                "reasoning": "The superscript '1' next to the author's name corresponds to the affiliation 'Borealis AI'.",
+                "quote": "Leo Feng* 1,2 ... 1 Borealis AΙ"
+              }
+            },
+            {
+              "$value": "Mila - Université de Montréal",
+              "$comment": {
+                "reasoning": "The superscript '2' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.",
+                "quote": "Leo Feng* 1,2 ... 2 Mila - Université de Montréal"
+              }
+            }
+          ]
+        },
+        {
+          "author": {
+            "$value": "Hossein Hajimirsadeghi",
+            "$comment": {
+              "reasoning": "The author's name is listed second in the author section.",
+              "quote": "Hossein Hajimirsadeghi ¹"
+            }
+          },
+          "affiliations": [
+            {
+              "$value": "Borealis AI",
+              "$comment": {
+                "reasoning": "The superscript '¹' next to the author's name corresponds to the affiliation 'Borealis AI'.",
+                "quote": "Hossein Hajimirsadeghi ¹ ... 1 Borealis AΙ"
+              }
+            }
+          ]
+        },
+        {
+          "author": {
+            "$value": "Yoshua Bengio",
+            "$comment": {
+              "reasoning": "The author's name is listed third in the author section.",
+              "quote": "Yoshua Bengio²"
+            }
+          },
+          "affiliations": [
+            {
+              "$value": "Mila - Université de Montréal",
+              "$comment": {
+                "reasoning": "The superscript '²' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.",
+                "quote": "Yoshua Bengio² ... 2 Mila - Université de Montréal"
+              }
+            }
+          ]
+        },
+        {
+          "author": {
+            "$value": "Mohamed Osama Ahmed",
+            "$comment": {
+              "reasoning": "The author's name is listed fourth in the author section.",
+              "quote": "Mohamed Osama Ahmed ²"
+            }
+          },
+          "affiliations": [
+            {
+              "$value": "Mila - Université de Montréal",
+              "$comment": {
+                "reasoning": "The superscript '²' next to the author's name corresponds to the affiliation 'Mila - Université de Montréal'.",
+                "quote": "Mohamed Osama Ahmed ² ... 2 Mila - Université de Montréal"
+              }
+            }
+          ]
+        }
+      ],
+      "affiliations": [
+        {
+          "$value": "Borealis AI",
+          "$comment": {
+            "reasoning": "This affiliation is listed under the authors' names and is associated with superscript '1'.",
+            "quote": "1 Borealis AΙ"
+          }
+        },
+        {
+          "$value": "Mila - Université de Montréal",
+          "$comment": {
+            "reasoning": "This affiliation is listed under the authors' names and is associated with superscript '2'.",
+            "quote": "2 Mila - Université de Montréal"
+          }
+        }
+      ]
+    }
   }
 }

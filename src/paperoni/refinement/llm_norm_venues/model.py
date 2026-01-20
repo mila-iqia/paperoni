@@ -3,7 +3,8 @@ from pathlib import Path
 
 import gifnoc
 
-from ..llm_common import Explained, PromptConfig
+from ...prompt import PromptConfig
+from ...prompt_utils import Explained
 
 
 @dataclass

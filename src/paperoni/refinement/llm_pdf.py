@@ -8,10 +8,10 @@ from ..config import config
 from ..fulltext.pdf import PDF, CachePolicies, get_pdf
 from ..model.classes import Author, Institution, Link, Paper, PaperAuthor
 from ..model.merge import qual
-from ..prompt import ParsedResponseSerializer
+from ..prompt import ParsedResponseSerializer, PromptConfig
+from ..prompt_utils import prompt_wrapper
 from .fetch import register_fetch
-from .llm_common import Analysis, PromptConfig
-from .llm_utils import prompt_wrapper
+from .llm_common import Analysis
 
 
 def _make_key(_, kwargs: dict) -> str:
@@ -41,7 +41,7 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
     analysis: Analysis = prompt_wrapper(
         pdf_prompt,
         force=force,
-        input=pdf.source.url,
+        send_input=pdf.source.url,
         client=config.refine.prompt.client,
         messages=[
             Message(type="system", prompt=llm_pdf_config.system_prompt),
@@ -49,7 +49,7 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
         ],
         model=config.refine.prompt.model,
         structured_model=Analysis,
-    ).parsed
+    )._.parsed
 
     return Paper(
         title=str(analysis.title),

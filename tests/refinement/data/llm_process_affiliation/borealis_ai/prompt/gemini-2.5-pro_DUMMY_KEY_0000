@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Borealis AI\",\n        \"$comment\": {\n          \"reasoning\": \"The provided affiliation 'Borealis AI' is the full name of the organization and does not contain any sub-department or address information that would require normalization.\",\n          \"quote\": \"Borealis AI\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"industry\",\n        \"$comment\": {\n          \"reasoning\": \"Borealis AI is the AI research institute of the Royal Bank of Canada (RBC), a for-profit financial institution. This makes it a corporate research lab, which falls under the 'industry' category.\",\n          \"quote\": \"Borealis AI\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"Borealis AI is a well-known Canadian AI research institute, founded and backed by the Royal Bank of Canada.\",\n          \"quote\": \"Borealis AI\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Borealis AI\",\n        \"$comment\": {\n          \"reasoning\": \"The provided affiliation 'Borealis AI' is the full name of the organization and does not contain any sub-department or address information that would require normalization.\",\n          \"quote\": \"Borealis AI\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"industry\",\n        \"$comment\": {\n          \"reasoning\": \"Borealis AI is the AI research institute of the Royal Bank of Canada (RBC), a for-profit financial institution. This makes it a corporate research lab, which falls under the 'industry' category.\",\n          \"quote\": \"Borealis AI\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"Borealis AI is a well-known Canadian AI research institute, founded and backed by the Royal Bank of Canada.\",\n          \"quote\": \"Borealis AI\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 429,
+    "output_tokens": 684,
+    "total_tokens": 1113,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "Borealis AI",
+            "$comment": {
+              "reasoning": "The provided affiliation 'Borealis AI' is the full name of the organization and does not contain any sub-department or address information that would require normalization.",
+              "quote": "Borealis AI"
+            }
+          },
+          "category": {
+            "$value": "industry",
+            "$comment": {
+              "reasoning": "Borealis AI is the AI research institute of the Royal Bank of Canada (RBC), a for-profit financial institution. This makes it a corporate research lab, which falls under the 'industry' category.",
+              "quote": "Borealis AI"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "Borealis AI is a well-known Canadian AI research institute, founded and backed by the Royal Bank of Canada.",
+              "quote": "Borealis AI"
+            }
+          }
+        }
+      ]
+    }
   }
 }

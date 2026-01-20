@@ -4,7 +4,8 @@ from pathlib import Path
 import gifnoc
 
 from ...model.classes import InstitutionCategory
-from ..llm_common import Explained, PromptConfig
+from ...prompt import PromptConfig
+from ...prompt_utils import Explained
 
 
 @dataclass

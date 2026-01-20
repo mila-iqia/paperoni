@@ -20,16 +20,17 @@
       "content": {
         "parts": [
           {
-            "video_metadata": null,
-            "thought": null,
-            "inline_data": null,
-            "file_data": null,
-            "thought_signature": null,
-            "function_call": null,
+            "media_resolution": null,
             "code_execution_result": null,
             "executable_code": null,
+            "file_data": null,
+            "function_call": null,
             "function_response": null,
-            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"DeepMind\",\n        \"$comment\": {\n          \"reasoning\": \"The core institution is \\\"DeepMind\\\". The corporate identifier \\\"Inc\\\" and the address \\\"London, UK\\\" have been removed as per normalization rules.\",\n          \"quote\": \"DeepMind, Inc, London, UK\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"industry\",\n        \"$comment\": {\n          \"reasoning\": \"DeepMind is a well-known AI research and development company, a subsidiary of Google. The \\\"Inc\\\" in the affiliation string also indicates it is a corporation.\",\n          \"quote\": \"DeepMind, Inc, London, UK\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"United Kingdom\",\n        \"$comment\": {\n          \"reasoning\": \"The country is explicitly stated as \\\"UK\\\" in the affiliation string.\",\n          \"quote\": \"DeepMind, Inc, London, UK\"\n        }\n      }\n    }\n  ]\n}"
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"DeepMind\",\n        \"$comment\": {\n          \"reasoning\": \"The core institution is \\\"DeepMind\\\". The corporate identifier \\\"Inc\\\" and the address \\\"London, UK\\\" have been removed as per normalization rules.\",\n          \"quote\": \"DeepMind, Inc, London, UK\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"industry\",\n        \"$comment\": {\n          \"reasoning\": \"DeepMind is a well-known AI research and development company, a subsidiary of Google. The \\\"Inc\\\" in the affiliation string also indicates it is a corporation.\",\n          \"quote\": \"DeepMind, Inc, London, UK\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"United Kingdom\",\n        \"$comment\": {\n          \"reasoning\": \"The country is explicitly stated as \\\"UK\\\" in the affiliation string.\",\n          \"quote\": \"DeepMind, Inc, London, UK\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
           }
         ],
         "role": "model"
@@ -38,12 +39,12 @@
       "finish_message": null,
       "token_count": null,
       "finish_reason": "STOP",
-      "url_context_metadata": null,
       "avg_logprobs": null,
       "grounding_metadata": null,
       "index": 0,
       "logprobs_result": null,
-      "safety_ratings": null
+      "safety_ratings": null,
+      "url_context_metadata": null
     }
   ],
   "create_time": null,
@@ -95,5 +96,37 @@
         }
       }
     ]
+  },
+  "$comment": {
+    "input_tokens": 433,
+    "output_tokens": 1025,
+    "total_tokens": 1458,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "DeepMind",
+            "$comment": {
+              "reasoning": "The core institution is \"DeepMind\". The corporate identifier \"Inc\" and the address \"London, UK\" have been removed as per normalization rules.",
+              "quote": "DeepMind, Inc, London, UK"
+            }
+          },
+          "category": {
+            "$value": "industry",
+            "$comment": {
+              "reasoning": "DeepMind is a well-known AI research and development company, a subsidiary of Google. The \"Inc\" in the affiliation string also indicates it is a corporation.",
+              "quote": "DeepMind, Inc, London, UK"
+            }
+          },
+          "country": {
+            "$value": "United Kingdom",
+            "$comment": {
+              "reasoning": "The country is explicitly stated as \"UK\" in the affiliation string.",
+              "quote": "DeepMind, Inc, London, UK"
+            }
+          }
+        }
+      ]
+    }
   }
 }
