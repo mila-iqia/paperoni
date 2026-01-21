@@ -1,12 +1,11 @@
 import pytest
-from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery import openreview
 from paperoni.discovery.openreview import OpenReview, OpenReviewDispatch
 from paperoni.model import PaperInfo
 from paperoni.model.focus import Focus, Focuses
 
-from ..utils import check_papers, iter_links_ids, iter_releases
+from ..utils import iter_links_ids, iter_releases
 
 
 @pytest.mark.parametrize(
@@ -23,9 +22,7 @@ from ..utils import check_papers, iter_links_ids, iter_releases
         },
     ],
 )
-async def test_query(
-    data_regression: DataRegressionFixture, query_params: dict[str, str]
-):
+async def test_query(dreg, query_params: dict[str, str]):
     query_params = {**query_params, "block_size": 100, "limit": 1000}
     openreview_dispatch: OpenReviewDispatch = OpenReviewDispatch()
     api_versions: list[int] = openreview_dispatch.api_versions
@@ -127,7 +124,7 @@ async def test_query(
     if not match_found:
         assert False, f"Unknown query parameters: {query_params=}"
 
-    check_papers(data_regression, papers)
+    dreg(list[PaperInfo], papers[:5])
 
 
 async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):

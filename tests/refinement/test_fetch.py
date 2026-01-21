@@ -1,8 +1,6 @@
 import pytest
 import requests
-from serieux import serialize
 
-from paperoni.model.classes import Paper
 from paperoni.refinement.dblp import dblp
 from paperoni.refinement.doi import crossref, datacite, unpaywall
 from paperoni.refinement.fetch import _test_tags
@@ -117,13 +115,12 @@ links_w_redirect_errors = {
 
 
 @pytest.mark.parametrize(["func", "link"], links)
-async def test_refine(func, link, data_regression):
+async def test_refine(func, link, dreg):
     typ, link = link.split(":", 1)
     try:
         result = await func(typ, link)
         assert result.authors
-        data = serialize(Paper, result)
-        data_regression.check(data)
+        dreg(result)
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 421 and link in links_w_redirect_errors:
             pytest.skip(

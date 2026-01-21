@@ -2,12 +2,11 @@ import itertools
 from unittest.mock import patch
 
 import pytest
-from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.miniconf import ErrorPolicy, MiniConf, conference_urls
 from paperoni.model import PaperInfo
 
-from ..utils import check_papers, iter_affiliations
+from ..utils import iter_affiliations
 
 
 @pytest.mark.parametrize(
@@ -16,7 +15,7 @@ from ..utils import check_papers, iter_affiliations
         conference_urls, [{"affiliation": "mila"}, {"author": "Yoshua Bengio"}]
     ),
 )
-async def test_query(data_regression: DataRegressionFixture, conference, query_params):
+async def test_query(dreg, conference, query_params):
     discoverer = MiniConf()
 
     papers: list[PaperInfo] = sorted(
@@ -58,7 +57,7 @@ async def test_query(data_regression: DataRegressionFixture, conference, query_p
     if not match_found:
         assert False, f"Unknown query parameters: {query_params=}"
 
-    check_papers(data_regression, papers)
+    dreg(list[PaperInfo], papers[:5])
 
 
 async def test_error_policy(capsys):

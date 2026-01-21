@@ -1,12 +1,9 @@
-from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model import PaperInfo
 
-from ..utils import check_papers
 
-
-async def test_query(data_regression: DataRegressionFixture):
+async def test_query(dreg):
     discoverer = JMLR()
 
     assert "v24" in [v async for v in discoverer.list_volumes()], (
@@ -20,4 +17,4 @@ async def test_query(data_regression: DataRegressionFixture):
 
     assert papers, "No papers found for Yoshua Bengio in v24"
 
-    check_papers(data_regression, papers)
+    dreg(list[PaperInfo], papers)
