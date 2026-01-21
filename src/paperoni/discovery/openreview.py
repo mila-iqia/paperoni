@@ -481,15 +481,14 @@ class OpenReview(Discoverer):
                         # OpenReview API does not support searching by author
                         # name, so first search for the possible author IDs
                         for author_id in self._query_authors(name):
-                            yield from rescore(
-                                self.query(
-                                    venue=venue,
-                                    author_id=author_id,
-                                    title=title,
-                                    block_size=block_size,
-                                ),
-                                score,
-                            )
+                            async for paper in self.query(
+                                venue=venue,
+                                author_id=author_id,
+                                title=title,
+                                block_size=block_size,
+                            ):
+                                paper.score = score
+                                yield paper
                     case Focus(type="author_openreview", name=aid, score=score):
                         async for paper in self.query(
                             venue=venue,
