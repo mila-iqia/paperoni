@@ -1,7 +1,7 @@
 - info:
     discovered_by:
-      openalex: W3022187094
-  key: openalex:W3022187094
+      openalex: W2399880602
+  key: openalex:W2399880602
   paper:
     abstract: Sequential data often possesses hierarchical structures with complex
       dependencies between sub-sequences, such as found between the utterances in
@@ -16,7 +16,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -36,7 +36,7 @@
       display_name: Alessandro Sordoni
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: McGill University
       author:
@@ -48,7 +48,7 @@
       display_name: Ryan Lowe
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: HEC Montréal
       author:
@@ -62,7 +62,7 @@
       display_name: Laurent Charlin
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: McGill University
       author:
@@ -76,7 +76,7 @@
       display_name: Joëlle Pineau
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -90,7 +90,7 @@
       display_name: Aaron Courville
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -108,11 +108,13 @@
       type: arxiv
     - link: 10.1609/aaai.v31i1.10983
       type: doi
-    - link: '3022187094'
+    - link: 10.48550/arxiv.1605.06069
+      type: doi
+    - link: '2399880602'
       type: mag
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
       type: open-access
-    - link: W3022187094
+    - link: W2399880602
       type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
       type: pdf
@@ -144,14 +146,18 @@
     - name: Generative model
     - name: Latent variable model
     - name: Artificial intelligence
+    - name: Context (archaeology)
     - name: Variable (mathematics)
     - name: Artificial neural network
+    - name: Process (computing)
     - name: Encoder
-    - name: Task (project management)
     - name: Machine learning
+    - name: Task (project management)
     - name: Mathematics
+    - name: Engineering
+    - name: Biology
     - name: Mathematical analysis
-    - name: Management
-    - name: Economics
+    - name: Systems engineering
+    - name: Paleontology
     - name: Operating system
   score: 0.0

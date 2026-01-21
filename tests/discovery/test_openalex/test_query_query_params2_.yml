@@ -1,7 +1,7 @@
 - info:
     discovered_by:
-      openalex: W3022187094
-  key: openalex:W3022187094
+      openalex: W2399880602
+  key: openalex:W2399880602
   paper:
     abstract: Sequential data often possesses hierarchical structures with complex
       dependencies between sub-sequences, such as found between the utterances in
@@ -16,7 +16,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -36,7 +36,7 @@
       display_name: Alessandro Sordoni
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: McGill University
       author:
@@ -48,7 +48,7 @@
       display_name: Ryan Lowe
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: HEC Montréal
       author:
@@ -62,7 +62,7 @@
       display_name: Laurent Charlin
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: McGill University
       author:
@@ -76,7 +76,7 @@
       display_name: Joëlle Pineau
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -90,7 +90,7 @@
       display_name: Aaron Courville
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -108,11 +108,13 @@
       type: arxiv
     - link: 10.1609/aaai.v31i1.10983
       type: doi
-    - link: '3022187094'
+    - link: 10.48550/arxiv.1605.06069
+      type: doi
+    - link: '2399880602'
       type: mag
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
       type: open-access
-    - link: W3022187094
+    - link: W2399880602
       type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
       type: pdf
@@ -144,530 +146,19 @@
     - name: Generative model
     - name: Latent variable model
     - name: Artificial intelligence
+    - name: Context (archaeology)
     - name: Variable (mathematics)
     - name: Artificial neural network
+    - name: Process (computing)
     - name: Encoder
+    - name: Machine learning
     - name: Task (project management)
-    - name: Machine learning
     - name: Mathematics
+    - name: Engineering
+    - name: Biology
     - name: Mathematical analysis
-    - name: Management
-    - name: Economics
-    - name: Operating system
-  score: 0.0
-- info:
-    discovered_by:
-      openalex: W2963096987
-  key: openalex:W2963096987
-  paper:
-    abstract: We examine the role of memorization in deep learning, drawing connections
-      to capacity, generalization, and adversarial robustness. While deep networks
-      are capable of memorizing noise data, our results suggest that they tend to
-      prioritize learning simple patterns first. In our experiments, we expose qualitative
-      differences in gradient-based optimization of deep neural networks (DNNs) on
-      noise vs. real data. We also demonstrate that for appropriately tuned explicit
-      regularization (e.g., dropout) we can degrade DNN training performance on noise
-      datasets without compromising generalization on real data. Our analysis suggests
-      that the notions of effective capacity which are dataset independent are unlikely
-      to explain the generalization performance of deep networks when trained with
-      gradient based methods because training data itself plays an important role
-      in determining the degree of memorization.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      - aliases: []
-        category: unknown
-        country: null
-        name: Concordia University
-      author:
-        aliases: []
-        links:
-        - link: A5000111662
-          type: openalex
-        name: Devansh Arpit
-      display_name: Devansh Arpit
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Jagiellonian University
-      author:
-        aliases: []
-        links:
-        - link: A5024552077
-          type: openalex
-        - link: 0000-0003-4138-1818
-          type: orcid
-        name: Stanisław Jastrzȩbski
-      display_name: Stanisław Jastrzȩbski
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      - aliases: []
-        category: unknown
-        country: null
-        name: Concordia University
-      author:
-        aliases: []
-        links:
-        - link: A5057065873
-          type: openalex
-        name: Nicolas Ballas
-      display_name: Nicolas Ballas
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      - aliases: []
-        category: unknown
-        country: null
-        name: Concordia University
-      author:
-        aliases: []
-        links:
-        - link: A5029025914
-          type: openalex
-        - link: 0000-0001-7256-0937
-          type: orcid
-        name: David Krueger
-      display_name: David Krueger
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: McGill University
-      author:
-        aliases: []
-        links:
-        - link: A5027310054
-          type: openalex
-        - link: 0000-0002-3257-4661
-          type: orcid
-        name: Emmanuel Bengio
-      display_name: Emmanuel Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of California, Berkeley
-      author:
-        aliases: []
-        links:
-        - link: A5038305916
-          type: openalex
-        name: Maxinder S Kanwal
-      display_name: Maxinder S Kanwal
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Polytechnique Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5061026145
-          type: openalex
-        - link: 0000-0002-7370-0978
-          type: orcid
-        name: Tegan Maharaj
-      display_name: Tegan Maharaj
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Bonn
-      author:
-        aliases: []
-        links:
-        - link: A5026151059
-          type: openalex
-        - link: 0000-0002-1916-7033
-          type: orcid
-        name: Asja Fischer
-      display_name: Asja Fischer
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Canadian Institute for Advanced Research
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5112608251
-          type: openalex
-        - link: 0000-0001-6223-0301
-          type: orcid
-        name: Aaron Courville
-      display_name: Aaron Courville
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      - aliases: []
-        category: unknown
-        country: null
-        name: Canadian Institute for Advanced Research
-      author:
-        aliases: []
-        links:
-        - link: A5086198262
-          type: openalex
-        - link: 0000-0002-9322-3515
-          type: orcid
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      - aliases: []
-        category: unknown
-        country: null
-        name: Concordia University
-      author:
-        aliases: []
-        links:
-        - link: A5051076050
-          type: openalex
-        - link: 0000-0001-6485-6180
-          type: orcid
-        name: Simon Lacoste-Julien
-      display_name: Simon Lacoste-Julien
-    flags: []
-    links:
-    - link: '2963096987'
-      type: mag
-    - link: W2963096987
-      type: openalex
-    - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
-      type: url
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2017-08-06'
-        date_precision: 3
-        links:
-        - link: http://proceedings.mlr.press/v70/arpit17a/arpit17a.pdf
-          type: url
-        name: International Conference on Machine Learning
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: A closer look at memorization in deep networks
-    topics:
-    - name: Memorization
-    - name: Deep neural networks
-    - name: Computer science
-    - name: Artificial intelligence
-    - name: Generalization
-    - name: Deep learning
-    - name: Robustness (evolution)
-    - name: Regularization (linguistics)
-    - name: Artificial neural network
-    - name: Machine learning
-    - name: Adversarial system
-    - name: Noise (video)
-    - name: Mathematics
-    - name: Cognitive psychology
-    - name: Psychology
-    - name: Mathematical analysis
-    - name: Biochemistry
-    - name: Chemistry
-    - name: Image (mathematics)
-    - name: Gene
-  score: 0.0
-- info:
-    discovered_by:
-      openalex: W2267635276
-  key: openalex:W2267635276
-  paper:
-    abstract: We introduce a method to train Binarized Neural Networks (BNNs) - neural
-      networks with binary weights and activations at run-time. At train-time the
-      binary weights and activations are used for computing the parameter gradients.
-      During the forward pass, BNNs drastically reduce memory size and accesses, and
-      replace most arithmetic operations with bit-wise operations, which is expected
-      to substantially improve power-efficiency. To validate the effectiveness of
-      BNNs, we conducted two sets of experiments on the Torch7 and Theano frameworks.
-      On both, BNNs achieved nearly state-of-the-art results over the MNIST, CIFAR-10
-      and SVHN datasets. We also report our preliminary results on the challenging
-      ImageNet dataset. Last but not least, we wrote a binary matrix multiplication
-      GPU kernel with which it is possible to run our MNIST BNN 7 times faster than
-      with an unoptimized GPU kernel, without suffering any loss in classification
-      accuracy. The code for training and running our BNNs is available on-line.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Technion – Israel Institute of Technology
-      author:
-        aliases: []
-        links:
-        - link: A5087518651
-          type: openalex
-        name: Itay Hubara
-      display_name: Itay Hubara
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5039449234
-          type: openalex
-        name: Matthieu Courbariaux
-      display_name: Matthieu Courbariaux
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Columbia University
-      author:
-        aliases: []
-        links:
-        - link: A5025123281
-          type: openalex
-        - link: 0000-0001-9368-6352
-          type: orcid
-        name: Daniel Soudry
-      display_name: Daniel Soudry
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Technion – Israel Institute of Technology
-      author:
-        aliases: []
-        links:
-        - link: A5025669300
-          type: openalex
-        name: Ran El‐Yaniv
-      display_name: Ran El‐Yaniv
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5086198262
-          type: openalex
-        - link: 0000-0002-9322-3515
-          type: orcid
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    flags: []
-    links:
-    - link: '2267635276'
-      type: mag
-    - link: W2267635276
-      type: openalex
-    - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
-      type: url
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2016-02-08'
-        date_precision: 3
-        links:
-        - link: https://papers.nips.cc/paper/6573-binarized-neural-networks.pdf
-          type: url
-        name: Neural Information Processing Systems
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: Binarized Neural Networks
-    topics:
-    - name: MNIST database
-    - name: Computer science
-    - name: Kernel (algebra)
-    - name: Artificial neural network
-    - name: Multiplication (music)
-    - name: Binary number
-    - name: Code (set theory)
-    - name: Artificial intelligence
-    - name: Deep neural networks
-    - name: Matrix multiplication
-    - name: Binary code
-    - name: Deep learning
-    - name: Machine learning
-    - name: Pattern recognition (psychology)
-    - name: Arithmetic
-    - name: Mathematics
-    - name: Physics
-    - name: Set (abstract data type)
-    - name: Combinatorics
-    - name: Quantum mechanics
-    - name: Quantum
-    - name: Programming language
-  score: 0.0
-- info:
-    discovered_by:
-      openalex: W2962883855
-  key: openalex:W2962883855
-  paper:
-    abstract: We investigate the task of building open domain, conversational dialogue
-      systems based on large dialogue corpora using generative models. Generative
-      models produce system responses that are autonomously generated word-by-word,
-      opening up the possibility for realistic, flexible interactions. In support
-      of this goal, we extend the recently proposed hierarchical recurrent encoder-decoder
-      neural network to the dialogue domain, and demonstrate that this model is competitive
-      with state-of-the-art neural language models and back-off n-gram models. We
-      investigate the limitations of this and similar approaches, and show how its
-      performance can be improved by bootstrapping the learning from a larger question-answer
-      pair corpus and from pretrained word embeddings.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5034688833
-          type: openalex
-        name: Iulian Vlad Serban
-      display_name: Iulian Vlad Serban
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5108137151
-          type: openalex
-        name: Alessandro Sordoni
-      display_name: Alessandro Sordoni
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5086198262
-          type: openalex
-        - link: 0000-0002-9322-3515
-          type: orcid
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5112608251
-          type: openalex
-        - link: 0000-0001-6223-0301
-          type: orcid
-        name: Aaron Courville
-      display_name: Aaron Courville
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: McGill University
-      author:
-        aliases: []
-        links:
-        - link: A5080591144
-          type: openalex
-        - link: 0000-0003-0747-7250
-          type: orcid
-        name: Joëlle Pineau
-      display_name: Joëlle Pineau
-    flags: []
-    links:
-    - link: '1507.04808'
-      type: arxiv
-    - link: 10.1609/aaai.v30i1.9883
-      type: doi
-    - link: '2962883855'
-      type: mag
-    - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
-      type: open-access
-    - link: W2962883855
-      type: openalex
-    - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
-      type: pdf
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2016-03-05'
-        date_precision: 3
-        links:
-        - link: 10.1609/aaai.v30i1.9883
-          type: doi
-        - link: https://ojs.aaai.org/index.php/AAAI/article/download/9883/9742
-          type: pdf
-        name: Proceedings of the AAAI Conference on Artificial Intelligence
-        open: true
-        peer_reviewed: true
-        publisher: Association for the Advancement of Artificial Intelligence
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: Building End-To-End Dialogue Systems Using Generative Hierarchical Neural
-      Network Models
-    topics:
-    - name: Generative grammar
-    - name: Computer science
-    - name: Bootstrapping (finance)
-    - name: Word (group theory)
-    - name: Artificial intelligence
-    - name: End-to-end principle
-    - name: Artificial neural network
-    - name: Language model
-    - name: Domain (mathematical analysis)
-    - name: Encoder
-    - name: Recurrent neural network
-    - name: Task (project management)
-    - name: Natural language processing
-    - name: Generative model
-    - name: Linguistics
-    - name: Mathematical analysis
-    - name: Philosophy
-    - name: Mathematics
-    - name: Management
-    - name: Financial economics
-    - name: Economics
+    - name: Systems engineering
+    - name: Paleontology
     - name: Operating system
   score: 0.0
 - info:
@@ -678,7 +169,7 @@
     abstract: We present in this paper a novel approach for training deterministic
       auto-encoders. We show that by adding a well chosen penalty term to the classical
       reconstruction cost function, we can achieve results that equal or surpass those
-      attained by other regularized auto-encoders as well as denoising auto-encoders
+      attained by other regularized autoencoders as well as denoising auto-encoders
       on a range of datasets. This penalty term corresponds to the Frobenius norm
       of the Jacobian matrix of the encoder activations with respect to the input.
       We show that this penalty term results in a localized space contraction which
@@ -695,7 +186,7 @@
     authors:
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -707,7 +198,7 @@
       display_name: Salah Rifai
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -719,7 +210,7 @@
       display_name: Pascal Vincent
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -731,7 +222,7 @@
       display_name: Xavier Muller
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -745,7 +236,7 @@
       display_name: Xavier Glorot
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -763,6 +254,8 @@
       type: mag
     - link: W2218318129
       type: openalex
+    - link: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.298.1581
+      type: url
     - link: https://icml.cc/2011/papers/455_icmlpaper.pdf
       type: url
     releases:
@@ -802,12 +295,567 @@
     - name: Artificial neural network
     - name: Eigenvalues and eigenvectors
     - name: Applied mathematics
-    - name: Physics
     - name: Materials science
-    - name: Quantum mechanics
+    - name: Physics
     - name: Politics
-    - name: Political science
-    - name: Law
-    - name: Composite material
     - name: Operating system
+    - name: Law
+    - name: Quantum mechanics
+    - name: Political science
+    - name: Composite material
+  score: 0.0
+- info:
+    discovered_by:
+      openalex: W1480583224
+  key: openalex:W1480583224
+  paper:
+    abstract: ''
+    authors:
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Polytechnique Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5032466547
+          type: openalex
+        name: Samira Ebrahimi Kahou
+      display_name: Samira Ebrahimi Kahou
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5016899919
+          type: openalex
+        name: Xavier Bouthillier
+      display_name: Xavier Bouthillier
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5033938098
+          type: openalex
+        - link: 0009-0009-9746-2001
+          type: orcid
+        name: Pascal Lamblin
+      display_name: Pascal Lamblin
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5041145688
+          type: openalex
+        - link: 0009-0003-4124-1687
+          type: orcid
+        name: Çaǧlar Gülçehre
+      display_name: Çaǧlar Gülçehre
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Goethe University Frankfurt
+      author:
+        aliases: []
+        links:
+        - link: A5019905286
+          type: openalex
+        name: Vincent Michalski
+      display_name: Vincent Michalski
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Goethe University Frankfurt
+      author:
+        aliases: []
+        links:
+        - link: A5060492651
+          type: openalex
+        name: Kishore Konda
+      display_name: Kishore Konda
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5051608757
+          type: openalex
+        name: Sébastien Jean
+      display_name: Sébastien Jean
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Polytechnique Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5078468259
+          type: openalex
+        name: Pierre Froumenty
+      display_name: Pierre Froumenty
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5020785659
+          type: openalex
+        name: Yann Dauphin
+      display_name: Yann Dauphin
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5037330846
+          type: openalex
+        name: Nicolas Boulanger-Lewandowski
+      display_name: Nicolas Boulanger-Lewandowski
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5017871627
+          type: openalex
+        name: Raul Chandias Ferrari
+      display_name: Raul Chandias Ferrari
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5035471281
+          type: openalex
+        - link: 0000-0002-0969-9992
+          type: orcid
+        name: Mehdi Mirza
+      display_name: Mehdi Mirza
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      author:
+        aliases: []
+        links:
+        - link: A5085746798
+          type: openalex
+        name: David Warde-Farley
+      display_name: David Warde-Farley
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5112608251
+          type: openalex
+        - link: 0000-0001-6223-0301
+          type: orcid
+        name: Aaron Courville
+      display_name: Aaron Courville
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5103958886
+          type: openalex
+        name: Pascal Vincent
+      display_name: Pascal Vincent
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5030440955
+          type: openalex
+        name: Roland Memisevic
+      display_name: Roland Memisevic
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Polytechnique Montréal
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5075885606
+          type: openalex
+        - link: 0000-0001-6534-2114
+          type: orcid
+        name: Christopher Pal
+      display_name: Christopher Pal
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Concordia University
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: 10.1007/s12193-015-0195-2
+      type: doi
+    - link: '1480583224'
+      type: mag
+    - link: W1480583224
+      type: openalex
+    - link: https://publications.polymtl.ca/35966/
+      type: url
+    releases:
+    - pages: null
+      status: published
+      venue:
+        aliases: []
+        date: '2015-08-20'
+        date_precision: 3
+        links:
+        - link: 10.1007/s12193-015-0195-2
+          type: doi
+        name: Journal on Multimodal User Interfaces
+        open: false
+        peer_reviewed: true
+        publisher: Springer Science+Business Media
+        series: ''
+        short_name: null
+        type: journal
+        volume: null
+    title: 'EmoNets: Multimodal deep learning approaches for emotion recognition in
+      video'
+    topics:
+    - name: Computer science
+    - name: Artificial intelligence
+    - name: Autoencoder
+    - name: Convolutional neural network
+    - name: Deep learning
+    - name: Modalities
+    - name: Classifier (UML)
+    - name: Modality (human–computer interaction)
+    - name: Feature learning
+    - name: Test set
+    - name: Pattern recognition (psychology)
+    - name: Machine learning
+    - name: Social science
+    - name: Sociology
+  score: 0.0
+- info:
+    discovered_by:
+      openalex: W2158139315
+  key: openalex:W2158139315
+  paper:
+    abstract: 'If we take an existing supervised NLP system, a simple and general
+      way to improve accuracy is to use unsupervised word representations as extra
+      word features. We evaluate Brown clusters, Collobert and Weston (2008) embeddings,
+      and HLBL (Mnih &amp;amp; Hinton, 2009) embeddings of words on both NER and chunking.
+      We use near state-of-the-art supervised baselines, and find that each of the
+      three word representations improves the accuracy of these baselines. We find
+      further improvements by combining different word representations. You can download
+      our word features, for off-the-shelf use in existing NLP systems, as well as
+      our code, here:'
+    authors:
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5072002276
+          type: openalex
+        name: Joseph Turian
+      display_name: Joseph Turian
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: University of Illinois Urbana-Champaign
+      author:
+        aliases: []
+        links:
+        - link: A5090783855
+          type: openalex
+        name: Lev-Arie Ratinov
+      display_name: Lev-Arie Ratinov
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: '2158139315'
+      type: mag
+    - link: W2158139315
+      type: openalex
+    - link: http://anthology.aclweb.org/P/P10/P10-1040.pdf
+      type: url
+    - link: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.301.5840
+      type: url
+    - link: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.331.3057
+      type: url
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2010-07-11'
+        date_precision: 3
+        links:
+        - link: http://anthology.aclweb.org/P/P10/P10-1040.pdf
+          type: url
+        name: Meeting of the Association for Computational Linguistics
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        short_name: null
+        type: conference
+        volume: null
+    title: 'Word Representations: A Simple and General Method for Semi-Supervised
+      Learning'
+    topics:
+    - name: Chunking (psychology)
+    - name: Computer science
+    - name: Word (group theory)
+    - name: Natural language processing
+    - name: Artificial intelligence
+    - name: Simple (philosophy)
+    - name: Word embedding
+    - name: Speech recognition
+    - name: Linguistics
+    - name: Epistemology
+    - name: Philosophy
+    - name: Embedding
+  score: 0.0
+- info:
+    discovered_by:
+      openalex: W27961112
+  key: openalex:W27961112
+  paper:
+    abstract: We introduce the problem of zero-data learning, where a model must generalize
+      to classes or tasks for which no training data are available and only a description
+      of the classes or tasks are provided. Zero-data learning is useful for problems
+      where the set of classes to distinguish or tasks to solve is very large and
+      is not entirely covered by the training data. The main contributions of this
+      work lie in the presentation of a general formalization of zero-data learning,
+      in an experimental analysis of its properties and in empirical evidence showing
+      that generalization is possible and significant in this context. The experimental
+      work of this paper addresses two classification problems of character recognition
+      and a multitask ranking problem in the context of drug discovery. Finally, we
+      conclude by discussing how this new framework could lead to a novel perspective
+      on how to extend machine learning towards AI, where an agent can be given a
+      specification for a learning problem before attempting to solve it (with very
+      few or even zero examples).
+    authors:
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5019862529
+          type: openalex
+        name: Hugo Larochelle
+      display_name: Hugo Larochelle
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5084125668
+          type: openalex
+        - link: 0000-0001-7650-1475
+          type: orcid
+        name: Dumitru Erhan
+      display_name: Dumitru Erhan
+    - affiliations:
+      - aliases: []
+        category: academia
+        country: null
+        name: Université de Montréal
+      author:
+        aliases: []
+        links:
+        - link: A5086198262
+          type: openalex
+        - link: 0000-0002-9322-3515
+          type: orcid
+        name: Yoshua Bengio
+      display_name: Yoshua Bengio
+    flags: []
+    links:
+    - link: '27961112'
+      type: mag
+    - link: W27961112
+      type: openalex
+    - link: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.434.5991
+      type: url
+    - link: http://info.usherbrooke.ca/hlarochelle/publications/aaai2008_zero-data.pdf
+      type: url
+    releases:
+    - pages: null
+      status: unknown
+      venue:
+        aliases: []
+        date: '2008-07-13'
+        date_precision: 3
+        links:
+        - link: http://info.usherbrooke.ca/hlarochelle/publications/aaai2008_zero-data.pdf
+          type: url
+        name: National Conference on Artificial Intelligence
+        open: false
+        peer_reviewed: false
+        publisher: null
+        series: ''
+        short_name: null
+        type: conference
+        volume: null
+    title: Zero-data learning of new tasks
+    topics:
+    - name: Computer science
+    - name: Artificial intelligence
+    - name: Generalization
+    - name: Zero (linguistics)
+    - name: Context (archaeology)
+    - name: Machine learning
+    - name: Multi-task learning
+    - name: Ranking (information retrieval)
+    - name: Perspective (graphical)
+    - name: Set (abstract data type)
+    - name: Task (project management)
+    - name: Mathematics
+    - name: Management
+    - name: Biology
+    - name: Programming language
+    - name: Linguistics
+    - name: Economics
+    - name: Paleontology
+    - name: Philosophy
+    - name: Mathematical analysis
   score: 0.0
