@@ -13,7 +13,11 @@ abstract: The dominant sequence transduction models are based on complex recurre
   well to other tasks by applying it successfully to English constituency parsing
   both with large and limited training data.
 authors:
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -23,7 +27,11 @@ authors:
       type: orcid
     name: Ashish Vaswani
   display_name: Ashish Vaswani
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -31,7 +39,15 @@ authors:
       type: openalex
     name: Noam Shazeer
   display_name: Noam Shazeer
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
+  - aliases: []
+    category: academia
+    country: null
+    name: University of Southern California
   author:
     aliases: []
     links:
@@ -39,7 +55,11 @@ authors:
       type: openalex
     name: Niki Parmar
   display_name: Niki Parmar
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -49,7 +69,11 @@ authors:
       type: orcid
     name: Jakob Uszkoreit
   display_name: Jakob Uszkoreit
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -57,7 +81,15 @@ authors:
       type: openalex
     name: Llion Jones
   display_name: Llion Jones
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: academia
+    country: null
+    name: University of Toronto
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -67,7 +99,11 @@ authors:
       type: orcid
     name: Aidan N. Gomez
   display_name: Aidan N. Gomez
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -77,7 +113,11 @@ authors:
       type: orcid
     name: Łukasz Kaiser
   display_name: Łukasz Kaiser
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -91,18 +131,40 @@ links:
   type: arxiv
 - link: 10.48550/arxiv.1706.03762
   type: doi
-- link: W4385245566
+- link: 10.65215/2q58a426
+  type: doi
+- link: 10.65215/ctdc8e75
+  type: doi
+- link: 10.65215/mdcm8z23
+  type: doi
+- link: 10.65215/ne77pf66
+  type: doi
+- link: 10.65215/nxvz2v36
+  type: doi
+- link: 10.65215/pc26a033
+  type: doi
+- link: 10.65215/r5bs2d54
+  type: doi
+- link: 10.65215/ysbyhc05
+  type: doi
+- link: '2626778328'
+  type: mag
+- link: https://langtaosha.org.cn/index.php/lts/preprint/download/10/108
+  type: open-access
+- link: W2626778328
   type: openalex
-- link: https://api.datacite.org/dois/10.48550/arxiv.1706.03762
-  type: url
+- link: https://langtaosha.org.cn/index.php/lts/preprint/download/10/108
+  type: pdf
 releases:
 - pages: null
   status: preprint
   venue:
     aliases: []
-    date: '2017-01-01'
+    date: '2025-08-23'
     date_precision: 3
     links:
+    - link: '1706.03762'
+      type: arxiv
     - link: '1706.03762'
       type: arxiv
     name: arXiv (Cornell University)
@@ -123,17 +185,17 @@ topics:
 - name: Artificial intelligence
 - name: Parallelizable manifold
 - name: Parsing
+- name: Language model
 - name: Natural language processing
 - name: Decoding methods
-- name: Language model
 - name: Task (project management)
 - name: Convolutional neural network
 - name: Speech recognition
 - name: Machine learning
 - name: Algorithm
+- name: Voltage
 - name: Physics
+- name: Economics
 - name: Management
 - name: Quantum mechanics
-- name: Voltage
-- name: Economics
 - name: Operating system

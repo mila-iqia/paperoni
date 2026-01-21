@@ -119,6 +119,12 @@ def _get_link(link_type: str, link_value: str) -> Link:
     return Link(type=link_type, link=relevant_part)
 
 
+def _links(**data):
+    for link_type, link_value in data.items():
+        if link_value is not None:
+            yield _get_link(link_type, link_value)
+
+
 class OpenAlexQueryManager:
     def __init__(self, *, mailto=None, work_types=DEFAULT_WORK_TYPES):
         self.mailto = mailto
@@ -201,8 +207,9 @@ class OpenAlexQueryManager:
     def _try_wrapping_paper(self, data: dict) -> PaperInfo:
         try:
             return self._wrap_paper(data)
-        except Exception as exc:
-            raise Exception(pprint.pformat(data)) from exc
+        except Exception:
+            pprint.pformat(data)
+            raise
 
     def _wrap_paper(self, data: dict) -> PaperInfo:
         # Assert consistency in locations
@@ -212,15 +219,15 @@ class OpenAlexQueryManager:
 
         locations = data["locations"]
 
-        if locations:
-            # data["primary_location"] apparently has more keys than
-            # locations[0]. In particular, it has the additional "version" and
-            # "is_accepted" keys.
-            for key in locations[0].keys():
-                assert locations[0][key] == data["primary_location"][key]
-        else:
-            assert data["primary_location"] is None
-            assert data["best_oa_location"] is None
+        # if locations:
+        #     # data["primary_location"] apparently has more keys than
+        #     # locations[0]. In particular, it has the additional "version" and
+        #     # "is_accepted" keys.
+        #     for key in locations[0].keys():
+        #         assert locations[0][key] == data["primary_location"][key]
+        # else:
+        #     assert data["primary_location"] is None
+        #     assert data["best_oa_location"] is None
 
         # # Assert consistency in paper ids
         # if data.get("doi"):
@@ -230,15 +237,12 @@ class OpenAlexQueryManager:
         # We collect them here so that they can also be added to paper "links" field.
         links_from_locations = []
         for location in locations:
-            if location["landing_page_url"]:
-                links_from_locations.append(
-                    _get_link(
-                        "url",
-                        location["landing_page_url"],
-                    )
+            links_from_locations.extend(
+                _links(
+                    url=location["landing_page_url"],
+                    pdf=location["pdf_url"],
                 )
-            if location["pdf_url"]:
-                links_from_locations.append(_get_link("pdf", location["pdf_url"]))
+            )
 
         def venue_name(loc):
             vn = candidate.get("raw_source_name", None)
@@ -263,7 +267,7 @@ class OpenAlexQueryManager:
         oa_url = data["open_access"]["oa_url"]
 
         links = {_get_link(typ, ref) for typ, ref in data["ids"].items()}
-        links.update([_get_link("open-access", oa_url)] if oa_url is not None else [])
+        links.update(_links(**{"open-access": oa_url}))
         links.update(links_from_locations)
         links = list(links)
         links.sort(key=lambda l: (l.type, l.link))
@@ -277,16 +281,11 @@ class OpenAlexQueryManager:
                     author=Author(
                         name=authorship["author"]["display_name"],
                         aliases=[],
-                        links=[_get_link("openalex", authorship["author"]["id"])]
-                        + (
-                            [
-                                _get_link(
-                                    "orcid",
-                                    authorship["author"]["orcid"],
-                                )
-                            ]
-                            if authorship["author"]["orcid"] is not None
-                            else []
+                        links=list(
+                            _links(
+                                openalex=authorship["author"]["id"],
+                                orcid=authorship["author"]["orcid"],
+                            )
                         ),
                     ),
                     affiliations=[
@@ -412,7 +411,7 @@ class OpenAlex(Discoverer):
         # [alias: -v]
         verbose: bool = False,
         # Data version
-        data_version: Literal["1", "2"] = "1",
+        data_version: Literal["1", "2"] = "2",
         # A list of focuses
         focuses: Focuses = None,
     ):

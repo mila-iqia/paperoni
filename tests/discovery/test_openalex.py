@@ -17,6 +17,11 @@ PAPERS = [
     "GraphMix: Improved Training of GNNs for Semi-Supervised Learning",
     "HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation",
     "Large-Scale Contrastive Language-Audio Pretraining with Feature Fusion and Keyword-to-Caption Augmentation",
+    "Domain adaptation for large-scale sentiment classification: A deep learning approach",
+    "EmoNets: Multimodal deep learning approaches for emotion recognition in video",
+    "What regularized auto-encoders learn from the data-generating distribution",
+    "Word Representations: A Simple and General Method for Semi-Supervised Learning",
+    "Zero-data learning of new tasks",
 ]
 
 

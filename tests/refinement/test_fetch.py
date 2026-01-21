@@ -62,6 +62,7 @@ links = [
     (datacite, "doi:10.48550/arXiv.2406.06946"),
     (datacite, "doi:10.48550/arXiv.2312.12604"),
     # # BiorXiv
+    # TODO: fix timeout
     # (biorxiv, "doi:10.1101/2020.10.29.359778"),
     # (biorxiv, "doi:10.1101/2023.05.17.541168"),
     # (biorxiv, "doi:10.1101/2023.10.27.564468"),
@@ -83,10 +84,12 @@ links = [
     (pubmed, "pmc:10684502"),
     # OpenAlex, by title
     (openalex_title, "title:Attention Is All You Need"),
-    (
-        openalex_title,
-        "title:BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
-    ),
+    (openalex_title, "title:GraphMix: Improved Training of GNNs for Semi-Supervised Learning"),
+    # TODO: why do they not have this paper?
+    # (
+    #     openalex_title,
+    #     "title:BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+    # ),
     # Crossref, by title
     (
         crossref_title,

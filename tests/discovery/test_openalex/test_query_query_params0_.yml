@@ -1,136 +1,5 @@
 - info:
     discovered_by:
-      openalex: W3163652268
-  key: openalex:W3163652268
-  paper:
-    abstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture
-      in sequence-to-sequence learning. RNNs, however, are inherently sequential models
-      that do not allow parallelization of their computations. Transformers are emerging
-      as a natural alternative to standard RNNs, replacing recurrent computations
-      with a multi-head attention mechanism.In this paper, we propose the SepFormer,
-      a novel RNN-free Transformer-based neural network for speech separation. The
-      Sep-Former learns short and long-term dependencies with a multi-scale approach
-      that employs transformers. The proposed model achieves state-of-the-art (SOTA)
-      performance on the standard WSJ0-2/3mix datasets. It reaches an SI-SNRi of 22.3
-      dB on WSJ0-2mix and an SI-SNRi of 19.5 dB on WSJ0-3mix. The SepFormer inherits
-      the parallelization advantages of Transformers and achieves a competitive performance
-      even when downsampling the encoded representation by a factor of 8. It is thus
-      significantly faster and it is less memory-demanding than the latest speech
-      separation systems with comparable performance.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5023830739
-          type: openalex
-        - link: 0000-0002-7593-6589
-          type: orcid
-        name: Cem Subakan
-      display_name: Cem Subakan
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5102962935
-          type: openalex
-        - link: 0000-0001-8479-3121
-          type: orcid
-        name: Mirco Ravanelli
-      display_name: Mirco Ravanelli
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Marche Polytechnic University
-      author:
-        aliases: []
-        links:
-        - link: A5047682990
-          type: openalex
-        - link: 0000-0002-5358-1844
-          type: orcid
-        name: Samuele Cornell
-      display_name: Samuele Cornell
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5028787566
-          type: openalex
-        name: Mirko Bronzi
-      display_name: Mirko Bronzi
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Rochester
-      author:
-        aliases: []
-        links:
-        - link: A5063943539
-          type: openalex
-        name: Jianyuan Zhong
-      display_name: Jianyuan Zhong
-    flags: []
-    links:
-    - link: '2010.13154'
-      type: arxiv
-    - link: 10.1109/icassp39728.2021.9413901
-      type: doi
-    - link: '3163652268'
-      type: mag
-    - link: W3163652268
-      type: openalex
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2021-05-13'
-        date_precision: 3
-        links:
-        - link: 10.1109/icassp39728.2021.9413901
-          type: doi
-        name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
-          and Signal Processing (ICASSP)
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: Attention Is All You Need In Speech Separation
-    topics:
-    - name: Computer science
-    - name: Recurrent neural network
-    - name: Transformer
-    - name: Computation
-    - name: Artificial intelligence
-    - name: Upsampling
-    - name: Speech recognition
-    - name: Artificial neural network
-    - name: Algorithm
-    - name: Engineering
-    - name: Voltage
-    - name: Electrical engineering
-    - name: Image (mathematics)
-  score: 0.0
-- info:
-    discovered_by:
       openalex: W3092206109
   key: openalex:W3092206109
   paper:
@@ -178,7 +47,7 @@
       display_name: Meng Qu
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Massachusetts Institute of Technology
       author:
@@ -192,7 +61,7 @@
       display_name: Kenji Kawaguchi
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Université de Montréal
       author:
@@ -218,7 +87,7 @@
       display_name: Yoshua Bengio
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Aalto University
       author:
@@ -258,12 +127,6 @@
       type: openalex
     - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
       type: pdf
-    - link: https://api.datacite.org/dois/10.48550/arxiv.1909.11715
-      type: url
-    - link: https://hal.archives-ouvertes.fr/hal-03247184
-      type: url
-    - link: https://hal.science/hal-03247184
-      type: url
     releases:
     - pages: null
       status: published
@@ -300,26 +163,11 @@
       openalex: W4319300975
   key: openalex:W4319300975
   paper:
-    abstract: Convolutional neural networks (CNNs) have been the consensus for medical
-      image segmentation tasks. However, they suffer from the limitation in modeling
-      long-range dependencies and spatial correlations due to the nature of convolution
-      operation. Although transformers were first developed to address this issue,
-      they fail to capture low-level features. In contrast, it is demonstrated that
-      both local and global features are crucial for dense prediction, such as segmenting
-      in challenging contexts. In this paper, we propose HiFormer, a novel method
-      that efficiently bridges a CNN and a transformer for medical image segmentation.
-      Specifically, we design two multi-scale feature representations using the seminal
-      Swin Transformer module and a CNN-based encoder. To secure a fine fusion of
-      global and local features obtained from the two aforementioned representations,
-      we propose a Double-Level Fusion (DLF) module in the skip connection of the
-      encoder-decoder structure. Extensive experiments on various medical image segmentation
-      datasets demonstrate the effectiveness of HiFormer over other CNN-based, transformer-based,
-      and hybrid methods in terms of computational complexity, quantitative and qualitative
-      results. Our code is publicly available at GitHub.
+    abstract: '6191'
     authors:
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Iran University of Science and Technology
       author:
@@ -333,7 +181,7 @@
       display_name: Moein Heidari
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Iran University of Science and Technology
       author:
@@ -347,7 +195,7 @@
       display_name: Amirhossein Kazerouni
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: Iran University of Science and Technology
       author:
@@ -359,7 +207,7 @@
       display_name: Milad Soltany
     - affiliations:
       - aliases: []
-        category: unknown
+        category: academia
         country: null
         name: RWTH Aachen University
       author:
@@ -395,17 +243,19 @@
         links:
         - link: A5009765322
           type: openalex
+        - link: 0000-0003-3662-9532
+          type: orcid
         name: Julien Cohen‐Adad
       display_name: Julien Cohen‐Adad
     - affiliations:
       - aliases: []
         category: unknown
         country: null
-        name: University of Regensburg
-      - aliases: []
-        category: unknown
-        country: null
         name: Fraunhofer Institute for Digital Medicine
+      - aliases: []
+        category: academia
+        country: null
+        name: University of Regensburg
       author:
         aliases: []
         links:
@@ -417,15 +267,15 @@
       display_name: Dorit Merhof
     flags: []
     links:
-    - link: '2207.08518'
-      type: arxiv
     - link: 10.1109/wacv56688.2023.00614
       type: doi
     - link: W4319300975
       type: openalex
+    - link: https://publica.fraunhofer.de/handle/publica/448509
+      type: url
     releases:
     - pages: null
-      status: unknown
+      status: published
       venue:
         aliases: []
         date: '2023-01-01'
@@ -433,9 +283,9 @@
         links:
         - link: 10.1109/wacv56688.2023.00614
           type: doi
-        name: 2022 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)
+        name: 2023 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)
         open: false
-        peer_reviewed: false
+        peer_reviewed: true
         publisher: null
         series: ''
         short_name: null
@@ -455,168 +305,7 @@
     - name: Scale-space segmentation
     - name: Computer vision
     - name: Voltage
-    - name: Physics
     - name: Quantum mechanics
     - name: Operating system
-  score: 0.0
-- info:
-    discovered_by:
-      openalex: W4372260310
-  key: openalex:W4372260310
-  paper:
-    abstract: 'Contrastive learning has shown remarkable success in the field of multimodal
-      representation learning. In this paper, we propose a pipeline of contrastive
-      language-audio pretraining to develop an audio representation by combining audio
-      data with natural language descriptions. To accomplish this target, we first
-      release LAION-Audio-630K, a large collection of 633,526 audio-text pairs from
-      different data sources. Second, we construct a contrastive language-audio pretraining
-      model by considering different audio encoders and text encoders. We incorporate
-      the feature fusion mechanism and keyword-to-caption augmentation into the model
-      design to further enable the model to process audio inputs of variable lengths
-      and enhance the performance. Third, we perform comprehensive experiments to
-      evaluate our model across three tasks: text-to-audio retrieval, zero-shot audio
-      classification, and supervised audio classification. The results demonstrate
-      that our model achieves superior performance in text-to-audio retrieval task.
-      In audio classification tasks, the model achieves state-of-the-art performance
-      in the zero-shot setting and is able to obtain performance comparable to models''
-      results in the non-zero-shot setting. LAION-Audio-630K <sup xmlns:mml="http://www.w3.org/1998/Math/MathML"
-      xmlns:xlink="http://www.w3.org/1999/xlink">1</sup> and the proposed model <sup
-      xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink">2</sup>
-      are both available to the public.'
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5102132394
-          type: openalex
-        - link: 0000-0003-4190-974X
-          type: orcid
-        name: Yusong Wu
-      display_name: Yusong Wu
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of California San Diego
-      author:
-        aliases: []
-        links:
-        - link: A5100451980
-          type: openalex
-        - link: 0000-0001-8357-3741
-          type: orcid
-        name: Ke Chen
-      display_name: Ke Chen
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5100425864
-          type: openalex
-        - link: 0000-0003-1969-2855
-          type: orcid
-        name: Tianyu Zhang
-      display_name: Tianyu Zhang
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5103129849
-          type: openalex
-        - link: 0000-0002-9659-3714
-          type: orcid
-        name: Yuchen Hui
-      display_name: Yuchen Hui
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of California San Diego
-      author:
-        aliases: []
-        links:
-        - link: A5017455302
-          type: openalex
-        - link: 0000-0002-1283-4075
-          type: orcid
-        name: Taylor Berg-Kirkpatrick
-      display_name: Taylor Berg-Kirkpatrick
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of California San Diego
-      author:
-        aliases: []
-        links:
-        - link: A5042278809
-          type: openalex
-        - link: 0000-0003-0222-1125
-          type: orcid
-        name: Shlomo Dubnov
-      display_name: Shlomo Dubnov
-    flags: []
-    links:
-    - link: '2211.06687'
-      type: arxiv
-    - link: 10.1109/icassp49357.2023.10095969
-      type: doi
-    - link: W4372260310
-      type: openalex
-    - link: https://hal.science/hal-04766539/document
-      type: pdf
-    - link: https://hal.science/hal-04766539
-      type: url
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2023-05-05'
-        date_precision: 3
-        links:
-        - link: 10.1109/icassp49357.2023.10095969
-          type: doi
-        name: ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech
-          and Signal Processing (ICASSP)
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: Large-Scale Contrastive Language-Audio Pretraining with Feature Fusion
-      and Keyword-to-Caption Augmentation
-    topics:
-    - name: Computer science
-    - name: Audio mining
-    - name: Natural language processing
-    - name: Pipeline (software)
-    - name: Speech recognition
-    - name: Artificial intelligence
-    - name: Encoder
-    - name: Construct (python library)
-    - name: Feature (linguistics)
-    - name: Natural language
-    - name: Language model
-    - name: Speech processing
-    - name: Acoustic model
-    - name: Linguistics
-    - name: Programming language
-    - name: Operating system
-    - name: Philosophy
+    - name: Physics
   score: 0.0
