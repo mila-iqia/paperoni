@@ -4,7 +4,7 @@ from serieux import serialize
 
 from paperoni.model.classes import Paper
 from paperoni.refinement.dblp import dblp
-from paperoni.refinement.doi import biorxiv, crossref, datacite, unpaywall
+from paperoni.refinement.doi import crossref, datacite, unpaywall
 from paperoni.refinement.fetch import _test_tags
 from paperoni.refinement.pubmed import pubmed
 from paperoni.refinement.title import crossref_title, openalex_title
@@ -61,14 +61,14 @@ links = [
     (datacite, "doi:10.48550/arXiv.2506.01225"),
     (datacite, "doi:10.48550/arXiv.2406.06946"),
     (datacite, "doi:10.48550/arXiv.2312.12604"),
-    # BiorXiv
-    (biorxiv, "doi:10.1101/2020.10.29.359778"),
-    (biorxiv, "doi:10.1101/2023.05.17.541168"),
-    (biorxiv, "doi:10.1101/2023.10.27.564468"),
-    (biorxiv, "doi:10.1101/2024.02.13.580150"),
-    (biorxiv, "doi:10.1101/2024.12.02.626449"),
-    (biorxiv, "doi:10.1101/2025.06.23.661173"),
-    (biorxiv, "doi:10.1101/2023.08.30.23294850"),
+    # # BiorXiv
+    # (biorxiv, "doi:10.1101/2020.10.29.359778"),
+    # (biorxiv, "doi:10.1101/2023.05.17.541168"),
+    # (biorxiv, "doi:10.1101/2023.10.27.564468"),
+    # (biorxiv, "doi:10.1101/2024.02.13.580150"),
+    # (biorxiv, "doi:10.1101/2024.12.02.626449"),
+    # (biorxiv, "doi:10.1101/2025.06.23.661173"),
+    # (biorxiv, "doi:10.1101/2023.08.30.23294850"),
     # DBLP
     (dblp, "dblp:conf/icml/LachapelleDMMBL23"),
     (dblp, "dblp:conf/wacv/DaultaniL24"),
