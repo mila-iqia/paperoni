@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from types import NoneType
 from typing import Generator, Iterable, Literal
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from serieux import auto_singleton, deserialize, serialize
 
@@ -33,10 +33,10 @@ class VoidFormatter(Formatter):
 class PagingMixin:
     """Mixin for paging."""
 
-    # Results offset
+    # Pagination offset
     offset: int = field(default=0)
-    # Max number of results to return
-    size: int = field(default=100)
+    # Maximum number of results to return
+    limit: int = field(default=100)
 
     _count: int | None = field(repr=False, compare=False, default=None)
     _next_offset: int | None = field(repr=False, compare=False, default=None)
@@ -54,23 +54,23 @@ class PagingMixin:
         iterable: Iterable,
         *,
         offset: int = None,
-        size: int = None,
+        limit: int = None,
     ) -> Iterable:
         if offset is None:
             offset = self.offset or 0
-        if size is None:
-            size = self.size or 100
+        if limit is None:
+            limit = self.limit or 100
 
-        size = min(size, config.server.max_results)
+        limit = min(limit, config.server.max_results)
 
         self._count = 0
         self._next_offset = offset
-        for entry in itertools.islice(iterable, offset, offset + size):
+        for entry in itertools.islice(iterable, offset, offset + limit):
             self._count += 1
             self._next_offset += 1
             yield entry
 
-        if self._count < size:
+        if self._count < limit:
             # No more results
             self._next_offset = None
 
@@ -331,12 +331,23 @@ def install_api(app) -> FastAPI:
             "version": app.version,
         }
 
+    def parse_search_request(
+        request: SearchRequest = Depends(),
+        flags: set[str] = Query(default=None),
+    ) -> SearchRequest:
+        """Parse search request with proper handling of flags list parameter."""
+        # Add flags if provided (FastAPI's Query() handles set parsing)
+        if flags:
+            request.flags = flags
+
+        return request
+
     @app.get(
         f"{prefix}/search",
         response_model=SearchResponse,
         dependencies=[Depends(hascap("search"))],
     )
-    async def search_papers(request: SearchRequest = Depends()):
+    async def search_papers(request: SearchRequest = Depends(parse_search_request)):
         """Search for papers in the collection."""
         results, count, next_offset, total = await run_in_process_pool(
             _search, serialize(SearchRequest, request)

@@ -5,9 +5,9 @@
   expand_links: false
   flags: null
   institution: null
+  limit: 100
   offset: 0
   paper_id: null
-  size: 100
   start_date: null
   title: Machine Learning
   venue: null

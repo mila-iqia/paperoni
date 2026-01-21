@@ -180,8 +180,8 @@ def test_search_endpoint(
     ["params", "count", "next_offset", "total"],
     [
         ({}, 3, None, 3),
-        ({"offset": 0, "size": 2}, 2, 2, 3),
-        ({"offset": 2, "size": 2}, 1, None, 3),
+        ({"offset": 0, "limit": 2}, 2, 2, 3),
+        ({"offset": 2, "limit": 2}, 1, None, 3),
     ],
 )
 def test_search_endpoint_pagination(

@@ -86,6 +86,12 @@ def sample_papers() -> Generator[list[Paper], None, None]:
                     ]
                 )
 
+    papers[0].flags = {"valid"}
+    papers[1].flags = {"invalid"}
+    papers[2].flags = {"valid", "invalid"}
+    papers[3].flags = {"reviewed"}
+    papers[4].flags = {"valid", "reviewed"}
+
     yield papers
 
 
@@ -188,6 +194,27 @@ def collection(
             pytest.skip(
                 "RemoteCollection does not implement all collection methods needed for this test"
             )
+
+
+def check_papers(
+    data_regression: DataRegressionFixture, papers: list[Paper], basename: str = None
+):
+    # Using file_regression and json.dumps to avoid
+    # yaml.representer.RepresenterError on DatePrecision
+    # papers = sort_keys(papers[:5])
+    # [p.pop("acquired") for p in papers]
+    papers = serialize(list[Paper], papers)
+
+    for paper in papers:
+        # MongoPaper uses ObjectId which will not be the same each time the test is
+        # run
+        paper["id"] = None if not isinstance(paper.get("id", None), int) else paper["id"]
+        paper.pop("_id", None)
+        paper.pop("version", None)
+        # Sort flags to ensure consistent ordering
+        paper["flags"] = sorted(paper["flags"])
+
+    data_regression.check(papers, basename=basename)
 
 
 def test_add_papers(collection: PaperCollection, sample_papers: list[Paper]):
@@ -406,6 +433,48 @@ def test_search_partial_matches(
     assert len(results) == 4
 
 
+@pytest.mark.coll_w_remote
+def test_search_by_flags(collection: PaperCollection, sample_papers: list[Paper]):
+    """Test searching by flag inclusion and exclusion."""
+    collection.add_papers(sample_papers)
+
+    # Test include_flags: papers must have ALL specified flags
+    results = sorted(collection.search(include_flags=["valid"]), key=lambda x: x.title)
+    assert len(results) == 3
+    assert all({"valid"} <= p.flags for p in results)
+
+    # Test include_flags with multiple flags: papers must have ALL specified flags
+    results = sorted(
+        collection.search(include_flags=["valid", "reviewed"]), key=lambda x: x.title
+    )
+    assert len(results) == 1
+    assert all({"valid", "reviewed"} <= p.flags for p in results)
+
+    # Test exclude_flags: papers must NOT have ANY of the specified flags
+    results = sorted(collection.search(exclude_flags=["invalid"]), key=lambda x: x.title)
+    assert len(results) == len(sample_papers) - 2
+    assert all(not p.flags & {"invalid"} for p in results)
+
+    # Test exclude_flags with multiple flags
+    results = sorted(
+        collection.search(exclude_flags=["valid", "invalid"]), key=lambda x: x.title
+    )
+    assert len(results) == len(sample_papers) - 4
+    assert all(not p.flags & {"valid", "invalid"} for p in results)
+
+    # Test combining include_flags and exclude_flags
+    results = sorted(
+        collection.search(include_flags=["valid"], exclude_flags=["invalid"]),
+        key=lambda x: x.title,
+    )
+    assert len(results) == 2
+    assert all({"valid"} <= p.flags and not p.flags & {"invalid"} for p in results)
+
+    # Test with no flags (should return all papers)
+    results = sorted(collection.search(), key=lambda x: x.title)
+    assert len(results) == 10
+
+
 def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list[Paper]):
     collection = FileCollection(file=tmp_path / "collection.json")
 
@@ -442,10 +511,4 @@ def test_make_collection_item(
         assert paper.id == papers[0].id
         assert eq(paper, papers[0])
 
-    paper = serialize(paper_cls, paper)
-    # MongoPaper uses ObjectId which will not be the same each time the test is
-    # run
-    paper["id"] = None if not isinstance(paper["id"], int) else paper["id"]
-    paper.pop("_id", None)
-    paper.pop("version")
-    data_regression.check(paper)
+    check_papers(data_regression, [paper])

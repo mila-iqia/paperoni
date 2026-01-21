@@ -42,6 +42,10 @@ def check_papers(data_regression: DataRegressionFixture, papers: list[PaperInfo]
     # make sure we can deserialize the papers
     deserialize(list[PaperInfo], papers)
 
+    for p in papers:
+        # Sort flags to ensure consistent ordering
+        p["paper"]["flags"] = sorted(p["paper"]["flags"])
+
     [p.pop("acquired") for p in papers]
     data_regression.check(papers)
 
