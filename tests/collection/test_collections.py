@@ -495,45 +495,60 @@ async def test_search_partial_matches(
     assert len(results) == 4
 
 
-@pytest.mark.coll_w_remote
-def test_search_by_flags(collection: PaperCollection, sample_papers: list[Paper]):
+@pytest.mark.asyncio
+async def test_search_by_flags(collection_r: PaperCollection, sample_papers: list[Paper]):
     """Test searching by flag inclusion and exclusion."""
-    collection.add_papers(sample_papers)
+    collection: PaperCollection = await collection_r()
+
+    await collection.add_papers(sample_papers)
 
     # Test include_flags: papers must have ALL specified flags
-    results = sorted(collection.search(include_flags=["valid"]), key=lambda x: x.title)
+    results = sorted(
+        [p async for p in collection.search(include_flags=["valid"])],
+        key=lambda x: x.title,
+    )
     assert len(results) == 3
     assert all({"valid"} <= p.flags for p in results)
 
     # Test include_flags with multiple flags: papers must have ALL specified flags
     results = sorted(
-        collection.search(include_flags=["valid", "reviewed"]), key=lambda x: x.title
+        [p async for p in collection.search(include_flags=["valid", "reviewed"])],
+        key=lambda x: x.title,
     )
     assert len(results) == 1
     assert all({"valid", "reviewed"} <= p.flags for p in results)
 
     # Test exclude_flags: papers must NOT have ANY of the specified flags
-    results = sorted(collection.search(exclude_flags=["invalid"]), key=lambda x: x.title)
+    results = sorted(
+        [p async for p in collection.search(exclude_flags=["invalid"])],
+        key=lambda x: x.title,
+    )
     assert len(results) == len(sample_papers) - 2
     assert all(not p.flags & {"invalid"} for p in results)
 
     # Test exclude_flags with multiple flags
     results = sorted(
-        collection.search(exclude_flags=["valid", "invalid"]), key=lambda x: x.title
+        [p async for p in collection.search(exclude_flags=["valid", "invalid"])],
+        key=lambda x: x.title,
     )
     assert len(results) == len(sample_papers) - 4
     assert all(not p.flags & {"valid", "invalid"} for p in results)
 
     # Test combining include_flags and exclude_flags
     results = sorted(
-        collection.search(include_flags=["valid"], exclude_flags=["invalid"]),
+        [
+            p
+            async for p in collection.search(
+                include_flags=["valid"], exclude_flags=["invalid"]
+            )
+        ],
         key=lambda x: x.title,
     )
     assert len(results) == 2
     assert all({"valid"} <= p.flags and not p.flags & {"invalid"} for p in results)
 
     # Test with no flags (should return all papers)
-    results = sorted(collection.search(), key=lambda x: x.title)
+    results = sorted([p async for p in collection.search()], key=lambda x: x.title)
     assert len(results) == 10
 
 
