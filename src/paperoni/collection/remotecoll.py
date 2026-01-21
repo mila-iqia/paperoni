@@ -8,7 +8,7 @@ from serieux import deserialize
 from serieux.features.encrypt import Secret
 
 from ..get import Fetcher, RequestsFetcher
-from ..model.classes import CollectionPaper, Paper
+from ..model.classes import Paper
 from .abc import PaperCollection
 
 
@@ -28,16 +28,16 @@ class RemoteCollection(PaperCollection):
     async def exclusions(self) -> set[str]:
         raise NotImplementedError()
 
-    async def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper]) -> int:
         raise NotImplementedError()
 
     async def exclude_papers(self, papers: Iterable[Paper]) -> None:
         raise NotImplementedError()
 
-    async def find_paper(self, paper: Paper) -> CollectionPaper | None:
+    async def find_paper(self, paper: Paper) -> Paper | None:
         raise NotImplementedError()
 
-    async def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+    async def find_by_id(self, paper_id: int) -> Paper | None:
         url = f"{self.endpoint}/paper/{paper_id}"
         try:
             resp = await self.fetch.read(
@@ -46,13 +46,13 @@ class RemoteCollection(PaperCollection):
                 cache_into=None,
                 headers=self.headers,
             )
-            return deserialize(CollectionPaper, resp)
+            return deserialize(Paper, resp)
         except HTTPException as e:
             if e.status_code == 404:
                 return None
             raise
 
-    async def edit_paper(self, paper: CollectionPaper) -> None:
+    async def edit_paper(self, paper: Paper) -> None:
         raise NotImplementedError()
 
     async def commit(self) -> None:
@@ -115,7 +115,7 @@ class RemoteCollection(PaperCollection):
             )
             papers = resp.get("results", [])
             for paper in papers:
-                yield deserialize(CollectionPaper, paper)
+                yield deserialize(Paper, paper)
             next_offset = resp.get("next_offset")
             if next_offset is None or not papers:
                 break

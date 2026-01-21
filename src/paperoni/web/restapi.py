@@ -16,7 +16,7 @@ from ..__main__ import Coll, Focus, Formatter, Fulltext, Work
 from ..config import config
 from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
-from ..model.classes import CollectionPaper, Paper, PaperInfo
+from ..model.classes import Paper, PaperInfo
 from ..model.focus import Focuses, Scored
 from ..model.merge import PaperWorkingSet
 from ..utils import url_to_id
@@ -106,7 +106,7 @@ class SearchRequest(PagingMixin, Coll.Search):
 class SearchResponse(PagingResponseMixin):
     """Response model for paper search."""
 
-    results: list[CollectionPaper]
+    results: list[Paper]
 
 
 @dataclass
@@ -253,7 +253,7 @@ class EditResponse:
 
     success: bool
     message: str
-    paper: CollectionPaper | None = None
+    paper: Paper | None = None
 
 
 @dataclass
@@ -316,7 +316,7 @@ def install_api(app) -> FastAPI:
 
     @app.get(
         f"{prefix}/paper/{{paper_id}}",
-        response_model=CollectionPaper,
+        response_model=Paper,
         dependencies=[Depends(hascap("search"))],
     )
     async def get_paper(paper_id: int):
@@ -402,7 +402,7 @@ def install_api(app) -> FastAPI:
         coll = Coll(command=None)
 
         # Deserialize the paper from the request
-        paper = deserialize(CollectionPaper, request.paper)
+        paper = deserialize(Paper, request.paper)
 
         # Verify the paper has an ID
         if paper.id is None:

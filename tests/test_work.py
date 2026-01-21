@@ -8,7 +8,7 @@ from paperoni.__main__ import Work
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
 from paperoni.discovery.semantic_scholar import SemanticScholar
-from paperoni.model.classes import CollectionPaper
+from paperoni.model.classes import Paper
 from paperoni.model.focus import Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 
@@ -92,7 +92,7 @@ async def test_work_updates_collection_papers(tmp_path: Path):
     )
 
     # remove a link from a paper to fake an update on the next work-get
-    paper_to_update: CollectionPaper = state.entries[2].value.current
+    paper_to_update: Paper = state.entries[2].value.current
     paper_to_update.links = paper_to_update.links[:-1]
     dump(
         Top[Scored[CommentRec[PaperWorkingSet, float]]],
@@ -122,7 +122,7 @@ async def test_work_updates_collection_papers(tmp_path: Path):
     # collection. Fake a concurrent update of the paper to discard the current
     # update inclusion
     assert await col.find_paper(paper_to_update) is not None
-    paper = CollectionPaper(**vars(await col.find_paper(paper_to_update)))
+    paper = Paper(**vars(await col.find_paper(paper_to_update)))
     sleep(1)
     paper.version = datetime.now()
     await col.add_papers([paper])

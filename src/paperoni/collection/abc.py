@@ -1,7 +1,7 @@
 from datetime import date
 from typing import AsyncIterable, Iterable
 
-from ..model.classes import CollectionPaper, Paper
+from ..model.classes import Paper
 
 _id_types = {
     "arxiv",
@@ -21,19 +21,19 @@ class PaperCollection:
     async def exclusions(self) -> set[str]:
         raise NotImplementedError()
 
-    async def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper]) -> int:
         raise NotImplementedError()
 
     async def exclude_papers(self, papers: Iterable[Paper]) -> None:
         raise NotImplementedError()
 
-    async def find_paper(self, paper: Paper) -> CollectionPaper | None:
+    async def find_paper(self, paper: Paper) -> Paper | None:
         raise NotImplementedError()
 
-    async def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+    async def find_by_id(self, paper_id: int) -> Paper | None:
         raise NotImplementedError()
 
-    async def edit_paper(self, paper: CollectionPaper) -> None:
+    async def edit_paper(self, paper: Paper) -> None:
         raise NotImplementedError()
 
     async def commit(self) -> None:
@@ -62,7 +62,7 @@ class PaperCollection:
         include_flags: list[str] = None,
         # Flags that must be False
         exclude_flags: list[str] = None,
-    ) -> AsyncIterable[CollectionPaper]:
+    ) -> AsyncIterable[Paper]:
         raise NotImplementedError()
 
     def __len__(self) -> int:

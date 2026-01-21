@@ -13,8 +13,6 @@ from serieux import Context, Serieux
 from serieux.features.encrypt import Secret
 
 from ..model.classes import (
-    CollectionMixin,
-    CollectionPaper as CollectionPaper,
     Institution,
     Link,
     Paper,
@@ -130,7 +128,7 @@ class MongoCollection(PaperCollection):
         exclusions = {doc["link"] async for doc in self._exclusions.find({})}
         return exclusions
 
-    async def add_papers(self, papers: Iterable[Paper | CollectionPaper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper]) -> int:
         """Add papers to the collection."""
         await self._ensure_connection()
         added = 0
@@ -142,24 +140,21 @@ class MongoCollection(PaperCollection):
 
             else:
                 # Handle existing papers
-                existing_paper: CollectionPaper = None
-                if isinstance(p, CollectionMixin) and (
-                    existing_paper := await self._collection.find_one({"_id": p.id})
-                ):
-                    existing_paper = srx.deserialize(CollectionPaper, existing_paper)
+                existing_paper: Paper = None
+                if existing_paper := await self._collection.find_one({"_id": p.id}):
+                    existing_paper = srx.deserialize(Paper, existing_paper)
                     if existing_paper.version >= p.version:
                         # Paper has been updated since last time it was fetched.
                         # Do not replace it.
                         continue
                     p.version = datetime.now()
                     await self._collection.replace_one(
-                        {"_id": p.id}, srx.serialize(CollectionPaper, p)
+                        {"_id": p.id}, srx.serialize(Paper, p)
                     )
 
                 else:
-                    p = CollectionPaper.make_collection_item(p)
                     assert not await self._collection.find_one({"_id": p.id})
-                    await self._collection.insert_one(srx.serialize(CollectionPaper, p))
+                    await self._collection.insert_one(srx.serialize(Paper, p))
 
                 added += 1
 
@@ -184,7 +179,7 @@ class MongoCollection(PaperCollection):
                 # Some exclusions already exist, that's fine
                 pass
 
-    async def find_paper(self, paper: Paper) -> CollectionPaper | None:
+    async def find_paper(self, paper: Paper) -> Paper | None:
         """Find a paper in the collection by links or title."""
         await self._ensure_connection()
 
@@ -205,15 +200,15 @@ class MongoCollection(PaperCollection):
                 }
             )
 
-        return srx.deserialize(CollectionPaper, doc) if doc else None
+        return srx.deserialize(Paper, doc) if doc else None
 
-    async def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+    async def find_by_id(self, paper_id: int) -> Paper | None:
         """Find a paper in the collection by id."""
         await self._ensure_connection()
         doc = await self._collection.find_one({"_id": ObjectId(paper_id)})
-        return srx.deserialize(CollectionPaper, doc) if doc else None
+        return srx.deserialize(Paper, doc) if doc else None
 
-    async def edit_paper(self, paper: CollectionPaper) -> None:
+    async def edit_paper(self, paper: Paper) -> None:
         """Edit an existing paper in the collection."""
         await self._ensure_connection()
 
@@ -223,7 +218,7 @@ class MongoCollection(PaperCollection):
 
         paper.version = datetime.now()
         result = await self._collection.replace_one(
-            {"_id": paper.id}, srx.serialize(CollectionPaper, paper)
+            {"_id": paper.id}, srx.serialize(Paper, paper)
         )
 
         if result.matched_count == 0:
@@ -249,7 +244,7 @@ class MongoCollection(PaperCollection):
         end_date: date = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
-    ) -> AsyncGenerator[CollectionPaper, None]:
+    ) -> AsyncGenerator[Paper, None]:
         """Search for papers in the collection."""
         await self._ensure_connection()
 
@@ -319,7 +314,7 @@ class MongoCollection(PaperCollection):
             }
 
         async for doc in self._collection.find(query):
-            yield srx.deserialize(CollectionPaper, doc)
+            yield srx.deserialize(Paper, doc)
 
     async def commit(self) -> None:
         # Commits are done synchronously to collections operations

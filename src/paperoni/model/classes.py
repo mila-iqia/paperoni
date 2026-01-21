@@ -216,18 +216,7 @@ class Paper(Base):
     links: list[Link] = field(default_factory=list)
     flags: set[str] = field(default_factory=set)
 
-
-@dataclass
-class PaperInfo:
-    paper: Paper
-    key: str
-    info: dict[str, JSON] = field(default_factory=dict)
-    acquired: datetime = field(default_factory=datetime.now)
-    score: float = 0.0
-
-
-@dataclass
-class CollectionMixin:
+    # Collection fields
     id: int | str = None
     version: datetime = None
 
@@ -238,7 +227,7 @@ class CollectionMixin:
         *,
         next_id: Callable[[], int | str] = lambda: None,
         **defaults,
-    ) -> "CollectionMixin":
+    ) -> "Paper":
         # Avoid errors coming from extra fields like '_id'
         kwargs = {k: v for k, v in vars(item).items() if k in cls.__dataclass_fields__}
         item = cls(**{**defaults, **kwargs})
@@ -248,5 +237,9 @@ class CollectionMixin:
 
 
 @dataclass
-class CollectionPaper(Paper, CollectionMixin):
-    pass
+class PaperInfo:
+    paper: Paper
+    key: str
+    info: dict[str, JSON] = field(default_factory=dict)
+    acquired: datetime = field(default_factory=datetime.now)
+    score: float = 0.0

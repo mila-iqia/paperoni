@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import AsyncGenerator, Iterable
 
-from ..model.classes import CollectionMixin, CollectionPaper, Paper
+from ..model.classes import Paper
 from ..utils import (
     normalize_institution,
     normalize_name,
@@ -16,7 +16,7 @@ from .finder import Finder
 @dataclass(kw_only=True)
 class MemCollection(PaperCollection):
     _last_id: int = field(compare=False, default=None)
-    _papers: list[CollectionPaper] = field(default_factory=list)
+    _papers: list[Paper] = field(default_factory=list)
     _exclusions: set[str] = field(default_factory=set)
 
     def __post_init__(self):
@@ -38,10 +38,10 @@ class MemCollection(PaperCollection):
         self._last_id += 1
         return self._last_id
 
-    async def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper]) -> int:
         return self._add_papers(papers)
 
-    def _add_papers(self, papers: Iterable[CollectionPaper]) -> int:
+    def _add_papers(self, papers: Iterable[Paper]) -> int:
         added = 0
 
         try:
@@ -51,7 +51,7 @@ class MemCollection(PaperCollection):
                         break
 
                 else:
-                    if isinstance(p, CollectionMixin) and p.id in self._finder.by_id:
+                    if p.id in self._finder.by_id:
                         paper = self._finder.by_id[p.id]
                         if paper.version >= p.version:
                             # Paper has been updated since last time it was fetched.
@@ -61,7 +61,7 @@ class MemCollection(PaperCollection):
                         p.version = datetime.now()
 
                     else:
-                        p = CollectionPaper.make_collection_item(p, next_id=self.next_id)
+                        p = Paper.make_collection_item(p, next_id=self.next_id)
                         assert p.id not in self._finder.by_id
 
                     self._papers.append(p)
@@ -86,13 +86,13 @@ class MemCollection(PaperCollection):
         if papers:
             await self.commit()
 
-    async def find_paper(self, paper: Paper) -> CollectionPaper | None:
+    async def find_paper(self, paper: Paper) -> Paper | None:
         return self._finder.find(paper)
 
-    async def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+    async def find_by_id(self, paper_id: int) -> Paper | None:
         return self._finder.by_id.get(paper_id)
 
-    async def edit_paper(self, paper: CollectionPaper) -> None:
+    async def edit_paper(self, paper: Paper) -> None:
         for i, existing_paper in enumerate(self._papers):
             # TODO: we have to do this loop to find the index in the list,
             # this is not acceptable, but we'll fix it later
@@ -139,7 +139,7 @@ class MemCollection(PaperCollection):
         include_flags: list[str] = None,
         # Flags that must not be present
         exclude_flags: list[str] = None,
-    ) -> AsyncGenerator[CollectionPaper, None]:
+    ) -> AsyncGenerator[Paper, None]:
         if paper_id is not None:
             yield await self.find_by_id(paper_id)
             return

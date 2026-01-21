@@ -41,7 +41,7 @@ def eq(a: object, b: object):
         fields_b = vars(b)
         return eq(fields_a, fields_b)
     except TypeError:
-        return a == b
+        return (a is None) or (b is None) or a == b
 
 
 @ovld
