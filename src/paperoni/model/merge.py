@@ -27,9 +27,7 @@ class PaperWorkingSet:
         if self.current is None:
             self.current = p.paper
         else:
-            self.current = Paper.make_collection_item(
-                merge(self.current, p.paper), **vars(self.current)
-            )
+            self.current = merge(self.current, p.paper)
 
 
 def qual(x, q):

@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import partial
-from typing import Callable
 
 from serieux import JSON
 
@@ -219,21 +218,6 @@ class Paper(Base):
     # Collection fields
     id: int | str = None
     version: datetime = None
-
-    @classmethod
-    def make_collection_item(
-        cls,
-        item,
-        *,
-        next_id: Callable[[], int | str] = lambda: None,
-        **defaults,
-    ) -> "Paper":
-        # Avoid errors coming from extra fields like '_id'
-        kwargs = {k: v for k, v in vars(item).items() if k in cls.__dataclass_fields__}
-        item = cls(**{**defaults, **kwargs})
-        item.id = next_id() if item.id is None else item.id
-        item.version = datetime.now() if item.version is None else item.version
-        return item
 
 
 @dataclass

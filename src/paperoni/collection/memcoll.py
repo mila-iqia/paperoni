@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime
 from typing import AsyncGenerator, Iterable
 
@@ -61,7 +61,7 @@ class MemCollection(PaperCollection):
                         p.version = datetime.now()
 
                     else:
-                        p = Paper.make_collection_item(p, next_id=self.next_id)
+                        p = replace(p, id=self.next_id(), version=datetime.now())
                         assert p.id not in self._finder.by_id
 
                     self._papers.append(p)
