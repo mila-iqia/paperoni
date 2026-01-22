@@ -22,7 +22,7 @@ class FileCollection(MemCollection):
 
         self.__dict__.update(vars(load(MemCollection, self.file)))
 
-    def _commit(self):
+    def _commit(self) -> None:
         dump(type(self), self, dest=self.file)
 
     @classmethod

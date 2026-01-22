@@ -10,7 +10,7 @@ from .formats import paper_from_crossref
 
 
 @register_fetch
-async def crossref_title(type: Literal["title"], link: str):
+async def crossref_title(typ: Literal["title"], link: str):
     """Fetch from Crossref by title search."""
 
     title = link
@@ -44,26 +44,18 @@ async def crossref_title(type: Literal["title"], link: str):
 
 
 @register_fetch
-async def openalex_title(type: Literal["title"], link: str):
+async def openalex_title(typ: Literal["title"], link: str):
     """Fetch from OpenAlex by title search."""
 
     title = link
 
     qm = OpenAlexQueryManager(mailto=config.mailto)
 
-    papers = [
-        p
-        async for p in qm.works(
-            filter=f"display_name.search:{title.strip().replace(',', '')}",
-            data_version="1",
-            limit=1,
-        )
-    ]
-
-    if not papers:
-        return None
-
-    paper = papers[0].paper
-    if paper.title != title:
-        return None
-    return paper
+    async for paper in qm.works(
+        filter=f"display_name.search:{title.strip().replace(',', '')}",
+        data_version="1",
+        limit=1,
+    ):
+        paper = paper.paper
+        if paper.title == title:
+            return paper

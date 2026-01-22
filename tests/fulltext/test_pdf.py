@@ -3,7 +3,6 @@ import pytest
 from paperoni.fulltext.pdf import CachePolicies, get_pdf
 
 
-@pytest.mark.asyncio
 async def test_get_pdf(file_regression):
     ref = "openreview:vieIamY2Gi"
 
@@ -14,7 +13,6 @@ async def test_get_pdf(file_regression):
     file_regression.check(p.meta_path.read_text())
 
 
-@pytest.mark.asyncio
 async def test_get_best_pdf():
     ref1 = "openreview:G7X1hsBLNl"
     ref2 = "arxiv:2506.10137"

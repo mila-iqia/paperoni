@@ -13,7 +13,6 @@ rors = {
 }
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize("name,ror_id", rors.items())
 async def test_ror(name, ror_id, data_regression):
     inst = await institution_from_ror(ror_id)

@@ -1,4 +1,3 @@
-import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.jmlr import JMLR
@@ -7,11 +6,12 @@ from paperoni.model import PaperInfo
 from ..utils import check_papers
 
 
-@pytest.mark.asyncio
 async def test_query(data_regression: DataRegressionFixture):
     discoverer = JMLR()
 
-    assert "v24" in (await discoverer.list_volumes())
+    assert "v24" in [v async for v in discoverer.list_volumes()], (
+        "Could not find volume v24"
+    )
 
     papers: list[PaperInfo] = sorted(
         [p async for p in discoverer.query(volume="v24", name="Yoshua Bengio")],

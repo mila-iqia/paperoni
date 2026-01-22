@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import gifnoc
-import pytest
 from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import CommentRec, deserialize, dump, serialize
 
@@ -192,7 +191,6 @@ def test_focuses_top():
     assert snd.value.paper.title == "Paper from Alice"
 
 
-@pytest.mark.asyncio
 async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
     with gifnoc.overlay(
         {

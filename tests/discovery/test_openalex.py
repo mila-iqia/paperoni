@@ -20,7 +20,6 @@ PAPERS = [
 ]
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "query_params",
     [
@@ -118,7 +117,6 @@ async def test_query(
     check_papers(data_regression, papers)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "query_params",
     [
@@ -139,7 +137,6 @@ async def test_query_error(query_params):
         await anext(discoverer.query(**query_params))
 
 
-@pytest.mark.asyncio
 async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
     discoverer = OpenAlex()
     results = [
@@ -170,7 +167,6 @@ async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureF
     )
 
 
-@pytest.mark.asyncio
 async def test_focuses_drive_discovery_false():
     """Test that focuses with drive_discovery=False are skipped."""
     discoverer = OpenAlex()
@@ -189,7 +185,6 @@ async def test_focuses_drive_discovery_false():
     assert len(results) == 0
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["query_params", "focused_params"],
     [
@@ -279,7 +274,6 @@ async def test_focuses(query_params, focused_params):
         assert result.score == 10.0
 
 
-@pytest.mark.asyncio
 async def test_focuses_multiple_focuses():
     """Test multiple focuses with different types."""
     discoverer = OpenAlex()

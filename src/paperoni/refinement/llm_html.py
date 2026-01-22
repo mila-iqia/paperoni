@@ -42,11 +42,11 @@ async def prompt(link: str, send_input, force: bool = False) -> Paper:
 
 
 @register_fetch(tags={"prompt", "html"})
-async def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
+async def html(typ: Literal["doi"], link: str, *, force: bool = False) -> Paper:
     paper = await prompt(
-        f"https://doi.org/{link}", send_input=f"{type}:{link}", force=force
+        f"https://doi.org/{link}", send_input=f"{typ}:{link}", force=force
     )
-    paper.links.append(Link(type=type, link=link))
+    paper.links.append(Link(type=typ, link=link))
     return paper.authors and paper or None
 
 

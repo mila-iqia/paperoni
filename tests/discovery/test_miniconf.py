@@ -10,7 +10,6 @@ from paperoni.model import PaperInfo
 from ..utils import check_papers, iter_affiliations
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["conference", "query_params"],
     itertools.product(
@@ -62,7 +61,6 @@ async def test_query(data_regression: DataRegressionFixture, conference, query_p
     check_papers(data_regression, papers)
 
 
-@pytest.mark.asyncio
 async def test_error_policy(capsys):
     discoverer = MiniConf()
 

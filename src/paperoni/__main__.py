@@ -393,11 +393,10 @@ class Work:
 
         async def run(self, work: "Work"):
             statuses = {}
-            it = itertools.islice(work.top, self.n) if self.n else work.top
-            sets = list(it)
+            it = list(itertools.islice(work.top, self.n)) if self.n else work.top
 
             for i in range(self.loops):
-                for sws in prog(sets, name=f"refine{i + 1 if i else ''}"):
+                for sws in prog(it, name=f"refine{i + 1 if i else ''}"):
                     statuses.update(
                         {
                             (name, key): "done"

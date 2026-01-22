@@ -24,7 +24,7 @@ from .formats import paper_from_crossref, paper_from_jats
 
 
 @register_fetch
-async def crossref(type: Literal["doi"], link: str):
+async def crossref(typ: Literal["doi"], link: str):
     """Fetch from CrossRef."""
 
     doi = link
@@ -50,7 +50,7 @@ async def crossref(type: Literal["doi"], link: str):
 
 
 @register_fetch
-async def datacite(type: Literal["doi", "arxiv"], link: str):
+async def datacite(typ: Literal["doi", "arxiv"], link: str):
     """
     Refine using DataCite.
 
@@ -59,7 +59,7 @@ async def datacite(type: Literal["doi", "arxiv"], link: str):
     API call reference: https://support.datacite.org/reference/get_dois-id
     DataCite metadata properties: https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/
     """
-    if type == "arxiv":
+    if typ == "arxiv":
         doi = f"10.48550/arXiv.{link}"
     else:
         doi = link
@@ -248,7 +248,7 @@ async def datacite(type: Literal["doi", "arxiv"], link: str):
 
 
 @register_fetch
-async def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
+async def biorxiv(typ: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
     async def _get(url):
         data = await config.fetch.read_retry(url, format="json")
         if (
@@ -276,7 +276,7 @@ async def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: 
 
 
 @register_fetch
-async def unpaywall(type: Literal["doi"], doi: str):
+async def unpaywall(typ: Literal["doi"], doi: str):
     try:
         data = await config.fetch.read_retry(
             f"https://api.unpaywall.org/v2/{doi}?email={config.mailto}",

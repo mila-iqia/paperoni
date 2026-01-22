@@ -107,7 +107,6 @@ links_w_redirect_errors = {
 }
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(["func", "link"], links)
 async def test_refine(func, link, data_regression):
     typ, link = link.split(":", 1)
@@ -125,7 +124,6 @@ async def test_refine(func, link, data_regression):
             raise
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["func", "link"],
     [

@@ -219,7 +219,7 @@ class MongoCollection(PaperCollection):
             else:
                 # Handle existing papers
                 existing_paper: MongoPaper = None
-                if isinstance(p, MongoMixin) and (
+                if isinstance(p, CollectionMixin) and (
                     existing_paper := await self._collection.find_one({"_id": p.id})
                 ):
                     existing_paper = deserialize(MongoPaper, existing_paper)
@@ -254,7 +254,7 @@ class MongoCollection(PaperCollection):
         if papers_links:
             try:
                 await self._exclusions.insert_many(
-                    [{"link": x} for x in papers_links], ordered=False
+                    ({"link": x} for x in papers_links), ordered=False
                 )
             except DuplicateKeyError:
                 # Some exclusions already exist, that's fine
@@ -265,14 +265,12 @@ class MongoCollection(PaperCollection):
         await self._ensure_connection()
 
         # First try to find by links
-        doc = None
         for link in paper.links:
             if doc := await self._collection.find_one(
                 {"links": {"$elemMatch": serialize(Link, link)}}
             ):
                 break
-
-        if doc is None:
+        else:
             # Then try to find by normalized title
             doc = await self._collection.find_one(
                 {
@@ -318,7 +316,7 @@ class MongoCollection(PaperCollection):
 
     async def search(
         self,
-        paper_id: int = None,
+        paper_id: ObjectId = None,
         title: str = None,
         institution: str = None,
         author: str = None,
@@ -399,7 +397,7 @@ class MongoCollection(PaperCollection):
         async for doc in self._collection.find(query):
             yield deserialize(MongoPaper, doc)
 
-    async def commit(self) -> None:
+    async def _commit(self) -> None:
         # Commits are done synchronously to collections operations
         pass
 

@@ -110,7 +110,7 @@ class Fetcher:
                     pass
 
         print(f"Downloading {url}")
-        async with await self.generic("GET", url, stream=True, **kwargs) as r:
+        async with await self.get(url, stream=True, **kwargs) as r:
             r.raise_for_status()
             total = int(r.headers.get("content-length") or 1024**2)
             sofar = 0
@@ -203,6 +203,42 @@ class HTTPXFetcher(Fetcher):
 
 
 @dataclass
+class RequestsFetcher(Fetcher):
+    user_agent: str = None
+    timeout: int = 60
+
+    def __post_init__(self):
+        if self.user_agent is not None:
+            try:
+                self.user_agent = getattr(ua, self.user_agent)
+            except AttributeError:
+                pass
+
+    @cached_property
+    def session(self):
+        return Session()
+
+    async def generic(self, method, url, stream=False, **kwargs):
+        # Requests is sync-only, so we just call the sync version
+        kwargs.setdefault("timeout", self.timeout)
+        if self.user_agent:
+            headers = kwargs.setdefault("headers", {})
+            headers["UserAgent"] = headers["User-Agent"] = self.user_agent
+        if stream:
+            return self._astream_context(method, url, **kwargs)
+        return getattr(self.session, method)(url, **kwargs)
+
+    @asynccontextmanager
+    async def _astream_context(self, method, url, **kwargs):
+        kwargs["stream"] = True
+        response = getattr(self.session, method.lower())(url, **kwargs)
+        try:
+            yield response
+        finally:
+            response.close()
+
+
+@dataclass
 class CachedFetcher(HTTPXFetcher):
     cache_path: Path = None
     expire_after: timedelta = None
@@ -247,42 +283,6 @@ class CachedFetcher(HTTPXFetcher):
 class BannedFetcher(Fetcher):
     async def generic(self, method, url, **kwargs):
         raise Exception(f"Will not try to fetch {url}")
-
-
-@dataclass
-class RequestsFetcher(Fetcher):
-    user_agent: str = None
-    timeout: int = 60
-
-    def __post_init__(self):
-        if self.user_agent is not None:
-            try:
-                self.user_agent = getattr(ua, self.user_agent)
-            except AttributeError:
-                pass
-
-    @cached_property
-    def session(self):
-        return Session()
-
-    async def generic(self, method, url, stream=False, **kwargs):
-        # Requests is sync-only, so we just call the sync version
-        kwargs.setdefault("timeout", self.timeout)
-        if self.user_agent:
-            headers = kwargs.setdefault("headers", {})
-            headers["UserAgent"] = headers["User-Agent"] = self.user_agent
-        if stream:
-            return self._astream_context(method, url, **kwargs)
-        return getattr(self.session, method)(url, **kwargs)
-
-    @asynccontextmanager
-    async def _astream_context(self, method, url, **kwargs):
-        kwargs["stream"] = True
-        response = getattr(self.session, method.lower())(url, **kwargs)
-        try:
-            yield response
-        finally:
-            response.close()
 
 
 @dataclass

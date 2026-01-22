@@ -9,7 +9,6 @@ from paperoni.model.focus import Focus, Focuses
 from ..utils import check_papers, iter_links_ids, iter_releases
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "query_params",
     [
@@ -131,7 +130,6 @@ async def test_query(
     check_papers(data_regression, papers)
 
 
-@pytest.mark.asyncio
 async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
     discoverer = OpenReviewDispatch()
     results = [
@@ -160,7 +158,6 @@ async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureF
     )
 
 
-@pytest.mark.asyncio
 async def test_focuses_drive_discovery_false():
     """Test that focuses with drive_discovery=False are skipped."""
     discoverer = OpenReviewDispatch()
@@ -176,7 +173,6 @@ async def test_focuses_drive_discovery_false():
     assert len(results) == 0
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ["query_params", "focused_params"],
     [

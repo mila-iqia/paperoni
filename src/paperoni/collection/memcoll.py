@@ -38,6 +38,9 @@ class MemCollection(PaperCollection):
         self._last_id += 1
         return self._last_id
 
+    async def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
+        return self._add_papers(papers)
+
     def _add_papers(self, papers: Iterable[CollectionPaper]) -> int:
         added = 0
 
@@ -74,9 +77,6 @@ class MemCollection(PaperCollection):
 
         return added
 
-    async def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
-        return self._add_papers(papers)
-
     async def exclude_papers(self, papers: Iterable[Paper]) -> None:
         for paper in papers:
             for link in getattr(paper, "links", []):
@@ -105,12 +105,12 @@ class MemCollection(PaperCollection):
 
         raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
+    async def commit(self) -> None:
+        self._commit()
+
     def _commit(self) -> None:
         # MemCollection, nothing to commit
         pass
-
-    async def commit(self) -> None:
-        self._commit()
 
     async def drop(self) -> None:
         self._last_id = -1

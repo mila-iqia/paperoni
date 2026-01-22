@@ -1,4 +1,3 @@
-import asyncio
 import copy
 from contextlib import contextmanager
 from functools import partial
@@ -60,7 +59,7 @@ async def _get_sample_papers():
 
     volumes: list[str] = []
     for volume in sorted(
-        await discoverer.list_volumes(), key=lambda x: int(x.lstrip("v"))
+        [v async for v in discoverer.list_volumes()], key=lambda x: int(x.lstrip("v"))
     ):
         if volume == "v25":
             break
@@ -75,8 +74,8 @@ async def _get_sample_papers():
 
 
 @pytest.fixture(scope="session")
-def sample_papers() -> Generator[list[Paper], None, None]:
-    papers = asyncio.run(_get_sample_papers())
+async def sample_papers() -> Generator[list[Paper], None, None]:
+    papers = await _get_sample_papers()
 
     papers: list[Paper] = sorted((p.paper for p in papers), key=lambda x: x.title)[:10]
     assert len(papers) == 10
@@ -182,13 +181,13 @@ async def make_collection(t: type[RemoteCollection], tmp_path: Path):
 
 
 @pytest.fixture(params=[MemCollection, FileCollection, MongoCollection])
-def collection(request, tmp_path: Path):
-    yield lambda: make_collection(request.param, tmp_path)
+async def collection(request, tmp_path: Path):
+    yield await make_collection(request.param, tmp_path)
 
 
 @pytest.fixture(params=[MemCollection, FileCollection, MongoCollection, RemoteCollection])
-def collection_r(request, tmp_path: Path, app_coll):
-    yield lambda: make_collection(request.param, tmp_path)
+async def collection_r(request, tmp_path: Path, app_coll):
+    yield await make_collection(request.param, tmp_path)
 
 
 def check_papers(
@@ -212,19 +211,15 @@ def check_papers(
     data_regression.check(papers, basename=basename)
 
 
-@pytest.mark.asyncio
-async def test_add_papers(collection, sample_papers: list[Paper]):
+async def test_add_papers(collection: PaperCollection, sample_papers: list[Paper]):
     """Test adding multiple papers."""
-    collection: PaperCollection = await collection()
     await collection.add_papers(sample_papers)
 
     assert eq([p async for p in collection.search()], sample_papers)
 
 
-@pytest.mark.asyncio
-async def test_drop_collection(collection, sample_papers: list[Paper]):
+async def test_drop_collection(collection: PaperCollection, sample_papers: list[Paper]):
     """Test dropping a collection."""
-    collection: PaperCollection = await collection()
     await collection.add_papers(sample_papers)
 
     await collection.drop()
@@ -232,14 +227,12 @@ async def test_drop_collection(collection, sample_papers: list[Paper]):
     assert not [p async for p in collection.search()]
 
 
-@pytest.mark.asyncio
 async def test_exclude_papers_multiple(
-    collection,
+    collection: PaperCollection,
     sample_papers: list[Paper],
     excluded_papers: list[Paper],
 ):
     """Test excluding multiple papers."""
-    collection: PaperCollection = await collection()
     await collection.exclude_papers(excluded_papers)
 
     await collection.add_papers(sample_papers)
@@ -248,10 +241,8 @@ async def test_exclude_papers_multiple(
         assert not [p async for p in collection.search(title=excluded_paper.title)]
 
 
-@pytest.mark.asyncio
-async def test_exclude_papers_unknown_link_type(collection):
+async def test_exclude_papers_unknown_link_type(collection: PaperCollection):
     """Test excluding papers with unknown link types."""
-    collection: PaperCollection = await collection()
     paper = Paper(
         title="Unknown Links",
         links=[
@@ -265,12 +256,10 @@ async def test_exclude_papers_unknown_link_type(collection):
     assert eq([p async for p in collection.search()], [paper])
 
 
-@pytest.mark.asyncio
 async def test_find_paper_by_link(
-    collection, sample_papers: list[Paper], sample_paper: Paper
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test finding a paper by its link."""
-    collection: PaperCollection = await collection()
     await collection.add_papers(sample_papers)
 
     # Create a paper with a matching link
@@ -280,12 +269,10 @@ async def test_find_paper_by_link(
     assert eq(found, sample_paper)
 
 
-@pytest.mark.asyncio
 async def test_find_paper_by_title(
-    collection, sample_papers: list[Paper], sample_paper: Paper
+    collection: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test finding a paper by its title."""
-    collection: PaperCollection = await collection()
     await collection.add_papers(sample_papers)
 
     # Create a paper with a matching title but no matching links
@@ -295,10 +282,10 @@ async def test_find_paper_by_title(
     assert eq(found, sample_paper)
 
 
-@pytest.mark.asyncio
-async def test_find_paper_not_found(collection, sample_papers: list[Paper]):
+async def test_find_paper_not_found(
+    collection: PaperCollection, sample_papers: list[Paper]
+):
     """Test finding a paper that doesn't exist."""
-    collection: PaperCollection = await collection()
     await collection.add_papers(sample_papers)
 
     # Create a paper with no matching links or title
@@ -311,11 +298,10 @@ async def test_find_paper_not_found(collection, sample_papers: list[Paper]):
     assert found is None
 
 
-@pytest.mark.asyncio
-async def test_find_paper_prioritizes_links_over_title(collection, sample_paper: Paper):
+async def test_find_paper_prioritizes_links_over_title(
+    collection: PaperCollection, sample_paper: Paper
+):
     """Test that find_paper prioritizes link matches over title matches."""
-    collection: PaperCollection = await collection()
-
     # Add a paper with a specific title
     paper1 = Paper(title=sample_paper.title, links=sample_paper.links)
     await collection.add_papers([paper1])
@@ -332,23 +318,22 @@ async def test_find_paper_prioritizes_links_over_title(collection, sample_paper:
     assert eq(found, paper1)
 
 
-@pytest.mark.asyncio
 async def test_search_by_title(
-    collection_r, sample_papers: list[Paper], sample_paper: Paper
+    collection_r: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test searching by title."""
-    collection: PaperCollection = await collection_r()
+    collection = collection_r
     await collection.add_papers(sample_papers)
 
     results = [p async for p in collection.search(title=sample_paper.title)]
     assert any(eq(p, sample_paper) for p in results)
 
 
-@pytest.mark.asyncio
-async def test_search_by_author(collection_r, sample_papers: list[Paper]):
+async def test_search_by_author(
+    collection_r: PaperCollection, sample_papers: list[Paper]
+):
     """Test searching by author."""
-    collection: PaperCollection = await collection_r()
-
+    collection = collection_r
     await collection.add_papers(sample_papers)
 
     results = sorted(
@@ -376,9 +361,10 @@ async def test_search_by_author(collection_r, sample_papers: list[Paper]):
     assert len(results) == 1
 
 
-@pytest.mark.asyncio
-async def test_search_by_institution(collection_r, sample_papers: list[Paper]):
-    collection: PaperCollection = await collection_r()
+async def test_search_by_institution(
+    collection_r: PaperCollection, sample_papers: list[Paper]
+):
+    collection = collection_r
 
     """Test searching by institution."""
     await collection.add_papers(sample_papers)
@@ -393,12 +379,11 @@ async def test_search_by_institution(collection_r, sample_papers: list[Paper]):
         )
 
 
-@pytest.mark.asyncio
 async def test_search_multiple_criteria(
-    collection_r, sample_papers: list[Paper], sample_paper: Paper
+    collection_r: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test searching with multiple criteria."""
-    collection: PaperCollection = await collection_r()
+    collection = collection_r
 
     await collection.add_papers(sample_papers)
 
@@ -421,12 +406,11 @@ async def test_search_multiple_criteria(
     assert eq(results, [p async for p in collection.search(author="Pascal Vincent")])
 
 
-@pytest.mark.asyncio
 async def test_search_case_insensitive(
-    collection_r, sample_papers: list[Paper], sample_paper: Paper
+    collection_r: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test that search is case insensitive."""
-    collection: PaperCollection = await collection_r()
+    collection = collection_r
 
     await collection.add_papers(sample_papers)
 
@@ -453,10 +437,11 @@ async def test_search_case_insensitive(
     )
 
 
-@pytest.mark.asyncio
-async def test_search_no_criteria(collection_r, sample_papers: list[Paper]):
+async def test_search_no_criteria(
+    collection_r: PaperCollection, sample_papers: list[Paper]
+):
     """Test searching with no criteria returns all papers."""
-    collection: PaperCollection = await collection_r()
+    collection = collection_r
 
     await collection.add_papers(sample_papers)
 
@@ -464,12 +449,11 @@ async def test_search_no_criteria(collection_r, sample_papers: list[Paper]):
     assert eq(results, sample_papers)
 
 
-@pytest.mark.asyncio
 async def test_search_partial_matches(
-    collection_r, sample_papers: list[Paper], sample_paper: Paper
+    collection_r: PaperCollection, sample_papers: list[Paper], sample_paper: Paper
 ):
     """Test that search finds partial matches."""
-    collection: PaperCollection = await collection_r()
+    collection = collection_r
 
     await collection.add_papers(sample_papers)
 
@@ -495,10 +479,9 @@ async def test_search_partial_matches(
     assert len(results) == 4
 
 
-@pytest.mark.asyncio
 async def test_search_by_flags(collection_r: PaperCollection, sample_papers: list[Paper]):
     """Test searching by flag inclusion and exclusion."""
-    collection: PaperCollection = await collection_r()
+    collection = collection_r
 
     await collection.add_papers(sample_papers)
 
@@ -552,7 +535,6 @@ async def test_search_by_flags(collection_r: PaperCollection, sample_papers: lis
     assert len(results) == 10
 
 
-@pytest.mark.asyncio
 async def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list[Paper]):
     collection = FileCollection(file=tmp_path / "collection.json")
 
@@ -567,16 +549,13 @@ async def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list
 
 
 @pytest.mark.parametrize("paper_cls", [CollectionPaper, MongoPaper])
-@pytest.mark.asyncio
 async def test_make_collection_item(
-    collection,
+    collection: PaperCollection,
     data_regression: DataRegressionFixture,
     sample_papers: list[Paper],
     paper_cls: type[CollectionPaper],
 ):
-    """Test making a collection."""
-    collection: PaperCollection = await collection()
-
+    """Test making a collection paper."""
     await collection.add_papers(sample_papers)
 
     papers = [p async for p in collection.search()]

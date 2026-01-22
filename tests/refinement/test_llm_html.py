@@ -1,4 +1,3 @@
-import asyncio
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,7 +13,7 @@ from tests.utils import check_papers
 
 
 @pytest.fixture(scope="module")
-def paper_info():
+async def paper_info():
     # Prepared with:
     # paperoni refine --link "doi:10.1038/s41597-023-02214-y" --tags html --norm
     with (
@@ -24,37 +23,33 @@ def paper_info():
             lambda *args, **kwargs: "DUMMY_KEY",
         ),
     ):
-
-        async def get():
-            assert (
-                next(
-                    filter(
-                        lambda pinfo: "html" in pinfo.info["refined_by"],
-                        [
-                            p
-                            async for p in fetch_all(
-                                [("doi", "10.1038/s41597-023-02214-y")], tags={}
-                            )
-                        ],
-                    ),
-                    None,
-                )
-                is None
-            )
-
-            return next(
+        assert (
+            next(
                 filter(
                     lambda pinfo: "html" in pinfo.info["refined_by"],
                     [
                         p
                         async for p in fetch_all(
-                            [("doi", "10.1038/s41597-023-02214-y")], tags={"html"}
+                            [("doi", "10.1038/s41597-023-02214-y")], tags={}
                         )
                     ],
-                )
+                ),
+                None,
             )
+            is None
+        )
 
-        yield asyncio.run(get())
+        yield next(
+            filter(
+                lambda pinfo: "html" in pinfo.info["refined_by"],
+                [
+                    p
+                    async for p in fetch_all(
+                        [("doi", "10.1038/s41597-023-02214-y")], tags={"html"}
+                    )
+                ],
+            )
+        )
 
 
 def test_html(data_regression: DataRegressionFixture, paper_info: PaperInfo):

@@ -260,7 +260,7 @@ class OpenReview(Discoverer):
         else:
             return VenueType.unknown
 
-    def _query(self, params, total=0, limit=1000000):
+    async def _query(self, params, total=0, limit=1000000):
         next_offset = 0
         while total < limit:
             params["offset"] = next_offset
@@ -362,7 +362,9 @@ class OpenReview(Discoverer):
                 break
             total += next_offset
 
-    def _query_papers_from_venues(self, params, venues=None, total=0, limit=1000000):
+    async def _query_papers_from_venues(
+        self, params, venues=None, total=0, limit=1000000
+    ):
         if not venues:  # pragma: no cover
             venues = self.client.get_group(id="venues").members
 
@@ -374,7 +376,7 @@ class OpenReview(Discoverer):
                     "content": {**params["content"], "venueid": v},
                 }
 
-            for paper in self._query(params, total, limit):
+            async for paper in self._query(params, total, limit):
                 total += 1
                 yield paper
 
@@ -532,7 +534,7 @@ class OpenReview(Discoverer):
                 "content": {**params["content"], "title": title},
             }
 
-        for paper in self._query_papers_from_venues(params, venue, 0, limit):
+        async for paper in self._query_papers_from_venues(params, venue, 0, limit):
             yield paper
 
 

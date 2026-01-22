@@ -302,8 +302,11 @@ def install_api(app) -> FastAPI:
     async def search_papers(request: SearchRequest = Depends(parse_search_request)):
         """Search for papers in the collection."""
         coll = Coll(command=None)
+
+        # Perform search using the collection's search method
         all_matches = await request.run(coll)
         results = list(request.slice(all_matches))
+
         return SearchResponse(
             results=results,
             count=request.count,

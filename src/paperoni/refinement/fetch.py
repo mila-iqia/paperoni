@@ -8,7 +8,7 @@ from ..utils import soft_fail
 
 
 @ovld
-async def fetch(type: str, link: str):
+async def fetch(typ: str, link: str):
     return None
 
 
@@ -85,6 +85,7 @@ async def fetch_all(links, group="composite", statuses=None, tags=None, force=Fa
         for f in fs:
             if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
                 continue
+
             name = getattr(f.func, "description", "???")
             nk = f"{name}/{key}"
             if nk in statuses:

@@ -28,7 +28,7 @@ def _author_links(author_span):
 
 
 @register_fetch
-async def dblp(type: Literal["dblp"], link: str):
+async def dblp(typ: Literal["dblp"], link: str):
     data = await config.fetch.read_retry(
         f"https://dblp.uni-trier.de/rec/{link}.xml", format="xml"
     )
@@ -63,7 +63,7 @@ async def dblp(type: Literal["dblp"], link: str):
             )
             for author in data.select("author")
         ],
-        links=[Link(type=type, link=link), *extra_links],
+        links=[Link(type=typ, link=link), *extra_links],
         releases=[
             Release(
                 venue=Venue(

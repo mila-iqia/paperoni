@@ -16,7 +16,6 @@ def touch_cache():
         _f.touch()
 
 
-@pytest.mark.asyncio
 async def test_query(data_regression: DataRegressionFixture):
     discoverer = Scrape()
 

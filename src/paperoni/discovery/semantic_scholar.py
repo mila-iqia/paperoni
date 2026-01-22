@@ -134,7 +134,7 @@ AUTHOR_PAPERS_FIELDS = (
 class SemanticScholar(Discoverer):
     api_key: str = field(default_factory=lambda: config.api_keys.semantic_scholar)
 
-    async def _evaluate(self, path: str, **params):
+    async def _evaluate(self, path: str, **params) -> dict:
         jdata = await config.fetch.read_retry(
             f"https://api.semanticscholar.org/graph/v1/{path}",
             params=params,

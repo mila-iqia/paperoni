@@ -2,7 +2,6 @@ from datetime import datetime
 from pathlib import Path
 from time import sleep
 
-import pytest
 from serieux import CommentRec, dump, load
 
 from paperoni.__main__ import Work
@@ -32,7 +31,6 @@ async def work(command, **kwargs):
     return load(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
 
 
-@pytest.mark.asyncio
 async def test_work_get_does_not_duplicate(tmp_path: Path):
     state = await work(
         Work.Get(command=SemanticScholar().query),
@@ -64,7 +62,6 @@ async def test_work_get_does_not_duplicate(tmp_path: Path):
         await mem_col.add_papers([paper])
 
 
-@pytest.mark.asyncio
 async def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
     await work(
         Work.Get(command=SemanticScholar().query),
@@ -87,7 +84,6 @@ async def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
         assert await col.find_paper(paper) is None
 
 
-@pytest.mark.asyncio
 async def test_work_updates_collection_papers(tmp_path: Path):
     state = await work(
         Work.Get(command=SemanticScholar().query),
