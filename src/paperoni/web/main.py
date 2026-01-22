@@ -11,6 +11,7 @@ from starlette.exceptions import HTTPException
 import paperoni
 
 from ..config import config
+from .capabilities import install_capabilities
 from .edit import install_edit
 from .pages import install_pages
 from .reports import install_reports
@@ -53,4 +54,5 @@ def create_app():
     install_search(app)
     install_edit(app)
     install_pages(app)
+    install_capabilities(app)
     return app

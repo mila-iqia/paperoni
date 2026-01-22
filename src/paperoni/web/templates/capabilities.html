@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+
+{% block title %}Manage Capabilities{% endblock %}
+
+{% block page_title %}Manage Capabilities{% endblock %}
+
+{% block content %}
+<div class="edit-container">
+    <div id="loadingMessage" class="loading">Loading capabilities...</div>
+    <div id="errorMessage" class="error-message" style="display: none;"></div>
+    <div id="capabilitiesContent" style="display: none;">
+        <form id="capabilitiesForm" class="edit-form">
+            <div class="form-section">
+                <div class="section-header">
+                    <h2>Capabilities</h2>
+                </div>
+                
+                <div class="array-field">
+                    <table class="capabilities-table edit-table">
+                        <thead>
+                            <tr>
+                                <th>Users</th>
+                                <th>Capabilities</th>
+                            </tr>
+                        </thead>
+                        <tbody id="capabilitiesTableBody"></tbody>
+                    </table>
+                    <button type="button" id="addUserBtn" class="btn-add input-container">+</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { manageCapabilities } from '/assets/capabilities.js';
+    const oauthPrefix = {{ oauth_prefix|tojson }};
+    manageCapabilities(oauthPrefix);
+</script>
+{% endblock %}
