@@ -84,7 +84,10 @@ links = [
     (pubmed, "pmc:10684502"),
     # OpenAlex, by title
     (openalex_title, "title:Attention Is All You Need"),
-    (openalex_title, "title:GraphMix: Improved Training of GNNs for Semi-Supervised Learning"),
+    (
+        openalex_title,
+        "title:GraphMix: Improved Training of GNNs for Semi-Supervised Learning",
+    ),
     # TODO: why do they not have this paper?
     # (
     #     openalex_title,

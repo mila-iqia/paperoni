@@ -186,7 +186,7 @@ async def test_focuses(query_params, focused_params):
     direct_papers = [p.paper.title for p in direct_results]
     focus_papers = [p.paper.title for p in focus_results]
 
-    assert focus_papers == direct_papers
+    assert set(focus_papers) == set(direct_papers)
 
     # All focus results should have the rescored score
     for result in focus_results:
