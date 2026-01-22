@@ -397,7 +397,7 @@ class MongoCollection(PaperCollection):
         async for doc in self._collection.find(query):
             yield deserialize(MongoPaper, doc)
 
-    async def _commit(self) -> None:
+    async def commit(self) -> None:
         # Commits are done synchronously to collections operations
         pass
 
