@@ -16,13 +16,16 @@ from ..utils import check_papers, iter_affiliations
         conference_urls, [{"affiliation": "mila"}, {"author": "Yoshua Bengio"}]
     ),
 )
-def test_query(data_regression: DataRegressionFixture, conference, query_params):
+async def test_query(data_regression: DataRegressionFixture, conference, query_params):
     discoverer = MiniConf()
 
     papers: list[PaperInfo] = sorted(
-        discoverer.query(
-            conference, year=2024, **query_params, error_policy=ErrorPolicy.RAISE
-        ),
+        [
+            p
+            async for p in discoverer.query(
+                conference, year=2024, **query_params, error_policy=ErrorPolicy.RAISE
+            )
+        ],
         key=lambda x: x.paper.title,
     )
 
@@ -58,15 +61,20 @@ def test_query(data_regression: DataRegressionFixture, conference, query_params)
     check_papers(data_regression, papers)
 
 
-def test_error_policy(capsys):
+async def test_error_policy(capsys):
     discoverer = MiniConf()
 
     # patch MiniConf.convert_paper to raise an exception
     with patch.object(MiniConf, "convert_paper", side_effect=Exception):
         with pytest.raises(Exception):
-            next(discoverer.query("neurips", year=2024, error_policy=ErrorPolicy.RAISE))
+            await anext(
+                discoverer.query("neurips", year=2024, error_policy=ErrorPolicy.RAISE)
+            )
 
-        next(discoverer.query("neurips", year=2024, error_policy=ErrorPolicy.LOG), None)
+        await anext(
+            discoverer.query("neurips", year=2024, error_policy=ErrorPolicy.LOG),
+            None,
+        )
 
         out, _ = capsys.readouterr()
         assert "Error converting paper " in out

@@ -25,23 +25,22 @@ class RemoteCollection(PaperCollection):
         if self.token is not None:
             self.headers["Authorization"] = f"Bearer {self.token}"
 
-    @property
-    def exclusions(self) -> set[str]:
+    async def exclusions(self) -> set[str]:
         raise NotImplementedError()
 
-    def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
+    async def add_papers(self, papers: Iterable[CollectionPaper]) -> int:
         raise NotImplementedError()
 
-    def exclude_papers(self, papers: Iterable[Paper]) -> None:
+    async def exclude_papers(self, papers: Iterable[Paper]) -> None:
         raise NotImplementedError()
 
-    def find_paper(self, paper: Paper) -> CollectionPaper | None:
+    async def find_paper(self, paper: Paper) -> CollectionPaper | None:
         raise NotImplementedError()
 
-    def find_by_id(self, paper_id: int) -> CollectionPaper | None:
+    async def find_by_id(self, paper_id: int) -> CollectionPaper | None:
         url = f"{self.endpoint}/paper/{paper_id}"
         try:
-            resp = self.fetch.read(
+            resp = await self.fetch.read(
                 url,
                 format="json",
                 cache_into=None,
@@ -53,16 +52,16 @@ class RemoteCollection(PaperCollection):
                 return None
             raise
 
-    def edit_paper(self, paper: CollectionPaper) -> None:
+    async def edit_paper(self, paper: CollectionPaper) -> None:
         raise NotImplementedError()
 
-    def commit(self) -> None:
+    async def commit(self) -> None:
         raise NotImplementedError()
 
-    def drop(self) -> None:
+    async def drop(self) -> None:
         raise NotImplementedError()
 
-    def search(
+    async def search(
         self,
         # Paper ID
         paper_id: int = None,
@@ -107,7 +106,7 @@ class RemoteCollection(PaperCollection):
         while True:
             query_params = params.copy()
             query_params["offset"] = offset
-            resp = self.fetch.read(
+            resp = await self.fetch.read(
                 url,
                 format="json",
                 cache_into=None,

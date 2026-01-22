@@ -6,13 +6,15 @@ from paperoni.model import PaperInfo
 from ..utils import check_papers
 
 
-def test_query(data_regression: DataRegressionFixture):
+async def test_query(data_regression: DataRegressionFixture):
     discoverer = PMLR()
 
-    assert "v180" in discoverer.list_volumes(), "Could not find volume v180"
+    assert "v180" in [v async for v in discoverer.list_volumes()], (
+        "Could not find volume v180"
+    )
 
     papers: list[PaperInfo] = sorted(
-        discoverer.query(volume="v180", name="Yoshua Bengio"),
+        [p async for p in discoverer.query(volume="v180", name="Yoshua Bengio")],
         key=lambda x: x.paper.title,
     )
 

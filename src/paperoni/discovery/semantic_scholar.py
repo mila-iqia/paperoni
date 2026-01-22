@@ -15,7 +15,6 @@ from ..model import (
     Topic,
     Venue,
     VenueType,
-    rescore,
 )
 from ..model.focus import Focus, Focuses
 from ..model.merge import qual
@@ -135,8 +134,8 @@ AUTHOR_PAPERS_FIELDS = (
 class SemanticScholar(Discoverer):
     api_key: str = field(default_factory=lambda: config.api_keys.semantic_scholar)
 
-    def _evaluate(self, path: str, **params):
-        jdata = config.fetch.read_retry(
+    async def _evaluate(self, path: str, **params) -> dict:
+        jdata = await config.fetch.read_retry(
             f"https://api.semanticscholar.org/graph/v1/{path}",
             params=params,
             headers={"x-api-key": self.api_key and str(self.api_key)},
@@ -146,7 +145,7 @@ class SemanticScholar(Discoverer):
             raise QueryError(jdata["error"] if jdata else "Received bad JSON")
         return jdata
 
-    def _list(
+    async def _list(
         self,
         path: str,
         fields: tuple[str],
@@ -161,7 +160,7 @@ class SemanticScholar(Discoverer):
         }
         next_offset = 0
         while next_offset is not None and next_offset < limit:
-            results = self._evaluate(path, offset=next_offset, **params)
+            results = await self._evaluate(path, offset=next_offset, **params)
             next_offset = results.get("next", None)
             if "data" not in results:
                 print("Could not get data:", results["message"])
@@ -255,54 +254,68 @@ class SemanticScholar(Discoverer):
             info={"discovered_by": {"semantic_scholar": data["paperId"]}},
         )
 
-    def search(self, query, fields=SEARCH_FIELDS, **params):
+    async def search(self, query, fields=SEARCH_FIELDS, **params):
         papers = self._list(
             "paper/search",
             query=query,
             fields=fields,
             **params,
         )
-        yield from map(self._wrap_paper, papers)
+        async for paper in papers:
+            yield self._wrap_paper(paper)
 
-    def paper(self, paper_id, fields=PAPER_FIELDS):
+    async def paper(self, paper_id, fields=PAPER_FIELDS):
         return self._wrap_paper(
-            self._evaluate(f"paper/{paper_id}", fields=",".join(fields))
+            await self._evaluate(f"paper/{paper_id}", fields=",".join(fields))
         )
 
-    def paper_authors(self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params):
-        yield from self._list(f"paper/{paper_id}/authors", fields=fields, **params)
+    async def paper_authors(self, paper_id, fields=PAPER_AUTHORS_FIELDS, **params):
+        async for author in self._list(
+            f"paper/{paper_id}/authors", fields=fields, **params
+        ):
+            yield author
 
-    def paper_citations(self, paper_id, fields=PAPER_CITATIONS_FIELDS, **params):
-        yield from self._list(f"paper/{paper_id}/citations", fields=fields, **params)
+    async def paper_citations(self, paper_id, fields=PAPER_CITATIONS_FIELDS, **params):
+        async for citation in self._list(
+            f"paper/{paper_id}/citations", fields=fields, **params
+        ):
+            yield citation
 
-    def paper_references(self, paper_id, fields=PAPER_REFERENCES_FIELDS, **params):
-        yield from self._list(f"paper/{paper_id}/citations", fields=fields, **params)
+    async def paper_references(self, paper_id, fields=PAPER_REFERENCES_FIELDS, **params):
+        async for ref in self._list(
+            f"paper/{paper_id}/citations", fields=fields, **params
+        ):
+            yield ref
 
-    def author(self, name=None, author_id=None, fields=AUTHOR_FIELDS, **params):
+    async def author(self, name=None, author_id=None, fields=AUTHOR_FIELDS, **params):
         wrap_author = partial(self._wrap_author)
         if name:
             name = name.replace("-", " ")
             authors = self._list("author/search", query=name, fields=fields, **params)
-            yield from map(wrap_author, authors)
+            async for author in authors:
+                yield wrap_author(author)
         else:
             yield wrap_author(
-                self._evaluate(f"author/{author_id}", fields=",".join(fields), **params)
+                await self._evaluate(
+                    f"author/{author_id}", fields=",".join(fields), **params
+                )
             )
 
-    def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
+    async def author_with_papers(self, name, fields=AUTHOR_FIELDS, **params):
         name = name.replace("-", " ")
         authors = self._list("author/search", query=name, fields=fields, **params)
-        for author in authors:
+        async for author in authors:
             yield (
                 self._wrap_author(author),
                 [self._wrap_paper(p) for p in author["papers"]],
             )
 
-    def author_papers(self, author_id, fields=AUTHOR_PAPERS_FIELDS, **params):
+    async def author_papers(self, author_id, fields=AUTHOR_PAPERS_FIELDS, **params):
         papers = self._list(f"author/{author_id}/papers", fields=fields, **params)
-        yield from map(self._wrap_paper, papers)
+        async for paper in papers:
+            yield self._wrap_paper(paper)
 
-    def query(
+    async def query(
         self,
         # Author of the article
         author: str = None,
@@ -329,12 +342,11 @@ class SemanticScholar(Discoverer):
                         case Focus(drive_discovery=False):
                             continue
                         case Focus(type="author", name=name, score=score):
-                            yield from rescore(
-                                self.query(
-                                    author=name, title=title, block_size=block_size
-                                ),
-                                score,
-                            )
+                            async for paper in self.query(
+                                author=name, title=title, block_size=block_size
+                            ):
+                                paper.score = score
+                                yield paper
             return
 
         if isinstance(author, list):
@@ -346,10 +358,12 @@ class SemanticScholar(Discoverer):
             raise QueryError("Cannot query both author and title")
 
         if title:
-            yield from self.search(title, block_size=block_size, limit=limit)
+            async for paper in self.search(title, block_size=block_size, limit=limit):
+                yield paper
 
         elif author:
-            for _, papers in self.author_with_papers(
+            async for _, papers in self.author_with_papers(
                 author, block_size=block_size, limit=limit
             ):
-                yield from papers
+                for paper in papers:
+                    yield paper

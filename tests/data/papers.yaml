@@ -1,0 +1,275 @@
+_last_id: 9
+_papers:
+  - id: 0
+    version: 2026-01-19T00:00:00
+    title: "Automated Ripeness Detection in Strawberries Using Computer Vision"
+    abstract: "We present a novel computer vision system for automated strawberry ripeness classification, achieving 94% accuracy across five ripeness stages."
+    authors:
+      - display_name: "Anna Banana"
+        author:
+          name: "Anna Banana"
+        affiliations:
+          - name: "Fruit Research Institute"
+            category: academia
+      - display_name: "Kevin Juicy"
+        author:
+          name: "Kevin Juicy"
+        affiliations:
+          - name: "Fruit Research Institute"
+            category: academia
+      - display_name: "James Rodriguez"
+        author:
+          name: "James Rodriguez"
+        affiliations:
+          - name: "Berry Analytics Corp"
+            category: industry
+    releases:
+      - venue:
+          type: journal
+          name: "Journal of Agricultural Testing"
+          series: "JAT"
+          date: 2024-03-15
+          date_precision: 3
+        status: published
+
+  - id: 1
+    version: 2026-01-19T00:00:00
+    title: "Non-Destructive Sugar Content Estimation in Apples via Near-Infrared Spectroscopy"
+    abstract: "This study validates near-infrared spectroscopy as a reliable method for estimating Brix levels in apples without damaging the fruit samples."
+    authors:
+      - display_name: "Kenji Tanaka"
+        author:
+          name: "Kenji Tanaka"
+        affiliations:
+          - name: "Tokyo Agricultural University"
+            category: academia
+    releases:
+      - venue:
+          type: conference
+          name: "International Fruit Quality Conference"
+          series: "IFQC"
+          date: 2023-09-20
+          date_precision: 3
+        status: published
+
+  - id: 2
+    version: 2026-01-19T00:00:00
+    title: "Firmness Testing Protocols for Mango Export Quality Assessment"
+    abstract: "We establish standardized firmness testing protocols for mangoes destined for international markets, reducing rejection rates by 23%."
+    authors:
+      - display_name: "Milo Meloni"
+        author:
+          name: "Milo Meloni"
+        affiliations:
+          - name: "Huge University"
+            category: academia
+      - display_name: "Anna Banana"
+        author:
+          name: "Anna Banana"
+        affiliations:
+          - name: "Fruit Research Institute"
+            category: academia
+      - display_name: "Robert Williams"
+        author:
+          name: "Robert Williams"
+        affiliations:
+          - name: "Global Fruit Standards Organization"
+            category: industry
+    releases:
+      - venue:
+          type: journal
+          name: "Postharvest Biology and Technology"
+          series: "PBT"
+          date: 2024-01-10
+          date_precision: 3
+        status: published
+
+  - id: 3
+    version: 2026-01-19T00:00:00
+    title: "Acoustic Resonance Methods for Internal Defect Detection in Watermelons"
+    abstract: "A portable acoustic testing device is developed and validated for detecting hollow heart and internal cracks in watermelons with 89% sensitivity."
+    authors:
+      - display_name: "Carlos Mendez"
+        author:
+          name: "Carlos Mendez"
+        affiliations:
+          - name: "University of Valencia"
+            category: academia
+      - display_name: "Milo Meloni"
+        author:
+          name: "Milo Meloni"
+        affiliations:
+          - name: "Huge University"
+            category: academia
+    releases:
+      - venue:
+          type: conference
+          name: "European Symposium on Fruit Testing"
+          series: "ESFT"
+          date: 2023-06-05
+          date_precision: 3
+        status: published
+
+  - id: 4
+    version: 2026-01-19T00:00:00
+    title: "Hyperspectral Imaging for Bruise Detection in Pears During Sorting"
+    abstract: "We demonstrate real-time bruise detection in pears using hyperspectral imaging integrated into commercial sorting lines."
+    authors:
+      - display_name: "Sophie Laurent"
+        author:
+          name: "Sophie Laurent"
+        affiliations:
+          - name: "Belgian Fruit Research Station"
+            category: academia
+      - display_name: "Erik van der Berg"
+        author:
+          name: "Erik van der Berg"
+        affiliations:
+          - name: "FruitSort Technologies"
+            category: industry
+    releases:
+      - venue:
+          type: journal
+          name: "Computers and Electronics in Agriculture"
+          series: "CEA"
+          date: 2024-02-28
+          date_precision: 3
+        status: published
+
+  - id: 5
+    version: 2026-01-19T00:00:00
+    title: "Shelf Life Prediction Models for Bananas Based on Accelerated Testing"
+    abstract: "Novel accelerated testing methods are combined with machine learning to predict banana shelf life with 3-day accuracy."
+    authors:
+      - display_name: "Anna Banana"
+        author:
+          name: "Anna Banana"
+        affiliations:
+          - name: "Fruit Research Institute"
+            category: academia
+      - display_name: "Emmanuel Okonkwo"
+        author:
+          name: "Emmanuel Okonkwo"
+        affiliations:
+          - name: "Nigerian Agricultural Research Council"
+            category: academia
+    releases:
+      - venue:
+          type: journal
+          name: "Food Quality and Preference"
+          series: "FQP"
+          date: 2023-11-12
+          date_precision: 3
+        status: published
+
+  - id: 6
+    version: 2026-01-19T00:00:00
+    title: "Comparative Analysis of Citrus Acidity Testing Methods"
+    abstract: "This comprehensive study compares pH meters, titration, and electronic tongue technologies for citrus acidity assessment."
+    authors:
+      - display_name: "Ana Oliveira"
+        author:
+          name: "Ana Oliveira"
+        affiliations:
+          - name: "University of São Paulo"
+            category: academia
+      - display_name: "Marco Rossi"
+        author:
+          name: "Marco Rossi"
+        affiliations:
+          - name: "Citrus Quality Labs"
+            category: industry
+    releases:
+      - venue:
+          type: conference
+          name: "World Congress of Food Science"
+          series: "WCFS"
+          date: 2024-04-18
+          date_precision: 3
+        status: published
+
+  - id: 7
+    version: 2026-01-19T00:00:00
+    title: "Volatile Compound Profiling for Peach Maturity Assessment"
+    abstract: "Gas chromatography-based volatile profiling is evaluated as a non-invasive indicator of peach harvest readiness."
+    authors:
+      - display_name: "Lisa Thompson"
+        author:
+          name: "Lisa Thompson"
+        affiliations:
+          - name: "UC Davis"
+            category: academia
+      - display_name: "Milo Meloni"
+        author:
+          name: "Milo Meloni"
+        affiliations:
+          - name: "Huge University"
+            category: academia
+    releases:
+      - venue:
+          type: journal
+          name: "Journal of Food Science"
+          series: "JFS"
+          date: 2023-08-22
+          date_precision: 3
+        status: published
+
+  - id: 8
+    version: 2026-01-19T00:00:00
+    title: "Machine Learning Approaches for Grape Quality Grading from Visual Features"
+    abstract: "A deep learning pipeline is trained on 50,000 grape images to automate quality grading for wine production."
+    authors:
+      - display_name: "Pierre Dubois"
+        author:
+          name: "Pierre Dubois"
+        affiliations:
+          - name: "Bordeaux Wine Research Institute"
+            category: academia
+      - display_name: "Anna Banana"
+        author:
+          name: "Anna Banana"
+        affiliations:
+          - name: "Fruit Research Institute"
+            category: academia
+      - display_name: "Claire Martin"
+        author:
+          name: "Claire Martin"
+        affiliations:
+          - name: "VineTech AI"
+            category: industry
+    releases:
+      - venue:
+          type: conference
+          name: "International Conference on Agricultural AI"
+          series: "ICAAI"
+          date: 2024-05-30
+          date_precision: 3
+        status: published
+
+  - id: 9
+    version: 2026-01-19T00:00:00
+    title: "Texture Analysis Standards for Kiwifruit Quality Control"
+    abstract: "International texture analysis standards for kiwifruit are proposed and validated across laboratories in five countries."
+    authors:
+      - display_name: "Wei Zhang"
+        author:
+          name: "Wei Zhang"
+        affiliations:
+          - name: "Zhejiang University"
+            category: academia
+      - display_name: "Sarah Mitchell"
+        author:
+          name: "Sarah Mitchell"
+        affiliations:
+          - name: "New Zealand Kiwifruit Board"
+            category: industry
+    releases:
+      - venue:
+          type: journal
+          name: "Food Standards International"
+          series: "FSI"
+          date: 2023-12-01
+          date_precision: 3
+        status: published
+
+_exclusions: []

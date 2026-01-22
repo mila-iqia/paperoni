@@ -4,7 +4,7 @@ from serieux import serialize
 
 from paperoni.model.classes import Paper
 from paperoni.refinement.dblp import dblp
-from paperoni.refinement.doi import biorxiv, crossref, datacite, unpaywall
+from paperoni.refinement.doi import crossref, datacite, unpaywall
 from paperoni.refinement.fetch import _test_tags
 from paperoni.refinement.pubmed import pubmed
 from paperoni.refinement.title import crossref_title, openalex_title
@@ -61,14 +61,14 @@ links = [
     (datacite, "doi:10.48550/arXiv.2506.01225"),
     (datacite, "doi:10.48550/arXiv.2406.06946"),
     (datacite, "doi:10.48550/arXiv.2312.12604"),
-    # BiorXiv
-    (biorxiv, "doi:10.1101/2020.10.29.359778"),
-    (biorxiv, "doi:10.1101/2023.05.17.541168"),
-    (biorxiv, "doi:10.1101/2023.10.27.564468"),
-    (biorxiv, "doi:10.1101/2024.02.13.580150"),
-    (biorxiv, "doi:10.1101/2024.12.02.626449"),
-    (biorxiv, "doi:10.1101/2025.06.23.661173"),
-    (biorxiv, "doi:10.1101/2023.08.30.23294850"),
+    # # BiorXiv
+    # (biorxiv, "doi:10.1101/2020.10.29.359778"),
+    # (biorxiv, "doi:10.1101/2023.05.17.541168"),
+    # (biorxiv, "doi:10.1101/2023.10.27.564468"),
+    # (biorxiv, "doi:10.1101/2024.02.13.580150"),
+    # (biorxiv, "doi:10.1101/2024.12.02.626449"),
+    # (biorxiv, "doi:10.1101/2025.06.23.661173"),
+    # (biorxiv, "doi:10.1101/2023.08.30.23294850"),
     # DBLP
     (dblp, "dblp:conf/icml/LachapelleDMMBL23"),
     (dblp, "dblp:conf/wacv/DaultaniL24"),
@@ -108,10 +108,10 @@ links_w_redirect_errors = {
 
 
 @pytest.mark.parametrize(["func", "link"], links)
-def test_refine(func, link, data_regression):
+async def test_refine(func, link, data_regression):
     typ, link = link.split(":", 1)
     try:
-        result = func(typ, link)
+        result = await func(typ, link)
         assert result.authors
         data = serialize(Paper, result)
         data_regression.check(data)
@@ -135,7 +135,7 @@ def test_refine(func, link, data_regression):
         (openalex_title, "title:Pre-training of Deep Bidirectional"),
     ],
 )
-def test_ignored_links(func, link):
+async def test_ignored_links(func, link):
     typ, link = link.split(":")
-    result = func(typ, link)
+    result = await func(typ, link)
     assert result is None

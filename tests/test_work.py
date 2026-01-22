@@ -13,16 +13,16 @@ from paperoni.model.focus import Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 
 
-def work(command, **kwargs):
+async def work(command, **kwargs):
     work_file = kwargs.pop("work_file")
     cf = kwargs.pop("collection_file")
-    Work(
+    await Work(
         command=Work.Configure(n=kwargs.pop("n", 10)),
         work_file=work_file,
         collection_file=cf,
         **kwargs,
     ).run()
-    Work(
+    await Work(
         command=command,
         work_file=work_file,
         collection_file=cf,
@@ -31,8 +31,8 @@ def work(command, **kwargs):
     return load(Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file)
 
 
-def test_work_get_does_not_duplicate(tmp_path: Path):
-    state = work(
+async def test_work_get_does_not_duplicate(tmp_path: Path):
+    state = await work(
         Work.Get(command=SemanticScholar().query),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
@@ -46,7 +46,7 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
         dest=tmp_path / "state.json",
     )
 
-    state = work(
+    state = await work(
         Work.Get(command=SemanticScholar().query),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
@@ -58,22 +58,22 @@ def test_work_get_does_not_duplicate(tmp_path: Path):
 
     mem_col = MemCollection()
     for paper in (scored.value.current for scored in state):
-        assert mem_col.find_paper(paper) is None
-        mem_col.add_papers([paper])
+        assert await mem_col.find_paper(paper) is None
+        await mem_col.add_papers([paper])
 
 
-def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
-    work(
+async def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
+    await work(
         Work.Get(command=SemanticScholar().query),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
     )
-    work(
+    await work(
         Work.Include(),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
     )
-    state = work(
+    state = await work(
         Work.Get(command=SemanticScholar().query),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
@@ -81,11 +81,11 @@ def test_work_get_does_not_duplicate_collection_papers(tmp_path: Path):
 
     col = FileCollection(file=tmp_path / "collection.json")
     for paper in (scored.value.current for scored in state):
-        assert col.find_paper(paper) is None
+        assert await col.find_paper(paper) is None
 
 
-def test_work_updates_collection_papers(tmp_path: Path):
-    state = work(
+async def test_work_updates_collection_papers(tmp_path: Path):
+    state = await work(
         Work.Get(command=SemanticScholar().query),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
@@ -100,13 +100,13 @@ def test_work_updates_collection_papers(tmp_path: Path):
         dest=tmp_path / "state.json",
     )
 
-    work(
+    await work(
         Work.Include(),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
     )
 
-    state = work(
+    state = await work(
         Work.Get(command=SemanticScholar().query, check_paper_updates=True),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
@@ -115,25 +115,25 @@ def test_work_updates_collection_papers(tmp_path: Path):
     col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
 
-    mem_col.add_papers([scored.value.current for scored in state])
-    assert mem_col.find_paper(paper_to_update) is not None
+    await mem_col.add_papers([scored.value.current for scored in state])
+    assert await mem_col.find_paper(paper_to_update) is not None
 
     # At this point, if work-include is run, the paper should be updated in the
     # collection. Fake a concurrent update of the paper to discard the current
     # update inclusion
-    assert col.find_paper(paper_to_update) is not None
-    paper = CollectionPaper(**vars(col.find_paper(paper_to_update)))
+    assert await col.find_paper(paper_to_update) is not None
+    paper = CollectionPaper(**vars(await col.find_paper(paper_to_update)))
     sleep(1)
     paper.version = datetime.now()
-    col.add_papers([paper])
+    await col.add_papers([paper])
 
-    work(
+    await work(
         Work.Include(),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
     )
 
-    state = work(
+    state = await work(
         Work.Get(command=SemanticScholar().query, check_paper_updates=True),
         work_file=tmp_path / "state.json",
         collection_file=tmp_path / "collection.json",
@@ -141,5 +141,5 @@ def test_work_updates_collection_papers(tmp_path: Path):
 
     col = FileCollection(file=tmp_path / "collection.json")
     mem_col = MemCollection(_last_id=col._last_id)
-    mem_col.add_papers([scored.value.current for scored in state])
-    assert mem_col.find_paper(paper_to_update) is not None
+    await mem_col.add_papers([scored.value.current for scored in state])
+    assert await mem_col.find_paper(paper_to_update) is not None

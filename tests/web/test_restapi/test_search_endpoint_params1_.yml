@@ -1,13 +1,59 @@
-- _count: null
-  _next_offset: null
-  author: null
-  end_date: null
-  expand_links: false
-  flags: null
-  institution: null
-  limit: 100
-  offset: 0
-  paper_id: null
-  start_date: null
-  title: Machine Learning
-  venue: null
+count: 1
+next_offset: null
+results:
+- abstract: We establish standardized firmness testing protocols for mangoes destined
+    for international markets, reducing rejection rates by 23%.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Huge University
+    author:
+      aliases: []
+      links: []
+      name: Milo Meloni
+    display_name: Milo Meloni
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: Global Fruit Standards Organization
+    author:
+      aliases: []
+      links: []
+      name: Robert Williams
+    display_name: Robert Williams
+  flags: []
+  id: 2
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-01-10'
+      date_precision: 3
+      links: []
+      name: Postharvest Biology and Technology
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: PBT
+      short_name: null
+      type: journal
+      volume: null
+  title: Firmness Testing Protocols for Mango Export Quality Assessment
+  topics: []
+  version: '2026-01-19T00:00:00'
+total: 1

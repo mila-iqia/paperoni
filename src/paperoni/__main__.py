@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 import itertools
 import json
 import logging
@@ -11,7 +12,7 @@ from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from functools import cached_property
 from pathlib import Path
-from typing import Annotated, Any, Generator, Literal
+from typing import Annotated, Any, AsyncGenerator, Literal
 
 import gifnoc
 import uvicorn
@@ -110,8 +111,8 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
-    def iterate(self, **kwargs) -> Generator[PaperInfo, None, None]:
-        for p in self.command(**kwargs):
+    async def iterate(self, **kwargs) -> AsyncGenerator[PaperInfo, None]:
+        async for p in self.command(**kwargs):
             send(discover=p)
             yield p
 
@@ -126,9 +127,9 @@ class Discover(Productor):
     # Top n entries
     top: int = 0
 
-    def run(self):
+    async def run(self):
         typ = PaperInfo
-        papers = self.iterate()
+        papers = [p async for p in self.iterate()]
         if self.top:
             papers = config.focuses.top(n=self.top, pinfos=papers)
             typ = Scored[PaperInfo]
@@ -149,13 +150,13 @@ class Fulltext:
             for url in urls:
                 print(f"\033[36m[{url.info}]\033[0m {url.url}")
 
-        def run(self):
+        async def run(self):
             if self.ref.startswith("http"):
                 ref = ":".join(url_to_id(self.ref) or ["", ""])
             else:
                 ref = self.ref
 
-            urls = list(locate_all(ref))
+            urls = [url async for url in locate_all(ref)]
             self.format(urls)
 
             return urls
@@ -173,8 +174,8 @@ class Fulltext:
         def format(self, pdf: PDF):
             print("Downloaded into:", pdf.pdf_path.resolve())
 
-        def run(self):
-            p = get_pdf(
+        async def run(self):
+            p = await get_pdf(
                 self.ref, cache_policy=getattr(CachePolicies, self.cache_policy.upper())
             )
             self.format(p)
@@ -183,9 +184,9 @@ class Fulltext:
     # Command to execute
     command: TaggedUnion[Locate, Download]
 
-    def run(self):
+    async def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
-        self.command.run()
+        await self.command.run()
 
 
 @dataclass
@@ -214,7 +215,7 @@ class Refine:
     # Output format
     format: Formatter = TerminalFormatter
 
-    def run(self):
+    async def run(self):
         results = []
         links = []
         for link in self.link:
@@ -223,7 +224,7 @@ class Refine:
             else:
                 links.append(link.split(":", 1))
 
-        results = list(fetch_all(links, tags=self.tags, force=self.force))
+        results = [p async for p in fetch_all(links, tags=self.tags, force=self.force)]
 
         if self.norm:
             results = [
@@ -248,7 +249,7 @@ class Work:
         n: int
         clear: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             work_file = work.work_file or config.work_file
             if work_file.exists():
                 top = deserialize(
@@ -272,8 +273,8 @@ class Work:
         # [alias: -U]
         check_paper_updates: bool = False
 
-        def run(self, work: "Work"):
-            ex = work.collection and work.collection.exclusions
+        async def run(self, work: "Work"):
+            ex = work.collection and (await work.collection.exclusions())
 
             find = Finder(
                 title_finder=lambda scored: scored.value.current.title,
@@ -283,7 +284,7 @@ class Work:
             )
             find.add(list(work.top))
 
-            for pinfo in self.iterate(focuses=work.focuses):
+            async for pinfo in self.iterate(focuses=work.focuses):
                 if ex and pinfo.key in ex:
                     continue
 
@@ -298,7 +299,7 @@ class Work:
                 col_paper = None
                 if (
                     work.collection
-                    and (col_paper := work.collection.find_paper(pinfo.paper))
+                    and (col_paper := await work.collection.find_paper(pinfo.paper))
                     and (
                         not self.check_paper_updates
                         or not paper_has_updated(col_paper, pinfo.paper)
@@ -342,7 +343,7 @@ class Work:
         # Number of papers to view
         n: int = None
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             worksets = itertools.islice(work.top, self.n) if self.n else work.top
             match self.what:
                 case "title":
@@ -352,14 +353,14 @@ class Work:
                 case "has_pdf":
                     n = total = 0
 
-                    def gen():
+                    async def gen():
                         nonlocal n, total
                         for ws in worksets:
                             paper = ws.value.current
                             pdf = None
                             total += 1
                             try:
-                                pdf = get_pdf(
+                                pdf = await get_pdf(
                                     [f"{lnk.type}:{lnk.link}" for lnk in paper.links]
                                 )
                                 n += 1
@@ -390,12 +391,12 @@ class Work:
         # Whether to force re-running the refine
         force: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             statuses = {}
-            it = itertools.islice(work.top, self.n) if self.n else work.top
+            it = list(itertools.islice(work.top, self.n)) if self.n else work.top
 
-            for sws in prog(list(it), name="refine"):
-                for i in range(self.loops):
+            for i in range(self.loops):
+                for sws in prog(it, name=f"refine{i + 1 if i else ''}"):
                     statuses.update(
                         {
                             (name, key): "done"
@@ -408,7 +409,7 @@ class Work:
                     links.append(("title", sws.value.current.title))
                     if i == 0:
                         send(to_refine=links)
-                    for pinfo in fetch_all(
+                    async for pinfo in fetch_all(
                         links,
                         group=";".join([f"{type}:{link}" for type, link in links]),
                         tags=self.tags,
@@ -437,7 +438,7 @@ class Work:
         # Whether to force re-running the normalization
         force: bool = False
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             kwargs = {k: not v for k, v in norm_args(self.exclude).items()}
             it = itertools.islice(work.top, self.n) if self.n else work.top
 
@@ -471,7 +472,7 @@ class Work:
         # Minimum score for saving
         score: float = 0.1
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 stop=self.n,
@@ -479,7 +480,7 @@ class Work:
             )
 
             try:
-                added = work.collection.add_papers(selected)
+                added = await work.collection.add_papers(selected)
             finally:
                 # As some papers could be added to the collection before an
                 # error is raised, causing a new paper to exists in the
@@ -503,7 +504,7 @@ class Work:
         # Maximum score for excluding
         score: float = 0.0
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 stop=None if self.n is None else -self.n,
@@ -511,7 +512,7 @@ class Work:
             )
 
             try:
-                work.collection.exclude_papers(selected)
+                await work.collection.exclude_papers(selected)
             finally:
                 work.save()
             send(collection_exclude=len(selected))
@@ -520,7 +521,7 @@ class Work:
     class Clear(Extractor):
         """Clear the workset."""
 
-        def run(self, work: "Work"):
+        async def run(self, work: "Work"):
             self.extract(work, filter=lambda _: True)
             work.save()
 
@@ -571,12 +572,12 @@ class Work:
             dest=wfile,
         )
 
-    def run(self):
+    async def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         wf = self.work_file or config.work_file
         lf = wf.with_suffix(".lock")
         with FileLock(lf):
-            return self.command.run(self)
+            return await self.command.run(self)
 
 
 @dataclass
@@ -623,7 +624,7 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
-        def run(self, coll: "Coll") -> list[Paper]:
+        async def run(self, coll: "Coll") -> list[Paper]:
             flags = set() if self.flags is None else self.flags
             papers = [
                 replace(
@@ -636,7 +637,7 @@ class Coll:
                 )
                 if self.expand_links
                 else p
-                for p in coll.collection.search(
+                async for p in coll.collection.search(
                     paper_id=self.paper_id,
                     title=self.title,
                     author=self.author,
@@ -659,8 +660,8 @@ class Coll:
         # [positional]
         file: Path
 
-        def run(self, coll: "Coll"):
-            coll.collection.add_papers(deserialize(list[Paper], self.file))
+        async def run(self, coll: "Coll"):
+            await coll.collection.add_papers(deserialize(list[Paper], self.file))
 
     @dataclass
     class Export:
@@ -670,8 +671,8 @@ class Coll:
         # [positional]
         file: Path = None
 
-        def run(self, coll: "Coll"):
-            papers = list(coll.collection.search())
+        async def run(self, coll: "Coll"):
+            papers = [p async for p in coll.collection.search()]
             if self.file:
                 dump(list[Paper], papers, dest=self.file)
             else:
@@ -684,7 +685,7 @@ class Coll:
         # Whether to force dropping the collection
         force: bool = False
 
-        def run(self, coll: "Coll"):
+        async def run(self, coll: "Coll"):
             if not self.force:
                 # Ask the user for confirmation
                 answer = input("Are you sure you want to drop the collection? (Y/n): ")
@@ -694,8 +695,8 @@ class Coll:
                 self.force = answer in ["Y", "yes"]
 
             if self.force:
-                coll.collection.drop()
-            elif not len(coll.collection) and not len(coll.collection.exclusions):
+                await coll.collection.drop()
+            elif not len(coll.collection) and not len(await coll.collection.exclusions()):
                 logging.warning("Collection is not empty. Use --force to drop it.")
 
     # Command to execute
@@ -715,8 +716,8 @@ class Coll:
         else:
             return config.collection
 
-    def run(self):
-        self.command.run(self)
+    async def run(self):
+        await self.command.run(self)
 
 
 @dataclass
@@ -727,14 +728,14 @@ class Batch:
     # [positional]
     batch_file: Path
 
-    def run(self):
+    async def run(self):
         batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
         for name, cmd in batch.items():
             __trace__ = f"step:{name}"  # noqa: F841
             batch_descr = f"Batch: start step {name}"
             with soft_fail(batch_descr):
                 send(event=batch_descr)
-                cmd.run()
+                await cmd.run()
 
 
 @dataclass
@@ -749,12 +750,12 @@ class Focus:
         # [alias: -t]
         timespan: timedelta = timedelta(weeks=52)
 
-        def run(self, focus: "Focus"):
+        async def run(self, focus: "Focus"):
             start_date = datetime.now() - self.timespan
             start_date = start_date.date().replace(month=1, day=1)
             focuses = Focuses()
             focus.focuses.update(
-                focus.collection.search(start_date=start_date),
+                [p async for p in focus.collection.search(start_date=start_date)],
                 config.autofocus,
                 dest=focuses,
             )
@@ -799,8 +800,8 @@ class Focus:
         else:
             return config.collection
 
-    def run(self):
-        self.command.run(self)
+    async def run(self):
+        await self.command.run(self)
 
 
 @dataclass
@@ -821,7 +822,7 @@ class Serve:
     # Whether to enable auth
     auth: bool = True
 
-    def run(self):
+    async def run(self):
         from .web import create_app
 
         if self.auth:
@@ -835,12 +836,15 @@ class Serve:
             }
         with gifnoc.overlay(overrides):
             app = create_app()
-            uvicorn.run(
-                app,
-                host=config.server.host if self.host is None else self.host,
-                port=config.server.port if self.port is None else self.port,
-                reload=self.reload,
+            server = uvicorn.Server(
+                uvicorn.Config(
+                    app,
+                    host=config.server.host if self.host is None else self.host,
+                    port=config.server.port if self.port is None else self.port,
+                    reload=self.reload,
+                )
             )
+            await server.serve()
 
     def no_dash(self):
         return True
@@ -856,7 +860,7 @@ class Login:
     # Whether to use headless mode
     headless: bool = False
 
-    def run(self):
+    async def run(self):
         print_field("Access token", login(self.endpoint, self.headless))
 
 
@@ -896,7 +900,7 @@ class PaperoniInterface:
         logname = now.strftime("%Y%m%d_%H%M%S") + f"_{rand:04d}.jsonl"
         return logdir / logname
 
-    def run(self):
+    async def run(self):
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         logfile = None
         if self.dash and not getattr(self.command, "no_dash", lambda: False)():
@@ -917,14 +921,14 @@ class PaperoniInterface:
                 description="`" + " ".join(map(shlex.quote, sys.argv)) + "`",
                 reporters=config.reporters,
             ) as report:
-                self.command.run()
+                await self.command.run()
                 if logfile and config.server:
                     url = f"{config.server.protocol}://{config.server.host}"
                     if config.server.port not in (80, 443):
                         url += f":{config.server.port}"
                     report.set_message(f"[View report]({url}/report/{logfile.stem})")
         else:
-            self.command.run()
+            await self.command.run()
 
 
 def enable_log():
@@ -1126,7 +1130,7 @@ def main():
         if args.config:
             add_overlay(Path(args.config))
         command = cli(field="paperoni.cli", type=PaperoniInterface, argv=remaining)
-        command.run()
+        asyncio.run(command.run())
 
 
 if __name__ == "__main__":

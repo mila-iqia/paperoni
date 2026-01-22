@@ -191,7 +191,7 @@ def test_focuses_top():
     assert snd.value.paper.title == "Paper from Alice"
 
 
-def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
+async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
     with gifnoc.overlay(
         {
             "paperoni.autofocus": {
@@ -216,7 +216,7 @@ def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
             ],
         )
 
-        state = work(
+        state = await work(
             Work.Get(command=SemanticScholar().query),
             work_file=tmp_path / "state.yaml",
             collection_file=tmp_path / "collection.yaml",
@@ -237,7 +237,7 @@ def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):
             dest=tmp_path / "state.yaml",
         )
 
-        state = work(
+        state = await work(
             Work.Refine(),
             work_file=tmp_path / "state.yaml",
             collection_file=tmp_path / "collection.yaml",

@@ -3,9 +3,9 @@ from types import SimpleNamespace
 from typing import Literal
 
 from ovld.dependent import StartsWith
-from requests import HTTPError
 
 from ..config import config
+from ..get import ERRORS
 from ..model import (
     Author,
     DatePrecision,
@@ -24,7 +24,7 @@ from .formats import paper_from_crossref, paper_from_jats
 
 
 @register_fetch
-def crossref(type: Literal["doi"], link: str):
+async def crossref(typ: Literal["doi"], link: str):
     """Fetch from CrossRef."""
 
     doi = link
@@ -33,10 +33,10 @@ def crossref(type: Literal["doi"], link: str):
         return None
 
     try:
-        data = config.fetch.read_retry(
+        data = await config.fetch.read_retry(
             f"https://api.crossref.org/v1/works/{doi}", format="json"
         )
-    except HTTPError as exc:  # pragma: no cover
+    except ERRORS as exc:  # pragma: no cover
         if exc.response.status_code == 404:
             return None
         else:
@@ -46,11 +46,11 @@ def crossref(type: Literal["doi"], link: str):
         raise Exception("Request failed", data)
 
     data = SimpleNamespace(**data["message"])
-    return paper_from_crossref(data)
+    return await paper_from_crossref(data)
 
 
 @register_fetch
-def datacite(type: Literal["doi", "arxiv"], link: str):
+async def datacite(typ: Literal["doi", "arxiv"], link: str):
     """
     Refine using DataCite.
 
@@ -59,17 +59,17 @@ def datacite(type: Literal["doi", "arxiv"], link: str):
     API call reference: https://support.datacite.org/reference/get_dois-id
     DataCite metadata properties: https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/
     """
-    if type == "arxiv":
+    if typ == "arxiv":
         doi = f"10.48550/arXiv.{link}"
     else:
         doi = link
 
     try:
-        json_data = config.fetch.read_retry(
+        json_data = await config.fetch.read_retry(
             f"https://api.datacite.org/dois/{doi}?publisher=true&affiliation=true",
             format="json",
         )
-    except HTTPError as exc:  # pragma: no cover
+    except ERRORS as exc:  # pragma: no cover
         if exc.response.status_code == 404:
             return None
         else:
@@ -248,9 +248,9 @@ def datacite(type: Literal["doi", "arxiv"], link: str):
 
 
 @register_fetch
-def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
-    def _get(url):
-        data = config.fetch.read_retry(url, format="json")
+async def biorxiv(typ: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
+    async def _get(url):
+        data = await config.fetch.read_retry(url, format="json")
         if (
             not any(msg.get("status", None) == "ok" for msg in data["messages"])
             or not data["collection"]
@@ -259,9 +259,9 @@ def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
         return data
 
     doi = link
-    data = _get(f"https://api.biorxiv.org/details/biorxiv/{doi}")
+    data = await _get(f"https://api.biorxiv.org/details/biorxiv/{doi}")
     if data is None:
-        data = _get(f"https://api.medrxiv.org/details/medrxiv/{doi}")
+        data = await _get(f"https://api.medrxiv.org/details/medrxiv/{doi}")
     if data is None:  # pragma: no cover
         raise Exception("Could not fetch from Bio/MedRXiv")
 
@@ -272,17 +272,17 @@ def biorxiv(type: Literal["doi"], link: StartsWith["10.1101/"]):  # type: ignore
     if entry["published"] != "NA":
         links.append(Link(type="doi", link=entry["published"]))
 
-    return paper_from_jats(config.fetch.read_retry(jats, format="xml"), links=links)
+    return paper_from_jats(await config.fetch.read_retry(jats, format="xml"), links=links)
 
 
 @register_fetch
-def unpaywall(type: Literal["doi"], doi: str):
+async def unpaywall(typ: Literal["doi"], doi: str):
     try:
-        data = config.fetch.read_retry(
+        data = await config.fetch.read_retry(
             f"https://api.unpaywall.org/v2/{doi}?email={config.mailto}",
             format="json",
         )
-    except HTTPError as exc:  # pragma: no cover
+    except ERRORS as exc:  # pragma: no cover
         if exc.response.status_code == 404:
             return None
         else:

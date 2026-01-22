@@ -36,7 +36,8 @@ class Synth(Discoverer):
     # List of discoverers
     discoverers: DiscoBag
 
-    def query(self, focuses: Focuses):
+    async def query(self, focuses: Focuses):
         """Query multiple discoverers."""
         for disco in self.discoverers.discoverers:
-            yield from disco(focuses=focuses)
+            async for paper in disco(focuses=focuses):
+                yield paper

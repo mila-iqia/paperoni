@@ -18,11 +18,11 @@ class FileCollection(MemCollection):
 
         if not self.file.exists():
             self.file.parent.mkdir(exist_ok=True, parents=True)
-            self.commit()
+            self._commit()
 
         self.__dict__.update(vars(load(MemCollection, self.file)))
 
-    def commit(self) -> None:
+    def _commit(self) -> None:
         dump(type(self), self, dest=self.file)
 
     @classmethod

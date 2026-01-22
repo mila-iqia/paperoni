@@ -12,11 +12,11 @@ from tests.utils import check_papers
 
 
 @pytest.fixture(scope="module")
-def paper_info():
+async def paper_info():
     # Prepared with:
     # paperoni refine --link "doi:10.1109/cvpr52733.2024.01307" --norm
     with gifnoc.overlay({"paperoni.data_path": str(Path(__file__).parent / "data")}):
-        yield next(fetch_all([("doi", "10.1109/cvpr52733.2024.01307")], tags={}))
+        yield await anext(fetch_all([("doi", "10.1109/cvpr52733.2024.01307")], tags={}))
 
 
 def test_norm(data_regression: DataRegressionFixture, paper_info: PaperInfo):

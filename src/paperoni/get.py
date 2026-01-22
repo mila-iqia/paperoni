@@ -1,6 +1,8 @@
+import asyncio
 import json
 import os
 import re
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from functools import cached_property
@@ -8,18 +10,25 @@ from pathlib import Path
 from typing import Literal
 
 import backoff
+import chardet
+import hishel
+import httpx
 import requests
-import requests_cache
 from eventlet.timeout import Timeout
 from fake_useragent import UserAgent
+from hishel.httpx import AsyncCacheClient
 from outsight import send
 from ovld import ovld
-from requests import HTTPError, Session
-from requests.exceptions import RequestException
+from requests import Session
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 
+ERRORS = (httpx.HTTPStatusError, requests.RequestException)
 ua = UserAgent()
+
+
+def detect_encoding(content):
+    return chardet.detect(content).get("encoding")
 
 
 @ovld
@@ -61,50 +70,61 @@ def parse(content: str, format: Literal["txt"]):
 
 
 def _giveup(exc):
-    return getattr(exc, "response", None) is None or exc.response.status_code not in (
-        403,
-        429,
-    )
+    response = getattr(exc, "response", None)
+    if response is None:
+        return True
+    status_code = getattr(response, "status_code", None)
+    if status_code is None:
+        return True
+    return status_code not in (403, 429)
 
 
 class Fetcher:
-    def generic(self, method, url, **kwargs):
+    async def generic(self, method, url, stream=False, **kwargs):
         raise NotImplementedError()
 
-    def head(self, url, **kwargs):
-        return self.generic("head", url, **kwargs)
+    async def head(self, url, **kwargs):
+        return await self.generic("head", url, **kwargs)
 
-    def get(self, url, **kwargs):
-        return self.generic("get", url, **kwargs)
+    async def get(self, url, **kwargs):
+        return await self.generic("get", url, **kwargs)
 
-    def download(self, url, filename, **kwargs):
-        """Download the given url into the given filename."""
+    async def download(self, url, filename, **kwargs):
+        """Download the given url into the given filename (async)."""
 
-        def iter_with_timeout(r: requests.Response, chunk_size: int, timeout: float):
-            it = r.iter_content(chunk_size=chunk_size)
-            try:
-                while True:
-                    with Timeout(timeout):
-                        yield next(it)
-            except StopIteration:
-                pass
-            finally:
-                it.close()
+        async def aiter_with_timeout(response, chunk_size: int, timeout: float):
+            # Works with httpx async (aiter_bytes)
+            iter_fn = getattr(response, "aiter_bytes", None)
+            if iter_fn:
+                async for chunk in iter_fn(chunk_size=chunk_size):
+                    yield chunk
+            else:
+                # Fallback for sync-style responses
+                iter_fn = getattr(response, "iter_bytes", None) or response.iter_content
+                it = iter_fn(chunk_size=chunk_size)
+                try:
+                    while True:
+                        with Timeout(timeout):
+                            yield next(it)
+                except StopIteration:
+                    pass
 
         print(f"Downloading {url}")
-        r = self.get(url, stream=True, **kwargs)
-        r.raise_for_status()
-        total = int(r.headers.get("content-length") or 1024**2)
-        sofar = 0
-        with open(filename, "wb") as f:
-            for chunk in iter_with_timeout(r, chunk_size=max(total // 100, 1), timeout=5):
-                f.write(chunk)
-                f.flush()
-                sofar += len(chunk)
-                send(progress=(Path(url).name, sofar, total))
+        async with await self.get(url, stream=True, **kwargs) as r:
+            r.raise_for_status()
+            total = int(r.headers.get("content-length") or 1024**2)
+            sofar = 0
+            with open(filename, "wb") as f:
+                async for chunk in aiter_with_timeout(
+                    r, chunk_size=max(total // 100, 1), timeout=5
+                ):
+                    f.write(chunk)
+                    f.flush()
+                    sofar += len(chunk)
+                    send(progress=(Path(url).name, sofar, total))
         print(f"Saved {filename}")
 
-    def read(
+    async def read(
         self, url, format=None, cache_into=None, cache_expiry: timedelta = None, **kwargs
     ):
         def is_cache_valid(path: Path, expiry: timedelta):
@@ -118,13 +138,10 @@ class Fetcher:
         if cache_into and is_cache_valid(cache_into, cache_expiry):
             content = cache_into.read_text()
         else:
-            resp = self.get(url, **kwargs)
+            resp = await self.get(url, **kwargs)
             send(url=url, params=kwargs.get("params", {}), response=resp)
             resp.raise_for_status()
-            if resp.encoding == resp.apparent_encoding:
-                content = resp.text
-            else:
-                content = resp.content.decode(resp.apparent_encoding, errors="ignore")
+            content = resp.text
 
             if cache_into:
                 cache_into.parent.mkdir(parents=True, exist_ok=True)
@@ -134,13 +151,55 @@ class Fetcher:
 
     @backoff.on_exception(
         backoff.expo,
-        RequestException,
+        ERRORS,
         giveup=_giveup,
         max_time=30,
         logger=None,
     )
-    def read_retry(self, *args, **kwargs):
-        return self.read(*args, **kwargs)
+    async def read_retry(self, *args, **kwargs):
+        return await self.read(*args, **kwargs)
+
+
+@dataclass
+class HTTPXFetcher(Fetcher):
+    user_agent: str = None
+    timeout: int = 60
+
+    # [serieux: ignore]
+    _client: httpx.AsyncClient = None
+    # [serieux: ignore]
+    _client_loop = None
+
+    def __post_init__(self):
+        if self.user_agent is not None:
+            try:
+                self.user_agent = getattr(ua, self.user_agent)
+            except AttributeError:
+                pass
+
+    @property
+    def client(self):
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if self._client is None or self._client_loop is not loop:
+            self._client = httpx.AsyncClient(
+                follow_redirects=True, default_encoding=detect_encoding
+            )
+            self._client_loop = loop
+        return self._client
+
+    async def generic(self, method, url, stream=False, headers={}, **kwargs):
+        kwargs.setdefault("timeout", self.timeout)
+        headers = {k: v for k, v in headers.items() if v is not None}
+        if self.user_agent:
+            headers["User-Agent"] = self.user_agent
+        if headers:
+            kwargs["headers"] = headers
+        if stream:
+            return self.client.stream(method.upper(), url, **kwargs)
+        return await getattr(self.client, method)(url, **kwargs)
 
 
 @dataclass
@@ -159,32 +218,70 @@ class RequestsFetcher(Fetcher):
     def session(self):
         return Session()
 
-    def generic(self, method, url, **kwargs):
+    async def generic(self, method, url, stream=False, **kwargs):
+        # Requests is sync-only, so we just call the sync version
         kwargs.setdefault("timeout", self.timeout)
         if self.user_agent:
             headers = kwargs.setdefault("headers", {})
             headers["UserAgent"] = headers["User-Agent"] = self.user_agent
+        if stream:
+            return self._astream_context(method, url, **kwargs)
         return getattr(self.session, method)(url, **kwargs)
+
+    @asynccontextmanager
+    async def _astream_context(self, method, url, **kwargs):
+        kwargs["stream"] = True
+        response = getattr(self.session, method.lower())(url, **kwargs)
+        try:
+            yield response
+        finally:
+            response.close()
 
 
 @dataclass
-class CachedFetcher(RequestsFetcher):
+class CachedFetcher(HTTPXFetcher):
     cache_path: Path = None
     expire_after: timedelta = None
 
-    @cached_property
-    def session(self):
-        if not self.cache_path:
-            return Session()
-        exp = self.expire_after
-        if exp is None:
-            exp = requests_cache.NEVER_EXPIRE
-        return requests_cache.CachedSession(self.cache_path, expire_after=exp)
+    def _cache_policy(self):
+        return hishel.SpecificationPolicy(
+            cache_options=hishel.CacheOptions(
+                shared=False,
+                supported_methods=["GET", "HEAD", "POST"],
+                allow_stale=True,
+            )
+        )
+
+    @property
+    def client(self):
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if self._client is None or self._client_loop is not loop:
+            if not self.cache_path:
+                self._client = httpx.AsyncClient(
+                    follow_redirects=True, default_encoding=detect_encoding
+                )
+            else:
+                ttl = self.expire_after.total_seconds() if self.expire_after else None
+                storage = hishel.AsyncSqliteStorage(
+                    database_path=str(self.cache_path) + ".db",
+                    default_ttl=ttl,
+                )
+                self._client = AsyncCacheClient(
+                    storage=storage,
+                    follow_redirects=True,
+                    default_encoding=detect_encoding,
+                    policy=self._cache_policy(),
+                )
+            self._client_loop = loop
+        return self._client
 
 
 @dataclass
 class BannedFetcher(Fetcher):
-    def generic(self, method, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         raise Exception(f"Will not try to fetch {url}")
 
 
@@ -203,7 +300,7 @@ class CloudFlareFetcher(RequestsFetcher):
 class ScraperAPIFetcher(CachedFetcher):
     api_key: Secret[str] = None
 
-    def generic(self, method, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         assert self.api_key is not None
         payload = {
             "api_key": str(self.api_key),
@@ -211,18 +308,18 @@ class ScraperAPIFetcher(CachedFetcher):
         }
         assert "params" not in kwargs
         kwargs["params"] = payload
-        return super().generic(method, "https://api.scraperapi.com/", **kwargs)
+        return await super().generic(method, "https://api.scraperapi.com/", **kwargs)
 
 
 @dataclass
 class SequenceFetcher(Fetcher):
     fetchers: list[TaggedSubclass[Fetcher]]
 
-    def generic(self, method, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         for fetcher in self.fetchers:
             try:
-                return fetcher.generic(method, url, **kwargs)
-            except HTTPError as e:
+                return await fetcher.generic(method, url, **kwargs)
+            except ERRORS as e:
                 if e.response.status_code == 403:
                     continue
                 else:
@@ -235,9 +332,9 @@ class RulesFetcher(Fetcher):
     rules: dict[re.Pattern, str]
     fetchers: dict[str, TaggedSubclass[Fetcher]]
 
-    def generic(self, method, url, **kwargs):
+    async def generic(self, method, url, **kwargs):
         for pattern, fetcher_key in self.rules.items():
             if pattern.search(url):
-                fetcher = self.fetchers[fetcher_key]
-                return fetcher.generic(method, url, **kwargs)
+                f = self.fetchers[fetcher_key]
+                return await f.generic(method, url, **kwargs)
         raise ValueError(f"No fetcher rule matches URL: {url}")

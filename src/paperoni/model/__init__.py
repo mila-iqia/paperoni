@@ -11,7 +11,6 @@ from .classes import (
     Topic,
     Venue,
     VenueType,
-    rescore,
 )
 from .focus import Focus, Focuses, Scored, Top
 from .merge import PaperWorkingSet
@@ -29,7 +28,6 @@ __all__ = [
     "Topic",
     "Venue",
     "VenueType",
-    "rescore",
     "PaperWorkingSet",
     "Focus",
     "Focuses",

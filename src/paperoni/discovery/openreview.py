@@ -19,7 +19,6 @@ from ..model import (
     Venue,
     VenueType,
 )
-from ..model.classes import rescore
 from ..model.focus import Focus, Focuses
 from .base import Discoverer
 
@@ -261,7 +260,7 @@ class OpenReview(Discoverer):
         else:
             return VenueType.unknown
 
-    def _query(self, params, total=0, limit=1000000):
+    async def _query(self, params, total=0, limit=1000000):
         next_offset = 0
         while total < limit:
             params["offset"] = next_offset
@@ -363,7 +362,9 @@ class OpenReview(Discoverer):
                 break
             total += next_offset
 
-    def _query_papers_from_venues(self, params, venues=None, total=0, limit=1000000):
+    async def _query_papers_from_venues(
+        self, params, venues=None, total=0, limit=1000000
+    ):
         if not venues:  # pragma: no cover
             venues = self.client.get_group(id="venues").members
 
@@ -375,7 +376,7 @@ class OpenReview(Discoverer):
                     "content": {**params["content"], "venueid": v},
                 }
 
-            for paper in self._query(params, total, limit):
+            async for paper in self._query(params, total, limit):
                 total += 1
                 yield paper
 
@@ -447,7 +448,7 @@ class OpenReview(Discoverer):
                 if fnmatch(pat=pattern.lower(), name=member.lower())
             ]
 
-    def query(
+    async def query(
         self,
         # Venue of publication
         venue: str = None,
@@ -482,25 +483,23 @@ class OpenReview(Discoverer):
                         # OpenReview API does not support searching by author
                         # name, so first search for the possible author IDs
                         for author_id in self._query_authors(name):
-                            yield from rescore(
-                                self.query(
-                                    venue=venue,
-                                    author_id=author_id,
-                                    title=title,
-                                    block_size=block_size,
-                                ),
-                                score,
-                            )
-                    case Focus(type="author_openreview", name=aid, score=score):
-                        yield from rescore(
-                            self.query(
+                            async for paper in self.query(
                                 venue=venue,
-                                author_id=aid,
+                                author_id=author_id,
                                 title=title,
                                 block_size=block_size,
-                            ),
-                            score,
-                        )
+                            ):
+                                paper.score = score
+                                yield paper
+                    case Focus(type="author_openreview", name=aid, score=score):
+                        async for paper in self.query(
+                            venue=venue,
+                            author_id=aid,
+                            title=title,
+                            block_size=block_size,
+                        ):
+                            paper.score = score
+                            yield paper
             return
 
         params = {
@@ -535,14 +534,15 @@ class OpenReview(Discoverer):
                 "content": {**params["content"], "title": title},
             }
 
-        yield from self._query_papers_from_venues(params, venue, 0, limit)
+        async for paper in self._query_papers_from_venues(params, venue, 0, limit):
+            yield paper
 
 
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
 
-    def query(
+    async def query(
         self,
         # Venue of publication
         venue: str = None,
@@ -579,7 +579,7 @@ class OpenReviewDispatch(Discoverer):
 
             exception = None
             try:
-                for paper in q:
+                async for paper in q:
                     has_papers = True
                     yield paper
 

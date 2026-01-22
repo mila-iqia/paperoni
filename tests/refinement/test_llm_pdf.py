@@ -13,7 +13,7 @@ from tests.utils import check_papers
 
 
 @pytest.fixture(scope="module")
-def paper_info():
+async def paper_info():
     # Prepared with:
     # paperoni refine --link "openreview:_3FyT_W1DW" --tags pdf --norm
     with (
@@ -26,7 +26,7 @@ def paper_info():
             next(
                 filter(
                     lambda pinfo: "pdf" in pinfo.info["refined_by"],
-                    fetch_all([("openreview", "_3FyT_W1DW")], tags={}),
+                    [p async for p in fetch_all([("openreview", "_3FyT_W1DW")], tags={})],
                 ),
                 None,
             )
@@ -36,7 +36,10 @@ def paper_info():
         yield next(
             filter(
                 lambda pinfo: "pdf" in pinfo.info["refined_by"],
-                fetch_all([("openreview", "_3FyT_W1DW")], tags={"pdf"}),
+                [
+                    p
+                    async for p in fetch_all([("openreview", "_3FyT_W1DW")], tags={"pdf"})
+                ],
             )
         )
 

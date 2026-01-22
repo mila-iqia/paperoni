@@ -34,11 +34,13 @@ PAPERS = [
         },
     ],
 )
-def test_query(data_regression: DataRegressionFixture, query_params: dict[str, str]):
+async def test_query(
+    data_regression: DataRegressionFixture, query_params: dict[str, str]
+):
     discoverer = SemanticScholar()
 
     papers: list[PaperInfo] = sorted(
-        discoverer.query(**query_params, block_size=100),
+        [p async for p in discoverer.query(**query_params, block_size=100)],
         key=lambda x: x.paper.title,
     )
 
@@ -101,10 +103,11 @@ def test_query(data_regression: DataRegressionFixture, query_params: dict[str, s
     check_papers(data_regression, papers)
 
 
-def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
+async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
     discoverer = SemanticScholar()
-    results = list(
-        discoverer.query(
+    results = [
+        p
+        async for p in discoverer.query(
             author="Yoshua Bengio",
             focuses=Focuses(
                 [
@@ -118,7 +121,7 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
             ),
             limit=1,
         )
-    )
+    ]
 
     assert (
         len(results) > 1
@@ -129,16 +132,17 @@ def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture
     )
 
 
-def test_focuses_drive_discovery_false():
+async def test_focuses_drive_discovery_false():
     """Test that focuses with drive_discovery=False are skipped."""
     discoverer = SemanticScholar()
 
     # This should return no results because the focus is skipped
-    results = list(
-        discoverer.query(
+    results = [
+        p
+        async for p in discoverer.query(
             focuses=Focuses([Focus(type="author", name="Yoshua Bengio", score=1.0)]),
         )
-    )
+    ]
     assert len(results) == 0
 
 
@@ -159,7 +163,7 @@ def test_focuses_drive_discovery_false():
         ],
     ],
 )
-def test_focuses(query_params, focused_params):
+async def test_focuses(query_params, focused_params):
     """Test that focuses."""
     discoverer = SemanticScholar()
 
@@ -174,9 +178,9 @@ def test_focuses(query_params, focused_params):
     )
 
     # Query with focuses should return the same results as direct author query
-    direct_results = list(discoverer.query(**query_params))
+    direct_results = [p async for p in discoverer.query(**query_params)]
 
-    focus_results = list(discoverer.query(**focused_params, focuses=focuses))
+    focus_results = [p async for p in discoverer.query(**focused_params, focuses=focuses)]
 
     # Both should return the same papers
     direct_papers = [p.paper.title for p in direct_results]

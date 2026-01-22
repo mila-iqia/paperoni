@@ -2,7 +2,6 @@
 FastAPI interface for paperoni collection search functionality.
 """
 
-import asyncio
 import datetime
 import itertools
 from dataclasses import dataclass, field
@@ -271,53 +270,6 @@ class AutoFocusRequest(Focus.AutoFocus):
     pass
 
 
-def _search(request: dict):
-    request: SearchRequest = deserialize(SearchRequest, request)
-
-    coll = Coll(command=None)
-
-    # Perform search using the collection's search method
-    all_matches = request.run(coll)
-    results = list(request.slice(all_matches))
-
-    return results, request.count, request.next_offset, len(all_matches)
-
-
-def _work_view(request: dict):
-    request: ViewRequest = deserialize(ViewRequest, request)
-
-    """Search for papers in the collection."""
-    work = Work(command=request, work_file=config.work_file)
-
-    worksets: list[Scored[PaperWorkingSet]] = list(request.slice(work.run()))
-
-    return worksets, request.count, request.next_offset, len(work.top)
-
-
-def _locate_fulltext(request: dict):
-    request: LocateFulltextRequest = deserialize(LocateFulltextRequest, request)
-    all_urls = request.run()
-    urls = list(request.slice(all_urls))
-    return urls, request.count, request.next_offset, len(all_urls)
-
-
-def _download_fulltext(request: dict):
-    request: DownloadFulltextRequest = deserialize(DownloadFulltextRequest, request)
-    return request.run()
-
-
-async def run_in_process_pool(func, *args):
-    # TODO: find a way to serialize a dynamically modified config using
-    # gifnoc.overlay such that we serialize / deserialize quickly properties
-    # like collection. Currently, serialize(config) fails with
-    # serieux.exc.ValidationError: At path (at root): Cannot serialize object of type 'Proxy'
-    if config.server.process_pool is None:
-        return func(*args)
-
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(config.server.process_pool, func, *args)
-
-
 def install_api(app) -> FastAPI:
     prefix = "/api/v1"
 
@@ -349,11 +301,17 @@ def install_api(app) -> FastAPI:
     )
     async def search_papers(request: SearchRequest = Depends(parse_search_request)):
         """Search for papers in the collection."""
-        results, count, next_offset, total = await run_in_process_pool(
-            _search, serialize(SearchRequest, request)
-        )
+        coll = Coll(command=None)
+
+        # Perform search using the collection's search method
+        all_matches = await request.run(coll)
+        results = list(request.slice(all_matches))
+
         return SearchResponse(
-            results=results, count=count, next_offset=next_offset, total=total
+            results=results,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(all_matches),
         )
 
     @app.get(
@@ -364,7 +322,7 @@ def install_api(app) -> FastAPI:
     async def get_paper(paper_id: int):
         """Get a single paper by ID."""
         coll = Coll(command=None)
-        paper = coll.collection.find_by_id(paper_id)
+        paper = await coll.collection.find_by_id(paper_id)
         if paper is None:
             raise HTTPException(
                 status_code=404, detail=f"Paper with ID {paper_id} not found"
@@ -376,7 +334,7 @@ def install_api(app) -> FastAPI:
         request.user = user
 
         work = Work(command=request, work_file=config.work_file)
-        work.run()
+        await work.run()
 
         return AddResponse(total=len(work.top))
 
@@ -384,14 +342,14 @@ def install_api(app) -> FastAPI:
     async def work_view_papers(
         request: ViewRequest = Depends(), user: str = Depends(hascap("admin"))
     ):
-        worksets, count, next_offset, total = await run_in_process_pool(
-            _work_view, serialize(ViewRequest, request)
-        )
+        work = Work(command=request, work_file=config.work_file)
+        worksets: list[Scored[PaperWorkingSet]] = list(request.slice(await work.run()))
+
         return ViewResponse(
             results=serialize(list[Scored[PaperWorkingSet]], worksets),
-            count=count,
-            next_offset=next_offset,
-            total=total,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(work.top),
         )
 
     @app.get(
@@ -403,7 +361,7 @@ def install_api(app) -> FastAPI:
         """Search for papers in the collection."""
         work = Work(command=request, work_file=config.work_file)
 
-        added = work.run()
+        added = await work.run()
 
         return IncludeResponse(total=added)
 
@@ -416,7 +374,7 @@ def install_api(app) -> FastAPI:
         """Set a flag on a paper in the collection."""
         coll = Coll(command=None)
 
-        paper = coll.collection.find_by_id(request.paper_id)
+        paper = await coll.collection.find_by_id(request.paper_id)
         if paper is None:
             return SetFlagResponse(
                 success=False, message=f"Paper with ID {request.paper_id} not found"
@@ -427,7 +385,7 @@ def install_api(app) -> FastAPI:
         else:
             paper.flags.discard(request.flag)
 
-        coll.collection.edit_paper(paper)
+        await coll.collection.edit_paper(paper)
 
         return SetFlagResponse(
             success=True,
@@ -455,7 +413,7 @@ def install_api(app) -> FastAPI:
             )
 
         # Verify the paper exists in the collection
-        existing_paper = coll.collection.find_by_id(paper.id)
+        existing_paper = await coll.collection.find_by_id(paper.id)
         if existing_paper is None:
             return EditResponse(
                 success=False,
@@ -464,7 +422,7 @@ def install_api(app) -> FastAPI:
             )
 
         # Update the paper in the collection
-        coll.collection.edit_paper(paper)
+        await coll.collection.edit_paper(paper)
 
         return EditResponse(
             success=True,
@@ -481,7 +439,7 @@ def install_api(app) -> FastAPI:
         """Autofocus the collection."""
         focus = Focus(command=None)
 
-        return request.run(focus)
+        return await request.run(focus)
 
     @app.get(
         f"{prefix}/fulltext/locate",
@@ -490,14 +448,13 @@ def install_api(app) -> FastAPI:
     )
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
-        results, count, next_offset, total = await run_in_process_pool(
-            _locate_fulltext, serialize(LocateFulltextRequest, request)
-        )
+        all_urls = await request.run()
+        urls = list(request.slice(all_urls))
         return LocateFulltextResponse(
-            results=results,
-            count=count,
-            next_offset=next_offset,
-            total=total,
+            results=urls,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(all_urls),
         )
 
     @app.get(
@@ -506,9 +463,7 @@ def install_api(app) -> FastAPI:
     )
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
-        pdf = await run_in_process_pool(
-            _download_fulltext, serialize(DownloadFulltextRequest, request)
-        )
+        pdf = await request.run()
 
         # Return as file download
         async def async_iter_pdf():

@@ -14,7 +14,7 @@ FIRST_MESSAGE = """### The HTML web page of the scientific paper:
 {}"""
 
 
-def prompt(link: str, send_input, force: bool = False) -> Paper:
+async def prompt(link: str, send_input, force: bool = False) -> Paper:
     """Analyze HTML content to extract author and affiliation information."""
     analysis: Analysis = prompt_html(
         system_prompt=llm_html_config.system_prompt,
@@ -42,9 +42,11 @@ def prompt(link: str, send_input, force: bool = False) -> Paper:
 
 
 @register_fetch(tags={"prompt", "html"})
-def html(type: Literal["doi"], link: str, *, force: bool = False) -> Paper:
-    paper = prompt(f"https://doi.org/{link}", send_input=f"{type}:{link}", force=force)
-    paper.links.append(Link(type=type, link=link))
+async def html(typ: Literal["doi"], link: str, *, force: bool = False) -> Paper:
+    paper = await prompt(
+        f"https://doi.org/{link}", send_input=f"{typ}:{link}", force=force
+    )
+    paper.links.append(Link(type=typ, link=link))
     return paper.authors and paper or None
 
 

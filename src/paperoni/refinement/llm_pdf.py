@@ -71,8 +71,8 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
 
 
 @register_fetch(tags={"prompt", "pdf"})
-def pdf(refs: list, *, force: bool = False) -> Paper:
-    p = get_pdf(
+async def pdf(refs: list, *, force: bool = False) -> Paper:
+    p = await get_pdf(
         [f"{type}:{link}" for type, link in refs], cache_policy=CachePolicies.USE_BEST
     )
 
