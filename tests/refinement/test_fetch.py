@@ -7,7 +7,7 @@ from paperoni.refinement.dblp import dblp
 from paperoni.refinement.doi import crossref, datacite, unpaywall
 from paperoni.refinement.fetch import _test_tags
 from paperoni.refinement.pubmed import pubmed
-from paperoni.refinement.title import crossref_title, openalex_title
+from paperoni.refinement.title import arxiv_title, crossref_title, openalex_title
 
 
 @pytest.mark.parametrize(
@@ -95,6 +95,9 @@ links = [
         crossref_title,
         "title:Spatially and non-spatially tuned hippocampal neurons are linear perceptual and nonlinear memory encoders",
     ),
+    # Arxiv, by title
+    (arxiv_title, "title:Attention Is All You Need"),
+    (arxiv_title, "title:Characterizing Idioms: Conventionality and Contingency"),
 ]
 
 # biorxiv links sometimes fails with requests.exceptions.HTTPError: 421 Client

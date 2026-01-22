@@ -1,0 +1,91 @@
+abstract: The dominant sequence transduction models are based on complex recurrent
+  or convolutional neural networks in an encoder-decoder configuration. The best performing
+  models also connect the encoder and decoder through an attention mechanism. We propose
+  a new simple network architecture, the Transformer, based solely on attention mechanisms,
+  dispensing with recurrence and convolutions entirely. Experiments on two machine
+  translation tasks show these models to be superior in quality while being more parallelizable
+  and requiring significantly less time to train. Our model achieves 28.4 BLEU on
+  the WMT 2014 English-to-German translation task, improving over the existing best
+  results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation
+  task, our model establishes a new single-model state-of-the-art BLEU score of 41.8
+  after training for 3.5 days on eight GPUs, a small fraction of the training costs
+  of the best models from the literature. We show that the Transformer generalizes
+  well to other tasks by applying it successfully to English constituency parsing
+  both with large and limited training data.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Ashish Vaswani
+  display_name: Ashish Vaswani
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Noam Shazeer
+  display_name: Noam Shazeer
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Niki Parmar
+  display_name: Niki Parmar
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jakob Uszkoreit
+  display_name: Jakob Uszkoreit
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Llion Jones
+  display_name: Llion Jones
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Aidan N. Gomez
+  display_name: Aidan N. Gomez
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Lukasz Kaiser
+  display_name: Lukasz Kaiser
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Illia Polosukhin
+  display_name: Illia Polosukhin
+flags: []
+links:
+- link: '1706.03762'
+  type: arxiv
+- link: https://arxiv.org/abs/1706.03762v7
+  type: html
+- link: https://arxiv.org/pdf/1706.03762v7
+  type: pdf
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2017-06-12'
+    date_precision: 3
+    links: []
+    name: arXiv
+    open: true
+    peer_reviewed: false
+    publisher: Cornell University
+    series: arXiv
+    short_name: null
+    type: preprint
+    volume: null
+title: Attention Is All You Need
+topics:
+- name: cs.CL
+- name: cs.LG

@@ -1,0 +1,61 @@
+abstract: Idioms are unlike most phrases in two important ways. First, the words in
+  an idiom have non-canonical meanings. Second, the non-canonical meanings of words
+  in an idiom are contingent on the presence of other words in the idiom. Linguistic
+  theories differ on whether these properties depend on one another, as well as whether
+  special theoretical machinery is needed to accommodate idioms. We define two measures
+  that correspond to the properties above, and we implement them using BERT (Devlin
+  et al., 2019) and XLNet(Yang et al., 2019). We show that idioms fall at the expected
+  intersection of the two dimensions, but that the dimensions themselves are not correlated.
+  Our results suggest that special machinery to handle idioms may not be warranted.
+authors:
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Michaela Socolof
+  display_name: Michaela Socolof
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Jackie Chi Kit Cheung
+  display_name: Jackie Chi Kit Cheung
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Michael Wagner
+  display_name: Michael Wagner
+- affiliations: []
+  author:
+    aliases: []
+    links: []
+    name: Timothy J. O'Donnell
+  display_name: Timothy J. O'Donnell
+flags: []
+links:
+- link: '2104.08664'
+  type: arxiv
+- link: https://arxiv.org/abs/2104.08664v3
+  type: html
+- link: https://arxiv.org/pdf/2104.08664v3
+  type: pdf
+releases:
+- pages: null
+  status: preprint
+  venue:
+    aliases: []
+    date: '2021-04-17'
+    date_precision: 3
+    links: []
+    name: arXiv
+    open: true
+    peer_reviewed: false
+    publisher: Cornell University
+    series: arXiv
+    short_name: null
+    type: preprint
+    volume: null
+title: 'Characterizing Idioms: Conventionality and Contingency'
+topics:
+- name: cs.CL

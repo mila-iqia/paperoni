@@ -246,7 +246,7 @@ class OpenAlexQueryManager:
 
         def venue_name(loc):
             vn = candidate.get("raw_source_name", None)
-            if vn is None and loc["source"]:
+            if (not vn) and loc["source"]:
                 vn = loc["source"]["display_name"]
             if vn and (vn.startswith("http") or "CiteSeer" in vn):
                 return None
@@ -261,6 +261,9 @@ class OpenAlexQueryManager:
                 break
 
         # We will use work publication date with primary location to set release
+        if not data["publication_date"]:
+            return None
+
         publication_date = date.fromisoformat(data["publication_date"])
 
         # We will save open access url in paper links

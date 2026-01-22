@@ -1,5 +1,5 @@
 import re
-from datetime import date
+from datetime import date, datetime
 
 from ..config import config
 from ..model import (
@@ -334,6 +334,119 @@ def paper_from_jats(soup, links):
             )
         ],
         topics=[Topic(name=kwd.text) for kwd in soup.select("kwd-group kwd")],
+    )
+
+
+def papers_from_arxiv(soup):
+    for entry in soup.find_all("entry"):
+        paper = paper_from_arxiv(entry)
+        if paper is not None:
+            yield paper
+
+
+def paper_from_arxiv(entry):
+    # Extract title
+    entry_title = entry.find("title")
+    if not entry_title or not entry_title.text:
+        return None
+
+    entry_title_text = entry_title.text.strip()
+
+    # Extract arxiv ID from the entry ID
+    entry_id = entry.find("id")
+    if not entry_id or not entry_id.text:
+        return None
+
+    arxiv_id_result = url_to_id(entry_id.text)
+    if not arxiv_id_result or arxiv_id_result[0] != "arxiv":
+        return None
+
+    arxiv_id = arxiv_id_result[1]
+
+    # Extract abstract
+    summary = entry.find("summary")
+    abstract = summary.text.strip() if summary and summary.text else None
+
+    # Extract authors
+    authors = []
+    for author_elem in entry.find_all("author"):
+        name_elem = author_elem.find("name")
+        if name_elem and name_elem.text:
+            author_name = name_elem.text.strip()
+            authors.append(
+                PaperAuthor(
+                    display_name=author_name,
+                    author=Author(name=author_name, aliases=[], links=[]),
+                    affiliations=[],
+                )
+            )
+
+    if not authors:
+        return None
+
+    # Extract published date
+    published = entry.find("published")
+    date_obj = None
+    date_precision = DatePrecision.year
+    if published and published.text:
+        try:
+            # Parse ISO format date: 2021-04-17T23:46:57Z
+            dt = datetime.fromisoformat(published.text.replace("Z", "+00:00"))
+            date_obj = dt.date()
+            date_precision = DatePrecision.day
+        except (ValueError, AttributeError):
+            pass
+
+    if not date_obj:
+        date_obj = date(2000, 1, 1)
+        date_precision = DatePrecision.year
+
+    # Extract topics from categories
+    topics = []
+    for category in entry.find_all("category"):
+        term = category.get("term")
+        if term:
+            topics.append(Topic(name=term))
+
+    # Extract links
+    links = [Link(type="arxiv", link=arxiv_id)]
+    for link_elem in entry.find_all("link"):
+        href = link_elem.get("href")
+        rel = link_elem.get("rel")
+        link_type = link_elem.get("type")
+        if href:
+            if rel == "alternate":
+                links.append(Link(type="html", link=href))
+            elif rel == "related" and link_type == "application/pdf":
+                links.append(Link(type="pdf", link=href))
+
+    # Create release (ArXiv is a preprint venue)
+    releases = [
+        Release(
+            venue=Venue(
+                name="arXiv",
+                date=date_obj,
+                date_precision=date_precision,
+                type=VenueType.preprint,
+                series="arXiv",
+                aliases=[],
+                links=[],
+                open=True,
+                peer_reviewed=False,
+                publisher="Cornell University",
+            ),
+            status="preprint",
+            pages=None,
+        )
+    ]
+
+    return Paper(
+        title=entry_title_text,
+        abstract=abstract,
+        authors=authors,
+        releases=releases,
+        topics=topics,
+        links=links,
     )
 
 
