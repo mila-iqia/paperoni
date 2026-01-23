@@ -43,6 +43,7 @@ from .collection.finder import find_equivalent, paper_index
 from .collection.remotecoll import RemoteCollection
 from .config import config
 from .dash import History
+from .discovery.paperoni_v2 import PaperoniV2
 from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
@@ -693,8 +694,60 @@ class Coll:
             elif not len(coll.collection) and not len(await coll.collection.exclusions()):
                 logging.warning("Collection is not empty. Use --force to drop it.")
 
+    @dataclass
+    class Validate(Productor):
+        """Validate the papers in the collection using the paperoni v2 database."""
+
+        # The paperoni v2 database
+        # [positional]
+        # [metavar v2]
+        command: Annotated[
+            Any,
+            FromEntryPoint(
+                "paperoni.discovery",
+                wrap=lambda cls: Auto[cls.query] if cls is PaperoniV2 else None,
+            ),
+        ]
+
+        async def run(self, coll: "Coll"):
+            validated = []
+            not_found = []
+            total = 0
+            send(progress=("Validated papers", len(validated), total))
+            send(progress=("Papers not found", len(not_found), total))
+
+            async for paper_v2 in self.iterate(embed=True):
+                paper_v2_json = paper_v2.info.pop("v2")
+                total += 1
+
+                if "validated" not in paper_v2.flags:
+                    continue
+
+                if paper := await coll.collection.find_paper(paper_v2):
+                    paper.flags.add("validated")
+                    await coll.collection.edit_paper(paper)
+                    validated.append(paper_v2_json)
+
+                else:
+                    not_found.append(paper_v2_json)
+
+                send(
+                    progress=(
+                        "Found papers",
+                        len(validated),
+                        len(validated) + len(not_found),
+                    )
+                )
+                send(
+                    progress=(
+                        "Validated papers",
+                        len(validated) + len(not_found),
+                        total,
+                    )
+                )
+
     # Command to execute
-    command: TaggedUnion[Search, Import, Export, Drop]
+    command: TaggedUnion[Search, Import, Export, Drop, Validate]
 
     # Collection dir
     # [alias: -c]

@@ -1,5 +1,5 @@
 from datetime import date
-from typing import AsyncIterable, Iterable
+from typing import AsyncGenerator, Iterable
 
 from ..model.classes import Paper
 
@@ -62,7 +62,7 @@ class PaperCollection:
         include_flags: list[str] = None,
         # Flags that must be False
         exclude_flags: list[str] = None,
-    ) -> AsyncIterable[Paper]:
+    ) -> AsyncGenerator[Paper, None]:
         raise NotImplementedError()
 
     def __len__(self) -> int:

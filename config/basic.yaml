@@ -45,6 +45,9 @@ paperoni:
     scrape:
       urls:
         - https://dadelani.github.io/publications
+    v2:
+      $class: paperoni.discovery.paperoni_v2:PaperoniV2
+      data: ${paperoni.data_path}/paperoniv2.json
   refine:
     prompt:
       $class: paperoni.prompt:GenAIPrompt

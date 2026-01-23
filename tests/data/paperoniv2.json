@@ -1,0 +1,650 @@
+[
+    {
+        "paper_id": "9266c713b4223e2674bf33e0cc34e9d7",
+        "title": "Laughing Hyena Distillery: Extracting Compact Recurrences From Convolutions",
+        "abstract": "Recent advances in attention-free sequence models rely on convolutions as alternatives to the attention operator at the core of Transformers. In particular, long convolution sequence models have achieved state-of-the-art performance in many domains, but incur a significant cost during auto-regressive inference workloads -- naively requiring a full pass (or caching of activations) over the input sequence for each generated token -- similarly to attention-based models. In this paper, we seek to enable $\\mathcal O(1)$ compute and memory cost per token in any pre-trained long convolution architecture to reduce memory footprint and increase throughput during generation. Concretely, our methods consist in extracting low-dimensional linear state-space models from each convolution layer, building upon rational interpolation and model-order reduction techniques. We further introduce architectural improvements to convolution-based layers such as Hyena: by weight-tying the filters across channels into heads, we achieve higher pre-training quality and reduce the number of filters to be distilled. The resulting model achieves 10x higher throughput than Transformers and 1.5x higher than Hyena at 1.3B parameters, without any loss in quality after distillation.",
+        "authors": [
+            {
+                "author": {
+                    "author_id": "d8858c05c1cdc71f186e2c2eb955c181",
+                    "name": "Stefano Massaroli",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Stefano_Massaroli1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2273389623"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2293395853"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2302267036"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "90467999"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "1f0d267f58247b33ffbbd41104394a3a",
+                        "name": "Universit\u00e9 de Montr\u00e9al.",
+                        "category": "academia"
+                    },
+                    {
+                        "institution_id": "78a83265183550c66a78ff9b5f9b960f",
+                        "name": "Mila",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "ea6d6a9e93a2f49c8bccc978d90aafd7",
+                    "name": "Michael Poli",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Michael_Poli1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2273389620"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "40585370"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "4309adf20ff20cd3a8564be88ce13d7c",
+                        "name": "Stanford University.",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "bde01b2d815b317d27e2bb21488667f5",
+                    "name": "Daniel Y Fu",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Daniel_Y_Fu1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2259931128"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2273413707"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2301804035"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "49577833"
+                        }
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "author_id": "8b4f1ca9ffdf234a87f6b10083702019",
+                    "name": "Hermann Kumbong",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Hermann_Kumbong1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2006456125"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "4309adf20ff20cd3a8564be88ce13d7c",
+                        "name": "Stanford University.",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "b3e71632aadc4036e18341de32c97573",
+                    "name": "Rom Nishijima Parnichkun",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Rom_Nishijima_Parnichkun1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2046954411"
+                        }
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "author_id": "b9fe4c1802723cbaaf944580edf703a6",
+                    "name": "Aman Timalsina",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Aman_Timalsina1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2173528923"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "50fa04b5fdf94ea1ee06a76d811bc9a6",
+                        "name": "Purdue University.",
+                        "category": "academia"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "8f4990158b9bf07810a65a5fa3b85240",
+                    "name": "David W. Romero",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~David_W._Romero1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2262444153"
+                        }
+                    ]
+                },
+                "affiliations": []
+            },
+            {
+                "author": {
+                    "author_id": "82af97c63d13297ebe7cbe2d14f15055",
+                    "name": "Quinn McIntyre",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Quinn_McIntyre1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2262444524"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "4309adf20ff20cd3a8564be88ce13d7c",
+                        "name": "Stanford University.",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "d1cef0c74d6c1efbaf73b441cde7d631",
+                    "name": "Beidi Chen",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Beidi_Chen1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2262515373"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "5cffccc10fbdaa58bd9db5868356af9a",
+                        "name": "Carnegie Mellon University",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "fcf8ffc0896461bd1847c171e417848f",
+                    "name": "Atri Rudra",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Atri_Rudra1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "1755572"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2272400719"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "740d738029438f70cc5112151169933d",
+                        "name": "University",
+                        "category": "academia"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "f652163b6ad21f682821701ddd9ca6ff",
+                    "name": "Ce Zhang",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Ce_Zhang1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "1776014"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2109269077"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2109269181"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2124943060"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2222376090"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2262511796"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2305565297"
+                        },
+                        {
+                            "type": "xplore",
+                            "link": "37086011002"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "6fcc3f84f417483577c3ea9464de7762",
+                        "name": "University of Chicago",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "c2bd09dc9e4afab08bfb5fcd684e340c",
+                    "name": "Christopher Re",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Christopher_Re1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "1803218"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2114485554"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2250761261"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2313917068"
+                        },
+                        {
+                            "type": "xplore",
+                            "link": "37085647844"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "4309adf20ff20cd3a8564be88ce13d7c",
+                        "name": "Stanford University.",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "d2fc8353a598fcc197580a7634447283",
+                    "name": "Stefano Ermon",
+                    "links": [
+                        {
+                            "type": "openreview",
+                            "link": "~Stefano_Ermon1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2248119118"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2282987268"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2490652"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "4309adf20ff20cd3a8564be88ce13d7c",
+                        "name": "Stanford University.",
+                        "category": "unknown"
+                    }
+                ]
+            },
+            {
+                "author": {
+                    "author_id": "fd676bfd2d2cc8ea03ecb12bb22bcd30",
+                    "name": "Yoshua Bengio",
+                    "links": [
+                        {
+                            "type": "bio",
+                            "link": "bengio-yoshua"
+                        },
+                        {
+                            "type": "email.mila",
+                            "link": "yoshua.bengio@mila.quebec"
+                        },
+                        {
+                            "type": "mag",
+                            "link": "161269817"
+                        },
+                        {
+                            "type": "mag",
+                            "link": "2550477701"
+                        },
+                        {
+                            "type": "mag",
+                            "link": "2762122187"
+                        },
+                        {
+                            "type": "mag",
+                            "link": "2969309771"
+                        },
+                        {
+                            "type": "mag",
+                            "link": "3049675594"
+                        },
+                        {
+                            "type": "openreview",
+                            "link": "~Yoshua_Bengio1"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "1751762"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "1865800402"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2211024206"
+                        },
+                        {
+                            "type": "semantic_scholar",
+                            "link": "2285114502"
+                        },
+                        {
+                            "type": "wpid_en",
+                            "link": "348"
+                        },
+                        {
+                            "type": "wpid_fr",
+                            "link": "96"
+                        },
+                        {
+                            "type": "xplore",
+                            "link": "37089048258"
+                        },
+                        {
+                            "type": "xplore",
+                            "link": "37089315098"
+                        },
+                        {
+                            "type": "xplore",
+                            "link": "37323338000"
+                        }
+                    ]
+                },
+                "affiliations": [
+                    {
+                        "institution_id": "1f0d267f58247b33ffbbd41104394a3a",
+                        "name": "Universit\u00e9 de Montr\u00e9al.",
+                        "category": "academia"
+                    },
+                    {
+                        "institution_id": "78a83265183550c66a78ff9b5f9b960f",
+                        "name": "Mila",
+                        "category": "unknown"
+                    }
+                ]
+            }
+        ],
+        "releases": [
+            {
+                "venue": {
+                    "venue_id": "2231305ebc59ffab234d656101ea6714",
+                    "name": "NeurIPS.cc/2023/Conference",
+                    "type": "conference",
+                    "date": {
+                        "text": "2023-09-21",
+                        "timestamp": 1695268800,
+                        "precision": 3
+                    },
+                    "links": [
+                        {
+                            "type": "openreview-venue",
+                            "link": "NeurIPS.cc/2023/Conference"
+                        }
+                    ],
+                    "publisher": null,
+                    "series": "",
+                    "volume": "NeurIPS 2023"
+                },
+                "peer_reviewed": true,
+                "status": "poster",
+                "pages": null
+            },
+            {
+                "venue": {
+                    "venue_id": "729777f3ada3f43e66622a8ed8f2bf62",
+                    "name": "Advances in Neural Information Processing Systems 36  (NeurIPS 2023)",
+                    "type": "unknown",
+                    "date": {
+                        "text": "2023",
+                        "timestamp": 1672549200,
+                        "precision": 1
+                    },
+                    "links": [],
+                    "publisher": "Curran Associates, Inc.",
+                    "series": "",
+                    "volume": "36"
+                },
+                "peer_reviewed": true,
+                "status": "published",
+                "pages": "17072\u201317116"
+            },
+            {
+                "venue": {
+                    "venue_id": "41021a76cc85ad466dbbf5c31527b81c",
+                    "name": "ArXiv",
+                    "type": "preprint",
+                    "date": {
+                        "text": "2023-10-28",
+                        "timestamp": 1698465600,
+                        "precision": 3
+                    },
+                    "links": [],
+                    "publisher": null,
+                    "series": "",
+                    "volume": null
+                },
+                "peer_reviewed": false,
+                "status": "preprint",
+                "pages": null
+            },
+            {
+                "venue": {
+                    "venue_id": "15273d5bcfb8f33fc0b1656f53c79766",
+                    "name": "",
+                    "type": "unknown",
+                    "date": {
+                        "text": "2000",
+                        "timestamp": 946702800,
+                        "precision": 0
+                    },
+                    "links": [],
+                    "publisher": null,
+                    "series": "",
+                    "volume": null
+                },
+                "peer_reviewed": false,
+                "status": "published",
+                "pages": null
+            }
+        ],
+        "topics": [
+            {
+                "name": "Long convolutions"
+            },
+            {
+                "name": "Computer Science"
+            },
+            {
+                "name": "signal processing"
+            },
+            {
+                "name": "throughput"
+            },
+            {
+                "name": "recurrence"
+            },
+            {
+                "name": "auto-regressive generation"
+            },
+            {
+                "name": "language models"
+            },
+            {
+                "name": "attention"
+            },
+            {
+                "name": "Engineering"
+            }
+        ],
+        "links": [
+            {
+                "type": "html.official",
+                "link": "https://proceedings.neurips.cc//paper_files/paper/2023/hash/371355cd42caaf83412c3fbef4688979-Abstract-Conference.html"
+            },
+            {
+                "type": "pdf.official",
+                "link": "https://proceedings.neurips.cc/paper_files/paper/2023/file/371355cd42caaf83412c3fbef4688979-Paper-Conference.pdf"
+            },
+            {
+                "type": "doi.abstract",
+                "link": "10.48550/arXiv.2310.18780",
+                "url": "https://doi.org/10.48550/arXiv.2310.18780"
+            },
+            {
+                "type": "openreview.abstract",
+                "link": "OWELckerm6",
+                "url": "https://openreview.net/forum?id=OWELckerm6"
+            },
+            {
+                "type": "openreview.pdf",
+                "link": "OWELckerm6",
+                "url": "https://openreview.net/pdf?id=OWELckerm6"
+            },
+            {
+                "type": "arxiv.abstract",
+                "link": "2310.18780",
+                "url": "https://arxiv.org/abs/2310.18780"
+            },
+            {
+                "type": "arxiv.pdf",
+                "link": "2310.18780",
+                "url": "https://arxiv.org/pdf/2310.18780.pdf"
+            },
+            {
+                "type": "dblp.abstract",
+                "link": "journals/corr/abs-2310-18780",
+                "url": "https://dblp.uni-trier.de/rec/journals/corr/abs-2310-18780"
+            },
+            {
+                "type": "pdf",
+                "link": ""
+            },
+            {
+                "type": "semantic_scholar.abstract",
+                "link": "bd50f83024e313dc2e0d4bef5cbde23284317f8e",
+                "url": "https://www.semanticscholar.org/paper/bd50f83024e313dc2e0d4bef5cbde23284317f8e"
+            },
+            {
+                "type": "semantic_scholar.abstract",
+                "link": "cb0ac335adda4ceef9987cbcbca9129e71c37f0a",
+                "url": "https://www.semanticscholar.org/paper/cb0ac335adda4ceef9987cbcbca9129e71c37f0a"
+            },
+            {
+                "type": "corpusid",
+                "link": "264590326"
+            },
+            {
+                "type": "corpusid",
+                "link": "266129752"
+            }
+        ],
+        "flags": [
+            {
+                "name": "validation",
+                "value": 1
+            }
+        ],
+        "validated": true,
+        "citation_count": 0,
+        "excerpt": null
+    }
+]

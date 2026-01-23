@@ -88,6 +88,7 @@ class Scrape(Discoverer):
     force: bool = False
 
     async def query(self):
+        """Query the pages to scrape"""
         for link in self.links:
             prompt_result = await prompt_html(
                 system_prompt=llm_config.system_prompt,
