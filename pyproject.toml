@@ -25,7 +25,6 @@ dependencies = [
     "unidecode>=1.4.0",
     "fake-useragent>=2.2.0",
     "cloudscraper>=1.2.71",
-    "eventlet>=0.40.1",
     "outsight>=0.0.2",
     "rich>=14.1.0",
     "paperazzi[vertexai]>=0.0.7",
