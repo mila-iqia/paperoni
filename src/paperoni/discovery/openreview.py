@@ -378,7 +378,7 @@ class OpenReview(Discoverer):
                 yield paper
 
     def _query_authors(self, author_or_email: str, /):
-        for profile in self.client.search_profiles(term=author_or_email, use_ES=True):
+        for profile in self.client.search_profiles(term=author_or_email):
             yield profile.id
 
     def _query_venues(self, venues):
@@ -477,17 +477,14 @@ class OpenReview(Discoverer):
                     case Focus(drive_discovery=False):
                         continue
                     case Focus(type="author", name=name, score=score):
-                        # OpenReview API does not support searching by author
-                        # name, so first search for the possible author IDs
-                        for author_id in self._query_authors(name):
-                            async for paper in self.query(
-                                venue=venue,
-                                author_id=author_id,
-                                title=title,
-                                block_size=block_size,
-                            ):
-                                paper.score = score
-                                yield paper
+                        async for paper in self.query(
+                            venue=venue,
+                            author=name,
+                            title=title,
+                            block_size=block_size,
+                        ):
+                            paper.score = score
+                            yield paper
                     case Focus(type="author_openreview", name=aid, score=score):
                         async for paper in self.query(
                             venue=venue,
@@ -516,10 +513,24 @@ class OpenReview(Discoverer):
                 "id": paper_id,
             }
         if author:
-            params = {
-                **params,
-                "content": {**params["content"], "authors": [author]},
-            }
+            if venue == [None]:
+                # OpenReview API does not support searching by author
+                # name without a venue, so first search for the possible author IDs
+                for author_id in self._query_authors(author):
+                    async for paper in self.query(
+                        venue=None,
+                        author_id=author_id,
+                        title=title,
+                        block_size=block_size,
+                        limit=limit,
+                    ):
+                        yield paper
+                return
+            else:
+                params = {
+                    **params,
+                    "content": {**params["content"], "authors": [author]},
+                }
         if author_id:
             params = {
                 **params,
