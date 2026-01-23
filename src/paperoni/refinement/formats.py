@@ -347,7 +347,7 @@ def papers_from_arxiv(soup):
 def paper_from_arxiv(entry):
     # Extract title
     entry_title = entry.find("title")
-    if not entry_title or not entry_title.text:
+    if not entry_title or not entry_title.text.strip():
         return None
 
     entry_title_text = entry_title.text.strip()
