@@ -9,7 +9,6 @@ from functools import cached_property
 from pathlib import Path
 from typing import Literal
 
-import backoff
 import chardet
 import hishel
 import httpx
@@ -22,6 +21,7 @@ from ovld import ovld
 from requests import Session
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
+from tenacity import retry, stop_after_delay, wait_exponential
 
 ERRORS = (httpx.HTTPStatusError, requests.RequestException)
 ua = UserAgent()
@@ -149,12 +149,11 @@ class Fetcher:
 
         return parse(content, format)
 
-    @backoff.on_exception(
-        backoff.expo,
-        ERRORS,
-        giveup=_giveup,
-        max_time=30,
-        logger=None,
+    @retry(
+        wait=wait_exponential(multiplier=1, exp_base=2),
+        stop=stop_after_delay(30),
+        retry=lambda retry_state: not _giveup(retry_state.outcome.exception()),
+        reraise=True,
     )
     async def read_retry(self, *args, **kwargs):
         return await self.read(*args, **kwargs)
