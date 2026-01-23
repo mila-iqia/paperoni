@@ -16,7 +16,6 @@ dependencies = [
     "ovld>=0.5.13",
     "serieux>=0.3.4",
     "gifnoc>=0.6.2",
-    "backoff>=2.2.1",
     "beautifulsoup4>=4.13.4",
     "blessed>=1.21.0",
     "requests>=2.32.3",
@@ -43,6 +42,7 @@ dependencies = [
     "httpx>=0.28.1",
     "hishel[httpx]>=1.1.8",
     "chardet>=5.2.0",
+    "tenacity>=9.1.2",
 ]
 
 [project.urls]

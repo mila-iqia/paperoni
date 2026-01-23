@@ -85,15 +85,6 @@ wheels = [
 ]
 
 [[package]]
-name = "backoff"
-version = "2.2.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/47/d7/5bbeb12c44d7c4f2fb5b56abce497eb5ed9f34d85701de869acedd602619/backoff-2.2.1.tar.gz", hash = "sha256:03f829f5bb1923180821643f8753b0502c3b682293992485b0eef2807afa5cba", size = 17001, upload-time = "2022-10-05T19:19:32.061Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/df/73/b6e24bd22e6720ca8ee9a85a0c4a2971af8497d8f3193fa05390cbd46e09/backoff-2.2.1-py3-none-any.whl", hash = "sha256:63579f9a0628e06278f7e47b7d7d5b6ce20dc65c5e96a6f3ca99a6adca0396e8", size = 15148, upload-time = "2022-10-05T19:19:30.546Z" },
-]
-
-[[package]]
 name = "beautifulsoup4"
 version = "4.14.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1261,7 +1252,6 @@ version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "authlib" },
-    { name = "backoff" },
     { name = "beautifulsoup4" },
     { name = "blessed" },
     { name = "chardet" },
@@ -1288,6 +1278,7 @@ dependencies = [
     { name = "requests-cache" },
     { name = "rich" },
     { name = "serieux" },
+    { name = "tenacity" },
     { name = "unidecode" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -1306,7 +1297,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "authlib", specifier = ">=1.6.4" },
-    { name = "backoff", specifier = ">=2.2.1" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "blessed", specifier = ">=1.21.0" },
     { name = "chardet", specifier = ">=5.2.0" },
@@ -1333,6 +1323,7 @@ requires-dist = [
     { name = "requests-cache", specifier = ">=1.2.1" },
     { name = "rich", specifier = ">=14.1.0" },
     { name = "serieux", specifier = ">=0.3.4" },
+    { name = "tenacity", specifier = ">=9.1.2" },
     { name = "unidecode", specifier = ">=1.4.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.35.0" },
 ]
