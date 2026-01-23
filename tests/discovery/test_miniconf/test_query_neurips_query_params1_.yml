@@ -1,886 +1,874 @@
-- info:
+- abstract: 'Diffusion models have emerged as effective distribution estimators in
+    vision, language, and reinforcement learning, but their use as priors in downstream
+    tasks poses an intractable posterior inference problem. This paper studies *amortized*
+    sampling of the posterior over data, $\mathbf{x}\sim p^{\rm post}(\mathbf{x})\propto
+    p(\mathbf{x})r(\mathbf{x})$, in a model that consists of a diffusion generative
+    model prior $p(\mathbf{x})$ and a black-box constraint or likelihood function
+    $r(\mathbf{x})$. We state and prove the asymptotic correctness of a data-free
+    learning objective, *relative trajectory balance*, for training a diffusion model
+    that samples from this posterior, a problem that existing methods solve only approximately
+    or in restricted cases. Relative trajectory balance arises from the generative
+    flow network perspective on diffusion models, which allows the use of deep reinforcement
+    learning techniques to improve mode coverage. Experiments illustrate the broad
+    potential of unbiased inference of arbitrary posteriors under diffusion priors:
+    in vision (classifier guidance), language (infilling under a discrete diffusion
+    LLM), and multimodal data (text-to-image generation). Beyond generative modeling,
+    we apply relative trajectory balance to the problem of continuous control with
+    a score-based behavior prior, achieving state-of-the-art results on benchmarks
+    in offline reinforcement learning. Code is available at [this link](https://github.com/GFNOrg/diffusion-finetuning).'
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/249763?format=json
+        type: profile
+      name: Siddarth Venkatraman
+    display_name: Siddarth Venkatraman
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/126135?format=json
+        type: profile
+      name: Moksh Jain
+    display_name: Moksh Jain
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/243220?format=json
+        type: profile
+      name: Luca Scimeca
+    display_name: Luca Scimeca
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: KAIST / Mila - Quebec AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/98221?format=json
+        type: profile
+      name: Minsu Kim
+    display_name: Minsu Kim
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, Université de Montréal, Jagiellonian University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/106224?format=json
+        type: profile
+      name: Marcin Sendera
+    display_name: Marcin Sendera
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/378105?format=json
+        type: profile
+      name: Mohsin Hasan
+    display_name: Mohsin Hasan
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/413753?format=json
+        type: profile
+      name: Luke Rowe
+    display_name: Luke Rowe
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Universite de Montreal / MILA
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/60090?format=json
+        type: profile
+      name: Sarthak Mittal
+    display_name: Sarthak Mittal
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, Université
+        de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/376508?format=json
+        type: profile
+      name: Pablo Lemos
+    display_name: Pablo Lemos
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Valence Labs
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/17163?format=json
+        type: profile
+      name: Emmanuel Bengio
+    display_name: Emmanuel Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/90745?format=json
+        type: profile
+      name: Alexandre Adam
+    display_name: Alexandre Adam
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, University
+        of Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/146114?format=json
+        type: profile
+      name: Jarrid Rector-Brooks
+    display_name: Jarrid Rector-Brooks
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/U. Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/68983?format=json
+        type: profile
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Québec AI Institute &amp; Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/229844?format=json
+        type: profile
+      name: Glen Berseth
+    display_name: Glen Berseth
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Edinburgh
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/183841?format=json
+        type: profile
+      name: Nikolay Malkin
+    display_name: Nikolay Malkin
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:6e2d5d50a943a0e0d738377f51011685
   key: miniconf:neurips:6e2d5d50a943a0e0d738377f51011685
-  paper:
-    abstract: 'Diffusion models have emerged as effective distribution estimators
-      in vision, language, and reinforcement learning, but their use as priors in
-      downstream tasks poses an intractable posterior inference problem. This paper
-      studies *amortized* sampling of the posterior over data, $\mathbf{x}\sim p^{\rm
-      post}(\mathbf{x})\propto p(\mathbf{x})r(\mathbf{x})$, in a model that consists
-      of a diffusion generative model prior $p(\mathbf{x})$ and a black-box constraint
-      or likelihood function $r(\mathbf{x})$. We state and prove the asymptotic correctness
-      of a data-free learning objective, *relative trajectory balance*, for training
-      a diffusion model that samples from this posterior, a problem that existing
-      methods solve only approximately or in restricted cases. Relative trajectory
-      balance arises from the generative flow network perspective on diffusion models,
-      which allows the use of deep reinforcement learning techniques to improve mode
-      coverage. Experiments illustrate the broad potential of unbiased inference of
-      arbitrary posteriors under diffusion priors: in vision (classifier guidance),
-      language (infilling under a discrete diffusion LLM), and multimodal data (text-to-image
-      generation). Beyond generative modeling, we apply relative trajectory balance
-      to the problem of continuous control with a score-based behavior prior, achieving
-      state-of-the-art results on benchmarks in offline reinforcement learning. Code
-      is available at [this link](https://github.com/GFNOrg/diffusion-finetuning).'
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/249763?format=json
-          type: profile
-        name: Siddarth Venkatraman
-      display_name: Siddarth Venkatraman
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/126135?format=json
-          type: profile
-        name: Moksh Jain
-      display_name: Moksh Jain
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/243220?format=json
-          type: profile
-        name: Luca Scimeca
-      display_name: Luca Scimeca
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: KAIST / Mila - Quebec AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/98221?format=json
-          type: profile
-        name: Minsu Kim
-      display_name: Minsu Kim
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, Université de Montréal, Jagiellonian University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/106224?format=json
-          type: profile
-        name: Marcin Sendera
-      display_name: Marcin Sendera
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/378105?format=json
-          type: profile
-        name: Mohsin Hasan
-      display_name: Mohsin Hasan
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/413753?format=json
-          type: profile
-        name: Luke Rowe
-      display_name: Luke Rowe
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Universite de Montreal / MILA
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/60090?format=json
-          type: profile
-        name: Sarthak Mittal
-      display_name: Sarthak Mittal
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/376508?format=json
-          type: profile
-        name: Pablo Lemos
-      display_name: Pablo Lemos
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Valence Labs
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/17163?format=json
-          type: profile
-        name: Emmanuel Bengio
-      display_name: Emmanuel Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/90745?format=json
-          type: profile
-        name: Alexandre Adam
-      display_name: Alexandre Adam
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          University of Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/146114?format=json
-          type: profile
-        name: Jarrid Rector-Brooks
-      display_name: Jarrid Rector-Brooks
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/U. Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/68983?format=json
-          type: profile
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Québec AI Institute &amp; Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/229844?format=json
-          type: profile
-        name: Glen Berseth
-      display_name: Glen Berseth
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Edinburgh
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/183841?format=json
-          type: profile
-        name: Nikolay Malkin
-      display_name: Nikolay Malkin
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/8b21a7ea42cbcd1c29a7a88c444cce45-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/94137
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
-      type: abstract
-    - link: gVTkMsaaGI
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/6e2d5d50a943a0e0d738377f51011685
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Amortizing intractable inference in diffusion models for vision, language,
-      and control
-    topics:
-    - name: Generative Models->Diffusion models
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/8b21a7ea42cbcd1c29a7a88c444cce45-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/94137
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
+    type: abstract
+  - link: gVTkMsaaGI
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/6e2d5d50a943a0e0d738377f51011685
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Amortizing intractable inference in diffusion models for vision, language,
+    and control
+  topics:
+  - name: Generative Models->Diffusion models
+- abstract: We study the problem of training diffusion models to sample from a distribution
+    with a given unnormalized density or energy function. We benchmark several diffusion-structured
+    inference methods, including simulation-based variational approaches and off-policy
+    methods (continuous generative flow networks). Our results shed light on the relative
+    advantages of existing algorithms while bringing into question some claims from
+    past work. We also propose a novel exploration strategy for off-policy methods,
+    based on local search in the target space with the use of a replay buffer, and
+    show that it improves the quality of samples on a variety of target distributions.
+    Our code for the sampling methods and benchmarks studied is made public at [this
+    link](https://github.com/GFNOrg/gfn-diffusion) as a base for future work on diffusion
+    models for amortized inference.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, Université de Montréal, Jagiellonian University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/106224?format=json
+        type: profile
+      name: Marcin Sendera
+    display_name: Marcin Sendera
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: KAIST / Mila - Quebec AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/98221?format=json
+        type: profile
+      name: Minsu Kim
+    display_name: Minsu Kim
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Universite de Montreal / MILA
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/60090?format=json
+        type: profile
+      name: Sarthak Mittal
+    display_name: Sarthak Mittal
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, Université
+        de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/376508?format=json
+        type: profile
+      name: Pablo Lemos
+    display_name: Pablo Lemos
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/243220?format=json
+        type: profile
+      name: Luca Scimeca
+    display_name: Luca Scimeca
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, University
+        of Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/146114?format=json
+        type: profile
+      name: Jarrid Rector-Brooks
+    display_name: Jarrid Rector-Brooks
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/90745?format=json
+        type: profile
+      name: Alexandre Adam
+    display_name: Alexandre Adam
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/U. Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/68983?format=json
+        type: profile
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Edinburgh
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/183841?format=json
+        type: profile
+      name: Nikolay Malkin
+    display_name: Nikolay Malkin
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:38811c5285e34e2e3319ab7d9f2cfa5b
   key: miniconf:neurips:38811c5285e34e2e3319ab7d9f2cfa5b
-  paper:
-    abstract: We study the problem of training diffusion models to sample from a distribution
-      with a given unnormalized density or energy function. We benchmark several diffusion-structured
-      inference methods, including simulation-based variational approaches and off-policy
-      methods (continuous generative flow networks). Our results shed light on the
-      relative advantages of existing algorithms while bringing into question some
-      claims from past work. We also propose a novel exploration strategy for off-policy
-      methods, based on local search in the target space with the use of a replay
-      buffer, and show that it improves the quality of samples on a variety of target
-      distributions. Our code for the sampling methods and benchmarks studied is made
-      public at [this link](https://github.com/GFNOrg/gfn-diffusion) as a base for
-      future work on diffusion models for amortized inference.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, Université de Montréal, Jagiellonian University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/106224?format=json
-          type: profile
-        name: Marcin Sendera
-      display_name: Marcin Sendera
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: KAIST / Mila - Quebec AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/98221?format=json
-          type: profile
-        name: Minsu Kim
-      display_name: Minsu Kim
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Universite de Montreal / MILA
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/60090?format=json
-          type: profile
-        name: Sarthak Mittal
-      display_name: Sarthak Mittal
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/376508?format=json
-          type: profile
-        name: Pablo Lemos
-      display_name: Pablo Lemos
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/243220?format=json
-          type: profile
-        name: Luca Scimeca
-      display_name: Luca Scimeca
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          University of Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/146114?format=json
-          type: profile
-        name: Jarrid Rector-Brooks
-      display_name: Jarrid Rector-Brooks
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/90745?format=json
-          type: profile
-        name: Alexandre Adam
-      display_name: Alexandre Adam
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/U. Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/68983?format=json
-          type: profile
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Edinburgh
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/183841?format=json
-          type: profile
-        name: Nikolay Malkin
-      display_name: Nikolay Malkin
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/93c936b9e492def9c00782cab79dbc6d-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/93194
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/93c936b9e492def9c00782cab79dbc6d-Abstract-Conference.html
-      type: abstract
-    - link: vieIamY2Gi
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/93c936b9e492def9c00782cab79dbc6d-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/38811c5285e34e2e3319ab7d9f2cfa5b
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Improved off-policy training of diffusion samplers
-    topics:
-    - name: Generative Models->Diffusion models
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/93c936b9e492def9c00782cab79dbc6d-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/93194
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/93c936b9e492def9c00782cab79dbc6d-Abstract-Conference.html
+    type: abstract
+  - link: vieIamY2Gi
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/93c936b9e492def9c00782cab79dbc6d-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/38811c5285e34e2e3319ab7d9f2cfa5b
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Improved off-policy training of diffusion samplers
+  topics:
+  - name: Generative Models->Diffusion models
+- abstract: \emph{Metacognitive knowledge} refers to humans' intuitive knowledge of
+    their own thinking and reasoning processes. Today's best LLMs clearly possess
+    some reasoning processes. The paper gives evidence that they also  have metacognitive
+    knowledge, including ability to name skills and procedures to apply given a task.
+    We explore this primarily in context of math reasoning, developing a prompt-guided
+    interaction procedure  to get a powerful  LLM to assign sensible skill labels
+    to math questions, followed by having it perform semantic clustering to obtain
+    coarser families of skill labels. These coarse skill labels look interpretable
+    to humans.To validate that these skill labels are meaningful and relevant to the
+    LLM's reasoning processes we perform the following experiments. (a) We ask GPT-4
+    to assign skill labels to training questions in math datasets GSM8K and MATH.  (b)
+    When using an LLM to solve the test questions, we present it with the full list
+    of skill labels and ask it to identify the skill needed. Then it is presented
+    with randomly selected exemplar solved questions associated with that skill label.  This
+    improves accuracy on GSM8k and MATH for several strong LLMs, including code-assisted
+    models. The methodology presented is domain-agnostic,  even though this article
+    applies it to math problems.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Meta &amp; MILA-Quebec AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/123948?format=json
+        type: profile
+      name: Aniket Didolkar
+    display_name: Aniket Didolkar
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/20474?format=json
+        type: profile
+      name: Anirudh Goyal
+    display_name: Anirudh Goyal
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Google DeepMind
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/23105?format=json
+        type: profile
+      name: Nan Rosemary Ke
+    display_name: Nan Rosemary Ke
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Max Planck Institute for Intelligent Systems
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/224679?format=json
+        type: profile
+      name: Siyuan Guo
+    display_name: Siyuan Guo
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: DeepMind
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/184078?format=json
+        type: profile
+      name: Michal Valko
+    display_name: Michal Valko
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Google DeepMind
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/15210?format=json
+        type: profile
+      name: Timothy Lillicrap
+    display_name: Timothy Lillicrap
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: DeepMind
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/413836?format=json
+        type: profile
+      name: Danilo Jimenez Rezende
+    display_name: Danilo Jimenez Rezende
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/U. Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/68983?format=json
+        type: profile
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Google DeepMind
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/91622?format=json
+        type: profile
+      name: Michael Mozer
+    display_name: Michael Mozer
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Princeton University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/10845?format=json
+        type: profile
+      name: Sanjeev Arora
+    display_name: Sanjeev Arora
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:306b0c0a95972617146049ce1a9a1613
   key: miniconf:neurips:306b0c0a95972617146049ce1a9a1613
-  paper:
-    abstract: \emph{Metacognitive knowledge} refers to humans' intuitive knowledge
-      of their own thinking and reasoning processes. Today's best LLMs clearly possess
-      some reasoning processes. The paper gives evidence that they also  have metacognitive
-      knowledge, including ability to name skills and procedures to apply given a
-      task. We explore this primarily in context of math reasoning, developing a prompt-guided
-      interaction procedure  to get a powerful  LLM to assign sensible skill labels
-      to math questions, followed by having it perform semantic clustering to obtain
-      coarser families of skill labels. These coarse skill labels look interpretable
-      to humans.To validate that these skill labels are meaningful and relevant to
-      the LLM's reasoning processes we perform the following experiments. (a) We ask
-      GPT-4 to assign skill labels to training questions in math datasets GSM8K and
-      MATH.  (b) When using an LLM to solve the test questions, we present it with
-      the full list of skill labels and ask it to identify the skill needed. Then
-      it is presented with randomly selected exemplar solved questions associated
-      with that skill label.  This improves accuracy on GSM8k and MATH for several
-      strong LLMs, including code-assisted models. The methodology presented is domain-agnostic,  even
-      though this article applies it to math problems.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Meta &amp; MILA-Quebec AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/123948?format=json
-          type: profile
-        name: Aniket Didolkar
-      display_name: Aniket Didolkar
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/20474?format=json
-          type: profile
-        name: Anirudh Goyal
-      display_name: Anirudh Goyal
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Google DeepMind
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/23105?format=json
-          type: profile
-        name: Nan Rosemary Ke
-      display_name: Nan Rosemary Ke
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Max Planck Institute for Intelligent Systems
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/224679?format=json
-          type: profile
-        name: Siyuan Guo
-      display_name: Siyuan Guo
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: DeepMind
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/184078?format=json
-          type: profile
-        name: Michal Valko
-      display_name: Michal Valko
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Google DeepMind
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/15210?format=json
-          type: profile
-        name: Timothy Lillicrap
-      display_name: Timothy Lillicrap
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: DeepMind
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/413836?format=json
-          type: profile
-        name: Danilo Jimenez Rezende
-      display_name: Danilo Jimenez Rezende
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/U. Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/68983?format=json
-          type: profile
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Google DeepMind
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/91622?format=json
-          type: profile
-        name: Michael Mozer
-      display_name: Michael Mozer
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Princeton University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/10845?format=json
-          type: profile
-        name: Sanjeev Arora
-      display_name: Sanjeev Arora
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/2318d75a06437eaa257737a5cf3ab83c-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/96107
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/2318d75a06437eaa257737a5cf3ab83c-Abstract-Conference.html
-      type: abstract
-    - link: D19UyP4HYk
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/2318d75a06437eaa257737a5cf3ab83c-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/306b0c0a95972617146049ce1a9a1613
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: 'Metacognitive Capabilities of LLMs: An Exploration in Mathematical Problem
-      Solving'
-    topics:
-    - name: Generative Models->In Context Learning
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/2318d75a06437eaa257737a5cf3ab83c-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/96107
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/2318d75a06437eaa257737a5cf3ab83c-Abstract-Conference.html
+    type: abstract
+  - link: D19UyP4HYk
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/2318d75a06437eaa257737a5cf3ab83c-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/306b0c0a95972617146049ce1a9a1613
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: 'Metacognitive Capabilities of LLMs: An Exploration in Mathematical Problem
+    Solving'
+  topics:
+  - name: Generative Models->In Context Learning
+- abstract: Generative models hold great promise for small molecule discovery, significantly
+    increasing the size of search space compared to traditional in silico screening
+    libraries. However, most existing machine learning methods for small molecule
+    generation suffer from poor synthesizability of candidate compounds, making experimental
+    validation difficult. In this paper we propose Reaction-GFlowNet (RGFN), an extension
+    of the GFlowNet framework that operates directly in the space of chemical reactions,
+    thereby allowing out-of-the-box synthesizability while maintaining comparable
+    quality of generated candidates. We demonstrate that with the proposed set of
+    reactions and building blocks, it is possible to obtain a search space of molecules
+    orders of magnitude larger than existing screening libraries coupled with low
+    cost of synthesis. We also show that the approach scales to very large fragment
+    libraries, further increasing the number of potential molecules. We demonstrate
+    the effectiveness of the proposed approach across a range of oracle models, including
+    pretrained proxy models and GPU-accelerated docking.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: SickKids &amp;amp; Vector Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/153737?format=json
+        type: profile
+      name: Michał Koziarski
+    display_name: Michał Koziarski
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Toronto
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/377963?format=json
+        type: profile
+      name: Andrei Rekesh
+    display_name: Andrei Rekesh
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Toronto
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/377966?format=json
+        type: profile
+      name: Dmytro Shevchuk
+    display_name: Dmytro Shevchuk
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, Université
+        de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/377962?format=json
+        type: profile
+      name: Almer van der Sloot
+    display_name: Almer van der Sloot
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Jagiellonian University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/122790?format=json
+        type: profile
+      name: Piotr Gaiński
+    display_name: Piotr Gaiński
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/U. Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/68983?format=json
+        type: profile
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, McGill University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/108576?format=json
+        type: profile
+      name: Chenghao Liu
+    display_name: Chenghao Liu
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Toronto
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/377969?format=json
+        type: profile
+      name: Mike Tyers
+    display_name: Mike Tyers
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Toronto
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/377972?format=json
+        type: profile
+      name: Robert Batey
+    display_name: Robert Batey
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:2f61bc8be89fcc808b4679e1d5de7c60
   key: miniconf:neurips:2f61bc8be89fcc808b4679e1d5de7c60
-  paper:
-    abstract: Generative models hold great promise for small molecule discovery, significantly
-      increasing the size of search space compared to traditional in silico screening
-      libraries. However, most existing machine learning methods for small molecule
-      generation suffer from poor synthesizability of candidate compounds, making
-      experimental validation difficult. In this paper we propose Reaction-GFlowNet
-      (RGFN), an extension of the GFlowNet framework that operates directly in the
-      space of chemical reactions, thereby allowing out-of-the-box synthesizability
-      while maintaining comparable quality of generated candidates. We demonstrate
-      that with the proposed set of reactions and building blocks, it is possible
-      to obtain a search space of molecules orders of magnitude larger than existing
-      screening libraries coupled with low cost of synthesis. We also show that the
-      approach scales to very large fragment libraries, further increasing the number
-      of potential molecules. We demonstrate the effectiveness of the proposed approach
-      across a range of oracle models, including pretrained proxy models and GPU-accelerated
-      docking.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: SickKids &amp;amp; Vector Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/153737?format=json
-          type: profile
-        name: Michał Koziarski
-      display_name: Michał Koziarski
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Toronto
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/377963?format=json
-          type: profile
-        name: Andrei Rekesh
-      display_name: Andrei Rekesh
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Toronto
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/377966?format=json
-          type: profile
-        name: Dmytro Shevchuk
-      display_name: Dmytro Shevchuk
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/377962?format=json
-          type: profile
-        name: Almer van der Sloot
-      display_name: Almer van der Sloot
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Jagiellonian University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/122790?format=json
-          type: profile
-        name: Piotr Gaiński
-      display_name: Piotr Gaiński
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/U. Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/68983?format=json
-          type: profile
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, McGill University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/108576?format=json
-          type: profile
-        name: Chenghao Liu
-      display_name: Chenghao Liu
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Toronto
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/377969?format=json
-          type: profile
-        name: Mike Tyers
-      display_name: Mike Tyers
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Toronto
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/377972?format=json
-          type: profile
-        name: Robert Batey
-      display_name: Robert Batey
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/53704142f230054140418ecd8857f391-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/94040
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/53704142f230054140418ecd8857f391-Abstract-Conference.html
-      type: abstract
-    - link: hpvJwmzEHX
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/53704142f230054140418ecd8857f391-Abstract-Conference.html
-      type: paper
-    - link: https://neurips.cc/media/neurips-2024/Slides/94040.pdf
-      type: slides
-    - link: neurips/2024-12-11/2f61bc8be89fcc808b4679e1d5de7c60
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: 'RGFN: Synthesizable Molecular Generation Using GFlowNets'
-    topics:
-    - name: Computational Biology
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/53704142f230054140418ecd8857f391-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/94040
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/53704142f230054140418ecd8857f391-Abstract-Conference.html
+    type: abstract
+  - link: hpvJwmzEHX
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/53704142f230054140418ecd8857f391-Abstract-Conference.html
+    type: paper
+  - link: https://neurips.cc/media/neurips-2024/Slides/94040.pdf
+    type: slides
+  - link: neurips/2024-12-11/2f61bc8be89fcc808b4679e1d5de7c60
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: 'RGFN: Synthesizable Molecular Generation Using GFlowNets'
+  topics:
+  - name: Computational Biology
+- abstract: Modeling stochastic and irregularly sampled time series is a challenging
+    problem found in a wide range of applications, especially in medicine. Neural
+    stochastic differential equations (Neural SDEs) are an attractive modeling technique
+    for this problem, which parameterize the drift and diffusion terms of an SDE with
+    neural networks. However, current algorithms for training Neural SDEs require
+    backpropagation through the SDE dynamics, greatly limiting their scalability and
+    stability. To address this, we propose **Trajectory Flow Matching** (TFM), which
+    trains a Neural SDE in a *simulation-free* manner, bypassing backpropagation through
+    the dynamics. TFM leverages the flow matching technique from generative modeling
+    to model time series. In this work we first establish necessary conditions for
+    TFM to learn time series data. Next, we present a reparameterization trick which
+    improves training stability. Finally, we adapt TFM to the clinical time series
+    setting, demonstrating improved performance on four clinical time series datasets
+    both in terms of absolute performance and uncertainty prediction, a crucial parameter
+    in this setting.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, Quebec AI Institute, McGill University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/276345?format=json
+        type: profile
+      name: Xi (Nicole) Zhang
+    display_name: Xi (Nicole) Zhang
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Yale School of Medicine
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/378248?format=json
+        type: profile
+      name: Yuan Pu
+    display_name: Yuan Pu
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Cambridge
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/378250?format=json
+        type: profile
+      name: Yuki Kawamura
+    display_name: Yuki Kawamura
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Yale University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/378222?format=json
+        type: profile
+      name: Andrew Loza
+    display_name: Andrew Loza
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/U. Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/68983?format=json
+        type: profile
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Yale School of Medicine
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/110532?format=json
+        type: profile
+      name: Dennis Shung
+    display_name: Dennis Shung
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/185329?format=json
+        type: profile
+      name: Alexander Tong
+    display_name: Alexander Tong
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:d9dbc51dc534921589adf460c85cd824
   key: miniconf:neurips:d9dbc51dc534921589adf460c85cd824
-  paper:
-    abstract: Modeling stochastic and irregularly sampled time series is a challenging
-      problem found in a wide range of applications, especially in medicine. Neural
-      stochastic differential equations (Neural SDEs) are an attractive modeling technique
-      for this problem, which parameterize the drift and diffusion terms of an SDE
-      with neural networks. However, current algorithms for training Neural SDEs require
-      backpropagation through the SDE dynamics, greatly limiting their scalability
-      and stability. To address this, we propose **Trajectory Flow Matching** (TFM),
-      which trains a Neural SDE in a *simulation-free* manner, bypassing backpropagation
-      through the dynamics. TFM leverages the flow matching technique from generative
-      modeling to model time series. In this work we first establish necessary conditions
-      for TFM to learn time series data. Next, we present a reparameterization trick
-      which improves training stability. Finally, we adapt TFM to the clinical time
-      series setting, demonstrating improved performance on four clinical time series
-      datasets both in terms of absolute performance and uncertainty prediction, a
-      crucial parameter in this setting.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, Quebec AI Institute, McGill University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/276345?format=json
-          type: profile
-        name: Xi (Nicole) Zhang
-      display_name: Xi (Nicole) Zhang
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Yale School of Medicine
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/378248?format=json
-          type: profile
-        name: Yuan Pu
-      display_name: Yuan Pu
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Cambridge
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/378250?format=json
-          type: profile
-        name: Yuki Kawamura
-      display_name: Yuki Kawamura
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Yale University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/378222?format=json
-          type: profile
-        name: Andrew Loza
-      display_name: Andrew Loza
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/U. Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/68983?format=json
-          type: profile
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Yale School of Medicine
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/110532?format=json
-          type: profile
-        name: Dennis Shung
-      display_name: Dennis Shung
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/185329?format=json
-          type: profile
-        name: Alexander Tong
-      display_name: Alexander Tong
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/c1e67cde895c3c91edb43569ad0df260-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/94212
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/c1e67cde895c3c91edb43569ad0df260-Abstract-Conference.html
-      type: abstract
-    - link: fNakQltI1N
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/c1e67cde895c3c91edb43569ad0df260-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/d9dbc51dc534921589adf460c85cd824
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (spotlight)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Trajectory Flow Matching with Applications to Clinical Time Series Modelling
-    topics:
-    - name: Applications
-  score: 0.0
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/c1e67cde895c3c91edb43569ad0df260-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/94212
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/c1e67cde895c3c91edb43569ad0df260-Abstract-Conference.html
+    type: abstract
+  - link: fNakQltI1N
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/c1e67cde895c3c91edb43569ad0df260-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/d9dbc51dc534921589adf460c85cd824
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (spotlight)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Trajectory Flow Matching with Applications to Clinical Time Series Modelling
+  topics:
+  - name: Applications

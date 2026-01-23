@@ -1,118 +1,116 @@
-- info:
+- abstract: We study the problem of training diffusion models to sample from a distribution
+    with a given unnormalized density or energy function. We benchmark several diffusion-structured
+    inference methods, including simulation-based variational approaches and off-policy
+    methods (continuous generative flow networks). Our results shed light on the relative
+    advantages of existing algorithms while bringing into question some claims from
+    past work. We also propose a novel exploration strategy for off-policy methods,
+    based on local search in the target space with the use of a replay buffer, and
+    show that it improves the quality of samples on a variety of target distributions.
+    Our code for the sampling methods and benchmarks studied is made public at [this
+    link](https://github.com/GFNOrg/gfn-diffusion) as a base for future work on diffusion
+    models for amortized inference.
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Marcin_Sendera1
+        type: openreview
+      name: Marcin Sendera
+    display_name: Marcin Sendera
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Minsu_Kim2
+        type: openreview
+      name: Minsu Kim
+    display_name: Minsu Kim
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Sarthak_Mittal1
+        type: openreview
+      name: Sarthak Mittal
+    display_name: Sarthak Mittal
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Pablo_Lemos1
+        type: openreview
+      name: Pablo Lemos
+    display_name: Pablo Lemos
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Luca_Scimeca1
+        type: openreview
+      name: Luca Scimeca
+    display_name: Luca Scimeca
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Jarrid_Rector-Brooks2
+        type: openreview
+      name: Jarrid Rector-Brooks
+    display_name: Jarrid Rector-Brooks
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Alexandre_Adam1
+        type: openreview
+      name: Alexandre Adam
+    display_name: Alexandre Adam
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Yoshua_Bengio1
+        type: openreview
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Nikolay_Malkin1
+        type: openreview
+      name: Nikolay Malkin
+    display_name: Nikolay Malkin
+  flags: []
+  info:
     discovered_by:
       openreview: vieIamY2Gi
   key: openreview:vieIamY2Gi
-  paper:
-    abstract: We study the problem of training diffusion models to sample from a distribution
-      with a given unnormalized density or energy function. We benchmark several diffusion-structured
-      inference methods, including simulation-based variational approaches and off-policy
-      methods (continuous generative flow networks). Our results shed light on the
-      relative advantages of existing algorithms while bringing into question some
-      claims from past work. We also propose a novel exploration strategy for off-policy
-      methods, based on local search in the target space with the use of a replay
-      buffer, and show that it improves the quality of samples on a variety of target
-      distributions. Our code for the sampling methods and benchmarks studied is made
-      public at [this link](https://github.com/GFNOrg/gfn-diffusion) as a base for
-      future work on diffusion models for amortized inference.
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Marcin_Sendera1
-          type: openreview
-        name: Marcin Sendera
-      display_name: Marcin Sendera
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Minsu_Kim2
-          type: openreview
-        name: Minsu Kim
-      display_name: Minsu Kim
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Sarthak_Mittal1
-          type: openreview
-        name: Sarthak Mittal
-      display_name: Sarthak Mittal
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Pablo_Lemos1
-          type: openreview
-        name: Pablo Lemos
-      display_name: Pablo Lemos
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Luca_Scimeca1
-          type: openreview
-        name: Luca Scimeca
-      display_name: Luca Scimeca
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Jarrid_Rector-Brooks2
-          type: openreview
-        name: Jarrid Rector-Brooks
-      display_name: Jarrid Rector-Brooks
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Alexandre_Adam1
-          type: openreview
-        name: Alexandre Adam
-      display_name: Alexandre Adam
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Yoshua_Bengio1
-          type: openreview
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Nikolay_Malkin1
-          type: openreview
-        name: Nikolay Malkin
-      display_name: Nikolay Malkin
-    flags: []
-    links:
-    - link: vieIamY2Gi
-      type: openreview
-    releases:
-    - pages: null
-      status: poster
-      venue:
-        aliases: []
-        date: '2024-09-25'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2024/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2024/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2024
-    title: Improved off-policy training of diffusion samplers
-    topics:
-    - name: diffusion models
-    - name: amortized inference
-    - name: stochastic control
-    - name: GFlowNets
-  score: 0.0
+  links:
+  - link: vieIamY2Gi
+    type: openreview
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2024-09-25'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2024/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2024/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2024
+  title: Improved off-policy training of diffusion samplers
+  topics:
+  - name: diffusion models
+  - name: amortized inference
+  - name: stochastic control
+  - name: GFlowNets

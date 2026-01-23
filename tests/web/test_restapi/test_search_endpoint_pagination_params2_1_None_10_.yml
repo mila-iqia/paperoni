@@ -23,6 +23,8 @@
     display_name: Sarah Mitchell
   flags: []
   id: 9
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -40,6 +42,7 @@
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Texture Analysis Standards for Kiwifruit Quality Control
   topics: []
   version: '2026-01-19T00:00:00'

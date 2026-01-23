@@ -1,311 +1,307 @@
-- info:
+- abstract: 'We present GraphMix, a regularization method for Graph Neural Network
+    based semi-supervised object classification, whereby we propose to train a fully-connected
+    network jointly with the graph neural network via parameter sharing and interpolation-based
+    regularization. Further, we provide a theoretical analysis of how GraphMix improves
+    the generalization bounds of the underlying graph neural network, without making
+    any assumptions about the "aggregation" layer or the depth of the graph neural
+    networks. We experimentally validate this analysis by applying GraphMix to various
+    architectures such as Graph Convolutional Networks, Graph Attention Networks and
+    Graph-U-Net. Despite its simplicity, we demonstrate that GraphMix can consistently
+    improve or closely match state-of-the-art performance using even simpler architectures
+    such as Graph Convolutional Networks, across three established graph benchmarks:
+    Cora, Citeseer and Pubmed citation network datasets, as well as three newly proposed
+    datasets: Cora-Full, Co-author-CS and Co-author-Physics.'
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Quebec Artificial Intelligence Institute
+    author:
+      aliases: []
+      links:
+      - link: A5083701330
+        type: openalex
+      - link: 0000-0002-4911-4709
+        type: orcid
+      name: Vikas Verma
+    display_name: Vikas Verma
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Quebec Artificial Intelligence Institute
+    author:
+      aliases: []
+      links:
+      - link: A5101458727
+        type: openalex
+      - link: 0000-0003-2961-8413
+        type: orcid
+      name: Meng Qu
+    display_name: Meng Qu
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Massachusetts Institute of Technology
+    author:
+      aliases: []
+      links:
+      - link: A5003184366
+        type: openalex
+      - link: 0000-0002-5361-9793
+        type: orcid
+      name: Kenji Kawaguchi
+    display_name: Kenji Kawaguchi
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: A5030891292
+        type: openalex
+      name: Alex Lamb
+    display_name: Alex Lamb
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Quebec Artificial Intelligence Institute
+    author:
+      aliases: []
+      links:
+      - link: A5086198262
+        type: openalex
+      - link: 0000-0002-9322-3515
+        type: orcid
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Aalto University
+    author:
+      aliases: []
+      links:
+      - link: A5057931031
+        type: openalex
+      - link: 0000-0001-5088-4041
+        type: orcid
+      name: Juho Kannala
+    display_name: Juho Kannala
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Quebec Artificial Intelligence Institute
+    author:
+      aliases: []
+      links:
+      - link: A5077231313
+        type: openalex
+      - link: 0000-0002-6819-4185
+        type: orcid
+      name: Jian Tang
+    display_name: Jian Tang
+  flags: []
+  info:
     discovered_by:
       openalex: W3092206109
   key: openalex:W3092206109
-  paper:
-    abstract: 'We present GraphMix, a regularization method for Graph Neural Network
-      based semi-supervised object classification, whereby we propose to train a fully-connected
-      network jointly with the graph neural network via parameter sharing and interpolation-based
-      regularization. Further, we provide a theoretical analysis of how GraphMix improves
-      the generalization bounds of the underlying graph neural network, without making
-      any assumptions about the "aggregation" layer or the depth of the graph neural
-      networks. We experimentally validate this analysis by applying GraphMix to various
-      architectures such as Graph Convolutional Networks, Graph Attention Networks
-      and Graph-U-Net. Despite its simplicity, we demonstrate that GraphMix can consistently
-      improve or closely match state-of-the-art performance using even simpler architectures
-      such as Graph Convolutional Networks, across three established graph benchmarks:
-      Cora, Citeseer and Pubmed citation network datasets, as well as three newly
-      proposed datasets: Cora-Full, Co-author-CS and Co-author-Physics.'
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5083701330
-          type: openalex
-        - link: 0000-0002-4911-4709
-          type: orcid
-        name: Vikas Verma
-      display_name: Vikas Verma
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5101458727
-          type: openalex
-        - link: 0000-0003-2961-8413
-          type: orcid
-        name: Meng Qu
-      display_name: Meng Qu
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Massachusetts Institute of Technology
-      author:
-        aliases: []
-        links:
-        - link: A5003184366
-          type: openalex
-        - link: 0000-0002-5361-9793
-          type: orcid
-        name: Kenji Kawaguchi
-      display_name: Kenji Kawaguchi
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: A5030891292
-          type: openalex
-        name: Alex Lamb
-      display_name: Alex Lamb
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5086198262
-          type: openalex
-        - link: 0000-0002-9322-3515
-          type: orcid
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Aalto University
-      author:
-        aliases: []
-        links:
-        - link: A5057931031
-          type: openalex
-        - link: 0000-0001-5088-4041
-          type: orcid
-        name: Juho Kannala
-      display_name: Juho Kannala
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5077231313
-          type: openalex
-        - link: 0000-0002-6819-4185
-          type: orcid
-        name: Jian Tang
-      display_name: Jian Tang
-    flags: []
-    links:
-    - link: '1909.11715'
-      type: arxiv
-    - link: 10.1609/aaai.v35i11.17203
-      type: doi
-    - link: '3092206109'
-      type: mag
-    - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
-      type: open-access
-    - link: W3092206109
-      type: openalex
-    - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
-      type: pdf
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2021-05-18'
-        date_precision: 3
-        links:
-        - link: 10.1609/aaai.v35i11.17203
-          type: doi
-        - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
-          type: pdf
-        name: Proceedings of the AAAI Conference on Artificial Intelligence
-        open: true
-        peer_reviewed: true
-        publisher: Association for the Advancement of Artificial Intelligence
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: 'GraphMix: Improved Training of GNNs for Semi-Supervised Learning'
-    topics:
-    - name: Computer science
-    - name: Graph
-    - name: Convolutional neural network
-    - name: Theoretical computer science
-    - name: Artificial intelligence
-    - name: Machine learning
-    - name: Regularization (linguistics)
-    - name: Artificial neural network
-  score: 0.0
-- info:
+  links:
+  - link: '1909.11715'
+    type: arxiv
+  - link: 10.1609/aaai.v35i11.17203
+    type: doi
+  - link: '3092206109'
+    type: mag
+  - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
+    type: open-access
+  - link: W3092206109
+    type: openalex
+  - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
+    type: pdf
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2021-05-18'
+      date_precision: 3
+      links:
+      - link: 10.1609/aaai.v35i11.17203
+        type: doi
+      - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
+        type: pdf
+      name: Proceedings of the AAAI Conference on Artificial Intelligence
+      open: true
+      peer_reviewed: true
+      publisher: Association for the Advancement of Artificial Intelligence
+      series: ''
+      short_name: null
+      type: conference
+      volume: null
+  title: 'GraphMix: Improved Training of GNNs for Semi-Supervised Learning'
+  topics:
+  - name: Computer science
+  - name: Graph
+  - name: Convolutional neural network
+  - name: Theoretical computer science
+  - name: Artificial intelligence
+  - name: Machine learning
+  - name: Regularization (linguistics)
+  - name: Artificial neural network
+- abstract: '6191'
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Iran University of Science and Technology
+    author:
+      aliases: []
+      links:
+      - link: A5000174202
+        type: openalex
+      - link: 0000-0003-3676-0127
+        type: orcid
+      name: Moein Heidari
+    display_name: Moein Heidari
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Iran University of Science and Technology
+    author:
+      aliases: []
+      links:
+      - link: A5037774043
+        type: openalex
+      - link: 0000-0002-3155-4407
+        type: orcid
+      name: Amirhossein Kazerouni
+    display_name: Amirhossein Kazerouni
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Iran University of Science and Technology
+    author:
+      aliases: []
+      links:
+      - link: A5056039283
+        type: openalex
+      name: Milad Soltany
+    display_name: Milad Soltany
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: RWTH Aachen University
+    author:
+      aliases: []
+      links:
+      - link: A5087512747
+        type: openalex
+      - link: 0000-0002-4772-2161
+        type: orcid
+      name: Reza Azad
+    display_name: Reza Azad
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Shahid Beheshti University
+    author:
+      aliases: []
+      links:
+      - link: A5015411150
+        type: openalex
+      - link: 0000-0002-2849-1070
+        type: orcid
+      name: Ehsan Khodapanah Aghdam
+    display_name: Ehsan Khodapanah Aghdam
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Quebec Artificial Intelligence Institute
+    author:
+      aliases: []
+      links:
+      - link: A5009765322
+        type: openalex
+      - link: 0000-0003-3662-9532
+        type: orcid
+      name: Julien Cohen‐Adad
+    display_name: Julien Cohen‐Adad
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Fraunhofer Institute for Digital Medicine
+    - aliases: []
+      category: academia
+      country: null
+      name: University of Regensburg
+    author:
+      aliases: []
+      links:
+      - link: A5064747056
+        type: openalex
+      - link: 0000-0002-1672-2185
+        type: orcid
+      name: Dorit Merhof
+    display_name: Dorit Merhof
+  flags: []
+  info:
     discovered_by:
       openalex: W4319300975
   key: openalex:W4319300975
-  paper:
-    abstract: '6191'
-    authors:
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Iran University of Science and Technology
-      author:
-        aliases: []
-        links:
-        - link: A5000174202
-          type: openalex
-        - link: 0000-0003-3676-0127
-          type: orcid
-        name: Moein Heidari
-      display_name: Moein Heidari
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Iran University of Science and Technology
-      author:
-        aliases: []
-        links:
-        - link: A5037774043
-          type: openalex
-        - link: 0000-0002-3155-4407
-          type: orcid
-        name: Amirhossein Kazerouni
-      display_name: Amirhossein Kazerouni
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Iran University of Science and Technology
-      author:
-        aliases: []
-        links:
-        - link: A5056039283
-          type: openalex
-        name: Milad Soltany
-      display_name: Milad Soltany
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: RWTH Aachen University
-      author:
-        aliases: []
-        links:
-        - link: A5087512747
-          type: openalex
-        - link: 0000-0002-4772-2161
-          type: orcid
-        name: Reza Azad
-      display_name: Reza Azad
-    - affiliations:
-      - aliases: []
-        category: academia
-        country: null
-        name: Shahid Beheshti University
-      author:
-        aliases: []
-        links:
-        - link: A5015411150
-          type: openalex
-        - link: 0000-0002-2849-1070
-          type: orcid
-        name: Ehsan Khodapanah Aghdam
-      display_name: Ehsan Khodapanah Aghdam
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec Artificial Intelligence Institute
-      author:
-        aliases: []
-        links:
-        - link: A5009765322
-          type: openalex
-        - link: 0000-0003-3662-9532
-          type: orcid
-        name: Julien Cohen‐Adad
-      display_name: Julien Cohen‐Adad
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Fraunhofer Institute for Digital Medicine
-      - aliases: []
-        category: academia
-        country: null
-        name: University of Regensburg
-      author:
-        aliases: []
-        links:
-        - link: A5064747056
-          type: openalex
-        - link: 0000-0002-1672-2185
-          type: orcid
-        name: Dorit Merhof
-      display_name: Dorit Merhof
-    flags: []
-    links:
-    - link: 10.1109/wacv56688.2023.00614
-      type: doi
-    - link: W4319300975
-      type: openalex
-    - link: https://publica.fraunhofer.de/handle/publica/448509
-      type: url
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2023-01-01'
-        date_precision: 3
-        links:
-        - link: 10.1109/wacv56688.2023.00614
-          type: doi
-        name: 2023 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)
-        open: false
-        peer_reviewed: true
-        publisher: null
-        series: ''
-        short_name: null
-        type: conference
-        volume: null
-    title: 'HiFormer: Hierarchical Multi-scale Representations Using Transformers
-      for Medical Image Segmentation'
-    topics:
-    - name: Computer science
-    - name: Encoder
-    - name: Segmentation
-    - name: Artificial intelligence
-    - name: Transformer
-    - name: Convolutional neural network
-    - name: Image segmentation
-    - name: Pattern recognition (psychology)
-    - name: Scale-space segmentation
-    - name: Computer vision
-    - name: Voltage
-    - name: Quantum mechanics
-    - name: Operating system
-    - name: Physics
-  score: 0.0
+  links:
+  - link: 10.1109/wacv56688.2023.00614
+    type: doi
+  - link: W4319300975
+    type: openalex
+  - link: https://publica.fraunhofer.de/handle/publica/448509
+    type: url
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-01-01'
+      date_precision: 3
+      links:
+      - link: 10.1109/wacv56688.2023.00614
+        type: doi
+      name: 2023 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)
+      open: false
+      peer_reviewed: true
+      publisher: null
+      series: ''
+      short_name: null
+      type: conference
+      volume: null
+  title: 'HiFormer: Hierarchical Multi-scale Representations Using Transformers for
+    Medical Image Segmentation'
+  topics:
+  - name: Computer science
+  - name: Encoder
+  - name: Segmentation
+  - name: Artificial intelligence
+  - name: Transformer
+  - name: Convolutional neural network
+  - name: Image segmentation
+  - name: Pattern recognition (psychology)
+  - name: Scale-space segmentation
+  - name: Computer vision
+  - name: Voltage
+  - name: Quantum mechanics
+  - name: Operating system
+  - name: Physics

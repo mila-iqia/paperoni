@@ -36,6 +36,8 @@ results:
     display_name: James Rodriguez
   flags: []
   id: 0
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -53,6 +55,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Automated Ripeness Detection in Strawberries Using Computer Vision
   topics: []
   version: '2026-01-19T00:00:00'
@@ -71,6 +74,8 @@ results:
     display_name: Kenji Tanaka
   flags: []
   id: 1
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -88,6 +93,7 @@ results:
       short_name: null
       type: conference
       volume: null
+  score: 0.0
   title: Non-Destructive Sugar Content Estimation in Apples via Near-Infrared Spectroscopy
   topics: []
   version: '2026-01-19T00:00:00'
@@ -126,6 +132,8 @@ results:
     display_name: Robert Williams
   flags: []
   id: 2
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -143,6 +151,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Firmness Testing Protocols for Mango Export Quality Assessment
   topics: []
   version: '2026-01-19T00:00:00'
@@ -171,6 +180,8 @@ results:
     display_name: Milo Meloni
   flags: []
   id: 3
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -188,6 +199,7 @@ results:
       short_name: null
       type: conference
       volume: null
+  score: 0.0
   title: Acoustic Resonance Methods for Internal Defect Detection in Watermelons
   topics: []
   version: '2026-01-19T00:00:00'
@@ -216,6 +228,8 @@ results:
     display_name: Erik van der Berg
   flags: []
   id: 4
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -233,6 +247,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Hyperspectral Imaging for Bruise Detection in Pears During Sorting
   topics: []
   version: '2026-01-19T00:00:00'
@@ -261,6 +276,8 @@ results:
     display_name: Emmanuel Okonkwo
   flags: []
   id: 5
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -278,6 +295,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Shelf Life Prediction Models for Bananas Based on Accelerated Testing
   topics: []
   version: '2026-01-19T00:00:00'
@@ -306,6 +324,8 @@ results:
     display_name: Marco Rossi
   flags: []
   id: 6
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -323,6 +343,7 @@ results:
       short_name: null
       type: conference
       volume: null
+  score: 0.0
   title: Comparative Analysis of Citrus Acidity Testing Methods
   topics: []
   version: '2026-01-19T00:00:00'
@@ -351,6 +372,8 @@ results:
     display_name: Milo Meloni
   flags: []
   id: 7
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -368,6 +391,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Volatile Compound Profiling for Peach Maturity Assessment
   topics: []
   version: '2026-01-19T00:00:00'
@@ -406,6 +430,8 @@ results:
     display_name: Claire Martin
   flags: []
   id: 8
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -423,6 +449,7 @@ results:
       short_name: null
       type: conference
       volume: null
+  score: 0.0
   title: Machine Learning Approaches for Grape Quality Grading from Visual Features
   topics: []
   version: '2026-01-19T00:00:00'
@@ -451,6 +478,8 @@ results:
     display_name: Sarah Mitchell
   flags: []
   id: 9
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -468,6 +497,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Texture Analysis Standards for Kiwifruit Quality Control
   topics: []
   version: '2026-01-19T00:00:00'

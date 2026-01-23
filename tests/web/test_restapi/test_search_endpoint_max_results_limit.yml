@@ -33,6 +33,8 @@
     display_name: James Rodriguez
   flags: []
   id: 0
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -50,6 +52,7 @@
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Automated Ripeness Detection in Strawberries Using Computer Vision
   topics: []
   version: '2026-01-19T00:00:00'
@@ -68,6 +71,8 @@
     display_name: Kenji Tanaka
   flags: []
   id: 1
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -85,6 +90,7 @@
       short_name: null
       type: conference
       volume: null
+  score: 0.0
   title: Non-Destructive Sugar Content Estimation in Apples via Near-Infrared Spectroscopy
   topics: []
   version: '2026-01-19T00:00:00'

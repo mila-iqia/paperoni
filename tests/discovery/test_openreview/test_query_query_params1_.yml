@@ -1,471 +1,459 @@
-- info:
+- abstract: "In this paper, we present a novel data-free method for merging neural\
+    \ networks in weight space. Our method optimizes for the permutations of network\
+    \ neurons while ensuring global coherence across all layers, and it outperforms\
+    \ recent layer-local approaches in a set of challenging scenarios. We then generalize\
+    \ the formulation to the $N$-models scenario to enforce cycle consistency of the\
+    \ permutations with guarantees, allowing circular compositions of permutations\
+    \ to be computed without accumulating error along the path. \n    We qualitatively\
+    \ and quantitatively motivate the need for such a constraint, showing its benefits\
+    \ when merging homogeneous sets of models in scenarios spanning varying architectures\
+    \ and datasets. We finally show that, when coupled with activation renormalization,\
+    \ the approach yields the best results in the task."
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Donato_Crisostomi1
+        type: openreview
+      name: Donato Crisostomi
+    display_name: Donato Crisostomi
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Marco_Fumero1
+        type: openreview
+      name: Marco Fumero
+    display_name: Marco Fumero
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Daniele_Baieri1
+        type: openreview
+      name: Daniele Baieri
+    display_name: Daniele Baieri
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Florian_Bernard3
+        type: openreview
+      name: Florian Bernard
+    display_name: Florian Bernard
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Emanuele_Rodolà1
+        type: openreview
+      name: Emanuele Rodolà
+    display_name: Emanuele Rodolà
+  flags: []
+  info:
     discovered_by:
       openreview: iD18l6prA7
   key: openreview:iD18l6prA7
-  paper:
-    abstract: "In this paper, we present a novel data-free method for merging neural\
-      \ networks in weight space. Our method optimizes for the permutations of network\
-      \ neurons while ensuring global coherence across all layers, and it outperforms\
-      \ recent layer-local approaches in a set of challenging scenarios. We then generalize\
-      \ the formulation to the $N$-models scenario to enforce cycle consistency of\
-      \ the permutations with guarantees, allowing circular compositions of permutations\
-      \ to be computed without accumulating error along the path. \n    We qualitatively\
-      \ and quantitatively motivate the need for such a constraint, showing its benefits\
-      \ when merging homogeneous sets of models in scenarios spanning varying architectures\
-      \ and datasets. We finally show that, when coupled with activation renormalization,\
-      \ the approach yields the best results in the task."
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Donato_Crisostomi1
-          type: openreview
-        name: Donato Crisostomi
-      display_name: Donato Crisostomi
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Marco_Fumero1
-          type: openreview
-        name: Marco Fumero
-      display_name: Marco Fumero
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Daniele_Baieri1
-          type: openreview
-        name: Daniele Baieri
-      display_name: Daniele Baieri
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Florian_Bernard3
-          type: openreview
-        name: Florian Bernard
-      display_name: Florian Bernard
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Emanuele_Rodolà1
-          type: openreview
-        name: Emanuele Rodolà
-      display_name: Emanuele Rodolà
-    flags: []
-    links:
-    - link: iD18l6prA7
-      type: openreview
-    releases:
-    - pages: null
-      status: poster
-      venue:
-        aliases: []
-        date: '2024-09-25'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2024/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2024/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2024
-    title: '$C^2M^3$: Cycle-Consistent Multi-Model Merging'
-    topics:
-    - name: model merging
-    - name: linear mode connectivity
-    - name: deep learning
-  score: 0.0
-- info:
+  links:
+  - link: iD18l6prA7
+    type: openreview
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2024-09-25'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2024/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2024/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2024
+  title: '$C^2M^3$: Cycle-Consistent Multi-Model Merging'
+  topics:
+  - name: model merging
+  - name: linear mode connectivity
+  - name: deep learning
+- abstract: 'Parameter-efficient finetuning (PEFT) methods effectively adapt large
+    language models (LLMs) to diverse downstream tasks, reducing storage and GPU memory
+    demands. Despite these advantages, several applications pose new challenges to
+    PEFT beyond mere parameter efficiency. One notable challenge involves the efficient
+    deployment of LLMs equipped with multiple task- or user-specific adapters, particularly
+    when different adapters are needed for distinct requests within the same batch.
+    Another challenge is the interpretability of LLMs, which is crucial for understanding
+    how LLMs function. Previous studies introduced various approaches to address different
+    challenges. In this paper, we introduce a novel method, RoAd, which employs a
+    straightforward 2D rotation to adapt LLMs and addresses all the above challenges:
+    (1) RoAd is remarkably parameter-efficient, delivering optimal performance on
+    GLUE, eight commonsense reasoning tasks and four arithmetic reasoning tasks with
+    <0.1% trainable parameters; (2) RoAd facilitates the efficient serving of requests
+    requiring different adapters within a batch, with an overhead comparable to element-wise
+    multiplication instead of batch matrix multiplication; (3) RoAd enhances LLM''s
+    interpretability through integration within a framework of distributed interchange
+    intervention, demonstrated via composition experiments.'
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Baohao_Liao1
+        type: openreview
+      name: Baohao Liao
+    display_name: Baohao Liao
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Christof_Monz1
+        type: openreview
+      name: Christof Monz
+    display_name: Christof Monz
+  flags: []
+  info:
     discovered_by:
       openreview: rYjYwuM6yH
   key: openreview:rYjYwuM6yH
-  paper:
-    abstract: 'Parameter-efficient finetuning (PEFT) methods effectively adapt large
-      language models (LLMs) to diverse downstream tasks, reducing storage and GPU
-      memory demands. Despite these advantages, several applications pose new challenges
-      to PEFT beyond mere parameter efficiency. One notable challenge involves the
-      efficient deployment of LLMs equipped with multiple task- or user-specific adapters,
-      particularly when different adapters are needed for distinct requests within
-      the same batch. Another challenge is the interpretability of LLMs, which is
-      crucial for understanding how LLMs function. Previous studies introduced various
-      approaches to address different challenges. In this paper, we introduce a novel
-      method, RoAd, which employs a straightforward 2D rotation to adapt LLMs and
-      addresses all the above challenges: (1) RoAd is remarkably parameter-efficient,
-      delivering optimal performance on GLUE, eight commonsense reasoning tasks and
-      four arithmetic reasoning tasks with <0.1% trainable parameters; (2) RoAd facilitates
-      the efficient serving of requests requiring different adapters within a batch,
-      with an overhead comparable to element-wise multiplication instead of batch
-      matrix multiplication; (3) RoAd enhances LLM''s interpretability through integration
-      within a framework of distributed interchange intervention, demonstrated via
-      composition experiments.'
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Baohao_Liao1
-          type: openreview
-        name: Baohao Liao
-      display_name: Baohao Liao
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Christof_Monz1
-          type: openreview
-        name: Christof Monz
-      display_name: Christof Monz
-    flags: []
-    links:
-    - link: rYjYwuM6yH
-      type: openreview
-    releases:
-    - pages: null
-      status: poster
-      venue:
-        aliases: []
-        date: '2024-09-25'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2024/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2024/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2024
-    title: '3-in-1: 2D Rotary Adaptation for Efficient Finetuning, Efficient Batching
-      and Composability'
-    topics:
-    - name: parameter-efficient finetuning
-    - name: orthogonal finetuning
-    - name: batching
-    - name: interpretability
-  score: 0.0
-- info:
+  links:
+  - link: rYjYwuM6yH
+    type: openreview
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2024-09-25'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2024/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2024/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2024
+  title: '3-in-1: 2D Rotary Adaptation for Efficient Finetuning, Efficient Batching
+    and Composability'
+  topics:
+  - name: parameter-efficient finetuning
+  - name: orthogonal finetuning
+  - name: batching
+  - name: interpretability
+- abstract: Multi-instance point cloud registration aims to estimate the pose of all
+    instances of a model point cloud in the whole scene. Existing methods all adopt
+    the strategy of first obtaining the global correspondence and then clustering
+    to obtain the pose of each instance. However, due to the cluttered and occluded
+    objects in the scene, it is difficult to obtain an accurate correspondence between
+    the model point cloud and all instances in the scene. To this end, we propose
+    a simple yet powerful 3D focusing-and-matching network for multi-instance point
+    cloud registration by learning the multiple pair-wise point cloud registration.
+    Specifically, we first present a 3D multi-object focusing module to locate the
+    center of each object and generate object proposals. By using self-attention and
+    cross-attention to associate the model point cloud with structurally similar objects,
+    we can locate potential matching instances by regressing object centers. Then,
+    we propose a 3D dual-masking instance matching module to estimate the pose between
+    the model point cloud and each object proposal. It performs instance mask and
+    overlap mask masks to accurately predict the pair-wise correspondence. Extensive
+    experiments on two public benchmarks, Scan2CAD and ROBI, show that our method
+    achieves a new state-of-the-art performance on the multi-instance point cloud
+    registration task.
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Liyuan_Zhang3
+        type: openreview
+      name: Liyuan Zhang
+    display_name: Liyuan Zhang
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Le_Hui1
+        type: openreview
+      name: Le Hui
+    display_name: Le Hui
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~qi_liu18
+        type: openreview
+      name: qi liu
+    display_name: qi liu
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Bo_Li35
+        type: openreview
+      name: Bo Li
+    display_name: Bo Li
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Yuchao_Dai1
+        type: openreview
+      name: Yuchao Dai
+    display_name: Yuchao Dai
+  flags: []
+  info:
     discovered_by:
       openreview: 0sJBW05a2W
   key: openreview:0sJBW05a2W
-  paper:
-    abstract: Multi-instance point cloud registration aims to estimate the pose of
-      all instances of a model point cloud in the whole scene. Existing methods all
-      adopt the strategy of first obtaining the global correspondence and then clustering
-      to obtain the pose of each instance. However, due to the cluttered and occluded
-      objects in the scene, it is difficult to obtain an accurate correspondence between
-      the model point cloud and all instances in the scene. To this end, we propose
-      a simple yet powerful 3D focusing-and-matching network for multi-instance point
-      cloud registration by learning the multiple pair-wise point cloud registration.
-      Specifically, we first present a 3D multi-object focusing module to locate the
-      center of each object and generate object proposals. By using self-attention
-      and cross-attention to associate the model point cloud with structurally similar
-      objects, we can locate potential matching instances by regressing object centers.
-      Then, we propose a 3D dual-masking instance matching module to estimate the
-      pose between the model point cloud and each object proposal. It performs instance
-      mask and overlap mask masks to accurately predict the pair-wise correspondence.
-      Extensive experiments on two public benchmarks, Scan2CAD and ROBI, show that
-      our method achieves a new state-of-the-art performance on the multi-instance
-      point cloud registration task.
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Liyuan_Zhang3
-          type: openreview
-        name: Liyuan Zhang
-      display_name: Liyuan Zhang
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Le_Hui1
-          type: openreview
-        name: Le Hui
-      display_name: Le Hui
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~qi_liu18
-          type: openreview
-        name: qi liu
-      display_name: qi liu
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Bo_Li35
-          type: openreview
-        name: Bo Li
-      display_name: Bo Li
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Yuchao_Dai1
-          type: openreview
-        name: Yuchao Dai
-      display_name: Yuchao Dai
-    flags: []
-    links:
-    - link: 0sJBW05a2W
-      type: openreview
-    releases:
-    - pages: null
-      status: poster
-      venue:
-        aliases: []
-        date: '2024-09-25'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2024/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2024/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2024
-    title: 3D Focusing-and-Matching Network for Multi-Instance Point Cloud Registration
-    topics:
-    - name: Point Cloud Registration
-    - name: Focus and Matching
-  score: 0.0
-- info:
+  links:
+  - link: 0sJBW05a2W
+    type: openreview
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2024-09-25'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2024/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2024/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2024
+  title: 3D Focusing-and-Matching Network for Multi-Instance Point Cloud Registration
+  topics:
+  - name: Point Cloud Registration
+  - name: Focus and Matching
+- abstract: "Current multimodal and multitask foundation models, like 4M or UnifiedIO,\
+    \ show promising results. However, their out-of-the-box abilities to accept diverse\
+    \ inputs and perform diverse tasks are limited by the (usually small) number of\
+    \ modalities and tasks they are trained on. In this paper, we develop a single\
+    \ any-to-any model trained on tens of highly diverse modalities and by performing\
+    \ co-training on large-scale multimodal datasets and text corpora. This includes\
+    \ training on images and text along with several semantic and geometric modalities,\
+    \ feature maps from recent state of the art models like DINOv2 and ImageBind,\
+    \ pseudo labels of specialist models like SAM and 4DHumans, and a range of new\
+    \ modalities that allow for novel ways to interact with the model and steer the\
+    \ generation, for example, image metadata or color palettes.\n\nA crucial step\
+    \ in this process is performing discrete tokenization on various modalities, whether\
+    \ they are image-like, neural network feature maps, vectors, structured data like\
+    \ instance segmentation or human poses, or data that can be represented as text.\n\
+    \    \nThrough this, we show the possibility of training one model to solve at\
+    \ least 3x more tasks/modalities than existing models and doing so without a loss\
+    \ in performance. In addition, this enables more fine-grained and controllable\
+    \ multimodal generation capabilities and allows studying the distillation of models\
+    \ trained on diverse data and objectives into one unified model.\nWe scale the\
+    \ training to a three billion parameter and different datasets. The multimodal\
+    \ models and training code are open sourced at https://4m.epfl.ch/."
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Roman_Bachmann1
+        type: openreview
+      name: Roman Bachmann
+    display_name: Roman Bachmann
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Oğuzhan_Fatih_Kar1
+        type: openreview
+      name: Oğuzhan Fatih Kar
+    display_name: Oğuzhan Fatih Kar
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~David_Mizrahi1
+        type: openreview
+      name: David Mizrahi
+    display_name: David Mizrahi
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Ali_Garjani1
+        type: openreview
+      name: Ali Garjani
+    display_name: Ali Garjani
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Mingfei_Gao1
+        type: openreview
+      name: Mingfei Gao
+    display_name: Mingfei Gao
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~David_Griffiths1
+        type: openreview
+      name: David Griffiths
+    display_name: David Griffiths
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Jiaming_Hu2
+        type: openreview
+      name: Jiaming Hu
+    display_name: Jiaming Hu
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Afshin_Dehghan5
+        type: openreview
+      name: Afshin Dehghan
+    display_name: Afshin Dehghan
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Amir_Zamir1
+        type: openreview
+      name: Amir Zamir
+    display_name: Amir Zamir
+  flags: []
+  info:
     discovered_by:
       openreview: qRnmLJQHgx
   key: openreview:qRnmLJQHgx
-  paper:
-    abstract: "Current multimodal and multitask foundation models, like 4M or UnifiedIO,\
-      \ show promising results. However, their out-of-the-box abilities to accept\
-      \ diverse inputs and perform diverse tasks are limited by the (usually small)\
-      \ number of modalities and tasks they are trained on. In this paper, we develop\
-      \ a single any-to-any model trained on tens of highly diverse modalities and\
-      \ by performing co-training on large-scale multimodal datasets and text corpora.\
-      \ This includes training on images and text along with several semantic and\
-      \ geometric modalities, feature maps from recent state of the art models like\
-      \ DINOv2 and ImageBind, pseudo labels of specialist models like SAM and 4DHumans,\
-      \ and a range of new modalities that allow for novel ways to interact with the\
-      \ model and steer the generation, for example, image metadata or color palettes.\n\
-      \nA crucial step in this process is performing discrete tokenization on various\
-      \ modalities, whether they are image-like, neural network feature maps, vectors,\
-      \ structured data like instance segmentation or human poses, or data that can\
-      \ be represented as text.\n    \nThrough this, we show the possibility of training\
-      \ one model to solve at least 3x more tasks/modalities than existing models\
-      \ and doing so without a loss in performance. In addition, this enables more\
-      \ fine-grained and controllable multimodal generation capabilities and allows\
-      \ studying the distillation of models trained on diverse data and objectives\
-      \ into one unified model.\nWe scale the training to a three billion parameter\
-      \ and different datasets. The multimodal models and training code are open sourced\
-      \ at https://4m.epfl.ch/."
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Roman_Bachmann1
-          type: openreview
-        name: Roman Bachmann
-      display_name: Roman Bachmann
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Oğuzhan_Fatih_Kar1
-          type: openreview
-        name: Oğuzhan Fatih Kar
-      display_name: Oğuzhan Fatih Kar
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~David_Mizrahi1
-          type: openreview
-        name: David Mizrahi
-      display_name: David Mizrahi
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Ali_Garjani1
-          type: openreview
-        name: Ali Garjani
-      display_name: Ali Garjani
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Mingfei_Gao1
-          type: openreview
-        name: Mingfei Gao
-      display_name: Mingfei Gao
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~David_Griffiths1
-          type: openreview
-        name: David Griffiths
-      display_name: David Griffiths
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Jiaming_Hu2
-          type: openreview
-        name: Jiaming Hu
-      display_name: Jiaming Hu
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Afshin_Dehghan5
-          type: openreview
-        name: Afshin Dehghan
-      display_name: Afshin Dehghan
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Amir_Zamir1
-          type: openreview
-        name: Amir Zamir
-      display_name: Amir Zamir
-    flags: []
-    links:
-    - link: qRnmLJQHgx
-      type: openreview
-    releases:
-    - pages: null
-      status: poster
-      venue:
-        aliases: []
-        date: '2024-09-25'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2024/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2024/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2024
-    title: '4M-21: An Any-to-Any Vision Model for Tens of Tasks and Modalities'
-    topics:
-    - name: multimodal learning
-    - name: multitask learning
-    - name: representation learning
-    - name: transfer learning
-    - name: foundation models
-    - name: generative models
-    - name: computer vision
-  score: 0.0
-- info:
+  links:
+  - link: qRnmLJQHgx
+    type: openreview
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2024-09-25'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2024/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2024/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2024
+  title: '4M-21: An Any-to-Any Vision Model for Tens of Tasks and Modalities'
+  topics:
+  - name: multimodal learning
+  - name: multitask learning
+  - name: representation learning
+  - name: transfer learning
+  - name: foundation models
+  - name: generative models
+  - name: computer vision
+- abstract: "Data point selection (DPS) is becoming a critical topic in deep learning\
+    \ due to the ease of acquiring uncurated training data compared to the difficulty\
+    \ of obtaining curated or processed data. \nExisting approaches to DPS are predominantly\
+    \ based on a bi-level optimisation (BLO) formulation, which is demanding in terms\
+    \ of memory and computation, and exhibits some theoretical defects regarding minibatches.\n\
+    Thus, we propose a novel Bayesian approach to DPS. We view the DPS problem as\
+    \ posterior inference in a novel Bayesian model where the posterior distributions\
+    \ of the instance-wise weights and the main neural network parameters are inferred\
+    \ under a reasonable prior and likelihood model.\nWe employ stochastic gradient\
+    \ Langevin MCMC sampling to learn the main network and instance-wise weights jointly,\
+    \ ensuring convergence even with minibatches. Our update equation is comparable\
+    \ to the widely used SGD and much more efficient than existing BLO-based methods.\
+    \ Through controlled experiments in both the vision and language domains, we present\
+    \ the proof-of-concept. Additionally, we demonstrate that our method scales effectively\
+    \ to large language models and facilitates automated per-task optimization for\
+    \ instruction fine-tuning datasets."
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Xinnuo_Xu1
+        type: openreview
+      name: Xinnuo Xu
+    display_name: Xinnuo Xu
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Minyoung_Kim2
+        type: openreview
+      name: Minyoung Kim
+    display_name: Minyoung Kim
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Royson_Lee1
+        type: openreview
+      name: Royson Lee
+    display_name: Royson Lee
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Brais_Martinez3
+        type: openreview
+      name: Brais Martinez
+    display_name: Brais Martinez
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Timothy_Hospedales1
+        type: openreview
+      name: Timothy Hospedales
+    display_name: Timothy Hospedales
+  flags: []
+  info:
     discovered_by:
       openreview: 9f5tOXKoMC
   key: openreview:9f5tOXKoMC
-  paper:
-    abstract: "Data point selection (DPS) is becoming a critical topic in deep learning\
-      \ due to the ease of acquiring uncurated training data compared to the difficulty\
-      \ of obtaining curated or processed data. \nExisting approaches to DPS are predominantly\
-      \ based on a bi-level optimisation (BLO) formulation, which is demanding in\
-      \ terms of memory and computation, and exhibits some theoretical defects regarding\
-      \ minibatches.\nThus, we propose a novel Bayesian approach to DPS. We view the\
-      \ DPS problem as posterior inference in a novel Bayesian model where the posterior\
-      \ distributions of the instance-wise weights and the main neural network parameters\
-      \ are inferred under a reasonable prior and likelihood model.\nWe employ stochastic\
-      \ gradient Langevin MCMC sampling to learn the main network and instance-wise\
-      \ weights jointly, ensuring convergence even with minibatches. Our update equation\
-      \ is comparable to the widely used SGD and much more efficient than existing\
-      \ BLO-based methods. Through controlled experiments in both the vision and language\
-      \ domains, we present the proof-of-concept. Additionally, we demonstrate that\
-      \ our method scales effectively to large language models and facilitates automated\
-      \ per-task optimization for instruction fine-tuning datasets."
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Xinnuo_Xu1
-          type: openreview
-        name: Xinnuo Xu
-      display_name: Xinnuo Xu
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Minyoung_Kim2
-          type: openreview
-        name: Minyoung Kim
-      display_name: Minyoung Kim
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Royson_Lee1
-          type: openreview
-        name: Royson Lee
-      display_name: Royson Lee
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Brais_Martinez3
-          type: openreview
-        name: Brais Martinez
-      display_name: Brais Martinez
-    - affiliations: []
-      author:
-        aliases: []
-        links:
-        - link: ~Timothy_Hospedales1
-          type: openreview
-        name: Timothy Hospedales
-      display_name: Timothy Hospedales
-    flags: []
-    links:
-    - link: 9f5tOXKoMC
-      type: openreview
-    releases:
-    - pages: null
-      status: poster
-      venue:
-        aliases: []
-        date: '2024-09-25'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2024/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2024/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2024
-    title: A Bayesian Approach to Data Point Selection
-    topics:
-    - name: Bayesian
-    - name: LLM
-    - name: Data selection
-    - name: Data unbalancing
-    - name: Data denoising
-    - name: Domain adaptation
-  score: 0.0
+  links:
+  - link: 9f5tOXKoMC
+    type: openreview
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2024-09-25'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2024/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2024/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2024
+  title: A Bayesian Approach to Data Point Selection
+  topics:
+  - name: Bayesian
+  - name: LLM
+  - name: Data selection
+  - name: Data unbalancing
+  - name: Data denoising
+  - name: Domain adaptation

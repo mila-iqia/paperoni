@@ -1,72 +1,70 @@
-- info:
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Luel Hagos Beyene
+    display_name: Luel Hagos Beyene
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Vivek Verma
+    display_name: Vivek Verma
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Min Ma
+    display_name: Min Ma
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Jesujoba O. Alabi
+    display_name: Jesujoba O. Alabi
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Fabian David Schmidt
+    display_name: Fabian David Schmidt
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Joyce Nakatumba-Nabende
+    display_name: Joyce Nakatumba-Nabende
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: David Ifeoluwa Adelani
+    display_name: David Ifeoluwa Adelani
+  flags: []
+  info:
     discovered_by:
       scrape: https://dadelani.github.io/publications
   key: scrape:f7edf37be2a8190bc845677b4fb331bb29c64bf4d1f5a7dd0c7d008a699b0bf5
-  paper:
-    abstract: null
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Luel Hagos Beyene
-      display_name: Luel Hagos Beyene
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Vivek Verma
-      display_name: Vivek Verma
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Min Ma
-      display_name: Min Ma
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Jesujoba O. Alabi
-      display_name: Jesujoba O. Alabi
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Fabian David Schmidt
-      display_name: Fabian David Schmidt
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Joyce Nakatumba-Nabende
-      display_name: Joyce Nakatumba-Nabende
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: David Ifeoluwa Adelani
-      display_name: David Ifeoluwa Adelani
-    flags: []
-    links:
-    - link: '2506.08400'
-      type: arxiv
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2025-01-01'
-        date_precision: 1
-        links: []
-        name: IEEE Workshop on Automatic Speech Recognition and Understanding
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: ASRU
-        short_name: null
-        type: workshop
-        volume: null
-    title: 'mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks'
-    topics: []
-  score: 0.0
+  links:
+  - link: '2506.08400'
+    type: arxiv
+  releases:
+  - pages: null
+    status: unknown
+    venue:
+      aliases: []
+      date: '2025-01-01'
+      date_precision: 1
+      links: []
+      name: IEEE Workshop on Automatic Speech Recognition and Understanding
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ASRU
+      short_name: null
+      type: workshop
+      volume: null
+  title: 'mSTEB: Massively Multilingual Evaluation of LLMs on Speech and Text Tasks'
+  topics: []
