@@ -188,27 +188,6 @@ async def collection_r(request, tmp_path: Path, app_coll):
     yield await make_collection(request.param, tmp_path)
 
 
-def check_papers(
-    data_regression: DataRegressionFixture, papers: list[Paper], basename: str = None
-):
-    # Using file_regression and json.dumps to avoid
-    # yaml.representer.RepresenterError on DatePrecision
-    # papers = sort_keys(papers[:5])
-    # [p.pop("acquired") for p in papers]
-    papers = serialize(list[Paper], papers)
-
-    for paper in papers:
-        # MongoPaper uses ObjectId which will not be the same each time the test is
-        # run
-        paper["id"] = None if not isinstance(paper.get("id", None), int) else paper["id"]
-        paper.pop("_id", None)
-        paper.pop("version", None)
-        # Sort flags to ensure consistent ordering
-        paper["flags"] = sorted(paper["flags"])
-
-    data_regression.check(papers, basename=basename)
-
-
 async def test_add_papers(collection: PaperCollection, sample_papers: list[Paper]):
     """Test adding multiple papers."""
     await collection.add_papers(sample_papers)

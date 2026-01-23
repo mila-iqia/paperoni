@@ -54,6 +54,10 @@ class RegressionRules(Medley):
                 result.pop(field, None)
         return result
 
+    @ovld(priority=HI1)
+    def serialize(self, t: type[set[Any]], obj: Any, ctx: Context):
+        return sorted(call_next(t, obj, ctx))
+
 
 @pytest.fixture
 def dreg(data_regression):
