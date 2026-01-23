@@ -3,11 +3,9 @@ from unittest.mock import patch
 
 import gifnoc
 import pytest
-from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.scrape import Scrape
-
-from ..utils import check_papers
+from paperoni.model import PaperInfo
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -16,7 +14,7 @@ def touch_cache():
         _f.touch()
 
 
-async def test_query(data_regression: DataRegressionFixture):
+async def test_query(dreg):
     discoverer = Scrape()
 
     with (
@@ -30,4 +28,4 @@ async def test_query(data_regression: DataRegressionFixture):
         # paperoni discover scrape --links "https://dadelani.github.io/publications"
         paper = await anext(discoverer.query())
 
-    check_papers(data_regression, [paper])
+    dreg(list[PaperInfo], [paper])

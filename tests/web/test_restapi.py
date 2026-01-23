@@ -8,9 +8,9 @@ from serieux import serialize
 
 from paperoni.model.classes import (
     Author,
-    CollectionPaper,
     DatePrecision,
     Institution,
+    Paper,
     PaperAuthor,
     Release,
     Venue,
@@ -177,7 +177,7 @@ def test_get_paper_requires_authentication(app):
 
 @pytest.fixture
 def edited_paper():
-    yield CollectionPaper(
+    yield Paper(
         id=3,
         title="Acoustic Resonance Methods for Internal Defect Detection in Cantaloupes",
         abstract="A portable acoustic testing device is developed and validated for detecting hollow heart and internal cracks in cantaloupes with 89% sensitivity.",
@@ -214,7 +214,7 @@ def test_edit_paper_endpoint(wr_app, edited_paper):
 
     response = admin.post(
         "/api/v1/edit",
-        paper=serialize(CollectionPaper, edited_paper),
+        paper=serialize(Paper, edited_paper),
     )
 
     assert response.status_code == 200
@@ -231,7 +231,7 @@ def test_edit_paper_endpoint_not_found(wr_app, edited_paper):
     edited_paper = replace(edited_paper, id=999)
     response = admin.post(
         "/api/v1/edit",
-        paper=serialize(CollectionPaper, edited_paper),
+        paper=serialize(Paper, edited_paper),
     )
 
     assert response.status_code == 200
@@ -248,7 +248,7 @@ def test_edit_paper_endpoint_no_id(wr_app, edited_paper):
 
     response = admin.post(
         "/api/v1/edit",
-        paper=serialize(CollectionPaper, edited_paper),
+        paper=serialize(Paper, edited_paper),
     )
 
     assert response.status_code == 200
@@ -264,7 +264,7 @@ def test_edit_paper_requires_validate_authentication(wr_app, edited_paper):
     unlogged = wr_app.client()
     response = unlogged.post(
         "/api/v1/edit",
-        paper=serialize(CollectionPaper, edited_paper),
+        paper=serialize(Paper, edited_paper),
         expect=401,
     )
     assert response.status_code == 401
@@ -274,7 +274,7 @@ def test_edit_paper_requires_validate_authentication(wr_app, edited_paper):
     user = wr_app.client("seeker@website.web")
     response = user.post(
         "/api/v1/edit",
-        paper=serialize(CollectionPaper, edited_paper),
+        paper=serialize(Paper, edited_paper),
         expect=403,
     )
     assert response.status_code == 403

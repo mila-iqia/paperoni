@@ -2,9 +2,6 @@
 # reproduce the same output
 from typing import Generator, Iterable
 
-from pytest_regressions.data_regression import DataRegressionFixture
-from serieux import deserialize, serialize
-
 from paperoni.model import Institution, Paper, PaperInfo, Release, VenueType
 
 
@@ -30,24 +27,6 @@ def split_on(string: str, separators: Iterable[str] = (" ", "-", "_")) -> list[s
     for sep in separators:
         splits = sum([part.split(sep) for part in splits], [])
     return [part for part in splits if part.strip()]
-
-
-def check_papers(data_regression: DataRegressionFixture, papers: list[PaperInfo]):
-    # Using file_regression and json.dumps to avoid
-    # yaml.representer.RepresenterError on DatePrecision
-    # papers = sort_keys(papers[:5])
-    # [p.pop("acquired") for p in papers]
-    papers = serialize(list[PaperInfo], papers[:5])
-
-    # make sure we can deserialize the papers
-    deserialize(list[PaperInfo], papers)
-
-    for p in papers:
-        # Sort flags to ensure consistent ordering
-        p["paper"]["flags"] = sorted(p["paper"]["flags"])
-
-    [p.pop("acquired") for p in papers]
-    data_regression.check(papers)
 
 
 def iter_conference_papers(papers: list[PaperInfo]) -> Generator[PaperInfo, None, None]:

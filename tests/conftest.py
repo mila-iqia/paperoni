@@ -1,11 +1,15 @@
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 
 import gifnoc
 import pytest
 from easy_oauth.testing.utils import OAuthMock
+from ovld import Medley, call_next, ovld
 from pytest import fixture
+from serieux import Context, Serieux, deserialize, serialize
+from serieux.priority import HI1
 
 TESTS_PATH = Path(__file__).parent
 
@@ -37,3 +41,44 @@ OAUTH_PORT = 29313
 def oauth_mock():
     with OAuthMock(port=OAUTH_PORT) as oauth:
         yield oauth
+
+
+class RegressionRules(Medley):
+    omissions: dict
+
+    @ovld(priority=HI1)
+    def serialize(self, t: Any, obj: Any, ctx: Context):
+        result = call_next(t, obj, ctx)
+        if isinstance(result, dict):
+            for field in self.omissions.get(t, set()):
+                result.pop(field, None)
+        return result
+
+    @ovld(priority=HI1)
+    def serialize(self, t: type[set[Any]], obj: Any, ctx: Context):
+        return sorted(call_next(t, obj, ctx))
+
+
+@pytest.fixture
+def dreg(data_regression):
+    from paperoni.model import Paper, PaperInfo
+
+    omissions = {
+        Paper: {"id", "version"},
+        PaperInfo: {"acquired"},
+    }
+    srx = (Serieux + RegressionRules)(omissions=omissions)
+
+    @ovld
+    def regress(x):
+        regress(type(x), x)
+
+    @ovld
+    def regress(t, obj):
+        # Check roundtrip
+        assert deserialize(t, serialize(t, obj)) == obj
+
+        data = srx.serialize(t, obj)
+        data_regression.check(data)
+
+    return regress

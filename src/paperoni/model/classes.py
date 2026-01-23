@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import partial
-from typing import Callable
 
 from serieux import JSON
 
@@ -216,6 +215,10 @@ class Paper(Base):
     links: list[Link] = field(default_factory=list)
     flags: set[str] = field(default_factory=set)
 
+    # Collection fields
+    id: int | str = None
+    version: datetime = None
+
 
 @dataclass
 class PaperInfo:
@@ -224,29 +227,3 @@ class PaperInfo:
     info: dict[str, JSON] = field(default_factory=dict)
     acquired: datetime = field(default_factory=datetime.now)
     score: float = 0.0
-
-
-@dataclass
-class CollectionMixin:
-    id: int = None
-    version: datetime = None
-
-    @classmethod
-    def make_collection_item(
-        cls,
-        item,
-        *,
-        next_id: Callable[[], int] = lambda: None,
-        **defaults,
-    ) -> "CollectionMixin":
-        # Avoid errors coming from extra fields like '_id'
-        kwargs = {k: v for k, v in vars(item).items() if k in cls.__dataclass_fields__}
-        item = cls(**{**defaults, **kwargs})
-        item.id = next_id() if item.id is None else item.id
-        item.version = datetime.now() if item.version is None else item.version
-        return item
-
-
-@dataclass
-class CollectionPaper(Paper, CollectionMixin):
-    pass

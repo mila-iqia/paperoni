@@ -1,6 +1,5 @@
-from dataclasses import field
 from datetime import date, datetime
-from typing import AsyncGenerator, Iterable, Union
+from typing import AsyncGenerator, Iterable
 
 from bson import ObjectId
 from motor.motor_asyncio import (
@@ -8,13 +7,12 @@ from motor.motor_asyncio import (
     AsyncIOMotorCollection,
     AsyncIOMotorDatabase,
 )
+from ovld import Medley, call_next
 from pymongo.errors import DuplicateKeyError
-from serieux import AllowExtras, deserialize, serialize
+from serieux import Context, Serieux
 from serieux.features.encrypt import Secret
 
 from ..model.classes import (
-    CollectionMixin,
-    CollectionPaper as CollectionPaper,
     Institution,
     Link,
     Paper,
@@ -30,111 +28,35 @@ from ..utils import (
 from .abc import PaperCollection, _id_types
 
 
-@dataclass
-class MongoMixin(CollectionMixin):
-    id: str = None
-    # Need to use str for _id because ObjectId throws an error:
-    # serieux.exc.SchemaError: At path (at root): Cannot deserialize union type
-    # `typing.Union[str, bson.objectid.ObjectId, NoneType]`, because no rule is
-    # defined to discriminate `<class 'bson.objectid.ObjectId'>` from other
-    # types.
-    _id: str = None
+class MongoSerieux(Medley):
+    def serialize(self, t: type[Institution], obj: Institution, ctx: Context):
+        rval = call_next(t, obj, ctx)
+        rval["_norm_name"] = normalize_institution(obj.name)
+        return rval
 
-    def __post_init__(self):
-        _id = self._id or self.id
-        self._id: ObjectId = ObjectId(_id) if _id else None
-        self.id = self._id
+    def serialize(self, t: type[PaperAuthor], obj: PaperAuthor, ctx: Context):
+        rval = call_next(t, obj, ctx)
+        rval["_norm_display_name"] = normalize_name(obj.display_name)
+        return rval
 
-    @classmethod
-    def _filter_fields(cls, obj: dict) -> dict:
-        return {k: v for k, v in obj.items() if k in cls.__dataclass_fields__}
+    def serialize(self, t: type[Paper], obj: Paper, ctx: Context):
+        rval = call_next(t, obj, ctx)
+        rval["_norm_title"] = normalize_title(obj.title)
+        if obj.id is not None:
+            assert isinstance(obj.id, str)
+            rval["_id"] = obj.id
+            del rval["id"]
+        return rval
 
-    @classmethod
-    def serieux_deserialize(cls, obj: dict, ctx, call_next):
-        obj = obj.copy()
-        obj["_id"] = str(obj["_id"]) if obj.get("_id", None) else None
-        return call_next(AllowExtras[cls], obj, ctx)
-
-    @classmethod
-    def serieux_serialize(cls, obj, ctx, call_next):
-        serialized = call_next(cls, obj, ctx)
-
-        if serialized["_id"] is None:
-            del serialized["_id"]
-        else:
-            serialized["id"] = serialized["_id"]
-
-        return serialized
+    def deserialize(self, t: type[Paper], obj: dict, ctx: Context):
+        obj = dict(obj)
+        ident = obj.pop("_id", None)
+        if ident is not None:
+            obj["id"] = str(ident)
+        return call_next(t, obj, ctx)
 
 
-@dataclass
-class NormalizedMixin:
-    @classmethod
-    def cast(cls, obj: Union["NormalizedMixin", dict]) -> "NormalizedMixin":
-        if isinstance(obj, cls):
-            return obj
-
-        try:
-            fields = vars(obj)
-        except TypeError:
-            fields = obj
-
-        return cls(**cls._filter_fields(fields))
-
-    @classmethod
-    def _filter_fields(cls, obj: dict) -> dict:
-        return {k: v for k, v in obj.items() if k in cls.__dataclass_fields__}
-
-
-@dataclass
-class NormalizedInstitution(Institution, NormalizedMixin):
-    _norm_name: str = field(repr=False, compare=False, default=None)
-
-    def __post_init__(self):
-        self._norm_name = normalize_institution(self.name)
-
-
-@dataclass
-class NormalizedPaperAuthor(PaperAuthor, NormalizedMixin):
-    affiliations: list[NormalizedInstitution] = field(default_factory=list)
-    _norm_display_name: str = field(repr=False, compare=False, default=None)
-
-    def __post_init__(self):
-        self.affiliations: list[NormalizedInstitution] = [
-            NormalizedInstitution.cast(a) for a in self.affiliations
-        ]
-        self._norm_display_name = normalize_name(self.display_name)
-
-
-@dataclass
-class NormalizedPaper(Paper, NormalizedMixin):
-    authors: list[NormalizedPaperAuthor] = field(default_factory=list)
-    _norm_title: str = field(repr=False, compare=False, default=None)
-
-    def __post_init__(self):
-        self.authors: list[NormalizedPaperAuthor] = [
-            NormalizedPaperAuthor.cast(a) for a in self.authors
-        ]
-        self._norm_title = normalize_title(self.title)
-
-
-@dataclass
-class MongoPaper(CollectionPaper, NormalizedPaper, MongoMixin):
-    # TODO: check if there is a way to use serieux_deserialize recursively
-    # through all the parents
-    @classmethod
-    def serieux_deserialize(cls, obj, ctx, call_next):
-        fields: dict = {}
-        for parent in cls.__bases__:
-            fields.update(vars(deserialize(AllowExtras[parent], obj, ctx)))
-        return cls(**fields)
-
-    @classmethod
-    def serieux_serialize(cls, obj: "MongoPaper", ctx, call_next):
-        serialized = {}
-        for parent in cls.__bases__:
-            serialized.update(serialize(parent, obj, ctx))
-        return serialized
+srx = (Serieux + MongoSerieux)()
 
 
 @dataclass
@@ -206,7 +128,7 @@ class MongoCollection(PaperCollection):
         exclusions = {doc["link"] async for doc in self._exclusions.find({})}
         return exclusions
 
-    async def add_papers(self, papers: Iterable[Paper | MongoPaper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper]) -> int:
         """Add papers to the collection."""
         await self._ensure_connection()
         added = 0
@@ -218,24 +140,21 @@ class MongoCollection(PaperCollection):
 
             else:
                 # Handle existing papers
-                existing_paper: MongoPaper = None
-                if isinstance(p, CollectionMixin) and (
-                    existing_paper := await self._collection.find_one({"_id": p.id})
-                ):
-                    existing_paper = deserialize(MongoPaper, existing_paper)
+                existing_paper: Paper = None
+                if existing_paper := await self._collection.find_one({"_id": p.id}):
+                    existing_paper = srx.deserialize(Paper, existing_paper)
                     if existing_paper.version >= p.version:
                         # Paper has been updated since last time it was fetched.
                         # Do not replace it.
                         continue
                     p.version = datetime.now()
                     await self._collection.replace_one(
-                        {"_id": p.id}, serialize(MongoPaper, p)
+                        {"_id": p.id}, srx.serialize(Paper, p)
                     )
 
                 else:
-                    p = MongoPaper.make_collection_item(p)
                     assert not await self._collection.find_one({"_id": p.id})
-                    await self._collection.insert_one(serialize(MongoPaper, p))
+                    await self._collection.insert_one(srx.serialize(Paper, p))
 
                 added += 1
 
@@ -260,14 +179,14 @@ class MongoCollection(PaperCollection):
                 # Some exclusions already exist, that's fine
                 pass
 
-    async def find_paper(self, paper: Paper) -> MongoPaper | None:
+    async def find_paper(self, paper: Paper) -> Paper | None:
         """Find a paper in the collection by links or title."""
         await self._ensure_connection()
 
         # First try to find by links
         for link in paper.links:
             if doc := await self._collection.find_one(
-                {"links": {"$elemMatch": serialize(Link, link)}}
+                {"links": {"$elemMatch": srx.serialize(Link, link)}}
             ):
                 break
         else:
@@ -281,15 +200,15 @@ class MongoCollection(PaperCollection):
                 }
             )
 
-        return deserialize(MongoPaper, doc) if doc else None
+        return srx.deserialize(Paper, doc) if doc else None
 
-    async def find_by_id(self, paper_id: int) -> MongoPaper | None:
+    async def find_by_id(self, paper_id: int) -> Paper | None:
         """Find a paper in the collection by id."""
         await self._ensure_connection()
         doc = await self._collection.find_one({"_id": ObjectId(paper_id)})
-        return deserialize(MongoPaper, doc) if doc else None
+        return srx.deserialize(Paper, doc) if doc else None
 
-    async def edit_paper(self, paper: MongoPaper) -> None:
+    async def edit_paper(self, paper: Paper) -> None:
         """Edit an existing paper in the collection."""
         await self._ensure_connection()
 
@@ -299,7 +218,7 @@ class MongoCollection(PaperCollection):
 
         paper.version = datetime.now()
         result = await self._collection.replace_one(
-            {"_id": paper.id}, serialize(MongoPaper, paper)
+            {"_id": paper.id}, srx.serialize(Paper, paper)
         )
 
         if result.matched_count == 0:
@@ -325,7 +244,7 @@ class MongoCollection(PaperCollection):
         end_date: date = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
-    ) -> AsyncGenerator[MongoPaper, None]:
+    ) -> AsyncGenerator[Paper, None]:
         """Search for papers in the collection."""
         await self._ensure_connection()
 
@@ -395,7 +314,7 @@ class MongoCollection(PaperCollection):
             }
 
         async for doc in self._collection.find(query):
-            yield deserialize(MongoPaper, doc)
+            yield srx.deserialize(Paper, doc)
 
     async def commit(self) -> None:
         # Commits are done synchronously to collections operations

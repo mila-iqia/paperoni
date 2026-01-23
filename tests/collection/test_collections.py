@@ -8,17 +8,15 @@ import gifnoc
 import pytest
 from easy_oauth.testing.utils import AppTester
 from ovld import ovld
-from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import serialize
 
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
 from paperoni.collection.memcoll import MemCollection
-from paperoni.collection.mongocoll import MongoCollection, MongoPaper
+from paperoni.collection.mongocoll import MongoCollection
 from paperoni.collection.remotecoll import RemoteCollection
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model.classes import (
-    CollectionPaper,
     Institution,
     InstitutionCategory,
     Link,
@@ -43,7 +41,7 @@ def eq(a: object, b: object):
         fields_b = vars(b)
         return eq(fields_a, fields_b)
     except TypeError:
-        return a == b
+        return (a is None) or (b is None) or a == b
 
 
 @ovld
@@ -188,27 +186,6 @@ async def collection(request, tmp_path: Path):
 @pytest.fixture(params=[MemCollection, FileCollection, MongoCollection, RemoteCollection])
 async def collection_r(request, tmp_path: Path, app_coll):
     yield await make_collection(request.param, tmp_path)
-
-
-def check_papers(
-    data_regression: DataRegressionFixture, papers: list[Paper], basename: str = None
-):
-    # Using file_regression and json.dumps to avoid
-    # yaml.representer.RepresenterError on DatePrecision
-    # papers = sort_keys(papers[:5])
-    # [p.pop("acquired") for p in papers]
-    papers = serialize(list[Paper], papers)
-
-    for paper in papers:
-        # MongoPaper uses ObjectId which will not be the same each time the test is
-        # run
-        paper["id"] = None if not isinstance(paper.get("id", None), int) else paper["id"]
-        paper.pop("_id", None)
-        paper.pop("version", None)
-        # Sort flags to ensure consistent ordering
-        paper["flags"] = sorted(paper["flags"])
-
-    data_regression.check(papers, basename=basename)
 
 
 async def test_add_papers(collection: PaperCollection, sample_papers: list[Paper]):
@@ -546,27 +523,3 @@ async def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list
 
     reloaded = FileCollection(file=tmp_path / "collection.json")
     assert [p async for p in collection.search()] == [p async for p in reloaded.search()]
-
-
-@pytest.mark.parametrize("paper_cls", [CollectionPaper, MongoPaper])
-async def test_make_collection_item(
-    collection: PaperCollection,
-    data_regression: DataRegressionFixture,
-    sample_papers: list[Paper],
-    paper_cls: type[CollectionPaper],
-):
-    """Test making a collection paper."""
-    await collection.add_papers(sample_papers)
-
-    papers = [p async for p in collection.search()]
-    assert eq(papers, sample_papers)
-
-    paper = paper_cls.make_collection_item(papers[0])
-
-    if paper_cls is type(papers[0]):
-        assert paper == papers[0]
-    else:
-        assert paper.id == papers[0].id
-        assert eq(paper, papers[0])
-
-    check_papers(data_regression, [paper])

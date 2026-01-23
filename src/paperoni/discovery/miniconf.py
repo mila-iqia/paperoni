@@ -209,7 +209,7 @@ class MiniConf(Discoverer):
                 releases=[release],
                 topics=topics,
                 links=list(links),
-                flags=[],
+                flags=set(),
             ),
             info={"discovered_by": {"miniconf": mid}},
         )

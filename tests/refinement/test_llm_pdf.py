@@ -3,13 +3,11 @@ from unittest.mock import patch
 
 import gifnoc
 import pytest
-from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import deserialize, serialize
 
 from paperoni.model.classes import PaperInfo
 from paperoni.refinement.fetch import fetch_all
 from paperoni.refinement.llm_normalize import normalize_paper
-from tests.utils import check_papers
 
 
 @pytest.fixture(scope="module")
@@ -44,13 +42,13 @@ async def paper_info():
         )
 
 
-def test_pdf(data_regression: DataRegressionFixture, paper_info: PaperInfo):
+def test_pdf(dreg, paper_info: PaperInfo):
     assert paper_info is not None
 
-    check_papers(data_regression, [paper_info])
+    dreg(list[PaperInfo], [paper_info])
 
 
-def test_pdf_norm(data_regression: DataRegressionFixture, paper_info: PaperInfo):
+def test_pdf_norm(dreg, paper_info: PaperInfo):
     assert paper_info is not None
 
     # Copy the paper_info to avoid modifying the original object
@@ -63,4 +61,4 @@ def test_pdf_norm(data_regression: DataRegressionFixture, paper_info: PaperInfo)
         normalized_paper = normalize_paper(paper_info.paper)
 
     paper_info.paper = normalized_paper
-    check_papers(data_regression, [paper_info])
+    dreg(list[PaperInfo], [paper_info])

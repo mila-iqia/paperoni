@@ -1,10 +1,9 @@
 import pytest
-from pytest_regressions.data_regression import DataRegressionFixture
 
 from paperoni.discovery.openalex import WORK_TYPES, OpenAlex, QueryError
 from paperoni.model import Focus, Focuses, PaperInfo
 
-from ..utils import check_papers, filter_test_papers, iter_affiliations, split_on
+from ..utils import filter_test_papers, iter_affiliations, split_on
 
 PAPERS = [
     "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
@@ -34,9 +33,7 @@ PAPERS = [
         {"title": "Hierarchical Latent Variable"},
     ],
 )
-async def test_query(
-    data_regression: DataRegressionFixture, query_params: dict[str, str]
-):
+async def test_query(dreg, query_params: dict[str, str]):
     discoverer = OpenAlex()
 
     papers: list[PaperInfo] = sorted(
@@ -119,7 +116,7 @@ async def test_query(
     if not match_found:
         assert False, f"Unknown query parameters: {query_params=}"
 
-    check_papers(data_regression, papers)
+    dreg(list[PaperInfo], papers)
 
 
 @pytest.mark.parametrize(
