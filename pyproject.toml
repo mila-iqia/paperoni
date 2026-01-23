@@ -91,9 +91,12 @@ ignore = ["E241", "F722", "E501", "E203", "F811", "F821", "E741"]
 [tool.ruff.lint.isort]
 combine-as-imports = true
 
-[tool.pytest.ini_options]
-timeout = 20
+[tool.pytest]
+timeout = "20"
 asyncio_mode = "auto"
+filterwarnings = [
+    'ignore:.*_UnionGenericAlias.*:DeprecationWarning',
+]
 
 [tool.hatch.envs.default]
 installer = "uv"
