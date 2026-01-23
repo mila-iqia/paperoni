@@ -3,7 +3,7 @@ from itertools import permutations
 import pytest
 
 from paperoni.discovery.semantic_scholar import SemanticScholar
-from paperoni.model import PaperInfo
+from paperoni.model import Paper
 from paperoni.model.focus import Focus, Focuses
 
 from ..utils import filter_test_papers, split_on
@@ -36,9 +36,9 @@ PAPERS = [
 async def test_query(dreg, query_params: dict[str, str]):
     discoverer = SemanticScholar()
 
-    papers: list[PaperInfo] = sorted(
+    papers: list[Paper] = sorted(
         [p async for p in discoverer.query(**query_params, block_size=100)],
-        key=lambda x: x.paper.title,
+        key=lambda x: x.title,
     )
 
     papers = list(filter_test_papers(papers, PAPERS))
@@ -77,7 +77,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                             name_variant.lower() in author.author.name.lower()
                             for name_variant in name_variants
                         )
-                        for author in paper.paper.authors
+                        for author in paper.authors
                     )
                     for paper in papers
                 ), f"Some papers do not contain the author {query_params['author']=}"
@@ -87,7 +87,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                 assert all(
                     # Search on title will return a match for each word in the query
                     set(split_on(query_params["title"].lower()))
-                    & set(split_on(paper.paper.title.lower()))
+                    & set(split_on(paper.title.lower()))
                     for paper in papers
                 ), (
                     f"Some papers' titles do not contain the words {query_params['title']=}"
@@ -97,7 +97,7 @@ async def test_query(dreg, query_params: dict[str, str]):
     if not match_found:
         assert False, f"Unknown query parameter: {query_params=}"
 
-    dreg(list[PaperInfo], papers)
+    dreg(list[Paper], papers)
 
 
 async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
@@ -180,8 +180,8 @@ async def test_focuses(query_params, focused_params):
     focus_results = [p async for p in discoverer.query(**focused_params, focuses=focuses)]
 
     # Both should return the same papers
-    direct_papers = [p.paper.title for p in direct_results]
-    focus_papers = [p.paper.title for p in focus_results]
+    direct_papers = [p.title for p in direct_results]
+    focus_papers = [p.title for p in focus_results]
 
     assert set(focus_papers) == set(direct_papers)
 

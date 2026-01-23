@@ -1,9 +1,9 @@
 import inspect
+from dataclasses import replace
 from typing import Callable
 
 from ovld import ovld
 
-from ..model import PaperInfo
 from ..utils import soft_fail
 
 
@@ -70,8 +70,8 @@ async def fetch_all(links, group="composite", statuses=None, tags=None, force=Fa
                 paper = await _call(f.func, *args, force=force)
                 if paper is not None:
                     statuses[nk] = "found"
-                    return PaperInfo(
-                        paper=paper,
+                    return replace(
+                        paper,
                         key=nk,
                         info={"refined_by": {name: key}},
                     )

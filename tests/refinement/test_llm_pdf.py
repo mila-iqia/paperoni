@@ -5,7 +5,7 @@ import gifnoc
 import pytest
 from serieux import deserialize, serialize
 
-from paperoni.model.classes import PaperInfo
+from paperoni.model.classes import Paper
 from paperoni.refinement.fetch import fetch_all
 from paperoni.refinement.llm_normalize import normalize_paper
 
@@ -42,23 +42,22 @@ async def paper_info():
         )
 
 
-def test_pdf(dreg, paper_info: PaperInfo):
+def test_pdf(dreg, paper_info: Paper):
     assert paper_info is not None
 
-    dreg(list[PaperInfo], [paper_info])
+    dreg(list[Paper], [paper_info])
 
 
-def test_pdf_norm(dreg, paper_info: PaperInfo):
+def test_pdf_norm(dreg, paper_info: Paper):
     assert paper_info is not None
 
     # Copy the paper_info to avoid modifying the original object
-    paper_info = deserialize(PaperInfo, serialize(PaperInfo, paper_info))
+    paper_info = deserialize(Paper, serialize(Paper, paper_info))
 
     with patch(
         "paperoni.prompt.paperazzi_make_key",
         lambda *args, **kwargs: "DUMMY_KEY",
     ):
-        normalized_paper = normalize_paper(paper_info.paper)
+        paper_info = normalize_paper(paper_info)
 
-    paper_info.paper = normalized_paper
-    dreg(list[PaperInfo], [paper_info])
+    dreg(list[Paper], [paper_info])

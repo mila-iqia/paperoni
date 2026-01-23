@@ -21,35 +21,13 @@ from paperoni.model.classes import (
     InstitutionCategory,
     Link,
     Paper,
-    PaperInfo,
 )
+
+from ..utils import eq
 
 # There's a 1 paper overlap between the papers of Hugo Larochelle and Pascal Vincent
 # There's no overlap between the papers of Guillaume Alain and the other two
 AUTHORS_WITH_FAKE_INSTITUTION = ["Hugo Larochelle", "Pascal Vincent", "Guillaume Alain"]
-
-
-@ovld
-def eq(a: list, b: list):
-    return len(a) == len(b) and all(eq(a, b) for a, b in zip(a, b))
-
-
-@ovld
-def eq(a: object, b: object):
-    try:
-        fields_a = vars(a)
-        fields_b = vars(b)
-        return eq(fields_a, fields_b)
-    except TypeError:
-        return (a is None) or (b is None) or a == b
-
-
-@ovld
-def eq(a: dict, b: dict):
-    for k in set(a) & set(b):
-        if not eq(a[k], b[k]):
-            return False
-    return True
 
 
 async def _get_sample_papers():
@@ -63,7 +41,7 @@ async def _get_sample_papers():
             break
         volumes.append(volume)
 
-    papers: list[PaperInfo] = []
+    papers: list[Paper] = []
     for volume in volumes:
         async for p in discoverer.query(volume=volume, name="Yoshua Bengio"):
             papers.append(p)
@@ -75,7 +53,7 @@ async def _get_sample_papers():
 async def sample_papers() -> Generator[list[Paper], None, None]:
     papers = await _get_sample_papers()
 
-    papers: list[Paper] = sorted((p.paper for p in papers), key=lambda x: x.title)[:10]
+    papers: list[Paper] = sorted(papers, key=lambda x: x.title)[:10]
     assert len(papers) == 10
 
     # Add fake institution to the papers

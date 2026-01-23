@@ -215,15 +215,11 @@ class Paper(Base):
     links: list[Link] = field(default_factory=list)
     flags: set[str] = field(default_factory=set)
 
+    # Info fields
+    key: str = "n/a"
+    info: dict[str, JSON] = field(default_factory=dict)
+    score: float = 0.0
+
     # Collection fields
     id: int | str = None
     version: datetime = None
-
-
-@dataclass
-class PaperInfo:
-    paper: Paper
-    key: str
-    info: dict[str, JSON] = field(default_factory=dict)
-    acquired: datetime = field(default_factory=datetime.now)
-    score: float = 0.0

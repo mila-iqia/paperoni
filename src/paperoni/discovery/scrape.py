@@ -10,7 +10,7 @@ from paperazzi.utils import DiskStoreFunc
 from serieux import deserialize, serialize
 
 from ..config import config
-from ..model.classes import DatePrecision, Link, Paper, PaperInfo
+from ..model.classes import DatePrecision, Link, Paper
 from ..prompt import ParsedResponseSerializer
 from ..prompt_utils import prompt_html, prompt_wrapper
 from ..utils import url_to_id
@@ -168,13 +168,10 @@ class Scrape(Discoverer):
                         paper.links[:] = sorted(
                             paper_links, key=lambda l: (l.type, l.link)
                         )
-
-                        yield PaperInfo(
-                            key=f"scrape:{hashlib.sha256(link.encode()).hexdigest()}",
-                            acquired=datetime.now(),
-                            paper=paper,
-                            info={"discovered_by": {"scrape": link}},
-                        )
+                        paper.key = f"scrape:{hashlib.sha256(link.encode()).hexdigest()}"
+                        paper.version = datetime.now()
+                        paper.info = {"discovered_by": {"scrape": link}}
+                        yield paper
 
 
 links: list[str] = gifnoc.define("paperoni.discovery.scrape.urls", list[str], defaults=[])

@@ -47,7 +47,7 @@ from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .heuristics import simplify_paper
-from .model import Link, Paper, PaperInfo
+from .model import Link, Paper
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all
 from .model.utils import paper_has_updated
@@ -111,7 +111,7 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
-    async def iterate(self, **kwargs) -> AsyncGenerator[PaperInfo, None]:
+    async def iterate(self, **kwargs) -> AsyncGenerator[Paper, None]:
         async for p in self.command(**kwargs):
             send(discover=p)
             yield p
@@ -128,11 +128,11 @@ class Discover(Productor):
     top: int = 0
 
     async def run(self):
-        typ = PaperInfo
+        typ = Paper
         papers = [p async for p in self.iterate()]
         if self.top:
-            papers = config.focuses.top(n=self.top, pinfos=papers)
-            typ = Scored[PaperInfo]
+            papers = config.focuses.top(n=self.top, papers=papers)
+            typ = Scored[Paper]
         self.format(papers, typ=typ)
 
 
@@ -228,8 +228,8 @@ class Refine:
 
         if self.norm:
             results = [
-                normalize_paper(pinfo.paper, force=self.force, **norm_args(self.norm))
-                for pinfo in results
+                normalize_paper(paper, force=self.force, **norm_args(self.norm))
+                for paper in results
             ]
 
         if self.merge:
@@ -284,12 +284,12 @@ class Work:
             )
             find.add(list(work.top))
 
-            async for pinfo in self.iterate(focuses=work.focuses):
-                if ex and pinfo.key in ex:
+            async for paper in self.iterate(focuses=work.focuses):
+                if ex and paper.key in ex:
                     continue
 
-                if found := find.find(pinfo.paper):
-                    found.value.add(pinfo)
+                if found := find.find(paper):
+                    found.value.add(paper)
                     new_score = work.focuses.score(found.value.current)
                     if new_score != found.score:
                         # Might be unnecessarily expensive but we'll see
@@ -299,29 +299,29 @@ class Work:
                 col_paper = None
                 if (
                     work.collection
-                    and (col_paper := await work.collection.find_paper(pinfo.paper))
+                    and (col_paper := await work.collection.find_paper(paper))
                     and (
                         not self.check_paper_updates
-                        or not paper_has_updated(col_paper, pinfo.paper)
+                        or not paper_has_updated(col_paper, paper)
                     )
                 ):
                     continue
 
                 if col_paper:
                     working_set = PaperWorkingSet.make(
-                        PaperInfo(
-                            paper=col_paper,
-                            key=pinfo.key,
-                            info=pinfo.info,
+                        replace(
+                            col_paper,
+                            key=paper.key,
+                            info=paper.info,
                             score=work.focuses.score(col_paper),
                         )
                     )
-                    working_set.add(pinfo)
+                    working_set.add(paper)
                     scored = Scored(work.focuses.score(working_set.current), working_set)
 
                 else:
                     scored = Scored(
-                        work.focuses.score(pinfo), PaperWorkingSet.make(pinfo)
+                        work.focuses.score(paper), PaperWorkingSet.make(paper)
                     )
 
                 if work.top.add(scored):
@@ -1086,7 +1086,7 @@ def enable_dash():
     @outsight.add
     async def show_paper_stats(sent, dash):
         async for group in sent["discover"].roll(5, partial=True):
-            values = [f"{pinfo.paper.title}" for pinfo in group]
+            values = [f"{paper.title}" for paper in group]
             dash["titles"] = History(values)
 
     @outsight.add

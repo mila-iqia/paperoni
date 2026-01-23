@@ -56,7 +56,6 @@ async def openalex_title(typ: Literal["title"], link: str):
         data_version="2",
         limit=1,
     ):
-        paper = paper.paper
         if paper.title == title:
             return paper
 

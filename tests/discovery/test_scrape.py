@@ -5,7 +5,7 @@ import gifnoc
 import pytest
 
 from paperoni.discovery.scrape import Scrape
-from paperoni.model import PaperInfo
+from paperoni.model import Paper
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -28,4 +28,4 @@ async def test_query(dreg):
         # paperoni discover scrape --links "https://dadelani.github.io/publications"
         paper = await anext(discoverer.query())
 
-    dreg(list[PaperInfo], [paper])
+    dreg(list[Paper], [paper])

@@ -4,7 +4,7 @@ from unittest.mock import patch
 import gifnoc
 import pytest
 
-from paperoni.model.classes import PaperInfo
+from paperoni.model.classes import Paper
 from paperoni.refinement.fetch import fetch_all
 from paperoni.refinement.llm_normalize import normalize_paper
 
@@ -17,14 +17,13 @@ async def paper_info():
         yield await anext(fetch_all([("doi", "10.1109/cvpr52733.2024.01307")], tags={}))
 
 
-def test_norm(dreg, paper_info: PaperInfo):
+def test_norm(dreg, paper_info: Paper):
     assert paper_info is not None
 
     with patch(
         "paperoni.prompt.paperazzi_make_key",
         lambda *args, **kwargs: "DUMMY_KEY",
     ):
-        normalized_paper = normalize_paper(paper_info.paper)
+        paper_info = normalize_paper(paper_info)
 
-    paper_info.paper = normalized_paper
-    dreg(list[PaperInfo], [paper_info])
+    dreg(list[Paper], [paper_info])

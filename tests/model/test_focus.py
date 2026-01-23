@@ -1,3 +1,4 @@
+from dataclasses import replace
 from pathlib import Path
 
 import gifnoc
@@ -6,7 +7,7 @@ from serieux import CommentRec, deserialize, dump, serialize
 
 from paperoni.__main__ import Work
 from paperoni.discovery.semantic_scholar import SemanticScholar
-from paperoni.model.classes import Author, Institution, Paper, PaperAuthor, PaperInfo
+from paperoni.model.classes import Author, Institution, Paper, PaperAuthor
 from paperoni.model.focus import Focus, Focuses, Scored, Top
 from paperoni.model.merge import PaperWorkingSet
 from tests.test_work import work
@@ -64,7 +65,7 @@ def test_focus_scoring():
     assert focuses.score(paper) == 1.5  # 1.0 + 0.5 + 0.0
 
     # Test paper info scoring
-    paper_info = PaperInfo(paper=paper, key="xyz")
+    paper_info = replace(paper, key="xyz")
     assert focuses.score(paper_info) == 1.5
 
 
@@ -174,11 +175,9 @@ def test_focuses_top():
     )
 
     papers = [
-        PaperInfo(
-            paper=Paper(
-                title=f"Paper from {foc.name}",
-                authors=[PaperAuthor(display_name=foc.name, author=None)],
-            ),
+        Paper(
+            title=f"Paper from {foc.name}",
+            authors=[PaperAuthor(display_name=foc.name, author=None)],
             key="xyz",
         )
         for foc in focuses.focuses
@@ -187,8 +186,8 @@ def test_focuses_top():
     top_2 = focuses.top(papers, 2)
     assert len(top_2) == 2
     fst, snd = top_2
-    assert fst.value.paper.title == "Paper from Charlie"
-    assert snd.value.paper.title == "Paper from Alice"
+    assert fst.value.title == "Paper from Charlie"
+    assert snd.value.title == "Paper from Alice"
 
 
 async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFixture):

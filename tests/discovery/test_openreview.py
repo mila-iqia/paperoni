@@ -2,10 +2,10 @@ import pytest
 
 from paperoni.discovery import openreview
 from paperoni.discovery.openreview import OpenReview, OpenReviewDispatch
-from paperoni.model import PaperInfo
+from paperoni.model import Paper
 from paperoni.model.focus import Focus, Focuses
 
-from ..utils import iter_links_ids, iter_releases
+from ..utils import eq, iter_links_ids, iter_releases, sort_title
 
 
 @pytest.mark.parametrize(
@@ -27,14 +27,14 @@ async def test_query(dreg, query_params: dict[str, str]):
     openreview_dispatch: OpenReviewDispatch = OpenReviewDispatch()
     api_versions: list[int] = openreview_dispatch.api_versions
 
-    papers_per_version: dict[int, list[PaperInfo]] = {}
+    papers_per_version: dict[int, list[Paper]] = {}
     for api_version in api_versions:
         discoverer = OpenReview(api_version)
 
         try:
             papers_per_version[api_version] = sorted(
                 [p async for p in discoverer.query(**query_params)],
-                key=lambda x: x.paper.title,
+                key=lambda x: x.title,
             )
         except openreview.openreview.OpenReviewException:
             papers_per_version[api_version] = []
@@ -44,17 +44,12 @@ async def test_query(dreg, query_params: dict[str, str]):
             f"The same papers are not expected to be in version 1 and 2 at the same time. Papers: {len(papers_per_version[1])=} {len(papers_per_version[2])=}"
         )
 
-    papers: list[PaperInfo] = sum(papers_per_version.values(), [])
+    papers: list[Paper] = sum(papers_per_version.values(), [])
 
     assert papers, f"No papers found for {query_params=}"
 
-    assert [p.paper for p in papers] == [
-        p.paper
-        for p in sorted(
-            [p async for p in openreview_dispatch.query(**query_params)],
-            key=lambda x: x.paper.title,
-        )
-    ], (
+    ptest = sort_title([p async for p in openreview_dispatch.query(**query_params)])
+    assert eq(papers, ptest), (
         f"Querying with OpenReview({api_versions=}) should return the same papers as querying with OpenReviewDispatch"
     )
 
@@ -66,7 +61,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                 assert all(
                     any(
                         query_params["venue"].lower() == rel.venue.name.lower()
-                        for rel in iter_releases(paper.paper)
+                        for rel in iter_releases(paper)
                     )
                     for paper in papers
                 ), f"Some papers do not contain the venue {query_params['venue']=}"
@@ -76,7 +71,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                 assert all(
                     any(
                         query_params["paper_id"] == link_id
-                        for link_id in iter_links_ids(paper.paper)
+                        for link_id in iter_links_ids(paper)
                     )
                     for paper in papers
                 ), f"Some papers do not contain the paper ID {query_params['paper_id']=}"
@@ -86,35 +81,32 @@ async def test_query(dreg, query_params: dict[str, str]):
                 assert all(
                     any(
                         query_params["author"].lower() in author.author.name.lower()
-                        for author in paper.paper.authors
+                        for author in paper.authors
                     )
                     for paper in papers
                 ), f"Some papers do not contain the author {query_params['author']=}"
                 match_found = True
 
             case "author_id":
-                assert [p.paper for p in papers] == [
-                    p.paper
-                    for p in sorted(
-                        [
-                            pp
-                            async for pp in openreview_dispatch.query(
-                                author="Yoshua Bengio",
-                                venue=query_params["venue"],
-                                block_size=100,
-                                limit=100,
-                            )
-                        ],
-                        key=lambda x: x.paper.title,
-                    )
-                ], (
+                ptest = sort_title(
+                    [
+                        pp
+                        async for pp in openreview_dispatch.query(
+                            author="Yoshua Bengio",
+                            venue=query_params["venue"],
+                            block_size=100,
+                            limit=100,
+                        )
+                    ]
+                )
+                assert eq(papers, ptest), (
                     "Querying by author ID, at least for Yoshua Bengio, should return the same papers as querying by author name"
                 )
                 match_found = True
 
             case "title":
                 assert all(
-                    query_params["title"].lower() == paper.paper.title.lower()
+                    query_params["title"].lower() == paper.title.lower()
                     for paper in papers
                 ), (
                     f"Some papers' titles do not contain the words {query_params['title']=}"
@@ -124,7 +116,7 @@ async def test_query(dreg, query_params: dict[str, str]):
     if not match_found:
         assert False, f"Unknown query parameters: {query_params=}"
 
-    dreg(list[PaperInfo], papers[:5])
+    dreg(list[Paper], papers[:5])
 
 
 async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureFixture):
@@ -218,8 +210,8 @@ async def test_focuses(query_params, focused_params):
     focus_results = [p async for p in discoverer.query(**focused_params, focuses=focuses)]
 
     # Both should return the same papers
-    direct_papers = [p.paper.title for p in direct_results]
-    focus_papers = [p.paper.title for p in focus_results]
+    direct_papers = [p.title for p in direct_results]
+    focus_papers = [p.title for p in focus_results]
 
     assert focus_papers == direct_papers
 

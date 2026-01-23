@@ -61,12 +61,9 @@ class RegressionRules(Medley):
 
 @pytest.fixture
 def dreg(data_regression):
-    from paperoni.model import Paper, PaperInfo
+    from paperoni.model import Paper
 
-    omissions = {
-        Paper: {"id", "version"},
-        PaperInfo: {"acquired"},
-    }
+    omissions = {Paper: {"id", "version", "score"}}
     srx = (Serieux + RegressionRules)(omissions=omissions)
 
     @ovld
