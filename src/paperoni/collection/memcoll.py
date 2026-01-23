@@ -10,7 +10,7 @@ from ..utils import (
     normalize_venue,
 )
 from .abc import PaperCollection, _id_types
-from .finder import Finder
+from .finder import find_equivalent, paper_index
 
 
 @dataclass(kw_only=True)
@@ -23,13 +23,13 @@ class MemCollection(PaperCollection):
         if self._last_id is None:
             self._last_id = -1
 
-        self._finder = Finder()
+        self._index = paper_index()
         if self._papers:
             assert self._last_id > -1, "If papers are provided, last id must be set"
             assert self._last_id >= max(
                 len(self._papers) - 1, *[p.id for p in self._papers]
             ), "Last id must be at least equal to the maximum paper id"
-            self._finder.add(self._papers)
+            self._index.index_all(self._papers)
 
     async def exclusions(self) -> set[str]:
         return self._exclusions
@@ -51,8 +51,7 @@ class MemCollection(PaperCollection):
                         break
 
                 else:
-                    if p.id in self._finder.by_id:
-                        paper = self._finder.by_id[p.id]
+                    if paper := self._index.equiv("id", p):
                         if paper.version >= p.version:
                             # Paper has been updated since last time it was fetched.
                             # Do not replace it.
@@ -62,14 +61,14 @@ class MemCollection(PaperCollection):
 
                     else:
                         p = replace(p, id=self.next_id(), version=datetime.now())
-                        assert p.id not in self._finder.by_id
+                        assert not self._index.equiv("id", p)
 
                     self._papers.append(p)
                     added += 1
 
                     assert p.id is not None
                     assert p.version is not None
-                    self._finder.add([p])
+                    self._index.index(p)
 
         finally:
             if added:
@@ -87,10 +86,10 @@ class MemCollection(PaperCollection):
             await self.commit()
 
     async def find_paper(self, paper: Paper) -> Paper | None:
-        return self._finder.find(paper)
+        return find_equivalent(paper, self._index)
 
     async def find_by_id(self, paper_id: int) -> Paper | None:
-        return self._finder.by_id.get(paper_id)
+        return self._index.find("id", paper_id)
 
     async def edit_paper(self, paper: Paper) -> None:
         for i, existing_paper in enumerate(self._papers):
@@ -99,7 +98,7 @@ class MemCollection(PaperCollection):
             if existing_paper.id == paper.id:
                 paper.version = datetime.now()
                 self._papers[i] = paper
-                self._finder.replace(paper)
+                self._index.replace(paper)
                 await self.commit()
                 return
 
@@ -116,7 +115,7 @@ class MemCollection(PaperCollection):
         self._last_id = -1
         self._papers.clear()
         self._exclusions.clear()
-        self._finder = Finder()
+        self._index = paper_index()
         await self.commit()
 
     async def search(

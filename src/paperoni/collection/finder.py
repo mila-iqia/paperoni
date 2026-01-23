@@ -1,56 +1,116 @@
 import logging
-from dataclasses import dataclass, field
-from typing import Callable
+from dataclasses import dataclass
+from typing import Any, Callable, Iterable
 
+from ovld import ovld, recurse
+
+from ..model import PaperWorkingSet, Scored
 from ..model.classes import Paper
-from ..utils import normalize_title, quick_author_similarity
+from ..utils import normalize_name, normalize_title, quick_author_similarity
 
 
 @dataclass
-class Finder[T]:
-    title_finder: Callable = lambda p: p.title
-    links_finder: Callable = lambda p: p.links
-    authors_finder: Callable = lambda p: p.authors
-    id_finder: Callable = lambda p: getattr(p, "id", None)
-    by_title: dict[str, T] = field(default_factory=dict)
-    by_link: dict[str, T] = field(default_factory=dict)
-    by_id: dict[str, T] = field(default_factory=dict)
+class Index[T]:
+    indexers: dict[str, Callable]
+    indexes: dict[str, dict[Any, T]] = None
 
-    def add(self, entries: list[T]):
+    def __post_init__(self):
+        self.indexes = {name: {} for name in self.indexers}
+
+    def index_all(self, entries: Iterable[T]):
         for entry in entries:
-            for lnk in self.links_finder(entry):
-                self.by_link[lnk] = entry
-            self.by_title[normalize_title(self.title_finder(entry))] = entry
-            if (i := self.id_finder(entry)) is not None:
-                self.by_id[i] = entry
+            self.index(entry)
 
-    def find(self, p: Paper):
-        for lnk in p.links:
-            if result := self.by_link.get(lnk, None):
-                return result
-        same_title = self.by_title.get(normalize_title(p.title), None)
-        if same_title:
-            au1 = {a.display_name for a in p.authors}
-            au2 = {a.display_name for a in self.authors_finder(same_title)}
-            sim = quick_author_similarity(au1, au2)
-            if sim >= 0.8:
-                return same_title
-            else:
-                logging.warning(
-                    f"Title match but low author similarity ({sim:.2f}) for paper '{p.title}': {au1} vs {au2}"
-                )
-        return None
+    def index(self, entry: T):
+        for name, fn in self.indexers.items():
+            idx = self.indexes[name]
+            for value in fn(entry):
+                idx[value] = entry
 
     def remove(self, entry: T):
-        for lnk in self.links_finder(entry):
-            self.by_link.pop(lnk, None)
-        title_key = normalize_title(self.title_finder(entry))
-        self.by_title.pop(title_key, None)
-        if i := self.id_finder(entry):
-            self.by_id.pop(i, None)
+        for name, fn in self.indexers.items():
+            idx = self.indexes[name]
+            for value in fn(entry):
+                idx.pop(value)
 
     def replace(self, entry: T):
-        entry_id = self.id_finder(entry)
-        if entry_id and (old_entry := self.by_id.get(entry_id)):
+        old_entry = self.equiv("id", entry)
+        if old_entry is not None:
             self.remove(old_entry)
-        self.add([entry])
+        self.index(entry)
+
+    def find(self, index: str, value: Any):
+        return self.indexes[index].get(value, None)
+
+    def equiv(self, index: str, model: T):
+        idx = self.indexes[index]
+        for value in self.indexers[index](model):
+            if result := idx.get(value, None):
+                return result
+        else:
+            return None
+
+
+def find_equivalent(p: Paper, idx: Index):
+    if result := idx.equiv("links", p):
+        return result
+    if same_title := idx.equiv("title", p):
+        au1 = list(extract_authors(p))
+        au2 = list(extract_authors(same_title))
+        sim = quick_author_similarity(au1, au2)
+        if sim >= 0.8:
+            return same_title
+        else:
+            logging.warning(
+                f"Title match but low author similarity ({sim:.2f}) for paper '{p.title}': {au1} vs {au2}"
+            )
+    return None
+
+
+@ovld
+def to_paper(p: PaperWorkingSet):
+    yield from recurse(p.current)
+
+
+@ovld
+def to_paper(p: Scored):
+    yield from recurse(p.value)
+
+
+@to_paper.variant
+def extract_title(p: Paper):
+    yield normalize_title(p.title)
+
+
+@to_paper.variant
+def extract_id(p: Paper):
+    yield p.id
+
+
+@to_paper.variant
+def extract_authors(p: Paper):
+    for a in p.authors:
+        yield normalize_name(a.display_name)
+
+
+@to_paper.variant
+def extract_latest(p: Paper):
+    if p.releases:
+        d = max(release.venue.date for release in p.releases)
+        yield f"{d}::{p.id}"
+
+
+@to_paper.variant
+def extract_links(p: Paper):
+    yield from p.links
+
+
+def paper_index():
+    return Index(
+        indexers={
+            "id": extract_id,
+            "title": extract_title,
+            "links": extract_links,
+            "latest": extract_latest,
+        }
+    )
