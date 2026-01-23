@@ -13,7 +13,6 @@ from ..model import (
     Link,
     Paper,
     PaperAuthor,
-    PaperInfo,
     Release,
     Topic,
     Venue,
@@ -321,40 +320,38 @@ class OpenReview(Discoverer):
                         precision = DatePrecision.year
                     venue_data["venue"] += f" {year}"
 
-                yield PaperInfo(
+                yield Paper(
                     key=f"openreview:{note.id}",
-                    acquired=datetime.now(),
-                    paper=Paper(
-                        title=self.get_content_field(note, "title"),
-                        abstract=self.get_content_field(note, "abstract"),
-                        authors=authors,
-                        releases=[
-                            Release(
-                                venue=Venue(
-                                    type=type(self)._map_venue_type(vid),
-                                    name=vid,
-                                    series=venue_to_series(vid),
-                                    volume=venue_data["venue"],
-                                    date=the_date,
-                                    date_precision=precision,
-                                    links=[
-                                        Link(
-                                            type="openreview-venue",
-                                            link=vid,
-                                        )
-                                    ],
-                                    aliases=[],
-                                ),
-                                status=decision,
-                                pages=None,
-                            )
-                        ],
-                        topics=[
-                            Topic(name=kw)
-                            for kw in self.get_content_field(note, "keywords", [])
-                        ],
-                        links=_links,
-                    ),
+                    version=datetime.now(),
+                    title=self.get_content_field(note, "title"),
+                    abstract=self.get_content_field(note, "abstract"),
+                    authors=authors,
+                    releases=[
+                        Release(
+                            venue=Venue(
+                                type=type(self)._map_venue_type(vid),
+                                name=vid,
+                                series=venue_to_series(vid),
+                                volume=venue_data["venue"],
+                                date=the_date,
+                                date_precision=precision,
+                                links=[
+                                    Link(
+                                        type="openreview-venue",
+                                        link=vid,
+                                    )
+                                ],
+                                aliases=[],
+                            ),
+                            status=decision,
+                            pages=None,
+                        )
+                    ],
+                    topics=[
+                        Topic(name=kw)
+                        for kw in self.get_content_field(note, "keywords", [])
+                    ],
+                    links=_links,
                     info={"discovered_by": {"openreview": note.id}},
                 )
             next_offset += len(notes)

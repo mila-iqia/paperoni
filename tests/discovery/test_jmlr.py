@@ -1,5 +1,5 @@
 from paperoni.discovery.jmlr import JMLR
-from paperoni.model import PaperInfo
+from paperoni.model import Paper
 
 
 async def test_query(dreg):
@@ -9,11 +9,11 @@ async def test_query(dreg):
         "Could not find volume v24"
     )
 
-    papers: list[PaperInfo] = sorted(
+    papers: list[Paper] = sorted(
         [p async for p in discoverer.query(volume="v24", name="Yoshua Bengio")],
-        key=lambda x: x.paper.title,
+        key=lambda x: x.title,
     )
 
     assert papers, "No papers found for Yoshua Bengio in v24"
 
-    dreg(list[PaperInfo], papers)
+    dreg(list[Paper], papers)

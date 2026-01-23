@@ -4,9 +4,9 @@ FastAPI interface for paperoni collection search functionality.
 
 import datetime
 import itertools
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from types import NoneType
-from typing import Generator, Iterable, Literal
+from typing import Any, Generator, Iterable, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
@@ -16,7 +16,7 @@ from ..__main__ import Coll, Focus, Formatter, Fulltext, Work
 from ..config import config
 from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
-from ..model.classes import Paper, PaperInfo
+from ..model.classes import Paper as _Paper
 from ..model.focus import Focuses, Scored
 from ..model.merge import PaperWorkingSet
 from ..utils import url_to_id
@@ -26,6 +26,12 @@ from ..utils import url_to_id
 class VoidFormatter(Formatter):
     def __call__(self, things):
         pass
+
+
+@dataclass
+class Paper(_Paper):
+    # Pydantic will not accept dict[str, JSON], so we cheat here
+    info: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -204,14 +210,14 @@ class AddRequest(Work.Get):
     def __post_init__(self):
         self.user: str = None
 
-    def iterate(self, **kwargs) -> Generator[PaperInfo, None, None]:
-        papers = deserialize(list[Paper], self.papers)
+    def iterate(self, **kwargs) -> Generator[Paper, None, None]:
+        papers = deserialize(list[_Paper], self.papers)
 
         for paper in papers:
-            yield PaperInfo(
+            yield replace(
+                paper,
                 key=f"user:{self.user}",
                 acquired=datetime.datetime.now(datetime.timezone.utc),
-                paper=paper,
                 info={"added_by": {"user": self.user}},
             )
 
@@ -327,7 +333,8 @@ def install_api(app) -> FastAPI:
             raise HTTPException(
                 status_code=404, detail=f"Paper with ID {paper_id} not found"
             )
-        return paper
+        # FastAPI requires this conversion, it'll be serialized so it's fine
+        return Paper(**vars(paper))
 
     @app.post(f"{prefix}/work/add", response_model=AddResponse)
     async def work_add_papers(request: AddRequest, user: str = Depends(hascap("admin"))):
@@ -402,7 +409,7 @@ def install_api(app) -> FastAPI:
         coll = Coll(command=None)
 
         # Deserialize the paper from the request
-        paper = deserialize(Paper, request.paper)
+        paper = deserialize(_Paper, request.paper)
 
         # Verify the paper has an ID
         if paper.id is None:

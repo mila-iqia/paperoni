@@ -14,7 +14,7 @@ from ..utils import (
     normalize_name,
     split_institution,
 )
-from .classes import Paper, PaperAuthor, PaperInfo
+from .classes import Paper, PaperAuthor
 from .merge import PaperWorkingSet
 
 
@@ -81,21 +81,18 @@ class Focuses:
         return iter(self.focuses)
 
     @ovld
-    def score(self, p: PaperInfo):
-        score = self.score(p.paper)
-        send(score=score)
-        return score
-
-    @ovld
     def score(self, p: PaperWorkingSet):
         return self.score(p.current)
 
     @ovld
     def score(self, p: Paper):
         if not mostly_latin(p.title):
-            return 0.0
-        scores = [self.score(author) for author in p.authors]
-        return combine(scores)
+            result = 0.0
+        else:
+            scores = [self.score(author) for author in p.authors]
+            result = combine(scores)
+        send(score=result)
+        return result
 
     @ovld
     def score(self, p: PaperAuthor):
@@ -114,9 +111,9 @@ class Focuses:
             return 0.0
         return name_score + iscores
 
-    def top(self, pinfos, n, drop_zero=True):
+    def top(self, papers, n, drop_zero=True):
         t = Top(n, drop_zero=drop_zero)
-        for p in pinfos:
+        for p in papers:
             scored = Scored(self.score(p), p)
             t.add(scored)
         return t

@@ -14,7 +14,6 @@ from ..model.classes import (
     Link,
     Paper,
     PaperAuthor,
-    PaperInfo,
     Release,
     Topic,
     Venue,
@@ -199,18 +198,16 @@ class MiniConf(Discoverer):
         mid = f"{conference}:{data['uid']}"
 
         # Create and return Paper object
-        return PaperInfo(
+        return Paper(
             key=f"miniconf:{mid}",
-            acquired=datetime.now(),
-            paper=Paper(
-                title=title,
-                abstract=abstract,
-                authors=authors,
-                releases=[release],
-                topics=topics,
-                links=list(links),
-                flags=set(),
-            ),
+            version=datetime.now(),
+            title=title,
+            abstract=abstract,
+            authors=authors,
+            releases=[release],
+            topics=topics,
+            links=list(links),
+            flags=set(),
             info={"discovered_by": {"miniconf": mid}},
         )
 
@@ -341,7 +338,7 @@ class MiniConf(Discoverer):
                     venue_date=conference_date,
                     date_precision=date_precision,
                 )
-                if matches(paper.paper):
+                if matches(paper):
                     n += 1
                     yield paper
             except Exception as e:

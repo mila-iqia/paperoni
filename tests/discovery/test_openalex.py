@@ -1,9 +1,11 @@
+from dataclasses import replace
+
 import pytest
 
 from paperoni.discovery.openalex import WORK_TYPES, OpenAlex, QueryError
-from paperoni.model import Focus, Focuses, PaperInfo
+from paperoni.model import Focus, Focuses, Paper
 
-from ..utils import filter_test_papers, iter_affiliations, split_on
+from ..utils import eq, filter_test_papers, iter_affiliations, sort_title, split_on
 
 PAPERS = [
     "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
@@ -36,7 +38,7 @@ PAPERS = [
 async def test_query(dreg, query_params: dict[str, str]):
     discoverer = OpenAlex()
 
-    papers: list[PaperInfo] = sorted(
+    papers: list[Paper] = sorted(
         [
             p
             async for p in discoverer.query(
@@ -46,7 +48,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                 limit=10000,
             )
         ],
-        key=lambda x: x.paper.title,
+        key=lambda x: x.title,
     )
 
     papers = list(filter_test_papers(papers, PAPERS))
@@ -61,7 +63,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                 assert all(
                     any(
                         query_params["institution"].lower() in aff.name.lower()
-                        for aff in iter_affiliations(paper.paper)
+                        for aff in iter_affiliations(paper)
                     )
                     for paper in papers
                 ), (
@@ -73,31 +75,28 @@ async def test_query(dreg, query_params: dict[str, str]):
                 assert all(
                     any(
                         query_params["author"].lower() in author.author.name.lower()
-                        for author in paper.paper.authors
+                        for author in paper.authors
                     )
                     for paper in papers
                 ), f"Some papers do not contain the author {query_params['author']=}"
                 match_found = True
 
             case "author_id":
-                assert [p.paper for p in papers] == [
-                    p.paper
-                    for p in sorted(
-                        filter_test_papers(
-                            [
-                                pp
-                                async for pp in discoverer.query(
-                                    author="Yoshua Bengio",
-                                    page=1,
-                                    per_page=100,
-                                    limit=100,
-                                )
-                            ],
-                            PAPERS,
-                        ),
-                        key=lambda x: x.paper.title,
+                ptest = sort_title(
+                    filter_test_papers(
+                        [
+                            replace(pp, version=None)
+                            async for pp in discoverer.query(
+                                author="Yoshua Bengio",
+                                page=1,
+                                per_page=100,
+                                limit=100,
+                            )
+                        ],
+                        PAPERS,
                     )
-                ], (
+                )
+                assert eq(papers, ptest), (
                     "Querying by author ID should return the same papers as querying by author name"
                 )
                 match_found = True
@@ -106,7 +105,7 @@ async def test_query(dreg, query_params: dict[str, str]):
                 # Search on title will return a match for each word in the query
                 assert all(
                     set(split_on(query_params["title"].lower()))
-                    & set(split_on(paper.paper.title.lower()))
+                    & set(split_on(paper.title.lower()))
                     for paper in papers
                 ), (
                     f"Some papers' titles do not contain the words {query_params['title']=}"
@@ -116,7 +115,7 @@ async def test_query(dreg, query_params: dict[str, str]):
     if not match_found:
         assert False, f"Unknown query parameters: {query_params=}"
 
-    dreg(list[PaperInfo], papers)
+    dreg(list[Paper], papers)
 
 
 @pytest.mark.parametrize(
@@ -265,8 +264,8 @@ async def test_focuses(query_params, focused_params):
     ]
 
     # Both should return the same papers
-    direct_papers = [p.paper.title for p in direct_results]
-    focus_papers = [p.paper.title for p in focus_results]
+    direct_papers = [p.title for p in direct_results]
+    focus_papers = [p.title for p in focus_results]
 
     assert focus_papers == direct_papers
     assert len(focus_results) == 10
@@ -301,4 +300,4 @@ async def test_focuses_multiple_focuses():
 
     # The last active focus is a duplicate of the first focus, so the first 10
     # results should be the same as the last 10 results
-    assert [p.paper.title for p in results][:10] == [p.paper.title for p in results][20:]
+    assert [p.title for p in results][:10] == [p.title for p in results][20:]

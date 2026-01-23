@@ -14,7 +14,6 @@ from ..model.classes import (
     Link,
     Paper,
     PaperAuthor,
-    PaperInfo,
     Release,
     Venue,
     VenueType,
@@ -47,20 +46,16 @@ class JMLR(Discoverer):
                     yield paper
             return
         name = name and asciiify(name).lower()
-        async for paper_info in self.get_volume(volume, cache):
+        async for paper in self.get_volume(volume, cache):
             try:
-                if (
-                    paper_info
-                    and paper_info.paper
-                    and (
-                        name is None
-                        or any(
-                            asciiify(auth.author.name).lower() == name
-                            for auth in paper_info.paper.authors
-                        )
+                if paper and (
+                    name is None
+                    or any(
+                        asciiify(auth.author.name).lower() == name
+                        for auth in paper.authors
                     )
                 ):
-                    yield paper_info
+                    yield paper
             except Exception as exc:
                 traceback.print_exception(exc)
 
@@ -166,12 +161,10 @@ class JMLR(Discoverer):
             jmlr_key = f"{volume}:{title[:50].replace(' ', '_').lower()}"
             paper_key = f"jmlr:{jmlr_key}"
 
-            yield PaperInfo(
-                key=paper_key,
-                acquired=datetime.now(),
-                paper=paper,
-                info={"discovered_by": {"jmlr": jmlr_key}},
-            )
+            paper.key = paper_key
+            paper.version = datetime.now()
+            paper.info = {"discovered_by": {"jmlr": jmlr_key}}
+            yield paper
 
     async def extract_volumes(
         self, index, selector, map: Callable = None, filter: Callable = None

@@ -4,7 +4,7 @@ import textwrap
 from blessed import Terminal
 from ovld import ovld, recurse
 
-from .model import Author, DatePrecision, Paper, PaperInfo, Scored, Venue
+from .model import Author, DatePrecision, Paper, Scored, Venue
 from .model.merge import PaperWorkingSet
 from .utils import expand_links_dict
 
@@ -41,15 +41,6 @@ def display(s: Scored):
 
 
 @ovld
-def display(pinfo: PaperInfo):
-    recurse(pinfo.paper)
-    if pinfo.info:
-        print_field("Info", "")
-    for field, value in pinfo.info.items():
-        print(f"  {T.bold_green(field)} {value}")
-
-
-@ovld
 def display(paper: Paper):
     """Print the paper in long form on the terminal.
 
@@ -82,6 +73,10 @@ def display(paper: Paper):
     if hasattr(paper, "excerpt"):
         before, match, after = paper.excerpt
         print_field("Excerpt", before + T.bold_red(match) + after)
+    if paper.info:
+        print_field("Info", "")
+    for field, value in paper.info.items():
+        print(f"  {T.bold_green(field)} {value}")
 
 
 @ovld

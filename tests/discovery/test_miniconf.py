@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 
 from paperoni.discovery.miniconf import ErrorPolicy, MiniConf, conference_urls
-from paperoni.model import PaperInfo
+from paperoni.model import Paper
 
 from ..utils import iter_affiliations
 
@@ -18,14 +18,14 @@ from ..utils import iter_affiliations
 async def test_query(dreg, conference, query_params):
     discoverer = MiniConf()
 
-    papers: list[PaperInfo] = sorted(
+    papers: list[Paper] = sorted(
         [
             p
             async for p in discoverer.query(
                 conference, year=2024, **query_params, error_policy=ErrorPolicy.RAISE
             )
         ],
-        key=lambda x: x.paper.title,
+        key=lambda x: x.title,
     )
 
     match_found = False
@@ -36,7 +36,7 @@ async def test_query(dreg, conference, query_params):
                 assert all(
                     any(
                         query_params["affiliation"].lower() in aff.name.lower()
-                        for aff in iter_affiliations(paper.paper)
+                        for aff in iter_affiliations(paper)
                     )
                     for paper in papers
                 ), (
@@ -48,7 +48,7 @@ async def test_query(dreg, conference, query_params):
                 assert all(
                     any(
                         query_params["author"].lower() in author.author.name.lower()
-                        for author in paper.paper.authors
+                        for author in paper.authors
                     )
                     for paper in papers
                 ), f"Some papers do not contain the author {query_params['author']=}"
@@ -57,7 +57,7 @@ async def test_query(dreg, conference, query_params):
     if not match_found:
         assert False, f"Unknown query parameters: {query_params=}"
 
-    dreg(list[PaperInfo], papers[:5])
+    dreg(list[Paper], papers[:5])
 
 
 async def test_error_policy(capsys):

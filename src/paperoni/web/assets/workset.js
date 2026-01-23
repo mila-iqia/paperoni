@@ -67,9 +67,8 @@ function createInfoTable(info) {
     `;
 }
 
-function createWorksetPaperElement(paperInfo) {
-    const paper = paperInfo.paper;
-    const info = paperInfo.info || {};
+function createWorksetPaperElement(paper) {
+    const info = paper.info || {};
 
     // Get the first link URL if available
     const firstLink = paper.links && paper.links.length > 0 ? paper.links[0] : null;
@@ -113,30 +112,26 @@ function createWorksetElement(scoredWorkset, index) {
     const current = workset.current;
     const collected = workset.collected || [];
 
-    // Create current paper as PaperInfo (only if current exists)
+    // current and collected are all Paper objects with key, info, score fields
+    // For display, we pair each paper with its tab label and score
     const allPapers = [];
     if (current) {
-        const currentPaperInfo = {
-            paper: current,
-            key: 'current',
-            info: {},
-            score: score
-        };
-        allPapers.push(currentPaperInfo);
+        allPapers.push({ paper: current, tabKey: 'current', score: score });
     }
     
-    // Add collected papers
-    allPapers.push(...collected);
+    // Add collected papers with their own keys as tab labels
+    collected.forEach(paper => {
+        allPapers.push({ paper, tabKey: paper.key, score: paper.score });
+    });
     
     // If no papers at all, return empty
     if (allPapers.length === 0) {
         return html`<div class="workset-item"><div class="workset-content">No papers in this workset.</div></div>`;
     }
     
-    const tabButtons = allPapers.map((paperInfo, tabIndex) => {
-        const paper = paperInfo.paper;
-        const key = paperInfo.key;
-        const info = paperInfo.info || {};
+    const tabButtons = allPapers.map(({ paper, tabKey }, tabIndex) => {
+        const key = tabKey;
+        const info = paper.info || {};
         let tabTitle;
         let tabSubtitle = null;
         
@@ -186,10 +181,10 @@ function createWorksetElement(scoredWorkset, index) {
         return button;
     });
 
-    const tabContent = allPapers.map((paperInfo, tabIndex) => {
+    const tabContent = allPapers.map(({ paper }, tabIndex) => {
         const content = html`
             <div class="tab-content ${tabIndex === 0 ? 'active' : ''}" data-tab-index="${tabIndex}">
-                ${createWorksetPaperElement(paperInfo)}
+                ${createWorksetPaperElement(paper)}
             </div>
         `;
         return content;
@@ -239,8 +234,7 @@ function createWorksetElement(scoredWorkset, index) {
         contents[index].classList.add('active');
         
         // Update the score to match the active paper
-        const activePaper = allPapers[index];
-        scoreValueElement.textContent = activePaper.score.toFixed(2);
+        scoreValueElement.textContent = allPapers[index].score.toFixed(2);
         
         // Update current tab index
         currentTabIndex = index;

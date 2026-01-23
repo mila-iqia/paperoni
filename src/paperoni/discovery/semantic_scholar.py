@@ -10,7 +10,6 @@ from ..model import (
     Link,
     Paper,
     PaperAuthor,
-    PaperInfo,
     Release,
     Topic,
     Venue,
@@ -234,7 +233,12 @@ class SemanticScholar(Discoverer):
                 pages=None,
             )
 
-        paper = Paper(
+        # Create unique key based on Semantic Scholar paper ID
+        paper_key = f"semantic_scholar:{data['paperId']}"
+
+        return Paper(
+            key=paper_key,
+            version=datetime.now(),
             links=links,
             authors=qual(authors, -10.0),
             title=qual(data["title"], -10.0),
@@ -242,15 +246,6 @@ class SemanticScholar(Discoverer):
             # citation_count=data["citationCount"],
             topics=[Topic(name=field) for field in (data["fieldsOfStudy"] or ())],
             releases=[release],
-        )
-
-        # Create unique key based on Semantic Scholar paper ID
-        paper_key = f"semantic_scholar:{data['paperId']}"
-
-        return PaperInfo(
-            key=paper_key,
-            acquired=datetime.now(),
-            paper=paper,
             info={"discovered_by": {"semantic_scholar": data["paperId"]}},
         )
 

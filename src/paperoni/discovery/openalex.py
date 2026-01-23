@@ -13,7 +13,6 @@ from ..model.classes import (
     Link,
     Paper,
     PaperAuthor,
-    PaperInfo,
     Release,
     Topic,
     Venue,
@@ -204,14 +203,14 @@ class OpenAlexQueryManager:
         assert "results" in jdata
         return jdata
 
-    def _try_wrapping_paper(self, data: dict) -> PaperInfo:
+    def _try_wrapping_paper(self, data: dict) -> Paper:
         try:
             return self._wrap_paper(data)
         except Exception:
             pprint.pformat(data)
             raise
 
-    def _wrap_paper(self, data: dict) -> PaperInfo:
+    def _wrap_paper(self, data: dict) -> Paper:
         # Assert consistency in locations
         typ = data["type"]
         if typ not in self.work_types:
@@ -366,12 +365,10 @@ class OpenAlexQueryManager:
         openalex_id = data["id"].split("/")[-1]
         paper_key = f"openalex:{openalex_id}"
 
-        return PaperInfo(
-            key=paper_key,
-            acquired=datetime.now(),
-            paper=paper,
-            info={"discovered_by": {"openalex": openalex_id}},
-        )
+        paper.key = paper_key
+        paper.version = datetime.now()
+        paper.info = {"discovered_by": {"openalex": openalex_id}}
+        return paper
 
     @classmethod
     def _reconstruct_abstract(cls, inverted: Dict[str, List[int]]) -> str:
