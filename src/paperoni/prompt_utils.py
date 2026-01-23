@@ -52,7 +52,7 @@ def prompt_wrapper(prompt: DiskStoreFunc, *, force=False, send_input, **kwargs):
             tmp_cache_file.rename(cache_file)
 
 
-def prompt_html(
+async def prompt_html(
     system_prompt: str,
     first_message: str,
     structured_model: type[Any],
@@ -79,7 +79,7 @@ def prompt_html(
     cache_dir = config.data_path / "html" / hashlib.sha256(link.encode()).hexdigest()
 
     try:
-        html_content = config.fetch.read(
+        html_content = await config.fetch.read(
             link,
             format="txt",
             cache_into=cache_dir / "content.html",

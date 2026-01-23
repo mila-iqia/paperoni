@@ -89,13 +89,14 @@ class Scrape(Discoverer):
 
     async def query(self):
         for link in self.links:
-            analysis: Analysis = prompt_html(
+            prompt_result = await prompt_html(
                 system_prompt=llm_config.system_prompt,
                 first_message=FIRST_MESSAGE,
                 structured_model=Analysis,
                 link=link,
                 force=self.force,
-            )._.parsed
+            )
+            analysis: Analysis = prompt_result._.parsed
 
             if not analysis:
                 continue
