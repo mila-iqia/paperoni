@@ -1,4 +1,3 @@
-
 from paperoni.discovery.jmlr import JMLR
 from paperoni.model import PaperInfo
 
