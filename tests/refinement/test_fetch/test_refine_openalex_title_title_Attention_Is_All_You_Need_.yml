@@ -126,6 +126,10 @@ authors:
     name: Illia Polosukhin
   display_name: Illia Polosukhin
 flags: []
+info:
+  discovered_by:
+    openalex: W2626778328
+key: openalex:W2626778328
 links:
 - link: '1706.03762'
   type: arxiv

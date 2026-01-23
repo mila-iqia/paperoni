@@ -1,282 +1,272 @@
-- info:
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Benjamin Biggs
+    display_name: Benjamin Biggs
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Sébastien Ehrhadt
+    display_name: Sébastien Ehrhadt
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Hanbyul Joo
+    display_name: Hanbyul Joo
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Benjamin Graham
+    display_name: Benjamin Graham
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Andrea Vedaldi
+    display_name: Andrea Vedaldi
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: David Novotny
+    display_name: David Novotny
+  flags: []
+  info:
     discovered_by:
       openreview: yI3LXao9Zwj
   key: openreview:yI3LXao9Zwj
-  paper:
-    abstract: null
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Benjamin Biggs
-      display_name: Benjamin Biggs
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Sébastien Ehrhadt
-      display_name: Sébastien Ehrhadt
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Hanbyul Joo
-      display_name: Hanbyul Joo
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Benjamin Graham
-      display_name: Benjamin Graham
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Andrea Vedaldi
-      display_name: Andrea Vedaldi
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: David Novotny
-      display_name: David Novotny
-    flags: []
-    links:
-    - link: yI3LXao9Zwj
-      type: openreview
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2020-11-13'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2020/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2020/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2020
-    title: '3D Multi-bodies: Fitting Sets of Plausible 3D Human Models to Ambiguous
-      Image Data'
-    topics: []
-  score: 0.0
-- info:
+  links:
+  - link: yI3LXao9Zwj
+    type: openreview
+  releases:
+  - pages: null
+    status: unknown
+    venue:
+      aliases: []
+      date: '2020-11-13'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2020/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2020/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2020
+  title: '3D Multi-bodies: Fitting Sets of Plausible 3D Human Models to Ambiguous
+    Image Data'
+  topics: []
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Jianan Wang
+    display_name: Jianan Wang
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Eren Sezener
+    display_name: Eren Sezener
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: David Budden
+    display_name: David Budden
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Marcus Hutter
+    display_name: Marcus Hutter
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Joel Veness
+    display_name: Joel Veness
+  flags: []
+  info:
     discovered_by:
       openreview: XeqwZIbowL
   key: openreview:XeqwZIbowL
-  paper:
-    abstract: null
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Jianan Wang
-      display_name: Jianan Wang
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Eren Sezener
-      display_name: Eren Sezener
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: David Budden
-      display_name: David Budden
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Marcus Hutter
-      display_name: Marcus Hutter
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Joel Veness
-      display_name: Joel Veness
-    flags: []
-    links:
-    - link: XeqwZIbowL
-      type: openreview
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2020-11-13'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2020/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2020/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2020
-    title: A Combinatorial Perspective on Transfer Learning
-    topics: []
-  score: 0.0
-- info:
+  links:
+  - link: XeqwZIbowL
+    type: openreview
+  releases:
+  - pages: null
+    status: unknown
+    venue:
+      aliases: []
+      date: '2020-11-13'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2020/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2020/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2020
+  title: A Combinatorial Perspective on Transfer Learning
+  topics: []
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Fan Wu
+    display_name: Fan Wu
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Patrick Rebeschini
+    display_name: Patrick Rebeschini
+  flags: []
+  info:
     discovered_by:
       openreview: PGASukuVc_z
   key: openreview:PGASukuVc_z
-  paper:
-    abstract: null
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Fan Wu
-      display_name: Fan Wu
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Patrick Rebeschini
-      display_name: Patrick Rebeschini
-    flags: []
-    links:
-    - link: PGASukuVc_z
-      type: openreview
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2020-11-13'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2020/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2020/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2020
-    title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
-    topics: []
-  score: 0.0
-- info:
+  links:
+  - link: PGASukuVc_z
+    type: openreview
+  releases:
+  - pages: null
+    status: unknown
+    venue:
+      aliases: []
+      date: '2020-11-13'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2020/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2020/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2020
+  title: A Continuous-Time Mirror Descent Approach to Sparse Phase Retrieval
+  topics: []
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Wei Deng
+    display_name: Wei Deng
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Guang Lin
+    display_name: Guang Lin
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Faming Liang
+    display_name: Faming Liang
+  flags: []
+  info:
     discovered_by:
       openreview: 6KHVe4iMtIs
   key: openreview:6KHVe4iMtIs
-  paper:
-    abstract: null
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Wei Deng
-      display_name: Wei Deng
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Guang Lin
-      display_name: Guang Lin
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Faming Liang
-      display_name: Faming Liang
-    flags: []
-    links:
-    - link: 6KHVe4iMtIs
-      type: openreview
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2020-11-13'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2020/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2020/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2020
-    title: A Contour Stochastic  Gradient Langevin Dynamics Algorithm for Simulations
-      of Multi-modal Distributions
-    topics: []
-  score: 0.0
-- info:
+  links:
+  - link: 6KHVe4iMtIs
+    type: openreview
+  releases:
+  - pages: null
+    status: unknown
+    venue:
+      aliases: []
+      date: '2020-11-13'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2020/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2020/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2020
+  title: A Contour Stochastic  Gradient Langevin Dynamics Algorithm for Simulations
+    of Multi-modal Distributions
+  topics: []
+- abstract: null
+  authors:
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Zhengdao Chen
+    display_name: Zhengdao Chen
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Grant M. Rotskoff
+    display_name: Grant M. Rotskoff
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Joan Bruna
+    display_name: Joan Bruna
+  - affiliations: []
+    author:
+      aliases: []
+      links: []
+      name: Eric Vanden-Eijnden
+    display_name: Eric Vanden-Eijnden
+  flags: []
+  info:
     discovered_by:
       openreview: JrSYyibYFVa
   key: openreview:JrSYyibYFVa
-  paper:
-    abstract: null
-    authors:
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Zhengdao Chen
-      display_name: Zhengdao Chen
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Grant M. Rotskoff
-      display_name: Grant M. Rotskoff
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Joan Bruna
-      display_name: Joan Bruna
-    - affiliations: []
-      author:
-        aliases: []
-        links: []
-        name: Eric Vanden-Eijnden
-      display_name: Eric Vanden-Eijnden
-    flags: []
-    links:
-    - link: JrSYyibYFVa
-      type: openreview
-    releases:
-    - pages: null
-      status: unknown
-      venue:
-        aliases: []
-        date: '2020-11-13'
-        date_precision: 3
-        links:
-        - link: NeurIPS.cc/2020/Conference
-          type: openreview-venue
-        name: NeurIPS.cc/2020/Conference
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: NeurIPS.cc/Conference
-        short_name: null
-        type: conference
-        volume: NeurIPS 2020
-    title: A Dynamical Central Limit Theorem for Shallow Neural Networks
-    topics: []
-  score: 0.0
+  links:
+  - link: JrSYyibYFVa
+    type: openreview
+  releases:
+  - pages: null
+    status: unknown
+    venue:
+      aliases: []
+      date: '2020-11-13'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2020/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2020/Conference
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: NeurIPS.cc/Conference
+      short_name: null
+      type: conference
+      volume: NeurIPS 2020
+  title: A Dynamical Central Limit Theorem for Shallow Neural Networks
+  topics: []

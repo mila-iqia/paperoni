@@ -36,6 +36,8 @@ results:
     display_name: Robert Williams
   flags: []
   id: 2
+  info: {}
+  key: n/a
   links: []
   releases:
   - pages: null
@@ -53,6 +55,7 @@ results:
       short_name: null
       type: journal
       volume: null
+  score: 0.0
   title: Firmness Testing Protocols for Mango Export Quality Assessment
   topics: []
   version: '2026-01-19T00:00:00'

@@ -1,670 +1,658 @@
-- info:
+- abstract: Complex logical query answering (CLQA) in knowledge graphs (KGs) goes
+    beyond simple KG completion and aims at answering compositional queries comprised
+    of multiple projections and logical operations. Existing CLQA methods that learn
+    parameters bound to certain entity or relation vocabularies can only be applied
+    to the graph they are trained on which requires substantial training time before
+    being deployed on a new graph. Here we present UltraQuery, the first foundation
+    model for inductive reasoning that can zero-shot answer logical queries on any
+    KG. The core idea of UltraQuery is to derive both projections and logical operations
+    as vocabulary-independent functions which generalize to new entities and relations
+    in any KG.With the projection operation initialized from a pre-trained inductive
+    KG completion model, UltraQuery can solve CLQA on any KG after finetuning on a
+    single dataset. Experimenting on 23 datasets, UltraQuery in the zero-shot inference
+    mode shows competitive or better query answering performance than best available
+    baselines and sets a new state of the art on 15 of them.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Google
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/162526?format=json
+        type: profile
+      name: Michael Galkin
+    display_name: Michael Galkin
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Purdue University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/255556?format=json
+        type: profile
+      name: Jincheng Zhou
+    display_name: Jincheng Zhou
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Purdue
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/33745?format=json
+        type: profile
+      name: Bruno Ribeiro
+    display_name: Bruno Ribeiro
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/52954?format=json
+        type: profile
+      name: Jian Tang
+    display_name: Jian Tang
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Quebec AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/146580?format=json
+        type: profile
+      name: Zhaocheng Zhu
+    display_name: Zhaocheng Zhu
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:eed4435e296d75fa7280539943113a7d
   key: miniconf:neurips:eed4435e296d75fa7280539943113a7d
-  paper:
-    abstract: Complex logical query answering (CLQA) in knowledge graphs (KGs) goes
-      beyond simple KG completion and aims at answering compositional queries comprised
-      of multiple projections and logical operations. Existing CLQA methods that learn
-      parameters bound to certain entity or relation vocabularies can only be applied
-      to the graph they are trained on which requires substantial training time before
-      being deployed on a new graph. Here we present UltraQuery, the first foundation
-      model for inductive reasoning that can zero-shot answer logical queries on any
-      KG. The core idea of UltraQuery is to derive both projections and logical operations
-      as vocabulary-independent functions which generalize to new entities and relations
-      in any KG.With the projection operation initialized from a pre-trained inductive
-      KG completion model, UltraQuery can solve CLQA on any KG after finetuning on
-      a single dataset. Experimenting on 23 datasets, UltraQuery in the zero-shot
-      inference mode shows competitive or better query answering performance than
-      best available baselines and sets a new state of the art on 15 of them.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Google
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/162526?format=json
-          type: profile
-        name: Michael Galkin
-      display_name: Michael Galkin
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Purdue University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/255556?format=json
-          type: profile
-        name: Jincheng Zhou
-      display_name: Jincheng Zhou
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Purdue
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/33745?format=json
-          type: profile
-        name: Bruno Ribeiro
-      display_name: Bruno Ribeiro
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/52954?format=json
-          type: profile
-        name: Jian Tang
-      display_name: Jian Tang
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Quebec AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/146580?format=json
-          type: profile
-        name: Zhaocheng Zhu
-      display_name: Zhaocheng Zhu
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/616521c3cf15f9f7018565c427d40e3b-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/95712
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/616521c3cf15f9f7018565c427d40e3b-Abstract-Conference.html
-      type: abstract
-    - link: JRSyMBBJi6
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/616521c3cf15f9f7018565c427d40e3b-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/eed4435e296d75fa7280539943113a7d
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: A Foundation Model for Zero-shot Logical Query Reasoning
-    topics:
-    - name: Graph Neural Networks
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/616521c3cf15f9f7018565c427d40e3b-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/95712
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/616521c3cf15f9f7018565c427d40e3b-Abstract-Conference.html
+    type: abstract
+  - link: JRSyMBBJi6
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/616521c3cf15f9f7018565c427d40e3b-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/eed4435e296d75fa7280539943113a7d
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: A Foundation Model for Zero-shot Logical Query Reasoning
+  topics:
+  - name: Graph Neural Networks
+- abstract: When decisions are made at high frequency, traditional reinforcement learning
+    (RL) methods struggle to accurately estimate action values. In turn, their performance
+    is inconsistent and often poor. Whether the performance of distributional RL (DRL)
+    agents suffers similarly, however, is unknown. In this work, we establish that
+    DRL agents *are* sensitive to the decision frequency. We prove that action-conditioned
+    return distributions collapse to their underlying policy's return distribution
+    as the decision frequency increases. We quantify the rate of collapse of these
+    return distributions and exhibit that their statistics collapse at different rates.
+    Moreover, we define distributional perspectives on action gaps and advantages.
+    In particular, we introduce the *superiority* as a probabilistic generalization
+    of the advantage---the core object of approaches to mitigating performance issues
+    in high-frequency value-based RL. In addition, we build a superiority-based DRL
+    algorithm. Through simulations in an option-trading domain, we validate that proper
+    modeling of the superiority distribution produces improved controllers at high
+    decision frequencies.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, McGill University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/206505?format=json
+        type: profile
+      name: Harley Wiltzer
+    display_name: Harley Wiltzer
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Google Brain
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/14085?format=json
+        type: profile
+      name: Marc Bellemare
+    display_name: Marc Bellemare
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: McGill University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/56258?format=json
+        type: profile
+      name: David Meger
+    display_name: David Meger
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Rutgers, DARPA
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/21367?format=json
+        type: profile
+      name: Patrick Shafto
+    display_name: Patrick Shafto
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Rutgers University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/233075?format=json
+        type: profile
+      name: Yash Jhaveri
+    display_name: Yash Jhaveri
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:2f10158c59d8ce7d40687769eb8e0424
   key: miniconf:neurips:2f10158c59d8ce7d40687769eb8e0424
-  paper:
-    abstract: When decisions are made at high frequency, traditional reinforcement
-      learning (RL) methods struggle to accurately estimate action values. In turn,
-      their performance is inconsistent and often poor. Whether the performance of
-      distributional RL (DRL) agents suffers similarly, however, is unknown. In this
-      work, we establish that DRL agents *are* sensitive to the decision frequency.
-      We prove that action-conditioned return distributions collapse to their underlying
-      policy's return distribution as the decision frequency increases. We quantify
-      the rate of collapse of these return distributions and exhibit that their statistics
-      collapse at different rates. Moreover, we define distributional perspectives
-      on action gaps and advantages. In particular, we introduce the *superiority*
-      as a probabilistic generalization of the advantage---the core object of approaches
-      to mitigating performance issues in high-frequency value-based RL. In addition,
-      we build a superiority-based DRL algorithm. Through simulations in an option-trading
-      domain, we validate that proper modeling of the superiority distribution produces
-      improved controllers at high decision frequencies.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, McGill University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/206505?format=json
-          type: profile
-        name: Harley Wiltzer
-      display_name: Harley Wiltzer
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Google Brain
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/14085?format=json
-          type: profile
-        name: Marc Bellemare
-      display_name: Marc Bellemare
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: McGill University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/56258?format=json
-          type: profile
-        name: David Meger
-      display_name: David Meger
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Rutgers, DARPA
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/21367?format=json
-          type: profile
-        name: Patrick Shafto
-      display_name: Patrick Shafto
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Rutgers University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/233075?format=json
-          type: profile
-        name: Yash Jhaveri
-      display_name: Yash Jhaveri
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/55769e1208c7f45e9acc98f06279c10c-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/96191
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/55769e1208c7f45e9acc98f06279c10c-Abstract-Conference.html
-      type: abstract
-    - link: BRW0MKJ7Rr
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/55769e1208c7f45e9acc98f06279c10c-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/2f10158c59d8ce7d40687769eb8e0424
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Action Gaps and Advantages in Continuous-Time Distributional Reinforcement
-      Learning
-    topics:
-    - name: Reinforcement Learning->Everything Else
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/55769e1208c7f45e9acc98f06279c10c-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/96191
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/55769e1208c7f45e9acc98f06279c10c-Abstract-Conference.html
+    type: abstract
+  - link: BRW0MKJ7Rr
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/55769e1208c7f45e9acc98f06279c10c-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/2f10158c59d8ce7d40687769eb8e0424
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Action Gaps and Advantages in Continuous-Time Distributional Reinforcement
+    Learning
+  topics:
+  - name: Reinforcement Learning->Everything Else
+- abstract: General Value Functions (GVFs) (Sutton et al., 2011) represent predictive
+    knowledge in reinforcement learning. Each GVF computes the expected return for
+    a given policy, based on a unique reward. Existing methods relying on fixed behavior
+    policies or pre-collected data often face data efficiency issues when learning
+    multiple GVFs in parallel using off-policy methods. To address this, we introduce
+    *GVFExplorer*, which adaptively learns a single behavior policy that efficiently
+    collects data for evaluating multiple GVFs in parallel. Our method optimizes the
+    behavior policy by minimizing the total variance in return across GVFs, thereby
+    reducing the required environmental interactions. We use an existing temporal-difference-style
+    variance estimator to approximate the return variance. We prove that each behavior
+    policy update decreases the overall mean squared error in GVF predictions. We
+    empirically show our method's performance in tabular and nonlinear function approximation
+    settings, including Mujoco environments, with stationary and non-stationary reward
+    signals, optimizing data usage and reducing prediction errors across multiple
+    GVFs.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/ McGill University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/52666?format=json
+        type: profile
+      name: Arushi Jain
+    display_name: Arushi Jain
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Wisconsin -- Madison
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/159161?format=json
+        type: profile
+      name: Josiah Hanna
+    display_name: Josiah Hanna
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: McGill University / Mila / DeepMind Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/664?format=json
+        type: profile
+      name: Doina Precup
+    display_name: Doina Precup
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:8d97f450424ddf6448b7efe4159d2aa6
   key: miniconf:neurips:8d97f450424ddf6448b7efe4159d2aa6
-  paper:
-    abstract: General Value Functions (GVFs) (Sutton et al., 2011) represent predictive
-      knowledge in reinforcement learning. Each GVF computes the expected return for
-      a given policy, based on a unique reward. Existing methods relying on fixed
-      behavior policies or pre-collected data often face data efficiency issues when
-      learning multiple GVFs in parallel using off-policy methods. To address this,
-      we introduce *GVFExplorer*, which adaptively learns a single behavior policy
-      that efficiently collects data for evaluating multiple GVFs in parallel. Our
-      method optimizes the behavior policy by minimizing the total variance in return
-      across GVFs, thereby reducing the required environmental interactions. We use
-      an existing temporal-difference-style variance estimator to approximate the
-      return variance. We prove that each behavior policy update decreases the overall
-      mean squared error in GVF predictions. We empirically show our method's performance
-      in tabular and nonlinear function approximation settings, including Mujoco environments,
-      with stationary and non-stationary reward signals, optimizing data usage and
-      reducing prediction errors across multiple GVFs.
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/ McGill University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/52666?format=json
-          type: profile
-        name: Arushi Jain
-      display_name: Arushi Jain
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Wisconsin -- Madison
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/159161?format=json
-          type: profile
-        name: Josiah Hanna
-      display_name: Josiah Hanna
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: McGill University / Mila / DeepMind Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/664?format=json
-          type: profile
-        name: Doina Precup
-      display_name: Doina Precup
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/794a72b1a9d5fc4c040eb3110d94c8a1-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/95848
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/794a72b1a9d5fc4c040eb3110d94c8a1-Abstract-Conference.html
-      type: abstract
-    - link: HC6iqpPt3L
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/794a72b1a9d5fc4c040eb3110d94c8a1-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/8d97f450424ddf6448b7efe4159d2aa6
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Adaptive Exploration for Data-Efficient General Value Function Evaluations
-    topics:
-    - name: Reinforcement Learning->Everything Else
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/794a72b1a9d5fc4c040eb3110d94c8a1-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/95848
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/794a72b1a9d5fc4c040eb3110d94c8a1-Abstract-Conference.html
+    type: abstract
+  - link: HC6iqpPt3L
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/794a72b1a9d5fc4c040eb3110d94c8a1-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/8d97f450424ddf6448b7efe4159d2aa6
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Adaptive Exploration for Data-Efficient General Value Function Evaluations
+  topics:
+  - name: Reinforcement Learning->Everything Else
+- abstract: 'Diffusion models have emerged as effective distribution estimators in
+    vision, language, and reinforcement learning, but their use as priors in downstream
+    tasks poses an intractable posterior inference problem. This paper studies *amortized*
+    sampling of the posterior over data, $\mathbf{x}\sim p^{\rm post}(\mathbf{x})\propto
+    p(\mathbf{x})r(\mathbf{x})$, in a model that consists of a diffusion generative
+    model prior $p(\mathbf{x})$ and a black-box constraint or likelihood function
+    $r(\mathbf{x})$. We state and prove the asymptotic correctness of a data-free
+    learning objective, *relative trajectory balance*, for training a diffusion model
+    that samples from this posterior, a problem that existing methods solve only approximately
+    or in restricted cases. Relative trajectory balance arises from the generative
+    flow network perspective on diffusion models, which allows the use of deep reinforcement
+    learning techniques to improve mode coverage. Experiments illustrate the broad
+    potential of unbiased inference of arbitrary posteriors under diffusion priors:
+    in vision (classifier guidance), language (infilling under a discrete diffusion
+    LLM), and multimodal data (text-to-image generation). Beyond generative modeling,
+    we apply relative trajectory balance to the problem of continuous control with
+    a score-based behavior prior, achieving state-of-the-art results on benchmarks
+    in offline reinforcement learning. Code is available at [this link](https://github.com/GFNOrg/diffusion-finetuning).'
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/249763?format=json
+        type: profile
+      name: Siddarth Venkatraman
+    display_name: Siddarth Venkatraman
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/126135?format=json
+        type: profile
+      name: Moksh Jain
+    display_name: Moksh Jain
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/243220?format=json
+        type: profile
+      name: Luca Scimeca
+    display_name: Luca Scimeca
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: KAIST / Mila - Quebec AI Institute
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/98221?format=json
+        type: profile
+      name: Minsu Kim
+    display_name: Minsu Kim
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila, Université de Montréal, Jagiellonian University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/106224?format=json
+        type: profile
+      name: Marcin Sendera
+    display_name: Marcin Sendera
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/378105?format=json
+        type: profile
+      name: Mohsin Hasan
+    display_name: Mohsin Hasan
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/413753?format=json
+        type: profile
+      name: Luke Rowe
+    display_name: Luke Rowe
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Universite de Montreal / MILA
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/60090?format=json
+        type: profile
+      name: Sarthak Mittal
+    display_name: Sarthak Mittal
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, Université
+        de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/376508?format=json
+        type: profile
+      name: Pablo Lemos
+    display_name: Pablo Lemos
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Valence Labs
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/17163?format=json
+        type: profile
+      name: Emmanuel Bengio
+    display_name: Emmanuel Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/90745?format=json
+        type: profile
+      name: Alexandre Adam
+    display_name: Alexandre Adam
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Montreal Institute for Learning Algorithms, University of Montreal, University
+        of Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/146114?format=json
+        type: profile
+      name: Jarrid Rector-Brooks
+    display_name: Jarrid Rector-Brooks
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila/U. Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/68983?format=json
+        type: profile
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Québec AI Institute &amp; Université de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/229844?format=json
+        type: profile
+      name: Glen Berseth
+    display_name: Glen Berseth
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Edinburgh
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/183841?format=json
+        type: profile
+      name: Nikolay Malkin
+    display_name: Nikolay Malkin
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:6e2d5d50a943a0e0d738377f51011685
   key: miniconf:neurips:6e2d5d50a943a0e0d738377f51011685
-  paper:
-    abstract: 'Diffusion models have emerged as effective distribution estimators
-      in vision, language, and reinforcement learning, but their use as priors in
-      downstream tasks poses an intractable posterior inference problem. This paper
-      studies *amortized* sampling of the posterior over data, $\mathbf{x}\sim p^{\rm
-      post}(\mathbf{x})\propto p(\mathbf{x})r(\mathbf{x})$, in a model that consists
-      of a diffusion generative model prior $p(\mathbf{x})$ and a black-box constraint
-      or likelihood function $r(\mathbf{x})$. We state and prove the asymptotic correctness
-      of a data-free learning objective, *relative trajectory balance*, for training
-      a diffusion model that samples from this posterior, a problem that existing
-      methods solve only approximately or in restricted cases. Relative trajectory
-      balance arises from the generative flow network perspective on diffusion models,
-      which allows the use of deep reinforcement learning techniques to improve mode
-      coverage. Experiments illustrate the broad potential of unbiased inference of
-      arbitrary posteriors under diffusion priors: in vision (classifier guidance),
-      language (infilling under a discrete diffusion LLM), and multimodal data (text-to-image
-      generation). Beyond generative modeling, we apply relative trajectory balance
-      to the problem of continuous control with a score-based behavior prior, achieving
-      state-of-the-art results on benchmarks in offline reinforcement learning. Code
-      is available at [this link](https://github.com/GFNOrg/diffusion-finetuning).'
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/249763?format=json
-          type: profile
-        name: Siddarth Venkatraman
-      display_name: Siddarth Venkatraman
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/126135?format=json
-          type: profile
-        name: Moksh Jain
-      display_name: Moksh Jain
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/243220?format=json
-          type: profile
-        name: Luca Scimeca
-      display_name: Luca Scimeca
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: KAIST / Mila - Quebec AI Institute
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/98221?format=json
-          type: profile
-        name: Minsu Kim
-      display_name: Minsu Kim
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila, Université de Montréal, Jagiellonian University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/106224?format=json
-          type: profile
-        name: Marcin Sendera
-      display_name: Marcin Sendera
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/378105?format=json
-          type: profile
-        name: Mohsin Hasan
-      display_name: Mohsin Hasan
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/413753?format=json
-          type: profile
-        name: Luke Rowe
-      display_name: Luke Rowe
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Universite de Montreal / MILA
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/60090?format=json
-          type: profile
-        name: Sarthak Mittal
-      display_name: Sarthak Mittal
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/376508?format=json
-          type: profile
-        name: Pablo Lemos
-      display_name: Pablo Lemos
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Valence Labs
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/17163?format=json
-          type: profile
-        name: Emmanuel Bengio
-      display_name: Emmanuel Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/90745?format=json
-          type: profile
-        name: Alexandre Adam
-      display_name: Alexandre Adam
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Montreal Institute for Learning Algorithms, University of Montreal,
-          University of Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/146114?format=json
-          type: profile
-        name: Jarrid Rector-Brooks
-      display_name: Jarrid Rector-Brooks
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila/U. Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/68983?format=json
-          type: profile
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Québec AI Institute &amp; Université de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/229844?format=json
-          type: profile
-        name: Glen Berseth
-      display_name: Glen Berseth
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: University of Edinburgh
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/183841?format=json
-          type: profile
-        name: Nikolay Malkin
-      display_name: Nikolay Malkin
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/8b21a7ea42cbcd1c29a7a88c444cce45-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/94137
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
-      type: abstract
-    - link: gVTkMsaaGI
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/6e2d5d50a943a0e0d738377f51011685
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Amortizing intractable inference in diffusion models for vision, language,
-      and control
-    topics:
-    - name: Generative Models->Diffusion models
-  score: 0.0
-- info:
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/8b21a7ea42cbcd1c29a7a88c444cce45-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/94137
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
+    type: abstract
+  - link: gVTkMsaaGI
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/8b21a7ea42cbcd1c29a7a88c444cce45-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/6e2d5d50a943a0e0d738377f51011685
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Amortizing intractable inference in diffusion models for vision, language,
+    and control
+  topics:
+  - name: Generative Models->Diffusion models
+- abstract: 'Due to the recent remarkable advances in artificial intelligence, researchers
+    have begun to consider challenging learning problems such as learning to generalize
+    behavior from large offline datasets or learning online in non-Markovian environments.
+    Meanwhile, recent advances in both of these areas have increasingly relied on
+    conditioning policies on large context lengths. A natural question is if there
+    is a limit to the performance benefits of increasing the context length if the
+    computation needed is available. In this work, we establish a novel theoretical
+    result that links the context length of a policy to the time needed to reliably
+    evaluate its performance (i.e., its mixing time) in large scale partially observable
+    reinforcement learning environments that exhibit latent sub-task structure. This
+    analysis underscores a key tradeoff: when we extend the context length, our policy
+    can more effectively model non-Markovian dependencies, but this comes at the cost
+    of potentially slower policy evaluation and as a result slower downstream learning.
+    Moreover, our empirical results highlight the relevance of this analysis when
+    leveraging Transformer based neural networks. This perspective will become increasingly
+    pertinent as the field scales towards larger and more realistic environments,
+    opening up a number of potential future directions for improving the way we design
+    learning agents.'
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: IBM Research
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/40901?format=json
+        type: profile
+      name: Matthew Riemer
+    display_name: Matthew Riemer
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Google Deepmind, Mila Montreal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/50564?format=json
+        type: profile
+      name: Khimya Khetarpal
+    display_name: Khimya Khetarpal
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Dalhousie University
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/379352?format=json
+        type: profile
+      name: Janarthanan Rajendran
+    display_name: Janarthanan Rajendran
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila / École Polytechnique de Montréal
+    author:
+      aliases: []
+      links:
+      - link: http://neurips.cc/api/miniconf/users/111364?format=json
+        type: profile
+      name: Sarath Chandar
+    display_name: Sarath Chandar
+  flags: []
+  info:
     discovered_by:
       miniconf: neurips:76a271c64a315732aa56eeb7277a63d4
   key: miniconf:neurips:76a271c64a315732aa56eeb7277a63d4
-  paper:
-    abstract: 'Due to the recent remarkable advances in artificial intelligence, researchers
-      have begun to consider challenging learning problems such as learning to generalize
-      behavior from large offline datasets or learning online in non-Markovian environments.
-      Meanwhile, recent advances in both of these areas have increasingly relied on
-      conditioning policies on large context lengths. A natural question is if there
-      is a limit to the performance benefits of increasing the context length if the
-      computation needed is available. In this work, we establish a novel theoretical
-      result that links the context length of a policy to the time needed to reliably
-      evaluate its performance (i.e., its mixing time) in large scale partially observable
-      reinforcement learning environments that exhibit latent sub-task structure.
-      This analysis underscores a key tradeoff: when we extend the context length,
-      our policy can more effectively model non-Markovian dependencies, but this comes
-      at the cost of potentially slower policy evaluation and as a result slower downstream
-      learning. Moreover, our empirical results highlight the relevance of this analysis
-      when leveraging Transformer based neural networks. This perspective will become
-      increasingly pertinent as the field scales towards larger and more realistic
-      environments, opening up a number of potential future directions for improving
-      the way we design learning agents.'
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: IBM Research
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/40901?format=json
-          type: profile
-        name: Matthew Riemer
-      display_name: Matthew Riemer
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Google Deepmind, Mila Montreal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/50564?format=json
-          type: profile
-        name: Khimya Khetarpal
-      display_name: Khimya Khetarpal
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Dalhousie University
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/379352?format=json
-          type: profile
-        name: Janarthanan Rajendran
-      display_name: Janarthanan Rajendran
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila / École Polytechnique de Montréal
-      author:
-        aliases: []
-        links:
-        - link: http://neurips.cc/api/miniconf/users/111364?format=json
-          type: profile
-        name: Sarath Chandar
-      display_name: Sarath Chandar
-    flags: []
-    links:
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/92f79f493ca2d6c0ba04c3af76bb3368-Paper-Conference.pdf
-      type: pdf
-    - link: https://neurips.cc/virtual/2024/poster/94886
-      type: abstract
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/92f79f493ca2d6c0ba04c3af76bb3368-Abstract-Conference.html
-      type: abstract
-    - link: VaJ4XOW7Ey
-      type: openreview
-    - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/92f79f493ca2d6c0ba04c3af76bb3368-Abstract-Conference.html
-      type: paper
-    - link: neurips/2024-12-11/76a271c64a315732aa56eeb7277a63d4
-      type: uid
-    releases:
-    - pages: null
-      status: Accept (poster)
-      venue:
-        aliases: []
-        date: '2024-12-11'
-        date_precision: 3
-        links: []
-        name: NEURIPS
-        open: true
-        peer_reviewed: true
-        publisher: null
-        series: NEURIPS
-        short_name: null
-        type: conference
-        volume: null
-    title: Balancing Context Length and Mixing Times for Reinforcement Learning at
-      Scale
-    topics:
-    - name: Theory->Reinforcement Learning and Planning
-  score: 0.0
+  links:
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/file/92f79f493ca2d6c0ba04c3af76bb3368-Paper-Conference.pdf
+    type: pdf
+  - link: https://neurips.cc/virtual/2024/poster/94886
+    type: abstract
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/92f79f493ca2d6c0ba04c3af76bb3368-Abstract-Conference.html
+    type: abstract
+  - link: VaJ4XOW7Ey
+    type: openreview
+  - link: https://proceedings.neurips.cc/paper_files/paper/2024/hash/92f79f493ca2d6c0ba04c3af76bb3368-Abstract-Conference.html
+    type: paper
+  - link: neurips/2024-12-11/76a271c64a315732aa56eeb7277a63d4
+    type: uid
+  releases:
+  - pages: null
+    status: Accept (poster)
+    venue:
+      aliases: []
+      date: '2024-12-11'
+      date_precision: 3
+      links: []
+      name: NEURIPS
+      open: true
+      peer_reviewed: true
+      publisher: null
+      series: NEURIPS
+      short_name: null
+      type: conference
+      volume: null
+  title: Balancing Context Length and Mixing Times for Reinforcement Learning at Scale
+  topics:
+  - name: Theory->Reinforcement Learning and Planning

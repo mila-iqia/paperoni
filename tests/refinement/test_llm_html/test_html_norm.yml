@@ -1,346 +1,344 @@
-- info:
+- abstract: null
+  authors:
+  - affiliations:
+    - aliases:
+      - Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario,
+        Canada
+      category: academia
+      country: Canada
+      name: University of Toronto
+    - aliases:
+      - Department of Biological Sciences, University of Toronto Scarborough, Toronto,
+        Ontario, Canada
+      category: academia
+      country: Canada
+      name: University of Toronto Scarborough
+    - aliases:
+      - Mila, Montréal, Québec, Canada
+      category: academia
+      country: Canada
+      name: Mila
+    author:
+      aliases: []
+      links: []
+      name: Colleen J. Gillon
+    display_name: Colleen J. Gillon
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Jérôme A. Lecoq
+    display_name: Jérôme A. Lecoq
+  - affiliations:
+    - aliases:
+      - Department of Physics and Astronomy, York University, Toronto, Canada
+      category: academia
+      country: Canada
+      name: York University
+    - aliases:
+      - Centre for Vision Research, York University, Toronto, Canada
+      category: academia
+      country: Canada
+      name: York University
+    author:
+      aliases: []
+      links: []
+      name: Jason E. Pina
+    display_name: Jason E. Pina
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Ruweida Ahmed
+    display_name: Ruweida Ahmed
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Yazan N. Billeh
+    display_name: Yazan N. Billeh
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Shiella Caldejon
+    display_name: Shiella Caldejon
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Peter Groblewski
+    display_name: Peter Groblewski
+  - affiliations:
+    - aliases:
+      - Department of Physics and Astronomy, York University, Toronto, Canada
+      category: academia
+      country: Canada
+      name: York University
+    - aliases:
+      - Centre for Vision Research, York University, Toronto, Canada
+      category: academia
+      country: Canada
+      name: York University
+    author:
+      aliases: []
+      links: []
+      name: Timothy M. Henley
+    display_name: Timothy M. Henley
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: India Kato
+    display_name: India Kato
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Eric Lee
+    display_name: Eric Lee
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Jennifer Luviano
+    display_name: Jennifer Luviano
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Kyla Mace
+    display_name: Kyla Mace
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Chelsea Nayan
+    display_name: Chelsea Nayan
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Thuyanh V. Nguyen
+    display_name: Thuyanh V. Nguyen
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Kat North
+    display_name: Kat North
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Jed Perkins
+    display_name: Jed Perkins
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Sam Seid
+    display_name: Sam Seid
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Matthew T. Valley
+    display_name: Matthew T. Valley
+  - affiliations:
+    - aliases:
+      - Allen Institute, MindScope Program, Seattle, USA
+      category: academia
+      country: USA
+      name: Allen Institute
+    author:
+      aliases: []
+      links: []
+      name: Ali Williford
+    display_name: Ali Williford
+  - affiliations:
+    - aliases:
+      - Mila, Montréal, Québec, Canada
+      category: academia
+      country: Canada
+      name: Mila
+    - aliases:
+      - Département d’informatique et de recherche opérationnelle, Université de Montréal,
+        Montréal, Canada
+      category: academia
+      country: Canada
+      name: Université de Montréal
+    - aliases:
+      - Learning in Machines and Brains Program, Canadian Institute for Advanced Research,
+        Toronto, Canada
+      category: academia
+      country: Canada
+      name: Canadian Institute for Advanced Research
+    author:
+      aliases: []
+      links: []
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases:
+      - DeepMind, Inc, London, UK
+      category: industry
+      country: United Kingdom
+      name: DeepMind
+    - aliases:
+      - Centre for Computation, Mathematics and Physics in the Life Sciences and Experimental
+        Biology, University College London, London, UK
+      category: academia
+      country: United Kingdom
+      name: University College London
+    author:
+      aliases: []
+      links: []
+      name: Timothy P. Lillicrap
+    display_name: Timothy P. Lillicrap
+  - affiliations:
+    - aliases:
+      - Department of Physics and Astronomy, York University, Toronto, Canada
+      category: academia
+      country: Canada
+      name: York University
+    - aliases:
+      - Centre for Vision Research, York University, Toronto, Canada
+      category: academia
+      country: Canada
+      name: York University
+    - aliases:
+      - Learning in Machines and Brains Program, Canadian Institute for Advanced Research,
+        Toronto, Canada
+      category: academia
+      country: Canada
+      name: Canadian Institute for Advanced Research
+    - aliases:
+      - Vector Institute for Artificial Intelligence, Toronto, Canada
+      category: academia
+      country: Canada
+      name: Vector Institute for Artificial Intelligence
+    author:
+      aliases: []
+      links: []
+      name: Joel Zylberberg
+    display_name: Joel Zylberberg
+  - affiliations:
+    - aliases:
+      - Mila, Montréal, Québec, Canada
+      category: academia
+      country: Canada
+      name: Mila
+    - aliases:
+      - Learning in Machines and Brains Program, Canadian Institute for Advanced Research,
+        Toronto, Canada
+      category: academia
+      country: Canada
+      name: Canadian Institute for Advanced Research
+    - aliases:
+      - School of Computer Science, McGill University, Montréal, Canada
+      category: academia
+      country: Canada
+      name: McGill University
+    - aliases:
+      - Department of Neurology & Neurosurgery, McGill University, Montréal, Canada
+      category: academia
+      country: Canada
+      name: McGill University
+    - aliases:
+      - Montreal Neurological Institute, McGill University, Montréal, Canada
+      category: academia
+      country: Canada
+      name: McGill University
+    author:
+      aliases: []
+      links: []
+      name: Blake A. Richards
+    display_name: Blake A. Richards
+  flags: []
+  info:
     refined_by:
       html: doi:10.1038/s41597-023-02214-y
   key: html/doi:10.1038/s41597-023-02214-y
-  paper:
-    abstract: null
-    authors:
-    - affiliations:
-      - aliases:
-        - Department of Cell & Systems Biology, University of Toronto, Toronto, Ontario,
-          Canada
-        category: academia
-        country: Canada
-        name: University of Toronto
-      - aliases:
-        - Department of Biological Sciences, University of Toronto Scarborough, Toronto,
-          Ontario, Canada
-        category: academia
-        country: Canada
-        name: University of Toronto Scarborough
-      - aliases:
-        - Mila, Montréal, Québec, Canada
-        category: academia
-        country: Canada
-        name: Mila
-      author:
-        aliases: []
-        links: []
-        name: Colleen J. Gillon
-      display_name: Colleen J. Gillon
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Jérôme A. Lecoq
-      display_name: Jérôme A. Lecoq
-    - affiliations:
-      - aliases:
-        - Department of Physics and Astronomy, York University, Toronto, Canada
-        category: academia
-        country: Canada
-        name: York University
-      - aliases:
-        - Centre for Vision Research, York University, Toronto, Canada
-        category: academia
-        country: Canada
-        name: York University
-      author:
-        aliases: []
-        links: []
-        name: Jason E. Pina
-      display_name: Jason E. Pina
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Ruweida Ahmed
-      display_name: Ruweida Ahmed
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Yazan N. Billeh
-      display_name: Yazan N. Billeh
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Shiella Caldejon
-      display_name: Shiella Caldejon
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Peter Groblewski
-      display_name: Peter Groblewski
-    - affiliations:
-      - aliases:
-        - Department of Physics and Astronomy, York University, Toronto, Canada
-        category: academia
-        country: Canada
-        name: York University
-      - aliases:
-        - Centre for Vision Research, York University, Toronto, Canada
-        category: academia
-        country: Canada
-        name: York University
-      author:
-        aliases: []
-        links: []
-        name: Timothy M. Henley
-      display_name: Timothy M. Henley
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: India Kato
-      display_name: India Kato
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Eric Lee
-      display_name: Eric Lee
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Jennifer Luviano
-      display_name: Jennifer Luviano
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Kyla Mace
-      display_name: Kyla Mace
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Chelsea Nayan
-      display_name: Chelsea Nayan
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Thuyanh V. Nguyen
-      display_name: Thuyanh V. Nguyen
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Kat North
-      display_name: Kat North
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Jed Perkins
-      display_name: Jed Perkins
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Sam Seid
-      display_name: Sam Seid
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Matthew T. Valley
-      display_name: Matthew T. Valley
-    - affiliations:
-      - aliases:
-        - Allen Institute, MindScope Program, Seattle, USA
-        category: academia
-        country: USA
-        name: Allen Institute
-      author:
-        aliases: []
-        links: []
-        name: Ali Williford
-      display_name: Ali Williford
-    - affiliations:
-      - aliases:
-        - Mila, Montréal, Québec, Canada
-        category: academia
-        country: Canada
-        name: Mila
-      - aliases:
-        - Département d’informatique et de recherche opérationnelle, Université de
-          Montréal, Montréal, Canada
-        category: academia
-        country: Canada
-        name: Université de Montréal
-      - aliases:
-        - Learning in Machines and Brains Program, Canadian Institute for Advanced
-          Research, Toronto, Canada
-        category: academia
-        country: Canada
-        name: Canadian Institute for Advanced Research
-      author:
-        aliases: []
-        links: []
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases:
-        - DeepMind, Inc, London, UK
-        category: industry
-        country: United Kingdom
-        name: DeepMind
-      - aliases:
-        - Centre for Computation, Mathematics and Physics in the Life Sciences and
-          Experimental Biology, University College London, London, UK
-        category: academia
-        country: United Kingdom
-        name: University College London
-      author:
-        aliases: []
-        links: []
-        name: Timothy P. Lillicrap
-      display_name: Timothy P. Lillicrap
-    - affiliations:
-      - aliases:
-        - Department of Physics and Astronomy, York University, Toronto, Canada
-        category: academia
-        country: Canada
-        name: York University
-      - aliases:
-        - Centre for Vision Research, York University, Toronto, Canada
-        category: academia
-        country: Canada
-        name: York University
-      - aliases:
-        - Learning in Machines and Brains Program, Canadian Institute for Advanced
-          Research, Toronto, Canada
-        category: academia
-        country: Canada
-        name: Canadian Institute for Advanced Research
-      - aliases:
-        - Vector Institute for Artificial Intelligence, Toronto, Canada
-        category: academia
-        country: Canada
-        name: Vector Institute for Artificial Intelligence
-      author:
-        aliases: []
-        links: []
-        name: Joel Zylberberg
-      display_name: Joel Zylberberg
-    - affiliations:
-      - aliases:
-        - Mila, Montréal, Québec, Canada
-        category: academia
-        country: Canada
-        name: Mila
-      - aliases:
-        - Learning in Machines and Brains Program, Canadian Institute for Advanced
-          Research, Toronto, Canada
-        category: academia
-        country: Canada
-        name: Canadian Institute for Advanced Research
-      - aliases:
-        - School of Computer Science, McGill University, Montréal, Canada
-        category: academia
-        country: Canada
-        name: McGill University
-      - aliases:
-        - Department of Neurology & Neurosurgery, McGill University, Montréal, Canada
-        category: academia
-        country: Canada
-        name: McGill University
-      - aliases:
-        - Montreal Neurological Institute, McGill University, Montréal, Canada
-        category: academia
-        country: Canada
-        name: McGill University
-      author:
-        aliases: []
-        links: []
-        name: Blake A. Richards
-      display_name: Blake A. Richards
-    flags: []
-    links:
-    - link: 10.1038/s41597-023-02214-y
-      type: doi
-    releases: []
-    title: Responses of pyramidal cell somata and apical dendrites in mouse visual
-      cortex over multiple days
-    topics: []
-  score: 0.0
+  links:
+  - link: 10.1038/s41597-023-02214-y
+    type: doi
+  releases: []
+  title: Responses of pyramidal cell somata and apical dendrites in mouse visual cortex over
+    multiple days
+  topics: []

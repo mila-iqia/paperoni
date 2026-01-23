@@ -1,59 +1,57 @@
-- info:
+- abstract: null
+  authors:
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Borealis AI
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Université de Montréal
+    author:
+      aliases: []
+      links: []
+      name: Leo Feng
+    display_name: Leo Feng
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Borealis AI
+    author:
+      aliases: []
+      links: []
+      name: Hossein Hajimirsadeghi
+    display_name: Hossein Hajimirsadeghi
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Université de Montréal
+    author:
+      aliases: []
+      links: []
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila - Université de Montréal
+    author:
+      aliases: []
+      links: []
+      name: Mohamed Osama Ahmed
+    display_name: Mohamed Osama Ahmed
+  flags: []
+  info:
     refined_by:
       pdf: composite
   key: pdf/composite
-  paper:
-    abstract: null
-    authors:
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Borealis AI
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Université de Montréal
-      author:
-        aliases: []
-        links: []
-        name: Leo Feng
-      display_name: Leo Feng
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Borealis AI
-      author:
-        aliases: []
-        links: []
-        name: Hossein Hajimirsadeghi
-      display_name: Hossein Hajimirsadeghi
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Université de Montréal
-      author:
-        aliases: []
-        links: []
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    - affiliations:
-      - aliases: []
-        category: unknown
-        country: null
-        name: Mila - Université de Montréal
-      author:
-        aliases: []
-        links: []
-        name: Mohamed Osama Ahmed
-      display_name: Mohamed Osama Ahmed
-    flags: []
-    links:
-    - link: _3FyT_W1DW
-      type: openreview
-    releases: []
-    title: Efficient Queries Transformer Neural Processes
-    topics: []
-  score: 0.0
+  links:
+  - link: _3FyT_W1DW
+    type: openreview
+  releases: []
+  title: Efficient Queries Transformer Neural Processes
+  topics: []

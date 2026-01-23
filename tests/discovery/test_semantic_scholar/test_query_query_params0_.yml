@@ -1,1773 +1,1762 @@
-- info:
+- abstract: 'Learning in nonstationary environments is one of the biggest challenges
+    in machine learning. Nonstationarity can be caused by either task drift, i.e.,
+    the drift in the conditional distribution of labels given the input data, or the
+    domain drift, i.e., the drift in the marginal distribution of the input data.
+    This article aims to tackle this challenge with a modularized two-stream continual
+    learning (CL) system, where the model is required to learn new tasks from a support
+    stream and adapted to new domains in the query stream while maintaining previously
+    learned knowledge. To deal with both drifts within and across the two streams,
+    we propose a variational domain-agnostic feature replay-based approach that decouples
+    the system into three modules: an inference module that filters the input data
+    from the two streams into domain-agnostic representations, a generative module
+    that facilitates the high-level knowledge transfer, and a solver module that applies
+    the filtered and transferable knowledge to solve the queries. We demonstrate the
+    effectiveness of our proposed approach in addressing the two fundamental scenarios
+    and complex scenarios in two-stream CL.'
+  authors:
+  - affiliations: []
+    author:
+      aliases:
+      - Qicheng Lao
+      links:
+      - link: '40522277'
+        type: semantic_scholar
+      name: Qicheng Lao
+    display_name: Qicheng Lao
+  - affiliations: []
+    author:
+      aliases:
+      - Xiangxi Jiang
+      links:
+      - link: '1576299780'
+        type: semantic_scholar
+      name: Xiangxi Jiang
+    display_name: Xiangxi Jiang
+  - affiliations: []
+    author:
+      aliases:
+      - Mohammad Havaei
+      links:
+      - link: '2203743'
+        type: semantic_scholar
+      name: Mohammad Havaei
+    display_name: Mohammad Havaei
+  - affiliations: []
+    author:
+      aliases:
+      - Y. Bengio
+      links:
+      - link: '1865800402'
+        type: semantic_scholar
+      name: Y. Bengio
+    display_name: Y. Bengio
+  flags: []
+  info:
     discovered_by:
       semantic_scholar: c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
   key: semantic_scholar:c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
-  paper:
-    abstract: 'Learning in nonstationary environments is one of the biggest challenges
-      in machine learning. Nonstationarity can be caused by either task drift, i.e.,
-      the drift in the conditional distribution of labels given the input data, or
-      the domain drift, i.e., the drift in the marginal distribution of the input
-      data. This article aims to tackle this challenge with a modularized two-stream
-      continual learning (CL) system, where the model is required to learn new tasks
-      from a support stream and adapted to new domains in the query stream while maintaining
-      previously learned knowledge. To deal with both drifts within and across the
-      two streams, we propose a variational domain-agnostic feature replay-based approach
-      that decouples the system into three modules: an inference module that filters
-      the input data from the two streams into domain-agnostic representations, a
-      generative module that facilitates the high-level knowledge transfer, and a
-      solver module that applies the filtered and transferable knowledge to solve
-      the queries. We demonstrate the effectiveness of our proposed approach in addressing
-      the two fundamental scenarios and complex scenarios in two-stream CL.'
-    authors:
-    - affiliations: []
-      author:
-        aliases:
-        - Qicheng Lao
-        links:
-        - link: '40522277'
-          type: semantic_scholar
-        name: Qicheng Lao
-      display_name: Qicheng Lao
-    - affiliations: []
-      author:
-        aliases:
-        - Xiangxi Jiang
-        links:
-        - link: '1576299780'
-          type: semantic_scholar
-        name: Xiangxi Jiang
-      display_name: Xiangxi Jiang
-    - affiliations: []
-      author:
-        aliases:
-        - Mohammad Havaei
-        links:
-        - link: '2203743'
-          type: semantic_scholar
-        name: Mohammad Havaei
-      display_name: Mohammad Havaei
-    - affiliations: []
-      author:
-        aliases:
-        - Y. Bengio
-        links:
-        - link: '1865800402'
-          type: semantic_scholar
-        name: Y. Bengio
-      display_name: Y. Bengio
-    flags: []
-    links:
-    - link: c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
-      type: semantic_scholar
-    - link: journals/tnn/LaoJHB22
-      type: dblp
-    - link: 10.1109/TNNLS.2021.3057453
-      type: doi
-    - link: '232113812'
-      type: corpusid
-    - link: '33657001'
-      type: pubmed
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2021-03-03'
-        date_precision: 3
-        links: []
-        name: IEEE Transactions on Neural Networks and Learning Systems
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: IEEE Transactions on Neural Networks and Learning Systems
-        short_name: null
-        type: journal
-        volume: '33'
-    title: A Two-Stream Continual Learning System With Variational Domain-Agnostic
-      Feature Replay
-    topics:
-    - name: Computer Science
-    - name: Medicine
-  score: 0.0
-- info:
+  links:
+  - link: c34fc6456ce73dfe7aab1f50e6ab86926aa1d5c2
+    type: semantic_scholar
+  - link: journals/tnn/LaoJHB22
+    type: dblp
+  - link: 10.1109/TNNLS.2021.3057453
+    type: doi
+  - link: '232113812'
+    type: corpusid
+  - link: '33657001'
+    type: pubmed
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2021-03-03'
+      date_precision: 3
+      links: []
+      name: IEEE Transactions on Neural Networks and Learning Systems
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: IEEE Transactions on Neural Networks and Learning Systems
+      short_name: null
+      type: journal
+      volume: '33'
+  title: A Two-Stream Continual Learning System With Variational Domain-Agnostic Feature
+    Replay
+  topics:
+  - name: Computer Science
+  - name: Medicine
+- abstract: The COVID‐19 pandemic continues to pose a substantial threat to human
+    lives and is likely to do so for years to come. Despite the availability of vaccines,
+    searching for efficient small‐molecule drugs that are widely available, including
+    in low‐ and middle‐income countries, is an ongoing challenge. In this work, we
+    report the results of an open science community effort, the “Billion molecules
+    against COVID‐19 challenge”, to identify small‐molecule inhibitors against SARS‐CoV‐2
+    or relevant human receptors. Participating teams used a wide variety of computational
+    methods to screen a minimum of 1 billion virtual molecules against 6 protein targets.
+    Overall, 31 teams participated, and they suggested a total of 639,024 molecules,
+    which were subsequently ranked to find ‘consensus compounds’. The organizing team
+    coordinated with various contract research organizations (CROs) and collaborating
+    institutions to synthesize and test 878 compounds for biological activity against
+    proteases (Nsp5, Nsp3, TMPRSS2), nucleocapsid N, RdRP (only the Nsp12 domain),
+    and (alpha) spike protein S. Overall, 27 compounds with weak inhibition/binding
+    were experimentally identified by binding‐, cleavage‐, and/or viral suppression
+    assays and are presented here. Open science approaches such as the one presented
+    here contribute to the knowledge base of future drug discovery efforts in finding
+    better SARS‐CoV‐2 treatments.
+  authors:
+  - affiliations: []
+    author:
+      aliases:
+      - Johannes Schimunek
+      links:
+      - link: '1607113435'
+        type: semantic_scholar
+      name: Johannes Schimunek
+    display_name: Johannes Schimunek
+  - affiliations: []
+    author:
+      aliases:
+      - Philipp Seidl
+      links:
+      - link: '2056443024'
+        type: semantic_scholar
+      name: Philipp Seidl
+    display_name: Philipp Seidl
+  - affiliations: []
+    author:
+      aliases:
+      - Katarina Elez
+      links:
+      - link: '19327908'
+        type: semantic_scholar
+      name: Katarina Elez
+    display_name: Katarina Elez
+  - affiliations: []
+    author:
+      aliases:
+      - Tim Hempel
+      links:
+      - link: '116733543'
+        type: semantic_scholar
+      name: Tim Hempel
+    display_name: Tim Hempel
+  - affiliations: []
+    author:
+      aliases:
+      - Tuan Le
+      links:
+      - link: '2258387384'
+        type: semantic_scholar
+      name: Tuan Le
+    display_name: Tuan Le
+  - affiliations: []
+    author:
+      aliases:
+      - Frank Noé
+      links:
+      - link: '2242398447'
+        type: semantic_scholar
+      name: Frank Noé
+    display_name: Frank Noé
+  - affiliations: []
+    author:
+      aliases:
+      - Simon Olsson
+      links:
+      - link: '2242398798'
+        type: semantic_scholar
+      name: Simon Olsson
+    display_name: Simon Olsson
+  - affiliations: []
+    author:
+      aliases:
+      - Lluís Raich
+      links:
+      - link: '2322865684'
+        type: semantic_scholar
+      name: Lluís Raich
+    display_name: Lluís Raich
+  - affiliations: []
+    author:
+      aliases:
+      - Robin Winter
+      links:
+      - link: '2258329082'
+        type: semantic_scholar
+      name: Robin Winter
+    display_name: Robin Winter
+  - affiliations: []
+    author:
+      aliases:
+      - Hatice Gokcan
+      links:
+      - link: '51889028'
+        type: semantic_scholar
+      name: Hatice Gokcan
+    display_name: Hatice Gokcan
+  - affiliations: []
+    author:
+      aliases:
+      - Filipp Gusev
+      links:
+      - link: '2128451027'
+        type: semantic_scholar
+      name: Filipp Gusev
+    display_name: Filipp Gusev
+  - affiliations: []
+    author:
+      aliases:
+      - Evgeny M Gutkin
+      links:
+      - link: '2258327609'
+        type: semantic_scholar
+      name: Evgeny M Gutkin
+    display_name: Evgeny M Gutkin
+  - affiliations: []
+    author:
+      aliases:
+      - O. Isayev
+      links:
+      - link: '2385206'
+        type: semantic_scholar
+      name: O. Isayev
+    display_name: O. Isayev
+  - affiliations: []
+    author:
+      aliases:
+      - Maria G. Kurnikova
+      links:
+      - link: '2258328926'
+        type: semantic_scholar
+      name: Maria G. Kurnikova
+    display_name: Maria G. Kurnikova
+  - affiliations: []
+    author:
+      aliases:
+      - Chamali Narangoda
+      links:
+      - link: '2258327407'
+        type: semantic_scholar
+      name: Chamali Narangoda
+    display_name: Chamali Narangoda
+  - affiliations: []
+    author:
+      aliases:
+      - Roman Zubatyuk
+      links:
+      - link: '2241375030'
+        type: semantic_scholar
+      name: Roman Zubatyuk
+    display_name: Roman Zubatyuk
+  - affiliations: []
+    author:
+      aliases:
+      - I. Bosko
+      links:
+      - link: '1816761321'
+        type: semantic_scholar
+      name: I. Bosko
+    display_name: I. Bosko
+  - affiliations: []
+    author:
+      aliases:
+      - K. V. Furs
+      links:
+      - link: '5625028'
+        type: semantic_scholar
+      name: K. V. Furs
+    display_name: K. V. Furs
+  - affiliations: []
+    author:
+      aliases:
+      - A. D. Karpenko
+      links:
+      - link: '1816720023'
+        type: semantic_scholar
+      name: A. D. Karpenko
+    display_name: A. D. Karpenko
+  - affiliations: []
+    author:
+      aliases:
+      - Yury V Kornoushenko
+      links:
+      - link: '2258327595'
+        type: semantic_scholar
+      name: Yury V Kornoushenko
+    display_name: Yury V Kornoushenko
+  - affiliations: []
+    author:
+      aliases:
+      - M. Shuldau
+      links:
+      - link: '2162831359'
+        type: semantic_scholar
+      name: M. Shuldau
+    display_name: M. Shuldau
+  - affiliations: []
+    author:
+      aliases:
+      - A. Yushkevich
+      links:
+      - link: '2100962004'
+        type: semantic_scholar
+      name: A. Yushkevich
+    display_name: A. Yushkevich
+  - affiliations: []
+    author:
+      aliases:
+      - M. Benabderrahmane
+      links:
+      - link: '2258328882'
+        type: semantic_scholar
+      name: M. Benabderrahmane
+    display_name: M. Benabderrahmane
+  - affiliations: []
+    author:
+      aliases:
+      - Patrick Bousquet-Melou
+      links:
+      - link: '2258328880'
+        type: semantic_scholar
+      name: Patrick Bousquet-Melou
+    display_name: Patrick Bousquet-Melou
+  - affiliations: []
+    author:
+      aliases:
+      - R. Bureau
+      links:
+      - link: '1767522'
+        type: semantic_scholar
+      name: R. Bureau
+    display_name: R. Bureau
+  - affiliations: []
+    author:
+      aliases:
+      - Beatrice Charton
+      links:
+      - link: '2258327729'
+        type: semantic_scholar
+      name: Beatrice Charton
+    display_name: Beatrice Charton
+  - affiliations: []
+    author:
+      aliases:
+      - B. Cirou
+      links:
+      - link: '2258327961'
+        type: semantic_scholar
+      name: B. Cirou
+    display_name: B. Cirou
+  - affiliations: []
+    author:
+      aliases:
+      - Gérard Gil
+      links:
+      - link: '2258327529'
+        type: semantic_scholar
+      name: Gérard Gil
+    display_name: Gérard Gil
+  - affiliations: []
+    author:
+      aliases:
+      - William J Allen
+      links:
+      - link: '2258328131'
+        type: semantic_scholar
+      name: William J Allen
+    display_name: William J Allen
+  - affiliations: []
+    author:
+      aliases:
+      - Suman Sirimulla
+      links:
+      - link: '1679340'
+        type: semantic_scholar
+      name: Suman Sirimulla
+    display_name: Suman Sirimulla
+  - affiliations: []
+    author:
+      aliases:
+      - Stanley Watowich
+      links:
+      - link: '2258327597'
+        type: semantic_scholar
+      name: Stanley Watowich
+    display_name: Stanley Watowich
+  - affiliations: []
+    author:
+      aliases:
+      - Nick Antonopoulos
+      links:
+      - link: '2258328875'
+        type: semantic_scholar
+      name: Nick Antonopoulos
+    display_name: Nick Antonopoulos
+  - affiliations: []
+    author:
+      aliases:
+      - Nikolaos Epitropakis
+      links:
+      - link: '2258327959'
+        type: semantic_scholar
+      name: Nikolaos Epitropakis
+    display_name: Nikolaos Epitropakis
+  - affiliations: []
+    author:
+      aliases:
+      - Agamemnon Krasoulis
+      links:
+      - link: '2946652'
+        type: semantic_scholar
+      name: Agamemnon Krasoulis
+    display_name: Agamemnon Krasoulis
+  - affiliations: []
+    author:
+      aliases:
+      - Vassilis Pitsikalis
+      links:
+      - link: '2264611741'
+        type: semantic_scholar
+      name: Vassilis Pitsikalis
+    display_name: Vassilis Pitsikalis
+  - affiliations: []
+    author:
+      aliases:
+      - Stavros Theodorakis
+      links:
+      - link: '2066359165'
+        type: semantic_scholar
+      name: Stavros Theodorakis
+    display_name: Stavros Theodorakis
+  - affiliations: []
+    author:
+      aliases:
+      - Igor Kozlovskii
+      links:
+      - link: '2004108052'
+        type: semantic_scholar
+      name: Igor Kozlovskii
+    display_name: Igor Kozlovskii
+  - affiliations: []
+    author:
+      aliases:
+      - Anton Maliutin
+      links:
+      - link: '2258328969'
+        type: semantic_scholar
+      name: Anton Maliutin
+    display_name: Anton Maliutin
+  - affiliations: []
+    author:
+      aliases:
+      - Alexander Medvedev
+      links:
+      - link: '2258328873'
+        type: semantic_scholar
+      name: Alexander Medvedev
+    display_name: Alexander Medvedev
+  - affiliations: []
+    author:
+      aliases:
+      - Petr Popov
+      links:
+      - link: '2183535935'
+        type: semantic_scholar
+      name: Petr Popov
+    display_name: Petr Popov
+  - affiliations: []
+    author:
+      aliases:
+      - Mark Zaretckii
+      links:
+      - link: '71401791'
+        type: semantic_scholar
+      name: Mark Zaretckii
+    display_name: Mark Zaretckii
+  - affiliations: []
+    author:
+      aliases:
+      - Hamid Eghbalzadeh
+      links:
+      - link: '1406798986'
+        type: semantic_scholar
+      name: Hamid Eghbalzadeh
+    display_name: Hamid Eghbalzadeh
+  - affiliations: []
+    author:
+      aliases:
+      - Christina Halmich
+      links:
+      - link: '2046836716'
+        type: semantic_scholar
+      name: Christina Halmich
+    display_name: Christina Halmich
+  - affiliations: []
+    author:
+      aliases:
+      - Sepp Hochreiter
+      links:
+      - link: '3308557'
+        type: semantic_scholar
+      name: Sepp Hochreiter
+    display_name: Sepp Hochreiter
+  - affiliations: []
+    author:
+      aliases:
+      - Andreas Mayr
+      links:
+      - link: '144831680'
+        type: semantic_scholar
+      name: Andreas Mayr
+    display_name: Andreas Mayr
+  - affiliations: []
+    author:
+      aliases:
+      - Peter Ruch
+      links:
+      - link: '1387984052'
+        type: semantic_scholar
+      name: Peter Ruch
+    display_name: Peter Ruch
+  - affiliations: []
+    author:
+      aliases:
+      - Michael Widrich
+      links:
+      - link: '1410855857'
+        type: semantic_scholar
+      name: Michael Widrich
+    display_name: Michael Widrich
+  - affiliations: []
+    author:
+      aliases:
+      - F. Berenger
+      links:
+      - link: '1962089'
+        type: semantic_scholar
+      name: F. Berenger
+    display_name: F. Berenger
+  - affiliations: []
+    author:
+      aliases:
+      - Ashutosh Kumar
+      links:
+      - link: '2258807620'
+        type: semantic_scholar
+      name: Ashutosh Kumar
+    display_name: Ashutosh Kumar
+  - affiliations: []
+    author:
+      aliases:
+      - Yoshihiro Yamanishi
+      links:
+      - link: '2258328966'
+        type: semantic_scholar
+      name: Yoshihiro Yamanishi
+    display_name: Yoshihiro Yamanishi
+  - affiliations: []
+    author:
+      aliases:
+      - Kam Zhang
+      links:
+      - link: '2258512250'
+        type: semantic_scholar
+      name: Kam Zhang
+    display_name: Kam Zhang
+  - affiliations: []
+    author:
+      aliases:
+      - Emmanuel Bengio
+      links:
+      - link: '2416433'
+        type: semantic_scholar
+      name: Emmanuel Bengio
+    display_name: Emmanuel Bengio
+  - affiliations: []
+    author:
+      aliases:
+      - Y. Bengio
+      links:
+      - link: '1865800402'
+        type: semantic_scholar
+      name: Y. Bengio
+    display_name: Y. Bengio
+  - affiliations: []
+    author:
+      aliases:
+      - Moksh Jain
+      links:
+      - link: '1383135665'
+        type: semantic_scholar
+      name: Moksh Jain
+    display_name: Moksh Jain
+  - affiliations: []
+    author:
+      aliases:
+      - Maksym Korablyov
+      links:
+      - link: '41018927'
+        type: semantic_scholar
+      name: Maksym Korablyov
+    display_name: Maksym Korablyov
+  - affiliations: []
+    author:
+      aliases:
+      - Cheng-Hao Liu
+      links:
+      - link: '2255410845'
+        type: semantic_scholar
+      name: Cheng-Hao Liu
+    display_name: Cheng-Hao Liu
+  - affiliations: []
+    author:
+      aliases:
+      - M. Gilles
+      links:
+      - link: '92144988'
+        type: semantic_scholar
+      name: M. Gilles
+    display_name: M. Gilles
+  - affiliations: []
+    author:
+      aliases:
+      - Enrico Glaab
+      links:
+      - link: '2249575787'
+        type: semantic_scholar
+      name: Enrico Glaab
+    display_name: Enrico Glaab
+  - affiliations: []
+    author:
+      aliases:
+      - Kelly K. Barnsley
+      links:
+      - link: '2162007207'
+        type: semantic_scholar
+      name: Kelly K. Barnsley
+    display_name: Kelly K. Barnsley
+  - affiliations: []
+    author:
+      aliases:
+      - Suhasini M Iyengar
+      links:
+      - link: '46243694'
+        type: semantic_scholar
+      name: Suhasini M Iyengar
+    display_name: Suhasini M Iyengar
+  - affiliations: []
+    author:
+      aliases:
+      - M. Ondrechen
+      links:
+      - link: '2524908'
+        type: semantic_scholar
+      name: M. Ondrechen
+    display_name: M. Ondrechen
+  - affiliations: []
+    author:
+      aliases:
+      - V. J. Haupt
+      links:
+      - link: '2239462'
+        type: semantic_scholar
+      name: V. J. Haupt
+    display_name: V. J. Haupt
+  - affiliations: []
+    author:
+      aliases:
+      - Florian Kaiser
+      links:
+      - link: '2258329318'
+        type: semantic_scholar
+      name: Florian Kaiser
+    display_name: Florian Kaiser
+  - affiliations: []
+    author:
+      aliases:
+      - Michael Schroeder
+      links:
+      - link: '2258328470'
+        type: semantic_scholar
+      name: Michael Schroeder
+    display_name: Michael Schroeder
+  - affiliations: []
+    author:
+      aliases:
+      - Luisa Pugliese
+      links:
+      - link: '2258329301'
+        type: semantic_scholar
+      name: Luisa Pugliese
+    display_name: Luisa Pugliese
+  - affiliations: []
+    author:
+      aliases:
+      - Simone Albani
+      links:
+      - link: '28186548'
+        type: semantic_scholar
+      name: Simone Albani
+    display_name: Simone Albani
+  - affiliations: []
+    author:
+      aliases:
+      - C. Athanasiou
+      links:
+      - link: '39390585'
+        type: semantic_scholar
+      name: C. Athanasiou
+    display_name: C. Athanasiou
+  - affiliations: []
+    author:
+      aliases:
+      - A. Beccari
+      links:
+      - link: '1836207'
+        type: semantic_scholar
+      name: A. Beccari
+    display_name: A. Beccari
+  - affiliations: []
+    author:
+      aliases:
+      - Paolo Carloni
+      links:
+      - link: '2233023778'
+        type: semantic_scholar
+      name: Paolo Carloni
+    display_name: Paolo Carloni
+  - affiliations: []
+    author:
+      aliases:
+      - Giulia D'Arrigo
+      links:
+      - link: '1441221647'
+        type: semantic_scholar
+      name: Giulia D'Arrigo
+    display_name: Giulia D'Arrigo
+  - affiliations: []
+    author:
+      aliases:
+      - Eleonora Gianquinto
+      links:
+      - link: '51911599'
+        type: semantic_scholar
+      name: Eleonora Gianquinto
+    display_name: Eleonora Gianquinto
+  - affiliations: []
+    author:
+      aliases:
+      - Jonas Gossen
+      links:
+      - link: '1658803022'
+        type: semantic_scholar
+      name: Jonas Gossen
+    display_name: Jonas Gossen
+  - affiliations: []
+    author:
+      aliases:
+      - Anton Hanke
+      links:
+      - link: '1693426058'
+        type: semantic_scholar
+      name: Anton Hanke
+    display_name: Anton Hanke
+  - affiliations: []
+    author:
+      aliases:
+      - B. P. Joseph
+      links:
+      - link: '2042346407'
+        type: semantic_scholar
+      name: B. P. Joseph
+    display_name: B. P. Joseph
+  - affiliations: []
+    author:
+      aliases:
+      - D. Kokh
+      links:
+      - link: '1878467'
+        type: semantic_scholar
+      name: D. Kokh
+    display_name: D. Kokh
+  - affiliations: []
+    author:
+      aliases:
+      - Sandra Kovachka
+      links:
+      - link: '2258327625'
+        type: semantic_scholar
+      name: Sandra Kovachka
+    display_name: Sandra Kovachka
+  - affiliations: []
+    author:
+      aliases:
+      - Candida Manelfi
+      links:
+      - link: '1596553520'
+        type: semantic_scholar
+      name: Candida Manelfi
+    display_name: Candida Manelfi
+  - affiliations: []
+    author:
+      aliases:
+      - Goutam Mukherjee
+      links:
+      - link: '2258329260'
+        type: semantic_scholar
+      name: Goutam Mukherjee
+    display_name: Goutam Mukherjee
+  - affiliations: []
+    author:
+      aliases:
+      - Abraham Muñiz-Chicharro
+      links:
+      - link: '2258327669'
+        type: semantic_scholar
+      name: Abraham Muñiz-Chicharro
+    display_name: Abraham Muñiz-Chicharro
+  - affiliations: []
+    author:
+      aliases:
+      - Francesco Musiani
+      links:
+      - link: '2242359787'
+        type: semantic_scholar
+      name: Francesco Musiani
+    display_name: Francesco Musiani
+  - affiliations: []
+    author:
+      aliases:
+      - Ariane Nunes-Alves
+      links:
+      - link: '2374015970'
+        type: semantic_scholar
+      name: Ariane Nunes-Alves
+    display_name: Ariane Nunes-Alves
+  - affiliations: []
+    author:
+      aliases:
+      - Giulia Paiardi
+      links:
+      - link: '2258329227'
+        type: semantic_scholar
+      name: Giulia Paiardi
+    display_name: Giulia Paiardi
+  - affiliations: []
+    author:
+      aliases:
+      - Giulia Rossetti
+      links:
+      - link: '2242361014'
+        type: semantic_scholar
+      name: Giulia Rossetti
+    display_name: Giulia Rossetti
+  - affiliations: []
+    author:
+      aliases:
+      - S. Sadiq
+      links:
+      - link: '2257754614'
+        type: semantic_scholar
+      name: S. Sadiq
+    display_name: S. Sadiq
+  - affiliations: []
+    author:
+      aliases:
+      - F. Spyrakis
+      links:
+      - link: '2037628'
+        type: semantic_scholar
+      name: F. Spyrakis
+    display_name: F. Spyrakis
+  - affiliations: []
+    author:
+      aliases:
+      - Carmine Talarico
+      links:
+      - link: '40067882'
+        type: semantic_scholar
+      name: Carmine Talarico
+    display_name: Carmine Talarico
+  - affiliations: []
+    author:
+      aliases:
+      - Alexandros Tsengenes
+      links:
+      - link: '2089833250'
+        type: semantic_scholar
+      name: Alexandros Tsengenes
+    display_name: Alexandros Tsengenes
+  - affiliations: []
+    author:
+      aliases:
+      - Rebecca C. Wade
+      links:
+      - link: '2254241781'
+        type: semantic_scholar
+      name: Rebecca C. Wade
+    display_name: Rebecca C. Wade
+  - affiliations: []
+    author:
+      aliases:
+      - Conner J. Copeland
+      links:
+      - link: '89130429'
+        type: semantic_scholar
+      name: Conner J. Copeland
+    display_name: Conner J. Copeland
+  - affiliations: []
+    author:
+      aliases:
+      - Jeremiah Gaiser
+      links:
+      - link: '1401651295'
+        type: semantic_scholar
+      name: Jeremiah Gaiser
+    display_name: Jeremiah Gaiser
+  - affiliations: []
+    author:
+      aliases:
+      - Daniel R Olson
+      links:
+      - link: '2258328171'
+        type: semantic_scholar
+      name: Daniel R Olson
+    display_name: Daniel R Olson
+  - affiliations: []
+    author:
+      aliases:
+      - Amitava Roy
+      links:
+      - link: '2258422001'
+        type: semantic_scholar
+      name: Amitava Roy
+    display_name: Amitava Roy
+  - affiliations: []
+    author:
+      aliases:
+      - Vishwesh Venkatraman
+      links:
+      - link: '3281017'
+        type: semantic_scholar
+      name: Vishwesh Venkatraman
+    display_name: Vishwesh Venkatraman
+  - affiliations: []
+    author:
+      aliases:
+      - T. Wheeler
+      links:
+      - link: '2398949'
+        type: semantic_scholar
+      name: T. Wheeler
+    display_name: T. Wheeler
+  - affiliations: []
+    author:
+      aliases:
+      - H. Arthanari
+      links:
+      - link: '4091943'
+        type: semantic_scholar
+      name: H. Arthanari
+    display_name: H. Arthanari
+  - affiliations: []
+    author:
+      aliases:
+      - Klara Blaschitz
+      links:
+      - link: '2258327622'
+        type: semantic_scholar
+      name: Klara Blaschitz
+    display_name: Klara Blaschitz
+  - affiliations: []
+    author:
+      aliases:
+      - M. Cespugli
+      links:
+      - link: '94234793'
+        type: semantic_scholar
+      name: M. Cespugli
+    display_name: M. Cespugli
+  - affiliations: []
+    author:
+      aliases:
+      - V. Durmaz
+      links:
+      - link: '3106875'
+        type: semantic_scholar
+      name: V. Durmaz
+    display_name: V. Durmaz
+  - affiliations: []
+    author:
+      aliases:
+      - Konstantin Fackeldey
+      links:
+      - link: '2258327665'
+        type: semantic_scholar
+      name: Konstantin Fackeldey
+    display_name: Konstantin Fackeldey
+  - affiliations: []
+    author:
+      aliases:
+      - P. Fischer
+      links:
+      - link: '2072760917'
+        type: semantic_scholar
+      name: P. Fischer
+    display_name: P. Fischer
+  - affiliations: []
+    author:
+      aliases:
+      - Christoph Gorgulla
+      links:
+      - link: '101925019'
+        type: semantic_scholar
+      name: Christoph Gorgulla
+    display_name: Christoph Gorgulla
+  - affiliations: []
+    author:
+      aliases:
+      - Christian C. Gruber
+      links:
+      - link: '2261384130'
+        type: semantic_scholar
+      name: Christian C. Gruber
+    display_name: Christian C. Gruber
+  - affiliations: []
+    author:
+      aliases:
+      - Karl Gruber
+      links:
+      - link: '2242822803'
+        type: semantic_scholar
+      name: Karl Gruber
+    display_name: Karl Gruber
+  - affiliations: []
+    author:
+      aliases:
+      - M. Hetmann
+      links:
+      - link: '90236242'
+        type: semantic_scholar
+      name: M. Hetmann
+    display_name: M. Hetmann
+  - affiliations: []
+    author:
+      aliases:
+      - Jamie Kinney
+      links:
+      - link: '2071253407'
+        type: semantic_scholar
+      name: Jamie Kinney
+    display_name: Jamie Kinney
+  - affiliations: []
+    author:
+      aliases:
+      - K. M. P. Das
+      links:
+      - link: '2258329775'
+        type: semantic_scholar
+      name: K. M. P. Das
+    display_name: K. M. P. Das
+  - affiliations: []
+    author:
+      aliases:
+      - Shreya Pandita
+      links:
+      - link: '70287988'
+        type: semantic_scholar
+      name: Shreya Pandita
+    display_name: Shreya Pandita
+  - affiliations: []
+    author:
+      aliases:
+      - Amit Singh
+      links:
+      - link: '2251732223'
+        type: semantic_scholar
+      name: Amit Singh
+    display_name: Amit Singh
+  - affiliations: []
+    author:
+      aliases:
+      - G. Steinkellner
+      links:
+      - link: '2095185'
+        type: semantic_scholar
+      name: G. Steinkellner
+    display_name: G. Steinkellner
+  - affiliations: []
+    author:
+      aliases:
+      - Guilhem Tesseyre
+      links:
+      - link: '107743006'
+        type: semantic_scholar
+      name: Guilhem Tesseyre
+    display_name: Guilhem Tesseyre
+  - affiliations: []
+    author:
+      aliases:
+      - Gerhard Wagner
+      links:
+      - link: '2258328658'
+        type: semantic_scholar
+      name: Gerhard Wagner
+    display_name: Gerhard Wagner
+  - affiliations: []
+    author:
+      aliases:
+      - Zi-Fu Wang
+      links:
+      - link: '2259065642'
+        type: semantic_scholar
+      name: Zi-Fu Wang
+    display_name: Zi-Fu Wang
+  - affiliations: []
+    author:
+      aliases:
+      - Ryan Yust
+      links:
+      - link: '2025813415'
+        type: semantic_scholar
+      name: Ryan Yust
+    display_name: Ryan Yust
+  - affiliations: []
+    author:
+      aliases:
+      - D. Druzhilovskiy
+      links:
+      - link: '10693262'
+        type: semantic_scholar
+      name: D. Druzhilovskiy
+    display_name: D. Druzhilovskiy
+  - affiliations: []
+    author:
+      aliases:
+      - D. Filimonov
+      links:
+      - link: '1802137'
+        type: semantic_scholar
+      name: D. Filimonov
+    display_name: D. Filimonov
+  - affiliations: []
+    author:
+      aliases:
+      - P. Pogodin
+      links:
+      - link: '11974306'
+        type: semantic_scholar
+      name: P. Pogodin
+    display_name: P. Pogodin
+  - affiliations: []
+    author:
+      aliases:
+      - V. Poroikov
+      links:
+      - link: '2237886309'
+        type: semantic_scholar
+      name: V. Poroikov
+    display_name: V. Poroikov
+  - affiliations: []
+    author:
+      aliases:
+      - A. Rudik
+      links:
+      - link: '153071426'
+        type: semantic_scholar
+      name: A. Rudik
+    display_name: A. Rudik
+  - affiliations: []
+    author:
+      aliases:
+      - L. Stolbov
+      links:
+      - link: '92833175'
+        type: semantic_scholar
+      name: L. Stolbov
+    display_name: L. Stolbov
+  - affiliations: []
+    author:
+      aliases:
+      - A. V. Veselovsky
+      links:
+      - link: '2252118161'
+        type: semantic_scholar
+      name: A. V. Veselovsky
+    display_name: A. V. Veselovsky
+  - affiliations: []
+    author:
+      aliases:
+      - Maria De Rosa
+      links:
+      - link: '2258329512'
+        type: semantic_scholar
+      name: Maria De Rosa
+    display_name: Maria De Rosa
+  - affiliations: []
+    author:
+      aliases:
+      - G. D. Simone
+      links:
+      - link: '19291649'
+        type: semantic_scholar
+      name: G. D. Simone
+    display_name: G. D. Simone
+  - affiliations: []
+    author:
+      aliases:
+      - M. R. Gulotta
+      links:
+      - link: '51193603'
+        type: semantic_scholar
+      name: M. R. Gulotta
+    display_name: M. R. Gulotta
+  - affiliations: []
+    author:
+      aliases:
+      - Jessica Lombino
+      links:
+      - link: '51200814'
+        type: semantic_scholar
+      name: Jessica Lombino
+    display_name: Jessica Lombino
+  - affiliations: []
+    author:
+      aliases:
+      - Nedra Mekni
+      links:
+      - link: '1381605491'
+        type: semantic_scholar
+      name: Nedra Mekni
+    display_name: Nedra Mekni
+  - affiliations: []
+    author:
+      aliases:
+      - Ugo Perricone
+      links:
+      - link: '4879279'
+        type: semantic_scholar
+      name: Ugo Perricone
+    display_name: Ugo Perricone
+  - affiliations: []
+    author:
+      aliases:
+      - Arturo Casini
+      links:
+      - link: '2258329487'
+        type: semantic_scholar
+      name: Arturo Casini
+    display_name: Arturo Casini
+  - affiliations: []
+    author:
+      aliases:
+      - Amanda Embree
+      links:
+      - link: '2129353757'
+        type: semantic_scholar
+      name: Amanda Embree
+    display_name: Amanda Embree
+  - affiliations: []
+    author:
+      aliases:
+      - D. B. Gordon
+      links:
+      - link: '2249318400'
+        type: semantic_scholar
+      name: D. B. Gordon
+    display_name: D. B. Gordon
+  - affiliations: []
+    author:
+      aliases:
+      - David Lei
+      links:
+      - link: '2258328308'
+        type: semantic_scholar
+      name: David Lei
+    display_name: David Lei
+  - affiliations: []
+    author:
+      aliases:
+      - K. Pratt
+      links:
+      - link: '1400803200'
+        type: semantic_scholar
+      name: K. Pratt
+    display_name: K. Pratt
+  - affiliations: []
+    author:
+      aliases:
+      - Christopher A. Voigt
+      links:
+      - link: '2242368683'
+        type: semantic_scholar
+      name: Christopher A. Voigt
+    display_name: Christopher A. Voigt
+  - affiliations: []
+    author:
+      aliases:
+      - Kuang-Yu Chen
+      links:
+      - link: '2258542308'
+        type: semantic_scholar
+      name: Kuang-Yu Chen
+    display_name: Kuang-Yu Chen
+  - affiliations: []
+    author:
+      aliases:
+      - Yves Jacob
+      links:
+      - link: '2258319657'
+        type: semantic_scholar
+      name: Yves Jacob
+    display_name: Yves Jacob
+  - affiliations: []
+    author:
+      aliases:
+      - T. Krischuns
+      links:
+      - link: '80200618'
+        type: semantic_scholar
+      name: T. Krischuns
+    display_name: T. Krischuns
+  - affiliations: []
+    author:
+      aliases:
+      - Pierre Lafaye
+      links:
+      - link: '2258327819'
+        type: semantic_scholar
+      name: Pierre Lafaye
+    display_name: Pierre Lafaye
+  - affiliations: []
+    author:
+      aliases:
+      - Agnès Zettor
+      links:
+      - link: '2266154540'
+        type: semantic_scholar
+      name: Agnès Zettor
+    display_name: Agnès Zettor
+  - affiliations: []
+    author:
+      aliases:
+      - M. L. Rodriguez
+      links:
+      - link: '2258529691'
+        type: semantic_scholar
+      name: M. L. Rodriguez
+    display_name: M. L. Rodriguez
+  - affiliations: []
+    author:
+      aliases:
+      - Kris M. White
+      links:
+      - link: '2258330310'
+        type: semantic_scholar
+      name: Kris M. White
+    display_name: Kris M. White
+  - affiliations: []
+    author:
+      aliases:
+      - D. Fearon
+      links:
+      - link: '72347968'
+        type: semantic_scholar
+      name: D. Fearon
+    display_name: D. Fearon
+  - affiliations: []
+    author:
+      aliases:
+      - F. von Delft
+      links:
+      - link: '2844632'
+        type: semantic_scholar
+      name: F. von Delft
+    display_name: F. von Delft
+  - affiliations: []
+    author:
+      aliases:
+      - Martin A. Walsh
+      links:
+      - link: '2118600472'
+        type: semantic_scholar
+      name: Martin A. Walsh
+    display_name: Martin A. Walsh
+  - affiliations: []
+    author:
+      aliases:
+      - D. Horvath
+      links:
+      - link: '49214592'
+        type: semantic_scholar
+      name: D. Horvath
+    display_name: D. Horvath
+  - affiliations: []
+    author:
+      aliases:
+      - Charles L. Brooks
+      links:
+      - link: '2258328190'
+        type: semantic_scholar
+      name: Charles L. Brooks
+    display_name: Charles L. Brooks
+  - affiliations: []
+    author:
+      aliases:
+      - Babak Falsafi
+      links:
+      - link: '2257900193'
+        type: semantic_scholar
+      name: Babak Falsafi
+    display_name: Babak Falsafi
+  - affiliations: []
+    author:
+      aliases:
+      - Bryan Ford
+      links:
+      - link: '2320802209'
+        type: semantic_scholar
+      name: Bryan Ford
+    display_name: Bryan Ford
+  - affiliations: []
+    author:
+      aliases:
+      - Adolfo García-Sastre
+      links:
+      - link: '1410665410'
+        type: semantic_scholar
+      name: Adolfo García-Sastre
+    display_name: Adolfo García-Sastre
+  - affiliations: []
+    author:
+      aliases:
+      - Sang Yup Lee
+      links:
+      - link: '2258536117'
+        type: semantic_scholar
+      name: Sang Yup Lee
+    display_name: Sang Yup Lee
+  - affiliations: []
+    author:
+      aliases:
+      - Nadia Naffakh
+      links:
+      - link: '2258327485'
+        type: semantic_scholar
+      name: Nadia Naffakh
+    display_name: Nadia Naffakh
+  - affiliations: []
+    author:
+      aliases:
+      - A. Varnek
+      links:
+      - link: '1685042'
+        type: semantic_scholar
+      name: A. Varnek
+    display_name: A. Varnek
+  - affiliations: []
+    author:
+      aliases:
+      - G. Klambauer
+      links:
+      - link: '2065785951'
+        type: semantic_scholar
+      name: G. Klambauer
+    display_name: G. Klambauer
+  - affiliations: []
+    author:
+      aliases:
+      - Thomas M Hermans
+      links:
+      - link: '2258328028'
+        type: semantic_scholar
+      name: Thomas M Hermans
+    display_name: Thomas M Hermans
+  flags: []
+  info:
     discovered_by:
       semantic_scholar: b2283234d862b7da0f3fd7034624e3744154da44
   key: semantic_scholar:b2283234d862b7da0f3fd7034624e3744154da44
-  paper:
-    abstract: The COVID‐19 pandemic continues to pose a substantial threat to human
-      lives and is likely to do so for years to come. Despite the availability of
-      vaccines, searching for efficient small‐molecule drugs that are widely available,
-      including in low‐ and middle‐income countries, is an ongoing challenge. In this
-      work, we report the results of an open science community effort, the “Billion
-      molecules against COVID‐19 challenge”, to identify small‐molecule inhibitors
-      against SARS‐CoV‐2 or relevant human receptors. Participating teams used a wide
-      variety of computational methods to screen a minimum of 1 billion virtual molecules
-      against 6 protein targets. Overall, 31 teams participated, and they suggested
-      a total of 639,024 molecules, which were subsequently ranked to find ‘consensus
-      compounds’. The organizing team coordinated with various contract research organizations
-      (CROs) and collaborating institutions to synthesize and test 878 compounds for
-      biological activity against proteases (Nsp5, Nsp3, TMPRSS2), nucleocapsid N,
-      RdRP (only the Nsp12 domain), and (alpha) spike protein S. Overall, 27 compounds
-      with weak inhibition/binding were experimentally identified by binding‐, cleavage‐,
-      and/or viral suppression assays and are presented here. Open science approaches
-      such as the one presented here contribute to the knowledge base of future drug
-      discovery efforts in finding better SARS‐CoV‐2 treatments.
-    authors:
-    - affiliations: []
-      author:
-        aliases:
-        - Johannes Schimunek
-        links:
-        - link: '1607113435'
-          type: semantic_scholar
-        name: Johannes Schimunek
-      display_name: Johannes Schimunek
-    - affiliations: []
-      author:
-        aliases:
-        - Philipp Seidl
-        links:
-        - link: '2056443024'
-          type: semantic_scholar
-        name: Philipp Seidl
-      display_name: Philipp Seidl
-    - affiliations: []
-      author:
-        aliases:
-        - Katarina Elez
-        links:
-        - link: '19327908'
-          type: semantic_scholar
-        name: Katarina Elez
-      display_name: Katarina Elez
-    - affiliations: []
-      author:
-        aliases:
-        - Tim Hempel
-        links:
-        - link: '116733543'
-          type: semantic_scholar
-        name: Tim Hempel
-      display_name: Tim Hempel
-    - affiliations: []
-      author:
-        aliases:
-        - Tuan Le
-        links:
-        - link: '2258387384'
-          type: semantic_scholar
-        name: Tuan Le
-      display_name: Tuan Le
-    - affiliations: []
-      author:
-        aliases:
-        - Frank Noé
-        links:
-        - link: '2242398447'
-          type: semantic_scholar
-        name: Frank Noé
-      display_name: Frank Noé
-    - affiliations: []
-      author:
-        aliases:
-        - Simon Olsson
-        links:
-        - link: '2242398798'
-          type: semantic_scholar
-        name: Simon Olsson
-      display_name: Simon Olsson
-    - affiliations: []
-      author:
-        aliases:
-        - Lluís Raich
-        links:
-        - link: '2322865684'
-          type: semantic_scholar
-        name: Lluís Raich
-      display_name: Lluís Raich
-    - affiliations: []
-      author:
-        aliases:
-        - Robin Winter
-        links:
-        - link: '2258329082'
-          type: semantic_scholar
-        name: Robin Winter
-      display_name: Robin Winter
-    - affiliations: []
-      author:
-        aliases:
-        - Hatice Gokcan
-        links:
-        - link: '51889028'
-          type: semantic_scholar
-        name: Hatice Gokcan
-      display_name: Hatice Gokcan
-    - affiliations: []
-      author:
-        aliases:
-        - Filipp Gusev
-        links:
-        - link: '2128451027'
-          type: semantic_scholar
-        name: Filipp Gusev
-      display_name: Filipp Gusev
-    - affiliations: []
-      author:
-        aliases:
-        - Evgeny M Gutkin
-        links:
-        - link: '2258327609'
-          type: semantic_scholar
-        name: Evgeny M Gutkin
-      display_name: Evgeny M Gutkin
-    - affiliations: []
-      author:
-        aliases:
-        - O. Isayev
-        links:
-        - link: '2385206'
-          type: semantic_scholar
-        name: O. Isayev
-      display_name: O. Isayev
-    - affiliations: []
-      author:
-        aliases:
-        - Maria G. Kurnikova
-        links:
-        - link: '2258328926'
-          type: semantic_scholar
-        name: Maria G. Kurnikova
-      display_name: Maria G. Kurnikova
-    - affiliations: []
-      author:
-        aliases:
-        - Chamali Narangoda
-        links:
-        - link: '2258327407'
-          type: semantic_scholar
-        name: Chamali Narangoda
-      display_name: Chamali Narangoda
-    - affiliations: []
-      author:
-        aliases:
-        - Roman Zubatyuk
-        links:
-        - link: '2241375030'
-          type: semantic_scholar
-        name: Roman Zubatyuk
-      display_name: Roman Zubatyuk
-    - affiliations: []
-      author:
-        aliases:
-        - I. Bosko
-        links:
-        - link: '1816761321'
-          type: semantic_scholar
-        name: I. Bosko
-      display_name: I. Bosko
-    - affiliations: []
-      author:
-        aliases:
-        - K. V. Furs
-        links:
-        - link: '5625028'
-          type: semantic_scholar
-        name: K. V. Furs
-      display_name: K. V. Furs
-    - affiliations: []
-      author:
-        aliases:
-        - A. D. Karpenko
-        links:
-        - link: '1816720023'
-          type: semantic_scholar
-        name: A. D. Karpenko
-      display_name: A. D. Karpenko
-    - affiliations: []
-      author:
-        aliases:
-        - Yury V Kornoushenko
-        links:
-        - link: '2258327595'
-          type: semantic_scholar
-        name: Yury V Kornoushenko
-      display_name: Yury V Kornoushenko
-    - affiliations: []
-      author:
-        aliases:
-        - M. Shuldau
-        links:
-        - link: '2162831359'
-          type: semantic_scholar
-        name: M. Shuldau
-      display_name: M. Shuldau
-    - affiliations: []
-      author:
-        aliases:
-        - A. Yushkevich
-        links:
-        - link: '2100962004'
-          type: semantic_scholar
-        name: A. Yushkevich
-      display_name: A. Yushkevich
-    - affiliations: []
-      author:
-        aliases:
-        - M. Benabderrahmane
-        links:
-        - link: '2258328882'
-          type: semantic_scholar
-        name: M. Benabderrahmane
-      display_name: M. Benabderrahmane
-    - affiliations: []
-      author:
-        aliases:
-        - Patrick Bousquet-Melou
-        links:
-        - link: '2258328880'
-          type: semantic_scholar
-        name: Patrick Bousquet-Melou
-      display_name: Patrick Bousquet-Melou
-    - affiliations: []
-      author:
-        aliases:
-        - R. Bureau
-        links:
-        - link: '1767522'
-          type: semantic_scholar
-        name: R. Bureau
-      display_name: R. Bureau
-    - affiliations: []
-      author:
-        aliases:
-        - Beatrice Charton
-        links:
-        - link: '2258327729'
-          type: semantic_scholar
-        name: Beatrice Charton
-      display_name: Beatrice Charton
-    - affiliations: []
-      author:
-        aliases:
-        - B. Cirou
-        links:
-        - link: '2258327961'
-          type: semantic_scholar
-        name: B. Cirou
-      display_name: B. Cirou
-    - affiliations: []
-      author:
-        aliases:
-        - Gérard Gil
-        links:
-        - link: '2258327529'
-          type: semantic_scholar
-        name: Gérard Gil
-      display_name: Gérard Gil
-    - affiliations: []
-      author:
-        aliases:
-        - William J Allen
-        links:
-        - link: '2258328131'
-          type: semantic_scholar
-        name: William J Allen
-      display_name: William J Allen
-    - affiliations: []
-      author:
-        aliases:
-        - Suman Sirimulla
-        links:
-        - link: '1679340'
-          type: semantic_scholar
-        name: Suman Sirimulla
-      display_name: Suman Sirimulla
-    - affiliations: []
-      author:
-        aliases:
-        - Stanley Watowich
-        links:
-        - link: '2258327597'
-          type: semantic_scholar
-        name: Stanley Watowich
-      display_name: Stanley Watowich
-    - affiliations: []
-      author:
-        aliases:
-        - Nick Antonopoulos
-        links:
-        - link: '2258328875'
-          type: semantic_scholar
-        name: Nick Antonopoulos
-      display_name: Nick Antonopoulos
-    - affiliations: []
-      author:
-        aliases:
-        - Nikolaos Epitropakis
-        links:
-        - link: '2258327959'
-          type: semantic_scholar
-        name: Nikolaos Epitropakis
-      display_name: Nikolaos Epitropakis
-    - affiliations: []
-      author:
-        aliases:
-        - Agamemnon Krasoulis
-        links:
-        - link: '2946652'
-          type: semantic_scholar
-        name: Agamemnon Krasoulis
-      display_name: Agamemnon Krasoulis
-    - affiliations: []
-      author:
-        aliases:
-        - Vassilis Pitsikalis
-        links:
-        - link: '2264611741'
-          type: semantic_scholar
-        name: Vassilis Pitsikalis
-      display_name: Vassilis Pitsikalis
-    - affiliations: []
-      author:
-        aliases:
-        - Stavros Theodorakis
-        links:
-        - link: '2066359165'
-          type: semantic_scholar
-        name: Stavros Theodorakis
-      display_name: Stavros Theodorakis
-    - affiliations: []
-      author:
-        aliases:
-        - Igor Kozlovskii
-        links:
-        - link: '2004108052'
-          type: semantic_scholar
-        name: Igor Kozlovskii
-      display_name: Igor Kozlovskii
-    - affiliations: []
-      author:
-        aliases:
-        - Anton Maliutin
-        links:
-        - link: '2258328969'
-          type: semantic_scholar
-        name: Anton Maliutin
-      display_name: Anton Maliutin
-    - affiliations: []
-      author:
-        aliases:
-        - Alexander Medvedev
-        links:
-        - link: '2258328873'
-          type: semantic_scholar
-        name: Alexander Medvedev
-      display_name: Alexander Medvedev
-    - affiliations: []
-      author:
-        aliases:
-        - Petr Popov
-        links:
-        - link: '2183535935'
-          type: semantic_scholar
-        name: Petr Popov
-      display_name: Petr Popov
-    - affiliations: []
-      author:
-        aliases:
-        - Mark Zaretckii
-        links:
-        - link: '71401791'
-          type: semantic_scholar
-        name: Mark Zaretckii
-      display_name: Mark Zaretckii
-    - affiliations: []
-      author:
-        aliases:
-        - Hamid Eghbalzadeh
-        links:
-        - link: '1406798986'
-          type: semantic_scholar
-        name: Hamid Eghbalzadeh
-      display_name: Hamid Eghbalzadeh
-    - affiliations: []
-      author:
-        aliases:
-        - Christina Halmich
-        links:
-        - link: '2046836716'
-          type: semantic_scholar
-        name: Christina Halmich
-      display_name: Christina Halmich
-    - affiliations: []
-      author:
-        aliases:
-        - Sepp Hochreiter
-        links:
-        - link: '3308557'
-          type: semantic_scholar
-        name: Sepp Hochreiter
-      display_name: Sepp Hochreiter
-    - affiliations: []
-      author:
-        aliases:
-        - Andreas Mayr
-        links:
-        - link: '144831680'
-          type: semantic_scholar
-        name: Andreas Mayr
-      display_name: Andreas Mayr
-    - affiliations: []
-      author:
-        aliases:
-        - Peter Ruch
-        links:
-        - link: '1387984052'
-          type: semantic_scholar
-        name: Peter Ruch
-      display_name: Peter Ruch
-    - affiliations: []
-      author:
-        aliases:
-        - Michael Widrich
-        links:
-        - link: '1410855857'
-          type: semantic_scholar
-        name: Michael Widrich
-      display_name: Michael Widrich
-    - affiliations: []
-      author:
-        aliases:
-        - F. Berenger
-        links:
-        - link: '1962089'
-          type: semantic_scholar
-        name: F. Berenger
-      display_name: F. Berenger
-    - affiliations: []
-      author:
-        aliases:
-        - Ashutosh Kumar
-        links:
-        - link: '2258807620'
-          type: semantic_scholar
-        name: Ashutosh Kumar
-      display_name: Ashutosh Kumar
-    - affiliations: []
-      author:
-        aliases:
-        - Yoshihiro Yamanishi
-        links:
-        - link: '2258328966'
-          type: semantic_scholar
-        name: Yoshihiro Yamanishi
-      display_name: Yoshihiro Yamanishi
-    - affiliations: []
-      author:
-        aliases:
-        - Kam Zhang
-        links:
-        - link: '2258512250'
-          type: semantic_scholar
-        name: Kam Zhang
-      display_name: Kam Zhang
-    - affiliations: []
-      author:
-        aliases:
-        - Emmanuel Bengio
-        links:
-        - link: '2416433'
-          type: semantic_scholar
-        name: Emmanuel Bengio
-      display_name: Emmanuel Bengio
-    - affiliations: []
-      author:
-        aliases:
-        - Y. Bengio
-        links:
-        - link: '1865800402'
-          type: semantic_scholar
-        name: Y. Bengio
-      display_name: Y. Bengio
-    - affiliations: []
-      author:
-        aliases:
-        - Moksh Jain
-        links:
-        - link: '1383135665'
-          type: semantic_scholar
-        name: Moksh Jain
-      display_name: Moksh Jain
-    - affiliations: []
-      author:
-        aliases:
-        - Maksym Korablyov
-        links:
-        - link: '41018927'
-          type: semantic_scholar
-        name: Maksym Korablyov
-      display_name: Maksym Korablyov
-    - affiliations: []
-      author:
-        aliases:
-        - Cheng-Hao Liu
-        links:
-        - link: '2255410845'
-          type: semantic_scholar
-        name: Cheng-Hao Liu
-      display_name: Cheng-Hao Liu
-    - affiliations: []
-      author:
-        aliases:
-        - M. Gilles
-        links:
-        - link: '92144988'
-          type: semantic_scholar
-        name: M. Gilles
-      display_name: M. Gilles
-    - affiliations: []
-      author:
-        aliases:
-        - Enrico Glaab
-        links:
-        - link: '2249575787'
-          type: semantic_scholar
-        name: Enrico Glaab
-      display_name: Enrico Glaab
-    - affiliations: []
-      author:
-        aliases:
-        - Kelly K. Barnsley
-        links:
-        - link: '2162007207'
-          type: semantic_scholar
-        name: Kelly K. Barnsley
-      display_name: Kelly K. Barnsley
-    - affiliations: []
-      author:
-        aliases:
-        - Suhasini M Iyengar
-        links:
-        - link: '46243694'
-          type: semantic_scholar
-        name: Suhasini M Iyengar
-      display_name: Suhasini M Iyengar
-    - affiliations: []
-      author:
-        aliases:
-        - M. Ondrechen
-        links:
-        - link: '2524908'
-          type: semantic_scholar
-        name: M. Ondrechen
-      display_name: M. Ondrechen
-    - affiliations: []
-      author:
-        aliases:
-        - V. J. Haupt
-        links:
-        - link: '2239462'
-          type: semantic_scholar
-        name: V. J. Haupt
-      display_name: V. J. Haupt
-    - affiliations: []
-      author:
-        aliases:
-        - Florian Kaiser
-        links:
-        - link: '2258329318'
-          type: semantic_scholar
-        name: Florian Kaiser
-      display_name: Florian Kaiser
-    - affiliations: []
-      author:
-        aliases:
-        - Michael Schroeder
-        links:
-        - link: '2258328470'
-          type: semantic_scholar
-        name: Michael Schroeder
-      display_name: Michael Schroeder
-    - affiliations: []
-      author:
-        aliases:
-        - Luisa Pugliese
-        links:
-        - link: '2258329301'
-          type: semantic_scholar
-        name: Luisa Pugliese
-      display_name: Luisa Pugliese
-    - affiliations: []
-      author:
-        aliases:
-        - Simone Albani
-        links:
-        - link: '28186548'
-          type: semantic_scholar
-        name: Simone Albani
-      display_name: Simone Albani
-    - affiliations: []
-      author:
-        aliases:
-        - C. Athanasiou
-        links:
-        - link: '39390585'
-          type: semantic_scholar
-        name: C. Athanasiou
-      display_name: C. Athanasiou
-    - affiliations: []
-      author:
-        aliases:
-        - A. Beccari
-        links:
-        - link: '1836207'
-          type: semantic_scholar
-        name: A. Beccari
-      display_name: A. Beccari
-    - affiliations: []
-      author:
-        aliases:
-        - Paolo Carloni
-        links:
-        - link: '2233023778'
-          type: semantic_scholar
-        name: Paolo Carloni
-      display_name: Paolo Carloni
-    - affiliations: []
-      author:
-        aliases:
-        - Giulia D'Arrigo
-        links:
-        - link: '1441221647'
-          type: semantic_scholar
-        name: Giulia D'Arrigo
-      display_name: Giulia D'Arrigo
-    - affiliations: []
-      author:
-        aliases:
-        - Eleonora Gianquinto
-        links:
-        - link: '51911599'
-          type: semantic_scholar
-        name: Eleonora Gianquinto
-      display_name: Eleonora Gianquinto
-    - affiliations: []
-      author:
-        aliases:
-        - Jonas Gossen
-        links:
-        - link: '1658803022'
-          type: semantic_scholar
-        name: Jonas Gossen
-      display_name: Jonas Gossen
-    - affiliations: []
-      author:
-        aliases:
-        - Anton Hanke
-        links:
-        - link: '1693426058'
-          type: semantic_scholar
-        name: Anton Hanke
-      display_name: Anton Hanke
-    - affiliations: []
-      author:
-        aliases:
-        - B. P. Joseph
-        links:
-        - link: '2042346407'
-          type: semantic_scholar
-        name: B. P. Joseph
-      display_name: B. P. Joseph
-    - affiliations: []
-      author:
-        aliases:
-        - D. Kokh
-        links:
-        - link: '1878467'
-          type: semantic_scholar
-        name: D. Kokh
-      display_name: D. Kokh
-    - affiliations: []
-      author:
-        aliases:
-        - Sandra Kovachka
-        links:
-        - link: '2258327625'
-          type: semantic_scholar
-        name: Sandra Kovachka
-      display_name: Sandra Kovachka
-    - affiliations: []
-      author:
-        aliases:
-        - Candida Manelfi
-        links:
-        - link: '1596553520'
-          type: semantic_scholar
-        name: Candida Manelfi
-      display_name: Candida Manelfi
-    - affiliations: []
-      author:
-        aliases:
-        - Goutam Mukherjee
-        links:
-        - link: '2258329260'
-          type: semantic_scholar
-        name: Goutam Mukherjee
-      display_name: Goutam Mukherjee
-    - affiliations: []
-      author:
-        aliases:
-        - Abraham Muñiz-Chicharro
-        links:
-        - link: '2258327669'
-          type: semantic_scholar
-        name: Abraham Muñiz-Chicharro
-      display_name: Abraham Muñiz-Chicharro
-    - affiliations: []
-      author:
-        aliases:
-        - Francesco Musiani
-        links:
-        - link: '2242359787'
-          type: semantic_scholar
-        name: Francesco Musiani
-      display_name: Francesco Musiani
-    - affiliations: []
-      author:
-        aliases:
-        - Ariane Nunes-Alves
-        links:
-        - link: '2374015970'
-          type: semantic_scholar
-        name: Ariane Nunes-Alves
-      display_name: Ariane Nunes-Alves
-    - affiliations: []
-      author:
-        aliases:
-        - Giulia Paiardi
-        links:
-        - link: '2258329227'
-          type: semantic_scholar
-        name: Giulia Paiardi
-      display_name: Giulia Paiardi
-    - affiliations: []
-      author:
-        aliases:
-        - Giulia Rossetti
-        links:
-        - link: '2242361014'
-          type: semantic_scholar
-        name: Giulia Rossetti
-      display_name: Giulia Rossetti
-    - affiliations: []
-      author:
-        aliases:
-        - S. Sadiq
-        links:
-        - link: '2257754614'
-          type: semantic_scholar
-        name: S. Sadiq
-      display_name: S. Sadiq
-    - affiliations: []
-      author:
-        aliases:
-        - F. Spyrakis
-        links:
-        - link: '2037628'
-          type: semantic_scholar
-        name: F. Spyrakis
-      display_name: F. Spyrakis
-    - affiliations: []
-      author:
-        aliases:
-        - Carmine Talarico
-        links:
-        - link: '40067882'
-          type: semantic_scholar
-        name: Carmine Talarico
-      display_name: Carmine Talarico
-    - affiliations: []
-      author:
-        aliases:
-        - Alexandros Tsengenes
-        links:
-        - link: '2089833250'
-          type: semantic_scholar
-        name: Alexandros Tsengenes
-      display_name: Alexandros Tsengenes
-    - affiliations: []
-      author:
-        aliases:
-        - Rebecca C. Wade
-        links:
-        - link: '2254241781'
-          type: semantic_scholar
-        name: Rebecca C. Wade
-      display_name: Rebecca C. Wade
-    - affiliations: []
-      author:
-        aliases:
-        - Conner J. Copeland
-        links:
-        - link: '89130429'
-          type: semantic_scholar
-        name: Conner J. Copeland
-      display_name: Conner J. Copeland
-    - affiliations: []
-      author:
-        aliases:
-        - Jeremiah Gaiser
-        links:
-        - link: '1401651295'
-          type: semantic_scholar
-        name: Jeremiah Gaiser
-      display_name: Jeremiah Gaiser
-    - affiliations: []
-      author:
-        aliases:
-        - Daniel R Olson
-        links:
-        - link: '2258328171'
-          type: semantic_scholar
-        name: Daniel R Olson
-      display_name: Daniel R Olson
-    - affiliations: []
-      author:
-        aliases:
-        - Amitava Roy
-        links:
-        - link: '2258422001'
-          type: semantic_scholar
-        name: Amitava Roy
-      display_name: Amitava Roy
-    - affiliations: []
-      author:
-        aliases:
-        - Vishwesh Venkatraman
-        links:
-        - link: '3281017'
-          type: semantic_scholar
-        name: Vishwesh Venkatraman
-      display_name: Vishwesh Venkatraman
-    - affiliations: []
-      author:
-        aliases:
-        - T. Wheeler
-        links:
-        - link: '2398949'
-          type: semantic_scholar
-        name: T. Wheeler
-      display_name: T. Wheeler
-    - affiliations: []
-      author:
-        aliases:
-        - H. Arthanari
-        links:
-        - link: '4091943'
-          type: semantic_scholar
-        name: H. Arthanari
-      display_name: H. Arthanari
-    - affiliations: []
-      author:
-        aliases:
-        - Klara Blaschitz
-        links:
-        - link: '2258327622'
-          type: semantic_scholar
-        name: Klara Blaschitz
-      display_name: Klara Blaschitz
-    - affiliations: []
-      author:
-        aliases:
-        - M. Cespugli
-        links:
-        - link: '94234793'
-          type: semantic_scholar
-        name: M. Cespugli
-      display_name: M. Cespugli
-    - affiliations: []
-      author:
-        aliases:
-        - V. Durmaz
-        links:
-        - link: '3106875'
-          type: semantic_scholar
-        name: V. Durmaz
-      display_name: V. Durmaz
-    - affiliations: []
-      author:
-        aliases:
-        - Konstantin Fackeldey
-        links:
-        - link: '2258327665'
-          type: semantic_scholar
-        name: Konstantin Fackeldey
-      display_name: Konstantin Fackeldey
-    - affiliations: []
-      author:
-        aliases:
-        - P. Fischer
-        links:
-        - link: '2072760917'
-          type: semantic_scholar
-        name: P. Fischer
-      display_name: P. Fischer
-    - affiliations: []
-      author:
-        aliases:
-        - Christoph Gorgulla
-        links:
-        - link: '101925019'
-          type: semantic_scholar
-        name: Christoph Gorgulla
-      display_name: Christoph Gorgulla
-    - affiliations: []
-      author:
-        aliases:
-        - Christian C. Gruber
-        links:
-        - link: '2261384130'
-          type: semantic_scholar
-        name: Christian C. Gruber
-      display_name: Christian C. Gruber
-    - affiliations: []
-      author:
-        aliases:
-        - Karl Gruber
-        links:
-        - link: '2242822803'
-          type: semantic_scholar
-        name: Karl Gruber
-      display_name: Karl Gruber
-    - affiliations: []
-      author:
-        aliases:
-        - M. Hetmann
-        links:
-        - link: '90236242'
-          type: semantic_scholar
-        name: M. Hetmann
-      display_name: M. Hetmann
-    - affiliations: []
-      author:
-        aliases:
-        - Jamie Kinney
-        links:
-        - link: '2071253407'
-          type: semantic_scholar
-        name: Jamie Kinney
-      display_name: Jamie Kinney
-    - affiliations: []
-      author:
-        aliases:
-        - K. M. P. Das
-        links:
-        - link: '2258329775'
-          type: semantic_scholar
-        name: K. M. P. Das
-      display_name: K. M. P. Das
-    - affiliations: []
-      author:
-        aliases:
-        - Shreya Pandita
-        links:
-        - link: '70287988'
-          type: semantic_scholar
-        name: Shreya Pandita
-      display_name: Shreya Pandita
-    - affiliations: []
-      author:
-        aliases:
-        - Amit Singh
-        links:
-        - link: '2251732223'
-          type: semantic_scholar
-        name: Amit Singh
-      display_name: Amit Singh
-    - affiliations: []
-      author:
-        aliases:
-        - G. Steinkellner
-        links:
-        - link: '2095185'
-          type: semantic_scholar
-        name: G. Steinkellner
-      display_name: G. Steinkellner
-    - affiliations: []
-      author:
-        aliases:
-        - Guilhem Tesseyre
-        links:
-        - link: '107743006'
-          type: semantic_scholar
-        name: Guilhem Tesseyre
-      display_name: Guilhem Tesseyre
-    - affiliations: []
-      author:
-        aliases:
-        - Gerhard Wagner
-        links:
-        - link: '2258328658'
-          type: semantic_scholar
-        name: Gerhard Wagner
-      display_name: Gerhard Wagner
-    - affiliations: []
-      author:
-        aliases:
-        - Zi-Fu Wang
-        links:
-        - link: '2259065642'
-          type: semantic_scholar
-        name: Zi-Fu Wang
-      display_name: Zi-Fu Wang
-    - affiliations: []
-      author:
-        aliases:
-        - Ryan Yust
-        links:
-        - link: '2025813415'
-          type: semantic_scholar
-        name: Ryan Yust
-      display_name: Ryan Yust
-    - affiliations: []
-      author:
-        aliases:
-        - D. Druzhilovskiy
-        links:
-        - link: '10693262'
-          type: semantic_scholar
-        name: D. Druzhilovskiy
-      display_name: D. Druzhilovskiy
-    - affiliations: []
-      author:
-        aliases:
-        - D. Filimonov
-        links:
-        - link: '1802137'
-          type: semantic_scholar
-        name: D. Filimonov
-      display_name: D. Filimonov
-    - affiliations: []
-      author:
-        aliases:
-        - P. Pogodin
-        links:
-        - link: '11974306'
-          type: semantic_scholar
-        name: P. Pogodin
-      display_name: P. Pogodin
-    - affiliations: []
-      author:
-        aliases:
-        - V. Poroikov
-        links:
-        - link: '2237886309'
-          type: semantic_scholar
-        name: V. Poroikov
-      display_name: V. Poroikov
-    - affiliations: []
-      author:
-        aliases:
-        - A. Rudik
-        links:
-        - link: '153071426'
-          type: semantic_scholar
-        name: A. Rudik
-      display_name: A. Rudik
-    - affiliations: []
-      author:
-        aliases:
-        - L. Stolbov
-        links:
-        - link: '92833175'
-          type: semantic_scholar
-        name: L. Stolbov
-      display_name: L. Stolbov
-    - affiliations: []
-      author:
-        aliases:
-        - A. V. Veselovsky
-        links:
-        - link: '2252118161'
-          type: semantic_scholar
-        name: A. V. Veselovsky
-      display_name: A. V. Veselovsky
-    - affiliations: []
-      author:
-        aliases:
-        - Maria De Rosa
-        links:
-        - link: '2258329512'
-          type: semantic_scholar
-        name: Maria De Rosa
-      display_name: Maria De Rosa
-    - affiliations: []
-      author:
-        aliases:
-        - G. D. Simone
-        links:
-        - link: '19291649'
-          type: semantic_scholar
-        name: G. D. Simone
-      display_name: G. D. Simone
-    - affiliations: []
-      author:
-        aliases:
-        - M. R. Gulotta
-        links:
-        - link: '51193603'
-          type: semantic_scholar
-        name: M. R. Gulotta
-      display_name: M. R. Gulotta
-    - affiliations: []
-      author:
-        aliases:
-        - Jessica Lombino
-        links:
-        - link: '51200814'
-          type: semantic_scholar
-        name: Jessica Lombino
-      display_name: Jessica Lombino
-    - affiliations: []
-      author:
-        aliases:
-        - Nedra Mekni
-        links:
-        - link: '1381605491'
-          type: semantic_scholar
-        name: Nedra Mekni
-      display_name: Nedra Mekni
-    - affiliations: []
-      author:
-        aliases:
-        - Ugo Perricone
-        links:
-        - link: '4879279'
-          type: semantic_scholar
-        name: Ugo Perricone
-      display_name: Ugo Perricone
-    - affiliations: []
-      author:
-        aliases:
-        - Arturo Casini
-        links:
-        - link: '2258329487'
-          type: semantic_scholar
-        name: Arturo Casini
-      display_name: Arturo Casini
-    - affiliations: []
-      author:
-        aliases:
-        - Amanda Embree
-        links:
-        - link: '2129353757'
-          type: semantic_scholar
-        name: Amanda Embree
-      display_name: Amanda Embree
-    - affiliations: []
-      author:
-        aliases:
-        - D. B. Gordon
-        links:
-        - link: '2249318400'
-          type: semantic_scholar
-        name: D. B. Gordon
-      display_name: D. B. Gordon
-    - affiliations: []
-      author:
-        aliases:
-        - David Lei
-        links:
-        - link: '2258328308'
-          type: semantic_scholar
-        name: David Lei
-      display_name: David Lei
-    - affiliations: []
-      author:
-        aliases:
-        - K. Pratt
-        links:
-        - link: '1400803200'
-          type: semantic_scholar
-        name: K. Pratt
-      display_name: K. Pratt
-    - affiliations: []
-      author:
-        aliases:
-        - Christopher A. Voigt
-        links:
-        - link: '2242368683'
-          type: semantic_scholar
-        name: Christopher A. Voigt
-      display_name: Christopher A. Voigt
-    - affiliations: []
-      author:
-        aliases:
-        - Kuang-Yu Chen
-        links:
-        - link: '2258542308'
-          type: semantic_scholar
-        name: Kuang-Yu Chen
-      display_name: Kuang-Yu Chen
-    - affiliations: []
-      author:
-        aliases:
-        - Yves Jacob
-        links:
-        - link: '2258319657'
-          type: semantic_scholar
-        name: Yves Jacob
-      display_name: Yves Jacob
-    - affiliations: []
-      author:
-        aliases:
-        - T. Krischuns
-        links:
-        - link: '80200618'
-          type: semantic_scholar
-        name: T. Krischuns
-      display_name: T. Krischuns
-    - affiliations: []
-      author:
-        aliases:
-        - Pierre Lafaye
-        links:
-        - link: '2258327819'
-          type: semantic_scholar
-        name: Pierre Lafaye
-      display_name: Pierre Lafaye
-    - affiliations: []
-      author:
-        aliases:
-        - Agnès Zettor
-        links:
-        - link: '2266154540'
-          type: semantic_scholar
-        name: Agnès Zettor
-      display_name: Agnès Zettor
-    - affiliations: []
-      author:
-        aliases:
-        - M. L. Rodriguez
-        links:
-        - link: '2258529691'
-          type: semantic_scholar
-        name: M. L. Rodriguez
-      display_name: M. L. Rodriguez
-    - affiliations: []
-      author:
-        aliases:
-        - Kris M. White
-        links:
-        - link: '2258330310'
-          type: semantic_scholar
-        name: Kris M. White
-      display_name: Kris M. White
-    - affiliations: []
-      author:
-        aliases:
-        - D. Fearon
-        links:
-        - link: '72347968'
-          type: semantic_scholar
-        name: D. Fearon
-      display_name: D. Fearon
-    - affiliations: []
-      author:
-        aliases:
-        - F. von Delft
-        links:
-        - link: '2844632'
-          type: semantic_scholar
-        name: F. von Delft
-      display_name: F. von Delft
-    - affiliations: []
-      author:
-        aliases:
-        - Martin A. Walsh
-        links:
-        - link: '2118600472'
-          type: semantic_scholar
-        name: Martin A. Walsh
-      display_name: Martin A. Walsh
-    - affiliations: []
-      author:
-        aliases:
-        - D. Horvath
-        links:
-        - link: '49214592'
-          type: semantic_scholar
-        name: D. Horvath
-      display_name: D. Horvath
-    - affiliations: []
-      author:
-        aliases:
-        - Charles L. Brooks
-        links:
-        - link: '2258328190'
-          type: semantic_scholar
-        name: Charles L. Brooks
-      display_name: Charles L. Brooks
-    - affiliations: []
-      author:
-        aliases:
-        - Babak Falsafi
-        links:
-        - link: '2257900193'
-          type: semantic_scholar
-        name: Babak Falsafi
-      display_name: Babak Falsafi
-    - affiliations: []
-      author:
-        aliases:
-        - Bryan Ford
-        links:
-        - link: '2320802209'
-          type: semantic_scholar
-        name: Bryan Ford
-      display_name: Bryan Ford
-    - affiliations: []
-      author:
-        aliases:
-        - Adolfo García-Sastre
-        links:
-        - link: '1410665410'
-          type: semantic_scholar
-        name: Adolfo García-Sastre
-      display_name: Adolfo García-Sastre
-    - affiliations: []
-      author:
-        aliases:
-        - Sang Yup Lee
-        links:
-        - link: '2258536117'
-          type: semantic_scholar
-        name: Sang Yup Lee
-      display_name: Sang Yup Lee
-    - affiliations: []
-      author:
-        aliases:
-        - Nadia Naffakh
-        links:
-        - link: '2258327485'
-          type: semantic_scholar
-        name: Nadia Naffakh
-      display_name: Nadia Naffakh
-    - affiliations: []
-      author:
-        aliases:
-        - A. Varnek
-        links:
-        - link: '1685042'
-          type: semantic_scholar
-        name: A. Varnek
-      display_name: A. Varnek
-    - affiliations: []
-      author:
-        aliases:
-        - G. Klambauer
-        links:
-        - link: '2065785951'
-          type: semantic_scholar
-        name: G. Klambauer
-      display_name: G. Klambauer
-    - affiliations: []
-      author:
-        aliases:
-        - Thomas M Hermans
-        links:
-        - link: '2258328028'
-          type: semantic_scholar
-        name: Thomas M Hermans
-      display_name: Thomas M Hermans
-    flags: []
-    links:
-    - link: b2283234d862b7da0f3fd7034624e3744154da44
-      type: semantic_scholar
-    - link: '11299051'
-      type: pmc
-    - link: 10.1002/minf.202300262
-      type: doi
-    - link: '264099540'
-      type: corpusid
-    - link: '37833243'
-      type: pubmed
-    - link: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/minf.202300262
-      type: pdf
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2023-10-13'
-        date_precision: 3
-        links: []
-        name: Molecular Informatics
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: Molecular Informatics
-        short_name: null
-        type: journal
-        volume: '43'
-    title: A community effort in SARS-CoV-2 drug discovery
-    topics:
-    - name: Medicine
-  score: 0.0
-- info:
+  links:
+  - link: b2283234d862b7da0f3fd7034624e3744154da44
+    type: semantic_scholar
+  - link: '11299051'
+    type: pmc
+  - link: 10.1002/minf.202300262
+    type: doi
+  - link: '264099540'
+    type: corpusid
+  - link: '37833243'
+    type: pubmed
+  - link: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/minf.202300262
+    type: pdf
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-10-13'
+      date_precision: 3
+      links: []
+      name: Molecular Informatics
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: Molecular Informatics
+      short_name: null
+      type: journal
+      volume: '43'
+  title: A community effort in SARS-CoV-2 drug discovery
+  topics:
+  - name: Medicine
+- abstract: ''
+  authors:
+  - affiliations: []
+    author:
+      aliases:
+      - Y. Bengio
+      links:
+      - link: '1865800402'
+        type: semantic_scholar
+      name: Y. Bengio
+    display_name: Y. Bengio
+  - affiliations: []
+    author:
+      aliases:
+      - R. Cardin
+      links:
+      - link: '39738052'
+        type: semantic_scholar
+      name: R. Cardin
+    display_name: R. Cardin
+  - affiliations: []
+    author:
+      aliases:
+      - R. Mori
+      links:
+      - link: '1714393'
+        type: semantic_scholar
+      name: R. Mori
+    display_name: R. Mori
+  - affiliations: []
+    author:
+      aliases:
+      - Y. Normandin
+      links:
+      - link: '1801692'
+        type: semantic_scholar
+      name: Y. Normandin
+    display_name: Y. Normandin
+  flags: []
+  info:
     discovered_by:
       semantic_scholar: 9b1e7754b0a508b0ce324167acd1e0381824bd9a
   key: semantic_scholar:9b1e7754b0a508b0ce324167acd1e0381824bd9a
-  paper:
-    abstract: ''
-    authors:
-    - affiliations: []
-      author:
-        aliases:
-        - Y. Bengio
-        links:
-        - link: '1865800402'
-          type: semantic_scholar
-        name: Y. Bengio
-      display_name: Y. Bengio
-    - affiliations: []
-      author:
-        aliases:
-        - R. Cardin
-        links:
-        - link: '39738052'
-          type: semantic_scholar
-        name: R. Cardin
-      display_name: R. Cardin
-    - affiliations: []
-      author:
-        aliases:
-        - R. Mori
-        links:
-        - link: '1714393'
-          type: semantic_scholar
-        name: R. Mori
-      display_name: R. Mori
-    - affiliations: []
-      author:
-        aliases:
-        - Y. Normandin
-        links:
-        - link: '1801692'
-          type: semantic_scholar
-        name: Y. Normandin
-      display_name: Y. Normandin
-    flags: []
-    links:
-    - link: 9b1e7754b0a508b0ce324167acd1e0381824bd9a
-      type: semantic_scholar
-    - link: conf/icassp/BengioCMN90
-      type: dblp
-    - link: '1956067001'
-      type: mag
-    - link: 10.1109/ICASSP.1990.115768
-      type: doi
-    - link: '61057395'
-      type: corpusid
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '1990-04-03'
-        date_precision: 3
-        links: []
-        name: IEEE International Conference on Acoustics, Speech, and Signal Processing
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: IEEE International Conference on Acoustics, Speech, and Signal Processing
-        short_name: null
-        type: journal
-        volume: null
-    title: A hybrid coder for hidden Markov models using a recurrent neural networks
-    topics:
-    - name: Computer Science
-  score: 0.0
-- info:
+  links:
+  - link: 9b1e7754b0a508b0ce324167acd1e0381824bd9a
+    type: semantic_scholar
+  - link: conf/icassp/BengioCMN90
+    type: dblp
+  - link: '1956067001'
+    type: mag
+  - link: 10.1109/ICASSP.1990.115768
+    type: doi
+  - link: '61057395'
+    type: corpusid
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '1990-04-03'
+      date_precision: 3
+      links: []
+      name: IEEE International Conference on Acoustics, Speech, and Signal Processing
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: IEEE International Conference on Acoustics, Speech, and Signal Processing
+      short_name: null
+      type: journal
+      volume: null
+  title: A hybrid coder for hidden Markov models using a recurrent neural networks
+  topics:
+  - name: Computer Science
+- abstract: One of the most fundamental laws of physics is the principle of least
+    action. Motivated by its predictive power, we introduce a neuronal least-action
+    principle for cortical processing of sensory streams to produce appropriate behavioural
+    outputs in real time. The principle postulates that the voltage dynamics of cortical
+    pyramidal neurons prospectively minimizes the local somato-dendritic mismatch
+    error within individual neurons. For output neurons, the principle implies minimizing
+    an instantaneous behavioural error. For deep network neurons, it implies the prospective
+    firing to overcome integration delays and correct for possible output errors right
+    in time. The neuron-specific errors are extracted in the apical dendrites of pyramidal
+    neurons through a cortical microcircuit that tries to explain away the feedback
+    from the periphery, and correct the trajectory on the fly. Any motor output is
+    in a moving equilibrium with the sensory input and the motor feedback during the
+    ongoing sensory-motor transform. Online synaptic plasticity reduces the somato-dendritic
+    mismatch error within each cortical neuron and performs gradient descent on the
+    output cost at any moment in time. The neuronal least-action principle offers
+    an axiomatic framework to derive local neuronal and synaptic laws for global real-time
+    computation and learning in the brain.
+  authors:
+  - affiliations: []
+    author:
+      aliases:
+      - W. Senn
+      links:
+      - link: '1719636'
+        type: semantic_scholar
+      name: W. Senn
+    display_name: W. Senn
+  - affiliations: []
+    author:
+      aliases:
+      - Dominik Dold
+      links:
+      - link: '19322337'
+        type: semantic_scholar
+      name: Dominik Dold
+    display_name: Dominik Dold
+  - affiliations: []
+    author:
+      aliases:
+      - Á. F. Kungl
+      links:
+      - link: '51135867'
+        type: semantic_scholar
+      name: Á. F. Kungl
+    display_name: Á. F. Kungl
+  - affiliations: []
+    author:
+      aliases:
+      - B. Ellenberger
+      links:
+      - link: '32391730'
+        type: semantic_scholar
+      name: B. Ellenberger
+    display_name: B. Ellenberger
+  - affiliations: []
+    author:
+      aliases:
+      - Jakob Jordan
+      links:
+      - link: '4867660'
+        type: semantic_scholar
+      name: Jakob Jordan
+    display_name: Jakob Jordan
+  - affiliations: []
+    author:
+      aliases:
+      - Y. Bengio
+      links:
+      - link: '1865800402'
+        type: semantic_scholar
+      name: Y. Bengio
+    display_name: Y. Bengio
+  - affiliations: []
+    author:
+      aliases:
+      - J. Sacramento
+      links:
+      - link: '3105061'
+        type: semantic_scholar
+      name: J. Sacramento
+    display_name: J. Sacramento
+  - affiliations: []
+    author:
+      aliases:
+      - Mihai A. Petrovici
+      links:
+      - link: '2238320235'
+        type: semantic_scholar
+      name: Mihai A. Petrovici
+    display_name: Mihai A. Petrovici
+  flags: []
+  info:
     discovered_by:
       semantic_scholar: c2c5f451c8109f3fccd233c28c639a70bf409f45
   key: semantic_scholar:c2c5f451c8109f3fccd233c28c639a70bf409f45
-  paper:
-    abstract: One of the most fundamental laws of physics is the principle of least
-      action. Motivated by its predictive power, we introduce a neuronal least-action
-      principle for cortical processing of sensory streams to produce appropriate
-      behavioural outputs in real time. The principle postulates that the voltage
-      dynamics of cortical pyramidal neurons prospectively minimizes the local somato-dendritic
-      mismatch error within individual neurons. For output neurons, the principle
-      implies minimizing an instantaneous behavioural error. For deep network neurons,
-      it implies the prospective firing to overcome integration delays and correct
-      for possible output errors right in time. The neuron-specific errors are extracted
-      in the apical dendrites of pyramidal neurons through a cortical microcircuit
-      that tries to explain away the feedback from the periphery, and correct the
-      trajectory on the fly. Any motor output is in a moving equilibrium with the
-      sensory input and the motor feedback during the ongoing sensory-motor transform.
-      Online synaptic plasticity reduces the somato-dendritic mismatch error within
-      each cortical neuron and performs gradient descent on the output cost at any
-      moment in time. The neuronal least-action principle offers an axiomatic framework
-      to derive local neuronal and synaptic laws for global real-time computation
-      and learning in the brain.
-    authors:
-    - affiliations: []
-      author:
-        aliases:
-        - W. Senn
-        links:
-        - link: '1719636'
-          type: semantic_scholar
-        name: W. Senn
-      display_name: W. Senn
-    - affiliations: []
-      author:
-        aliases:
-        - Dominik Dold
-        links:
-        - link: '19322337'
-          type: semantic_scholar
-        name: Dominik Dold
-      display_name: Dominik Dold
-    - affiliations: []
-      author:
-        aliases:
-        - Á. F. Kungl
-        links:
-        - link: '51135867'
-          type: semantic_scholar
-        name: Á. F. Kungl
-      display_name: Á. F. Kungl
-    - affiliations: []
-      author:
-        aliases:
-        - B. Ellenberger
-        links:
-        - link: '32391730'
-          type: semantic_scholar
-        name: B. Ellenberger
-      display_name: B. Ellenberger
-    - affiliations: []
-      author:
-        aliases:
-        - Jakob Jordan
-        links:
-        - link: '4867660'
-          type: semantic_scholar
-        name: Jakob Jordan
-      display_name: Jakob Jordan
-    - affiliations: []
-      author:
-        aliases:
-        - Y. Bengio
-        links:
-        - link: '1865800402'
-          type: semantic_scholar
-        name: Y. Bengio
-      display_name: Y. Bengio
-    - affiliations: []
-      author:
-        aliases:
-        - J. Sacramento
-        links:
-        - link: '3105061'
-          type: semantic_scholar
-        name: J. Sacramento
-      display_name: J. Sacramento
-    - affiliations: []
-      author:
-        aliases:
-        - Mihai A. Petrovici
-        links:
-        - link: '2238320235'
-          type: semantic_scholar
-        name: Mihai A. Petrovici
-      display_name: Mihai A. Petrovici
-    flags: []
-    links:
-    - link: c2c5f451c8109f3fccd233c28c639a70bf409f45
-      type: semantic_scholar
-    - link: '11661794'
-      type: pmc
-    - link: 10.1101/2023.03.25.534198
-      type: doi
-    - link: '257774930'
-      type: corpusid
-    - link: '39704647'
-      type: pubmed
-    - link: https://www.biorxiv.org/content/biorxiv/early/2023/06/06/2023.03.25.534198.full.pdf
-      type: pdf
-    releases:
-    - pages: null
-      status: preprint
-      venue:
-        aliases: []
-        date: '2024-09-23'
-        date_precision: 3
-        links: []
-        name: bioRxiv
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: bioRxiv
-        short_name: null
-        type: journal
-        volume: '12'
-    title: A neuronal least-action principle for real-time learning in cortical circuits
-    topics:
-    - name: Biology
-    - name: Medicine
-  score: 0.0
-- info:
+  links:
+  - link: c2c5f451c8109f3fccd233c28c639a70bf409f45
+    type: semantic_scholar
+  - link: '11661794'
+    type: pmc
+  - link: 10.1101/2023.03.25.534198
+    type: doi
+  - link: '257774930'
+    type: corpusid
+  - link: '39704647'
+    type: pubmed
+  - link: https://www.biorxiv.org/content/biorxiv/early/2023/06/06/2023.03.25.534198.full.pdf
+    type: pdf
+  releases:
+  - pages: null
+    status: preprint
+    venue:
+      aliases: []
+      date: '2024-09-23'
+      date_precision: 3
+      links: []
+      name: bioRxiv
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: bioRxiv
+      short_name: null
+      type: journal
+      volume: '12'
+  title: A neuronal least-action principle for real-time learning in cortical circuits
+  topics:
+  - name: Biology
+  - name: Medicine
+- abstract: Abstract:Since OpenAI's release of the very large language models Chat-GPT
+    and GPT-4, the potential dangers of AI have garnered widespread public attention.
+    In this essay, the author reviews the threats to democracy posed by the possibility
+    of "rogue AIs," dangerous and powerful AIs that would execute harmful goals, irrespective
+    of whether the outcomes are intended by humans. To mitigate against the risk that
+    rogue AIs present to democracy and geopolitical stability, the author argues that
+    research into safe and defensive AIs should be conducted by a multilateral, international
+    network of research laboratories.
+  authors:
+  - affiliations: []
+    author:
+      aliases:
+      - Yoshua Bengio
+      links:
+      - link: '1751762'
+        type: semantic_scholar
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  flags: []
+  info:
     discovered_by:
       semantic_scholar: 0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
   key: semantic_scholar:0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
-  paper:
-    abstract: Abstract:Since OpenAI's release of the very large language models Chat-GPT
-      and GPT-4, the potential dangers of AI have garnered widespread public attention.
-      In this essay, the author reviews the threats to democracy posed by the possibility
-      of "rogue AIs," dangerous and powerful AIs that would execute harmful goals,
-      irrespective of whether the outcomes are intended by humans. To mitigate against
-      the risk that rogue AIs present to democracy and geopolitical stability, the
-      author argues that research into safe and defensive AIs should be conducted
-      by a multilateral, international network of research laboratories.
-    authors:
-    - affiliations: []
-      author:
-        aliases:
-        - Yoshua Bengio
-        links:
-        - link: '1751762'
-          type: semantic_scholar
-        name: Yoshua Bengio
-      display_name: Yoshua Bengio
-    flags: []
-    links:
-    - link: 0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
-      type: semantic_scholar
-    - link: 10.1353/jod.2023.a907692
-      type: doi
-    - link: '262191335'
-      type: corpusid
-    releases:
-    - pages: null
-      status: published
-      venue:
-        aliases: []
-        date: '2023-10-01'
-        date_precision: 3
-        links: []
-        name: Journal of Democracy
-        open: false
-        peer_reviewed: false
-        publisher: null
-        series: Journal of Democracy
-        short_name: null
-        type: journal
-        volume: '34'
-    title: AI and Catastrophic Risk
-    topics: []
-  score: 0.0
+  links:
+  - link: 0fdff0a9a42dfb00f1b99d9025be3759b8fe6fd2
+    type: semantic_scholar
+  - link: 10.1353/jod.2023.a907692
+    type: doi
+  - link: '262191335'
+    type: corpusid
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2023-10-01'
+      date_precision: 3
+      links: []
+      name: Journal of Democracy
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: Journal of Democracy
+      short_name: null
+      type: journal
+      volume: '34'
+  title: AI and Catastrophic Risk
+  topics: []

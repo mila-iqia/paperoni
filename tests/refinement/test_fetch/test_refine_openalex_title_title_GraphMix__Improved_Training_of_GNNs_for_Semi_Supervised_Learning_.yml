@@ -109,6 +109,10 @@ authors:
     name: Jian Tang
   display_name: Jian Tang
 flags: []
+info:
+  discovered_by:
+    openalex: W3092206109
+key: openalex:W3092206109
 links:
 - link: '1909.11715'
   type: arxiv
