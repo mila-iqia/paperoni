@@ -1,0 +1,416 @@
+- abstract: 'Recent advances in attention-free sequence models rely on convolutions
+    as alternatives to the attention operator at the core of Transformers. In particular,
+    long convolution sequence models have achieved state-of-the-art performance in
+    many domains, but incur a significant cost during auto-regressive inference workloads
+    -- naively requiring a full pass (or caching of activations) over the input sequence
+    for each generated token -- similarly to attention-based models. In this paper,
+    we seek to enable $\mathcal O(1)$ compute and memory cost per token in any pre-trained
+    long convolution architecture to reduce memory footprint and increase throughput
+    during generation. Concretely, our methods consist in extracting low-dimensional
+    linear state-space models from each convolution layer, building upon rational
+    interpolation and model-order reduction techniques. We further introduce architectural
+    improvements to convolution-based layers such as Hyena: by weight-tying the filters
+    across channels into heads, we achieve higher pre-training quality and reduce
+    the number of filters to be distilled. The resulting model achieves 10x higher
+    throughput than Transformers and 1.5x higher than Hyena at 1.3B parameters, without
+    any loss in quality after distillation.'
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Université de Montréal.
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: ~Stefano_Massaroli1
+        type: openreview
+      - link: '2273389623'
+        type: semantic_scholar
+      - link: '2293395853'
+        type: semantic_scholar
+      - link: '2302267036'
+        type: semantic_scholar
+      - link: '90467999'
+        type: semantic_scholar
+      - link: d8858c05c1cdc71f186e2c2eb955c181
+        type: paperoni_v2
+      name: Stefano Massaroli
+    display_name: Stefano Massaroli
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Stanford University.
+    author:
+      aliases: []
+      links:
+      - link: ~Michael_Poli1
+        type: openreview
+      - link: '2273389620'
+        type: semantic_scholar
+      - link: '40585370'
+        type: semantic_scholar
+      - link: ea6d6a9e93a2f49c8bccc978d90aafd7
+        type: paperoni_v2
+      name: Michael Poli
+    display_name: Michael Poli
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Daniel_Y_Fu1
+        type: openreview
+      - link: '2259931128'
+        type: semantic_scholar
+      - link: '2273413707'
+        type: semantic_scholar
+      - link: '2301804035'
+        type: semantic_scholar
+      - link: '49577833'
+        type: semantic_scholar
+      - link: bde01b2d815b317d27e2bb21488667f5
+        type: paperoni_v2
+      name: Daniel Y Fu
+    display_name: Daniel Y Fu
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Stanford University.
+    author:
+      aliases: []
+      links:
+      - link: ~Hermann_Kumbong1
+        type: openreview
+      - link: '2006456125'
+        type: semantic_scholar
+      - link: 8b4f1ca9ffdf234a87f6b10083702019
+        type: paperoni_v2
+      name: Hermann Kumbong
+    display_name: Hermann Kumbong
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~Rom_Nishijima_Parnichkun1
+        type: openreview
+      - link: '2046954411'
+        type: semantic_scholar
+      - link: b3e71632aadc4036e18341de32c97573
+        type: paperoni_v2
+      name: Rom Nishijima Parnichkun
+    display_name: Rom Nishijima Parnichkun
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Purdue University.
+    author:
+      aliases: []
+      links:
+      - link: ~Aman_Timalsina1
+        type: openreview
+      - link: '2173528923'
+        type: semantic_scholar
+      - link: b9fe4c1802723cbaaf944580edf703a6
+        type: paperoni_v2
+      name: Aman Timalsina
+    display_name: Aman Timalsina
+  - affiliations: []
+    author:
+      aliases: []
+      links:
+      - link: ~David_W._Romero1
+        type: openreview
+      - link: '2262444153'
+        type: semantic_scholar
+      - link: 8f4990158b9bf07810a65a5fa3b85240
+        type: paperoni_v2
+      name: David W. Romero
+    display_name: David W. Romero
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Stanford University.
+    author:
+      aliases: []
+      links:
+      - link: ~Quinn_McIntyre1
+        type: openreview
+      - link: '2262444524'
+        type: semantic_scholar
+      - link: 82af97c63d13297ebe7cbe2d14f15055
+        type: paperoni_v2
+      name: Quinn McIntyre
+    display_name: Quinn McIntyre
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Carnegie Mellon University
+    author:
+      aliases: []
+      links:
+      - link: ~Beidi_Chen1
+        type: openreview
+      - link: '2262515373'
+        type: semantic_scholar
+      - link: d1cef0c74d6c1efbaf73b441cde7d631
+        type: paperoni_v2
+      name: Beidi Chen
+    display_name: Beidi Chen
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: University
+    author:
+      aliases: []
+      links:
+      - link: ~Atri_Rudra1
+        type: openreview
+      - link: '1755572'
+        type: semantic_scholar
+      - link: '2272400719'
+        type: semantic_scholar
+      - link: fcf8ffc0896461bd1847c171e417848f
+        type: paperoni_v2
+      name: Atri Rudra
+    display_name: Atri Rudra
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: University of Chicago
+    author:
+      aliases: []
+      links:
+      - link: ~Ce_Zhang1
+        type: openreview
+      - link: '1776014'
+        type: semantic_scholar
+      - link: '2109269077'
+        type: semantic_scholar
+      - link: '2109269181'
+        type: semantic_scholar
+      - link: '2124943060'
+        type: semantic_scholar
+      - link: '2222376090'
+        type: semantic_scholar
+      - link: '2262511796'
+        type: semantic_scholar
+      - link: '2305565297'
+        type: semantic_scholar
+      - link: '37086011002'
+        type: xplore
+      - link: f652163b6ad21f682821701ddd9ca6ff
+        type: paperoni_v2
+      name: Ce Zhang
+    display_name: Ce Zhang
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Stanford University.
+    author:
+      aliases: []
+      links:
+      - link: ~Christopher_Re1
+        type: openreview
+      - link: '1803218'
+        type: semantic_scholar
+      - link: '2114485554'
+        type: semantic_scholar
+      - link: '2250761261'
+        type: semantic_scholar
+      - link: '2313917068'
+        type: semantic_scholar
+      - link: '37085647844'
+        type: xplore
+      - link: c2bd09dc9e4afab08bfb5fcd684e340c
+        type: paperoni_v2
+      name: Christopher Re
+    display_name: Christopher Re
+  - affiliations:
+    - aliases: []
+      category: unknown
+      country: null
+      name: Stanford University.
+    author:
+      aliases: []
+      links:
+      - link: ~Stefano_Ermon1
+        type: openreview
+      - link: '2248119118'
+        type: semantic_scholar
+      - link: '2282987268'
+        type: semantic_scholar
+      - link: '2490652'
+        type: semantic_scholar
+      - link: d2fc8353a598fcc197580a7634447283
+        type: paperoni_v2
+      name: Stefano Ermon
+    display_name: Stefano Ermon
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Université de Montréal.
+    - aliases: []
+      category: unknown
+      country: null
+      name: Mila
+    author:
+      aliases: []
+      links:
+      - link: bengio-yoshua
+        type: bio
+      - link: yoshua.bengio@mila.quebec
+        type: email
+      - link: '161269817'
+        type: mag
+      - link: '2550477701'
+        type: mag
+      - link: '2762122187'
+        type: mag
+      - link: '2969309771'
+        type: mag
+      - link: '3049675594'
+        type: mag
+      - link: ~Yoshua_Bengio1
+        type: openreview
+      - link: '1751762'
+        type: semantic_scholar
+      - link: '1865800402'
+        type: semantic_scholar
+      - link: '2211024206'
+        type: semantic_scholar
+      - link: '2285114502'
+        type: semantic_scholar
+      - link: '348'
+        type: wpid_en
+      - link: '96'
+        type: wpid_fr
+      - link: '37089048258'
+        type: xplore
+      - link: '37089315098'
+        type: xplore
+      - link: '37323338000'
+        type: xplore
+      - link: fd676bfd2d2cc8ea03ecb12bb22bcd30
+        type: paperoni_v2
+      name: Yoshua Bengio
+    display_name: Yoshua Bengio
+  flags:
+  - validated
+  info:
+    discovered_by:
+      paperoni_v2: 9266c713b4223e2674bf33e0cc34e9d7
+  key: paperoni_v2:9266c713b4223e2674bf33e0cc34e9d7
+  links:
+  - link: https://proceedings.neurips.cc//paper_files/paper/2023/hash/371355cd42caaf83412c3fbef4688979-Abstract-Conference.html
+    type: html
+  - link: https://proceedings.neurips.cc/paper_files/paper/2023/file/371355cd42caaf83412c3fbef4688979-Paper-Conference.pdf
+    type: pdf
+  - link: 10.48550/arXiv.2310.18780
+    type: doi
+  - link: OWELckerm6
+    type: openreview
+  - link: OWELckerm6
+    type: openreview
+  - link: '2310.18780'
+    type: arxiv
+  - link: '2310.18780'
+    type: arxiv
+  - link: journals/corr/abs-2310-18780
+    type: dblp
+  - link: ''
+    type: pdf
+  - link: bd50f83024e313dc2e0d4bef5cbde23284317f8e
+    type: semantic_scholar
+  - link: cb0ac335adda4ceef9987cbcbca9129e71c37f0a
+    type: semantic_scholar
+  - link: '264590326'
+    type: corpusid
+  - link: '266129752'
+    type: corpusid
+  releases:
+  - pages: null
+    status: poster
+    venue:
+      aliases: []
+      date: '2023-09-21'
+      date_precision: 3
+      links:
+      - link: NeurIPS.cc/2023/Conference
+        type: openreview-venue
+      name: NeurIPS.cc/2023/Conference
+      open: false
+      peer_reviewed: true
+      publisher: null
+      series: ''
+      short_name: null
+      type: conference
+      volume: NeurIPS 2023
+  - pages: 17072–17116
+    status: published
+    venue:
+      aliases: []
+      date: '2023-01-01'
+      date_precision: 1
+      links: []
+      name: Advances in Neural Information Processing Systems 36  (NeurIPS 2023)
+      open: false
+      peer_reviewed: true
+      publisher: Curran Associates, Inc.
+      series: ''
+      short_name: null
+      type: unknown
+      volume: '36'
+  - pages: null
+    status: preprint
+    venue:
+      aliases: []
+      date: '2023-10-28'
+      date_precision: 3
+      links: []
+      name: ArXiv
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ''
+      short_name: null
+      type: preprint
+      volume: null
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2000-01-01'
+      date_precision: 0
+      links: []
+      name: ''
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ''
+      short_name: null
+      type: unknown
+      volume: null
+  title: 'Laughing Hyena Distillery: Extracting Compact Recurrences From Convolutions'
+  topics:
+  - name: Long convolutions
+  - name: Computer Science
+  - name: signal processing
+  - name: throughput
+  - name: recurrence
+  - name: auto-regressive generation
+  - name: language models
+  - name: attention
+  - name: Engineering

@@ -7,7 +7,7 @@ from typing import Any, Literal
 import gifnoc
 from easy_oauth import OAuthManager
 from rapporteur.report import Reporter
-from serieux import JSON, TaggedSubclass
+from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 
 from .collection.abc import PaperCollection
@@ -53,15 +53,20 @@ class Server:
 
 
 @dataclass
+class AutoValidate:
+    score_threshold: float = 10.0
+
+
+@dataclass
 class PaperoniConfig:
     cache_path: Path = None
     data_path: Path = None
     mailto: str = ""
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
-    discovery: JSON = None
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
     focuses: Focuses = field(default_factory=Focuses)
     autofocus: AutoFocus[str, AutoFocus.Author] = field(default_factory=AutoFocus)
+    autovalidate: AutoValidate = field(default_factory=AutoValidate)
     refine: Refine = None
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
