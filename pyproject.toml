@@ -96,6 +96,8 @@ timeout = "20"
 asyncio_mode = "auto"
 filterwarnings = [
     'ignore:.*_UnionGenericAlias.*:DeprecationWarning',
+    'ignore:.*websockets.server.WebSocketServerProtocol is deprecated.*:DeprecationWarning',
+    'ignore:.*websockets.legacy is deprecated.*:DeprecationWarning',
 ]
 
 [tool.hatch.envs.default]
