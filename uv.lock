@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.12"
 
 [[package]]
@@ -449,8 +449,8 @@ wheels = [
 
 [[package]]
 name = "easy-oauth"
-version = "0.0.2"
-source = { git = "https://github.com/mila-iqia/easy-oauth?rev=v0.0.2#65646b7084a5ae8a505a3ee9b4a0758df096413a" }
+version = "0.0.3"
+source = { git = "https://github.com/mila-iqia/easy-oauth?rev=v0.0.3#d81fadaeb288c86ef9d8545d261368c31f39e9fe" }
 dependencies = [
     { name = "authlib" },
     { name = "httpx" },
@@ -1221,7 +1221,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "blessed", specifier = ">=1.21.0" },
     { name = "cloudscraper", specifier = ">=1.2.71" },
-    { name = "easy-oauth", git = "https://github.com/mila-iqia/easy-oauth?rev=v0.0.2" },
+    { name = "easy-oauth", git = "https://github.com/mila-iqia/easy-oauth?rev=v0.0.3" },
     { name = "eventlet", specifier = ">=0.40.1" },
     { name = "fake-useragent", specifier = ">=2.2.0" },
     { name = "fastapi", specifier = ">=0.116.1" },
