@@ -13,7 +13,6 @@ import chardet
 import hishel
 import httpx
 import requests
-from eventlet.timeout import Timeout
 from fake_useragent import UserAgent
 from hishel.httpx import AsyncCacheClient
 from outsight import send
@@ -92,7 +91,7 @@ class Fetcher:
     async def download(self, url, filename, **kwargs):
         """Download the given url into the given filename (async)."""
 
-        async def aiter_with_timeout(response, chunk_size: int, timeout: float):
+        async def aiter(response, chunk_size: int):
             # Works with httpx async (aiter_bytes)
             iter_fn = getattr(response, "aiter_bytes", None)
             if iter_fn:
@@ -104,8 +103,7 @@ class Fetcher:
                 it = iter_fn(chunk_size=chunk_size)
                 try:
                     while True:
-                        with Timeout(timeout):
-                            yield next(it)
+                        yield next(it)
                 except StopIteration:
                     pass
 
@@ -115,9 +113,7 @@ class Fetcher:
             total = int(r.headers.get("content-length") or 1024**2)
             sofar = 0
             with open(filename, "wb") as f:
-                async for chunk in aiter_with_timeout(
-                    r, chunk_size=max(total // 100, 1), timeout=5
-                ):
+                async for chunk in aiter(r, chunk_size=max(total // 100, 1)):
                     f.write(chunk)
                     f.flush()
                     sofar += len(chunk)
