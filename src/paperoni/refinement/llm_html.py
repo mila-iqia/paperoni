@@ -16,14 +16,15 @@ FIRST_MESSAGE = """### The HTML web page of the scientific paper:
 
 async def prompt(link: str, send_input, force: bool = False) -> Paper:
     """Analyze HTML content to extract author and affiliation information."""
-    analysis: Analysis = prompt_html(
+    prompt_result = await prompt_html(
         system_prompt=llm_html_config.system_prompt,
         first_message=FIRST_MESSAGE,
         structured_model=Analysis,
         link=link,
         send_input=send_input,
         force=force,
-    )._.parsed
+    )
+    analysis: Analysis = prompt_result._.parsed
 
     return Paper(
         title=str(analysis.title),
