@@ -105,12 +105,13 @@ def extract_links(p: Paper):
     yield from p.links
 
 
+paper_indexers = {
+    "id": extract_id,
+    "title": extract_title,
+    "links": extract_links,
+    "latest": extract_latest,
+}
+
+
 def paper_index():
-    return Index(
-        indexers={
-            "id": extract_id,
-            "title": extract_title,
-            "links": extract_links,
-            "latest": extract_latest,
-        }
-    )
+    return Index(indexers=paper_indexers)

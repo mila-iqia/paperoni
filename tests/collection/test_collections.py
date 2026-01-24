@@ -2,13 +2,13 @@ import copy
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Generator
 
 import gifnoc
 import pytest
 from easy_oauth.testing.utils import AppTester
 from ovld import ovld
-from serieux import serialize
 
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
@@ -109,24 +109,28 @@ def _wrap(cfg_src: list[str | dict]):
 def app_coll(oauth_mock, cfg_src, sample_papers):
     from paperoni.web import create_app
 
-    memcol = MemCollection()
-    memcol._add_papers(sample_papers)
-    memcol = serialize(MemCollection, memcol)
+    with TemporaryDirectory() as tmpdir:
+        sample_file = Path(tmpdir) / "samples.json"
+        sample_coll = FileCollection(file=sample_file)
+        sample_coll._add_papers(sample_papers)
+        sample_coll._commit()
 
-    memcol["$class"] = "paperoni.collection.memcoll:MemCollection"
-    overrides = {
-        "paperoni.collection": memcol,
-        "paperoni.server.max_results": 5,
-        "paperoni.server.auth.capabilities.guest_capabilities": ["search"],
-    }
+        overrides = {
+            "paperoni.collection": {
+                "$class": "paperoni.collection.filecoll:FileCollection",
+                "file": str(sample_file),
+            },
+            "paperoni.server.max_results": 5,
+            "paperoni.server.auth.capabilities.guest_capabilities": ["search"],
+        }
 
-    cfg = [*cfg_src, overrides]
+        cfg = [*cfg_src, overrides]
 
-    with gifnoc.use(*cfg):
-        with AppTester(
-            create_app(), oauth_mock, port=18888, wrap=partial(_wrap, cfg)
-        ) as appt:
-            yield appt
+        with gifnoc.use(*cfg):
+            with AppTester(
+                create_app(), oauth_mock, port=18888, wrap=partial(_wrap, cfg)
+            ) as appt:
+                yield appt
 
 
 @ovld
