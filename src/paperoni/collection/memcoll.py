@@ -31,7 +31,8 @@ class PaperIndex(Index[Paper]):
         super().index(paper)
 
     def __iter__(self):
-        return iter(self.indexes["id"].values())
+        for _, paper in sorted(self.indexes["latest"].items(), reverse=True):
+            yield paper
 
     @classmethod
     def serieux_serialize(cls, obj, ctx, cn):

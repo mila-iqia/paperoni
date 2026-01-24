@@ -23,7 +23,7 @@ from paperoni.model.classes import (
     Paper,
 )
 
-from ..utils import eq
+from ..utils import eq, sort_title
 
 # There's a 1 paper overlap between the papers of Hugo Larochelle and Pascal Vincent
 # There's no overlap between the papers of Guillaume Alain and the other two
@@ -76,7 +76,7 @@ async def sample_papers() -> Generator[list[Paper], None, None]:
     papers[3].flags = {"reviewed"}
     papers[4].flags = {"valid", "reviewed"}
 
-    yield papers
+    yield sort_title(papers)
 
 
 @pytest.fixture(scope="session")
@@ -174,7 +174,8 @@ async def test_add_papers(collection: PaperCollection, sample_papers: list[Paper
     """Test adding multiple papers."""
     await collection.add_papers(sample_papers)
 
-    assert eq([p async for p in collection.search()], sample_papers)
+    papers = sort_title([p async for p in collection.search()])
+    assert eq(papers, sample_papers)
 
 
 async def test_drop_collection(collection: PaperCollection, sample_papers: list[Paper]):
@@ -404,7 +405,7 @@ async def test_search_no_criteria(
 
     await collection.add_papers(sample_papers)
 
-    results = [p async for p in collection.search()]
+    results = sort_title([p async for p in collection.search()])
     assert eq(results, sample_papers)
 
 

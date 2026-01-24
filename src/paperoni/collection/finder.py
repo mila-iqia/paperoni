@@ -98,6 +98,8 @@ def extract_latest(p: Paper):
     if p.releases:
         d = max(release.venue.date for release in p.releases)
         yield f"{d}::{p.id}"
+    else:
+        yield f"0::{p.id}"
 
 
 @to_paper.variant

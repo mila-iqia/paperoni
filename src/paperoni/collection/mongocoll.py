@@ -26,6 +26,7 @@ from ..utils import (
     normalize_venue,
 )
 from .abc import PaperCollection, _id_types
+from .finder import extract_latest
 
 
 class MongoSerieux(Medley):
@@ -42,6 +43,7 @@ class MongoSerieux(Medley):
     def serialize(self, t: type[Paper], obj: Paper, ctx: Context):
         rval = call_next(t, obj, ctx)
         rval["_norm_title"] = normalize_title(obj.title)
+        rval["_latest"] = list(extract_latest(obj))[0]
         if obj.id is not None:
             assert isinstance(obj.id, str)
             rval["_id"] = obj.id
@@ -118,6 +120,9 @@ class MongoCollection(PaperCollection):
 
         # Index on flags for fast flag-based searches
         await self._collection.create_index("flags")
+
+        # Index on _latest for sorting by recency
+        await self._collection.create_index([("_latest", -1)])
 
         # Index on exclusions
         await self._exclusions.create_index("link", unique=True)
@@ -313,7 +318,7 @@ class MongoCollection(PaperCollection):
                 "$options": "i",
             }
 
-        async for doc in self._collection.find(query):
+        async for doc in self._collection.find(query).sort("_latest", -1):
             yield srx.deserialize(Paper, doc)
 
     async def commit(self) -> None:
