@@ -17,6 +17,8 @@ paperoni:
       cloudflare:
         $class: CloudFlareFetcher
         user_agent: chrome
+    simultaneous:
+      "*": 1
   focuses:
     - "!institution :: Mila :: 10"
     - "!author :: Yoshua Bengio :: 3"
