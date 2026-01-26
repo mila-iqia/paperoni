@@ -1,3 +1,109 @@
+- abstract: A deep learning pipeline is trained on 50,000 grape images to automate
+    quality grading for wine production.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Bordeaux Wine Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Pierre Dubois
+    display_name: Pierre Dubois
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: VineTech AI
+    author:
+      aliases: []
+      links: []
+      name: Claire Martin
+    display_name: Claire Martin
+  flags: []
+  id: 8
+  info: {}
+  key: n/a
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-05-30'
+      date_precision: 3
+      links: []
+      name: International Conference on Agricultural AI
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ICAAI
+      short_name: null
+      type: conference
+      volume: null
+  score: 0.0
+  title: Machine Learning Approaches for Grape Quality Grading from Visual Features
+  topics: []
+  version: '2026-01-19T00:00:00'
+- abstract: This comprehensive study compares pH meters, titration, and electronic
+    tongue technologies for citrus acidity assessment.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: University of São Paulo
+    author:
+      aliases: []
+      links: []
+      name: Ana Oliveira
+    display_name: Ana Oliveira
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: Citrus Quality Labs
+    author:
+      aliases: []
+      links: []
+      name: Marco Rossi
+    display_name: Marco Rossi
+  flags: []
+  id: 6
+  info: {}
+  key: n/a
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-04-18'
+      date_precision: 3
+      links: []
+      name: World Congress of Food Science
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: WCFS
+      short_name: null
+      type: conference
+      volume: null
+  score: 0.0
+  title: Comparative Analysis of Citrus Acidity Testing Methods
+  topics: []
+  version: '2026-01-19T00:00:00'
 - abstract: We present a novel computer vision system for automated strawberry ripeness
     classification, achieving 94% accuracy across five ripeness stages.
   authors:
@@ -56,21 +162,31 @@
   title: Automated Ripeness Detection in Strawberries Using Computer Vision
   topics: []
   version: '2026-01-19T00:00:00'
-- abstract: This study validates near-infrared spectroscopy as a reliable method for
-    estimating Brix levels in apples without damaging the fruit samples.
+- abstract: We demonstrate real-time bruise detection in pears using hyperspectral
+    imaging integrated into commercial sorting lines.
   authors:
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: Tokyo Agricultural University
+      name: Belgian Fruit Research Station
     author:
       aliases: []
       links: []
-      name: Kenji Tanaka
-    display_name: Kenji Tanaka
+      name: Sophie Laurent
+    display_name: Sophie Laurent
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: FruitSort Technologies
+    author:
+      aliases: []
+      links: []
+      name: Erik van der Berg
+    display_name: Erik van der Berg
   flags: []
-  id: 1
+  id: 4
   info: {}
   key: n/a
   links: []
@@ -79,19 +195,19 @@
     status: published
     venue:
       aliases: []
-      date: '2023-09-20'
+      date: '2024-02-28'
       date_precision: 3
       links: []
-      name: International Fruit Quality Conference
+      name: Computers and Electronics in Agriculture
       open: false
       peer_reviewed: false
       publisher: null
-      series: IFQC
+      series: CEA
       short_name: null
-      type: conference
+      type: journal
       volume: null
   score: 0.0
-  title: Non-Destructive Sugar Content Estimation in Apples via Near-Infrared Spectroscopy
+  title: Hyperspectral Imaging for Bruise Detection in Pears During Sorting
   topics: []
   version: '2026-01-19T00:00:00'
 - abstract: We establish standardized firmness testing protocols for mangoes destined
@@ -152,79 +268,31 @@
   title: Firmness Testing Protocols for Mango Export Quality Assessment
   topics: []
   version: '2026-01-19T00:00:00'
-- abstract: A portable acoustic testing device is developed and validated for detecting
-    hollow heart and internal cracks in watermelons with 89% sensitivity.
+- abstract: International texture analysis standards for kiwifruit are proposed and
+    validated across laboratories in five countries.
   authors:
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: University of Valencia
+      name: Zhejiang University
     author:
       aliases: []
       links: []
-      name: Carlos Mendez
-    display_name: Carlos Mendez
-  - affiliations:
-    - aliases: []
-      category: academia
-      country: null
-      name: Huge University
-    author:
-      aliases: []
-      links: []
-      name: Milo Meloni
-    display_name: Milo Meloni
-  flags: []
-  id: 3
-  info: {}
-  key: n/a
-  links: []
-  releases:
-  - pages: null
-    status: published
-    venue:
-      aliases: []
-      date: '2023-06-05'
-      date_precision: 3
-      links: []
-      name: European Symposium on Fruit Testing
-      open: false
-      peer_reviewed: false
-      publisher: null
-      series: ESFT
-      short_name: null
-      type: conference
-      volume: null
-  score: 0.0
-  title: Acoustic Resonance Methods for Internal Defect Detection in Watermelons
-  topics: []
-  version: '2026-01-19T00:00:00'
-- abstract: We demonstrate real-time bruise detection in pears using hyperspectral
-    imaging integrated into commercial sorting lines.
-  authors:
-  - affiliations:
-    - aliases: []
-      category: academia
-      country: null
-      name: Belgian Fruit Research Station
-    author:
-      aliases: []
-      links: []
-      name: Sophie Laurent
-    display_name: Sophie Laurent
+      name: Wei Zhang
+    display_name: Wei Zhang
   - affiliations:
     - aliases: []
       category: industry
       country: null
-      name: FruitSort Technologies
+      name: New Zealand Kiwifruit Board
     author:
       aliases: []
       links: []
-      name: Erik van der Berg
-    display_name: Erik van der Berg
+      name: Sarah Mitchell
+    display_name: Sarah Mitchell
   flags: []
-  id: 4
+  id: 9
   info: {}
   key: n/a
   links: []
@@ -233,19 +301,19 @@
     status: published
     venue:
       aliases: []
-      date: '2024-02-28'
+      date: '2023-12-01'
       date_precision: 3
       links: []
-      name: Computers and Electronics in Agriculture
+      name: Food Standards International
       open: false
       peer_reviewed: false
       publisher: null
-      series: CEA
+      series: FSI
       short_name: null
       type: journal
       volume: null
   score: 0.0
-  title: Hyperspectral Imaging for Bruise Detection in Pears During Sorting
+  title: Texture Analysis Standards for Kiwifruit Quality Control
   topics: []
   version: '2026-01-19T00:00:00'
 - abstract: Novel accelerated testing methods are combined with machine learning to
@@ -296,31 +364,21 @@
   title: Shelf Life Prediction Models for Bananas Based on Accelerated Testing
   topics: []
   version: '2026-01-19T00:00:00'
-- abstract: This comprehensive study compares pH meters, titration, and electronic
-    tongue technologies for citrus acidity assessment.
+- abstract: This study validates near-infrared spectroscopy as a reliable method for
+    estimating Brix levels in apples without damaging the fruit samples.
   authors:
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: University of São Paulo
+      name: Tokyo Agricultural University
     author:
       aliases: []
       links: []
-      name: Ana Oliveira
-    display_name: Ana Oliveira
-  - affiliations:
-    - aliases: []
-      category: industry
-      country: null
-      name: Citrus Quality Labs
-    author:
-      aliases: []
-      links: []
-      name: Marco Rossi
-    display_name: Marco Rossi
+      name: Kenji Tanaka
+    display_name: Kenji Tanaka
   flags: []
-  id: 6
+  id: 1
   info: {}
   key: n/a
   links: []
@@ -329,19 +387,19 @@
     status: published
     venue:
       aliases: []
-      date: '2024-04-18'
+      date: '2023-09-20'
       date_precision: 3
       links: []
-      name: World Congress of Food Science
+      name: International Fruit Quality Conference
       open: false
       peer_reviewed: false
       publisher: null
-      series: WCFS
+      series: IFQC
       short_name: null
       type: conference
       volume: null
   score: 0.0
-  title: Comparative Analysis of Citrus Acidity Testing Methods
+  title: Non-Destructive Sugar Content Estimation in Apples via Near-Infrared Spectroscopy
   topics: []
   version: '2026-01-19T00:00:00'
 - abstract: Gas chromatography-based volatile profiling is evaluated as a non-invasive
@@ -392,41 +450,31 @@
   title: Volatile Compound Profiling for Peach Maturity Assessment
   topics: []
   version: '2026-01-19T00:00:00'
-- abstract: A deep learning pipeline is trained on 50,000 grape images to automate
-    quality grading for wine production.
+- abstract: A portable acoustic testing device is developed and validated for detecting
+    hollow heart and internal cracks in watermelons with 89% sensitivity.
   authors:
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: Bordeaux Wine Research Institute
+      name: University of Valencia
     author:
       aliases: []
       links: []
-      name: Pierre Dubois
-    display_name: Pierre Dubois
+      name: Carlos Mendez
+    display_name: Carlos Mendez
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: Fruit Research Institute
+      name: Huge University
     author:
       aliases: []
       links: []
-      name: Anna Banana
-    display_name: Anna Banana
-  - affiliations:
-    - aliases: []
-      category: industry
-      country: null
-      name: VineTech AI
-    author:
-      aliases: []
-      links: []
-      name: Claire Martin
-    display_name: Claire Martin
+      name: Milo Meloni
+    display_name: Milo Meloni
   flags: []
-  id: 8
+  id: 3
   info: {}
   key: n/a
   links: []
@@ -435,66 +483,18 @@
     status: published
     venue:
       aliases: []
-      date: '2024-05-30'
+      date: '2023-06-05'
       date_precision: 3
       links: []
-      name: International Conference on Agricultural AI
+      name: European Symposium on Fruit Testing
       open: false
       peer_reviewed: false
       publisher: null
-      series: ICAAI
+      series: ESFT
       short_name: null
       type: conference
       volume: null
   score: 0.0
-  title: Machine Learning Approaches for Grape Quality Grading from Visual Features
-  topics: []
-  version: '2026-01-19T00:00:00'
-- abstract: International texture analysis standards for kiwifruit are proposed and
-    validated across laboratories in five countries.
-  authors:
-  - affiliations:
-    - aliases: []
-      category: academia
-      country: null
-      name: Zhejiang University
-    author:
-      aliases: []
-      links: []
-      name: Wei Zhang
-    display_name: Wei Zhang
-  - affiliations:
-    - aliases: []
-      category: industry
-      country: null
-      name: New Zealand Kiwifruit Board
-    author:
-      aliases: []
-      links: []
-      name: Sarah Mitchell
-    display_name: Sarah Mitchell
-  flags: []
-  id: 9
-  info: {}
-  key: n/a
-  links: []
-  releases:
-  - pages: null
-    status: published
-    venue:
-      aliases: []
-      date: '2023-12-01'
-      date_precision: 3
-      links: []
-      name: Food Standards International
-      open: false
-      peer_reviewed: false
-      publisher: null
-      series: FSI
-      short_name: null
-      type: journal
-      volume: null
-  score: 0.0
-  title: Texture Analysis Standards for Kiwifruit Quality Control
+  title: Acoustic Resonance Methods for Internal Defect Detection in Watermelons
   topics: []
   version: '2026-01-19T00:00:00'
