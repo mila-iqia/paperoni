@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 from dataclasses import replace
 from typing import Callable
@@ -63,7 +64,7 @@ async def fetch_all(links, group="composite", statuses=None, tags=None, force=Fa
     for type, link in links:
         funcs.append((f"{type}:{link}", (type, link), fetch.resolve_all(type, link)))
 
-    async def go(key, args, f):
+    async def go(key, name, nk, args, f):
         __trace__ = f"refine:{key}"  # noqa: F841
         with soft_fail(f"Refinement of {key}"):
             try:
@@ -81,16 +82,21 @@ async def fetch_all(links, group="composite", statuses=None, tags=None, force=Fa
                 statuses[nk] = "error"
                 raise
 
+    tasks = []
+
     for key, args, fs in funcs:
         for f in fs:
             if not _test_tags(getattr(f.func, "tags", {"normal"}), tags):
                 continue
-
             name = getattr(f.func, "description", "???")
             nk = f"{name}/{key}"
             if nk in statuses:
                 continue
             statuses[nk] = "pending"
-            result = await go(key, args, f)
-            if result is not None:
-                yield result
+            coro = go(key, name, nk, args, f)
+            tasks.append(asyncio.create_task(coro))
+
+    for task in tasks:
+        result = await task
+        if result is not None:
+            yield result

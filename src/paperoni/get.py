@@ -21,7 +21,7 @@ from ovld import ovld
 from requests import Session
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
-from tenacity import retry, stop_after_delay, wait_exponential
+from tenacity import retry, stop_after_delay, wait_exponential, wait_random
 
 ERRORS = (httpx.HTTPStatusError, requests.RequestException)
 ua = UserAgent()
@@ -147,7 +147,7 @@ class Fetcher:
         return parse(content, format)
 
     @retry(
-        wait=wait_exponential(multiplier=1, exp_base=2),
+        wait=wait_exponential(multiplier=1, exp_base=2) + wait_random(0, 0.5),
         stop=stop_after_delay(30),
         retry=lambda retry_state: not _giveup(retry_state.outcome.exception()),
         reraise=True,

@@ -19,7 +19,7 @@ async def crossref_title(typ: Literal["title"], link: str):
     encoded_title = quote(title.strip())
 
     try:
-        data = await config.fetch.read(
+        data = await config.fetch.read_retry(
             f"https://api.crossref.org/works?query.title={encoded_title}&rows=1",
             format="json",
         )
@@ -67,7 +67,7 @@ async def arxiv_title(type: Literal["title"], link: str):
     title = link
 
     try:
-        soup = await config.fetch.read(
+        soup = await config.fetch.read_retry(
             "https://export.arxiv.org/api/query",
             params={
                 "search_query": f'title:"{title}"',

@@ -390,12 +390,13 @@ class Work:
             it = list(itertools.islice(work.top, self.n)) if self.n else work.top
 
             for i in range(self.loops):
-                for sws in prog(it, name=f"refine{i + 1 if i else ''}"):
+
+                async def fetch_and_add(sws, i):
                     statuses.update(
                         {
                             (name, key): "done"
-                            for pinfo in sws.value.collected
-                            for name, key in pinfo.info.get("refined_by", {}).items()
+                            for paper in sws.value.collected
+                            for name, key in paper.info.get("refined_by", {}).items()
                         }
                     )
                     # Loop a bit because refiners can add new links to refine further
@@ -403,16 +404,23 @@ class Work:
                     links.append(("title", sws.value.current.title))
                     if i == 0:
                         send(to_refine=links)
-                    async for pinfo in fetch_all(
+                    async for paper in fetch_all(
                         links,
                         group=";".join([f"{type}:{link}" for type, link in links]),
                         tags=self.tags,
                         force=self.force,
                         statuses=statuses,
                     ):
-                        send(refinement=pinfo)
-                        sws.value.add(pinfo)
-                sws.score = work.focuses.score(sws.value)
+                        send(refinement=paper)
+                        sws.value.add(paper)
+                    sws.score = work.focuses.score(sws.value)
+                    return sws
+
+                coros = [
+                    fetch_and_add(sws, i)
+                    for sws in prog(it, name=f"refine{i + 1 if i else ''}")
+                ]
+                await asyncio.gather(*coros)
 
             work.top.resort()
             work.save()
