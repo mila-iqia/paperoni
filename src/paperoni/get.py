@@ -3,11 +3,12 @@ import json
 import os
 import re
 from contextlib import asynccontextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from functools import cached_property
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlparse
 
 import chardet
 import hishel
@@ -326,10 +327,31 @@ class SequenceFetcher(Fetcher):
 class RulesFetcher(Fetcher):
     rules: dict[re.Pattern, str]
     fetchers: dict[str, TaggedSubclass[Fetcher]]
+    simultaneous: dict[str, int] = field(default_factory=dict)
+
+    # [serieux: ignore]
+    _semaphores: dict[str, asyncio.Semaphore] = field(default_factory=dict, repr=False)
+
+    def _get_semaphore(self, hostname: str) -> asyncio.Semaphore | None:
+        """Get or create a semaphore for the given hostname."""
+        if hostname not in self._semaphores:
+            limit = self.simultaneous.get(hostname, None) or self.simultaneous.get(
+                "*", -1
+            )
+            if limit == -1:
+                return None
+            self._semaphores[hostname] = asyncio.Semaphore(limit)
+
+        return self._semaphores[hostname]
 
     async def generic(self, method, url, **kwargs):
         for pattern, fetcher_key in self.rules.items():
             if pattern.search(url):
                 f = self.fetchers[fetcher_key]
-                return await f.generic(method, url, **kwargs)
+                hostname = urlparse(url).hostname or ""
+                if (semaphore := self._get_semaphore(hostname)) is not None:
+                    async with semaphore:
+                        return await f.generic(method, url, **kwargs)
+                else:
+                    return await f.generic(method, url, **kwargs)
         raise ValueError(f"No fetcher rule matches URL: {url}")
