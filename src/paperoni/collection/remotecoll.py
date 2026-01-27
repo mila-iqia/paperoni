@@ -28,12 +28,12 @@ class RemoteCollection(PaperCollection):
     async def exclusions(self) -> set[str]:
         raise NotImplementedError()
 
-    async def add_exclusion(self, exclusion: str) -> None:
-        """Add a single exclusion string."""
+    async def add_exclusions(self, exclusions: list[str]) -> None:
+        """Add exclusion strings."""
         raise NotImplementedError()
 
-    async def remove_exclusion(self, exclusion: str) -> None:
-        """Remove a single exclusion string."""
+    async def remove_exclusions(self, exclusions: list[str]) -> None:
+        """Remove exclusion strings."""
         raise NotImplementedError()
 
     async def add_papers(self, papers: Iterable[Paper]) -> int:

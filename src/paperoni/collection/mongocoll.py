@@ -25,7 +25,7 @@ from ..utils import (
     normalize_title,
     normalize_venue,
 )
-from .abc import PaperCollection, _id_types
+from .abc import PaperCollection
 from .finder import extract_latest
 
 
@@ -133,19 +133,25 @@ class MongoCollection(PaperCollection):
         exclusions = {doc["link"] async for doc in self._exclusions.find({})}
         return exclusions
 
-    async def add_exclusion(self, exclusion: str) -> None:
-        """Add a single exclusion string."""
+    async def add_exclusions(self, exclusions: list[str]) -> None:
+        """Add exclusion strings."""
+        if not exclusions:
+            return
         await self._ensure_connection()
         try:
-            await self._exclusions.insert_one({"link": exclusion})
+            await self._exclusions.insert_many(
+                ({"link": x} for x in exclusions), ordered=False
+            )
         except DuplicateKeyError:
-            # Exclusion already exists, that's fine
+            # Some exclusions already exist, that's fine
             pass
 
-    async def remove_exclusion(self, exclusion: str) -> None:
-        """Remove a single exclusion string."""
+    async def remove_exclusions(self, exclusions: list[str]) -> None:
+        """Remove exclusion strings."""
+        if not exclusions:
+            return
         await self._ensure_connection()
-        await self._exclusions.delete_one({"link": exclusion})
+        await self._exclusions.delete_many({"link": {"$in": exclusions}})
 
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         """Add papers to the collection."""
@@ -178,25 +184,6 @@ class MongoCollection(PaperCollection):
                 added += 1
 
         return added
-
-    async def exclude_papers(self, papers: Iterable[Paper]) -> None:
-        """Exclude papers from the collection."""
-        await self._ensure_connection()
-
-        papers_links = set()
-        for paper in papers:
-            for link in getattr(paper, "links", []):
-                if link.type in _id_types:
-                    papers_links.add(f"{link.type}:{link.link}")
-
-        if papers_links:
-            try:
-                await self._exclusions.insert_many(
-                    ({"link": x} for x in papers_links), ordered=False
-                )
-            except DuplicateKeyError:
-                # Some exclusions already exist, that's fine
-                pass
 
     async def find_paper(self, paper: Paper) -> Paper | None:
         """Find a paper in the collection by links or title."""

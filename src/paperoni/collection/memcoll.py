@@ -11,7 +11,7 @@ from ..utils import (
     normalize_title,
     normalize_venue,
 )
-from .abc import PaperCollection, _id_types
+from .abc import PaperCollection
 from .finder import Index, find_equivalent, paper_indexers
 
 
@@ -63,15 +63,19 @@ class MemCollection(PaperCollection):
     async def exclusions(self) -> set[str]:
         return self._index.exclusions
 
-    async def add_exclusion(self, exclusion: str) -> None:
-        """Add a single exclusion string."""
-        self._index.exclusions.add(exclusion)
-        await self.commit()
+    async def add_exclusions(self, exclusions: list[str]) -> None:
+        """Add exclusion strings."""
+        for exclusion in exclusions:
+            self._index.exclusions.add(exclusion)
+        if exclusions:
+            await self.commit()
 
-    async def remove_exclusion(self, exclusion: str) -> None:
-        """Remove a single exclusion string."""
-        self._index.exclusions.discard(exclusion)
-        await self.commit()
+    async def remove_exclusions(self, exclusions: list[str]) -> None:
+        """Remove exclusion strings."""
+        for exclusion in exclusions:
+            self._index.exclusions.discard(exclusion)
+        if exclusions:
+            await self.commit()
 
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         return self._add_papers(papers)
@@ -108,15 +112,6 @@ class MemCollection(PaperCollection):
                 self._commit()
 
         return added
-
-    async def exclude_papers(self, papers: Iterable[Paper]) -> None:
-        for paper in papers:
-            for link in getattr(paper, "links", []):
-                if link.type in _id_types:
-                    self._index.exclusions.add(f"{link.type}:{link.link}")
-
-        if papers:
-            await self.commit()
 
     async def find_paper(self, paper: Paper) -> Paper | None:
         return find_equivalent(paper, self._index)
