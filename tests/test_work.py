@@ -113,7 +113,8 @@ async def test_work_updates_collection_papers(tmp_path: Path):
     )
 
     col = FileCollection(file=tmp_path / "collection.json")
-    mem_col = MemCollection(_last_id=col._last_id)
+    mem_col = MemCollection()
+    mem_col._index = col._index
 
     await mem_col.add_papers([scored.value.current for scored in state])
     assert await mem_col.find_paper(paper_to_update) is not None
@@ -140,6 +141,7 @@ async def test_work_updates_collection_papers(tmp_path: Path):
     )
 
     col = FileCollection(file=tmp_path / "collection.json")
-    mem_col = MemCollection(_last_id=col._last_id)
+    mem_col = MemCollection()
+    mem_col._index = col._index
     await mem_col.add_papers([scored.value.current for scored in state])
     assert await mem_col.find_paper(paper_to_update) is not None

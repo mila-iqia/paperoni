@@ -39,7 +39,7 @@ from serieux.features.tagset import FromEntryPoint
 from .client.utils import login
 from .collection.abc import PaperCollection
 from .collection.filecoll import FileCollection
-from .collection.finder import Finder
+from .collection.finder import find_equivalent, paper_index
 from .collection.remotecoll import RemoteCollection
 from .config import config
 from .dash import History
@@ -275,20 +275,14 @@ class Work:
 
         async def run(self, work: "Work"):
             ex = work.collection and (await work.collection.exclusions())
-
-            find = Finder(
-                title_finder=lambda scored: scored.value.current.title,
-                links_finder=lambda scored: scored.value.current.links,
-                authors_finder=lambda scored: scored.value.current.authors,
-                id_finder=lambda scored: getattr(scored.value.current, "id", None),
-            )
-            find.add(list(work.top))
+            index = paper_index()
+            index.index_all(list(work.top))
 
             async for paper in self.iterate(focuses=work.focuses):
                 if ex and paper.key in ex:
                     continue
 
-                if found := find.find(paper):
+                if found := find_equivalent(paper, index):
                     found.value.add(paper)
                     new_score = work.focuses.score(found.value.current)
                     if new_score != found.score:
@@ -326,7 +320,7 @@ class Work:
 
                 if work.top.add(scored):
                     send(workset_added=1)
-                find.add([scored])
+                index.index(scored)
             work.save()
 
     @dataclass

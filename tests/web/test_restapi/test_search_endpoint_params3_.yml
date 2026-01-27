@@ -1,6 +1,64 @@
 count: 4
 next_offset: null
 results:
+- abstract: A deep learning pipeline is trained on 50,000 grape images to automate
+    quality grading for wine production.
+  authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Bordeaux Wine Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Pierre Dubois
+    display_name: Pierre Dubois
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Fruit Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Anna Banana
+    display_name: Anna Banana
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: VineTech AI
+    author:
+      aliases: []
+      links: []
+      name: Claire Martin
+    display_name: Claire Martin
+  flags: []
+  id: 8
+  info: {}
+  key: n/a
+  links: []
+  releases:
+  - pages: null
+    status: published
+    venue:
+      aliases: []
+      date: '2024-05-30'
+      date_precision: 3
+      links: []
+      name: International Conference on Agricultural AI
+      open: false
+      peer_reviewed: false
+      publisher: null
+      series: ICAAI
+      short_name: null
+      type: conference
+      volume: null
+  score: 0.0
+  title: Machine Learning Approaches for Grape Quality Grading from Visual Features
+  topics: []
+  version: '2026-01-19T00:00:00'
 - abstract: We present a novel computer vision system for automated strawberry ripeness
     classification, achieving 94% accuracy across five ripeness stages.
   authors:
@@ -163,64 +221,6 @@ results:
       volume: null
   score: 0.0
   title: Shelf Life Prediction Models for Bananas Based on Accelerated Testing
-  topics: []
-  version: '2026-01-19T00:00:00'
-- abstract: A deep learning pipeline is trained on 50,000 grape images to automate
-    quality grading for wine production.
-  authors:
-  - affiliations:
-    - aliases: []
-      category: academia
-      country: null
-      name: Bordeaux Wine Research Institute
-    author:
-      aliases: []
-      links: []
-      name: Pierre Dubois
-    display_name: Pierre Dubois
-  - affiliations:
-    - aliases: []
-      category: academia
-      country: null
-      name: Fruit Research Institute
-    author:
-      aliases: []
-      links: []
-      name: Anna Banana
-    display_name: Anna Banana
-  - affiliations:
-    - aliases: []
-      category: industry
-      country: null
-      name: VineTech AI
-    author:
-      aliases: []
-      links: []
-      name: Claire Martin
-    display_name: Claire Martin
-  flags: []
-  id: 8
-  info: {}
-  key: n/a
-  links: []
-  releases:
-  - pages: null
-    status: published
-    venue:
-      aliases: []
-      date: '2024-05-30'
-      date_precision: 3
-      links: []
-      name: International Conference on Agricultural AI
-      open: false
-      peer_reviewed: false
-      publisher: null
-      series: ICAAI
-      short_name: null
-      type: conference
-      volume: null
-  score: 0.0
-  title: Machine Learning Approaches for Grape Quality Grading from Visual Features
   topics: []
   version: '2026-01-19T00:00:00'
 total: 4

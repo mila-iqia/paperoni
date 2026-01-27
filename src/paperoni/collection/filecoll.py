@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from serieux import dump, load
+from serieux import deserialize
+from serieux.features.filebacked import FileProxy
 
-from ..utils import deprox
-from .memcoll import MemCollection
+from .memcoll import MemCollection, PaperIndex
 
 
 @dataclass(kw_only=True)
@@ -12,19 +12,8 @@ class FileCollection(MemCollection):
     file: Path = field(compare=False)
 
     def __post_init__(self):
-        super().__post_init__()
-
-        self.file = deprox(self.file)
-
-        if not self.file.exists():
-            self.file.parent.mkdir(exist_ok=True, parents=True)
-            self._commit()
-
-        self.__dict__.update(vars(load(MemCollection, self.file)))
+        ann = FileProxy(default_factory=PaperIndex, refresh=True)
+        self._index = deserialize(PaperIndex @ ann, str(self.file))
 
     def _commit(self) -> None:
-        dump(type(self), self, dest=self.file)
-
-    @classmethod
-    def serieux_serialize(cls, obj, ctx, call_next):
-        return call_next(MemCollection, obj, ctx)
+        self._index.save()

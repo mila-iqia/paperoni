@@ -1,28 +1,28 @@
-- abstract: International texture analysis standards for kiwifruit are proposed and
-    validated across laboratories in five countries.
+- abstract: A portable acoustic testing device is developed and validated for detecting
+    hollow heart and internal cracks in watermelons with 89% sensitivity.
   authors:
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: Zhejiang University
+      name: University of Valencia
     author:
       aliases: []
       links: []
-      name: Wei Zhang
-    display_name: Wei Zhang
+      name: Carlos Mendez
+    display_name: Carlos Mendez
   - affiliations:
     - aliases: []
-      category: industry
+      category: academia
       country: null
-      name: New Zealand Kiwifruit Board
+      name: Huge University
     author:
       aliases: []
       links: []
-      name: Sarah Mitchell
-    display_name: Sarah Mitchell
+      name: Milo Meloni
+    display_name: Milo Meloni
   flags: []
-  id: 9
+  id: 3
   info: {}
   key: n/a
   links: []
@@ -31,18 +31,18 @@
     status: published
     venue:
       aliases: []
-      date: '2023-12-01'
+      date: '2023-06-05'
       date_precision: 3
       links: []
-      name: Food Standards International
+      name: European Symposium on Fruit Testing
       open: false
       peer_reviewed: false
       publisher: null
-      series: FSI
+      series: ESFT
       short_name: null
-      type: journal
+      type: conference
       volume: null
   score: 0.0
-  title: Texture Analysis Standards for Kiwifruit Quality Control
+  title: Acoustic Resonance Methods for Internal Defect Detection in Watermelons
   topics: []
   version: '2026-01-19T00:00:00'

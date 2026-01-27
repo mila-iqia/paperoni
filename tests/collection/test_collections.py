@@ -2,13 +2,13 @@ import copy
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Generator
 
 import gifnoc
 import pytest
 from easy_oauth.testing.utils import AppTester
 from ovld import ovld
-from serieux import serialize
 
 from paperoni.collection.abc import PaperCollection, _id_types
 from paperoni.collection.filecoll import FileCollection
@@ -23,7 +23,7 @@ from paperoni.model.classes import (
     Paper,
 )
 
-from ..utils import eq
+from ..utils import eq, sort_title
 
 # There's a 1 paper overlap between the papers of Hugo Larochelle and Pascal Vincent
 # There's no overlap between the papers of Guillaume Alain and the other two
@@ -76,7 +76,7 @@ async def sample_papers() -> Generator[list[Paper], None, None]:
     papers[3].flags = {"reviewed"}
     papers[4].flags = {"valid", "reviewed"}
 
-    yield papers
+    yield sort_title(papers)
 
 
 @pytest.fixture(scope="session")
@@ -109,24 +109,28 @@ def _wrap(cfg_src: list[str | dict]):
 def app_coll(oauth_mock, cfg_src, sample_papers):
     from paperoni.web import create_app
 
-    memcol = MemCollection()
-    memcol._add_papers(sample_papers)
-    memcol = serialize(MemCollection, memcol)
+    with TemporaryDirectory() as tmpdir:
+        sample_file = Path(tmpdir) / "samples.json"
+        sample_coll = FileCollection(file=sample_file)
+        sample_coll._add_papers(sample_papers)
+        sample_coll._commit()
 
-    memcol["$class"] = "paperoni.collection.memcoll:MemCollection"
-    overrides = {
-        "paperoni.collection": memcol,
-        "paperoni.server.max_results": 5,
-        "paperoni.server.auth.capabilities.guest_capabilities": ["search"],
-    }
+        overrides = {
+            "paperoni.collection": {
+                "$class": "paperoni.collection.filecoll:FileCollection",
+                "file": str(sample_file),
+            },
+            "paperoni.server.max_results": 5,
+            "paperoni.server.auth.capabilities.guest_capabilities": ["search"],
+        }
 
-    cfg = [*cfg_src, overrides]
+        cfg = [*cfg_src, overrides]
 
-    with gifnoc.use(*cfg):
-        with AppTester(
-            create_app(), oauth_mock, port=18888, wrap=partial(_wrap, cfg)
-        ) as appt:
-            yield appt
+        with gifnoc.use(*cfg):
+            with AppTester(
+                create_app(), oauth_mock, port=18888, wrap=partial(_wrap, cfg)
+            ) as appt:
+                yield appt
 
 
 @ovld
@@ -170,7 +174,8 @@ async def test_add_papers(collection: PaperCollection, sample_papers: list[Paper
     """Test adding multiple papers."""
     await collection.add_papers(sample_papers)
 
-    assert eq([p async for p in collection.search()], sample_papers)
+    papers = sort_title([p async for p in collection.search()])
+    assert eq(papers, sample_papers)
 
 
 async def test_drop_collection(collection: PaperCollection, sample_papers: list[Paper]):
@@ -400,7 +405,7 @@ async def test_search_no_criteria(
 
     await collection.add_papers(sample_papers)
 
-    results = [p async for p in collection.search()]
+    results = sort_title([p async for p in collection.search()])
     assert eq(results, sample_papers)
 
 

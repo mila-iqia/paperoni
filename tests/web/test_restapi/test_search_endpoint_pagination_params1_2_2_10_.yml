@@ -1,6 +1,16 @@
-- abstract: We present a novel computer vision system for automated strawberry ripeness
-    classification, achieving 94% accuracy across five ripeness stages.
+- abstract: A deep learning pipeline is trained on 50,000 grape images to automate
+    quality grading for wine production.
   authors:
+  - affiliations:
+    - aliases: []
+      category: academia
+      country: null
+      name: Bordeaux Wine Research Institute
+    author:
+      aliases: []
+      links: []
+      name: Pierre Dubois
+    display_name: Pierre Dubois
   - affiliations:
     - aliases: []
       category: academia
@@ -13,26 +23,16 @@
     display_name: Anna Banana
   - affiliations:
     - aliases: []
-      category: academia
-      country: null
-      name: Fruit Research Institute
-    author:
-      aliases: []
-      links: []
-      name: Kevin Juicy
-    display_name: Kevin Juicy
-  - affiliations:
-    - aliases: []
       category: industry
       country: null
-      name: Berry Analytics Corp
+      name: VineTech AI
     author:
       aliases: []
       links: []
-      name: James Rodriguez
-    display_name: James Rodriguez
+      name: Claire Martin
+    display_name: Claire Martin
   flags: []
-  id: 0
+  id: 8
   info: {}
   key: n/a
   links: []
@@ -41,36 +41,46 @@
     status: published
     venue:
       aliases: []
-      date: '2024-03-15'
+      date: '2024-05-30'
       date_precision: 3
       links: []
-      name: Journal of Agricultural Testing
+      name: International Conference on Agricultural AI
       open: false
       peer_reviewed: false
       publisher: null
-      series: JAT
+      series: ICAAI
       short_name: null
-      type: journal
+      type: conference
       volume: null
   score: 0.0
-  title: Automated Ripeness Detection in Strawberries Using Computer Vision
+  title: Machine Learning Approaches for Grape Quality Grading from Visual Features
   topics: []
   version: '2026-01-19T00:00:00'
-- abstract: This study validates near-infrared spectroscopy as a reliable method for
-    estimating Brix levels in apples without damaging the fruit samples.
+- abstract: This comprehensive study compares pH meters, titration, and electronic
+    tongue technologies for citrus acidity assessment.
   authors:
   - affiliations:
     - aliases: []
       category: academia
       country: null
-      name: Tokyo Agricultural University
+      name: University of São Paulo
     author:
       aliases: []
       links: []
-      name: Kenji Tanaka
-    display_name: Kenji Tanaka
+      name: Ana Oliveira
+    display_name: Ana Oliveira
+  - affiliations:
+    - aliases: []
+      category: industry
+      country: null
+      name: Citrus Quality Labs
+    author:
+      aliases: []
+      links: []
+      name: Marco Rossi
+    display_name: Marco Rossi
   flags: []
-  id: 1
+  id: 6
   info: {}
   key: n/a
   links: []
@@ -79,18 +89,18 @@
     status: published
     venue:
       aliases: []
-      date: '2023-09-20'
+      date: '2024-04-18'
       date_precision: 3
       links: []
-      name: International Fruit Quality Conference
+      name: World Congress of Food Science
       open: false
       peer_reviewed: false
       publisher: null
-      series: IFQC
+      series: WCFS
       short_name: null
       type: conference
       volume: null
   score: 0.0
-  title: Non-Destructive Sugar Content Estimation in Apples via Near-Infrared Spectroscopy
+  title: Comparative Analysis of Citrus Acidity Testing Methods
   topics: []
   version: '2026-01-19T00:00:00'

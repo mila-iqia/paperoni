@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field, replace
 from datetime import date, datetime
-from typing import AsyncGenerator, Iterable
+from typing import Any, AsyncGenerator, Iterable
+
+from serieux import deserialize, serialize
 
 from ..model.classes import Paper
 from ..utils import (
@@ -10,33 +12,56 @@ from ..utils import (
     normalize_venue,
 )
 from .abc import PaperCollection, _id_types
-from .finder import Finder
+from .finder import Index, find_equivalent, paper_indexers
 
 
-@dataclass(kw_only=True)
-class MemCollection(PaperCollection):
-    _last_id: int = field(compare=False, default=None)
-    _papers: list[Paper] = field(default_factory=list)
-    _exclusions: set[str] = field(default_factory=set)
-
-    def __post_init__(self):
-        if self._last_id is None:
-            self._last_id = -1
-
-        self._finder = Finder()
-        if self._papers:
-            assert self._last_id > -1, "If papers are provided, last id must be set"
-            assert self._last_id >= max(
-                len(self._papers) - 1, *[p.id for p in self._papers]
-            ), "Last id must be at least equal to the maximum paper id"
-            self._finder.add(self._papers)
-
-    async def exclusions(self) -> set[str]:
-        return self._exclusions
+@dataclass
+class PaperIndex(Index[Paper]):
+    last_id: int = -1
+    indexers: dict[str, Any] = field(default_factory=lambda: paper_indexers)
+    exclusions: set[str] = field(default_factory=set)
 
     def next_id(self) -> int:
-        self._last_id += 1
-        return self._last_id
+        self.last_id += 1
+        return self.last_id
+
+    def index(self, paper):
+        if paper.id is None:
+            paper.id = self.next_id()
+        super().index(paper)
+
+    def __iter__(self):
+        for _, paper in sorted(self.indexes["latest"].items(), reverse=True):
+            yield paper
+
+    @classmethod
+    def serieux_serialize(cls, obj, ctx, cn):
+        return {
+            "_last_id": serialize(int, obj.last_id, ctx),
+            "_papers": serialize(list[Paper], list(obj), ctx),
+            "_exclusions": serialize(set[str], obj.exclusions, ctx),
+        }
+
+    @classmethod
+    def serieux_deserialize(cls, obj, ctx, cn):
+        rval = cls(
+            last_id=deserialize(int, obj["_last_id"]),
+            exclusions=deserialize(set[str], obj["_exclusions"]),
+        )
+        rval.index_all(deserialize(list[Paper], obj["_papers"], ctx))
+        return rval
+
+
+class MemCollection(PaperCollection):
+    def __init__(self):
+        self._index = None
+        self.__post_init__()
+
+    def __post_init__(self):
+        self._index = PaperIndex()
+
+    async def exclusions(self) -> set[str]:
+        return self._index.exclusions
 
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         return self._add_papers(papers)
@@ -47,29 +72,26 @@ class MemCollection(PaperCollection):
         try:
             for p in papers:
                 for link in p.links:
-                    if f"{link.type}:{link.link}" in self._exclusions:
+                    if f"{link.type}:{link.link}" in self._index.exclusions:
                         break
 
                 else:
-                    if p.id in self._finder.by_id:
-                        paper = self._finder.by_id[p.id]
+                    if paper := self._index.equiv("id", p):
                         if paper.version >= p.version:
                             # Paper has been updated since last time it was fetched.
                             # Do not replace it.
                             continue
-                        self._papers.remove(paper)
                         p.version = datetime.now()
 
                     else:
-                        p = replace(p, id=self.next_id(), version=datetime.now())
-                        assert p.id not in self._finder.by_id
+                        p = replace(p, id=self._index.next_id(), version=datetime.now())
+                        assert not self._index.equiv("id", p)
 
-                    self._papers.append(p)
                     added += 1
 
                     assert p.id is not None
                     assert p.version is not None
-                    self._finder.add([p])
+                    self._index.index(p)
 
         finally:
             if added:
@@ -81,29 +103,24 @@ class MemCollection(PaperCollection):
         for paper in papers:
             for link in getattr(paper, "links", []):
                 if link.type in _id_types:
-                    self._exclusions.add(f"{link.type}:{link.link}")
+                    self._index.exclusions.add(f"{link.type}:{link.link}")
 
         if papers:
             await self.commit()
 
     async def find_paper(self, paper: Paper) -> Paper | None:
-        return self._finder.find(paper)
+        return find_equivalent(paper, self._index)
 
     async def find_by_id(self, paper_id: int) -> Paper | None:
-        return self._finder.by_id.get(paper_id)
+        return self._index.find("id", paper_id)
 
     async def edit_paper(self, paper: Paper) -> None:
-        for i, existing_paper in enumerate(self._papers):
-            # TODO: we have to do this loop to find the index in the list,
-            # this is not acceptable, but we'll fix it later
-            if existing_paper.id == paper.id:
-                paper.version = datetime.now()
-                self._papers[i] = paper
-                self._finder.replace(paper)
-                await self.commit()
-                return
-
-        raise ValueError(f"Paper with ID {paper.id} not found in collection")
+        paper.version = datetime.now()
+        if self._index.equiv("id", paper):
+            self._index.replace(paper)
+            await self.commit()
+        else:
+            raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
     async def commit(self) -> None:
         self._commit()
@@ -113,10 +130,9 @@ class MemCollection(PaperCollection):
         pass
 
     async def drop(self) -> None:
-        self._last_id = -1
-        self._papers.clear()
-        self._exclusions.clear()
-        self._finder = Finder()
+        self._index.last_index = -1
+        self._index.exclusions.clear()
+        self._index.indexes = {k: {} for k in self._index.indexes}
         await self.commit()
 
     async def search(
@@ -148,7 +164,7 @@ class MemCollection(PaperCollection):
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
         venue = venue and normalize_venue(venue)
-        for p in self._papers:
+        for p in self._index:
             if title and title not in normalize_title(p.title):
                 continue
             if author and not any(
@@ -195,4 +211,4 @@ class MemCollection(PaperCollection):
             yield p
 
     def __len__(self) -> int:
-        return len(self._papers)
+        return sum(1 for _ in self._index)
