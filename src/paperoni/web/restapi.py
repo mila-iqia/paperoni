@@ -560,15 +560,8 @@ def install_api(app) -> FastAPI:
     async def add_exclusions(request: AddExclusionsRequest):
         """Add exclusions to the collection."""
         coll = Coll(command=None)
-        added = 0
-        for exclusion in request.exclusions:
-            try:
-                await coll.collection.add_exclusion(exclusion)
-                added += 1
-            except Exception as e:
-                # Log error but continue with other exclusions
-                pass
-
+        await coll.collection.add_exclusions(request.exclusions)
+        added = len(request.exclusions)
         return AddExclusionsResponse(
             success=True,
             message=f"Added {added} exclusion(s)",
@@ -583,15 +576,8 @@ def install_api(app) -> FastAPI:
     async def remove_exclusions(request: RemoveExclusionsRequest):
         """Remove exclusions from the collection."""
         coll = Coll(command=None)
-        removed = 0
-        for exclusion in request.exclusions:
-            try:
-                await coll.collection.remove_exclusion(exclusion)
-                removed += 1
-            except Exception as e:
-                # Log error but continue with other exclusions
-                pass
-
+        await coll.collection.remove_exclusions(request.exclusions)
+        removed = len(request.exclusions)
         return RemoveExclusionsResponse(
             success=True,
             message=f"Removed {removed} exclusion(s)",
