@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+
+{% block title %}Exclusions{% endblock %}
+
+{% block page_title %}Exclusions{% endblock %}
+
+{% block content %}
+<div class="exclusions-container">
+    <div class="exclusions-header">
+        <h2>Manage Exclusions</h2>
+        <div class="exclusions-actions">
+            <div class="add-exclusion-form">
+                <input type="text" id="newExclusionInput" placeholder="Enter exclusion (e.g., arxiv:1234.5678)" class="exclusion-input">
+                <button id="addExclusionBtn" class="btn btn-primary">Add Exclusion</button>
+            </div>
+            <div class="bulk-add-form">
+                <textarea id="bulkExclusionsInput" placeholder="Enter multiple exclusions, one per line" class="bulk-exclusion-input"></textarea>
+                <button id="bulkAddExclusionsBtn" class="btn btn-primary">Add Multiple</button>
+            </div>
+        </div>
+    </div>
+    <div id="exclusionsContainer"></div>
+    <div id="paginationContainer"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { displayExclusions } from '/assets/exclusions.js';
+    displayExclusions();
+</script>
+{% endblock %}
+

@@ -133,6 +133,20 @@ class MongoCollection(PaperCollection):
         exclusions = {doc["link"] async for doc in self._exclusions.find({})}
         return exclusions
 
+    async def add_exclusion(self, exclusion: str) -> None:
+        """Add a single exclusion string."""
+        await self._ensure_connection()
+        try:
+            await self._exclusions.insert_one({"link": exclusion})
+        except DuplicateKeyError:
+            # Exclusion already exists, that's fine
+            pass
+
+    async def remove_exclusion(self, exclusion: str) -> None:
+        """Remove a single exclusion string."""
+        await self._ensure_connection()
+        await self._exclusions.delete_one({"link": exclusion})
+
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         """Add papers to the collection."""
         await self._ensure_connection()

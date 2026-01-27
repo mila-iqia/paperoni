@@ -53,4 +53,14 @@ def install_search(app: FastAPI) -> FastAPI:
             validation_buttons=False,
         )
 
+    @app.get("/exclusions", dependencies=[Depends(hascap("validate", redirect=True))])
+    async def exclusions_page(request: Request):
+        """Render the exclusions management page."""
+        return render_template(
+            "exclusions.html",
+            request,
+            is_validator=True,
+            validation_buttons=False,
+        )
+
     return app

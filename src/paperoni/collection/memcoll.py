@@ -63,6 +63,16 @@ class MemCollection(PaperCollection):
     async def exclusions(self) -> set[str]:
         return self._index.exclusions
 
+    async def add_exclusion(self, exclusion: str) -> None:
+        """Add a single exclusion string."""
+        self._index.exclusions.add(exclusion)
+        await self.commit()
+
+    async def remove_exclusion(self, exclusion: str) -> None:
+        """Remove a single exclusion string."""
+        self._index.exclusions.discard(exclusion)
+        await self.commit()
+
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         return self._add_papers(papers)
 

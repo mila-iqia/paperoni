@@ -276,6 +276,52 @@ class AutoFocusRequest(Focus.AutoFocus):
     pass
 
 
+@dataclass
+class ExclusionsListRequest(PagingMixin):
+    """Request model for listing exclusions."""
+
+    pass
+
+
+@dataclass
+class ExclusionsListResponse(PagingResponseMixin):
+    """Response model for listing exclusions."""
+
+    results: list[str]
+
+
+@dataclass
+class AddExclusionsRequest:
+    """Request model for adding exclusions."""
+
+    exclusions: list[str]
+
+
+@dataclass
+class AddExclusionsResponse:
+    """Response model for adding exclusions."""
+
+    success: bool
+    message: str
+    added: int
+
+
+@dataclass
+class RemoveExclusionsRequest:
+    """Request model for removing exclusions."""
+
+    exclusions: list[str]
+
+
+@dataclass
+class RemoveExclusionsResponse:
+    """Response model for removing exclusions."""
+
+    success: bool
+    message: str
+    removed: int
+
+
 def install_api(app) -> FastAPI:
     prefix = "/api/v1"
 
@@ -484,6 +530,72 @@ def install_api(app) -> FastAPI:
             headers={
                 "Content-Disposition": f'attachment; filename="{pdf.directory.name}.pdf"'
             },
+        )
+
+    @app.get(
+        f"{prefix}/exclusions",
+        response_model=ExclusionsListResponse,
+        dependencies=[Depends(hascap("validate"))],
+    )
+    async def list_exclusions(request: ExclusionsListRequest = Depends()):
+        """List exclusions with pagination."""
+        coll = Coll(command=None)
+        all_exclusions = await coll.collection.exclusions()
+        # Convert set to sorted list for consistent pagination
+        sorted_exclusions = sorted(all_exclusions)
+        results = list(request.slice(sorted_exclusions))
+
+        return ExclusionsListResponse(
+            results=results,
+            count=request.count,
+            next_offset=request.next_offset,
+            total=len(sorted_exclusions),
+        )
+
+    @app.post(
+        f"{prefix}/exclusions",
+        response_model=AddExclusionsResponse,
+        dependencies=[Depends(hascap("validate"))],
+    )
+    async def add_exclusions(request: AddExclusionsRequest):
+        """Add exclusions to the collection."""
+        coll = Coll(command=None)
+        added = 0
+        for exclusion in request.exclusions:
+            try:
+                await coll.collection.add_exclusion(exclusion)
+                added += 1
+            except Exception as e:
+                # Log error but continue with other exclusions
+                pass
+
+        return AddExclusionsResponse(
+            success=True,
+            message=f"Added {added} exclusion(s)",
+            added=added,
+        )
+
+    @app.delete(
+        f"{prefix}/exclusions",
+        response_model=RemoveExclusionsResponse,
+        dependencies=[Depends(hascap("validate"))],
+    )
+    async def remove_exclusions(request: RemoveExclusionsRequest):
+        """Remove exclusions from the collection."""
+        coll = Coll(command=None)
+        removed = 0
+        for exclusion in request.exclusions:
+            try:
+                await coll.collection.remove_exclusion(exclusion)
+                removed += 1
+            except Exception as e:
+                # Log error but continue with other exclusions
+                pass
+
+        return RemoveExclusionsResponse(
+            success=True,
+            message=f"Removed {removed} exclusion(s)",
+            removed=removed,
         )
 
     return app
