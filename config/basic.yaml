@@ -74,12 +74,13 @@ paperoni:
       force_user:
         email: __admin__
       capabilities:
+        guest_capabilities: []
         user_overrides:
           __admin__: [admin]
         user_file: ${paperoni.data_path}/permissions.yaml
         graph:
           user_management: []
           user: []
-          search: []
+          search: [user]
           validate: [search]
           dev: []

@@ -80,7 +80,7 @@ dash = "paperoni.dash:Dash"
 exc = "paperoni.srx:ExceptionSerialization"
 
 [tool.uv.sources]
-easy-oauth = { git = "https://github.com/mila-iqia/easy-oauth", rev = "v0.0.2" }
+easy-oauth = { git = "https://github.com/mila-iqia/easy-oauth", rev = "v0.0.3" }
 
 [tool.ruff]
 line-length = 90

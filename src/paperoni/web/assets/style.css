@@ -1929,3 +1929,82 @@ body {
 .info-table tbody tr:hover {
     background: #f9f9f9;
 }
+
+/* Capabilities Management Styles */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.capabilities-table th:nth-child(1) { width: 25%; }
+.capabilities-table th:nth-child(2) { width: 70%; }
+.capabilities-table th:nth-child(3) { width: 5%; text-align: center; }
+
+.capabilities-badges-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    padding: 4px;
+    min-height: 40px;
+}
+
+.capabilities-badges-cell .topic-badge {
+    margin: 0;
+}
+
+.capabilities-badges-cell .topic-badge.implicit-capability {
+    opacity: 0.5;
+    background: #e0e0e0;
+    border-color: #ccc;
+    color: #666;
+}
+
+.capability-input-container {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 200px;
+    max-width: 100%;
+}
+
+.capability-autocomplete {
+    width: 100%;
+}
+
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: #f0f0f0;
+}
+
+.cell-center {
+    text-align: center;
+}
