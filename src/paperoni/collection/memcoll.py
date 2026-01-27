@@ -44,8 +44,6 @@ class PaperIndex(Index[Paper]):
 
     @classmethod
     def serieux_deserialize(cls, obj, ctx, cn):
-        if not isinstance(obj, dict):
-            breakpoint()
         rval = cls(
             last_id=deserialize(int, obj["_last_id"]),
             exclusions=deserialize(set[str], obj["_exclusions"]),
