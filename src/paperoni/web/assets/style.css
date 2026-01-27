@@ -2008,3 +2008,139 @@ body {
 .cell-center {
     text-align: center;
 }
+
+/* Exclusions Styles */
+.exclusions-container {
+    padding: 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.exclusions-header {
+    margin-bottom: 30px;
+}
+
+.exclusions-header h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.exclusions-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.add-exclusion-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.exclusion-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    max-width: 500px;
+}
+
+.bulk-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bulk-exclusion-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: monospace;
+    min-height: 100px;
+    resize: vertical;
+    max-width: 800px;
+}
+
+.exclusion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.exclusion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.exclusion-text {
+    flex: 1;
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+    word-break: break-all;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 14px;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    background: #2c5aa0;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 90px;
+    transition: background 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #1e3a6f;
+}
+
+.pagination-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}

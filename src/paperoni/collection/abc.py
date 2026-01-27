@@ -21,6 +21,14 @@ class PaperCollection:
     async def exclusions(self) -> set[str]:
         raise NotImplementedError()
 
+    async def add_exclusion(self, exclusion: str) -> None:
+        """Add a single exclusion string (e.g., 'arxiv:1234.5678')."""
+        raise NotImplementedError()
+
+    async def remove_exclusion(self, exclusion: str) -> None:
+        """Remove a single exclusion string."""
+        raise NotImplementedError()
+
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         raise NotImplementedError()
 
