@@ -113,6 +113,28 @@ export function editPaper(paperId) {
     const messageContainer = document.getElementById('messageContainer');
     const formContainer = document.getElementById('formContainer');
 
+    // Check if creating a new paper
+    if (paperId === 'new') {
+        document.title = 'Create Paper';
+        const h1 = document.querySelector('h1');
+        if (h1) h1.textContent = 'Create Paper';
+
+        formContainer.innerHTML = '';
+        const paper = {
+            id: null,
+            title: '',
+            abstract: '',
+            authors: [],
+            releases: [],
+            topics: [],
+            links: [],
+            flags: []
+        };
+        const form = renderEditForm(paper);
+        formContainer.appendChild(form);
+        return;
+    }
+
     // Show loading state
     formContainer.innerHTML = '';
     formContainer.appendChild(html`<div class="loading">Loading paper...</div>`);
@@ -120,6 +142,11 @@ export function editPaper(paperId) {
     // Fetch the paper data
     fetchPaper(paperId)
         .then((paper) => {
+            const pageTitle = "Edit Paper";
+            document.title = pageTitle;
+            const h1 = document.querySelector('h1');
+            if (h1) h1.textContent = pageTitle;
+
             formContainer.innerHTML = '';
             const form = renderEditForm(paper);
             formContainer.appendChild(form);
@@ -247,7 +274,7 @@ function renderEditForm(paper) {
 
             <!-- Form Actions -->
             <div class="form-actions sticky-bottom">
-                <button type="submit" class="btn-primary btn-save-sticky">Save Changes</button>
+                <button type="submit" class="btn-primary btn-save-sticky">${paper.id ? 'Save Changes' : 'Create Paper'}</button>
             </div>
         </form>
     `;
@@ -273,16 +300,64 @@ function renderEditForm(paper) {
         e.preventDefault();
         const messageContainer = document.getElementById('messageContainer');
         const submitBtn = form.querySelector('button[type="submit"]');
+        let originalBtnText = submitBtn.textContent;
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Saving...';
 
         try {
             const updatedPaper = collectFormData(form, paper);
+
+            // Validation
+            if (!updatedPaper.title || !updatedPaper.title.trim()) {
+                showToast('Title cannot be empty', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText; // Restore text
+                return;
+            }
+
+            for (const author of updatedPaper.authors) {
+                if (!author.display_name || !author.display_name.trim()) {
+                    showToast('Author name cannot be empty', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+            }
+
+            for (const release of updatedPaper.releases) {
+                if (!release.venue || !release.venue.name || !release.venue.name.trim()) {
+                    showToast('Venue name cannot be empty', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+            }
+
             const result = await submitPaper(updatedPaper);
 
             if (result.success) {
-                showToast('Paper updated successfully!', 'success');
+                const isNew = paper.id === null;
+                if (result.ids && result.ids.length > 0 && isNew) {
+                    paper.id = result.ids[0];
+                    // Update button text for subsequent saves
+                    originalBtnText = 'Save Changes';
+                }
+                if (isNew) {
+                    showToast('Paper created successfully!', 'success');
+                    // Update URL without reloading
+                    window.history.replaceState(null, '', `/edit/${paper.id}`);
+                }
+                else {
+                    showToast('Paper updated successfully!', 'success');
+                }
+                
+                // Update page title
+                const newTitle = "Edit Paper";
+                document.title = newTitle;
+                const h1 = document.querySelector('h1');
+                if (h1) h1.textContent = newTitle;
+
             } else {
                 showToast(result.message || 'Failed to update paper', 'error');
             }
@@ -290,7 +365,7 @@ function renderEditForm(paper) {
             showToast(`Error: ${error.message}`, 'error');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Save Changes';
+            submitBtn.textContent = originalBtnText;
         }
     });
 

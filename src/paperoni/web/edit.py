@@ -13,8 +13,8 @@ def install_edit(app: FastAPI) -> FastAPI:
     hascap = app.auth.get_email_capability
 
     @app.get("/edit/{paper_id}", dependencies=[Depends(hascap("validate"))])
-    async def edit_page(request: Request, paper_id: int):
+    async def edit_page(request: Request, paper_id: int | str):
         """Render the paper edit page."""
-        return render_template("edit.html", request, paper_id=paper_id)
+        return render_template("edit.html", request, paper_id=repr(paper_id))
 
     return app
