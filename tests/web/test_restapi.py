@@ -203,8 +203,8 @@ def edited_paper():
     )
 
 
-def test_edit_paper_endpoint(wr_app, edited_paper):
-    """Test edit paper endpoint."""
+def test_include_papers_endpoint(wr_app, edited_paper):
+    """Test include papers endpoint."""
     admin = wr_app.client("admin@website.web")
 
     original = admin.get("/api/v1/paper/3").json()
@@ -213,8 +213,8 @@ def test_edit_paper_endpoint(wr_app, edited_paper):
     assert len(original["authors"]) == 2
 
     response = admin.post(
-        "/api/v1/edit",
-        paper=serialize(Paper, edited_paper),
+        "/api/v1/include",
+        papers=[serialize(Paper, edited_paper)],
     )
 
     assert response.status_code == 200
@@ -223,48 +223,48 @@ def test_edit_paper_endpoint(wr_app, edited_paper):
     assert "Watermelon" not in modified["title"]
     assert "Cantaloupe" in modified["title"]
     assert len(modified["authors"]) == 1
+    assert response.json()["added"] == 1
 
 
-def test_edit_paper_endpoint_not_found(wr_app, edited_paper):
-    """Test edit paper endpoint returns error when paper not found."""
+def test_include_papers_endpoint_not_found(wr_app, edited_paper):
+    """Test include papers endpoint with new ID (not found)."""
     admin = wr_app.client("admin@website.web")
     edited_paper = replace(edited_paper, id=999)
     response = admin.post(
-        "/api/v1/edit",
-        paper=serialize(Paper, edited_paper),
+        "/api/v1/include",
+        papers=[serialize(Paper, edited_paper)],
     )
 
     assert response.status_code == 200
     data = response.json()
     assert data["success"] is False
     assert "Paper with ID 999 not found" in data["message"]
-    assert data["paper"] is None
+    assert data["added"] == 0
 
 
-def test_edit_paper_endpoint_no_id(wr_app, edited_paper):
-    """Test edit paper endpoint returns error when paper has no ID."""
+def test_include_papers_endpoint_no_id(wr_app, edited_paper):
+    """Test include papers endpoint works when paper has no ID."""
     admin = wr_app.client("admin@website.web")
     edited_paper = replace(edited_paper, id=None)
 
     response = admin.post(
-        "/api/v1/edit",
-        paper=serialize(Paper, edited_paper),
+        "/api/v1/include",
+        papers=[serialize(Paper, edited_paper)],
     )
 
     assert response.status_code == 200
     data = response.json()
-    assert data["success"] is False
-    assert "Paper must have an ID to be edited" in data["message"]
-    assert data["paper"] is None
+    assert data["success"] is True
+    assert data["added"] == 1
 
 
-def test_edit_paper_requires_validate_authentication(wr_app, edited_paper):
-    """Test that the edit paper endpoint requires validate authentication."""
+def test_include_papers_requires_validate_authentication(wr_app, edited_paper):
+    """Test that the include papers endpoint requires validate authentication."""
     # Test with no authentication
     unlogged = wr_app.client()
     response = unlogged.post(
-        "/api/v1/edit",
-        paper=serialize(Paper, edited_paper),
+        "/api/v1/include",
+        papers=[serialize(Paper, edited_paper)],
         expect=401,
     )
     assert response.status_code == 401
@@ -273,8 +273,8 @@ def test_edit_paper_requires_validate_authentication(wr_app, edited_paper):
     # Test with user without validate capability
     user = wr_app.client("seeker@website.web")
     response = user.post(
-        "/api/v1/edit",
-        paper=serialize(Paper, edited_paper),
+        "/api/v1/include",
+        papers=[serialize(Paper, edited_paper)],
         expect=403,
     )
     assert response.status_code == 403

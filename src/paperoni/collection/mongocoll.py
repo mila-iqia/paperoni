@@ -157,7 +157,9 @@ class MongoCollection(PaperCollection):
         """Return whether a link is excluded."""
         return await self._exclusions.find_one({"link": s})
 
-    async def add_papers(self, papers: Iterable[Paper], ignore_exclusions=False) -> int:
+    async def add_papers(
+        self, papers: Iterable[Paper], force=False, ignore_exclusions=False
+    ) -> int:
         """Add papers to the collection."""
         await self._ensure_connection()
         added = 0
@@ -170,14 +172,18 @@ class MongoCollection(PaperCollection):
             existing_paper: Paper = None
             if existing_paper := await self._collection.find_one({"_id": p.id}):
                 existing_paper = srx.deserialize(Paper, existing_paper)
-                if existing_paper.version >= p.version:
+                if not force and existing_paper.version >= p.version:
                     # Paper has been updated since last time it was fetched.
                     # Do not replace it.
                     continue
                 p.version = datetime.now()
                 await self._collection.replace_one({"_id": p.id}, srx.serialize(Paper, p))
 
+            elif p.id is not None:
+                raise ValueError(f"Paper with ID {p.id} not found in collection")
+
             else:
+                p.version = datetime.now()
                 assert not await self._collection.find_one({"_id": p.id})
                 await self._collection.insert_one(srx.serialize(Paper, p))
 
@@ -213,22 +219,6 @@ class MongoCollection(PaperCollection):
         await self._ensure_connection()
         doc = await self._collection.find_one({"_id": ObjectId(paper_id)})
         return srx.deserialize(Paper, doc) if doc else None
-
-    async def edit_paper(self, paper: Paper) -> None:
-        """Edit an existing paper in the collection."""
-        await self._ensure_connection()
-
-        existing_paper = await self._collection.find_one({"_id": paper.id})
-        if not existing_paper:
-            raise ValueError(f"Paper with ID {paper.id} not found in collection")
-
-        paper.version = datetime.now()
-        result = await self._collection.replace_one(
-            {"_id": paper.id}, srx.serialize(Paper, paper)
-        )
-
-        if result.matched_count == 0:
-            raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
     async def drop(self) -> None:
         """Drop the collection."""

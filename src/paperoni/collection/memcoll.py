@@ -81,7 +81,9 @@ class MemCollection(PaperCollection):
         """Return whether a link is excluded."""
         return s in self._index.exclusions
 
-    async def add_papers(self, papers: Iterable[Paper], ignore_exclusions=False) -> int:
+    async def add_papers(
+        self, papers: Iterable[Paper], force=False, ignore_exclusions=False
+    ) -> int:
         added = 0
         if not ignore_exclusions:
             papers = await self.filter_exclusions(papers)
@@ -89,11 +91,14 @@ class MemCollection(PaperCollection):
         try:
             for p in papers:
                 if paper := self._index.equiv("id", p):
-                    if paper.version >= p.version:
+                    if not force and paper.version >= p.version:
                         # Paper has been updated since last time it was fetched.
                         # Do not replace it.
                         continue
                     p.version = datetime.now()
+
+                elif p.id is not None:
+                    raise ValueError(f"Paper with ID {p.id} not found in collection")
 
                 else:
                     p = replace(p, id=self._index.next_id(), version=datetime.now())
@@ -116,14 +121,6 @@ class MemCollection(PaperCollection):
 
     async def find_by_id(self, paper_id: int) -> Paper | None:
         return self._index.find("id", paper_id)
-
-    async def edit_paper(self, paper: Paper) -> None:
-        paper.version = datetime.now()
-        if self._index.equiv("id", paper):
-            self._index.replace(paper)
-            await self.commit()
-        else:
-            raise ValueError(f"Paper with ID {paper.id} not found in collection")
 
     async def commit(self) -> None:
         self._commit()

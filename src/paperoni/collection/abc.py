@@ -43,7 +43,9 @@ class PaperCollection:
             )
         ]
 
-    async def add_papers(self, papers: Iterable[Paper], ignore_exclusions=False) -> int:
+    async def add_papers(
+        self, papers: Iterable[Paper], force=False, ignore_exclusions=False
+    ) -> int:
         """Add papers to the collection."""
         raise NotImplementedError()
 
@@ -64,7 +66,8 @@ class PaperCollection:
         raise NotImplementedError()
 
     async def edit_paper(self, paper: Paper) -> None:
-        raise NotImplementedError()
+        paper.version = datetime.now()
+        await self.add_papers([paper], force=True, ignore_exclusions=True)
 
     async def drop(self) -> None:
         raise NotImplementedError()

@@ -247,19 +247,19 @@ class SetFlagResponse:
 
 
 @dataclass
-class EditRequest:
-    """Request model for editing a paper."""
+class PaperIncludeRequest:
+    """Request model for including new papers."""
 
-    paper: dict
+    papers: list[dict]
 
 
 @dataclass
-class EditResponse:
-    """Response model for editing a paper."""
+class PaperIncludeResponse:
+    """Response model for including new papers."""
 
     success: bool
     message: str
-    paper: Paper | None = None
+    added: int = 0
 
 
 @dataclass
@@ -446,42 +446,32 @@ def install_api(app) -> FastAPI:
         )
 
     @app.post(
-        f"{prefix}/edit",
-        response_model=EditResponse,
+        f"{prefix}/include",
+        response_model=PaperIncludeResponse,
         dependencies=[Depends(hascap("validate"))],
     )
-    async def edit_paper(request: EditRequest):
-        """Edit an existing paper in the collection."""
+    async def include_papers(request: PaperIncludeRequest):
+        """Include papers in the collection."""
         coll = Coll(command=None)
 
-        # Deserialize the paper from the request
-        paper = deserialize(_Paper, request.paper)
+        # Deserialize the papers from the request
+        papers = deserialize(list[_Paper], request.papers)
 
-        # Verify the paper has an ID
-        if paper.id is None:
-            return EditResponse(
-                success=False,
-                message="Paper must have an ID to be edited",
-                paper=None,
+        # Update the papers in the collection
+        # We use add_papers which handles updates/merges
+        try:
+            added = await coll.collection.add_papers(papers, force=True)
+            return PaperIncludeResponse(
+                success=True,
+                message=f"Processed {added} paper(s)",
+                added=added,
             )
-
-        # Verify the paper exists in the collection
-        existing_paper = await coll.collection.find_by_id(paper.id)
-        if existing_paper is None:
-            return EditResponse(
+        except Exception as e:
+            return PaperIncludeResponse(
                 success=False,
-                message=f"Paper with ID {paper.id} not found",
-                paper=None,
+                message=f"Error processing papers: {str(e)}",
+                added=0,
             )
-
-        # Update the paper in the collection
-        await coll.collection.edit_paper(paper)
-
-        return EditResponse(
-            success=True,
-            message=f"Paper {paper.id} updated successfully",
-            paper=paper,
-        )
 
     @app.get(
         f"{prefix}/focus/auto",
