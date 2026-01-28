@@ -106,14 +106,14 @@ def _wrap(cfg_src: list[str | dict]):
 
 
 @pytest.fixture(scope="module")
-def app_coll(oauth_mock, cfg_src, sample_papers):
+async def app_coll(oauth_mock, cfg_src, sample_papers):
     from paperoni.web import create_app
 
     with TemporaryDirectory() as tmpdir:
         sample_file = Path(tmpdir) / "samples.json"
         sample_coll = FileCollection(file=sample_file)
-        sample_coll._add_papers(sample_papers)
-        sample_coll._commit()
+        await sample_coll.add_papers(sample_papers)
+        await sample_coll.commit()
 
         overrides = {
             "paperoni.collection": {

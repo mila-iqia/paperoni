@@ -29,7 +29,22 @@ class PaperCollection:
         """Remove exclusion strings."""
         raise NotImplementedError()
 
-    async def add_papers(self, papers: Iterable[Paper]) -> int:
+    async def is_excluded(self, s: str):
+        """Return whether a link is excluded."""
+        raise NotImplementedError()
+
+    async def filter_exclusions(self, papers: Iterable[Paper]) -> Iterable[Paper]:
+        """Filter out papers based on exclusions."""
+        return [
+            p
+            for p in papers
+            if not any(
+                [(await self.is_excluded(f"{lnk.type}:{lnk.link}")) for lnk in p.links]
+            )
+        ]
+
+    async def add_papers(self, papers: Iterable[Paper], ignore_exclusions=False) -> int:
+        """Add papers to the collection."""
         raise NotImplementedError()
 
     async def exclude_papers(self, papers: Iterable[Paper]) -> None:
@@ -49,9 +64,6 @@ class PaperCollection:
         raise NotImplementedError()
 
     async def edit_paper(self, paper: Paper) -> None:
-        raise NotImplementedError()
-
-    async def commit(self) -> None:
         raise NotImplementedError()
 
     async def drop(self) -> None:

@@ -36,6 +36,10 @@ class RemoteCollection(PaperCollection):
         """Remove exclusion strings."""
         raise NotImplementedError()
 
+    async def is_excluded(self, s: str):
+        """Return whether a link is excluded."""
+        raise NotImplementedError()
+
     async def add_papers(self, papers: Iterable[Paper]) -> int:
         raise NotImplementedError()
 
@@ -61,9 +65,6 @@ class RemoteCollection(PaperCollection):
             raise
 
     async def edit_paper(self, paper: Paper) -> None:
-        raise NotImplementedError()
-
-    async def commit(self) -> None:
         raise NotImplementedError()
 
     async def drop(self) -> None:

@@ -153,35 +153,35 @@ class MongoCollection(PaperCollection):
         await self._ensure_connection()
         await self._exclusions.delete_many({"link": {"$in": exclusions}})
 
-    async def add_papers(self, papers: Iterable[Paper]) -> int:
+    async def is_excluded(self, s: str):
+        """Return whether a link is excluded."""
+        return await self._exclusions.find_one({"link": s})
+
+    async def add_papers(self, papers: Iterable[Paper], ignore_exclusions=False) -> int:
         """Add papers to the collection."""
         await self._ensure_connection()
         added = 0
 
+        if not ignore_exclusions:
+            papers = await self.filter_exclusions(papers)
+
         for p in papers:
-            for link in p.links:
-                if await self._exclusions.find_one({"link": f"{link.type}:{link.link}"}):
-                    break
+            # Handle existing papers
+            existing_paper: Paper = None
+            if existing_paper := await self._collection.find_one({"_id": p.id}):
+                existing_paper = srx.deserialize(Paper, existing_paper)
+                if existing_paper.version >= p.version:
+                    # Paper has been updated since last time it was fetched.
+                    # Do not replace it.
+                    continue
+                p.version = datetime.now()
+                await self._collection.replace_one({"_id": p.id}, srx.serialize(Paper, p))
 
             else:
-                # Handle existing papers
-                existing_paper: Paper = None
-                if existing_paper := await self._collection.find_one({"_id": p.id}):
-                    existing_paper = srx.deserialize(Paper, existing_paper)
-                    if existing_paper.version >= p.version:
-                        # Paper has been updated since last time it was fetched.
-                        # Do not replace it.
-                        continue
-                    p.version = datetime.now()
-                    await self._collection.replace_one(
-                        {"_id": p.id}, srx.serialize(Paper, p)
-                    )
+                assert not await self._collection.find_one({"_id": p.id})
+                await self._collection.insert_one(srx.serialize(Paper, p))
 
-                else:
-                    assert not await self._collection.find_one({"_id": p.id})
-                    await self._collection.insert_one(srx.serialize(Paper, p))
-
-                added += 1
+            added += 1
 
         return added
 
@@ -321,10 +321,6 @@ class MongoCollection(PaperCollection):
 
         async for doc in self._collection.find(query).sort("_latest", -1):
             yield srx.deserialize(Paper, doc)
-
-    async def commit(self) -> None:
-        # Commits are done synchronously to collections operations
-        pass
 
     def __len__(self) -> int:
         """Get the number of papers in the collection."""
