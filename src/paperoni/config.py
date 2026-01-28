@@ -9,6 +9,7 @@ from easy_oauth import OAuthManager
 from rapporteur.report import Reporter
 from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
+from serieux.features.filebacked import FileProxy
 
 from .collection.abc import PaperCollection
 from .get import Fetcher, RequestsFetcher
@@ -64,7 +65,7 @@ class PaperoniConfig:
     mailto: str = ""
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
-    focuses: Focuses = field(default_factory=Focuses)
+    focuses: Focuses @ FileProxy(default_factory=Focuses) = field(default_factory=Focuses)
     autofocus: AutoFocus[str, AutoFocus.Author] = field(default_factory=AutoFocus)
     autovalidate: AutoValidate = field(default_factory=AutoValidate)
     refine: Refine = None

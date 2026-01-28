@@ -491,6 +491,24 @@ def install_api(app) -> FastAPI:
                 count=0,
             )
 
+    @app.get(f"{prefix}/focuses")
+    async def get_focuses():
+        """Get the current configuration focuses."""
+        return serialize(Focuses, config.focuses)
+
+    @app.post(f"{prefix}/focuses", dependencies=[Depends(hascap("admin"))])
+    async def set_focuses(new_focuses: dict):
+        """Update the configuration focuses."""
+        if not hasattr(config.focuses, "save"):
+            raise HTTPException(
+                status_code=501,
+                detail="The current configuration does not support saving focuses.",
+            )
+
+        focuses = deserialize(Focuses, new_focuses["focuses"])
+        config.focuses.save(focuses)
+        return {"success": True, "message": "Focuses updated successfully."}
+
     @app.post(
         f"{prefix}/delete",
         response_model=DeletePapersResponse,

@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+
+{% block title %}Edit Focuses{% endblock %}
+
+{% block page_title %}Edit Focuses{% endblock %}
+
+{% block content %}
+<div class="edit-container">
+    <div class="edit-header">
+        <a href="/search" class="back-link">← Back to Search</a>
+    </div>
+
+    <div id="messageContainer"></div>
+    
+    <div class="focuses-actions">
+        <button id="addFocusBtn" class="btn-primary">+ Add Focus</button>
+        <button id="saveFocusesBtn" class="btn-success">Save Changes</button>
+    </div>
+
+    <div class="table-container">
+        <table id="focusesTable" class="edit-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Drive Discovery</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { init } from '/assets/focuses.js';
+    init();
+</script>
+{% endblock %}
