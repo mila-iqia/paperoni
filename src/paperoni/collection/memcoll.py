@@ -108,6 +108,9 @@ class MemCollection(PaperCollection):
 
                 assert p.id is not None
                 assert p.version is not None
+                if paper:
+                    # Replace existing paper
+                    self._index.remove(paper)
                 self._index.index(p)
 
         finally:
@@ -115,6 +118,18 @@ class MemCollection(PaperCollection):
                 self._commit()
 
         return added
+
+    async def delete_ids(self, ids: list[int]) -> int:
+        deleted = 0
+        try:
+            for i in ids:
+                if paper := self._index.find("id", i):
+                    self._index.remove(paper)
+                    deleted += 1
+        finally:
+            if deleted:
+                self._commit()
+        return deleted
 
     async def find_paper(self, paper: Paper) -> Paper | None:
         return find_equivalent(paper, self._index)
