@@ -77,35 +77,33 @@ class MemCollection(PaperCollection):
         if exclusions:
             await self.commit()
 
-    async def add_papers(self, papers: Iterable[Paper]) -> int:
-        return self._add_papers(papers)
+    async def is_excluded(self, s):
+        """Return whether a link is excluded."""
+        return s in self._index.exclusions
 
-    def _add_papers(self, papers: Iterable[Paper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper], ignore_exclusions=False) -> int:
         added = 0
+        if not ignore_exclusions:
+            papers = await self.filter_exclusions(papers)
 
         try:
             for p in papers:
-                for link in p.links:
-                    if f"{link.type}:{link.link}" in self._index.exclusions:
-                        break
+                if paper := self._index.equiv("id", p):
+                    if paper.version >= p.version:
+                        # Paper has been updated since last time it was fetched.
+                        # Do not replace it.
+                        continue
+                    p.version = datetime.now()
 
                 else:
-                    if paper := self._index.equiv("id", p):
-                        if paper.version >= p.version:
-                            # Paper has been updated since last time it was fetched.
-                            # Do not replace it.
-                            continue
-                        p.version = datetime.now()
+                    p = replace(p, id=self._index.next_id(), version=datetime.now())
+                    assert not self._index.equiv("id", p)
 
-                    else:
-                        p = replace(p, id=self._index.next_id(), version=datetime.now())
-                        assert not self._index.equiv("id", p)
+                added += 1
 
-                    added += 1
-
-                    assert p.id is not None
-                    assert p.version is not None
-                    self._index.index(p)
+                assert p.id is not None
+                assert p.version is not None
+                self._index.index(p)
 
         finally:
             if added:
