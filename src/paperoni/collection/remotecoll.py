@@ -46,6 +46,9 @@ class RemoteCollection(PaperCollection):
     async def exclude_papers(self, papers: Iterable[Paper]) -> None:
         raise NotImplementedError()
 
+    async def delete_ids(self, ids: list[int]) -> int:
+        raise NotImplementedError()
+
     async def find_paper(self, paper: Paper) -> Paper | None:
         raise NotImplementedError()
 

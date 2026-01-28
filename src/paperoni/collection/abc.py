@@ -69,6 +69,14 @@ class PaperCollection:
         paper.version = datetime.now()
         await self.add_papers([paper], force=True, ignore_exclusions=True)
 
+    async def delete_ids(self, ids: list[int]) -> int:
+        """Delete papers by ID."""
+        raise NotImplementedError()
+
+    async def delete_papers(self, papers: list[Paper]):
+        await self.exclude_papers(papers)
+        await self.delete_ids([p.id for p in papers if p.id is not None])
+
     async def drop(self) -> None:
         raise NotImplementedError()
 

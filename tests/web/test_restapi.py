@@ -279,3 +279,27 @@ def test_include_papers_requires_validate_authentication(wr_app, edited_paper):
     )
     assert response.status_code == 403
     assert "validate capability required" in response.json()["detail"]
+
+
+def test_delete_papers_endpoint(wr_app):
+    """Test delete papers endpoint."""
+    admin = wr_app.client("admin@website.web")
+
+    # Paper 3 exists initially
+    assert admin.get("/api/v1/paper/3").status_code == 200
+
+    # Delete paper 3
+    response = admin.post("/api/v1/delete", ids=[3])
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert data["deleted"] == 1
+
+    # Paper 3 should be gone
+    assert admin.get("/api/v1/paper/3", expect=404).status_code == 404
+
+    # Delete non-existent
+    response = admin.post("/api/v1/delete", ids=[999])
+    assert response.status_code == 200
+    data = response.json()
+    assert data["deleted"] == 0

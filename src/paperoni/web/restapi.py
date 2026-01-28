@@ -263,6 +263,22 @@ class PaperIncludeResponse:
 
 
 @dataclass
+class DeletePapersRequest:
+    """Request model for deleting papers."""
+
+    ids: list[int]
+
+
+@dataclass
+class DeletePapersResponse:
+    """Response model for deleting papers."""
+
+    success: bool
+    message: str
+    deleted: int
+
+
+@dataclass
 class ViewResponse(PagingResponseMixin):
     """Response model for work state paper view."""
 
@@ -472,6 +488,21 @@ def install_api(app) -> FastAPI:
                 message=f"Error processing papers: {str(e)}",
                 added=0,
             )
+
+    @app.post(
+        f"{prefix}/delete",
+        response_model=DeletePapersResponse,
+        dependencies=[Depends(hascap("validate"))],
+    )
+    async def delete_papers(request: DeletePapersRequest):
+        """Delete papers from the collection."""
+        coll = Coll(command=None)
+        deleted = await coll.collection.delete_ids(request.ids)
+        return DeletePapersResponse(
+            success=True,
+            message=f"Deleted {deleted} paper(s)",
+            deleted=deleted,
+        )
 
     @app.get(
         f"{prefix}/focus/auto",

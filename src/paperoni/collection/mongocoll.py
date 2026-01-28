@@ -220,6 +220,14 @@ class MongoCollection(PaperCollection):
         doc = await self._collection.find_one({"_id": ObjectId(paper_id)})
         return srx.deserialize(Paper, doc) if doc else None
 
+    async def delete_ids(self, ids: list[int]) -> int:
+        """Delete papers by ID."""
+        await self._ensure_connection()
+        result = await self._collection.delete_many(
+            {"_id": {"$in": [ObjectId(i) for i in ids]}}
+        )
+        return result.deleted_count
+
     async def drop(self) -> None:
         """Drop the collection."""
         await self._ensure_connection()
