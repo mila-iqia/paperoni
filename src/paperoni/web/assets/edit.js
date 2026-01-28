@@ -150,13 +150,13 @@ async function fetchPaper(paperId) {
  * Submit updated paper data to the API
  */
 async function submitPaper(paper) {
-    const response = await fetch('/api/v1/edit', {
+    const response = await fetch('/api/v1/include', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ paper }),
+        body: JSON.stringify({ papers: [paper] }),
     });
 
     if (!response.ok) {

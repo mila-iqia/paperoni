@@ -64,9 +64,6 @@ class RemoteCollection(PaperCollection):
                 return None
             raise
 
-    async def edit_paper(self, paper: Paper) -> None:
-        raise NotImplementedError()
-
     async def drop(self) -> None:
         raise NotImplementedError()
 
