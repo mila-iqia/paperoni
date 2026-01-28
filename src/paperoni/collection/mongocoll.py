@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import date, datetime
 from typing import AsyncGenerator, Iterable
 
@@ -159,10 +160,10 @@ class MongoCollection(PaperCollection):
 
     async def add_papers(
         self, papers: Iterable[Paper], force=False, ignore_exclusions=False
-    ) -> int:
+    ) -> list[int | str]:
         """Add papers to the collection."""
         await self._ensure_connection()
-        added = 0
+        added_ids = []
 
         if not ignore_exclusions:
             papers = await self.filter_exclusions(papers)
@@ -185,11 +186,12 @@ class MongoCollection(PaperCollection):
             else:
                 p.version = datetime.now()
                 assert not await self._collection.find_one({"_id": p.id})
-                await self._collection.insert_one(srx.serialize(Paper, p))
+                result = await self._collection.insert_one(srx.serialize(Paper, p))
+                p = replace(p, id=str(result.inserted_id))
 
-            added += 1
+            added_ids.append(p.id)
 
-        return added
+        return added_ids
 
     async def find_paper(self, paper: Paper) -> Paper | None:
         """Find a paper in the collection by links or title."""

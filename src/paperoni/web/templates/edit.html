@@ -18,7 +18,7 @@
 {% block scripts %}
 <script type="module">
     import { editPaper } from '/assets/edit.js';
-    const paperId = {{ paper_id }};
+    const paperId = {{ paper_id | safe }};
     editPaper(paperId);
 </script>
 {% endblock %}

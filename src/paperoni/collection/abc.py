@@ -45,7 +45,7 @@ class PaperCollection:
 
     async def add_papers(
         self, papers: Iterable[Paper], force=False, ignore_exclusions=False
-    ) -> int:
+    ) -> list[int | str]:
         """Add papers to the collection."""
         raise NotImplementedError()
 

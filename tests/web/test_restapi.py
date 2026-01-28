@@ -224,6 +224,7 @@ def test_include_papers_endpoint(wr_app, edited_paper):
     assert "Cantaloupe" in modified["title"]
     assert len(modified["authors"]) == 1
     assert response.json()["added"] == 1
+    assert response.json()["ids"] == [3]
 
 
 def test_include_papers_endpoint_not_found(wr_app, edited_paper):
@@ -256,6 +257,8 @@ def test_include_papers_endpoint_no_id(wr_app, edited_paper):
     data = response.json()
     assert data["success"] is True
     assert data["added"] == 1
+    assert len(data["ids"]) == 1
+    assert isinstance(data["ids"][0], int)
 
 
 def test_include_papers_requires_validate_authentication(wr_app, edited_paper):
