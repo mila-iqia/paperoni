@@ -260,6 +260,7 @@ class PaperIncludeResponse:
     success: bool
     message: str
     added: int = 0
+    ids: list[int | str] = field(default_factory=list)
 
 
 @dataclass
@@ -476,11 +477,12 @@ def install_api(app) -> FastAPI:
         # Update the papers in the collection
         # We use add_papers which handles updates/merges
         try:
-            added = await coll.collection.add_papers(papers, force=True)
+            added_ids = await coll.collection.add_papers(papers, force=True)
             return PaperIncludeResponse(
                 success=True,
-                message=f"Processed {added} paper(s)",
-                added=added,
+                message=f"Processed {len(added_ids)} paper(s)",
+                added=len(added_ids),
+                ids=added_ids,
             )
         except Exception as e:
             return PaperIncludeResponse(

@@ -83,8 +83,8 @@ class MemCollection(PaperCollection):
 
     async def add_papers(
         self, papers: Iterable[Paper], force=False, ignore_exclusions=False
-    ) -> int:
-        added = 0
+    ) -> list[int | str]:
+        added_ids = []
         if not ignore_exclusions:
             papers = await self.filter_exclusions(papers)
 
@@ -104,7 +104,7 @@ class MemCollection(PaperCollection):
                     p = replace(p, id=self._index.next_id(), version=datetime.now())
                     assert not self._index.equiv("id", p)
 
-                added += 1
+                added_ids.append(p.id)
 
                 assert p.id is not None
                 assert p.version is not None
@@ -114,10 +114,10 @@ class MemCollection(PaperCollection):
                 self._index.index(p)
 
         finally:
-            if added:
+            if added_ids:
                 self._commit()
 
-        return added
+        return added_ids
 
     async def delete_ids(self, ids: list[int]) -> int:
         deleted = 0

@@ -40,7 +40,7 @@ class RemoteCollection(PaperCollection):
         """Return whether a link is excluded."""
         raise NotImplementedError()
 
-    async def add_papers(self, papers: Iterable[Paper]) -> int:
+    async def add_papers(self, papers: Iterable[Paper]) -> list[int | str]:
         raise NotImplementedError()
 
     async def exclude_papers(self, papers: Iterable[Paper]) -> None:
