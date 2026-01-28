@@ -703,56 +703,74 @@ class Coll:
                 logging.warning("Collection is not empty. Use --force to drop it.")
 
     @dataclass
-    class Validate(Productor):
+    class Validate:
         """Validate the papers in the collection using the paperoni v2 database."""
 
         # The paperoni v2 database
-        # [positional]
+        # [optional]
         # [metavar v2]
-        command: Annotated[
-            Any,
-            FromEntryPoint(
-                "paperoni.discovery",
-                wrap=lambda cls: Auto[cls.query] if cls is PaperoniV2 else None,
-            ),
-        ]
+        paperoni_v2: Auto[PaperoniV2.query] = None
+
+        # Validate papers having a score greater than the threshold
+        # [metavar FLOAT]
+        threshold: float = None
+
+        async def iterate(
+            self, coll: "Coll" = None, **kwargs
+        ) -> AsyncGenerator[Paper, None]:
+            if self.paperoni_v2 is not None:
+                validated = 0
+                total = 0
+                async for paper_v2 in self.paperoni_v2(**kwargs):
+                    paper_v2: Paper
+                    total += 1
+
+                    if "valid" not in paper_v2.flags:
+                        continue
+
+                    validated += 1
+
+                    yield paper_v2
+
+                    send(progress=("Validated v2 papers", validated, total))
+
+                send(progress=("Validated v2 papers", None, total))
+
+            else:
+                score_threshold = self.threshold or config.autovalidate.score_threshold
+
+                async for paper in coll.collection.search():
+                    paper: Paper
+
+                    if (
+                        "valid" in paper.flags
+                        or (paper.score or config.focuses.score(paper)) < score_threshold
+                    ):
+                        continue
+
+                    yield paper
 
         async def run(self, coll: "Coll"):
-            validated = []
-            not_found = []
-            total = 0
-            send(progress=("Validated papers", len(validated), total))
-            send(progress=("Papers not found", len(not_found), total))
+            ignored = 0
+            validated = 0
+            count = 0
 
-            async for paper_v2 in self.iterate(embed=True):
-                paper_v2_json = paper_v2.info.pop("v2")
-                total += 1
+            async for paper in self.iterate(coll=coll):
+                count += 1
 
-                if "validated" not in paper_v2.flags:
-                    continue
+                if coll_paper := await coll.collection.find_paper(paper):
+                    if "invalid" in coll_paper.flags:
+                        ignored += 1
+                        continue
 
-                if paper := await coll.collection.find_paper(paper_v2):
-                    paper.flags.add("validated")
-                    await coll.collection.edit_paper(paper)
-                    validated.append(paper_v2_json)
+                    validated += 1
+                    coll_paper.flags.add("valid")
+                    await coll.collection.edit_paper(coll_paper)
 
-                else:
-                    not_found.append(paper_v2_json)
+                if ignored and ignored != count:
+                    send(progress=("Ignored papers", ignored, count))
 
-                send(
-                    progress=(
-                        "Found papers",
-                        len(validated),
-                        len(validated) + len(not_found),
-                    )
-                )
-                send(
-                    progress=(
-                        "Validated papers",
-                        len(validated) + len(not_found),
-                        total,
-                    )
-                )
+                send(progress=("Validated papers", validated, count))
 
     # Command to execute
     command: TaggedUnion[Search, Import, Export, Drop, Validate]

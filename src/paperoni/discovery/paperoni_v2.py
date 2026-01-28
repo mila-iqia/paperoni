@@ -1,11 +1,13 @@
 import datetime
-import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, AsyncGenerator
 
 import gifnoc
+from serieux.features.encrypt import Secret
 
+from ..config import config
 from ..discovery.base import Discoverer
 from ..model import (
     Author,
@@ -103,21 +105,57 @@ def _parse_release(release: dict[str, Any]) -> Release:
 # - [ ] Complete the flags information
 @dataclass
 class PaperoniV2(Discoverer):
-    # The paperoni v2 JSON export file
+    # The paperoni v2 endpoint
     # [positional]
     # [metavar JSON]
-    json: Path = field(default_factory=lambda: paperoni_v2_json)
+    endpoint: str
+
+    # The paperoni v2 access token
+    # [metavar TOKEN]
+    token: Secret[str] = field(
+        default_factory=lambda: os.getenv("PAPERONIV2_TOKEN", paperoni_v2_config["token"])
+    )
+
+    # The paperoni v2 cache file
+    # [metavar JSON]
+    cache: Path = field(default_factory=lambda: paperoni_v2_config["cache"])
 
     async def query(
         self,
         # Embed the paperoni v2 paper's JSON in the Paper info dictionary
         embed: bool = False,
+        # Force refresh the paperoni v2 cache
+        force_refresh: bool = False,
     ) -> AsyncGenerator[Paper, None]:
         """Query the paperoni v2 database"""
-        with self.json.open() as f:
-            papers = json.load(f)
+        if force_refresh and self.cache.exists():
+            self.cache.unlink()
+
+        # TODO: fix the SSL certificate verification error
+        # requests.exceptions.SSLError:
+        # HTTPSConnectionPool(host='paperoni.mila.quebec', port=443): Max
+        # retries exceeded with url:
+        # /report?validation=validated&sort=-date&format=json (Caused by
+        # SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED]
+        # certificate verify failed: unable to get local issuer certificate
+        # (_ssl.c:1000)')))
+        papers: list[dict] = await config.fetch.read(
+            url=f"{self.endpoint}/report",
+            format="json",
+            cache_into=self.cache,
+            headers={"X-API-KEY": str(self.token)},
+            params={"validation": "validated", "sort": "-date", "format": "json"},
+        )
 
         for paper in papers:
+            match _is_validated(paper):
+                case True:
+                    flags = ["valid"]
+                case False:
+                    flags = ["invalid"]
+                case _:
+                    flags = []
+
             yield Paper(
                 title=paper["title"],
                 abstract=paper["abstract"],
@@ -125,18 +163,20 @@ class PaperoniV2(Discoverer):
                 releases=list(map(_parse_release, paper["releases"])),
                 topics=list(map(_parse_topic, paper["topics"])),
                 links=list(map(_parse_link, paper["links"])),
-                flags=set(
-                    (["validated"] if _is_validated(paper) else [])
-                    + (["~validated"] if _is_validated(paper) is False else [])
-                ),
+                flags=set(flags),
                 key=f"paperoni_v2:{paper['paper_id']}",
                 info={"discovered_by": {"paperoni_v2": paper["paper_id"]}}
                 | ({"v2": paper} if embed else {}),
-                score=10.0 if _is_validated(paper) else 0.0,
+                score=(
+                    config.autovalidate.score_threshold if _is_validated(paper) else 0.0
+                ),
                 version=datetime.datetime.now(),
             )
 
 
-paperoni_v2_json: Path | None = gifnoc.define(
-    "paperoni.discovery.v2.data", Path | None, defaults=None
-)
+paperoni_v2_config: dict[str, Secret[str] | Path | None] = {
+    "token": gifnoc.define(
+        "paperoni.discovery.v2.token", Secret[str] | None, defaults=None
+    ),
+    "cache": gifnoc.define("paperoni.discovery.v2.cache", Path | None, defaults=None),
+}
