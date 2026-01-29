@@ -27,7 +27,7 @@ def _wrap(cfg_src: list[str | dict], collfile):
     with gifnoc.use(*cfg_src, additional):
         with patch("paperoni.web.restapi.config.metadata") as mock_meta:
             mock_meta.focuses.file = config.work_file.parent / "focuses.yaml"
-            mock_meta.focuses.file.write_text("[]")
+            mock_meta.focuses.file.write_text("{}")
             yield
 
 

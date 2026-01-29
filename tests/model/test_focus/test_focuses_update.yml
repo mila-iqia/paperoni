@@ -1,6 +1,8 @@
-- '!institution::Mila::10.0'
-- '!institution::McGill University::1.0'
-- '!author::Irina Rish::3.0'
+auto:
 - author::Arthur Dehgan::1
 - author::Hamza Abdelhedi::1
 - author::Karim Jerbi::1
+main:
+- '!institution::Mila::10.0'
+- '!institution::McGill University::1.0'
+- '!author::Irina Rish::3.0'

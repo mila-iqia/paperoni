@@ -65,8 +65,8 @@ class PaperoniConfig:
     mailto: str = ""
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)
-    focuses: Focuses @ FileProxy(default_factory=Focuses) = field(default_factory=Focuses)
-    autofocus: AutoFocus[str, AutoFocus.Author] = field(default_factory=AutoFocus)
+    focuses: Focuses @ FileProxy(refresh=True) = field(default_factory=Focuses)
+    autofocus: AutoFocus = field(default_factory=AutoFocus)
     autovalidate: AutoValidate = field(default_factory=AutoValidate)
     refine: Refine = None
     work_file: Path = None
