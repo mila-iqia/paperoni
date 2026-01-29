@@ -642,8 +642,56 @@ body {
 
 .btn-move-up:disabled,
 .btn-move-down:disabled {
-    opacity: 0.3;
     cursor: not-allowed;
+}
+
+/* Focuses Page Flexbox Layout */
+.focuses-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent outer scroll */
+}
+
+.focuses-page .focuses-table-container {
+    flex: 1;
+    height: auto; /* Override fixed height */
+    overflow-y: auto;
+    margin-bottom: 0;
+    border: 1px solid #ddd; /* fallback */
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 8px 8px 0 0;
+}
+
+.focuses-page .focuses-actions {
+    flex: 0 0 auto;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd; /* fallback */
+    border: 1px solid var(--border-color, #ddd);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    margin-top: 0;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.focuses-table-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.focuses-table-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f5f5f5;
+    background-color: var(--bg-secondary, #f5f5f5);
+    z-index: 10;
+    box-shadow: 0 1px 0 #ddd;
+    box-shadow: 0 1px 0 var(--border-color, #ddd);
 }
 
 /* Remove Button (X) */

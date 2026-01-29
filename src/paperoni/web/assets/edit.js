@@ -1,4 +1,4 @@
-import { html } from './common.js';
+import { html, showToast } from './common.js';
 
 /**
  * Generic badge management system for topics, flags, etc.
@@ -69,41 +69,6 @@ function createBadge(item, index, items, renderBadges, config) {
     });
 
     return badge;
-}
-
-/**
- * Show a toast notification
- */
-function showToast(message, type = 'success') {
-    // Remove any existing toast
-    const existingToast = document.querySelector('.toast');
-    if (existingToast) {
-        existingToast.remove();
-    }
-
-    const toast = html`
-        <div class="toast toast-${type}">
-            <span class="toast-message">${message}</span>
-            <button class="toast-close" type="button">×</button>
-        </div>
-    `;
-
-    // Add close functionality
-    toast.querySelector('.toast-close').addEventListener('click', () => {
-        toast.classList.add('toast-hiding');
-        setTimeout(() => toast.remove(), 300);
-    });
-
-    // Add to page
-    document.body.appendChild(toast);
-
-    // Auto-hide after 4 seconds
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.classList.add('toast-hiding');
-            setTimeout(() => toast.remove(), 300);
-        }
-    }, 4000);
 }
 
 /**

@@ -487,7 +487,7 @@ def install_api(app) -> FastAPI:
         except Exception as e:
             return PaperIncludeResponse(
                 success=False,
-                message=f"Error processing papers: {str(e)}",
+                message=f"Error processing papers: {e}",
                 count=0,
             )
 

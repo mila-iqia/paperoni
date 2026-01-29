@@ -1,4 +1,4 @@
-import { html } from './common.js';
+import { html, showToast } from './common.js';
 
 export function init() {
     loadFocuses();
@@ -21,21 +21,6 @@ async function loadFocuses() {
         if (!response.ok) throw new Error('Failed to load focuses');
         
         const data = await response.json();
-        // data might be { "focuses": [...] } or just [...] depend on serialization
-        // Based on Focuses.serieux_model, it wraps a list. Serialize usually returns the inner list if from_list is used?
-        // Wait, restapi returns serialize(Focuses, config.focuses).
-        // If config.focuses is a Focuses object.
-        // Let's assume it returns { focuses: [...] } or the object structure.
-        // Actually, Focuses has `focuses` field.
-        // If it's serialized as Model(..., from_list=cls), it might be a list. 
-        // But the class has a field `focuses`.
-        // Let's handle both or check/debug.
-        // Given `from_list=cls` in `serieux_model`, it likely behaves like a list wrapper.
-        // But wait, `Focus.encode` returns strings.
-        // So the list will contain strings like "author::Name::10".
-        // Or objects if `to_string` is not applied during JSON serialization?
-        // Serieux `to_string` is usually for loose formats.
-        // "Parse the focuses from the endpoint like in focus.py" implies we get strings.
         
         let focuses = [];
         if (data.focuses) {
@@ -49,7 +34,7 @@ async function loadFocuses() {
         renderTable(focuses);
 
     } catch (error) {
-        showError(`Error: ${error.message}`);
+        showToast(`Error: ${error.message}`, 'error');
     }
 }
 
@@ -70,7 +55,6 @@ function parseFocus(focus) {
             };
         }
     }
-    // Fallback if it's already an object (shouldn't happen if encode is used, but good for robustness)
     return focus;
 }
 
@@ -118,6 +102,13 @@ function addFocusRow(focus = { type: 'author', name: '', score: 1, drive_discove
     row.querySelector('.btn-remove-x').addEventListener('click', () => row.remove());
     
     tbody.appendChild(row);
+    
+    // Scroll to the new row
+    row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    // Focus the name input if it is empty, or type otherwise (though type is first)
+    // Actually focusing the type makes sense as it is the first field
+    row.querySelector('.focus-type').focus();
 }
 
 async function saveFocuses() {
@@ -152,23 +143,11 @@ async function saveFocuses() {
             throw new Error(err.message || 'Failed to save');
         }
 
-        showSuccess('Focuses saved successfully!');
+        showToast('Focuses saved successfully!', 'success');
     } catch (error) {
-        showError(`Error saving focuses: ${error.message}`);
+        showToast(`Error saving focuses: ${error.message}`, 'error');
     } finally {
         btn.textContent = originalText;
         btn.disabled = false;
     }
-}
-
-function showError(msg) {
-    const container = document.getElementById('messageContainer');
-    container.innerHTML = `<div class="error-message">${msg}</div>`;
-    setTimeout(() => container.innerHTML = '', 5000);
-}
-
-function showSuccess(msg) {
-    const container = document.getElementById('messageContainer');
-    container.innerHTML = `<div class="success-message">${msg}</div>`;
-    setTimeout(() => container.innerHTML = '', 3000);
 }
