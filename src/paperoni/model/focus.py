@@ -153,7 +153,7 @@ class Focuses:
 
         # sort focuses by institution first, then author
         order = {"institution": 0, "author": 1}
-        self.auto.sort(key=lambda x: (order[x.type], x.score))
+        self.auto.sort(key=lambda x: (order[x.type], -x.score, x.name))
         self.compile()
 
 
