@@ -577,6 +577,10 @@ body {
 .links-table th:nth-child(2) { width: 75%; }
 .links-table th:nth-child(3) { width: 40px; text-align: center; }
 
+.info-table th:nth-child(1) { width: 25%; }
+.info-table th:nth-child(2) { width: 70%; }
+.info-table th:nth-child(3) { width: 40px; text-align: center; }
+
 /* Form Input Styles */
 .edit-input {
     width: 100%;
@@ -933,6 +937,49 @@ body {
 
 .editable-abstract:focus:empty::before {
     content: '';
+}
+
+/* Read-only Input */
+.readonly-input {
+    background: #f5f5f5 !important;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.readonly-input:focus {
+    border-color: #ccc;
+    box-shadow: none;
+}
+
+/* Editable JSON Textarea */
+.editable-json {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background: #fff;
+    resize: vertical;
+    tab-size: 2;
+}
+
+.editable-json:focus {
+    outline: none;
+    border-color: #2c5aa0;
+    box-shadow: 0 0 0 2px rgba(44, 90, 160, 0.1);
+}
+
+/* Field Hint Text */
+.field-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
 }
 
 /* Edit Page Layout */

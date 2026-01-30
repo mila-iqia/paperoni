@@ -237,6 +237,28 @@ function renderEditForm(paper) {
                 <div id="flagsContainer"></div>
             </div>
 
+            <!-- Metadata -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2>Metadata</h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="key">Key</label>
+                    <input type="text" id="key" name="key" value="${paper.key || 'n/a'}" placeholder="Paper key identifier" class="edit-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="version">Version</label>
+                    <input type="text" id="version" name="version" value="${paper.version ? new Date(paper.version).toLocaleString() : 'Not set'}" readonly class="edit-input readonly-input" title="Last modified timestamp (read-only)">
+                </div>
+
+                <div class="form-group">
+                    <label>Info</label>
+                    <div id="infoContainer"></div>
+                </div>
+            </div>
+
             <!-- Form Actions -->
             <div class="form-actions sticky-bottom">
                 <button type="submit" class="btn-primary btn-save-sticky">${paper.id ? 'Save Changes' : 'Create Paper'}</button>
@@ -259,6 +281,9 @@ function renderEditForm(paper) {
 
     const flagsContainer = form.querySelector('#flagsContainer');
     renderFlags(flagsContainer, Array.from(paper.flags || []));
+
+    const infoContainer = form.querySelector('#infoContainer');
+    renderInfo(infoContainer, paper.info || {});
 
     // Set up form submission
     form.addEventListener('submit', async (e) => {
@@ -298,6 +323,7 @@ function renderEditForm(paper) {
                     return;
                 }
             }
+
 
             const result = await submitPaper(updatedPaper);
 
@@ -801,6 +827,87 @@ function renderFlags(container, flags) {
     renderBadgeField(container, flags, config);
 }
 
+/**
+ * Render info key-value pairs as a table
+ */
+function renderInfo(container, info) {
+    container.innerHTML = '';
+
+    // Convert info object to array of {key, value} pairs
+    const infoItems = Object.entries(info || {}).map(([key, value]) => ({
+        key,
+        value: typeof value === 'string' ? value : JSON.stringify(value)
+    }));
+
+    const tableWrapper = html`
+        <div class="array-field">
+            <table class="info-table edit-table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value (JSON or string)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="infoTableBody"></tbody>
+            </table>
+        </div>
+    `;
+
+    const tbody = tableWrapper.querySelector('#infoTableBody');
+
+    infoItems.forEach((item, index) => {
+        const row = createInfoRow(item, index);
+        tbody.appendChild(row);
+    });
+
+    const addBtn = html`<button type="button" class="btn-add input-container">+ Add Info</button>`;
+    addBtn.addEventListener('click', () => {
+        const newItem = { key: '', value: '' };
+        const row = createInfoRow(newItem, tbody.children.length);
+        tbody.appendChild(row);
+        
+        // Focus on the key field of the newly added row
+        const keyInput = row.querySelector('input[name$=".key"]');
+        if (keyInput) {
+            keyInput.focus();
+        }
+    });
+
+    tableWrapper.appendChild(addBtn);
+    container.appendChild(tableWrapper);
+}
+
+function createInfoRow(item, index) {
+    const row = html`
+        <tr>
+            <td>
+                <input type="text"
+                       name="info[${index}].key"
+                       value="${item.key || ''}"
+                       placeholder="Key name"
+                       class="edit-input">
+            </td>
+            <td>
+                <input type="text"
+                       name="info[${index}].value"
+                       value="${item.value || ''}"
+                       placeholder="Value (JSON or plain text)"
+                       class="edit-input">
+            </td>
+            <td class="cell-center">
+                <button type="button" class="btn-remove-x" tabindex="-1">×</button>
+            </td>
+        </tr>
+    `;
+
+    row.querySelector('.btn-remove-x').addEventListener('click', () => {
+        row.remove();
+    });
+
+    return row;
+}
+
 
 /**
  * Collect form data and build updated paper object
@@ -809,10 +916,43 @@ function collectFormData(form, originalPaper) {
     const formData = new FormData(form);
 
     // Start with the original paper to preserve fields like id, version
+    // Collect info from table
+    const infoElements = form.querySelectorAll('[name^="info["]');
+    const infoMap = {};
+
+    infoElements.forEach(input => {
+        const match = input.name.match(/info\[(\d+)\]\.(.+)/);
+        if (match) {
+            const [, index, field] = match;
+            if (!infoMap[index]) {
+                infoMap[index] = { key: '', value: '' };
+            }
+            infoMap[index][field] = input.value;
+        }
+    });
+
+    // Build info object from collected key-value pairs
+    const infoValue = {};
+    Object.values(infoMap).forEach(item => {
+        if (item.key && item.key.trim()) {
+            const key = item.key.trim();
+            const valueStr = item.value || '';
+            // Try to parse as JSON, otherwise use as string
+            try {
+                infoValue[key] = JSON.parse(valueStr);
+            } catch (e) {
+                infoValue[key] = valueStr;
+            }
+        }
+    });
+
     const paper = {
         ...originalPaper,
         title: formData.get('title'),
         abstract: form.querySelector('#abstract').textContent.trim() || null,
+        key: formData.get('key') || 'n/a',
+        info: infoValue,
+        // version is read-only, preserve from originalPaper
         authors: [],
         releases: [],
         topics: [],
