@@ -1,20 +1,57 @@
 import { html, showToast } from './common.js';
 
+let mainFocuses = [];
+let autoFocuses = [];
+
 export function init() {
     loadFocuses();
+    setupTabs();
 
-    document.getElementById('addFocusBtn').addEventListener('click', () => {
-        addFocusRow();
+    document.getElementById('addMainFocusBtn').addEventListener('click', () => {
+        addFocusRow('main', undefined, true);
     });
 
-    document.getElementById('saveFocusesBtn').addEventListener('click', () => {
-        saveFocuses();
+    document.getElementById('addAutoFocusBtn').addEventListener('click', () => {
+        addFocusRow('auto', undefined, true);
+    });
+
+    document.getElementById('saveMainFocusesBtn').addEventListener('click', () => {
+        saveFocuses('main');
+    });
+
+    document.getElementById('saveAutoFocusesBtn').addEventListener('click', () => {
+        saveFocuses('auto');
+    });
+
+    document.getElementById('autogenerateFocusesBtn').addEventListener('click', () => {
+        autogenerateFocuses();
+    });
+}
+
+function setupTabs() {
+    const tabs = document.querySelectorAll('.focuses-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.dataset.tab;
+            
+            // Update active tab button
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Update active tab content
+            document.querySelectorAll('.focuses-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
     });
 }
 
 async function loadFocuses() {
-    const tbody = document.querySelector('#focusesTable tbody');
-    tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading...</td></tr>';
+    const mainTbody = document.querySelector('#mainFocusesTable tbody');
+    const autoTbody = document.querySelector('#autoFocusesTable tbody');
+    mainTbody.innerHTML = '<tr><td colspan="5" class="loading">Loading...</td></tr>';
+    autoTbody.innerHTML = '<tr><td colspan="5" class="loading">Loading...</td></tr>';
 
     try {
         const response = await fetch('/api/v1/focuses');
@@ -22,16 +59,12 @@ async function loadFocuses() {
         
         const data = await response.json();
         
-        let focuses = [];
-        if (data.focuses) {
-            focuses = data.focuses;
-        } else if (Array.isArray(data)) {
-            focuses = data;
-        } else if (data._) { // Serieux sometimes uses _ for wrapped value
-            focuses = data._;
-        }
+        // Handle the new format with main and auto sublists
+        mainFocuses = data.main || [];
+        autoFocuses = data.auto || [];
 
-        renderTable(focuses);
+        renderTable('main', mainFocuses);
+        renderTable('auto', autoFocuses);
 
     } catch (error) {
         showToast(`Error: ${error.message}`, 'error');
@@ -58,24 +91,22 @@ function parseFocus(focus) {
     return focus;
 }
 
-function renderTable(focuses) {
-    const tbody = document.querySelector('#focusesTable tbody');
+function renderTable(section, focuses) {
+    const tableId = section === 'main' ? 'mainFocusesTable' : 'autoFocusesTable';
+    const tbody = document.querySelector(`#${tableId} tbody`);
     tbody.innerHTML = '';
 
     focuses.forEach(f => {
         const parsed = parseFocus(f);
         if (parsed) {
-            addFocusRow(parsed);
+            addFocusRow(section, parsed);
         }
     });
-
-    if (focuses.length === 0) {
-        // No focuses
-    }
 }
 
-function addFocusRow(focus = { type: 'author', name: '', score: 1, drive_discovery: false }) {
-    const tbody = document.querySelector('#focusesTable tbody');
+function addFocusRow(section, focus = { type: 'author', name: '', score: 1, drive_discovery: false }, scrollToRow = false) {
+    const tableId = section === 'main' ? 'mainFocusesTable' : 'autoFocusesTable';
+    const tbody = document.querySelector(`#${tableId} tbody`);
     const row = document.createElement('tr');
     
     row.innerHTML = `
@@ -89,7 +120,7 @@ function addFocusRow(focus = { type: 'author', name: '', score: 1, drive_discove
             <input type="text" class="focus-name edit-input" value="${focus.name || ''}" placeholder="Name">
         </td>
         <td>
-            <input type="number" step="0.1" class="focus-score edit-input" value="${focus.score}" placeholder="Score">
+            <input type="number" step="1" class="focus-score edit-input" value="${focus.score}" placeholder="Score">
         </td>
         <td class="cell-center">
             <input type="checkbox" class="focus-drive" ${focus.drive_discovery ? 'checked' : ''}>
@@ -103,19 +134,20 @@ function addFocusRow(focus = { type: 'author', name: '', score: 1, drive_discove
     
     tbody.appendChild(row);
     
-    // Scroll to the new row
-    row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    
-    // Focus the name input if it is empty, or type otherwise (though type is first)
-    // Actually focusing the type makes sense as it is the first field
-    row.querySelector('.focus-type').focus();
+    if (scrollToRow) {
+        // Scroll to the new row
+        row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Focus the type select as it's the first field
+        row.querySelector('.focus-type').focus();
+    }
 }
 
-async function saveFocuses() {
-    const tbody = document.querySelector('#focusesTable tbody');
+function collectFocusesFromTable(tableId) {
+    const tbody = document.querySelector(`#${tableId} tbody`);
     const rows = Array.from(tbody.querySelectorAll('tr'));
     
-    const newFocuses = rows.map(row => {
+    return rows.map(row => {
         return {
             type: row.querySelector('.focus-type').value,
             name: row.querySelector('.focus-name').value.trim(),
@@ -123,8 +155,15 @@ async function saveFocuses() {
             drive_discovery: row.querySelector('.focus-drive').checked
         };
     }).filter(f => f.name); // Filter empty names
+}
 
-    const btn = document.getElementById('saveFocusesBtn');
+async function saveFocuses(section) {
+    const btnId = section === 'main' ? 'saveMainFocusesBtn' : 'saveAutoFocusesBtn';
+    
+    const mainFocusesList = collectFocusesFromTable('mainFocusesTable');
+    const autoFocusesList = collectFocusesFromTable('autoFocusesTable');
+
+    const btn = document.getElementById(btnId);
     const originalText = btn.textContent;
     btn.textContent = 'Saving...';
     btn.disabled = true;
@@ -135,7 +174,7 @@ async function saveFocuses() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ focuses: newFocuses })
+            body: JSON.stringify({ main: mainFocusesList, auto: autoFocusesList })
         });
 
         if (!response.ok) {
@@ -146,6 +185,36 @@ async function saveFocuses() {
         showToast('Focuses saved successfully!', 'success');
     } catch (error) {
         showToast(`Error saving focuses: ${error.message}`, 'error');
+    } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+}
+
+async function autogenerateFocuses() {
+    const btn = document.getElementById('autogenerateFocusesBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Generating...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/v1/focus/auto', { method: 'POST' });
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || err.message || 'Failed to autogenerate');
+        }
+
+        const data = await response.json();
+        
+        // The endpoint returns the full Focuses object with auto populated
+        const newAutoFocuses = data.auto || [];
+        
+        // Render the new auto focuses
+        renderTable('auto', newAutoFocuses);
+        
+        showToast(`Autogenerated ${newAutoFocuses.length} focus(es).`, 'success');
+    } catch (error) {
+        showToast(`Error autogenerating focuses: ${error.message}`, 'error');
     } finally {
         btn.textContent = originalText;
         btn.disabled = false;
