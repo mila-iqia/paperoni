@@ -173,11 +173,12 @@ class MongoCollection(PaperCollection):
             # Handle existing papers
             existing_paper: Paper = None
             if existing_paper := await self._collection.find_one({"_id": p.id}):
-                existing_paper = srx.deserialize(Paper, existing_paper)
-                if not force and existing_paper.version >= p.version:
-                    # Paper has been updated since last time it was fetched.
-                    # Do not replace it.
-                    continue
+                if not force:
+                    existing_paper = srx.deserialize(Paper, existing_paper)
+                    if existing_paper.version > p.version:
+                        # Paper has been updated since last time it was fetched.
+                        # Do not replace it.
+                        continue
                 p.version = datetime.now()
                 await self._collection.replace_one({"_id": p.id}, srx.serialize(Paper, p))
 

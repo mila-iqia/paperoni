@@ -1,7 +1,8 @@
 from datetime import date, datetime
-from typing import AsyncGenerator, Iterable
+from typing import AsyncGenerator, Callable, Iterable
 
 from ..model.classes import Paper
+from ..operations import OperationResult
 
 _id_types = {
     "arxiv",
@@ -80,6 +81,17 @@ class PaperCollection:
 
     async def drop(self) -> None:
         raise NotImplementedError()
+
+    async def operate(
+        self, operator: Callable[[Paper], OperationResult], **search_options
+    ):
+        """Operate over every paper in the dataset."""
+        edits = []
+        async for p in self.search(**search_options):
+            result = operator(p)
+            if result.changed:
+                edits.append(result.new)
+        return await self.add_papers(edits, force=True, ignore_exclusions=True)
 
     async def search(
         self,

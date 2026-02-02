@@ -35,6 +35,7 @@ from serieux import (
     serialize,
 )
 from serieux.features.filebacked import FileProxy
+from serieux.features.registered import Referenced
 from serieux.features.tagset import FromEntryPoint
 
 from .client.utils import login
@@ -478,12 +479,22 @@ class Work:
         # Minimum score for saving
         score: float = 0.1
 
+        # Operations to run on each included paper
+        operations: list[Referenced[object]] = field(default_factory=list)
+
+        def _apply_operations(self, p: Paper):
+            for o in self.operations:
+                p = o(p).new
+            return p
+
         async def run(self, work: "Work"):
             selected = self.extract(
                 work,
                 stop=self.n,
                 filter=lambda sws: sws.score >= self.score,
             )
+            if self.operations:
+                selected = [self._apply_operations(p) for p in selected]
 
             try:
                 added = await work.collection.add_papers(selected)
@@ -819,8 +830,20 @@ class Coll:
                 extras
             )
 
+    class Operate:
+        """Operate over the paper collection."""
+
+        # Operation to perform
+        # [positional]
+        operation: Referenced[object]
+
+        async def run(self, coll: "Coll"):
+            results = await coll.collection.operate(self.operation)
+            print(f"Modified {len(results)} papers")
+            return results
+
     # Command to execute
-    command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff]
+    command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff, Operate]
 
     # Collection dir
     # [alias: -c]
