@@ -49,6 +49,11 @@ async function fetchSearchResults(params, offset = 0) {
             break;
     }
 
+    // Add peer-reviewed flag if checked
+    if (params.peerReviewed) {
+        queryParams.append('flags', 'peer-reviewed');
+    }
+
     const url = `/api/v1/search?${queryParams.toString()}`;
     const response = await fetch(url);
 
@@ -177,6 +182,7 @@ function updateUrlParams(params, offset) {
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
     if (params.validated) urlParams.set('validated', params.validated);
+    if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
     if (offset > 0) urlParams.set('offset', offset.toString());
 
     const newUrl = urlParams.toString() 
@@ -219,6 +225,7 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
     const validatedRadios = document.querySelectorAll('input[name="validated"]');
+    const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
     function getValidatedValue() {
         const checked = document.querySelector('input[name="validated"]:checked');
@@ -233,7 +240,8 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
             venue: venueInput.value.trim(),
             start_date: startDateInput.value,
             end_date: endDateInput.value,
-            validated: getValidatedValue()
+            validated: getValidatedValue(),
+            peerReviewed: peerReviewedCheckbox.checked
         };
 
         // Always perform search, even with empty criteria
@@ -249,6 +257,7 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     validatedRadios.forEach(radio => {
         radio.addEventListener('change', handleInputChange);
     });
+    peerReviewedCheckbox.addEventListener('change', handleInputChange);
 
     // Prevent form submission
     form.addEventListener('submit', (e) => {
@@ -269,6 +278,8 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
         if (allRadio) {
             allRadio.checked = true;
         }
+        // Reset peer-reviewed checkbox
+        peerReviewedCheckbox.checked = false;
         handleInputChange();
     });
 
@@ -281,7 +292,8 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
         venue: urlParams.get('venue') || '',
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
-        validated: urlParams.get('validated') || ''
+        validated: urlParams.get('validated') || '',
+        peerReviewed: urlParams.get('peerReviewed') === 'true'
     };
     const initialOffset = parseInt(urlParams.get('offset') || '0', 10);
 
@@ -300,6 +312,9 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
             radioToCheck.checked = true;
         }
     }
+
+    // Set the peer-reviewed checkbox
+    peerReviewedCheckbox.checked = initialParams.peerReviewed;
 
     // Always perform initial search, even with empty criteria
     performSearch(initialParams, initialOffset);
