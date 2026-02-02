@@ -26,6 +26,7 @@ def install_search(app: FastAPI) -> FastAPI:
             request,
             is_validator=is_validator,
             validation_buttons=False,
+            show_scores=False,
         )
 
     @app.get("/validate", dependencies=[Depends(hascap("validate", redirect=True))])
@@ -36,6 +37,7 @@ def install_search(app: FastAPI) -> FastAPI:
             request,
             is_validator=True,
             validation_buttons=True,
+            show_scores=True,
         )
 
     @app.get("/workset")

@@ -2,7 +2,8 @@ import { html } from './common.js';
 import {
     createAuthorsSection,
     createReleasesSection,
-    createDetailsSection
+    createDetailsSection,
+    getScoreClass
 } from './paper.js';
 
 function setResults(...elements) {
@@ -198,9 +199,10 @@ function createWorksetElement(scoredWorkset, index) {
     `;
 
     // Create the score band on the left
-    const scoreValueElement = html`<div class="score-value">${allPapers[0].score.toFixed(2)}</div>`;
+    const initialScore = allPapers[0].score;
+    const scoreValueElement = html`<div class="score-value">${Math.round(initialScore)}</div>`;
     const scoreBand = html`
-        <div class="score-band">
+        <div class="score-band ${getScoreClass(initialScore)}">
             ${scoreValueElement}
         </div>
     `;
@@ -234,7 +236,11 @@ function createWorksetElement(scoredWorkset, index) {
         contents[index].classList.add('active');
         
         // Update the score to match the active paper
-        scoreValueElement.textContent = allPapers[index].score.toFixed(2);
+        const newScore = allPapers[index].score;
+        scoreValueElement.textContent = Math.round(newScore);
+        
+        // Update score band color class
+        scoreBand.className = `score-band ${getScoreClass(newScore)}`;
         
         // Update current tab index
         currentTabIndex = index;

@@ -101,3 +101,11 @@ def sort_releases(p: Paper):
     releases = [(release, release_status_order(release)) for release in p.releases]
     releases.sort(key=lambda entry: -entry[1])
     return replace(p, releases=[r for r, _ in releases])
+
+
+@operation
+def rescore(p: Paper):
+    from .config import config
+
+    new_score = config.focuses.score(p)
+    return replace(p, score=new_score)
