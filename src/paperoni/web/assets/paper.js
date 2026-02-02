@@ -535,6 +535,35 @@ export function createValidationButtons(paper) {
     return container;
 }
 
+/**
+ * Gets the CSS class for a score value based on thresholds.
+ * @param {number} score - The score value
+ * @returns {string} The CSS class name
+ */
+export function getScoreClass(score) {
+    if (score >= 20) return 'score-20';
+    if (score >= 10) return 'score-10';
+    if (score >= 5) return 'score-5';
+    if (score >= 3) return 'score-3';
+    if (score >= 2) return 'score-2';
+    if (score >= 1) return 'score-1';
+    return 'score-0';
+}
+
+/**
+ * Creates a score band element for displaying paper scores.
+ * @param {number} score - The score value
+ * @returns {HTMLElement} The score band element
+ */
+export function createScoreBand(score) {
+    const scoreClass = getScoreClass(score);
+    return html`
+        <div class="score-band ${scoreClass}">
+            <div class="score-value">${Math.round(score)}</div>
+        </div>
+    `;
+}
+
 export function createEditIcon(paper) {
     const editIcon = html`
         <a href="/edit/${paper.id}" target="_blank" class="edit-icon" style="

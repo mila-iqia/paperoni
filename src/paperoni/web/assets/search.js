@@ -1,5 +1,5 @@
 import { html, debounce } from './common.js';
-import { createPaperElement, createValidationButtons } from './paper.js';
+import { createPaperElement, createValidationButtons, createScoreBand } from './paper.js';
 
 const PAGE_SIZE = 50;
 
@@ -8,6 +8,7 @@ let currentParams = {};
 let totalResults = 0;
 let isValidator = false;
 let showValidationButtons = false;
+let showScores = false;
 
 function setResults(...elements) {
     const container = document.getElementById('resultsContainer');
@@ -146,15 +147,29 @@ function displayResults(data) {
 
     const paginationTop = createPagination(data.offset ?? currentOffset, data.count, data.total, data.next_offset, true);
 
-    const paperElements = data.results.map(paper => createPaperElement(paper, {
-        searchParams: currentParams,
-        onAuthorClick: handleAuthorClick,
-        onInstitutionClick: handleInstitutionClick,
-        onVenueClick: handleVenueClick,
-        onYearClick: handleYearClick,
-        bottomSection: showValidationButtons ? createValidationButtons(paper) : null,
-        showEditIcon: isValidator
-    }));
+    const paperElements = data.results.map(paper => {
+        const paperEl = createPaperElement(paper, {
+            searchParams: currentParams,
+            onAuthorClick: handleAuthorClick,
+            onInstitutionClick: handleInstitutionClick,
+            onVenueClick: handleVenueClick,
+            onYearClick: handleYearClick,
+            bottomSection: showValidationButtons ? createValidationButtons(paper) : null,
+            showEditIcon: isValidator
+        });
+
+        if (showScores) {
+            // Wrap paper in a container with score band (like workset)
+            const score = paper.score ?? 0;
+            return html`
+                <li class="paper-item-with-score">
+                    ${createScoreBand(score)}
+                    <div class="paper-content-wrapper">${paperEl}</div>
+                </li>
+            `;
+        }
+        return paperEl;
+    });
     const paperList = html`<ul class="paper-list">${paperElements}</ul>`;
 
     const paginationBottom = data.total > PAGE_SIZE
@@ -212,10 +227,11 @@ const debouncedSearch = debounce((params) => {
     performSearch(params, 0);
 }, 300);
 
-export function searchPapers(hasValidateCapability = false, enableValidationButtons = false) {
+export function searchPapers(hasValidateCapability = false, enableValidationButtons = false, enableScores = false) {
     // Store the capability flags
     isValidator = hasValidateCapability;
     showValidationButtons = enableValidationButtons;
+    showScores = enableScores;
 
     const form = document.getElementById('searchForm');
     const titleInput = document.getElementById('title');
