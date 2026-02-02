@@ -65,4 +65,21 @@ def install_search(app: FastAPI) -> FastAPI:
             validation_buttons=False,
         )
 
+    @app.get("/latest-group")
+    async def latest_group_page(
+        request: Request,
+        user: str = Depends(hascap("search", redirect=True)),
+    ):
+        """Render the latest group page."""
+        validate = deserialize(app.auth.capabilities.captype, "validate")
+        is_validator = app.auth.capabilities.check(user, validate)
+        return render_template(
+            "latest-group.html",
+            request,
+            is_validator=is_validator,
+            default_ndays=30,
+            default_fwd=0,
+            default_serial=0,
+        )
+
     return app
