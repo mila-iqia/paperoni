@@ -25,14 +25,17 @@ class FlagSetter:
     def __call__(self, p: Paper):
         new_flags = set(p.flags)
         if not self.locked(p):
-            if self.operation(p):
+            if result := self.operation(p):
                 if self.true_flag:
                     new_flags.add(self.true_flag)
                 new_flags.discard(self.false_flag)
-            else:
+            elif result is False:
                 if self.false_flag:
                     new_flags.add(self.false_flag)
                 new_flags.discard(self.true_flag)
+            else:
+                new_flags.discard(self.true_flag)
+                new_flags.discard(self.false_flag)
         changed = p.flags != new_flags
         return OperationResult(
             changed=changed,
@@ -109,3 +112,10 @@ def rescore(p: Paper):
 
     new_score = config.focuses.score(p)
     return replace(p, score=new_score)
+
+
+@flag_setter("valid")
+def auto_validate(p: Paper):
+    from .config import config
+
+    return p.score >= config.autovalidation_threshold

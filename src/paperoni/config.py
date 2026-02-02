@@ -72,6 +72,7 @@ class PaperoniConfig:
     collection: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
     server: Server = field(default_factory=Server)
+    autovalidation_threshold: float = 10.0
 
     # TODO: Why does this seams to disable future gifnoc.define like
     # `paperoni.semantic_scholar`?
