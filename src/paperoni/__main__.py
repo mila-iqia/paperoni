@@ -248,6 +248,7 @@ class Work:
         """Configure the workset."""
 
         n: int
+        drop_zero: bool = True
         clear: bool = False
 
         async def run(self, work: "Work"):
@@ -256,6 +257,7 @@ class Work:
                 top = deserialize(
                     Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file
                 )
+                top.drop_zero = self.drop_zero
                 if self.clear:
                     top.entries = []
                 elif top.n > self.n:
@@ -263,7 +265,7 @@ class Work:
                     top.resort()
                 top.n = self.n
             else:
-                top = Top(self.n)
+                top = Top(self.n, drop_zero=self.drop_zero)
             work.save(top)
             print(f"Configured {work_file.resolve()} for n={self.n}")
 
@@ -772,8 +774,52 @@ class Coll:
 
                 send(progress=("Validated papers", validated, count))
 
+    @dataclass
+    class Diff:
+        """Diff the paper collection and another collection.
+
+        The output directory will contain two files:
+        - missing.json: Papers in the other collection that are not in the current collection
+        - extra.json: Papers in the current collection that are not in the other collection
+        """
+
+        # The other collection
+        # [positional]
+        other_collection_path: str
+
+        # Output directory
+        out: Path
+
+        # Format of the output files
+        # [alias: --fmt]
+        format: Literal["json", "yaml"] = "json"
+
+        async def run(self, coll: "Coll"):
+            other_collection = FileCollection(file=Path(self.other_collection_path))
+            missings = []
+            extras = []
+
+            async for paper in other_collection.search():
+                if not await coll.collection.find_paper(paper):
+                    missings.append(paper)
+
+            self.out.mkdir(exist_ok=True, parents=True)
+            (self.out / f"missing.{self.format}").unlink(missing_ok=True)
+            await FileCollection(file=self.out / f"missing.{self.format}").add_papers(
+                missings
+            )
+
+            async for paper in coll.collection.search():
+                if not await other_collection.find_paper(paper):
+                    extras.append(paper)
+
+            (self.out / f"extra.{self.format}").unlink(missing_ok=True)
+            await FileCollection(file=self.out / f"extra.{self.format}").add_papers(
+                extras
+            )
+
     # Command to execute
-    command: TaggedUnion[Search, Import, Export, Drop, Validate]
+    command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff]
 
     # Collection dir
     # [alias: -c]
