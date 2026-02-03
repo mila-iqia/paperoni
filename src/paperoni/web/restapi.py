@@ -259,7 +259,7 @@ class PaperIncludeResponse:
 
     success: bool
     message: str
-    added: int = 0
+    count: int = 0
     ids: list[int | str] = field(default_factory=list)
 
 
@@ -276,7 +276,7 @@ class DeletePapersResponse:
 
     success: bool
     message: str
-    deleted: int
+    count: int
 
 
 @dataclass
@@ -320,7 +320,7 @@ class AddExclusionsResponse:
 
     success: bool
     message: str
-    added: int
+    count: int
 
 
 @dataclass
@@ -336,7 +336,7 @@ class RemoveExclusionsResponse:
 
     success: bool
     message: str
-    removed: int
+    count: int
 
 
 def install_api(app) -> FastAPI:
@@ -481,14 +481,14 @@ def install_api(app) -> FastAPI:
             return PaperIncludeResponse(
                 success=True,
                 message=f"Processed {len(added_ids)} paper(s)",
-                added=len(added_ids),
+                count=len(added_ids),
                 ids=added_ids,
             )
         except Exception as e:
             return PaperIncludeResponse(
                 success=False,
                 message=f"Error processing papers: {str(e)}",
-                added=0,
+                count=0,
             )
 
     @app.post(
@@ -503,7 +503,7 @@ def install_api(app) -> FastAPI:
         return DeletePapersResponse(
             success=True,
             message=f"Deleted {deleted} paper(s)",
-            deleted=deleted,
+            count=deleted,
         )
 
     @app.get(
@@ -588,7 +588,7 @@ def install_api(app) -> FastAPI:
         return AddExclusionsResponse(
             success=True,
             message=f"Added {added} exclusion(s)",
-            added=added,
+            count=added,
         )
 
     @app.delete(
@@ -604,7 +604,7 @@ def install_api(app) -> FastAPI:
         return RemoveExclusionsResponse(
             success=True,
             message=f"Removed {removed} exclusion(s)",
-            removed=removed,
+            count=removed,
         )
 
     return app
