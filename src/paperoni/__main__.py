@@ -43,6 +43,7 @@ from .collection.finder import find_equivalent, paper_index
 from .collection.remotecoll import RemoteCollection
 from .config import config
 from .dash import History
+from .discovery.paperoni_v2 import PaperoniV2
 from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
@@ -247,6 +248,7 @@ class Work:
         """Configure the workset."""
 
         n: int
+        drop_zero: bool = True
         clear: bool = False
 
         async def run(self, work: "Work"):
@@ -255,6 +257,7 @@ class Work:
                 top = deserialize(
                     Top[Scored[CommentRec[PaperWorkingSet, float]]], work_file
                 )
+                top.drop_zero = self.drop_zero
                 if self.clear:
                     top.entries = []
                 elif top.n > self.n:
@@ -262,7 +265,7 @@ class Work:
                     top.resort()
                 top.n = self.n
             else:
-                top = Top(self.n)
+                top = Top(self.n, drop_zero=self.drop_zero)
             work.save(top)
             print(f"Configured {work_file.resolve()} for n={self.n}")
 
@@ -701,8 +704,122 @@ class Coll:
             elif not len(coll.collection) and not len(await coll.collection.exclusions()):
                 logging.warning("Collection is not empty. Use --force to drop it.")
 
+    @dataclass
+    class Validate:
+        """Validate the papers in the collection using the paperoni v2 database."""
+
+        # The paperoni v2 database
+        # [optional]
+        # [metavar v2]
+        paperoni_v2: Auto[PaperoniV2.query] = None
+
+        # Validate papers having a score greater than the threshold
+        # [metavar FLOAT]
+        threshold: float = None
+
+        async def iterate(
+            self, coll: "Coll" = None, **kwargs
+        ) -> AsyncGenerator[Paper, None]:
+            if self.paperoni_v2 is not None:
+                validated = 0
+                total = 0
+                async for paper_v2 in self.paperoni_v2(**kwargs):
+                    paper_v2: Paper
+                    total += 1
+
+                    if "valid" not in paper_v2.flags:
+                        continue
+
+                    validated += 1
+
+                    yield paper_v2
+
+                    send(progress=("Validated v2 papers", validated, total))
+
+                send(progress=("Validated v2 papers", None, total))
+
+            else:
+                score_threshold = self.threshold or config.autovalidate.score_threshold
+
+                async for paper in coll.collection.search():
+                    paper: Paper
+
+                    if (
+                        "valid" in paper.flags
+                        or (paper.score or config.focuses.score(paper)) < score_threshold
+                    ):
+                        continue
+
+                    yield paper
+
+        async def run(self, coll: "Coll"):
+            ignored = 0
+            validated = 0
+            count = 0
+
+            async for paper in self.iterate(coll=coll):
+                count += 1
+
+                if coll_paper := await coll.collection.find_paper(paper):
+                    if "invalid" in coll_paper.flags:
+                        ignored += 1
+                        continue
+
+                    validated += 1
+                    coll_paper.flags.add("valid")
+                    await coll.collection.edit_paper(coll_paper)
+
+                if ignored and ignored != count:
+                    send(progress=("Ignored papers", ignored, count))
+
+                send(progress=("Validated papers", validated, count))
+
+    @dataclass
+    class Diff:
+        """Diff the paper collection and another collection.
+
+        The output directory will contain two files:
+        - missing.json: Papers in the other collection that are not in the current collection
+        - extra.json: Papers in the current collection that are not in the other collection
+        """
+
+        # The other collection
+        # [positional]
+        other_collection_path: str
+
+        # Output directory
+        out: Path
+
+        # Format of the output files
+        # [alias: --fmt]
+        format: Literal["json", "yaml"] = "json"
+
+        async def run(self, coll: "Coll"):
+            other_collection = FileCollection(file=Path(self.other_collection_path))
+            missings = []
+            extras = []
+
+            async for paper in other_collection.search():
+                if not await coll.collection.find_paper(paper):
+                    missings.append(paper)
+
+            self.out.mkdir(exist_ok=True, parents=True)
+            (self.out / f"missing.{self.format}").unlink(missing_ok=True)
+            await FileCollection(file=self.out / f"missing.{self.format}").add_papers(
+                missings
+            )
+
+            async for paper in coll.collection.search():
+                if not await other_collection.find_paper(paper):
+                    extras.append(paper)
+
+            (self.out / f"extra.{self.format}").unlink(missing_ok=True)
+            await FileCollection(file=self.out / f"extra.{self.format}").add_papers(
+                extras
+            )
+
     # Command to execute
-    command: TaggedUnion[Search, Import, Export, Drop]
+    command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff]
 
     # Collection dir
     # [alias: -c]

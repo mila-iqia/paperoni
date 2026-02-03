@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Iterable
+from typing import AsyncGenerator, Iterable
 
 from fastapi import HTTPException
 from serieux import deserialize
@@ -81,7 +81,7 @@ class RemoteCollection(PaperCollection):
         include_flags: list[str] = None,
         # Flags that must be False
         exclude_flags: list[str] = None,
-    ):
+    ) -> AsyncGenerator[Paper, None]:
         params = {}
         if paper_id:
             params["paper_id"] = paper_id
@@ -106,7 +106,7 @@ class RemoteCollection(PaperCollection):
         while True:
             query_params = params.copy()
             query_params["offset"] = offset
-            resp = await self.fetch.read(
+            resp: dict = await self.fetch.read(
                 url,
                 format="json",
                 cache_into=None,
