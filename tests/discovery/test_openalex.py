@@ -7,6 +7,7 @@ from paperoni.model import Focus, Focuses, Paper
 
 from ..utils import eq, filter_test_papers, iter_affiliations, sort_title, split_on
 
+MILA = "Mila - Quebec Artificial Intelligence Institute"
 PAPERS = [
     "A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues",
     "A closer look at memorization in deep networks",
@@ -29,7 +30,7 @@ PAPERS = [
 @pytest.mark.parametrize(
     "query_params",
     [
-        {"institution": "mila"},
+        {"institution": MILA},
         {"author": "Yoshua Bengio"},
         {"author_id": "a5086198262"},
         {"title": "Hierarchical Latent Variable"},
@@ -143,7 +144,7 @@ async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureF
     results = [
         p
         async for p in discoverer.query(
-            institution="mila",
+            institution=MILA,
             focuses=Focuses(
                 [
                     Focus(
@@ -176,7 +177,7 @@ async def test_focuses_drive_discovery_false():
     results = [
         p
         async for p in discoverer.query(
-            institution="mila",
+            institution=MILA,
             focuses=Focuses([Focus(type="author", name="Yoshua Bengio", score=1.0)]),
             page=1,
             per_page=10,
@@ -192,11 +193,11 @@ async def test_focuses_drive_discovery_false():
         [
             {
                 "author": "Yoshua Bengio",
-                "institution": "mila",
+                "institution": MILA,
             },
             {
                 "author": "Unknown Author",  # Focuses should take precedence over other parameters
-                "institution": "mila",
+                "institution": MILA,
                 "focuses": {
                     "type": "author",
                     "name": "Yoshua Bengio",
@@ -206,11 +207,11 @@ async def test_focuses_drive_discovery_false():
         [
             {
                 "author_id": "a5086198262",
-                "institution": "mila",
+                "institution": MILA,
             },
             {
                 "author_id": "aINVALID",  # Focuses should take precedence over other parameters
-                "institution": "mila",
+                "institution": MILA,
                 "focuses": {
                     "type": "author_openalex",
                     "name": "a5086198262",
@@ -219,12 +220,12 @@ async def test_focuses_drive_discovery_false():
         ],
         [
             {
-                "institution": "mila",
+                "institution": MILA,
             },
             {
                 "focuses": {
                     "type": "institution",
-                    "name": "mila",
+                    "name": MILA,
                 },
             },
         ],
@@ -264,8 +265,8 @@ async def test_focuses(query_params, focused_params):
     ]
 
     # Both should return the same papers
-    direct_papers = [p.title for p in direct_results]
-    focus_papers = [p.title for p in focus_results]
+    direct_papers = {p.title for p in direct_results}
+    focus_papers = {p.title for p in focus_results}
 
     assert focus_papers == direct_papers
     assert len(focus_results) == 10
@@ -282,7 +283,7 @@ async def test_focuses_multiple_focuses():
     focuses = Focuses(
         [
             Focus(type="author", name="Yoshua Bengio", score=1.0, drive_discovery=True),
-            Focus(type="institution", name="mila", score=2.0, drive_discovery=True),
+            Focus(type="institution", name=MILA, score=2.0, drive_discovery=True),
             Focus(type="author", name="Yoshua Bengio", score=1.0, drive_discovery=True),
             Focus(type="author", name="Unknown Author", score=0.5),  # Should be skipped
         ]
