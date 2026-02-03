@@ -108,7 +108,7 @@ class PaperoniV2(Discoverer):
     # The paperoni v2 endpoint
     # [positional]
     # [metavar JSON]
-    endpoint: str
+    endpoint: str = None
 
     # The paperoni v2 access token
     # [metavar TOKEN]

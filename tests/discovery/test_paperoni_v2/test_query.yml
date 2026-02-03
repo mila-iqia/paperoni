@@ -308,7 +308,7 @@
       name: Yoshua Bengio
     display_name: Yoshua Bengio
   flags:
-  - validated
+  - valid
   info:
     discovered_by:
       paperoni_v2: 9266c713b4223e2674bf33e0cc34e9d7
