@@ -30,7 +30,9 @@ link_generators = {
     },
     "mlr": {
         "abstract": "https://proceedings.mlr.press/v{}.html",
-        "pdf": lambda lnk: f"https://proceedings.mlr.press/v{lnk}/{lnk.split('/')[-1]}.pdf",
+        "pdf": lambda lnk: (
+            f"https://proceedings.mlr.press/v{lnk}/{lnk.split('/')[-1]}.pdf"
+        ),
     },
     "dblp": {"abstract": "https://dblp.uni-trier.de/rec/{}"},
     "semantic_scholar": {"abstract": "https://www.semanticscholar.org/paper/{}"},

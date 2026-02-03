@@ -223,8 +223,10 @@ async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFix
         )
         magnetoencephalography_paper: Scored[CommentRec[PaperWorkingSet, float]] = next(
             filter(
-                lambda p: "artificial neural networks for magnetoencephalography".lower()
-                in p.value.current.title.lower(),
+                lambda p: (
+                    "artificial neural networks for magnetoencephalography".lower()
+                    in p.value.current.title.lower()
+                ),
                 state,
             )
         )
