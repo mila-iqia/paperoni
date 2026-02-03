@@ -223,7 +223,7 @@ def test_include_papers_endpoint(wr_app, edited_paper):
     assert "Watermelon" not in modified["title"]
     assert "Cantaloupe" in modified["title"]
     assert len(modified["authors"]) == 1
-    assert response.json()["added"] == 1
+    assert response.json()["count"] == 1
     assert response.json()["ids"] == [3]
 
 
@@ -240,7 +240,7 @@ def test_include_papers_endpoint_not_found(wr_app, edited_paper):
     data = response.json()
     assert data["success"] is False
     assert "Paper with ID 999 not found" in data["message"]
-    assert data["added"] == 0
+    assert data["count"] == 0
 
 
 def test_include_papers_endpoint_no_id(wr_app, edited_paper):
@@ -256,7 +256,7 @@ def test_include_papers_endpoint_no_id(wr_app, edited_paper):
     assert response.status_code == 200
     data = response.json()
     assert data["success"] is True
-    assert data["added"] == 1
+    assert data["count"] == 1
     assert len(data["ids"]) == 1
     assert isinstance(data["ids"][0], int)
 
@@ -296,7 +296,7 @@ def test_delete_papers_endpoint(wr_app):
     assert response.status_code == 200
     data = response.json()
     assert data["success"] is True
-    assert data["deleted"] == 1
+    assert data["count"] == 1
 
     # Paper 3 should be gone
     assert admin.get("/api/v1/paper/3", expect=404).status_code == 404
@@ -305,4 +305,4 @@ def test_delete_papers_endpoint(wr_app):
     response = admin.post("/api/v1/delete", ids=[999])
     assert response.status_code == 200
     data = response.json()
-    assert data["deleted"] == 0
+    assert data["count"] == 0
