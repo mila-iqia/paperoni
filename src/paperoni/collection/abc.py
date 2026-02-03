@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from typing import AsyncGenerator, Iterable
 
 from ..model.classes import Paper
