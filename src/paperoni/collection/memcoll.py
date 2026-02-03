@@ -10,6 +10,7 @@ from ..utils import (
     normalize_name,
     normalize_title,
     normalize_venue,
+    to_sync,
 )
 from .abc import PaperCollection
 from .finder import Index, find_equivalent, paper_indexers
@@ -86,7 +87,7 @@ class MemCollection(PaperCollection):
     ) -> list[int | str]:
         added_ids = []
         if not ignore_exclusions:
-            papers = await self.filter_exclusions(papers)
+            papers = await to_sync(self.filter_exclusions(papers))
 
         try:
             for p in papers:

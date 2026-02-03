@@ -284,3 +284,10 @@ def deprox(x):
         return x._obj
     else:
         return x
+
+
+async def to_sync(async_iter):
+    values = []
+    async for x in async_iter:
+        values.append(x)
+    return values

@@ -33,15 +33,16 @@ class PaperCollection:
         """Return whether a link is excluded."""
         raise NotImplementedError()
 
-    async def filter_exclusions(self, papers: Iterable[Paper]) -> Iterable[Paper]:
+    async def filter_exclusions(
+        self, papers: Iterable[Paper]
+    ) -> AsyncGenerator[Paper, None]:
         """Filter out papers based on exclusions."""
-        return [
-            p
-            for p in papers
-            if not any(
-                [(await self.is_excluded(f"{lnk.type}:{lnk.link}")) for lnk in p.links]
-            )
-        ]
+        for paper in papers:
+            for lnk in paper.links:
+                if await self.is_excluded(f"{lnk.type}:{lnk.link}"):
+                    break
+            else:
+                yield paper
 
     async def add_papers(
         self, papers: Iterable[Paper], force=False, ignore_exclusions=False
