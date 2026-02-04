@@ -20,9 +20,10 @@ paperoni:
     simultaneous:
       "*": 1
   focuses:
-    - "!institution :: Mila :: 10"
-    - "!author :: Yoshua Bengio :: 3"
-    - "!author :: Aaron Courville :: 3"
+    main:
+      - "!institution :: Mila :: 10"
+      - "!author :: Yoshua Bengio :: 3"
+      - "!author :: Aaron Courville :: 3"
   discovery:
     scrape:
       urls:

@@ -13,6 +13,7 @@ import paperoni
 from ..config import config
 from .capabilities import install_capabilities
 from .edit import install_edit
+from .focuses import install_focuses
 from .pages import install_pages
 from .reports import install_reports
 from .restapi import install_api
@@ -53,6 +54,7 @@ def create_app():
     install_reports(app)
     install_search(app)
     install_edit(app)
+    install_focuses(app)
     install_pages(app)
     install_capabilities(app)
     return app

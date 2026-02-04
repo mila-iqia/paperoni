@@ -14,7 +14,7 @@ license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "ovld>=0.5.13",
-    "serieux>=0.3.8",
+    "serieux>=0.3.9",
     "gifnoc>=0.6.2",
     "beautifulsoup4>=4.13.4",
     "blessed>=1.21.0",

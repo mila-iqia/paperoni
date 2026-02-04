@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
 
@@ -15,7 +16,7 @@ from tests.test_work import work
 
 def test_focus_scoring():
     focuses = Focuses(
-        [
+        main=[
             Focus("author", "Alice Smith", 1.0),
             Focus("author", "Bob Jones", 0.5),
             Focus("institution", "MIT", 2.0),
@@ -69,14 +70,22 @@ def test_focus_scoring():
     assert focuses.score(paper_info) == 1.5
 
 
-def test_focuses_institution_scoring():
+@contextmanager
+def focus_overlay(*focuses):
     with gifnoc.overlay(
         {
-            "paperoni.focuses": [
-                "!institution :: Mila :: 10",
-                "!author :: Alice Smith :: 1",
-            ]
+            "paperoni.focuses": {
+                "main": list(focuses),
+            }
         }
+    ) as cfg:
+        yield cfg
+
+
+def test_focuses_institution_scoring():
+    with focus_overlay(
+        "!institution :: Mila :: 10",
+        "!author :: Alice Smith :: 1",
     ) as config:
         from paperoni.config import PaperoniConfig
 
@@ -101,13 +110,9 @@ def test_focuses_institution_scoring():
 
 
 def test_focuses_normalization():
-    with gifnoc.overlay(
-        {
-            "paperoni.focuses": [
-                "!institution :: Mila :: 10",
-                "!institution :: Université de Montréal :: 1",
-            ]
-        }
+    with focus_overlay(
+        "!institution :: Mila :: 10",
+        "!institution :: Université de Montréal :: 1",
     ) as config:
         from paperoni.config import PaperoniConfig
 
@@ -132,7 +137,7 @@ def test_focuses_normalization():
 
 def test_score_non_ascii_title():
     focuses = Focuses(
-        [
+        main=[
             Focus("author", "Alice Smith", 1.0),
             Focus("author", "Bob Jones", 0.5),
         ]
@@ -159,15 +164,18 @@ def test_focus_serialization():
 def test_focuses_serialization():
     focus1 = Focus("author", "Alice Smith", 1.0, drive_discovery=False)
     focus2 = Focus("institution", "MIT", 2.0, drive_discovery=True)
-    focuses = Focuses(focuses=[focus1, focus2])
-    ser = ["author::Alice Smith::1.0", "!institution::MIT::2.0"]
+    focuses = Focuses(main=[focus1, focus2])
+    ser = {
+        "main": ["author::Alice Smith::1.0", "!institution::MIT::2.0"],
+        "auto": [],
+    }
     assert serialize(Focuses, focuses) == ser
     assert deserialize(Focuses, ser) == focuses
 
 
 def test_focuses_top():
     focuses = Focuses(
-        [
+        main=[
             Focus("author", "Alice", 1.0),
             Focus("author", "Bob", 0.5),
             Focus("author", "Charlie", 2.0),
@@ -208,11 +216,13 @@ async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFix
 
         config.focuses = deserialize(
             Focuses,
-            [
-                "!institution :: Mila :: 10",
-                "!institution :: McGill University :: 1",
-                "!author :: Irina Rish :: 3",
-            ],
+            {
+                "main": [
+                    "!institution :: Mila :: 10",
+                    "!institution :: McGill University :: 1",
+                    "!author :: Irina Rish :: 3",
+                ],
+            },
         )
 
         state = await work(
@@ -253,7 +263,7 @@ async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFix
 
         # Nothing should change as we have passed the threshold for the authors
         # count affiliated to an institution
-        assert len(config.focuses.focuses) == 3
+        assert len(list(config.focuses.focuses)) == 3
 
         config.focuses.update(
             [magnetoencephalography_paper.value.current]
@@ -261,7 +271,7 @@ async def test_focuses_update(tmp_path: Path, data_regression: DataRegressionFix
             config.autofocus,
         )
 
-        assert len(config.focuses.focuses) > 3
+        assert len(list(config.focuses.focuses)) > 3
         # Some of the author focus should have a score of config.autofocus.author.score
         assert any(
             f.type == "author" and f.score == config.autofocus.author.score

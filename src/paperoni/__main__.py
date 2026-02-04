@@ -34,6 +34,7 @@ from serieux import (
     dump,
     serialize,
 )
+from serieux.features.filebacked import FileProxy
 from serieux.features.tagset import FromEntryPoint
 
 from .client.utils import login
@@ -870,47 +871,26 @@ class Focus:
         timespan: timedelta = timedelta(weeks=52)
 
         async def run(self, focus: "Focus"):
+            focuses = focus.focuses or config.focuses
             start_date = datetime.now() - self.timespan
             start_date = start_date.date().replace(month=1, day=1)
-            focuses = Focuses()
-            focus.focuses.update(
+            focuses.update(
                 [p async for p in focus.collection.search(start_date=start_date)],
                 config.autofocus,
-                dest=focuses,
             )
-            dump(Focuses, focuses, dest=focus.autofocus_file)
-            return focus.focuses
+            focuses.save()
+            return focuses
 
     # Command to execute
     command: TaggedUnion[AutoFocus]
 
     # List of focuses
     # [option: -f]
-    _focus_file: Path = None
+    focuses: Focuses @ FileProxy() = None
 
     # Collection dir
     # [alias: -c]
     collection_file: Path = None
-
-    @cached_property
-    def focus_file(self):
-        focus_file = self._focus_file
-        if focus_file is None:
-            f = config.metadata.focuses.file
-            focus_file = f if f.exists() else None
-        return focus_file
-
-    @cached_property
-    def autofocus_file(self):
-        focus_file = self.focus_file
-        return (
-            focus_file.parent / f"auto{focus_file.name}"
-            or config.metadata.focuses.autofile
-        )
-
-    @cached_property
-    def focuses(self):
-        return deserialize(Focuses, self.focus_file)
 
     @cached_property
     def collection(self):

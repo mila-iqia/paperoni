@@ -52,15 +52,15 @@ def test_endpoint_requires_admin_authentication(app, endpoint):
     """Test that the admin GET endpoints require admin authentication."""
 
     unlogged = app.client()
-    response = unlogged.get(endpoint, expect=401)
+    response = unlogged.post(endpoint, expect=401)
     assert "Authentication required" in response.json()["detail"]
 
     user = app.client("seeker@website.web")
-    response = user.get(endpoint, expect=403)
+    response = user.post(endpoint, expect=403)
     assert "admin capability required" in response.json()["detail"]
 
     admin = app.client("admin@website.web")
-    response = admin.get(endpoint)
+    response = admin.post(endpoint)
 
 
 @pytest.mark.parametrize(

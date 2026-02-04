@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+
+{% block title %}Edit Focuses{% endblock %}
+
+{% block page_title %}Edit Focuses{% endblock %}
+
+{% block content %}
+<div class="edit-container focuses-page">
+    <div class="focuses-tabs">
+        <button class="focuses-tab active" data-tab="main">Main</button>
+        <button class="focuses-tab" data-tab="auto">Auto</button>
+    </div>
+
+    <div class="focuses-tab-content active" id="main-tab">
+        <div class="focuses-table-container">
+            <table id="mainFocusesTable" class="edit-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Drive Discovery</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="focuses-actions">
+            <button id="addMainFocusBtn" class="btn-primary">+ Add Focus</button>
+            <button id="saveMainFocusesBtn" class="btn-save-sticky">Save Main</button>
+        </div>
+    </div>
+
+    <div class="focuses-tab-content" id="auto-tab">
+        <div class="focuses-table-container">
+            <table id="autoFocusesTable" class="edit-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Drive Discovery</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="focuses-actions">
+            <button id="addAutoFocusBtn" class="btn-primary">+ Add Focus</button>
+            <div class="focuses-actions-right">
+                <button id="autogenerateFocusesBtn" class="btn-secondary">⚡ Autogenerate</button>
+                <button id="saveAutoFocusesBtn" class="btn-save-sticky">Save Auto</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { init } from '/assets/focuses.js';
+    init();
+</script>
+{% endblock %}

@@ -197,3 +197,41 @@ export function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+/**
+ * Show a toast notification
+ */
+export function showToast(message, type = 'success') {
+    // Create toast container if it doesn't exist
+    // Implementation of showToast extracted from edit.js but made generic
+    // We assume the CSS handles positioning relative to the viewport (.toast { position: fixed ... })
+    
+    // Check for existing toast with same message to prevent stacking
+    const existing = Array.from(document.querySelectorAll('.toast')).find(t => t.textContent.includes(message));
+    if (existing) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? '✓' : '✕';
+    
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close">×</button>
+    `;
+
+    document.body.appendChild(toast);
+
+    const closeBtn = toast.querySelector('.toast-close');
+    
+    function hide() {
+        toast.classList.add('toast-hiding');
+        toast.addEventListener('animationend', () => {
+            toast.remove();
+        });
+    }
+
+    closeBtn.addEventListener('click', hide);
+    setTimeout(hide, 5000);
+}

@@ -6,7 +6,6 @@ from typing import Counter, Iterable, Literal
 
 from outsight import send
 from ovld import ovld
-from serieux import Field, Model
 
 from ..utils import (
     mostly_latin,
@@ -56,10 +55,15 @@ def combine(scores):
 
 @dataclass
 class Focuses:
-    focuses: list[Focus] = field(default_factory=list)
+    main: list[Focus] = field(default_factory=list)
+    auto: list[Focus] = field(default_factory=list)
 
     def __post_init__(self):
+        self.compile()
+
+    def compile(self):
         self.score_index = {}
+        self.focuses = list(self.main + self.auto)
         for f in self.focuses:
             match f.type.split("_")[0]:
                 case "author":
@@ -68,14 +72,6 @@ class Focuses:
                     self.score_index[(f.type, normalize_institution(f.name))] = f.score
                 case _:
                     raise ValueError(f"Invalid focus type: {f.type}")
-
-    @classmethod
-    def serieux_model(cls, call_next):
-        return Model(
-            original_type=cls,
-            element_field=Field(name="_", type=Focus),
-            from_list=cls,
-        )
 
     def __iter__(self):
         return iter(self.focuses)
@@ -118,19 +114,17 @@ class Focuses:
             t.add(scored)
         return t
 
-    def update(
-        self, papers: Iterable[Paper], autofocus: "AutoFocus", dest: Focuses = None
-    ) -> Focuses:
+    def update(self, papers: Iterable[Paper], autofocus: "AutoFocus"):
         # TODO: store each auto focus with a start / end date to avoid
         # considering the papers of authors not at Mila anymore
-        dest = dest or self
+
         focused_institutions_cnts = {
             normalize_institution(f.name): Counter()
-            for f in self.focuses
+            for f in self.main
             if f.type == "institution"
             and f.score >= autofocus.author.institution_score_threshold
         }
-        focused_authors = {f.name for f in self.focuses if f.type == "author"}
+        focused_authors = {f.name for f in self.main if f.type == "author"}
 
         for paper in papers:
             for author in paper.authors:
@@ -143,13 +137,14 @@ class Focuses:
                             set([author.display_name, *author.author.aliases])
                         )
 
+        self.auto.clear()
         for counter in focused_institutions_cnts.values():
             for author_name, count in counter.most_common():
                 if (
                     count >= autofocus.author.threshold
                     and author_name not in focused_authors
                 ):
-                    dest.focuses.append(
+                    self.auto.append(
                         Focus(
                             type="author", name=author_name, score=autofocus.author.score
                         )
@@ -157,26 +152,21 @@ class Focuses:
                     focused_authors.add(author_name)
 
         # sort focuses by institution first, then author
-        dest.focuses = sorted(
-            (f for f in dest.focuses if f.type == "institution"),
-            key=lambda x: x.score,
-            reverse=True,
-        ) + sorted(
-            (f for f in dest.focuses if f.type == "author"),
-            key=lambda x: x.score,
-            reverse=True,
-        )
+        order = {"institution": 0, "author": 1}
+        self.auto.sort(key=lambda x: (order[x.type], -x.score, x.name))
+        self.compile()
 
 
-class AutoFocus(dict):
-    @dataclass
-    class Author:
-        score: int
-        institution_score_threshold: int
-        threshold: int = 1
+@dataclass
+class AuthorFocusPolicy:
+    score: int
+    institution_score_threshold: int
+    threshold: int = 1
 
-    def __getattr__(self, attr: str) -> "AutoFocus.Author":
-        return self[attr]
+
+@dataclass
+class AutoFocus:
+    author: AuthorFocusPolicy = None
 
 
 @dataclass(order=True)
