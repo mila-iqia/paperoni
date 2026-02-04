@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
 from typing import Callable
 
-from .model import Paper
+from .model import Paper, Release
 
 
 @dataclass

@@ -69,8 +69,6 @@ paperoni:
     file: ${paperoni.data_path}/collection.json
   server:
     max_results: 10000
-    process_pool_executor:
-      max_workers: 4
     auth:
       server_metadata_url: https://accounts.google.com/.well-known/openid-configuration
       secret_key: _
