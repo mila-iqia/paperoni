@@ -1045,9 +1045,7 @@ class PaperoniInterface:
             ) as report:
                 await self.command.run()
                 if logfile and config.server:
-                    url = f"{config.server.protocol}://{config.server.host}"
-                    if config.server.port not in (80, 443):
-                        url += f":{config.server.port}"
+                    url = f"{config.server.external_host}"
                     report.set_message(f"[View report]({url}/report/{logfile.stem})")
         else:
             await self.command.run()

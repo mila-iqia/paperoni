@@ -37,9 +37,6 @@ paperoni:
       model: gemini-2.5-pro
       api_key: DUMMY_GEMINI_API_KEY
   server:
-    process_pool_executor:
-      # Disable process pool for testing
-      max_workers: 0
     auth:
       server_metadata_url: http://127.0.0.1:29313/.well-known/openid-configuration
       secret_key: _

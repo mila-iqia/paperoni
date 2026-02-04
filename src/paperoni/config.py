@@ -1,4 +1,3 @@
-from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
@@ -38,18 +37,18 @@ class Refine:
 @dataclass(kw_only=True)
 class Server:
     host: str = "localhost"
+    external_host: str = None
     port: int = 8000
     protocol: Literal["http", "https"] = "http"
     max_results: int = 10000
-    process_pool_executor: dict = field(default_factory=dict)
     auth: OAuthManager = None
     assets: Path = None
 
     def __post_init__(self):
-        if self.process_pool_executor.get("max_workers", 0) == 0:
-            self.process_pool = None
-        else:
-            self.process_pool = ProcessPoolExecutor(**self.process_pool_executor)
+        if self.external_host is None:
+            self.external_host = f"{self.protocol}://{self.host}"
+            if self.port not in (80, 443):
+                self.external_host += f":{self.port}"
 
 
 @dataclass
