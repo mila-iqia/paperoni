@@ -70,7 +70,7 @@ class MongoCollection(PaperCollection):
     cluster_uri: str = "localhost:27017"
     user: Secret[str] = None
     password: Secret[str] = None
-    connection_string: str = "mongodb://{cluster_uri}"
+    connection_string: str = "mongodb://{user}:{password}@{cluster_uri}"
     database: str = "paperoni"
     collection: str = "collection"
     exclusions_collection: str = "exclusions"
@@ -187,7 +187,7 @@ class MongoCollection(PaperCollection):
 
             else:
                 p.version = datetime.now()
-                assert not await self._collection.find_one({"_id": p.id})
+                # assert not await self._collection.find_one({"_id": p.id})
                 result = await self._collection.insert_one(srx.serialize(Paper, p))
                 p = replace(p, id=str(result.inserted_id))
 
@@ -233,9 +233,10 @@ class MongoCollection(PaperCollection):
         return result.deleted_count
 
     async def drop(self) -> None:
-        """Drop the collection."""
+        """Drop the collections."""
         await self._ensure_connection()
-        await self._client.drop_database(self.database)
+        await self._collection.delete_many({})
+        await self._exclusions.delete_many({})
         self._client = None
         self._database = None
         self._collection = None

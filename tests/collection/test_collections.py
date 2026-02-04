@@ -145,7 +145,9 @@ async def make_collection(t: type[FileCollection], tmp_path: Path):
 
 @ovld
 async def make_collection(t: type[MongoCollection], tmp_path: Path):
-    mongo_collection = MongoCollection(database=tmp_path.name)
+    mongo_collection = MongoCollection(
+        database=tmp_path.name, connection_string="mongodb://{cluster_uri}"
+    )
     await mongo_collection._ensure_connection()
     await mongo_collection._client.drop_database(mongo_collection.database)
     return mongo_collection
