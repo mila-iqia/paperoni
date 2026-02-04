@@ -713,7 +713,9 @@ class Coll:
 
             if self.force:
                 await coll.collection.drop()
-            elif not len(coll.collection) and not len(await coll.collection.exclusions()):
+            elif (await coll.collection.count()) or len(
+                await coll.collection.exclusions()
+            ):
                 logging.warning("Collection is not empty. Use --force to drop it.")
 
     @dataclass
@@ -830,6 +832,7 @@ class Coll:
                 extras
             )
 
+    @dataclass
     class Operate:
         """Operate over the paper collection."""
 
