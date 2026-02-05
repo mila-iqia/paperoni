@@ -170,6 +170,8 @@ class MongoCollection(PaperCollection):
             papers = await to_sync(self.filter_exclusions(papers))
 
         for p in papers:
+            p = self.prepare(p)
+
             # Handle existing papers
             existing_paper: Paper = None
             if existing_paper := await self._collection.find_one({"_id": ObjectId(p.id)}):

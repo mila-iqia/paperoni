@@ -53,11 +53,8 @@ class PaperIndex(Index[Paper]):
         return rval
 
 
+@dataclass
 class MemCollection(PaperCollection):
-    def __init__(self):
-        self._index = None
-        self.__post_init__()
-
     def __post_init__(self):
         self._index = PaperIndex()
 
@@ -91,6 +88,8 @@ class MemCollection(PaperCollection):
 
         try:
             for p in papers:
+                p = self.prepare(p)
+
                 if paper := self._index.equiv("id", p):
                     if not force and paper.version >= p.version:
                         # Paper has been updated since last time it was fetched.
