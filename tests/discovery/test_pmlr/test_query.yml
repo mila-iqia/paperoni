@@ -68,6 +68,7 @@
     type: pdf
   releases:
   - pages: 518-528
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -159,6 +160,7 @@
     type: pdf
   releases:
   - pages: 641-651
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []

@@ -161,6 +161,7 @@ links:
   type: pdf
 releases:
 - pages: null
+  peer_review_status: preprint
   status: preprint
   venue:
     aliases: []

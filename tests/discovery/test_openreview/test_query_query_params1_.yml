@@ -60,6 +60,7 @@
     type: openreview
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: poster
     venue:
       aliases: []
@@ -125,6 +126,7 @@
     type: openreview
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: poster
     venue:
       aliases: []
@@ -217,6 +219,7 @@
     type: openreview
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: poster
     venue:
       aliases: []
@@ -341,6 +344,7 @@
     type: openreview
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: poster
     venue:
       aliases: []
@@ -433,6 +437,7 @@
     type: openreview
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: poster
     venue:
       aliases: []

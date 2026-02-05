@@ -142,6 +142,7 @@ links:
   type: url
 releases:
 - pages: null
+  peer_review_status: preprint
   status: published
   venue:
     aliases: []

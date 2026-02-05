@@ -89,6 +89,7 @@ links:
   type: pmc
 releases:
 - pages: null
+  peer_review_status: peer-reviewed
   status: published
   venue:
     aliases: []

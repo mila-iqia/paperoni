@@ -99,6 +99,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (Poster)
     venue:
       aliases: []
@@ -240,6 +241,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (Spotlight)
     venue:
       aliases: []
@@ -336,6 +338,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (Poster)
     venue:
       aliases: []
@@ -466,6 +469,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (Poster)
     venue:
       aliases: []
@@ -557,6 +561,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (Spotlight)
     venue:
       aliases: []

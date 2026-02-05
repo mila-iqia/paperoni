@@ -119,6 +119,7 @@
     type: pdf
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -256,6 +257,7 @@
     type: url
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: unknown
     venue:
       aliases: []
@@ -609,6 +611,7 @@
     type: url
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -708,6 +711,7 @@
     type: url
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: unknown
     venue:
       aliases: []
@@ -809,6 +813,7 @@
     type: url
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: unknown
     venue:
       aliases: []

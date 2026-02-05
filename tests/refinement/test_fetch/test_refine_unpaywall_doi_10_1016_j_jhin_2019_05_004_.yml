@@ -56,6 +56,7 @@ links:
   type: pdf
 releases:
 - pages: null
+  peer_review_status: peer-reviewed
   status: published
   venue:
     aliases: []

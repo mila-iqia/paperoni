@@ -342,6 +342,7 @@
     type: corpusid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: poster
     venue:
       aliases: []
@@ -359,6 +360,7 @@
       type: conference
       volume: NeurIPS 2023
   - pages: 17072–17116
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -374,6 +376,7 @@
       type: unknown
       volume: '36'
   - pages: null
+    peer_review_status: preprint
     status: preprint
     venue:
       aliases: []
@@ -389,6 +392,7 @@
       type: preprint
       volume: null
   - pages: null
+    peer_review_status: preprint
     status: published
     venue:
       aliases: []

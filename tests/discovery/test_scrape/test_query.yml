@@ -52,6 +52,7 @@
     type: arxiv
   releases:
   - pages: null
+    peer_review_status: workshop
     status: unknown
     venue:
       aliases: []

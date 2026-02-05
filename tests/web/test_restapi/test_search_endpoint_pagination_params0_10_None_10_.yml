@@ -38,6 +38,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -86,6 +87,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -144,6 +146,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -192,6 +195,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -250,6 +254,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -298,6 +303,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -346,6 +352,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -384,6 +391,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -432,6 +440,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -480,6 +489,7 @@
   links: []
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []

@@ -68,6 +68,7 @@
     type: pubmed
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -1494,6 +1495,7 @@
     type: pdf
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -1567,6 +1569,7 @@
     type: corpusid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
@@ -1694,6 +1697,7 @@
     type: pdf
   releases:
   - pages: null
+    peer_review_status: preprint
     status: preprint
     venue:
       aliases: []
@@ -1744,6 +1748,7 @@
     type: corpusid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: published
     venue:
       aliases: []
