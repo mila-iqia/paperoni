@@ -293,3 +293,29 @@ async def to_sync(async_iter):
     async for x in async_iter:
         values.append(x)
     return values
+
+
+#######################
+# Peer review helpers #
+#######################
+
+
+def release_status_order(release):
+    name = release.venue.name.lower()
+    if release.status.lower() in ("submitted", "withdrawn", "rejected"):
+        return -2
+    elif (
+        release.status == "preprint"
+        or not name.strip()
+        or name == "n/a"
+        or "rxiv" in name
+    ):
+        return -1
+    elif "workshop" in name:
+        return 0
+    else:
+        return 1
+
+
+def is_peer_reviewed_release(release):
+    return release_status_order(release) > 0
