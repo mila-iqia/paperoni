@@ -48,7 +48,7 @@ class MongoSerieux(Medley):
         rval["_latest"] = list(extract_latest(obj))[0]
         if obj.id is not None:
             assert isinstance(obj.id, str)
-            rval["_id"] = obj.id
+            rval["_id"] = ObjectId(obj.id)
             del rval["id"]
         return rval
 
@@ -172,7 +172,7 @@ class MongoCollection(PaperCollection):
         for p in papers:
             # Handle existing papers
             existing_paper: Paper = None
-            if existing_paper := await self._collection.find_one({"_id": p.id}):
+            if existing_paper := await self._collection.find_one({"_id": ObjectId(p.id)}):
                 if not force:
                     existing_paper = srx.deserialize(Paper, existing_paper)
                     if existing_paper.version > p.version:
@@ -180,7 +180,9 @@ class MongoCollection(PaperCollection):
                         # Do not replace it.
                         continue
                 p.version = datetime.now()
-                await self._collection.replace_one({"_id": p.id}, srx.serialize(Paper, p))
+                await self._collection.replace_one(
+                    {"_id": ObjectId(p.id)}, srx.serialize(Paper, p)
+                )
 
             elif p.id is not None:
                 raise ValueError(f"Paper with ID {p.id} not found in collection")

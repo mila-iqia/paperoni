@@ -1,5 +1,6 @@
 import copy
 from contextlib import contextmanager
+from dataclasses import replace
 from functools import partial
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -508,3 +509,21 @@ async def test_file_collection_is_persistent(tmp_path: Path, sample_papers: list
 
     reloaded = FileCollection(file=tmp_path / "collection.json")
     assert [p async for p in collection.search()] == [p async for p in reloaded.search()]
+
+
+async def test_operations(collection: PaperCollection, sample_papers: list[Paper]):
+    from paperoni.operations import operation
+
+    @operation
+    def capitalize(paper):
+        return replace(paper, title=paper.title.upper())
+
+    await collection.add_papers(sample_papers)
+
+    results = [p async for p in collection.search()]
+    assert not all(p.title == p.title.upper() for p in results)
+
+    await collection.operate(capitalize)
+    results = [p async for p in collection.search()]
+    print([p.title for p in results])
+    assert all(p.title == p.title.upper() for p in results)
