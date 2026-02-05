@@ -7,7 +7,7 @@ from typing import Literal
 
 from serieux import JSON
 
-from .utils import release_status_order
+from ..utils import release_status_order
 
 fromisoformat = date.fromisoformat
 
