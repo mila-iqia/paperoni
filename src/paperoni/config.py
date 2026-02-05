@@ -87,6 +87,9 @@ class PaperoniConfig:
     #         deserialized._file = config_file
     #     return deserialized
 
+    class SerieuxConfig:
+        allow_extras = True
+
 
 config = gifnoc.define(
     "paperoni",
