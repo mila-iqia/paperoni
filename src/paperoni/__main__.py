@@ -961,12 +961,18 @@ class Serve:
             }
         with gifnoc.overlay(overrides):
             app = create_app()
+            ssl_config = config.server.ssl
+            ssl_kwargs = {}
+            if ssl_config and ssl_config.enabled:
+                ssl_kwargs["ssl_certfile"] = ssl_config.cert_file
+                ssl_kwargs["ssl_keyfile"] = ssl_config.key_file
             server = uvicorn.Server(
                 uvicorn.Config(
                     app,
                     host=config.server.host if self.host is None else self.host,
                     port=config.server.port if self.port is None else self.port,
                     reload=self.reload,
+                    **ssl_kwargs,
                 )
             )
             await server.serve()

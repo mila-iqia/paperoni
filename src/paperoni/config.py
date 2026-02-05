@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
+from functools import cached_property
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import Literal
 
 import gifnoc
@@ -35,6 +37,25 @@ class Refine:
 
 
 @dataclass(kw_only=True)
+class SSLConfig:
+    enabled: bool = True
+    cert: str
+    key: Secret[str]
+
+    @cached_property
+    def cert_file(self):
+        with NamedTemporaryFile(mode="w", suffix=".pem", delete=False) as cf:
+            cf.write(self.cert)
+            return cf.name
+
+    @cached_property
+    def key_file(self):
+        with NamedTemporaryFile(mode="w", suffix=".pem", delete=False) as kf:
+            kf.write(self.key)
+            return kf.name
+
+
+@dataclass(kw_only=True)
 class Server:
     host: str = "localhost"
     external_host: str = None
@@ -43,6 +64,7 @@ class Server:
     max_results: int = 10000
     auth: OAuthManager = None
     assets: Path = None
+    ssl: SSLConfig = None
 
     def __post_init__(self):
         if self.external_host is None:
