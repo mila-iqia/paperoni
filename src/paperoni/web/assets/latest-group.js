@@ -1,14 +1,14 @@
 import { html } from './common.js';
 import { createPaperElement } from './paper.js';
 
-const PAGE_SIZE = 200;
-
 let isValidator = false;
 let defaults = {
     defaultNdays: 30,
     defaultFwd: 0,
     defaultSerial: 0
 };
+
+let activeTab = 'peer-reviewed';
 
 function setResults(...elements) {
     const container = document.getElementById('resultsContainer');
@@ -25,28 +25,39 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-function addDays(dateStr, days) {
-    const date = new Date(dateStr);
-    date.setDate(date.getDate() + days);
-    return formatDate(date);
+function formatDatetimeLocal(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-function subtractDays(dateStr, days) {
-    const date = new Date(dateStr);
-    date.setDate(date.getDate() - days);
-    return formatDate(date);
+function datetimeLocalToTimestamp(value) {
+    if (!value) return 0;
+    const date = new Date(value);
+    return Math.floor(date.getTime() / 1000);
 }
 
-async function fetchSearchResults(startDate, endDate) {
-    const queryParams = new URLSearchParams({
-        offset: '0',
-        size: PAGE_SIZE.toString(),
-        expand_links: 'true',
-        start_date: startDate,
-        end_date: endDate
+function timestampToDatetimeLocal(timestamp) {
+    if (timestamp === null || timestamp === undefined || timestamp === 0 || isNaN(timestamp)) return '';
+    const date = new Date(timestamp * 1000);
+    return formatDatetimeLocal(date);
+}
+
+function buildQueryParams(params) {
+    return new URLSearchParams({
+        back: params.ndays.toString(),
+        forward: params.fwd.toString(),
+        serial: params.serial.toString(),
+        date: params.date
     });
+}
 
-    const url = `/api/v1/search?${queryParams.toString()}`;
+async function fetchLatest(params) {
+    const queryParams = buildQueryParams(params);
+    const url = `/api/v1/latest?${queryParams.toString()}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -56,56 +67,81 @@ async function fetchSearchResults(startDate, endDate) {
     return await response.json();
 }
 
-function filterPapersBySerial(papers, minSerial) {
-    if (minSerial <= 0) {
-        return papers;
+async function generateNewsletter(params) {
+    const queryParams = buildQueryParams(params);
+    const url = `/latest-group/generate?${queryParams.toString()}`;
+    const response = await fetch(url, { method: 'POST' });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
-    return papers.filter(paper => {
-        const latestSerial = paper.info?.latest_serial;
-        // Keep paper if latest_serial is defined and >= minSerial
-        // Filter out papers where latest_serial < minSerial or undefined
-        if (latestSerial === undefined || latestSerial === null) {
-            return true;
-        }
-        return latestSerial >= minSerial;
-    });
+
+    return await response.json();
 }
 
-function createResultsInfo(filteredCount, totalCount, startDate, endDate, minSerial) {
-    const paperWord = filteredCount !== 1 ? 'papers' : 'paper';
-    
-    let filterInfo = '';
-    if (minSerial > 0 && filteredCount !== totalCount) {
-        filterInfo = ` (filtered from ${totalCount} by serial ≥ ${minSerial})`;
-    }
-    
-    return html`
-        <div class="results-info">
-            <span class="count">${filteredCount}</span> ${paperWord} found${filterInfo} between ${startDate} and ${endDate}
-        </div>
-    `;
-}
-
-function displayResults(papers, totalCount, startDate, endDate, minSerial) {
+function createPaperList(papers) {
     if (papers.length === 0) {
-        const noResults = html`
+        return html`
             <div class="no-results">
-                No papers found matching the criteria.
+                No papers found in this category.
             </div>
         `;
-        setResults(noResults);
-        return;
     }
-
-    const resultsInfo = createResultsInfo(papers.length, totalCount, startDate, endDate, minSerial);
 
     const paperElements = papers.map(paper => createPaperElement(paper, {
         showEditIcon: isValidator
     }));
-    const paperList = html`<ul class="paper-list">${paperElements}</ul>`;
+    return html`<ul class="paper-list">${paperElements}</ul>`;
+}
 
-    setResults(resultsInfo, paperList);
+function displayResults(data) {
+    const peerReviewed = data['peer-reviewed'] || [];
+    const preprints = data['preprints'] || [];
+
+    const tabContent = {
+        'peer-reviewed': peerReviewed,
+        'preprints': preprints
+    };
+
+    // Create the container
+    const container = html`
+        <div class="latest-tabs-container">
+            <div class="latest-tabs">
+                <button class="latest-tab-button ${activeTab === 'peer-reviewed' ? 'active' : ''}" data-tab="peer-reviewed">
+                    Peer-Reviewed <span class="latest-tab-count">(${peerReviewed.length})</span>
+                </button>
+                <button class="latest-tab-button ${activeTab === 'preprints' ? 'active' : ''}" data-tab="preprints">
+                    Preprints <span class="latest-tab-count">(${preprints.length})</span>
+                </button>
+            </div>
+            <div class="latest-tab-content"></div>
+        </div>
+    `;
+
+    // Get references to elements
+    const tabButtons = container.querySelectorAll('.latest-tab-button');
+    const contentDiv = container.querySelector('.latest-tab-content');
+
+    // Function to render content for a tab
+    function renderTab(tab) {
+        contentDiv.innerHTML = '';
+        contentDiv.appendChild(createPaperList(tabContent[tab]));
+    }
+
+    // Add click handlers
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            activeTab = button.dataset.tab;
+            renderTab(activeTab);
+        });
+    });
+
+    // Render the initial tab content
+    renderTab(activeTab);
+
+    setResults(container);
 }
 
 function displayLoading() {
@@ -136,12 +172,8 @@ async function performSearch(params) {
     displayLoading();
 
     try {
-        const startDate = subtractDays(params.date, params.ndays);
-        const endDate = addDays(params.date, params.fwd);
-
-        const data = await fetchSearchResults(startDate, endDate);
-        const filteredPapers = filterPapersBySerial(data.results, params.serial);
-        displayResults(filteredPapers, data.results.length, startDate, endDate, params.serial);
+        const data = await fetchLatest(params);
+        displayResults(data);
     } catch (error) {
         console.error('Search failed:', error);
         displayError(error);
@@ -164,25 +196,30 @@ export function latestGroup(hasValidateCapability = false, options = {}) {
 
     // Read URL parameters
     const urlParams = new URLSearchParams(window.location.search);
+    const now = Math.floor(Date.now() / 1000);
+    const defaultSerial = defaults.defaultSerial || now;
+    const initialSerial = urlParams.has('serial') 
+        ? parseInt(urlParams.get('serial'), 10) 
+        : defaultSerial;
     const initialParams = {
         date: urlParams.get('date') || today,
         ndays: parseInt(urlParams.get('ndays') || defaults.defaultNdays.toString(), 10),
         fwd: parseInt(urlParams.get('fwd') || defaults.defaultFwd.toString(), 10),
-        serial: parseInt(urlParams.get('serial') || defaults.defaultSerial.toString(), 10)
+        serial: initialSerial
     };
 
     // Set form values from URL parameters or defaults
     dateInput.value = initialParams.date;
     ndaysInput.value = initialParams.ndays;
     fwdInput.value = initialParams.fwd;
-    serialInput.value = initialParams.serial;
+    serialInput.value = timestampToDatetimeLocal(initialSerial);
 
     function getFormParams() {
         return {
             date: dateInput.value || today,
             ndays: parseInt(ndaysInput.value, 10) || 0,
             fwd: parseInt(fwdInput.value, 10) || 0,
-            serial: parseInt(serialInput.value, 10) || 0
+            serial: datetimeLocalToTimestamp(serialInput.value)
         };
     }
 
@@ -190,6 +227,25 @@ export function latestGroup(hasValidateCapability = false, options = {}) {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         performSearch(getFormParams());
+    });
+
+    // Handle generate button
+    const generateBtn = document.getElementById('generateBtn');
+    generateBtn.addEventListener('click', async () => {
+        const params = getFormParams();
+        generateBtn.disabled = true;
+        generateBtn.textContent = 'Generating...';
+        try {
+            const result = await generateNewsletter(params);
+            console.log('Generate result:', result);
+            // TODO: handle the result (e.g., show success message, download file, etc.)
+        } catch (error) {
+            console.error('Generate failed:', error);
+            displayError(error);
+        } finally {
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate';
+        }
     });
 
     // Perform initial search

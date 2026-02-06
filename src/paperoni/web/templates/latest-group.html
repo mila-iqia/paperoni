@@ -9,7 +9,7 @@
     <form class="search-form" id="latestGroupForm">
         <div class="form-row">
             <div class="form-group">
-                <label for="date">Date</label>
+                <label for="date">Anchor Date</label>
                 <input type="date" id="date" name="date">
             </div>
             <div class="form-group">
@@ -21,13 +21,16 @@
                 <input type="number" id="fwd" name="fwd" value="{{ default_fwd }}" min="0" placeholder="Number of days">
             </div>
             <div class="form-group">
-                <label for="serial">Min Serial</label>
-                <input type="number" id="serial" name="serial" value="{{ default_serial }}" min="0" placeholder="Minimum serial number">
+                <label for="serial">Previous Anchor</label>
+                <input type="datetime-local" id="serial" name="serial">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group" style="flex: 0; align-self: flex-end;">
                 <button type="submit" class="btn-primary">Search</button>
+            </div>
+            <div class="form-group" style="flex: 0; align-self: flex-end;">
+                <button type="button" id="generateBtn" class="btn-secondary">Generate</button>
             </div>
         </div>
     </form>

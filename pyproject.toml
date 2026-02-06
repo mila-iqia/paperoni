@@ -81,6 +81,7 @@ edit = "paperoni.web.edit:install_edit"
 focuses = "paperoni.web.focuses:install_focuses"
 pages = "paperoni.web.pages:install_pages"
 capabilities = "paperoni.web.capabilities:install_capabilities"
+latest = "paperoni.misc.newsletter:install_latest"
 
 [project.entry-points."outsight.fixtures"]
 dash = "paperoni.dash:Dash"
