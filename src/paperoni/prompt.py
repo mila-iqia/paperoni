@@ -10,7 +10,7 @@ from google import genai
 from google.genai import types
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import _make_key as paperazzi_make_key, disk_cache, disk_store
-from serieux.features.comment import CommentProxy
+from serieux.features.comment import CommentProxy, comment_field
 from serieux.features.encrypt import Secret
 
 _JSON_SCHEMA_TYPES = {
@@ -108,16 +108,16 @@ class ParsedResponseSerializer:
         else:
             metadata_type = PromptMetadata
 
+        data = dict(data)
+        comment = data.pop(comment_field, {})
         with SERIEUX_LOCK:
-            response = serieux.deserialize(
-                serieux.Comment[serieux.JSON, metadata_type], data
+            response: types.GenerateContentResponse = (
+                types.GenerateContentResponse.model_validate(data)
             )
-        response: types.GenerateContentResponse = CommentProxy(
-            types.GenerateContentResponse.model_validate(response), response._
-        )
-        # response.parsed is reset to a generic Pydantic BaseModel. Restore the
-        # parsed value.
-        response.parsed = data["parsed"]
+
+            comment = serieux.deserialize(metadata_type, comment)
+            response = CommentProxy(response, comment)
+            response.parsed = comment.parsed
 
         return response
 
