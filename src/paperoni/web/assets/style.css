@@ -2472,3 +2472,81 @@ body {
 .latest-tab-content {
     padding: 20px 0;
 }
+
+/* Generated Links */
+.generated-links {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.generated-links h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 16px;
+    border-bottom: 2px solid #2c5aa0;
+    padding-bottom: 8px;
+}
+
+.links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.link-item:last-child {
+    margin-bottom: 0;
+}
+
+.link-title {
+    font-weight: 500;
+    color: #333;
+}
+
+.link-urls {
+    display: flex;
+    gap: 10px;
+}
+
+.link-main,
+.link-archive {
+    padding: 6px 14px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.link-main {
+    background: #2c5aa0;
+    color: white;
+}
+
+.link-main:hover {
+    background: #1e3a6f;
+}
+
+.link-archive {
+    background: #e8e8e8;
+    color: #555;
+    border: 1px solid #ccc;
+}
+
+.link-archive:hover {
+    background: #d8d8d8;
+    color: #333;
+}

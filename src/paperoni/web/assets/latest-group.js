@@ -149,7 +149,36 @@ function displayLoading() {
 }
 
 function displayError(error) {
-    setResults(html`<div class="error-message">Error loading results: ${error.message}</div>`);
+    setResults(html`<div class="error-message">Error: ${error.message}</div>`);
+}
+
+function displayGeneratedLinks(links) {
+    const container = document.getElementById('linksContainer');
+    container.innerHTML = '';
+
+    if (!links || Object.keys(links).length === 0) {
+        container.appendChild(html`<div class="no-results">No links generated.</div>`);
+        return;
+    }
+
+    const linksList = html`
+        <div class="generated-links">
+            <h3>Generated Newsletter Links</h3>
+            <ul class="links-list">
+                ${Object.entries(links).map(([title, urls]) => html`
+                    <li class="link-item">
+                        <span class="link-title">${title}</span>
+                        <div class="link-urls">
+                            <a href="${urls.url}" target="_blank" rel="noopener noreferrer" class="link-main">View</a>
+                            ${urls.archive ? html`<a href="${urls.archive}" target="_blank" rel="noopener noreferrer" class="link-archive">Archive</a>` : ''}
+                        </div>
+                    </li>
+                `)}
+            </ul>
+        </div>
+    `;
+
+    container.appendChild(linksList);
 }
 
 function updateUrlParams(params) {
@@ -231,14 +260,20 @@ export function latestGroup(hasValidateCapability = false, options = {}) {
 
     // Handle generate button
     const generateBtn = document.getElementById('generateBtn');
+    const linksContainer = document.getElementById('linksContainer');
     generateBtn.addEventListener('click', async () => {
         const params = getFormParams();
         generateBtn.disabled = true;
         generateBtn.textContent = 'Generating...';
+        linksContainer.innerHTML = '';
         try {
             const result = await generateNewsletter(params);
             console.log('Generate result:', result);
-            // TODO: handle the result (e.g., show success message, download file, etc.)
+            if (result.status === 'failure') {
+                displayError(new Error(result.reason || 'Unknown error'));
+            } else {
+                displayGeneratedLinks(result.links);
+            }
         } catch (error) {
             console.error('Generate failed:', error);
             displayError(error);
