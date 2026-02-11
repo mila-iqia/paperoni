@@ -602,8 +602,8 @@ function renderReleases(container, releases) {
                         <th>Date</th>
                         <th>Venue Name</th>
                         <th>Type</th>
-                        <th>Series</th>
-                        <th>Status</th>
+                        <th>Peer review</th>
+                        <th>Raw status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -629,7 +629,8 @@ function renderReleases(container, releases) {
                 date: new Date().toISOString().split('T')[0],
                 date_precision: 3
             },
-            status: 'published'
+            status: 'published',
+            peer_review_status: 'unknown'
         };
         const row = createReleaseRow(newRelease, tbody.children.length);
         tbody.appendChild(row);
@@ -666,17 +667,21 @@ function createReleaseRow(release, index) {
             <td>
                 <select name="releases[${index}].venue.type" required
                         class="edit-input">
-                    <option value="conference" selected="${release.venue?.type === 'conference'}">Conference</option>
-                    <option value="journal" selected="${release.venue?.type === 'journal'}">Journal</option>
-                    <option value="workshop" selected="${release.venue?.type === 'workshop'}">Workshop</option>
-                    <option value="preprint" selected="${release.venue?.type === 'preprint'}">Preprint</option>
+                    <option value="conference">Conference</option>
+                    <option value="journal">Journal</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="preprint">Preprint</option>
                 </select>
             </td>
             <td>
-                <input type="text"
-                       name="releases[${index}].venue.series"
-                       value="${release.venue?.series || ''}"
-                       class="edit-input">
+                <select name="releases[${index}].peer_review_status" required
+                        class="edit-input">
+                    <option value="peer-reviewed">Peer-reviewed</option>
+                    <option value="preprint">Preprint</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="other">Other</option>
+                    <option value="unknown">Unknown</option>
+                </select>
             </td>
             <td>
                 <input type="text"
@@ -690,6 +695,12 @@ function createReleaseRow(release, index) {
             </td>
         </tr>
     `;
+
+    // Set select values programmatically (more reliable than selected attribute)
+    const typeSelect = row.querySelector(`[name="releases[${index}].venue.type"]`);
+    const peerReviewSelect = row.querySelector(`[name="releases[${index}].peer_review_status"]`);
+    if (typeSelect) typeSelect.value = release.venue?.type || 'conference';
+    if (peerReviewSelect) peerReviewSelect.value = release.peer_review_status || 'unknown';
 
     row.querySelector('.btn-remove-x').addEventListener('click', () => {
         row.remove();
@@ -1016,6 +1027,7 @@ function collectFormData(form, originalPaper) {
                         peer_reviewed: false
                     },
                     status: 'published',
+                    peer_review_status: 'unknown',
                     pages: null
                 };
             }

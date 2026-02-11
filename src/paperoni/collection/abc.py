@@ -1,5 +1,8 @@
+from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import AsyncGenerator, Callable, Iterable
+
+from serieux.features.registered import Referenced
 
 from ..model.classes import Paper
 from ..operations import OperationResult
@@ -18,7 +21,15 @@ _id_types = {
 }
 
 
+@dataclass
 class PaperCollection:
+    operations: list[Referenced[object]] = field(default_factory=list)
+
+    def prepare(self, p: Paper):
+        for op in self.operations:
+            p = op(p).new
+        return p
+
     async def exclusions(self) -> set[str]:
         raise NotImplementedError()
 

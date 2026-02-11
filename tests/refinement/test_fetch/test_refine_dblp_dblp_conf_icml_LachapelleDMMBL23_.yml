@@ -66,6 +66,7 @@ links:
   type: html
 releases:
 - pages: 18171-18206
+  peer_review_status: peer-reviewed
   status: published
   venue:
     aliases: []

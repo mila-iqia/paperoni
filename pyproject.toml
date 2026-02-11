@@ -42,6 +42,8 @@ dependencies = [
     "hishel[httpx]>=1.1.8",
     "chardet>=5.2.0",
     "tenacity>=9.1.2",
+    "hrepr>=0.9.1",
+    "mailchimp-marketing>=3.0.80",
 ]
 
 [project.urls]
@@ -72,6 +74,16 @@ jmlr = "paperoni.discovery.jmlr:JMLR"
 synth = "paperoni.discovery.synth:Synth"
 scrape = "paperoni.discovery.scrape:Scrape"
 v2 = "paperoni.discovery.paperoni_v2:PaperoniV2"
+
+[project.entry-points."paperoni.web"]
+restapi = "paperoni.web.restapi:install_api"
+reports = "paperoni.web.reports:install_reports"
+search = "paperoni.web.search:install_search"
+edit = "paperoni.web.edit:install_edit"
+focuses = "paperoni.web.focuses:install_focuses"
+pages = "paperoni.web.pages:install_pages"
+capabilities = "paperoni.web.capabilities:install_capabilities"
+latest = "paperoni.misc.newsletter:install_latest"
 
 [project.entry-points."outsight.fixtures"]
 dash = "paperoni.dash:Dash"

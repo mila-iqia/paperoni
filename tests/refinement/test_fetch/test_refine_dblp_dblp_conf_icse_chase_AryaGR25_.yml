@@ -34,6 +34,7 @@ links:
   type: doi
 releases:
 - pages: 179-190
+  peer_review_status: peer-reviewed
   status: published
   venue:
     aliases: []

@@ -3,8 +3,11 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from enum import Enum
 from functools import partial
+from typing import Literal
 
 from serieux import JSON
+
+from ..utils import release_status_order
 
 fromisoformat = date.fromisoformat
 
@@ -196,6 +199,25 @@ class Release:
     venue: Venue
     status: str
     pages: str = None
+    peer_review_status: Literal[
+        "peer-reviewed",
+        "preprint",
+        "workshop",
+        "other",
+        "unknown",
+    ] = "unknown"
+
+    def __post_init__(self):
+        if self.peer_review_status == "unknown":
+            match release_status_order(self):
+                case -1:
+                    self.peer_review_status = "preprint"
+                case 0:
+                    self.peer_review_status = "workshop"
+                case n if n > 0:
+                    self.peer_review_status = "peer-reviewed"
+                case _:
+                    self.peer_review_status = "other"
 
 
 @dataclass

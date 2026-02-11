@@ -26,6 +26,7 @@ links:
   type: doi
 releases:
 - pages: 440-449
+  peer_review_status: workshop
   status: published
   venue:
     aliases: []

@@ -88,6 +88,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (poster)
     venue:
       aliases: []
@@ -180,6 +181,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (poster)
     venue:
       aliases: []
@@ -314,6 +316,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (oral)
     venue:
       aliases: []
@@ -434,6 +437,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (poster)
     venue:
       aliases: []
@@ -560,6 +564,7 @@
     type: uid
   releases:
   - pages: null
+    peer_review_status: peer-reviewed
     status: Accept (poster)
     venue:
       aliases: []

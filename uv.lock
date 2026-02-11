@@ -604,6 +604,18 @@ httpx = [
 ]
 
 [[package]]
+name = "hrepr"
+version = "0.9.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ovld" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/ae/38e5323a68759cdcd932d7d8ee4f96dd3c5f2ef66ac9608b0233e05eb33b/hrepr-0.9.1.tar.gz", hash = "sha256:6a21b1eca27a3bf72510494bd50a8da4f75513c4a607bdb88d58dded13865c47", size = 587635, upload-time = "2025-04-16T17:18:23.137Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/42/66/ed26b5fb267055e28b41335dca83135d04841efdb9c03b9e8c8cd0a8b0f8/hrepr-0.9.1-py3-none-any.whl", hash = "sha256:0faad8f36d8a5d42bf32ae24b183141a95c581c37ec62aa34759618e19dd1000", size = 24438, upload-time = "2025-04-16T17:18:21.33Z" },
+]
+
+[[package]]
 name = "httpcore"
 version = "1.0.9"
 source = { registry = "https://pypi.org/simple" }
@@ -855,6 +867,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/0f/85/86766dfebfa87bea0ab78e9ff7a4b4b45225df4b4d3b8cc3c03c5cd68464/lxml-6.0.2-cp314-cp314t-win32.whl", hash = "sha256:da08e7bb297b04e893d91087df19638dc7a6bb858a954b0cc2b9f5053c922312", size = 3911420, upload-time = "2025-09-22T04:03:32.198Z" },
     { url = "https://files.pythonhosted.org/packages/fe/1a/b248b355834c8e32614650b8008c69ffeb0ceb149c793961dd8c0b991bb3/lxml-6.0.2-cp314-cp314t-win_amd64.whl", hash = "sha256:252a22982dca42f6155125ac76d3432e548a7625d56f5a273ee78a5057216eca", size = 4406837, upload-time = "2025-09-22T04:03:34.027Z" },
     { url = "https://files.pythonhosted.org/packages/92/aa/df863bcc39c5e0946263454aba394de8a9084dbaff8ad143846b0d844739/lxml-6.0.2-cp314-cp314t-win_arm64.whl", hash = "sha256:bb4c1847b303835d89d785a18801a883436cdfd5dc3d62947f9c49e24f0f5a2c", size = 3822205, upload-time = "2025-09-22T04:03:36.249Z" },
+]
+
+[[package]]
+name = "mailchimp-marketing"
+version = "3.0.80"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "python-dateutil" },
+    { name = "requests" },
+    { name = "six" },
+    { name = "urllib3" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/22/a0/bf3a0d0c237eee255a02ee9a75fc60cabff2ec8264c4f715c4e647ba2466/mailchimp_marketing-3.0.80-py3-none-any.whl", hash = "sha256:a5bcb3ebd3be60908c65af765f8195724e6fd2d61ecf6da667a794c5bc7b84d3", size = 109565, upload-time = "2022-11-02T19:20:25.306Z" },
 ]
 
 [[package]]
@@ -1209,9 +1236,11 @@ dependencies = [
     { name = "filelock" },
     { name = "gifnoc" },
     { name = "hishel", extra = ["httpx"] },
+    { name = "hrepr" },
     { name = "httpx" },
     { name = "jinja2" },
     { name = "lxml" },
+    { name = "mailchimp-marketing" },
     { name = "markdown" },
     { name = "motor" },
     { name = "openreview-py" },
@@ -1253,9 +1282,11 @@ requires-dist = [
     { name = "filelock", specifier = ">=3.20.0" },
     { name = "gifnoc", specifier = ">=0.6.2" },
     { name = "hishel", extras = ["httpx"], specifier = ">=1.1.8" },
+    { name = "hrepr", specifier = ">=0.9.1" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "lxml", specifier = ">=6.0.0" },
+    { name = "mailchimp-marketing", specifier = ">=3.0.80" },
     { name = "markdown", specifier = ">=3.10" },
     { name = "motor", specifier = ">=3.7.1" },
     { name = "openreview-py", specifier = ">=1.50.0,<1.52.3" },

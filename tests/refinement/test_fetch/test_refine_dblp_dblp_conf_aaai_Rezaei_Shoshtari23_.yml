@@ -50,6 +50,7 @@ links:
   type: doi
 releases:
 - pages: 9579-9587
+  peer_review_status: peer-reviewed
   status: published
   venue:
     aliases: []

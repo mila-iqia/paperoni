@@ -63,7 +63,7 @@ export function formatRelease(release) {
         ? formatDate(release.venue.date, release.venue.date_precision)
         : null;
     const venueName = release.venue?.name ?? null;
-    const status = release.status ?? null;
+    const status = release.peer_review_status ?? null;
 
     return { date, venueName, status };
 }

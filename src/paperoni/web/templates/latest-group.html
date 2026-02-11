@@ -1,0 +1,52 @@
+{% extends "main.html" %}
+
+{% block title %}Latest Group{% endblock %}
+
+{% block page_title %}Latest Group{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <form class="search-form" id="latestGroupForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date">Anchor Date</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="ndays">Days Back</label>
+                <input type="number" id="ndays" name="ndays" value="{{ default_ndays }}" min="0" placeholder="Number of days">
+            </div>
+            <div class="form-group">
+                <label for="fwd">Days Forward</label>
+                <input type="number" id="fwd" name="fwd" value="{{ default_fwd }}" min="0" placeholder="Number of days">
+            </div>
+            <div class="form-group">
+                <label for="serial">Previous Anchor</label>
+                <input type="datetime-local" id="serial" name="serial">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 0; align-self: flex-end;">
+                <button type="submit" class="btn-primary">Search</button>
+            </div>
+            <div class="form-group" style="flex: 0; align-self: flex-end;">
+                <button type="button" id="generateBtn" class="btn-primary">Generate</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="linksContainer"></div>
+    <div id="resultsContainer"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { latestGroup } from '/assets/latest-group.js';
+    latestGroup({{ is_validator|tojson }}, {
+        defaultNdays: {{ default_ndays }},
+        defaultFwd: {{ default_fwd }},
+        defaultSerial: {{ default_serial }}
+    });
+</script>
+{% endblock %}
