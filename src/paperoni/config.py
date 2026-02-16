@@ -82,6 +82,7 @@ class AutoValidate:
 class PaperoniConfig:
     cache_path: Path = None
     data_path: Path = None
+    batch_dir: Path = None
     mailto: str = ""
     api_keys: Keys[str, Secret[str]] = field(default_factory=Keys)
     fetch: TaggedSubclass[Fetcher] = field(default_factory=RequestsFetcher)

@@ -875,7 +875,10 @@ class Batch:
     batch_file: Path
 
     async def run(self):
-        batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
+        batch_file = self.batch_file
+        if config.batch_dir:
+            batch_file = config.batch_dir / batch_file
+        batch = deserialize(dict[str, PaperoniCommand], batch_file)
         for name, cmd in batch.items():
             __trace__ = f"step:{name}"  # noqa: F841
             batch_descr = f"Batch: start step {name}"
