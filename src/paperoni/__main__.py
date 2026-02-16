@@ -974,6 +974,8 @@ class Serve:
                     app,
                     host=config.server.host if self.host is None else self.host,
                     port=config.server.port if self.port is None else self.port,
+                    proxy_headers=True,
+                    forwarded_allow_ips="*",
                     reload=self.reload,
                     **ssl_kwargs,
                 )
