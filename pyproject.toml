@@ -63,6 +63,7 @@ dev = [
     "pytest-asyncio>=1.3.0",
     "ruff>=0.11.3",
 ]
+cloud = []
 
 [project.entry-points."paperoni.discovery"]
 semantic_scholar = "paperoni.discovery.semantic_scholar:SemanticScholar"
