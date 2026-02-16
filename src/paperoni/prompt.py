@@ -9,8 +9,8 @@ import serieux
 from google import genai
 from google.genai import types
 from paperazzi.platforms.utils import Message
-from paperazzi.utils import _make_key as paperazzi_make_key
-from paperazzi.utils import disk_cache, disk_store
+from paperazzi.utils import _make_key as paperazzi_make_key, disk_cache, disk_store
+from pydantic import BaseModel
 from serieux.features.comment import CommentProxy, comment_field
 from serieux.features.encrypt import Secret
 
@@ -71,9 +71,7 @@ def _derive_metadata(
     usage = response.usage_metadata
     if usage is not None:
         input_tokens = usage.prompt_token_count
-        output_tokens = (
-            usage.candidates_token_count + usage.thoughts_token_count
-        )
+        output_tokens = usage.candidates_token_count + usage.thoughts_token_count
         total_tokens = usage.total_token_count
     else:
         input_tokens = output_tokens = total_tokens = None
@@ -144,6 +142,11 @@ class ParsedResponseSerializer:
         response: types.GenerateContentResponse = (
             types.GenerateContentResponse.model_validate(data)
         )
+        if type(response.parsed) is BaseModel:
+            # We replace response.parsed if
+            # Pydantic deserialized this as a raw BaseModel which is unprintable
+            response.parsed = {}
+
         metadata = metadata or _derive_metadata(response, self.content_type)
 
         with SERIEUX_LOCK:
