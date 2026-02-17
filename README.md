@@ -210,7 +210,7 @@ paperoni serve --host 0.0.0.0 --port 8888
 paperoni serve --reload
 
 # Without authentication (not for production)
-paperoni serve --auth false
+paperoni serve --no-auth
 ```
 
 ### Batch mode
@@ -270,6 +270,9 @@ that belong and "No" for those that do not (wrong author, wrong field, etc.).
 The web app uses OAuth (e.g. Google). Configure `paperoni.server.auth` in your
 config. Capabilities (search, validate, admin, dev) control access to each
 feature and are managed via the capabilities page or `user_overrides` in config.
+
+For OAuth setup details, see the
+[easy-oauth documentation](https://github.com/mila-iqia/easy-oauth?tab=readme-ov-file#reading-configuration-from-a-file).
 
 ## Typical workflow
 
