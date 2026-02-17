@@ -1,3 +1,2 @@
 web: paperoni serve
-batch: paperoni batch
-paperoni: paperoni
+scrape: paperoni batch scrape.yaml

@@ -494,7 +494,7 @@ resource "google_cloud_run_v2_job" "paperoni_scrape" {
 
       containers {
         image   = "gcr.io/cloudrun/hello"
-        command = ["batch", "scrape.yaml"]
+        command = ["scrape"]
 
         env {
           name  = "GIFNOC_FILE"
