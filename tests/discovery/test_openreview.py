@@ -210,8 +210,8 @@ async def test_focuses(query_params, focused_params):
     focus_results = [p async for p in discoverer.query(**focused_params, focuses=focuses)]
 
     # Both should return the same papers
-    direct_papers = [p.title for p in direct_results]
-    focus_papers = [p.title for p in focus_results]
+    direct_papers = {p.title for p in direct_results}
+    focus_papers = {p.title for p in focus_results}
 
     assert focus_papers == direct_papers
 

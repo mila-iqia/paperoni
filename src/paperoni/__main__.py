@@ -994,17 +994,40 @@ class Serve:
 
 
 @dataclass
-class Login:
-    """Retrieve an access token from the paperoni server."""
-
+class _PaperoniLogin:
     # Endpoint to login to
     endpoint: str = "http://localhost:8000"
 
-    # Whether to use headless mode
-    headless: bool = False
+    def login(self):
+        return login(self.endpoint)
+
+
+@dataclass
+class Login:
+    """Login to a service."""
+
+    @dataclass(frozen=True)
+    class LoginFromEntryPoint(FromEntryPoint):
+        @cached_property
+        def elements(self):
+            # hack to avoid FromEntryPoint.default=Auto[_PaperoniLogin.login]
+            # failing with:
+            # TypeError: sequence item 0: expected str instance, NoneType found
+
+            return {"paperoni": Auto[_PaperoniLogin.login]} | super().elements
+
+    service: Annotated[
+        Any,
+        LoginFromEntryPoint(
+            "paperoni.discovery",
+            wrap=lambda cls: Auto[cls.login] if getattr(cls, "login", None) else None,
+        ),
+    ] = "paperoni"
 
     async def run(self):
-        print_field("Access token", login(self.endpoint, self.headless))
+        match token := self.service():
+            case str():
+                print_field("Access token", token)
 
 
 PaperoniCommand = TaggedUnion[
