@@ -4,6 +4,10 @@ authors:
   - aliases: []
     category: unknown
     country: null
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  - aliases: []
+    category: unknown
+    country: null
     name: School of Computer Science, McGill University, Montreal, Canada
   author:
     aliases: []
@@ -14,6 +18,10 @@ authors:
   - aliases: []
     category: unknown
     country: null
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  - aliases: []
+    category: unknown
+    country: null
     name: School of Computer Science, McGill University, Montreal, Canada
   author:
     aliases: []
@@ -21,6 +29,10 @@ authors:
     name: Shenyang Huang
   display_name: Shenyang Huang
 - affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
   - aliases: []
     category: unknown
     country: null
@@ -35,6 +47,10 @@ authors:
     category: unknown
     country: null
     name: Mila, Quebec Artificial Intelligence Institute, Montreal, Canada
+  - aliases: []
+    category: unknown
+    country: null
+    name: School of Computer Science, McGill University, Montreal, Canada
   author:
     aliases: []
     links: []
