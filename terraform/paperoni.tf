@@ -54,12 +54,6 @@ variable "serieux_password" {
   sensitive   = true
 }
 
-variable "run_triggers" {
-  type        = bool
-  description = "If true, run both Cloud Build triggers (build and config) at the end of apply"
-  default     = false
-}
-
 #################
 # Main settings #
 #################
@@ -405,28 +399,6 @@ resource "google_cloudbuild_trigger" "paperoni_config_trigger" {
       logging = "CLOUD_LOGGING_ONLY"
     }
   }
-}
-
-# When run_triggers is true, run both triggers at the end of apply (e.g. to deploy after infra changes)
-resource "null_resource" "run_triggers" {
-  count = var.run_triggers ? 1 : 0
-
-  triggers = {
-    build_trigger  = google_cloudbuild_trigger.paperoni_build_trigger.id
-    config_trigger = google_cloudbuild_trigger.paperoni_config_trigger.id
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      gcloud builds triggers run ${google_cloudbuild_trigger.paperoni_build_trigger.name} --region=${var.google_region} --project=${var.project_id} --branch=${trim(var.gh_service_branch, "^$")}
-      gcloud builds triggers run ${google_cloudbuild_trigger.paperoni_config_trigger.name} --region=${var.google_region} --project=${var.project_id} --branch=${trim(var.gh_config_branch, "^$")}
-    EOT
-  }
-
-  depends_on = [
-    google_cloudbuild_trigger.paperoni_build_trigger,
-    google_cloudbuild_trigger.paperoni_config_trigger
-  ]
 }
 
 ###########
