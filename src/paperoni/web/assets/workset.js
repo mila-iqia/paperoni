@@ -1,8 +1,8 @@
 import { html } from './common.js';
 import {
     createAuthorsSection,
-    createReleasesSection,
     createDetailsSection,
+    createReleasesSection,
     getScoreClass
 } from './paper.js';
 
@@ -105,7 +105,7 @@ function createWorksetPaperElement(paper) {
     `;
 }
 
-function createWorksetElement(scoredWorkset, index) {
+export function createWorksetElement(scoredWorkset) {
     // scoredWorkset is Scored[PaperWorkingSet]
     // It has: { score: float, value: PaperWorkingSet }
     const score = scoredWorkset.score;

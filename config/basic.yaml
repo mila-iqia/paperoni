@@ -8,15 +8,21 @@ paperoni:
     paperoni_v2: _
   fetch:
     $class: RulesFetcher
+    simultaneous:
+      "*": 3
     rules:
+      "^https://api.ror.org/": standard
       "^https://export.arxiv.org/": standard
       "^https://api.crossref.org/": cached
       "^https://api.semanticscholar.org/": cached
+      "^https://api.openalex.org/": cached
+      "^https://api.datacite.org/": cached
+      "^https://api.unpaywall.org/": cached
       "^https://www.biorxiv.org/": sequence
       ".*": sequence
     fetchers:
       standard:
-        $class: RequestsFetcher
+        $class: HTTPXFetcher
         user_agent: chrome
       cached:
         $class: CachedFetcher
@@ -28,20 +34,20 @@ paperoni:
       sequence:
         $class: SequenceFetcher
         fetchers:
+        - $class: HTTPXFetcher
+          user_agent: chrome
         - $class: CloudFlareFetcher
           user_agent: chrome
         - $class: ScraperAPIFetcher
           cache_path: ${paperoni.cache_path}/scraper-cache.sql
           expire_after: 100d
           api_key: ${paperoni.api_keys.scraperapi}
-  focuses:
-    $include:
-    - focuses.yaml
-    - autofocuses.yaml
+  focuses: focuses.yaml
   autofocus:
     author:
       score: 1
       institution_score_threshold: 1
+      threshold: 1
   autovalidate:
     score_threshold: 10.0
   discovery:
@@ -68,6 +74,9 @@ paperoni:
     $class: paperoni.collection.filecoll:FileCollection
     file: ${paperoni.data_path}/collection.json
   server:
+    host: localhost
+    port: 8000
+    protocol: http
     max_results: 10000
     auth:
       server_metadata_url: https://accounts.google.com/.well-known/openid-configuration
@@ -89,4 +98,4 @@ paperoni:
           user: []
           search: [user]
           validate: [search]
-          dev: []
+          dev: [validate]

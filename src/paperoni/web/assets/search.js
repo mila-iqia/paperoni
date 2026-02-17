@@ -1,5 +1,6 @@
-import { html, debounce } from './common.js';
-import { createPaperElement, createValidationButtons, createScoreBand } from './paper.js';
+import { debounce, html } from './common.js';
+import { createPaperElement, createScoreBand, createValidationButtons } from './paper.js';
+import { createWorksetElement } from './workset.js';
 
 const PAGE_SIZE = 50;
 
@@ -9,6 +10,7 @@ let totalResults = 0;
 let isValidator = false;
 let showValidationButtons = false;
 let showScores = false;
+let useDevMode = false;
 
 function setResults(...elements) {
     const container = document.getElementById('resultsContainer');
@@ -148,6 +150,10 @@ function displayResults(data) {
     const paginationTop = createPagination(data.offset ?? currentOffset, data.count, data.total, data.next_offset, true);
 
     const paperElements = data.results.map(paper => {
+        if (useDevMode) {
+            const fakeWorkset = { score: paper.score, value: { current: paper, collected: [] } };
+            return createWorksetElement(fakeWorkset);
+        }
         const paperEl = createPaperElement(paper, {
             searchParams: currentParams,
             onAuthorClick: handleAuthorClick,
@@ -170,7 +176,9 @@ function displayResults(data) {
         }
         return paperEl;
     });
-    const paperList = html`<ul class="paper-list">${paperElements}</ul>`;
+    const paperList = useDevMode
+        ? html`<div class="workset-list">${paperElements}</div>`
+        : html`<ul class="paper-list">${paperElements}</ul>`;
 
     const paginationBottom = data.total > PAGE_SIZE
         ? createPagination(data.offset ?? currentOffset, data.count, data.total, data.next_offset)
@@ -199,6 +207,7 @@ function updateUrlParams(params, offset) {
     if (params.validated) urlParams.set('validated', params.validated);
     if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
     if (offset > 0) urlParams.set('offset', offset.toString());
+    if (useDevMode) urlParams.set('dev', '');
 
     const newUrl = urlParams.toString() 
         ? `${window.location.pathname}?${urlParams.toString()}`
@@ -227,11 +236,12 @@ const debouncedSearch = debounce((params) => {
     performSearch(params, 0);
 }, 300);
 
-export function searchPapers(hasValidateCapability = false, enableValidationButtons = false, enableScores = false) {
+export function searchPapers(hasValidateCapability = false, enableValidationButtons = false, enableScores = false, enableDevMode = false) {
     // Store the capability flags
     isValidator = hasValidateCapability;
     showValidationButtons = enableValidationButtons;
     showScores = enableScores;
+    useDevMode = enableDevMode;
 
     const form = document.getElementById('searchForm');
     const titleInput = document.getElementById('title');
