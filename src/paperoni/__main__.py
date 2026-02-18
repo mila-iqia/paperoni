@@ -1010,7 +1010,7 @@ class Login:
     headless: bool = False
 
     async def run(self):
-        print_field("Access token", login(self.endpoint, self.headless))
+        print_field("Access token", await login(self.endpoint, self.headless))
 
 
 PaperoniCommand = TaggedUnion[
