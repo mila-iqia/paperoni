@@ -280,7 +280,7 @@ class Work:
         check_paper_updates: bool = False
 
         async def run(self, work: "Work"):
-            ex = work.collection and (await work.collection.exclusions())
+            ex = (work.collection is not None) and (await work.collection.exclusions())
             index = paper_index()
             index.index_all(list(work.top))
 
@@ -509,7 +509,7 @@ class Work:
                 # file
                 work.save()
 
-            send(collection_include=added)
+            send(collection_include=len(added))
             return added
 
     @dataclass
