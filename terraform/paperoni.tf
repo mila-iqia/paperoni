@@ -496,6 +496,12 @@ resource "google_cloud_run_v2_job" "paperoni_scrape" {
         image   = "gcr.io/cloudrun/hello"
         command = ["scrape"]
 
+        resources {
+          limits = {
+            memory = "2Gi"
+          }
+        }
+
         env {
           name  = "GIFNOC_FILE"
           value = "/paperoni-config/paperoni.yaml"
