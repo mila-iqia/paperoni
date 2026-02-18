@@ -1,5 +1,6 @@
 from dataclasses import replace
 from datetime import date, datetime
+from re import escape
 from typing import AsyncGenerator, Iterable
 
 from bson import ObjectId
@@ -208,7 +209,7 @@ class MongoCollection(PaperCollection):
             doc = await self._collection.find_one(
                 {
                     "_norm_title": {
-                        "$regex": normalize_title(paper.title),
+                        "$regex": escape(normalize_title(paper.title)),
                         "$options": "i",
                     }
                 }
@@ -265,25 +266,35 @@ class MongoCollection(PaperCollection):
             query["_id"] = ObjectId(paper_id)
 
         if title:
-            query["_norm_title"] = {"$regex": f".*{title}.*", "$options": "i"}
+            query["_norm_title"] = {"$regex": f".*{escape(title)}.*", "$options": "i"}
 
         if author:
             query["authors._norm_display_name"] = {
-                "$regex": f".*{author}.*",
+                "$regex": f".*{escape(author)}.*",
                 "$options": "i",
             }
 
         if venue:
             # Match papers where any release has a venue name, short_name, or alias matching the search
             query["$or"] = [
-                {"releases.venue.name": {"$regex": f".*{venue}.*", "$options": "i"}},
                 {
-                    "releases.venue.short_name": {
-                        "$regex": f".*{venue}.*",
+                    "releases.venue.name": {
+                        "$regex": f".*{escape(venue)}.*",
                         "$options": "i",
                     }
                 },
-                {"releases.venue.aliases": {"$regex": f".*{venue}.*", "$options": "i"}},
+                {
+                    "releases.venue.short_name": {
+                        "$regex": f".*{escape(venue)}.*",
+                        "$options": "i",
+                    }
+                },
+                {
+                    "releases.venue.aliases": {
+                        "$regex": f".*{escape(venue)}.*",
+                        "$options": "i",
+                    }
+                },
             ]
 
         # Date filtering: papers match if at least one release falls within the date range
@@ -316,7 +327,7 @@ class MongoCollection(PaperCollection):
 
         if institution:
             query["authors.affiliations._norm_name"] = {
-                "$regex": f".*{institution}.*",
+                "$regex": f".*{escape(institution)}.*",
                 "$options": "i",
             }
 
