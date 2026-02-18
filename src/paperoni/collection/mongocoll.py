@@ -67,20 +67,13 @@ srx = (Serieux + MongoSerieux)()
 class MongoCollection(PaperCollection):
     """Async MongoDB implementation of PaperCollection using motor."""
 
-    cluster_uri: str = "localhost:27017"
-    user: Secret[str] = None
-    password: Secret[str] = None
-    connection_string: str = "mongodb://{user}:{password}@{cluster_uri}"
+    connection_string: Secret[str]
+    create_indexes: bool = True
     database: str = "paperoni"
-    collection: str = "collection"
+    collection: str = "papers"
     exclusions_collection: str = "exclusions"
 
     def __post_init__(self):
-        self.connection_string = self.connection_string.format(
-            user=self.user,
-            password=self.password,
-            cluster_uri=self.cluster_uri,
-        )
         self._client: AsyncIOMotorClient = None
         self._database: AsyncIOMotorDatabase = None
         self._collection: AsyncIOMotorCollection = None
@@ -94,8 +87,9 @@ class MongoCollection(PaperCollection):
             self._collection = self._database[self.collection]
             self._exclusions = self._database[self.exclusions_collection]
 
-            # Create indexes for efficient searching
-            await self._create_indexes()
+            if self.create_indexes:
+                # Create indexes for efficient searching
+                await self._create_indexes()
 
     async def _create_indexes(self):
         """Create MongoDB indexes for efficient searching."""
