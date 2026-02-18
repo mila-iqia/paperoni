@@ -99,12 +99,6 @@ resource "google_project_iam_binding" "firestore" {
   members = [google_service_account.paperoni_user.member]
 }
 
-resource "google_project_iam_member" "firestore_index_admin" {
-  project = data.google_project.paperoni.project_id
-  role    = "roles/datastore.indexAdmin"
-  member  = google_service_account.paperoni_user.member
-}
-
 resource "google_project_iam_binding" "cloud_run_developer" {
   project = data.google_project.paperoni.project_id
   role    = "roles/run.developer"
