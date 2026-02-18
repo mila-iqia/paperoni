@@ -22,6 +22,7 @@ from ..model import (
     VenueType,
 )
 from ..model.classes import Paper
+from ..model.merge import qual
 from ..utils import url_to_id
 
 
@@ -58,14 +59,14 @@ def _parse_institution(institution: dict[str, str]) -> Institution:
 
 def _parse_author(author: dict[str, str]) -> PaperAuthor:
     return PaperAuthor(
-        display_name=author["author"]["name"],
+        display_name=qual(author["author"]["name"], -10.0),
         author=Author(
-            name=author["author"]["name"],
+            name=qual(author["author"]["name"], -10.0),
             aliases=[],
             links=list(map(_parse_link, author["author"]["links"]))
             + [Link(type="paperoni_v2", link=author["author"]["author_id"])],
         ),
-        affiliations=list(map(_parse_institution, author["affiliations"])),
+        affiliations=qual(list(map(_parse_institution, author["affiliations"])), -10.0),
     )
 
 
