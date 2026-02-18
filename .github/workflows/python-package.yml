@@ -24,9 +24,9 @@ jobs:
     - name: Sync dependencies
       run: uv sync
     - name: Lint check
-      run: uvx ruff check
+      run: uv run ruff check
     - name: Check formatting
-      run: uvx ruff format --check
+      run: uv run ruff format --check
 
   test:
     runs-on: ubuntu-latest

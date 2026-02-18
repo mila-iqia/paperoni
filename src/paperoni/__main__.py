@@ -35,6 +35,7 @@ from serieux import (
     serialize,
 )
 from serieux.features.filebacked import FileProxy
+from serieux.features.partial import Override
 from serieux.features.registered import Referenced
 from serieux.features.tagset import FromEntryPoint
 
@@ -553,7 +554,7 @@ class Work:
     # [alias: -f]
     focus_file: Path = None
 
-    # Collection dir
+    # Collection file
     # [alias: -c]
     collection_file: Path = None
 
@@ -848,7 +849,7 @@ class Coll:
     # Command to execute
     command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff, Operate]
 
-    # Collection dir
+    # Collection string. Can be a remote collection URL or a path.
     # [alias: -c]
     collection_path: str = None
 
@@ -914,7 +915,7 @@ class Focus:
     # [option: -f]
     focuses: Focuses @ FileProxy() = None
 
-    # Collection dir
+    # Collection file
     # [alias: -c]
     collection_file: Path = None
 
@@ -947,6 +948,10 @@ class Serve:
     # Whether to enable auth
     auth: bool = True
 
+    # Collection file
+    # [alias: -c]
+    collection_file: Path = None
+
     async def run(self):
         from .web import create_app
 
@@ -959,6 +964,13 @@ class Serve:
                     "__admin__": ["admin"]
                 },
             }
+        if self.collection_file:
+            overrides["paperoni.collection"] = Override(
+                {
+                    "$class": f"{FileCollection.__module__}:{FileCollection.__qualname__}",
+                    "file": str(self.collection_file.resolve()),
+                }
+            )
         with gifnoc.overlay(overrides):
             app = create_app()
             ssl_config = config.server.ssl
