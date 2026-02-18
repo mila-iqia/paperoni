@@ -298,7 +298,7 @@ class Work:
 
                 col_paper = None
                 if (
-                    work.collection
+                    work.collection is not None
                     and (col_paper := await work.collection.find_paper(paper))
                     and (
                         not self.check_paper_updates
