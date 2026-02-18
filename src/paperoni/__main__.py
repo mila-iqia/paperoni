@@ -873,10 +873,14 @@ class Batch:
 
     # Path to the batch file
     # [positional]
-    batch_file: Path
+    batch_file: str
 
     async def run(self):
-        batch = deserialize(dict[str, PaperoniCommand], self.batch_file)
+        if config.batch_dir:
+            batch_file = config.batch_dir / self.batch_file
+        else:
+            batch_file = Path(self.batch_file)
+        batch = deserialize(dict[str, PaperoniCommand], batch_file)
         for name, cmd in batch.items():
             __trace__ = f"step:{name}"  # noqa: F841
             batch_descr = f"Batch: start step {name}"
@@ -983,6 +987,8 @@ class Serve:
                     app,
                     host=config.server.host if self.host is None else self.host,
                     port=config.server.port if self.port is None else self.port,
+                    proxy_headers=True,
+                    forwarded_allow_ips="*",
                     reload=self.reload,
                     **ssl_kwargs,
                 )

@@ -65,6 +65,7 @@ dev = [
 lint = [
     "ruff>=0.15.0",
 ]
+cloud = []
 
 [project.entry-points."paperoni.discovery"]
 semantic_scholar = "paperoni.discovery.semantic_scholar:SemanticScholar"

@@ -21,3 +21,6 @@ requests-cache.sqlite
 /cache
 /data
 /tests/cache
+/terraform/.terraform*
+/terraform/terraform*state*
+/terraform/*.tfvars
