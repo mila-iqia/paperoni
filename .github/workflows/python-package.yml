@@ -30,6 +30,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    environment: tests
+    env:
+      OPENREVIEW_TOKEN: ${{ secrets.OPENREVIEW_TOKEN }}
     strategy:
       matrix:
         settings:
