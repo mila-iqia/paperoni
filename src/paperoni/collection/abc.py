@@ -1,5 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime
+from functools import cached_property
 from typing import AsyncGenerator, Callable, Iterable
 
 from serieux.features.registered import Referenced
@@ -126,6 +127,15 @@ class PaperCollection:
         exclude_flags: list[str] = None,
     ) -> AsyncGenerator[Paper, None]:
         raise NotImplementedError()
+
+    @cached_property
+    async def cached(self):
+        from .memcoll import MemCollection
+
+        coll = MemCollection()
+        await coll.add_papers([replace(p, id=None) async for p in self.search()])
+        await coll.add_exclusions(await self.exclusions())
+        return coll
 
     def __len__(self) -> int:
         raise NotImplementedError()
