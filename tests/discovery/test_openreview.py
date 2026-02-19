@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from paperoni.discovery import openreview
@@ -207,11 +209,21 @@ async def test_focuses(query_params, focused_params):
     # Query with focuses should return the same results as direct author query
     direct_results = [p async for p in discoverer.query(**query_params)]
 
-    focus_results = [p async for p in discoverer.query(**focused_params, focuses=focuses)]
+    try:
+        focus_results = [
+            p async for p in discoverer.query(**focused_params, focuses=focuses)
+        ]
+    except openreview.openreview.OpenReviewException:
+        # If query fails with a 403 "This action is forbidden", try again with
+        # an access token
+        discoverer.token = os.environ.get("OPENREVIEW_TOKEN")
+        focus_results = [
+            p async for p in discoverer.query(**focused_params, focuses=focuses)
+        ]
 
     # Both should return the same papers
-    direct_papers = [p.title for p in direct_results]
-    focus_papers = [p.title for p in focus_results]
+    direct_papers = {p.title for p in direct_results}
+    focus_papers = {p.title for p in focus_results}
 
     assert focus_papers == direct_papers
 

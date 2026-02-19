@@ -1,11 +1,14 @@
 import re
 import sys
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass, field, field as dc_field
 from datetime import date, datetime
 from fnmatch import fnmatch
 from functools import reduce
 
+import gifnoc
 import openreview
+import openreview.api
+from serieux.features.encrypt import Secret
 
 from ..model import (
     Author,
@@ -126,9 +129,9 @@ def parse_openreview_venue(venue):
         r"\b(submitted|accepted|accept|notable|poster|oral|spotlight|withdrawn|rejected)\b": "status",
     }
     results = {}
-    for regexp, field in extractors.items():
+    for regexp, field_ in extractors.items():
         if m := re.search(pattern=regexp, string=venue, flags=re.IGNORECASE):
-            results[field] = m.groups()[0].lower()
+            results[field_] = m.groups()[0].lower()
             start, end = m.span()
             venue = venue[:start] + venue[end:]
     if results.get("status", None) == "submitted":
@@ -139,17 +142,28 @@ def parse_openreview_venue(venue):
 
 @dataclass
 class OpenReview(Discoverer):
-    api_version: int = 1
+    api_version: int = 2
+    username: Secret[str] = None
+    password: Secret[str] = None
+    token: Secret[str] = field(default_factory=lambda: openreview_api_key)
 
     def __post_init__(self):
         self.set_client()
 
     def set_client(self):
         if self.api_version == 1:
-            self.client = openreview.Client(baseurl="https://api.openreview.net")
+            self.client = openreview.Client(
+                baseurl="https://api.openreview.net",
+                username=self.username,
+                password=self.password,
+                token=self.token,
+            )
         elif self.api_version == 2:
             self.client = openreview.api.OpenReviewClient(
-                baseurl="https://api2.openreview.net"
+                baseurl="https://api2.openreview.net",
+                username=self.username,
+                password=self.password,
+                token=self.token,
             )
 
     def get_content_field(self, note, key, default=None):
@@ -210,17 +224,17 @@ class OpenReview(Discoverer):
             invitations = (
                 [reply["invitation"]] if self.api_version == 1 else reply["invitations"]
             )
-            for rank, rx, field in heuristics:
+            for rank, rx, field_ in heuristics:
                 if any(
                     re.match(string=inv, pattern=rx, flags=re.IGNORECASE)
                     for inv in invitations
                 ):
-                    if field.startswith("="):
-                        ranked_results.append((rank, field[1:]))
+                    if field_.startswith("="):
+                        ranked_results.append((rank, field_[1:]))
                         break
-                    elif field in reply["content"]:
+                    elif field_ in reply["content"]:
                         ranked_results.append(
-                            (rank, self.get_content_field(reply, field))
+                            (rank, self.get_content_field(reply, field_))
                         )
                         break
 
@@ -378,6 +392,9 @@ class OpenReview(Discoverer):
                 yield paper
 
     def _query_authors(self, author_or_email: str, /):
+        # This endpoint requires an access token:
+        # E           openreview.openreview.OpenReviewException: {'name': 'ForbiddenError', 'message': 'This action is forbidden. You must be logged in to access this resource. (2026-02-17-8058870)', 'status': 403, 'details': {'path': '/profiles/search?term=Yoshua+Bengio&es=false', 'user': 'guest_1771368244277', 'reqId': '2026-02-17-8058870'}}
+        # https://api2.openreview.net/profiles/search
         for profile in self.client.search_profiles(term=author_or_email):
             yield profile.id
 
@@ -496,16 +513,30 @@ class OpenReview(Discoverer):
                             yield paper
             return
 
+        if not venue:
+            venue = [None]
+        else:
+            venue = [venue]
+
+        if author and venue == [None]:
+            # OpenReview API does not support searching by author
+            # name without a venue, so first search for the possible author IDs
+            for author_id in self._query_authors(author):
+                async for paper in self.query(
+                    venue=None,
+                    author_id=author_id,
+                    title=title,
+                    block_size=block_size,
+                    limit=limit,
+                ):
+                    yield paper
+            return
+
         params = {
             "content": {},
             "limit": min(block_size or limit, limit),
             "offset": 0,
         }
-
-        if not venue:
-            venue = [None]
-        else:
-            venue = [venue]
 
         if paper_id:
             params = {
@@ -513,24 +544,10 @@ class OpenReview(Discoverer):
                 "id": paper_id,
             }
         if author:
-            if venue == [None]:
-                # OpenReview API does not support searching by author
-                # name without a venue, so first search for the possible author IDs
-                for author_id in self._query_authors(author):
-                    async for paper in self.query(
-                        venue=None,
-                        author_id=author_id,
-                        title=title,
-                        block_size=block_size,
-                        limit=limit,
-                    ):
-                        yield paper
-                return
-            else:
-                params = {
-                    **params,
-                    "content": {**params["content"], "authors": [author]},
-                }
+            params = {
+                **params,
+                "content": {**params["content"], "authors": [author]},
+            }
         if author_id:
             params = {
                 **params,
@@ -545,10 +562,18 @@ class OpenReview(Discoverer):
         async for paper in self._query_papers_from_venues(params, venue, 0, limit):
             yield paper
 
+    def login(self, username: str, password: str):
+        if self.client.token or self.token:
+            return self.client.token or self.token
+        return OpenReview(
+            api_version=self.api_version, username=username, password=password
+        ).client.token
+
 
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
+    token: Secret[str] = field(default_factory=lambda: openreview_api_key)
 
     async def query(
         self,
@@ -571,7 +596,7 @@ class OpenReviewDispatch(Discoverer):
     ):
         """Query OpenReview"""
         for api_version in self.api_versions:
-            o = OpenReview(api_version=api_version)
+            o = OpenReview(api_version=api_version, token=self.token)
             q = o.query(
                 venue=venue,
                 paper_id=paper_id,
@@ -602,3 +627,15 @@ class OpenReviewDispatch(Discoverer):
         else:
             if exception is not None:
                 raise exception
+
+    async def login(self, username: str, password: str):
+        for api_version in self.api_versions:
+            try:
+                return OpenReview(api_version=api_version).login(username, password)
+            except openreview.OpenReviewException:
+                continue
+
+
+openreview_api_key: Secret[str] | None = gifnoc.define(
+    "paperoni.discovery.openreview.api_key", Secret[str] | None, defaults=None
+)

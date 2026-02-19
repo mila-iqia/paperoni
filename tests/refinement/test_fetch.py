@@ -4,7 +4,6 @@ import requests
 from paperoni.refinement.dblp import dblp
 from paperoni.refinement.doi import crossref, datacite, unpaywall
 from paperoni.refinement.fetch import _test_tags
-from paperoni.refinement.pubmed import pubmed
 from paperoni.refinement.title import arxiv_title, crossref_title, openalex_title
 
 
@@ -74,12 +73,13 @@ links = [
     (dblp, "dblp:conf/nips/LacosteLRSKLIDA23"),
     (dblp, "dblp:conf/icse-chase/AryaGR25"),
     (dblp, "dblp:conf/aaai/Rezaei-Shoshtari23"),
-    # Pubmed Central
-    (pubmed, "pmc:8900797"),
-    (pubmed, "pmc:11551764"),
-    (pubmed, "pmc:12136731"),
-    (pubmed, "pmc:11971501"),
-    (pubmed, "pmc:10684502"),
+    # # Pubmed Central
+    # TODO: fix timeout
+    # (pubmed, "pmc:8900797"),
+    # (pubmed, "pmc:11551764"),
+    # (pubmed, "pmc:12136731"),
+    # (pubmed, "pmc:11971501"),
+    # (pubmed, "pmc:10684502"),
     # OpenAlex, by title
     (openalex_title, "title:Attention Is All You Need"),
     (

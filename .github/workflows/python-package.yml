@@ -30,18 +30,38 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    environment: tests
+    env:
+      OPENREVIEW_TOKEN: ${{ secrets.OPENREVIEW_TOKEN }}
     strategy:
       matrix:
         settings:
         - python: '3.13'
           coverage: false
     steps:
+    - name: Set month outputs
+      id: month
+      run: echo "month=$(date +%m)" >> $GITHUB_OUTPUT
+
     - name: Check out the code
       uses: actions/checkout@v3
     - name: Set up uv
       uses: hynek/setup-cached-uv@v2
       with:
         cache-dependency-path: uv.lock
+
+    - name: Restore tests cache
+      uses: actions/cache/restore@v5
+      id: restore-cache
+      with:
+        path: ./tests/cache/
+        # Reset the completely every month
+        key: tests-cache-${{ steps.month.outputs.month }}
+
+    - name: List tests cache
+      continue-on-error: true
+      run: ls -lR tests/cache/
+
     - name: Install Podman
       uses: gacts/install-podman@v1.1.1
     - name: Install and set up Hatch
@@ -66,3 +86,10 @@ jobs:
     - name: Stop mongo
       if: always()
       run: hatch run mongo:stop
+    
+    - name: Store tests cache
+      if: always()
+      uses: actions/cache/save@v5
+      with:
+        path: ./tests/cache/
+        key: ${{ steps.restore-cache.outputs.cache-primary-key }}
