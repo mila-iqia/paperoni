@@ -1,8 +1,11 @@
+import tarfile
 from dataclasses import replace
 from datetime import date
+from io import BytesIO
 
 import httpx
 import pytest
+from easy_oauth.testing.utils import AppTester
 from pytest_regressions.data_regression import DataRegressionFixture
 from serieux import serialize
 
@@ -306,3 +309,21 @@ def test_delete_papers_endpoint(wr_app):
     assert response.status_code == 200
     data = response.json()
     assert data["count"] == 0
+
+
+def test_export_data_endpoint(wr_app: AppTester):
+    """Test export data endpoint."""
+    # serieux does not seams to be compatible with pytest async mode. Importing
+    # paperoni.config here avoids the following error:
+    # E       serieux.exc.UnrecognizedFieldError: paperoni/tests/config/test-config.yaml:1:2-60:0 -- Extra unrecognized fields were found for type `Annotated[PaperoniConfig, Partial]`: {'discovery'}
+    from paperoni.config import config
+
+    (config.data_path / "test").mkdir(parents=True, exist_ok=True)
+    (config.data_path / "test" / "test.txt").write_text("test")
+
+    admin = wr_app.client("admin@website.web")
+    response: httpx.Response = admin.get("/api/v1/export/data")
+    assert response.status_code == 200
+
+    with tarfile.open(mode="r:gz", fileobj=BytesIO(response.content)) as tarf:
+        assert tarf.extractfile("./test/test.txt").read() == b"test"

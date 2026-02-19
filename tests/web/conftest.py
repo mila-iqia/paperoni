@@ -32,6 +32,8 @@ def app(oauth_mock, cfg_src):
     from paperoni.web import create_app
 
     collfile = here / ".." / "data" / "papers.yaml"
+    # Make sure the file is read-only
+    collfile.chmod(0o444)
     with AppTester(
         create_app(), oauth_mock, wrap=partial(_wrap, cfg_src, collfile)
     ) as appt:
@@ -45,7 +47,8 @@ def wr_app(oauth_mock, cfg_src, tmp_path):
     src_collfile = here / ".." / "data" / "papers.yaml"
     collfile = tmp_path / "papers.yaml"
     shutil.copy(str(src_collfile), str(collfile))
-
+    # Make sure the file is read-writable
+    collfile.chmod(0o666)
     with AppTester(
         create_app(), oauth_mock, wrap=partial(_wrap, cfg_src, collfile)
     ) as appt:
