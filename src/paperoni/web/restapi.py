@@ -233,7 +233,7 @@ class AddResponse:
 class SetFlagRequest:
     """Request model for setting a flag on a paper."""
 
-    paper_id: int
+    paper_id: int | str
     flag: str
     value: bool = True
 
@@ -388,7 +388,7 @@ def install_api(app) -> FastAPI:
         response_model=Paper,
         dependencies=[Depends(hascap("search"))],
     )
-    async def get_paper(paper_id: int):
+    async def get_paper(paper_id: int | str):
         """Get a single paper by ID."""
         coll = Coll(command=None)
         paper = await coll.collection.find_by_id(paper_id)
