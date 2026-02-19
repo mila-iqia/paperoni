@@ -10,8 +10,7 @@ from google import genai
 from google.genai import types
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import _make_key as paperazzi_make_key, disk_cache, disk_store
-from pydantic import BaseModel
-from serieux.features.comment import CommentProxy, comment_field
+from serieux.features.comment import CommentProxy
 from serieux.features.encrypt import Secret
 
 _JSON_SCHEMA_TYPES = {
@@ -63,11 +62,12 @@ def cleanup_schema(schema: dict | Type[Any]) -> dict:
     return schema
 
 
-def _derive_metadata(
+def _generate_metadata(
     response: types.GenerateContentResponse,
     structured_model: Type[Any] | None,
 ) -> "PromptMetadata":
-    """Derive token counts and parsed output from response, return PromptMetadata."""
+    """Derive token counts and deserialize parsed output from response, return
+    PromptMetadata."""
     usage = response.usage_metadata
     if usage is not None:
         input_tokens = usage.prompt_token_count
@@ -137,23 +137,16 @@ class ParsedResponseSerializer:
         else:
             metadata_type = PromptMetadata
 
-        data = dict(data)
-        metadata = data.pop(comment_field, {})
-        response: types.GenerateContentResponse = (
-            types.GenerateContentResponse.model_validate(data)
-        )
-        if type(response.parsed) is BaseModel:
-            # We replace response.parsed if
-            # Pydantic deserialized this as a raw BaseModel which is unprintable
-            response.parsed = {}
-
-        metadata = metadata or _derive_metadata(response, self.content_type)
-
         with SERIEUX_LOCK:
-            metadata = serieux.deserialize(metadata_type, metadata)
-
-        response = CommentProxy(response, metadata)
-        response.parsed = metadata.parsed
+            response = serieux.deserialize(
+                serieux.Comment[serieux.JSON, metadata_type], data
+            )
+        response: types.GenerateContentResponse = CommentProxy(
+            types.GenerateContentResponse.model_validate(response), response._
+        )
+        # response.parsed is reset to a generic Pydantic BaseModel. Restore the
+        # parsed value.
+        response.parsed = response._.parsed
 
         return response
 
@@ -260,7 +253,7 @@ class GenAIPrompt(Prompt):
             contents=contents, model=model, config=config
         )
 
-        metadata = _derive_metadata(response, structured_model)
+        metadata = _generate_metadata(response, structured_model)
 
         response = CommentProxy(response, metadata)
 
