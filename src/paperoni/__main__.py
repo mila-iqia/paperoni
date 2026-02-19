@@ -21,7 +21,7 @@ from filelock import FileLock
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from outsight.ops import merge, ticktock
-from ovld import ovld
+from ovld import ovld, recurse
 from rapporteur.report import Report
 from serieux import (
     JSON,
@@ -242,6 +242,37 @@ class Refine:
         self.format(results)
 
 
+@ovld
+def expand_paper_links(xs: list):
+    return [recurse(x) for x in xs]
+
+
+@ovld
+def expand_paper_links(p: Scored):
+    return replace(p, value=recurse(p.value))
+
+
+@ovld
+def expand_paper_links(p: PaperWorkingSet):
+    return replace(
+        p,
+        current=recurse(p.current),
+        collected=recurse(p.collected),
+    )
+
+
+@ovld
+def expand_paper_links(p: Paper):
+    return replace(
+        p,
+        links=[
+            Link(type=l["type"], link=l["url"])
+            for l in expand_links_dict(p.links)
+            if "url" in l
+        ],
+    )
+
+
 @dataclass
 class Work:
     """Discover and work on prospective papers."""
@@ -346,8 +377,14 @@ class Work:
         # Number of papers to view
         n: int = None
 
+        # Whether to expand links
+        expand_links: bool = False
+
         async def run(self, work: "Work"):
             worksets = itertools.islice(work.top, self.n) if self.n else work.top
+            worksets = (
+                expand_paper_links(list(worksets)) if self.expand_links else worksets
+            )
             match self.what:
                 case "title":
                     self.format(ws.value.current.title for ws in worksets)
@@ -649,16 +686,7 @@ class Coll:
         async def run(self, coll: "Coll") -> list[Paper]:
             flags = set() if self.flags is None else self.flags
             papers = [
-                replace(
-                    p,
-                    links=[
-                        Link(type=l["type"], link=l["url"])
-                        for l in expand_links_dict(p.links)
-                        if "url" in l
-                    ],
-                )
-                if self.expand_links
-                else p
+                expand_paper_links(p) if self.expand_links else p
                 async for p in coll.collection.search(
                     paper_id=self.paper_id,
                     title=self.title,
@@ -880,7 +908,7 @@ class Batch:
     batch_file: str
 
     async def run(self):
-        if config.batch_dir:
+        if config.batch_dir and "/" not in self.batch_file:
             batch_file = config.batch_dir / self.batch_file
         else:
             batch_file = Path(self.batch_file)
