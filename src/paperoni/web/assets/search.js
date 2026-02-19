@@ -23,7 +23,7 @@ function setResults(...elements) {
 async function fetchSearchResults(params, offset = 0) {
     const queryParams = new URLSearchParams({
         offset: offset.toString(),
-        size: PAGE_SIZE.toString(),
+        limit: PAGE_SIZE.toString(),
         expand_links: 'true'
     });
 
