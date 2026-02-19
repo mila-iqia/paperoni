@@ -160,6 +160,7 @@ class Fetcher:
 class HTTPXFetcher(Fetcher):
     user_agent: str = None
     timeout: int = 60
+    verify: bool = True
 
     # [serieux: ignore]
     _client: httpx.AsyncClient = None
@@ -181,7 +182,9 @@ class HTTPXFetcher(Fetcher):
             loop = None
         if self._client is None or self._client_loop is not loop:
             self._client = httpx.AsyncClient(
-                follow_redirects=True, default_encoding=detect_encoding
+                follow_redirects=True,
+                default_encoding=detect_encoding,
+                verify=self.verify,
             )
             self._client_loop = loop
         return self._client
