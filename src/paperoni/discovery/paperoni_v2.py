@@ -50,6 +50,10 @@ def _parse_link(link: dict[str, str]) -> Link:
     return Link(type=link["type"].split(".", 1)[0], link=link["link"])
 
 
+def _parse_all_links(links):
+    return list({x for lnk in links if (x := _parse_link(lnk)).link})
+
+
 def _parse_institution(institution: dict[str, str]) -> Institution:
     return Institution(
         name=institution["name"],
@@ -63,7 +67,7 @@ def _parse_author(author: dict[str, str]) -> PaperAuthor:
         author=Author(
             name=qual(author["author"]["name"], -10.0),
             aliases=[],
-            links=list(map(_parse_link, author["author"]["links"]))
+            links=_parse_all_links(author["author"]["links"])
             + [Link(type="paperoni_v2", link=author["author"]["author_id"])],
         ),
         affiliations=qual(list(map(_parse_institution, author["affiliations"])), -10.0),
@@ -94,7 +98,7 @@ def _parse_release(release: dict[str, Any]) -> Release:
             ),
             volume=release["venue"]["volume"],
             publisher=release["venue"]["publisher"],
-            links=list(map(_parse_link, release["venue"]["links"])),
+            links=_parse_all_links(release["venue"]["links"]),
             peer_reviewed=release["peer_reviewed"],
         ),
         status=release["status"],
@@ -169,7 +173,7 @@ class PaperoniV2(Discoverer):
                 authors=list(map(_parse_author, paper["authors"])),
                 releases=list(map(_parse_release, paper["releases"])),
                 topics=list(map(_parse_topic, paper["topics"])),
-                links=list(map(_parse_link, paper["links"])),
+                links=_parse_all_links(paper["links"]),
                 flags=set(flags),
                 key=f"paperoni_v2:{paper['paper_id']}",
                 info={"discovered_by": {"paperoni_v2": paper["paper_id"]}}
