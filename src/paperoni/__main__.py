@@ -280,7 +280,10 @@ class Work:
         check_paper_updates: bool = False
 
         async def run(self, work: "Work"):
-            ex = (work.collection is not None) and (await work.collection.exclusions())
+            wcoll = (
+                (await work.collection.cached) if work.collection is not None else None
+            )
+            ex = (await wcoll.exclusions()) if wcoll is not None else None
             index = paper_index()
             index.index_all(list(work.top))
 
@@ -298,8 +301,8 @@ class Work:
 
                 col_paper = None
                 if (
-                    work.collection is not None
-                    and (col_paper := await work.collection.find_paper(paper))
+                    wcoll is not None
+                    and (col_paper := await wcoll.find_paper(paper))
                     and (
                         not self.check_paper_updates
                         or not paper_has_updated(col_paper, paper)
