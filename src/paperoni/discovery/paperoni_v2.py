@@ -114,12 +114,12 @@ class PaperoniV2(Discoverer):
     # The paperoni v2 access token
     # [metavar TOKEN]
     token: Secret[str] = field(
-        default_factory=lambda: os.getenv("PAPERONIV2_TOKEN", paperoni_v2_config["token"])
+        default_factory=lambda: os.getenv("PAPERONIV2_TOKEN", paperoni_v2_config.token)
     )
 
     # The paperoni v2 cache file
     # [metavar JSON]
-    cache: Path = field(default_factory=lambda: paperoni_v2_config["cache"])
+    cache: Path = field(default_factory=lambda: paperoni_v2_config.cache)
 
     async def query(
         self,
@@ -141,7 +141,7 @@ class PaperoniV2(Discoverer):
         # certificate verify failed: unable to get local issuer certificate
         # (_ssl.c:1000)')))
         papers: list[dict] = await config.fetch.read(
-            url=f"{self.endpoint}/report",
+            url=f"{self.endpoint or paperoni_v2_config.endpoint}/report",
             format="json",
             cache_into=self.cache,
             headers={"X-API-KEY": str(self.token)},
@@ -175,9 +175,11 @@ class PaperoniV2(Discoverer):
             )
 
 
-paperoni_v2_config: dict[str, Secret[str] | Path | None] = {
-    "token": gifnoc.define(
-        "paperoni.discovery.v2.token", Secret[str] | None, defaults=None
-    ),
-    "cache": gifnoc.define("paperoni.discovery.v2.cache", Path | None, defaults=None),
-}
+@dataclass
+class Paperoniv2Config:
+    endpoint: str = "https://paperoni.mila.quebec"
+    token: Secret[str] = None
+    cache: Path = None
+
+
+paperoni_v2_config = gifnoc.define("paperoni.discovery.v2", Paperoniv2Config)
