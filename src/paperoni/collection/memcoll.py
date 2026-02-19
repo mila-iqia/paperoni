@@ -24,7 +24,7 @@ class PaperIndex(Index[Paper]):
 
     def next_id(self) -> int:
         self.last_id += 1
-        return self.last_id
+        return str(self.last_id)
 
     def index(self, paper):
         if paper.id is None:
@@ -134,7 +134,7 @@ class MemCollection(PaperCollection):
     async def find_paper(self, paper: Paper) -> Paper | None:
         return find_equivalent(paper, self._index)
 
-    async def find_by_id(self, paper_id: int) -> Paper | None:
+    async def find_by_id(self, paper_id: str) -> Paper | None:
         return self._index.find("id", paper_id)
 
     async def commit(self) -> None:
@@ -153,7 +153,7 @@ class MemCollection(PaperCollection):
     async def search(
         self,
         # Paper ID
-        paper_id: int | None = None,
+        paper_id: str | None = None,
         # Title of the paper
         title: str = None,
         # Institution of an author

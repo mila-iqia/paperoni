@@ -75,14 +75,14 @@ class PaperCollection:
     async def find_paper(self, paper: Paper) -> Paper | None:
         raise NotImplementedError()
 
-    async def find_by_id(self, paper_id: int) -> Paper | None:
+    async def find_by_id(self, paper_id: str) -> Paper | None:
         raise NotImplementedError()
 
     async def edit_paper(self, paper: Paper) -> None:
         paper.version = datetime.now()
         await self.add_papers([paper], force=True, ignore_exclusions=True)
 
-    async def delete_ids(self, ids: list[int]) -> int:
+    async def delete_ids(self, ids: list[str]) -> int:
         """Delete papers by ID."""
         raise NotImplementedError()
 

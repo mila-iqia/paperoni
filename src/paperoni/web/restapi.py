@@ -233,7 +233,7 @@ class AddResponse:
 class SetFlagRequest:
     """Request model for setting a flag on a paper."""
 
-    paper_id: int | str
+    paper_id: str
     flag: str
     value: bool = True
 
@@ -260,14 +260,14 @@ class PaperIncludeResponse:
     success: bool
     message: str
     count: int = 0
-    ids: list[int | str] = field(default_factory=list)
+    ids: list[str] = field(default_factory=list)
 
 
 @dataclass
 class DeletePapersRequest:
     """Request model for deleting papers."""
 
-    ids: list[int]
+    ids: list[str]
 
 
 @dataclass
@@ -388,7 +388,7 @@ def install_api(app) -> FastAPI:
         response_model=Paper,
         dependencies=[Depends(hascap("search"))],
     )
-    async def get_paper(paper_id: int | str):
+    async def get_paper(paper_id: str):
         """Get a single paper by ID."""
         coll = Coll(command=None)
         paper = await coll.collection.find_by_id(paper_id)
