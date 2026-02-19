@@ -419,7 +419,7 @@ class Work:
                     ):
                         send(refinement=paper)
                         sws.value.add(paper)
-                    sws.score = work.focuses.score(sws.value)
+                    sws.score = sws.value.current.score = work.focuses.score(sws.value)
                     return sws
 
                 coros = [
@@ -454,7 +454,8 @@ class Work:
                 with soft_fail():
                     p = normalize_paper(sws.value.current, **kwargs, force=self.force)
                     sws.value.current = simplify_paper(p)
-                    sws.score = work.focuses.score(sws.value)
+                    new_score = work.focuses.score(sws.value)
+                    sws.score = sws.score = sws.value.current.score = new_score
 
             work.top.resort()
             work.save()
