@@ -127,6 +127,10 @@ class PaperoniV2(Discoverer):
         embed: bool = False,
         # Force refresh the paperoni v2 cache
         force_refresh: bool = False,
+        # Minimum date
+        min_date: datetime.date = None,
+        # Whether we only fetch validated papers
+        only_validated: bool = True,
     ) -> AsyncGenerator[Paper, None]:
         """Query the paperoni v2 database"""
         if force_refresh and self.cache.exists():
@@ -152,12 +156,14 @@ class PaperoniV2(Discoverer):
             match _is_validated(paper):
                 case True:
                     flags = ["valid"]
+                case _ if only_validated:
+                    continue
                 case False:
                     flags = ["invalid"]
                 case _:
                     flags = []
 
-            yield Paper(
+            p = Paper(
                 title=paper["title"],
                 abstract=paper["abstract"],
                 authors=list(map(_parse_author, paper["authors"])),
@@ -173,6 +179,10 @@ class PaperoniV2(Discoverer):
                 ),
                 version=datetime.datetime.now(),
             )
+            if min_date and all(release.venue.date < min_date for release in p.releases):
+                continue
+
+            yield p
 
 
 @dataclass
