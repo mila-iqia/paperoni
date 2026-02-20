@@ -312,7 +312,7 @@ class Work:
 
         async def run(self, work: "Work"):
             wcoll = (
-                (await work.collection.cached) if work.collection is not None else None
+                (await work.collection.cached()) if work.collection is not None else None
             )
             ex = (await wcoll.exclusions()) if wcoll is not None else None
             index = paper_index()
