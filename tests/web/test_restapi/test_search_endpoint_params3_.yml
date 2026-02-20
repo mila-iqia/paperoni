@@ -35,7 +35,7 @@ results:
       name: Claire Martin
     display_name: Claire Martin
   flags: []
-  id: 8
+  id: '8'
   info: {}
   key: n/a
   links: []
@@ -94,7 +94,7 @@ results:
       name: James Rodriguez
     display_name: James Rodriguez
   flags: []
-  id: 0
+  id: '0'
   info: {}
   key: n/a
   links: []
@@ -153,7 +153,7 @@ results:
       name: Robert Williams
     display_name: Robert Williams
   flags: []
-  id: 2
+  id: '2'
   info: {}
   key: n/a
   links: []
@@ -202,7 +202,7 @@ results:
       name: Emmanuel Okonkwo
     display_name: Emmanuel Okonkwo
   flags: []
-  id: 5
+  id: '5'
   info: {}
   key: n/a
   links: []

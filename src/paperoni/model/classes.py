@@ -245,3 +245,9 @@ class Paper(Base):
     # Collection fields
     id: int | str = None
     version: datetime = None
+
+    def __post_init__(self):
+        # For compatibility with existing databases
+        # To delete later
+        if isinstance(self.id, int):
+            self.id = str(self.id)

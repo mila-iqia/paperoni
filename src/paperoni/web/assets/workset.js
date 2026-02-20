@@ -18,6 +18,7 @@ async function fetchWorksets(offset = 0, size = 100) {
     const queryParams = new URLSearchParams({
         offset: offset.toString(),
         size: size.toString(),
+        expand_links: true,
     });
 
     const url = `/api/v1/work/view?${queryParams.toString()}`;

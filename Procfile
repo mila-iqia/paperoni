@@ -1,2 +1,2 @@
 web: paperoni serve
-scrape: paperoni batch scrape.yaml
+scrape: paperoni --no-dash --rich-log --report batch scrape.yaml
