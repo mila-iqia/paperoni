@@ -42,6 +42,14 @@ def install_search(app: FastAPI) -> FastAPI:
             show_scores=True,
         )
 
+    @app.get("/pending")
+    async def pending_page(
+        request: Request,
+        user: str = Depends(hascap("search", redirect=True)),
+    ):
+        """Render the pending papers page."""
+        return render_template("pending.html", request)
+
     @app.get("/workset")
     async def workset_page(
         request: Request,

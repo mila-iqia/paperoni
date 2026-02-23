@@ -134,6 +134,46 @@ function handleYearClick(year) {
     }
 }
 
+/**
+ * Create a paper result element for display (used by search and pending).
+ * @param {Object} paper - The paper object
+ * @param {Object} options - Options: showScores, score, searchParams, onAuthorClick, etc.
+ * @returns {HTMLElement} The paper element, optionally wrapped with score band
+ */
+export function createPaperResultElement(paper, options = {}) {
+    const {
+        showScores = false,
+        score = 0,
+        searchParams = {},
+        onAuthorClick = null,
+        onInstitutionClick = null,
+        onVenueClick = null,
+        onYearClick = null,
+        bottomSection = null,
+        showEditIcon = false,
+    } = options;
+
+    const paperEl = createPaperElement(paper, {
+        searchParams,
+        onAuthorClick,
+        onInstitutionClick,
+        onVenueClick,
+        onYearClick,
+        bottomSection,
+        showEditIcon,
+    });
+
+    if (showScores) {
+        return html`
+            <li class="paper-item-with-score">
+                ${createScoreBand(score)}
+                <div class="paper-content-wrapper">${paperEl}</div>
+            </li>
+        `;
+    }
+    return paperEl;
+}
+
 function displayResults(data) {
     totalResults = data.total;
 
@@ -154,27 +194,17 @@ function displayResults(data) {
             const fakeWorkset = { score: paper.score, value: { current: paper, collected: [] } };
             return createWorksetElement(fakeWorkset);
         }
-        const paperEl = createPaperElement(paper, {
+        return createPaperResultElement(paper, {
+            showScores,
+            score: paper.score ?? 0,
             searchParams: currentParams,
             onAuthorClick: handleAuthorClick,
             onInstitutionClick: handleInstitutionClick,
             onVenueClick: handleVenueClick,
             onYearClick: handleYearClick,
             bottomSection: showValidationButtons ? createValidationButtons(paper) : null,
-            showEditIcon: isValidator
+            showEditIcon: isValidator,
         });
-
-        if (showScores) {
-            // Wrap paper in a container with score band (like workset)
-            const score = paper.score ?? 0;
-            return html`
-                <li class="paper-item-with-score">
-                    ${createScoreBand(score)}
-                    <div class="paper-content-wrapper">${paperEl}</div>
-                </li>
-            `;
-        }
-        return paperEl;
     });
     const paperList = useDevMode
         ? html`<div class="workset-list">${paperElements}</div>`
