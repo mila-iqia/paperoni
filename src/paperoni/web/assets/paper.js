@@ -564,9 +564,11 @@ export function createScoreBand(score) {
     `;
 }
 
-export function createEditIcon(paper) {
+export function createEditIcon(paper, options = {}) {
+    const suggest = options.suggest ?? false;
+    const editUrl = paper.id != null ? `/edit/${paper.id}${suggest ? '?suggest=1' : ''}` : `/edit/new${suggest ? '?suggest=1' : ''}`;
     const editIcon = html`
-        <a href="/edit/${paper.id}" target="_blank" class="edit-icon" style="
+        <a href="${editUrl}" target="_blank" class="edit-icon" style="
             display: inline-flex;
             align-items: center;
             margin-left: 8px;

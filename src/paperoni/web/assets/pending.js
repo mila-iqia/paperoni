@@ -184,13 +184,13 @@ function createPendingItem(scoredWorkset) {
     let contentEl;
     if (collected.length === 0) {
         // New paper suggestion - display like search (using workset paper format)
-        contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });
+        contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'], editSuggest: true });
     } else if (collected.length === 1) {
         // Diff between collected (old) and current (new suggestion)
         contentEl = createDiffViewWithTabs(collected[0], current);
     } else {
         // Unexpected: multiple collected - show current
-        contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });
+        contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'], editSuggest: true });
     }
 
         const oldComments = collected.length === 1 ? collected[0]?.info?.comments : undefined;

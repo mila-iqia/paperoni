@@ -1020,11 +1020,20 @@ function collectFormData(form, originalPaper) {
                 // Automatically copy display_name to author.name
                 authorsMap[index].author.name = input.value;
             } else if (field === 'affiliations') {
-                authorsMap[index].affiliations = input.value
-                    .split(';')
-                    .map(s => s.trim())
-                    .filter(s => s)
-                    .map(name => ({ name, category: 'unknown', country: null, aliases: [] }));
+                const originalAuthor = originalPaper.authors?.[parseInt(index, 10)];
+                const originalAffiliations = originalAuthor?.affiliations || [];
+                const originalStr = originalAffiliations.map(a => a.name.trim()).filter(Boolean).join('; ');
+                const inputStr = input.value.split(';').map(s => s.trim()).filter(Boolean).join('; ');
+
+                if (inputStr === originalStr) {
+                    authorsMap[index].affiliations = originalAffiliations.map(a => ({ ...a }));
+                } else {
+                    authorsMap[index].affiliations = input.value
+                        .split(';')
+                        .map(s => s.trim())
+                        .filter(s => s)
+                        .map(name => ({ name, category: 'unknown', country: null, aliases: [] }));
+                }
             }
         }
     });

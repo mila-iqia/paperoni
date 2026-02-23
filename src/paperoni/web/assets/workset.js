@@ -2,9 +2,12 @@ import { html, join } from './common.js';
 import {
     createAuthorsSection,
     createDetailsSection,
+    createEditIcon,
     createReleasesSection,
     extractDomain,
-    getScoreClass
+    formatRelease,
+    getScoreClass,
+    sortReleasesByDate
 } from './paper.js';
 
 function getAffName(aff) {
@@ -131,10 +134,13 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
         ? html`<a href="${titleUrl}" target="_blank" class="paper-title-link">${titleSpans}</a>`
         : html`<span>${titleSpans}</span>`;
 
+    const editNewIcon = paperNew ? createEditIcon(paperNew, { suggest: true }) : null;
+
     const titleWithEdit = html`
         <h3 class="paper-title" style="display: flex; align-items: center;">
             ${titleContent}
             ${pdfBadge}
+            ${editNewIcon}
         </h3>
     `;
 
@@ -283,10 +289,10 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
         `
         : html`<div class="paper-authors-container"><div class="paper-authors">No authors</div></div>`;
 
-    // Releases diff
-    const releases1 = paperOld?.releases || [];
-    const releases2 = paperNew?.releases || [];
-    const releaseKey = r => `${r.venue?.name ?? ''}|${r.venue?.date ?? ''}|${r.peer_review_status ?? ''}`;
+    // Releases diff - match normal view: full date, status, venue
+    const releases1 = sortReleasesByDate(paperOld?.releases || []);
+    const releases2 = sortReleasesByDate(paperNew?.releases || []);
+    const releaseKey = (r) => `${r.venue?.name ?? ''}|${r.venue?.date ?? ''}|${r.peer_review_status ?? ''}`;
     const r1Keys = new Set(releases1.map(releaseKey));
     const r2Keys = new Set(releases2.map(releaseKey));
     const releaseItems = [];
@@ -294,16 +300,30 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
         const key = releaseKey(r);
         const in2 = r2Keys.has(key);
         const cls = in2 ? '' : 'diff-removed';
-        const date = r.venue?.date ? r.venue.date.substring(0, 4) : '????';
-        const venue = r.venue?.name ?? 'Unknown';
-        releaseItems.push(html`<div class="release-item ${cls}"><strong class="release-date">${date}</strong> <span class="release-venue">${venue}</span></div>`);
+        const { date, venueName, status } = formatRelease(r);
+        const dateEl = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
+        const statusSpan = status ? html`<span class="release-status">${status}</span>` : null;
+        releaseItems.push(html`
+            <div class="release-item ${cls}">
+                ${dateEl}
+                ${statusSpan}
+                <span class="release-venue">${venueName ?? 'Unknown'}</span>
+            </div>
+        `);
     }
     for (const r of releases2) {
         const key = releaseKey(r);
         if (r1Keys.has(key)) continue;
-        const date = r.venue?.date ? r.venue.date.substring(0, 4) : '????';
-        const venue = r.venue?.name ?? 'Unknown';
-        releaseItems.push(html`<div class="release-item diff-added"><strong class="release-date">${date}</strong> <span class="release-venue">${venue}</span></div>`);
+        const { date, venueName, status } = formatRelease(r);
+        const dateEl = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
+        const statusSpan = status ? html`<span class="release-status">${status}</span>` : null;
+        releaseItems.push(html`
+            <div class="release-item diff-added">
+                ${dateEl}
+                ${statusSpan}
+                <span class="release-venue">${venueName ?? 'Unknown'}</span>
+            </div>
+        `);
     }
     const releasesHtml = html`<div class="paper-meta-item"><div class="paper-releases">${releaseItems.length ? releaseItems : html`<div class="release-item">No releases</div>`}</div></div>`;
 
@@ -541,10 +561,11 @@ function createInfoTable(info, excludeKeys = []) {
     `;
 }
 
-/** Exported for use by pending.js. Options: { excludeFromInfo: ['comments'] } */
+/** Exported for use by pending.js. Options: { excludeFromInfo: ['comments'], editSuggest: bool } */
 export function createWorksetPaperElement(paper, options = {}) {
     const info = paper.info || {};
     const excludeFromInfo = options.excludeFromInfo || [];
+    const editSuggest = options.editSuggest ?? false;
 
     // Get the first link URL if available
     const firstLink = paper.links && paper.links.length > 0 ? paper.links[0] : null;
@@ -556,6 +577,8 @@ export function createWorksetPaperElement(paper, options = {}) {
         ? html`<a href="${firstPdfLink.link}" target="_blank" class="badge pdf" title="${firstPdfLink.link}">PDF</a>`
         : null;
 
+    const editIcon = editSuggest ? createEditIcon(paper, { suggest: true }) : null;
+
     const titleContent = titleUrl
         ? html`<a href="${titleUrl}" target="_blank" class="paper-title-link">${paper.title ?? 'Untitled'}</a>`
         : html`<span>${paper.title ?? 'Untitled'}</span>`;
@@ -564,6 +587,7 @@ export function createWorksetPaperElement(paper, options = {}) {
         <h3 class="paper-title" style="display: flex; align-items: center;">
             ${titleContent}
             ${pdfBadge}
+            ${editIcon}
         </h3>
     `;
 
