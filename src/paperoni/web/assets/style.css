@@ -1067,6 +1067,13 @@ body {
     padding-bottom: 0;
 }
 
+.edit-pending-note {
+    color: #2c5aa0;
+    font-size: 0.9em;
+    font-weight: normal;
+    margin-left: 6px;
+}
+
 /* Top Save Button */
 .btn-save-top {
     background: #28a745;
@@ -1206,6 +1213,125 @@ body {
         transform: translateX(calc(100% + 20px));
         opacity: 0;
     }
+}
+
+/* Pending page: comments */
+.pending-comments {
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: #f0f4f8;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.pending-comment-item {
+    margin-bottom: 6px;
+}
+
+.pending-comment-item:last-child {
+    margin-bottom: 0;
+}
+
+.pending-comment-user {
+    font-weight: 600;
+    color: #2c5aa0;
+}
+
+.pending-comment-text {
+    margin-left: 4px;
+}
+
+/* Pending page: approve/reject actions */
+.pending-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.btn-approve-pending {
+    padding: 6px 14px;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+
+.btn-approve-pending:hover:not(.faded) {
+    background: #c3e6cb;
+}
+
+.btn-approve-pending.selected {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.btn-approve-pending.selected:hover {
+    background: #218838;
+}
+
+.btn-approve-pending.faded {
+    opacity: 0.4;
+}
+
+.btn-approve-pending.faded:hover {
+    opacity: 0.7;
+}
+
+.btn-reject-pending {
+    padding: 6px 14px;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+
+.btn-reject-pending:hover:not(.faded) {
+    background: #f5c6cb;
+}
+
+.btn-reject-pending.selected {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.btn-reject-pending.selected:hover {
+    background: #c82333;
+}
+
+.btn-reject-pending.faded {
+    opacity: 0.4;
+}
+
+.btn-reject-pending.faded:hover {
+    opacity: 0.7;
+}
+
+.pending-confirm-toast {
+    border-left-color: #2c5aa0;
+}
+
+.btn-confirm-pending {
+    padding: 6px 14px;
+    background: #2c5aa0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.btn-confirm-pending:hover {
+    background: #1e3a6f;
 }
 
 .form-group {
@@ -2146,7 +2272,7 @@ body {
     display: block;
 }
 
-/* Diff view styles - V1 only = green (removed), V2 only = red (added) */
+/* Diff view styles - added = green (new), removed = red (deleted) */
 /* Scoped under .diff-view with higher specificity to override .badge, .badge.topic, .badge.link, etc. */
 .diff-view .diff-added,
 .diff-view .badge.diff-added,
@@ -2156,7 +2282,7 @@ body {
 .diff-view span.diff-added,
 .diff-view td.diff-added,
 .diff-view tr.diff-added {
-    background-color: rgba(255, 182, 182, 0.6) !important;
+    background-color: rgba(182, 255, 182, 0.6) !important;
 }
 
 .diff-view .diff-removed,
@@ -2167,7 +2293,7 @@ body {
 .diff-view span.diff-removed,
 .diff-view td.diff-removed,
 .diff-view tr.diff-removed {
-    background-color: rgba(182, 255, 182, 0.6) !important;
+    background-color: rgba(255, 182, 182, 0.6) !important;
 }
 
 .diff-view .diff-legend {
@@ -2207,12 +2333,6 @@ body {
 
 .tab-button.diff-v2 {
     box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.7);
-}
-
-.diff-order-arrow {
-    color: #888;
-    font-size: 0.85em;
-    margin-left: 1px;
 }
 
 .paper-content {

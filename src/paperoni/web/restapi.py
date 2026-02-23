@@ -5,14 +5,14 @@ FastAPI interface for paperoni collection search functionality.
 import datetime
 import itertools
 from dataclasses import dataclass, field, replace
-from types import NoneType
+from types import NoneType, SimpleNamespace
 from typing import Any, Generator, Iterable, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from serieux import auto_singleton, deserialize, serialize
 
-from ..__main__ import Coll, Focus, Formatter, Fulltext, Work
+from ..__main__ import Coll, Focus, Formatter, Fulltext, Work, expand_paper_links
 from ..config import config
 from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
@@ -251,6 +251,7 @@ class PaperIncludeRequest:
     """Request model for including new papers."""
 
     papers: list[dict]
+    comment: str = ""
 
 
 @dataclass
@@ -261,6 +262,24 @@ class PaperIncludeResponse:
     message: str
     count: int = 0
     ids: list[str] = field(default_factory=list)
+
+
+@dataclass
+class PendingDecideRequest:
+    """Request model for pending decide."""
+
+    approve: list[str] = field(default_factory=list)
+    reject: list[str] = field(default_factory=list)
+
+
+@dataclass
+class PendingDecideResponse:
+    """Response model for pending decide."""
+
+    success: bool
+    message: str
+    approved: int = 0
+    removed: int = 0
 
 
 @dataclass
@@ -384,14 +403,99 @@ def install_api(app) -> FastAPI:
         )
 
     @app.get(
+        f"{prefix}/pending/list",
+        response_model=ViewResponse,
+        dependencies=[Depends(hascap("search"))],
+    )
+    async def pending_papers(request: SearchRequest = Depends(parse_search_request)):
+        """Return pending papers as list[Scored[PaperWorkingSet]]. Each workset has
+        current=suggestion; collected=[] for new papers, or collected=[equiv] when
+        the suggestion matches an existing paper in the collection."""
+        if config.suggestions is None:
+            return ViewResponse(
+                results=[],
+                count=0,
+                next_offset=None,
+                total=0,
+            )
+
+        all_papers = await request.run(SimpleNamespace(collection=config.suggestions))
+
+        async def pair(sugg: Paper):
+            collected = []
+            if sugg.id and config.collection is not None:
+                equiv = await config.collection.find_by_id(sugg.id)
+                if equiv is not None:
+                    if request.expand_links:
+                        equiv = expand_paper_links(equiv)
+                    collected.append(equiv)
+            return Scored(
+                score=0, value=PaperWorkingSet(current=sugg, collected=collected)
+            )
+
+        worksets = [await pair(paper) for paper in all_papers]
+        total = len(worksets)
+        sliced = list(request.slice(worksets))
+
+        return ViewResponse(
+            results=serialize(list[Scored[PaperWorkingSet]], sliced),
+            count=request.count,
+            next_offset=request.next_offset,
+            total=total,
+        )
+
+    @app.post(
+        f"{prefix}/pending/decide",
+        response_model=PendingDecideResponse,
+        dependencies=[Depends(hascap("search"))],
+    )
+    async def pending_decide(request: PendingDecideRequest):
+        """Approve papers (add to collection) or reject them. Both are removed from suggestions."""
+        if config.suggestions is None:
+            return PendingDecideResponse(
+                success=False,
+                message="Suggestions collection not configured",
+            )
+
+        all_ids = list(dict.fromkeys(request.approve + request.reject))
+        if not all_ids:
+            return PendingDecideResponse(
+                success=True,
+                message="Nothing to process",
+            )
+
+        papers_to_approve = []
+        for pid in request.approve:
+            paper = await config.suggestions.find_by_id(pid)
+            if paper is not None:
+                papers_to_approve.append(paper)
+
+        if papers_to_approve and config.collection is not None:
+            await config.collection.add_papers(papers_to_approve, force=True)
+
+        removed = await config.suggestions.delete_ids(all_ids)
+
+        return PendingDecideResponse(
+            success=True,
+            message=f"Approved {len(papers_to_approve)}, removed {removed} from suggestions",
+            approved=len(papers_to_approve),
+            removed=removed,
+        )
+
+    @app.get(
         f"{prefix}/paper/{{paper_id}}",
         response_model=Paper,
         dependencies=[Depends(hascap("search"))],
     )
-    async def get_paper(paper_id: str):
+    async def get_paper(paper_id: str, latest_edit: bool = False):
         """Get a single paper by ID."""
-        coll = Coll(command=None)
-        paper = await coll.collection.find_by_id(paper_id)
+        paper = None
+        if latest_edit:
+            paper = await config.suggestions.find_by_id(paper_id)
+            if paper is not None:
+                paper = replace(paper, info={**paper.info, "edit_pending": True})
+        if paper is None:
+            paper = await config.collection.find_by_id(paper_id)
         if paper is None:
             raise HTTPException(
                 status_code=404, detail=f"Paper with ID {paper_id} not found"
@@ -478,6 +582,33 @@ def install_api(app) -> FastAPI:
         # We use add_papers which handles updates/merges
         try:
             added_ids = await coll.collection.add_papers(papers, force=True)
+            return PaperIncludeResponse(
+                success=True,
+                message=f"Processed {len(added_ids)} paper(s)",
+                count=len(added_ids),
+                ids=added_ids,
+            )
+        except Exception as e:
+            return PaperIncludeResponse(
+                success=False,
+                message=f"Error processing papers: {e}",
+                count=0,
+            )
+
+    @app.post(f"{prefix}/suggest", response_model=PaperIncludeResponse)
+    async def suggest_papers(
+        request: PaperIncludeRequest, user: str = Depends(hascap("search"))
+    ):
+        """Suggest papers to add/edit in the collection."""
+        # Deserialize the papers from the request
+        papers = deserialize(list[_Paper], request.papers)
+        for p in papers:
+            if not isinstance(p.info.get("comments", None), list):
+                p.info["comments"] = []
+            p.info["comments"].append({"user": user, "comment": request.comment})
+
+        try:
+            added_ids = await config.suggestions.add_papers(papers, force=True)
             return PaperIncludeResponse(
                 success=True,
                 message=f"Processed {len(added_ids)} paper(s)",

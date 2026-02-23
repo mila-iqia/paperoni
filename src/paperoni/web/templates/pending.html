@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+
+{% block title %}Pending Papers{% endblock %}
+
+{% block page_title %}Pending Papers{% endblock %}
+
+{% block content %}
+<div class="workset-container">
+    <div id="pendingContainer"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    import { displayPending } from '/assets/pending.js';
+    displayPending();
+</script>
+{% endblock %}

@@ -72,17 +72,19 @@ function createBadge(item, index, items, renderBadges, config) {
 }
 
 /**
- * Main function to set up the paper edit page
+ * Main function to set up the paper edit page.
+ * suggestMode: when true, submit to /suggest (pending validation); when false, submit to /include (direct edit).
  */
-export function editPaper(paperId) {
+export function editPaper(paperId, suggestMode = false) {
     const messageContainer = document.getElementById('messageContainer');
     const formContainer = document.getElementById('formContainer');
 
     // Check if creating a new paper
     if (paperId === 'new') {
-        document.title = 'Create Paper';
+        const pageTitle = suggestMode ? 'Suggest New Paper' : 'Create Paper';
+        document.title = pageTitle;
         const h1 = document.querySelector('h1');
-        if (h1) h1.textContent = 'Create Paper';
+        if (h1) h1.textContent = pageTitle;
 
         formContainer.innerHTML = '';
         const paper = {
@@ -95,7 +97,7 @@ export function editPaper(paperId) {
             links: [],
             flags: []
         };
-        const form = renderEditForm(paper);
+        const form = renderEditForm(paper, suggestMode);
         formContainer.appendChild(form);
         return;
     }
@@ -107,13 +109,13 @@ export function editPaper(paperId) {
     // Fetch the paper data
     fetchPaper(paperId)
         .then((paper) => {
-            const pageTitle = "Edit Paper";
+            const pageTitle = suggestMode ? 'Suggest Edit' : 'Edit Paper';
             document.title = pageTitle;
             const h1 = document.querySelector('h1');
             if (h1) h1.textContent = pageTitle;
 
             formContainer.innerHTML = '';
-            const form = renderEditForm(paper);
+            const form = renderEditForm(paper, suggestMode);
             formContainer.appendChild(form);
         })
         .catch((error) => {
@@ -124,9 +126,10 @@ export function editPaper(paperId) {
 
 /**
  * Fetch paper data from the API
+ * Passes latest_edit=true as a query parameter.
  */
 async function fetchPaper(paperId) {
-    const response = await fetch(`/api/v1/paper/${paperId}`, {
+    const response = await fetch(`/api/v1/paper/${paperId}?latest_edit=true`, {
         credentials: 'include',
     });
 
@@ -139,16 +142,18 @@ async function fetchPaper(paperId) {
 }
 
 /**
- * Submit updated paper data to the API
+ * Submit updated paper data to the API.
+ * suggestMode: use /suggest (pending) or /include (direct).
  */
-async function submitPaper(paper) {
-    const response = await fetch('/api/v1/include', {
+async function submitPaper(paper, comment = '', suggestMode = false) {
+    const endpoint = suggestMode ? '/api/v1/suggest' : '/api/v1/include';
+    const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ papers: [paper] }),
+        body: JSON.stringify({ papers: [paper], comment: comment || '' }),
     });
 
     if (!response.ok) {
@@ -179,16 +184,33 @@ function showSuccess(container, message) {
     );
 }
 
+function getSubmitButtonText(paper, suggestMode) {
+    if (suggestMode) {
+        return paper.id ? 'Submit Suggestion' : 'Suggest Paper';
+    }
+    return paper.id ? 'Save Changes' : 'Create Paper';
+}
+
 /**
- * Render the edit form for a paper
+ * Render the edit form for a paper.
+ * suggestMode: when true, wording reflects suggest/pending flow.
  */
-function renderEditForm(paper) {
+function renderEditForm(paper, suggestMode = false) {
+    const editPending = paper.info?.edit_pending === true;
+    if (editPending) {
+        delete paper.info.edit_pending;
+    }
+
+    const editPendingNote = editPending
+        ? html`<span class="edit-pending-note">(based on existing pending edit)</span>`
+        : null;
+
     const form = html`
         <form class="edit-form" id="editForm">
             <!-- Basic Information -->
             <div class="form-section">
                 <div class="section-header">
-                    <h2>Basic Information</h2>
+                    <h2>Basic Information ${editPendingNote}</h2>
                 </div>
 
                 <div class="form-group">
@@ -259,9 +281,17 @@ function renderEditForm(paper) {
                 </div>
             </div>
 
+            <!-- Comment (suggest mode: for validator; include mode: optional note) -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="comment">Comment</label>
+                    <textarea id="comment" name="comment" class="edit-input" rows="3" placeholder="${suggestMode ? 'Comment about this edit, for the person who will validate it' : 'Optional note about this edit'}"></textarea>
+                </div>
+            </div>
+
             <!-- Form Actions -->
             <div class="form-actions sticky-bottom">
-                <button type="submit" class="btn-primary btn-save-sticky">${paper.id ? 'Save Changes' : 'Create Paper'}</button>
+                <button type="submit" class="btn-primary btn-save-sticky">${getSubmitButtonText(paper, suggestMode)}</button>
             </div>
         </form>
     `;
@@ -293,7 +323,7 @@ function renderEditForm(paper) {
         let originalBtnText = submitBtn.textContent;
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving...';
+        submitBtn.textContent = suggestMode ? 'Submitting...' : 'Saving...';
 
         try {
             const updatedPaper = collectFormData(form, paper);
@@ -325,32 +355,30 @@ function renderEditForm(paper) {
             }
 
 
-            const result = await submitPaper(updatedPaper);
+            const comment = form.querySelector('#comment')?.value?.trim() || '';
+            const result = await submitPaper(updatedPaper, comment, suggestMode);
 
             if (result.success) {
                 const isNew = paper.id === null;
                 if (result.ids && result.ids.length > 0 && isNew) {
                     paper.id = result.ids[0];
-                    // Update button text for subsequent saves
-                    originalBtnText = 'Save Changes';
+                    originalBtnText = getSubmitButtonText(paper, suggestMode);
+                }
+                if (suggestMode) {
+                    showToast(isNew ? 'Suggestion submitted! It will appear in the pending queue for validation.' : 'Edit suggested! It will appear in the pending queue for validation.', 'success');
+                } else {
+                    showToast(isNew ? 'Paper created successfully!' : 'Paper updated successfully!', 'success');
                 }
                 if (isNew) {
-                    showToast('Paper created successfully!', 'success');
-                    // Update URL without reloading
-                    window.history.replaceState(null, '', `/edit/${paper.id}`);
+                    window.history.replaceState(null, '', `/edit/${paper.id}${suggestMode ? '?suggest=1' : ''}`);
                 }
-                else {
-                    showToast('Paper updated successfully!', 'success');
-                }
-                
-                // Update page title
-                const newTitle = "Edit Paper";
+                const newTitle = suggestMode ? 'Suggest Edit' : 'Edit Paper';
                 document.title = newTitle;
                 const h1 = document.querySelector('h1');
                 if (h1) h1.textContent = newTitle;
 
             } else {
-                showToast(result.message || 'Failed to update paper', 'error');
+                showToast(result.message || (suggestMode ? 'Failed to submit suggestion' : 'Failed to update paper'), 'error');
             }
         } catch (error) {
             showToast(`Error: ${error.message}`, 'error');
