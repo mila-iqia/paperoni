@@ -2146,6 +2146,75 @@ body {
     display: block;
 }
 
+/* Diff view styles - V1 only = green (removed), V2 only = red (added) */
+/* Scoped under .diff-view with higher specificity to override .badge, .badge.topic, .badge.link, etc. */
+.diff-view .diff-added,
+.diff-view .badge.diff-added,
+.diff-view .author-name.diff-added,
+.diff-view .institution-item.diff-added,
+.diff-view .release-item.diff-added,
+.diff-view span.diff-added,
+.diff-view td.diff-added,
+.diff-view tr.diff-added {
+    background-color: rgba(255, 182, 182, 0.6) !important;
+}
+
+.diff-view .diff-removed,
+.diff-view .badge.diff-removed,
+.diff-view .author-name.diff-removed,
+.diff-view .institution-item.diff-removed,
+.diff-view .release-item.diff-removed,
+.diff-view span.diff-removed,
+.diff-view td.diff-removed,
+.diff-view tr.diff-removed {
+    background-color: rgba(182, 255, 182, 0.6) !important;
+}
+
+.diff-view .diff-legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #666;
+}
+
+.diff-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.diff-legend-hint {
+    margin-left: auto;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.diff-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.tab-button.diff-v1 {
+    box-shadow: 0 0 0 2px rgba(34, 139, 34, 0.7);
+}
+
+.tab-button.diff-v2 {
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.7);
+}
+
+.diff-order-arrow {
+    color: #888;
+    font-size: 0.85em;
+    margin-left: 1px;
+}
+
 .paper-content {
     padding: 0;
 }

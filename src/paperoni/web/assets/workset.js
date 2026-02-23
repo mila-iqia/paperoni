@@ -1,10 +1,337 @@
-import { html } from './common.js';
+import { html, join } from './common.js';
 import {
     createAuthorsSection,
     createDetailsSection,
     createReleasesSection,
+    extractDomain,
     getScoreClass
 } from './paper.js';
+
+function getAffName(aff) {
+    return aff?.display_name || aff?.name || '';
+}
+
+/**
+ * Simple word-level diff. Returns array of { type: 'equal'|'added'|'removed', value: string }.
+ * V1 = old (green when removed), V2 = new (red when added).
+ */
+function diffWords(text1, text2) {
+    const words1 = (text1 || '').split(/\s+/).filter(Boolean);
+    const words2 = (text2 || '').split(/\s+/).filter(Boolean);
+    const result = [];
+    let i = 0, j = 0;
+
+    function lcsLength(a, b) {
+        const m = a.length, n = b.length;
+        const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+        for (let i = 1; i <= m; i++) {
+            for (let j = 1; j <= n; j++) {
+                dp[i][j] = a[i - 1] === b[j - 1]
+                    ? dp[i - 1][j - 1] + 1
+                    : Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+        return dp;
+    }
+
+    function backtrack(a, b, dp, i, j) {
+        if (i === 0 && j === 0) return [];
+        if (i === 0) return backtrack(a, b, dp, 0, j - 1).concat({ type: 'added', value: b[j - 1] });
+        if (j === 0) return backtrack(a, b, dp, i - 1, 0).concat({ type: 'removed', value: a[i - 1] });
+        if (a[i - 1] === b[j - 1]) {
+            return backtrack(a, b, dp, i - 1, j - 1).concat({ type: 'equal', value: a[i - 1] });
+        }
+        if (dp[i - 1][j] >= dp[i][j - 1]) {
+            return backtrack(a, b, dp, i - 1, j).concat({ type: 'removed', value: a[i - 1] });
+        }
+        return backtrack(a, b, dp, i, j - 1).concat({ type: 'added', value: b[j - 1] });
+    }
+
+    const dp = lcsLength(words1, words2);
+    return backtrack(words1, words2, dp, words1.length, words2.length);
+}
+
+/**
+ * Compare two values for equality (shallow, for list items).
+ */
+function valueKey(val) {
+    if (val == null) return 'null';
+    if (typeof val === 'object') return JSON.stringify(val);
+    return String(val);
+}
+
+/**
+ * Create a paper element showing diff between V1 (currently selected) and V2 (shift-clicked).
+ * Red = in V2 not V1 (additions). Green = in V1 not V2 (removals).
+ */
+function createWorksetPaperDiffElement(paperV1, paperV2) {
+    const info1 = paperV1?.info || {};
+    const info2 = paperV2?.info || {};
+
+    const firstLink = paperV2?.links?.[0] || paperV1?.links?.[0];
+    const titleUrl = firstLink?.link ?? null;
+    const firstPdfLink = paperV2?.links?.find(l => l.type?.toLowerCase().includes('pdf'))
+        || paperV1?.links?.find(l => l.type?.toLowerCase().includes('pdf'));
+    const pdfBadge = firstPdfLink
+        ? html`<a href="${firstPdfLink.link}" target="_blank" class="badge pdf" title="${firstPdfLink.link}">PDF</a>`
+        : null;
+
+    // Title diff
+    const title1 = paperV1?.title ?? '';
+    const title2 = paperV2?.title ?? '';
+    const titleSegments = diffWords(title1, title2);
+    const titleSpans = titleSegments.map(seg => {
+        if (seg.type === 'equal') return html`<span>${seg.value} </span>`;
+        if (seg.type === 'added') return html`<span class="diff-added">${seg.value} </span>`;
+        return html`<span class="diff-removed">${seg.value} </span>`;
+    });
+    const titleContent = titleUrl
+        ? html`<a href="${titleUrl}" target="_blank" class="paper-title-link">${titleSpans}</a>`
+        : html`<span>${titleSpans}</span>`;
+
+    const titleWithEdit = html`
+        <h3 class="paper-title" style="display: flex; align-items: center;">
+            ${titleContent}
+            ${pdfBadge}
+        </h3>
+    `;
+
+    // Authors + affiliations diff - match by exact display_name
+    const authorsV1 = paperV1?.authors || [];
+    const authorsV2 = paperV2?.authors || [];
+    const v1ByName = new Map(authorsV1.map((a, i) => [a.display_name ?? 'Unknown', { author: a, index: i }]));
+    const v2ByName = new Map(authorsV2.map((a, i) => [a.display_name ?? 'Unknown', { author: a, index: i }]));
+
+    // Build unified institution map: name -> { num, inV1, inV2 }
+    const instMap = new Map();
+    let instNum = 1;
+    for (const author of [...authorsV1, ...authorsV2]) {
+        for (const aff of author.affiliations || []) {
+            const name = getAffName(aff);
+            if (name && !instMap.has(name)) {
+                instMap.set(name, { num: instNum++, inV1: false, inV2: false });
+            }
+        }
+    }
+    for (const author of authorsV1) {
+        for (const aff of author.affiliations || []) {
+            const e = instMap.get(getAffName(aff));
+            if (e) e.inV1 = true;
+        }
+    }
+    for (const author of authorsV2) {
+        for (const aff of author.affiliations || []) {
+            const e = instMap.get(getAffName(aff));
+            if (e) e.inV2 = true;
+        }
+    }
+
+    function getAuthorAffNums(author) {
+        return (author?.affiliations || [])
+            .map(aff => instMap.get(getAffName(aff))?.num)
+            .filter(n => n !== undefined)
+            .sort((a, b) => a - b);
+    }
+
+    const authorItems = [];
+    // V2 order first
+    for (const { author, index: idx2 } of authorsV2.map((a, i) => ({ author: a, index: i }))) {
+        const name = author.display_name ?? 'Unknown';
+        const v1Entry = v1ByName.get(name);
+        const inBoth = !!v1Entry;
+
+        if (inBoth) {
+            const idx1 = v1Entry.index;
+            const orderArrow = idx1 !== idx2 ? (idx2 > idx1 ? ' →' : ' ←') : '';
+            const affNums1 = new Set(getAuthorAffNums(v1Entry.author));
+            const affNums2 = new Set(getAuthorAffNums(author));
+            const allNums = [...new Set([...affNums1, ...affNums2])].sort((a, b) => a - b);
+            const supParts = allNums.flatMap((n, i) => {
+                const in1 = affNums1.has(n);
+                const in2 = affNums2.has(n);
+                const cls = in1 && in2 ? '' : in2 ? 'diff-added' : 'diff-removed';
+                return [i > 0 ? ', ' : null, html`<span class="${cls}">${n}</span>`];
+            }).filter(Boolean);
+            const orderEl = orderArrow ? html`<span class="diff-order-arrow" title="Author order changed">${orderArrow}</span>` : null;
+            authorItems.push(html`<span class="author-name">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}${orderEl}</span>`);
+        } else {
+            const affNums = getAuthorAffNums(author);
+            const supParts = affNums.flatMap((n, i) => {
+                const e = [...instMap.entries()].find(([, v]) => v.num === n);
+                const cls = e && e[1].inV1 ? '' : 'diff-added';
+                return [i > 0 ? ', ' : null, html`<span class="${cls}">${n}</span>`];
+            }).filter(Boolean);
+            authorItems.push(html`<span class="author-name diff-added">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`);
+        }
+    }
+    // V1-only authors
+    for (const { author } of authorsV1.map((a, i) => ({ author: a, index: i }))) {
+        const name = author.display_name ?? 'Unknown';
+        if (!v2ByName.has(name)) {
+            const affNums = getAuthorAffNums(author);
+            const supParts = affNums.flatMap((n, i) => {
+                const e = [...instMap.entries()].find(([, v]) => v.num === n);
+                const cls = e && e[1].inV2 ? '' : 'diff-removed';
+                return [i > 0 ? ', ' : null, html`<span class="${cls}">${n}</span>`];
+            }).filter(Boolean);
+            authorItems.push(html`<span class="author-name diff-removed">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`);
+        }
+    }
+
+    // Institutions list below authors - green/red by V1/V2
+    const institutions = [...instMap.entries()].sort((a, b) => a[1].num - b[1].num);
+    const instElements = institutions.map(([instName, { num, inV1, inV2 }]) => {
+        const cls = inV1 && inV2 ? '' : inV2 ? 'diff-added' : 'diff-removed';
+        return html`<span class="institution-item ${cls}" data-affiliation="${num}"><sup>${num}</sup>${instName}</span>`;
+    });
+
+    const authorsHtml = authorItems.length > 0
+        ? html`
+            <div class="paper-authors-container">
+                <div class="paper-authors">${join(', ', authorItems)}</div>
+                ${instElements.length ? html`<div class="paper-institutions">${join('; ', instElements)}</div>` : null}
+            </div>
+        `
+        : html`<div class="paper-authors-container"><div class="paper-authors">No authors</div></div>`;
+
+    // Releases diff
+    const releases1 = paperV1?.releases || [];
+    const releases2 = paperV2?.releases || [];
+    const releaseKey = r => `${r.venue?.name ?? ''}|${r.venue?.date ?? ''}|${r.peer_review_status ?? ''}`;
+    const r1Keys = new Set(releases1.map(releaseKey));
+    const r2Keys = new Set(releases2.map(releaseKey));
+    const releaseItems = [];
+    for (const r of releases1) {
+        const key = releaseKey(r);
+        const in2 = r2Keys.has(key);
+        const cls = in2 ? '' : 'diff-removed';
+        const date = r.venue?.date ? r.venue.date.substring(0, 4) : '????';
+        const venue = r.venue?.name ?? 'Unknown';
+        releaseItems.push(html`<div class="release-item ${cls}"><strong class="release-date">${date}</strong> <span class="release-venue">${venue}</span></div>`);
+    }
+    for (const r of releases2) {
+        const key = releaseKey(r);
+        if (r1Keys.has(key)) continue;
+        const date = r.venue?.date ? r.venue.date.substring(0, 4) : '????';
+        const venue = r.venue?.name ?? 'Unknown';
+        releaseItems.push(html`<div class="release-item diff-added"><strong class="release-date">${date}</strong> <span class="release-venue">${venue}</span></div>`);
+    }
+    const releasesHtml = html`<div class="paper-meta-item"><div class="paper-releases">${releaseItems.length ? releaseItems : html`<div class="release-item">No releases</div>`}</div></div>`;
+
+    // Abstract diff
+    const abs1 = paperV1?.abstract ?? '';
+    const abs2 = paperV2?.abstract ?? '';
+    let abstractHtml = null;
+    if (abs1 || abs2) {
+        const absSegments = diffWords(abs1, abs2);
+        const absSpans = absSegments.map(seg => {
+            if (seg.type === 'equal') return html`<span>${seg.value} </span>`;
+            if (seg.type === 'added') return html`<span class="diff-added">${seg.value} </span>`;
+            return html`<span class="diff-removed">${seg.value} </span>`;
+        });
+        abstractHtml = html`<div class="paper-abstract-section"><div class="paper-abstract expanded">${absSpans}</div></div>`;
+    }
+
+    // Topics diff - exact match (order doesn't matter)
+    const topicKey = t => t.name ?? t.display_name ?? '';
+    const topics1 = (paperV1?.topics || []).map(topicKey).filter(Boolean);
+    const topics2 = (paperV2?.topics || []).map(topicKey).filter(Boolean);
+    const t1Set = new Set(topics1);
+    const t2Set = new Set(topics2);
+    const topicBadges = [];
+    for (const t of topics1) {
+        const cls = t2Set.has(t) ? '' : 'diff-removed';
+        topicBadges.push(html`<span class="badge topic ${cls}">${t}</span>`);
+    }
+    for (const t of topics2) {
+        if (t1Set.has(t)) continue;
+        topicBadges.push(html`<span class="badge topic diff-added">${t}</span>`);
+    }
+    const topicsHtml = topicBadges.length
+        ? html`<div class="paper-topics">${topicBadges}</div>`
+        : null;
+
+    // Links diff - exact match by type+url (order doesn't matter)
+    const linkKey = (link) => `${link.type ?? ''}|${link.link ?? ''}`;
+    const links1 = (paperV1?.links || []).map(linkKey);
+    const links2 = (paperV2?.links || []).map(linkKey);
+    const l1Set = new Set(links1);
+    const l2Set = new Set(links2);
+    console.log("A", l1Set);
+    console.log("B", l2Set);
+    const linkBadges = [];
+    for (const link of paperV1?.links || []) {
+        const key = linkKey(link);
+        const cls = l2Set.has(key) ? '' : 'diff-removed';
+        const linkType = link.type ?? 'unknown';
+        const linkUrl = link.link ?? '';
+        const domain = extractDomain(linkUrl);
+        const typeContainsDomain = domain && linkType.toLowerCase().includes(domain.toLowerCase());
+        const badgeText = (domain && !typeContainsDomain) ? `${linkType} (${domain})` : linkType;
+        linkBadges.push(html`<a href="${linkUrl}" target="_blank" class="badge link ${cls}" title="${linkUrl}">${badgeText}</a>`);
+    }
+    for (const link of paperV2?.links || []) {
+        const key = linkKey(link);
+        if (l1Set.has(key)) continue;
+        const linkType = link.type ?? 'unknown';
+        const linkUrl = link.link ?? '';
+        const domain = extractDomain(linkUrl);
+        const typeContainsDomain = domain && linkType.toLowerCase().includes(domain.toLowerCase());
+        const badgeText = (domain && !typeContainsDomain) ? `${linkType} (${domain})` : linkType;
+        linkBadges.push(html`<a href="${linkUrl}" target="_blank" class="badge link diff-added" title="${linkUrl}">${badgeText}</a>`);
+    }
+    const linksContainer = linkBadges.length
+        ? html`<div class="paper-links">${linkBadges}</div>`
+        : null;
+
+    // Info table diff
+    const allInfoKeys = new Set([...Object.keys(info1), ...Object.keys(info2)]);
+    const infoRows = [];
+    for (const key of allInfoKeys) {
+        const v1 = info1[key];
+        const v2 = info2[key];
+        const v1Str = v1 != null ? (typeof v1 === 'object' ? JSON.stringify(v1) : String(v1)) : '';
+        const v2Str = v2 != null ? (typeof v2 === 'object' ? JSON.stringify(v2) : String(v2)) : '';
+        let valueContent;
+        if (v1Str === v2Str) {
+            valueContent = (v2Str || v1Str || 'null');
+        } else {
+            const segs = diffWords(v1Str, v2Str);
+            valueContent = segs.map(seg => {
+                if (seg.type === 'equal') return html`<span>${seg.value} </span>`;
+                if (seg.type === 'added') return html`<span class="diff-added">${seg.value} </span>`;
+                return html`<span class="diff-removed">${seg.value} </span>`;
+            });
+        }
+        const in1 = key in info1;
+        const in2 = key in info2;
+        const rowCls = in1 && in2 ? '' : in2 ? 'diff-added' : 'diff-removed';
+        infoRows.push(html`<tr class="${rowCls}"><td class="info-key">${key}</td><td class="info-value">${valueContent}</td></tr>`);
+    }
+    const infoTable = infoRows.length
+        ? html`<table class="info-table"><tbody>${infoRows}</tbody></table>`
+        : null;
+
+    const detailsParts = [abstractHtml, topicsHtml, linksContainer].filter(Boolean);
+    const detailsSection = detailsParts.length
+        ? html`<div class="paper-details-section">${detailsParts}</div>`
+        : null;
+
+    return html`
+        <div class="paper-content diff-view">
+            <div class="diff-legend">
+                <span class="diff-legend-item"><span class="diff-swatch diff-removed"></span> In V1 only</span>
+                <span class="diff-legend-item"><span class="diff-swatch diff-added"></span> In V2 only</span>
+                <span class="diff-legend-hint">Shift+click tab to exit</span>
+            </div>
+            ${titleWithEdit}
+            ${authorsHtml}
+            ${releasesHtml}
+            ${detailsSection}
+            ${infoTable}
+        </div>
+    `;
+}
 
 function setResults(...elements) {
     const container = document.getElementById('worksetContainer');
@@ -228,6 +555,16 @@ export function createWorksetElement(scoredWorkset) {
     function switchToTab(index) {
         if (index < 0 || index >= buttons.length) return;
         
+        // Exit diff mode if active (keyboard nav or programmatic switch)
+        if (diffMode) {
+            diffMode = false;
+            diffV1Index = -1;
+            diffV2Index = -1;
+            buttons.forEach(btn => btn.classList.remove('diff-v1', 'diff-v2'));
+            const diffContainer = worksetItem.querySelector('.tab-contents .diff-content-container');
+            if (diffContainer) diffContainer.remove();
+        }
+        
         // Remove active class from all buttons and contents
         buttons.forEach(btn => btn.classList.remove('active'));
         contents.forEach(content => content.classList.remove('active'));
@@ -265,10 +602,71 @@ export function createWorksetElement(scoredWorkset) {
         }
     }
     
+    // Track if we're in diff mode (showing diff between two tabs)
+    let diffMode = false;
+    let diffV1Index = -1;
+    let diffV2Index = -1;
+
+    function showDiffView(v1Index, v2Index) {
+        diffMode = true;
+        diffV1Index = v1Index;
+        diffV2Index = v2Index;
+        const paperV1 = allPapers[v1Index].paper;
+        const paperV2 = allPapers[v2Index].paper;
+
+        // Hide all tab contents and show diff in a special container
+        contents.forEach(c => c.classList.remove('active'));
+        buttons.forEach(btn => btn.classList.remove('active'));
+        buttons[v1Index].classList.add('diff-v1');
+        buttons[v2Index].classList.add('diff-v2');
+
+        // Create or update diff content container
+        let diffContainer = worksetItem.querySelector('.tab-contents .diff-content-container');
+        if (!diffContainer) {
+            diffContainer = document.createElement('div');
+            diffContainer.className = 'diff-content-container tab-content active';
+            worksetItem.querySelector('.tab-contents').appendChild(diffContainer);
+        }
+        diffContainer.innerHTML = '';
+        diffContainer.appendChild(createWorksetPaperDiffElement(paperV1, paperV2));
+        diffContainer.classList.add('active');
+    }
+
+    function exitDiffView(restoreToIndex) {
+        if (!diffMode) return;
+        diffMode = false;
+        diffV1Index = -1;
+        diffV2Index = -1;
+        buttons.forEach(btn => {
+            btn.classList.remove('diff-v1', 'diff-v2');
+        });
+        const diffContainer = worksetItem.querySelector('.tab-contents .diff-content-container');
+        if (diffContainer) diffContainer.remove();
+        switchToTab(restoreToIndex !== undefined ? restoreToIndex : currentTabIndex);
+    }
+
     buttons.forEach((button, idx) => {
-        button.addEventListener('click', () => {
-            switchToTab(idx);
-            setFocused(true);
+        button.addEventListener('click', (e) => {
+            if (e.shiftKey) {
+                if (diffMode) {
+                    exitDiffView(); // Restore to V1 (currentTabIndex)
+                } else {
+                    // V1 = currently selected, V2 = clicked tab
+                    const v1Index = currentTabIndex;
+                    const v2Index = idx;
+                    if (v1Index !== v2Index) {
+                        showDiffView(v1Index, v2Index);
+                    }
+                }
+                setFocused(true);
+            } else {
+                if (diffMode) {
+                    exitDiffView(idx); // Switch to clicked tab
+                } else {
+                    switchToTab(idx);
+                }
+                setFocused(true);
+            }
         });
     });
     
