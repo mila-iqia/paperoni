@@ -33,13 +33,6 @@ alt="edit" style="height:1em; vertical-align:middle">) appears next to each
 paper title. Clicking it opens the edit page for that paper in a new tab, where
 you can modify its title, authors, venues, and other fields.
 
-## Exporting search results
-
-Search results can be downloaded as JSON or CSV files. Simply click on the
-"JSON" or "CSV" button. CSV files can be [imported in Google
-Sheets](https://blog.golayer.io/google-sheets/import-csv-to-google-sheets) or in
-Excel.
-
 # Validation {: #validation}
 
 The [Validation](/validate) interface allows the validation or invalidation of
@@ -88,8 +81,13 @@ scores and metadata, and PDF links are available when fulltext has been located.
 
 The [Latest Group](/latest-group) page helps discover recently published papers.
 You can set an anchor date and a window (days back/forward) to find new papers.
-Results are split into peer-reviewed publications and preprints. A newsletter
-can be generated from these results.
+The anchor date is the center of the search window: Paperoni searches from
+`anchor date - days back` to `anchor date + days forward` (inclusive). For
+example, if the anchor date is `2026-02-19`, with `days back = 30` and `days
+forward = 0`, the interval is `2026-01-20` to `2026-02-19`. If you set `days
+forward = 7`, the interval becomes `2026-01-20` to `2026-02-26`. Results are
+split into peer-reviewed publications and preprints. A newsletter can be
+generated from these results.
 
 # Capabilities {: #capabilities}
 
