@@ -105,6 +105,52 @@ export function extractDomain(url) {
 }
 
 /**
+ * Attaches hover listeners so that hovering an author highlights their affiliations
+ * and vice versa. Works on any container with .author-name (data-affiliations="1,2,3")
+ * and .institution-item (data-affiliation="1") elements.
+ * @param {HTMLElement} container - Element containing author and institution spans
+ */
+export function attachAuthorAffiliationHover(container) {
+    const authorSpans = container.querySelectorAll('.author-name');
+    const institutionSpans = container.querySelectorAll('.institution-item');
+
+    authorSpans.forEach(authorSpan => {
+        const affiliations = (authorSpan.dataset.affiliations || '').split(',').filter(n => n);
+
+        authorSpan.addEventListener('mouseenter', () => {
+            affiliations.forEach(affNum => {
+                institutionSpans.forEach(instSpan => {
+                    if (instSpan.dataset.affiliation === affNum) {
+                        instSpan.classList.add('highlight');
+                    }
+                });
+            });
+        });
+
+        authorSpan.addEventListener('mouseleave', () => {
+            institutionSpans.forEach(instSpan => instSpan.classList.remove('highlight'));
+        });
+    });
+
+    institutionSpans.forEach(instSpan => {
+        const affNum = instSpan.dataset.affiliation;
+
+        instSpan.addEventListener('mouseenter', () => {
+            authorSpans.forEach(authorSpan => {
+                const affiliations = (authorSpan.dataset.affiliations || '').split(',').filter(n => n);
+                if (affiliations.includes(affNum)) {
+                    authorSpan.classList.add('highlight');
+                }
+            });
+        });
+
+        instSpan.addEventListener('mouseleave', () => {
+            authorSpans.forEach(authorSpan => authorSpan.classList.remove('highlight'));
+        });
+    });
+}
+
+/**
  * Creates the authors section with affiliations.
  * @param {Array} authors - List of author objects
  * @param {Object} options - Optional settings
@@ -179,50 +225,11 @@ export function createAuthorsSection(authors, options = {}) {
         </div>
     `;
 
-    // Add hover event listeners for highlighting
-    const authorSpans = container.querySelectorAll('.author-name');
-    const institutionSpans = container.querySelectorAll('.institution-item');
-
-    authorSpans.forEach(authorSpan => {
-        const affiliations = authorSpan.dataset.affiliations.split(',').filter(n => n);
-        
-        authorSpan.addEventListener('mouseenter', () => {
-            affiliations.forEach(affNum => {
-                institutionSpans.forEach(instSpan => {
-                    if (instSpan.dataset.affiliation === affNum) {
-                        instSpan.classList.add('highlight');
-                    }
-                });
-            });
-        });
-
-        authorSpan.addEventListener('mouseleave', () => {
-            institutionSpans.forEach(instSpan => {
-                instSpan.classList.remove('highlight');
-            });
-        });
-    });
-
-    institutionSpans.forEach(instSpan => {
-        const affNum = instSpan.dataset.affiliation;
-
-        instSpan.addEventListener('mouseenter', () => {
-            authorSpans.forEach(authorSpan => {
-                const affiliations = authorSpan.dataset.affiliations.split(',').filter(n => n);
-                if (affiliations.includes(affNum)) {
-                    authorSpan.classList.add('highlight');
-                }
-            });
-        });
-
-        instSpan.addEventListener('mouseleave', () => {
-            authorSpans.forEach(authorSpan => {
-                authorSpan.classList.remove('highlight');
-            });
-        });
-    });
+    attachAuthorAffiliationHover(container);
 
     // Add click event listeners if callbacks are provided
+    const authorSpans = container.querySelectorAll('.author-name');
+    const institutionSpans = container.querySelectorAll('.institution-item');
     if (onAuthorClick) {
         authorSpans.forEach(authorSpan => {
             authorSpan.addEventListener('click', () => {

@@ -1,5 +1,6 @@
 import { html, join } from './common.js';
 import {
+    attachAuthorAffiliationHover,
     createAuthorsSection,
     createDetailsSection,
     createEditIcon,
@@ -240,7 +241,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                 })
                 .filter(Boolean);
             authorItems.push(
-                html`<span class="author-name">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
+                html`<span class="author-name" data-affiliations="${allNums.join(',')}">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
             );
         } else if (seg.type === 'added') {
             const author = seg.value;
@@ -254,7 +255,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                 })
                 .filter(Boolean);
             authorItems.push(
-                html`<span class="author-name diff-added">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
+                html`<span class="author-name diff-added" data-affiliations="${affNums.join(',')}">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
             );
         } else {
             const author = seg.value;
@@ -268,7 +269,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                 })
                 .filter(Boolean);
             authorItems.push(
-                html`<span class="author-name diff-removed">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
+                html`<span class="author-name diff-removed" data-affiliations="${affNums.join(',')}">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
             );
         }
     }
@@ -288,6 +289,8 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
             </div>
         `
         : html`<div class="paper-authors-container"><div class="paper-authors">No authors</div></div>`;
+
+    attachAuthorAffiliationHover(authorsHtml);
 
     // Releases diff - match normal view: full date, status, venue
     const releases1 = sortReleasesByDate(paperOld?.releases || []);
