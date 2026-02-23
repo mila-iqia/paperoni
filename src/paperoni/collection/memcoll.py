@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, replace
 from datetime import date, datetime
 from typing import Any, AsyncGenerator, Iterable
+from uuid import uuid4
 
 from serieux import deserialize, serialize
 
@@ -22,9 +23,8 @@ class PaperIndex(Index[Paper]):
     indexers: dict[str, Any] = field(default_factory=lambda: paper_indexers)
     exclusions: set[str] = field(default_factory=set)
 
-    def next_id(self) -> int:
-        self.last_id += 1
-        return str(self.last_id)
+    def next_id(self) -> str:
+        return str(uuid4())
 
     def index(self, paper):
         if paper.id is None:
@@ -97,11 +97,12 @@ class MemCollection(PaperCollection):
                         continue
                     p.version = datetime.now()
 
-                elif p.id is not None:
+                elif p.id is not None and not force:
                     raise ValueError(f"Paper with ID {p.id} not found in collection")
 
                 else:
-                    p = replace(p, id=self._index.next_id(), version=datetime.now())
+                    if p.id is None:
+                        p = replace(p, id=self._index.next_id(), version=datetime.now())
                     assert not self._index.equiv("id", p)
 
                 added_ids.append(p.id)
