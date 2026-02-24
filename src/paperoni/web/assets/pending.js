@@ -167,34 +167,31 @@ async function fetchPending(offset = 0, limit = PAGE_SIZE) {
     return await response.json();
 }
 
-function createPendingItem(scoredWorkset) {
-    const score = scoredWorkset.score ?? 0;
-    const workset = scoredWorkset.value;
-    const current = workset.current;
-    const collected = workset.collected || [];
-    const paperId = current?.id;
+function createPendingItem(paperDiff) {
+    const current = paperDiff.current;
+    const paperNew = paperDiff.new;
+    const score = paperDiff.score;
+    const paperId = paperNew?.id;
 
-    const scoreValueElement = html`<div class="score-value">${Math.round(score)}</div>`;
-    const scoreBand = html`
-        <div class="score-band ${getScoreClass(score)}">
-            ${scoreValueElement}
-        </div>
-    `;
+    const scoreBand = (score != null)
+        ? html`
+            <div class="score-band ${getScoreClass(score)}">
+                <div class="score-value">${Math.round(score)}</div>
+            </div>
+        `
+        : null;
 
     let contentEl;
-    if (collected.length === 0) {
+    if (!current) {
         // New paper suggestion - display like search (using workset paper format)
-        contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'], editSuggest: true });
-    } else if (collected.length === 1) {
-        // Diff between collected (old) and current (new suggestion)
-        contentEl = createDiffViewWithTabs(collected[0], current);
+        contentEl = createWorksetPaperElement(paperNew, { excludeFromInfo: ['comments'], editSuggest: true });
     } else {
-        // Unexpected: multiple collected - show current
-        contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'], editSuggest: true });
+        // Diff between current (old) and new (suggestion)
+        contentEl = createDiffViewWithTabs(current, paperNew);
     }
 
-        const oldComments = collected.length === 1 ? collected[0]?.info?.comments : undefined;
-    const commentsEl = createCommentsDisplay(current?.info?.comments, oldComments);
+    const oldComments = current?.info?.comments;
+    const commentsEl = createCommentsDisplay(paperNew?.info?.comments, oldComments);
     if (commentsEl) {
         const wrapper = document.createElement('div');
         wrapper.className = 'pending-with-comments';
@@ -274,7 +271,7 @@ function renderPending(data) {
         return;
     }
 
-    const items = data.results.map(scoredWorkset => createPendingItem(scoredWorkset));
+    const items = data.results.map(paperDiff => createPendingItem(paperDiff));
     const list = html`<div class="workset-list">${items}</div>`;
     setResults(list);
     updateButtonStates();

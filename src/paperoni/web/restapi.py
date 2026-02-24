@@ -16,7 +16,7 @@ from ..__main__ import Coll, Focus, Formatter, Fulltext, Work, expand_paper_link
 from ..config import config
 from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
-from ..model.classes import Paper as _Paper
+from ..model.classes import Base, Paper as _Paper
 from ..model.focus import Focuses, Scored
 from ..model.merge import PaperWorkingSet
 from ..utils import url_to_id
@@ -32,6 +32,13 @@ class VoidFormatter(Formatter):
 class Paper(_Paper):
     # Pydantic will not accept dict[str, JSON], so we cheat here
     info: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(kw_only=True)
+class PaperDiff(Base):
+    score: int | None = None
+    current: Paper | None = None
+    new: Paper | None = None
 
 
 @dataclass
@@ -306,6 +313,13 @@ class ViewResponse(PagingResponseMixin):
 
 
 @dataclass
+class DiffResponse(PagingResponseMixin):
+    """Response model for work state paper view."""
+
+    results: list[PaperDiff]
+
+
+@dataclass
 class AutoFocusRequest(Focus.AutoFocus):
     """Request model for autofocus."""
 
@@ -404,15 +418,12 @@ def install_api(app) -> FastAPI:
 
     @app.get(
         f"{prefix}/pending/list",
-        response_model=ViewResponse,
+        response_model=DiffResponse,
         dependencies=[Depends(hascap("search"))],
     )
     async def pending_papers(request: SearchRequest = Depends(parse_search_request)):
-        """Return pending papers as list[Scored[PaperWorkingSet]]. Each workset has
-        current=suggestion; collected=[] for new papers, or collected=[equiv] when
-        the suggestion matches an existing paper in the collection."""
         if config.suggestions is None:
-            return ViewResponse(
+            return DiffResponse(
                 results=[],
                 count=0,
                 next_offset=None,
@@ -421,24 +432,22 @@ def install_api(app) -> FastAPI:
 
         all_papers = await request.run(SimpleNamespace(collection=config.suggestions))
 
-        async def pair(sugg: Paper):
-            collected = []
+        async def pair(sugg: _Paper):
+            current = None
             if sugg.id and config.collection is not None:
                 equiv = await config.collection.find_by_id(sugg.id)
                 if equiv is not None:
                     if request.expand_links:
                         equiv = expand_paper_links(equiv)
-                    collected.append(equiv)
-            return Scored(
-                score=0, value=PaperWorkingSet(current=sugg, collected=collected)
-            )
+                    current = equiv
+            return PaperDiff(score=None, current=current and Paper(**vars(current)), new=sugg and Paper(**vars(sugg)))
 
-        worksets = [await pair(paper) for paper in all_papers]
-        total = len(worksets)
-        sliced = list(request.slice(worksets))
+        diffs = [await pair(paper) for paper in all_papers]
+        total = len(diffs)
+        sliced = list(request.slice(diffs))
 
-        return ViewResponse(
-            results=serialize(list[Scored[PaperWorkingSet]], sliced),
+        return DiffResponse(
+            results=sliced,
             count=request.count,
             next_offset=request.next_offset,
             total=total,
