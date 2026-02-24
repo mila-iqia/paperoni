@@ -2420,9 +2420,12 @@ body {
     flex: 1;
 }
 
+.tab-contents > .tab-content {
+    padding: 20px;
+}
+
 .tab-content {
     display: none;
-    padding: 20px;
 }
 
 .tab-content.active {
@@ -2436,7 +2439,7 @@ body {
 
 .diff-tab-buttons {
     position: absolute;
-    top: 8px;
+    top: 0px;
     right: 12px;
     display: flex;
     gap: 4px;
@@ -2446,7 +2449,7 @@ body {
 .diff-tab {
     padding: 2px 6px;
     border: none;
-    background: transparent;
+    background: #f8f8f8;
     cursor: pointer;
     font-size: 11px;
     font-weight: 500;
@@ -2460,7 +2463,7 @@ body {
 
 .diff-tab-diff:hover,
 .diff-tab-diff.active {
-    background: rgba(111, 66, 193, 0.2);
+    background: #e8d8fa;
 }
 
 .diff-tab-old {
@@ -2469,7 +2472,7 @@ body {
 
 .diff-tab-old:hover,
 .diff-tab-old.active {
-    background: rgba(220, 53, 69, 0.2);
+    background: #f8d7da;
 }
 
 .diff-tab-new {
@@ -2478,7 +2481,7 @@ body {
 
 .diff-tab-new:hover,
 .diff-tab-new.active {
-    background: rgba(40, 167, 69, 0.2);
+    background: #90e5a7;
 }
 
 .diff-tab-contents {
@@ -2486,11 +2489,6 @@ body {
     min-height: 200px;
     overflow-y: auto;
     flex: 1;
-}
-
-.diff-tab-contents .tab-content {
-    display: none;
-    padding: 20px;
 }
 
 .diff-tab-contents .tab-content.active {
