@@ -512,7 +512,7 @@ class Work:
             return [s.value.current for s in selected]
 
     @dataclass
-    class Include(Extractor):
+    class Suggest(Extractor):
         """Include top articles to collection."""
 
         # Maximum number of papers to include
@@ -529,6 +529,9 @@ class Work:
                 p = o(p).new
             return p
 
+        def _coll(self, work: "Work"):
+            return work.suggestions
+
         async def run(self, work: "Work"):
             selected = self.extract(
                 work,
@@ -539,7 +542,7 @@ class Work:
                 selected = [self._apply_operations(p) for p in selected]
 
             try:
-                added = await work.collection.add_papers(selected)
+                added = await self._coll(work).add_papers(selected)
             finally:
                 # As some papers could be added to the collection before an
                 # error is raised, causing a new paper to exists in the
@@ -552,6 +555,13 @@ class Work:
 
             send(collection_include=len(added))
             return added
+
+    @dataclass
+    class Include(Suggest):
+        """Suggest top articles to collection."""
+
+        def _coll(self, work: "Work"):
+            return work.collection
 
     @dataclass
     class Exclude(Extractor):
@@ -585,7 +595,9 @@ class Work:
             work.save()
 
     # Command
-    command: TaggedUnion[Configure, View, Get, Refine, Normalize, Include, Exclude, Clear]
+    command: TaggedUnion[
+        Configure, View, Get, Refine, Normalize, Suggest, Include, Exclude, Clear
+    ]
 
     # File containing the working set
     # [alias: -w]
@@ -598,6 +610,9 @@ class Work:
     # Collection file
     # [alias: -c]
     collection_file: Path = None
+
+    # Suggestion file
+    suggestions_file: Path = None
 
     @cached_property
     def focuses(self):
@@ -612,6 +627,13 @@ class Work:
             return FileCollection(file=self.collection_file)
         else:
             return config.collection
+
+    @cached_property
+    def suggestions(self):
+        if self.suggestions_file:
+            return FileCollection(file=self.suggestions_file)
+        else:
+            return config.suggestions
 
     @cached_property
     def top(self):
