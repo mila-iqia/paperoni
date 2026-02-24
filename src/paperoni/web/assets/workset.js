@@ -236,7 +236,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                     const in1 = affNums1.has(n);
                     const in2 = affNums2.has(n);
                     const cls = in1 && in2 ? '' : in2 ? 'diff-added' : 'diff-removed';
-                    return [i > 0 ? ', ' : null, html`<span class="${cls}">${n}</span>`];
+                    return [i > 0 ? ',' : null, html`<span class="${cls}">${n}</span>`];
                 })
                 .filter(Boolean);
             authorItems.push(
@@ -250,7 +250,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                 .flatMap((n, i) => {
                     const e = [...instMap.entries()].find(([, v]) => v.num === n);
                     const cls = e && e[1].inOld ? '' : 'diff-added';
-                    return [i > 0 ? ', ' : null, html`<span class="${cls}">${n}</span>`];
+                    return [i > 0 ? ',' : null, html`<span class="${cls}">${n}</span>`];
                 })
                 .filter(Boolean);
             authorItems.push(
@@ -264,7 +264,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                 .flatMap((n, i) => {
                     const e = [...instMap.entries()].find(([, v]) => v.num === n);
                     const cls = e && e[1].inNew ? '' : 'diff-removed';
-                    return [i > 0 ? ', ' : null, html`<span class="${cls}">${n}</span>`];
+                    return [i > 0 ? ',' : null, html`<span class="${cls}">${n}</span>`];
                 })
                 .filter(Boolean);
             authorItems.push(
@@ -291,18 +291,26 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
 
     attachAuthorAffiliationHover(authorsHtml);
 
-    // Releases diff - match normal view: full date, status, venue
+    // Releases diff - match by key with consumption (handles duplicate venues)
     const releases1 = paperOld?.releases || [];
     const releases2 = paperNew?.releases || [];
-    // const releases1 = sortReleasesByDate(paperOld?.releases || []);
-    // const releases2 = sortReleasesByDate(paperNew?.releases || []);
     const releaseKey = (r) => `${r.venue?.name ?? ''}|${r.venue?.date ?? ''}|${r.peer_review_status ?? ''}`;
-    const r1Keys = new Set(releases1.map(releaseKey));
-    const r2Keys = new Set(releases2.map(releaseKey));
+    const r2Counts = new Map();
+    for (const r of releases2) {
+        const k = releaseKey(r);
+        r2Counts.set(k, (r2Counts.get(k) || 0) + 1);
+    }
+    const r1Counts = new Map();
+    for (const r of releases1) {
+        const k = releaseKey(r);
+        r1Counts.set(k, (r1Counts.get(k) || 0) + 1);
+    }
     const releaseItems = [];
     for (const r of releases1) {
         const key = releaseKey(r);
-        const in2 = r2Keys.has(key);
+        const count = r2Counts.get(key) || 0;
+        const in2 = count > 0;
+        if (in2) r2Counts.set(key, count - 1);
         const cls = in2 ? '' : 'diff-removed';
         const { date, venueName, status } = formatRelease(r);
         const dateEl = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
@@ -317,7 +325,11 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
     }
     for (const r of releases2) {
         const key = releaseKey(r);
-        if (r1Keys.has(key)) continue;
+        const count = r1Counts.get(key) || 0;
+        if (count > 0) {
+            r1Counts.set(key, count - 1);
+            continue;
+        }
         const { date, venueName, status } = formatRelease(r);
         const dateEl = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
         const statusSpan = status ? html`<span class="release-status">${status}</span>` : null;
@@ -457,15 +469,15 @@ export function createDiffViewWithTabs(paperOld, paperNew) {
     const newContent = createWorksetPaperElement(paperNew, excludeComments);
 
     const tabButtons = html`
-        <div class="tab-buttons">
-            <button class="tab-button active" data-diff-tab="diff">Diff</button>
-            <button class="tab-button" data-diff-tab="old">Old</button>
-            <button class="tab-button" data-diff-tab="new">New</button>
+        <div class="diff-tab-buttons">
+            <button class="diff-tab diff-tab-diff active" data-diff-tab="diff">Diff</button>
+            <button class="diff-tab diff-tab-old" data-diff-tab="old">Old</button>
+            <button class="diff-tab diff-tab-new" data-diff-tab="new">New</button>
         </div>
     `;
 
     const tabContents = html`
-        <div class="tab-contents">
+        <div class="diff-tab-contents">
             <div class="tab-content active" data-diff-tab="diff">${diffContent}</div>
             <div class="tab-content" data-diff-tab="old">${oldContent}</div>
             <div class="tab-content" data-diff-tab="new">${newContent}</div>
@@ -474,14 +486,14 @@ export function createDiffViewWithTabs(paperOld, paperNew) {
 
     const container = html`
         <div class="diff-view-with-tabs">
-            <div class="workset-tabs">
-                ${tabButtons}
+            <div class="workset-tabs diff-view-tabs-wrapper">
                 ${tabContents}
+                ${tabButtons}
             </div>
         </div>
     `;
 
-    const buttons = container.querySelectorAll('.tab-button[data-diff-tab]');
+    const buttons = container.querySelectorAll('.diff-tab[data-diff-tab]');
     const contents = container.querySelectorAll('.tab-content[data-diff-tab]');
 
     buttons.forEach((btn) => {
