@@ -134,13 +134,10 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
         ? html`<a href="${titleUrl}" target="_blank" class="paper-title-link">${titleSpans}</a>`
         : html`<span>${titleSpans}</span>`;
 
-    const editNewIcon = paperNew ? createEditIcon(paperNew, { suggest: true }) : null;
-
     const titleWithEdit = html`
         <h3 class="paper-title" style="display: flex; align-items: center;">
             ${titleContent}
             ${pdfBadge}
-            ${editNewIcon}
         </h3>
     `;
 
