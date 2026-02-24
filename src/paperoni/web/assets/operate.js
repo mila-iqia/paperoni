@@ -348,7 +348,6 @@ export async function operatePapers() {
     const venueInput = document.getElementById('venue');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
-    const validatedRadios = document.querySelectorAll('input[name="validated"]');
     const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
     await loadMonacoEditor();
@@ -371,7 +370,6 @@ export async function operatePapers() {
     venueInput?.addEventListener('input', handleSearchChange);
     startDateInput?.addEventListener('input', handleSearchChange);
     endDateInput?.addEventListener('input', handleSearchChange);
-    validatedRadios?.forEach(radio => radio.addEventListener('change', handleSearchChange));
     peerReviewedCheckbox?.addEventListener('change', handleSearchChange);
 
     selectEl.addEventListener('change', () => {
