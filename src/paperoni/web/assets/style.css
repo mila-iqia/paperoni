@@ -2255,6 +2255,11 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+#pendingContainer .workset-item.pending-selected {
+    border-color: #2c5aa0;
+    box-shadow: 0 0 0 2px #2c5aa0;
+}
+
 .workset-content {
     display: flex;
     gap: 0;

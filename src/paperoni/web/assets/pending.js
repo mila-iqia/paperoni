@@ -2,7 +2,7 @@ import { html } from './common.js';
 import { getScoreClass } from './paper.js';
 import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js';
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
 
 /**
  * Create comments display from paper.info.comments. Merge messages from same user.
@@ -63,6 +63,89 @@ function createCommentsDisplay(comments, oldComments) {
 
 const approvedIds = new Set();
 const rejectedIds = new Set();
+
+let selectedPendingIndex = 0;
+let pendingKeydownHandler = null;
+
+function getPendingItems() {
+    const list = document.querySelector('#pendingContainer .workset-list');
+    return list ? list.querySelectorAll('.workset-item') : [];
+}
+
+function updatePendingSelection() {
+    const items = getPendingItems();
+    items.forEach((el, i) => el.classList.toggle('pending-selected', i === selectedPendingIndex));
+    const selected = items[selectedPendingIndex];
+    if (selected) {
+        selected.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+}
+
+function attachPendingKeyboard() {
+    if (pendingKeydownHandler) {
+        document.removeEventListener('keydown', pendingKeydownHandler);
+    }
+    pendingKeydownHandler = (e) => {
+        const container = document.getElementById('pendingContainer');
+        const list = container?.querySelector('.workset-list');
+        if (!list) return;
+        const items = getPendingItems();
+        if (items.length === 0) return;
+        const tag = (e.target?.tagName || '').toUpperCase();
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                selectedPendingIndex = Math.min(selectedPendingIndex + 1, items.length - 1);
+                updatePendingSelection();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                selectedPendingIndex = Math.max(0, selectedPendingIndex - 1);
+                updatePendingSelection();
+                break;
+            case 'a':
+            case 'y':
+                e.preventDefault();
+                approveSelectedAndNext(items);
+                break;
+            case 'r':
+            case 'n':
+                e.preventDefault();
+                rejectSelectedAndNext(items);
+                break;
+            default:
+                break;
+        }
+    };
+    document.addEventListener('keydown', pendingKeydownHandler);
+}
+
+function getPaperIdFromItem(item) {
+    if (!item) return null;
+    return item.dataset?.paperId || item.querySelector('[data-paper-id]')?.dataset?.paperId || null;
+}
+
+function approveSelectedAndNext(items) {
+    const paperId = getPaperIdFromItem(items[selectedPendingIndex]);
+    if (!paperId) return;
+    rejectedIds.delete(paperId);
+    approvedIds.add(paperId);
+    updateConfirmToast();
+    selectedPendingIndex = Math.min(selectedPendingIndex + 1, items.length - 1);
+    updatePendingSelection();
+}
+
+function rejectSelectedAndNext(items) {
+    const paperId = getPaperIdFromItem(items[selectedPendingIndex]);
+    if (!paperId) return;
+    approvedIds.delete(paperId);
+    rejectedIds.add(paperId);
+    updateConfirmToast();
+    selectedPendingIndex = Math.min(selectedPendingIndex + 1, items.length - 1);
+    updatePendingSelection();
+}
 
 function updateButtonStates() {
     document.querySelectorAll('.btn-approve-pending[data-paper-id]').forEach(btn => {
@@ -148,6 +231,34 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+}
+
+function createPagination(offset, count, total, nextOffset) {
+    const start = offset + 1;
+    const end = offset + count;
+    const paperWord = total !== 1 ? 'papers' : 'paper';
+
+    const prevButton = html`<button disabled="${offset === 0}">Previous</button>`;
+    prevButton.onclick = () => {
+        const newOffset = Math.max(0, offset - PAGE_SIZE);
+        loadPending(newOffset);
+    };
+
+    const nextButton = html`<button disabled="${nextOffset === null}">Next</button>`;
+    nextButton.onclick = () => {
+        if (nextOffset !== null) {
+            loadPending(nextOffset);
+        }
+    };
+
+    return html`
+        <div class="pagination">
+            <div class="results-info"><span class="count">${total}</span> ${paperWord} found</div>
+            ${prevButton}
+            <div class="page-info">Showing ${start}-${end} of ${total}</div>
+            ${nextButton}
+        </div>
+    `;
 }
 
 async function fetchPending(offset = 0, limit = PAGE_SIZE) {
@@ -238,8 +349,8 @@ function createPendingItem(paperDiff) {
         </div>
     `;
 
-    return html`
-        <div class="workset-item">
+    const itemEl = html`
+        <div class="workset-item" data-paper-id="${paperId ?? ''}">
             <div class="workset-content">
                 ${scoreBand}
                 <div class="workset-tabs">
@@ -253,9 +364,10 @@ function createPendingItem(paperDiff) {
             </div>
         </div>
     `;
+    return itemEl;
 }
 
-function renderPending(data) {
+function renderPending(data, offset = 0) {
     approvedIds.clear();
     rejectedIds.clear();
     const existingToast = document.getElementById('pending-confirm-toast');
@@ -271,10 +383,22 @@ function renderPending(data) {
         return;
     }
 
+    const paginationTop = createPagination(
+        offset,
+        data.count,
+        data.total,
+        data.next_offset,
+    );
     const items = data.results.map(paperDiff => createPendingItem(paperDiff));
     const list = html`<div class="workset-list">${items}</div>`;
-    setResults(list);
+    const paginationBottom = data.total > PAGE_SIZE
+        ? createPagination(offset, data.count, data.total, data.next_offset)
+        : null;
+    setResults(paginationTop, list, paginationBottom);
+    selectedPendingIndex = 0;
+    updatePendingSelection();
     updateButtonStates();
+    attachPendingKeyboard();
 }
 
 function displayLoading() {
@@ -285,14 +409,32 @@ function displayError(error) {
     setResults(html`<div class="error-message">Error loading pending: ${error.message}</div>`);
 }
 
-export async function displayPending() {
+function updatePendingUrl(offset) {
+    const urlParams = new URLSearchParams();
+    if (offset > 0) {
+        urlParams.set('offset', offset.toString());
+    }
+    const newUrl = urlParams.toString()
+        ? `${window.location.pathname}?${urlParams.toString()}`
+        : window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
+}
+
+export async function loadPending(offset = 0) {
     displayLoading();
+    updatePendingUrl(offset);
 
     try {
-        const data = await fetchPending();
-        renderPending(data);
+        const data = await fetchPending(offset, PAGE_SIZE);
+        renderPending(data, offset);
     } catch (error) {
         console.error('Failed to load pending:', error);
         displayError(error);
     }
+}
+
+export async function displayPending() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const offset = parseInt(urlParams.get('offset') || '0', 10);
+    await loadPending(offset);
 }
