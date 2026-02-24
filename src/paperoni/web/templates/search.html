@@ -17,6 +17,6 @@
 {% block scripts %}
 <script type="module">
     import { searchPapers } from '/assets/search.js';
-    searchPapers({{ is_validator|tojson }}, {{ validation_buttons|tojson }}, {{ show_scores|default(false)|tojson }}, {{ use_dev_mode|default(false)|tojson }});
+    searchPapers({{ is_validator|tojson }}, {{ show_scores|default(false)|tojson }}, {{ use_dev_mode|default(false)|tojson }});
 </script>
 {% endblock %}

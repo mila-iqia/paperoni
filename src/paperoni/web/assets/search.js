@@ -1,5 +1,5 @@
 import { debounce, html } from './common.js';
-import { createPaperElement, createScoreBand, createValidationButtons } from './paper.js';
+import { createPaperElement, createScoreBand } from './paper.js';
 import { createWorksetElement } from './workset.js';
 import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
 
@@ -9,7 +9,6 @@ let currentOffset = 0;
 let currentParams = {};
 let totalResults = 0;
 let isValidator = false;
-let showValidationButtons = false;
 let showScores = false;
 let useDevMode = false;
 
@@ -174,7 +173,7 @@ function displayResults(data) {
             onInstitutionClick: handleInstitutionClick,
             onVenueClick: handleVenueClick,
             onYearClick: handleYearClick,
-            bottomSection: showValidationButtons ? createValidationButtons(paper) : null,
+            bottomSection: null,
             showEditIcon: isValidator,
         });
     });
@@ -206,7 +205,6 @@ function updateUrlParams(params, offset) {
     if (params.venue) urlParams.set('venue', params.venue);
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
-    if (params.validated) urlParams.set('validated', params.validated);
     if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
     if (offset > 0) urlParams.set('offset', offset.toString());
     if (useDevMode) urlParams.set('dev', '');
@@ -238,10 +236,8 @@ const debouncedSearch = debounce((params) => {
     performSearch(params, 0);
 }, 300);
 
-export function searchPapers(hasValidateCapability = false, enableValidationButtons = false, enableScores = false, enableDevMode = false) {
-    // Store the capability flags
+export function searchPapers(hasValidateCapability = false, enableScores = false, enableDevMode = false) {
     isValidator = hasValidateCapability;
-    showValidationButtons = enableValidationButtons;
     showScores = enableScores;
     useDevMode = enableDevMode;
 
@@ -252,7 +248,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     const venueInput = document.getElementById('venue');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
-    const validatedRadios = document.querySelectorAll('input[name="validated"]');
     const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
     function handleInputChange() {
@@ -265,9 +260,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     venueInput.addEventListener('input', handleInputChange);
     startDateInput.addEventListener('input', handleInputChange);
     endDateInput.addEventListener('input', handleInputChange);
-    validatedRadios.forEach(radio => {
-        radio.addEventListener('change', handleInputChange);
-    });
     peerReviewedCheckbox.addEventListener('change', handleInputChange);
 
     // Prevent form submission
@@ -291,7 +283,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
         venue: urlParams.get('venue') || '',
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
-        validated: urlParams.get('validated') || '',
         peerReviewed: urlParams.get('peerReviewed') === 'true'
     };
     const initialOffset = parseInt(urlParams.get('offset') || '0', 10);
@@ -303,10 +294,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     venueInput.value = initialParams.venue;
     startDateInput.value = initialParams.start_date;
     endDateInput.value = initialParams.end_date;
-    if (initialParams.validated) {
-        const radioToCheck = document.querySelector(`input[name="validated"][value="${initialParams.validated}"]`);
-        if (radioToCheck) radioToCheck.checked = true;
-    }
     peerReviewedCheckbox.checked = initialParams.peerReviewed;
 
     // Always perform initial search, even with empty criteria
