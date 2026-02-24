@@ -5,7 +5,7 @@ FastAPI routes for serving markdown-based pages (index, help).
 from pathlib import Path
 
 import markdown
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 
 from ..config import config
 from .helpers import render_template
@@ -29,45 +29,42 @@ def get_markdown_content(filename: str) -> str:
     return None
 
 
+def _render_markdown_page(filename, page_title, request):
+    md_content = get_markdown_content(filename)
+    if md_content is None:
+        raise HTTPException(status_code=404, detail=f"{page_title} page not found")
+
+    html_content = markdown.markdown(
+        md_content, extensions=["extra", "codehilite", "toc", "attr_list"]
+    )
+
+    return render_template(
+        "markdown.html",
+        request,
+        help_section=False,
+        page_title=page_title,
+        content=html_content,
+    )
+
+
 def install_pages(app: FastAPI) -> FastAPI:
     """Install the markdown page routes."""
+
+    hascap = app.auth.get_email_capability
 
     @app.get("/")
     async def index_page(request: Request):
         """Render the index page from markdown."""
-        md_content = get_markdown_content("index.md")
-        if md_content is None:
-            raise HTTPException(status_code=404, detail="Index page not found")
-
-        html_content = markdown.markdown(
-            md_content, extensions=["extra", "codehilite", "toc", "attr_list"]
-        )
-
-        return render_template(
-            "markdown.html",
-            request,
-            help_section=False,
-            page_title="Home",
-            content=html_content,
-        )
+        return _render_markdown_page("index.md", "Home", request)
 
     @app.get("/help")
     async def help_page(request: Request):
         """Render the help page."""
-        md_content = get_markdown_content("help.md")
-        if md_content is None:
-            raise HTTPException(status_code=404, detail="Help page not found")
+        return _render_markdown_page("help.md", "Help", request)
 
-        html_content = markdown.markdown(
-            md_content, extensions=["extra", "codehilite", "toc", "attr_list"]
-        )
-
-        return render_template(
-            "markdown.html",
-            request,
-            help_section=False,
-            page_title="Help",
-            content=html_content,
-        )
+    @app.get("/admin", dependencies=[Depends(hascap("admin", redirect=True))])
+    async def admin_page(request: Request):
+        """Render the admin page from markdown."""
+        return _render_markdown_page("admin.md", "Admin", request)
 
     return app
