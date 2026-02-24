@@ -1,6 +1,7 @@
 import { debounce, html } from './common.js';
 import { createPaperElement, createScoreBand, createValidationButtons } from './paper.js';
 import { createWorksetElement } from './workset.js';
+import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
 
 const PAGE_SIZE = 50;
 
@@ -26,36 +27,7 @@ async function fetchSearchResults(params, offset = 0) {
         limit: PAGE_SIZE.toString(),
         expand_links: 'true'
     });
-
-    // Add search parameters if they have values
-    if (params.title) queryParams.append('title', params.title);
-    if (params.author) queryParams.append('author', params.author);
-    if (params.institution) queryParams.append('institution', params.institution);
-    if (params.venue) queryParams.append('venue', params.venue);
-    if (params.start_date) queryParams.append('start_date', params.start_date);
-    if (params.end_date) queryParams.append('end_date', params.end_date);
-
-    // Convert validated parameter to flags
-    switch (params.validated) {
-        case 'true':
-            // Include papers with 'valid' flag
-            queryParams.append('flags', 'valid');
-            break;
-        case 'false':
-            // Include papers with 'invalid' flag
-            queryParams.append('flags', 'invalid');
-            break;
-        case 'unset':
-            // Exclude papers with both 'valid' and 'invalid' flags (unprocessed)
-            queryParams.append('flags', '~valid');
-            queryParams.append('flags', '~invalid');
-            break;
-    }
-
-    // Add peer-reviewed flag if checked
-    if (params.peerReviewed) {
-        queryParams.append('flags', 'peer-reviewed');
-    }
+    appendSearchParamsTo(queryParams, params);
 
     const url = `/api/v1/search?${queryParams.toString()}`;
     const response = await fetch(url);
@@ -283,25 +255,8 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     const validatedRadios = document.querySelectorAll('input[name="validated"]');
     const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
-    function getValidatedValue() {
-        const checked = document.querySelector('input[name="validated"]:checked');
-        return checked ? checked.value : '';
-    }
-
     function handleInputChange() {
-        const params = {
-            title: titleInput.value.trim(),
-            author: authorInput.value.trim(),
-            institution: institutionInput.value.trim(),
-            venue: venueInput.value.trim(),
-            start_date: startDateInput.value,
-            end_date: endDateInput.value,
-            validated: getValidatedValue(),
-            peerReviewed: peerReviewedCheckbox.checked
-        };
-
-        // Always perform search, even with empty criteria
-        debouncedSearch(params);
+        debouncedSearch(getSearchParams());
     }
 
     titleInput.addEventListener('input', handleInputChange);
@@ -323,19 +278,7 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     // Clear search button
     const clearButton = document.getElementById('clearSearch');
     clearButton.addEventListener('click', () => {
-        titleInput.value = '';
-        authorInput.value = '';
-        institutionInput.value = '';
-        venueInput.value = '';
-        startDateInput.value = '';
-        endDateInput.value = '';
-        // Reset validated radio to "All"
-        const allRadio = document.querySelector('input[name="validated"][value=""]');
-        if (allRadio) {
-            allRadio.checked = true;
-        }
-        // Reset peer-reviewed checkbox
-        peerReviewedCheckbox.checked = false;
+        clearSearchForm();
         handleInputChange();
     });
 
@@ -360,16 +303,10 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     venueInput.value = initialParams.venue;
     startDateInput.value = initialParams.start_date;
     endDateInput.value = initialParams.end_date;
-
-    // Set the validated radio button
     if (initialParams.validated) {
         const radioToCheck = document.querySelector(`input[name="validated"][value="${initialParams.validated}"]`);
-        if (radioToCheck) {
-            radioToCheck.checked = true;
-        }
+        if (radioToCheck) radioToCheck.checked = true;
     }
-
-    // Set the peer-reviewed checkbox
     peerReviewedCheckbox.checked = initialParams.peerReviewed;
 
     // Always perform initial search, even with empty criteria

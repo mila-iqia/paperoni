@@ -4,9 +4,10 @@ FastAPI interface for paperoni collection search functionality.
 
 import datetime
 import itertools
+import traceback
 from dataclasses import dataclass, field, replace
 from types import NoneType, SimpleNamespace
-from typing import Any, Generator, Iterable, Literal
+from typing import Any, Generator, Iterable, Literal, Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
@@ -19,6 +20,7 @@ from ..fulltext.pdf import PDF
 from ..model.classes import Base, Paper as _Paper
 from ..model.focus import Focuses, Scored
 from ..model.merge import PaperWorkingSet
+from ..operations import from_code
 from ..utils import url_to_id
 
 
@@ -37,6 +39,7 @@ class Paper(_Paper):
 @dataclass(kw_only=True)
 class PaperDiff(Base):
     score: int | None = None
+    matched: bool = True
     current: Paper | None = None
     new: Paper | None = None
 
@@ -320,6 +323,23 @@ class DiffResponse(PagingResponseMixin):
 
 
 @dataclass
+class OperateRequest:
+    """Request model for operate (POST body)."""
+
+    operation: str
+    title: Optional[str] = None
+    author: Optional[str] = None
+    institution: Optional[str] = None
+    venue: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    flags: Optional[list[str]] = None
+    offset: int = 0
+    limit: int = 100
+    expand_links: bool = True
+
+
+@dataclass
 class AutoFocusRequest(Focus.AutoFocus):
     """Request model for autofocus."""
 
@@ -416,6 +436,64 @@ def install_api(app) -> FastAPI:
             total=len(all_matches),
         )
 
+    def _run_operate(operation_obj, coll, selected):
+        results = []
+        for p in selected:
+            result = operation_obj(p)
+            results.append(
+                PaperDiff(
+                    matched=result.changed,
+                    current=p,
+                    new=result.new if result.changed else None,
+                )
+            )
+        return results
+
+    def _parse_date(s: str | None):
+        if not s:
+            return None
+        try:
+            return datetime.datetime.fromisoformat(s).date()
+        except (ValueError, TypeError):
+            return None
+
+    @app.post(
+        f"{prefix}/operate",
+        response_model=DiffResponse,
+        dependencies=[Depends(hascap("admin"))],
+    )
+    async def operate_papers_post(body: OperateRequest):
+        try:
+            operation_obj = from_code(body.operation)
+            flags = set(body.flags) if body.flags else set()
+            search_req = SearchRequest(
+                title=body.title,
+                author=body.author,
+                institution=body.institution,
+                venue=body.venue,
+                start_date=_parse_date(body.start_date),
+                end_date=_parse_date(body.end_date),
+                flags=flags,
+                offset=body.offset,
+                limit=body.limit,
+                expand_links=body.expand_links,
+            )
+            coll = Coll(command=None)
+            all_matches = await search_req.run(coll)
+            selected = list(search_req.slice(all_matches))
+            results = _run_operate(operation_obj, coll, selected)
+            return DiffResponse(
+                results=results,
+                count=search_req.count,
+                next_offset=search_req.next_offset,
+                total=len(all_matches),
+            )
+        except Exception:
+            raise HTTPException(
+                status_code=500,
+                detail=traceback.format_exc(),
+            )
+
     @app.get(
         f"{prefix}/pending/list",
         response_model=DiffResponse,
@@ -440,7 +518,10 @@ def install_api(app) -> FastAPI:
                     if request.expand_links:
                         equiv = expand_paper_links(equiv)
                     current = equiv
-            return PaperDiff(score=None, current=current and Paper(**vars(current)), new=sugg and Paper(**vars(sugg)))
+            return PaperDiff(
+                current=current and Paper(**vars(current)),
+                new=sugg and Paper(**vars(sugg)),
+            )
 
         diffs = [await pair(paper) for paper in all_papers]
         total = len(diffs)
