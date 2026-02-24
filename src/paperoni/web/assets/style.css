@@ -2424,6 +2424,74 @@ body {
     display: block;
 }
 
+/* Diff view tab buttons - small, over top right of paper */
+.diff-view-tabs-wrapper {
+    position: relative;
+}
+
+.diff-tab-buttons {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+}
+
+.diff-tab {
+    padding: 2px 6px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 3px;
+    transition: background 0.15s;
+}
+
+.diff-tab-diff {
+    color: #6f42c1;
+}
+
+.diff-tab-diff:hover,
+.diff-tab-diff.active {
+    background: rgba(111, 66, 193, 0.2);
+}
+
+.diff-tab-old {
+    color: #dc3545;
+}
+
+.diff-tab-old:hover,
+.diff-tab-old.active {
+    background: rgba(220, 53, 69, 0.2);
+}
+
+.diff-tab-new {
+    color: #28a745;
+}
+
+.diff-tab-new:hover,
+.diff-tab-new.active {
+    background: rgba(40, 167, 69, 0.2);
+}
+
+.diff-tab-contents {
+    position: relative;
+    min-height: 200px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.diff-tab-contents .tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.diff-tab-contents .tab-content.active {
+    display: block;
+}
+
 /* Diff view styles - added = green (new), removed = red (deleted) */
 /* Scoped under .diff-view with higher specificity to override .badge, .badge.topic, .badge.link, etc. */
 .diff-view .diff-added,

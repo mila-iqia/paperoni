@@ -10,7 +10,7 @@ const PAGE_SIZE = 100;
 const MONACO_CDN = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min';
 const STORAGE_KEY_BLOCKS = 'operate.blocks';
 const STORAGE_KEY_INDEX = 'operate.index';
-const DEFAULT_OPERATION = `paperoni.operations:sort_releases`;
+const DEFAULT_OPERATION = `# Write body of operate(paper)`;
 
 let monacoEditor = null;
 let blocks = [];
@@ -86,6 +86,9 @@ function loadMonacoEditor() {
                 lineNumbers: 'on',
                 wordWrap: 'on',
                 automaticLayout: true,
+                quickSuggestions: false,
+                suggestOnTriggerCharacters: false,
+                acceptSuggestionOnCommitCharacter: false,
             });
             monacoEditor.onDidChangeModelContent(() => {
                 if (currentIndex >= 0 && currentIndex < blocks.length) {
@@ -270,7 +273,7 @@ function renderResults(data) {
         ? html`
             <div class="operate-results-section">
                 <h3 class="operate-section-header">Unmatched</h3>
-                <div class="workset-list">${unmatchedItems}</div>
+                <div class="workset-list">${unmatchedItems.length} unmatched</div>
             </div>
         `
         : null;
