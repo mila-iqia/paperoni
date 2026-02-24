@@ -68,24 +68,24 @@ export function formatRelease(release) {
     return { date, venueName, status };
 }
 
-export function sortReleasesByDate(releases) {
-    return [...releases].sort((a, b) => {
-        // Parse dates manually to avoid timezone issues
-        const parseDate = (dateString) => {
-            if (!dateString) return new Date(0);
-            const parts = dateString.split('-');
-            if (parts.length === 3) {
-                // Create date in local timezone to avoid UTC conversion
-                return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-            }
-            return new Date(dateString); // Fallback
-        };
+// export function sortReleasesByDate(releases) {
+//     return [...releases].sort((a, b) => {
+//         // Parse dates manually to avoid timezone issues
+//         const parseDate = (dateString) => {
+//             if (!dateString) return new Date(0);
+//             const parts = dateString.split('-');
+//             if (parts.length === 3) {
+//                 // Create date in local timezone to avoid UTC conversion
+//                 return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+//             }
+//             return new Date(dateString); // Fallback
+//         };
 
-        const dateA = parseDate(a.venue?.date);
-        const dateB = parseDate(b.venue?.date);
-        return dateB - dateA; // Most recent first
-    });
-}
+//         const dateA = parseDate(a.venue?.date);
+//         const dateB = parseDate(b.venue?.date);
+//         return dateB - dateA; // Most recent first
+//     });
+// }
 
 export function matchesSearch(text, searchTerm) {
     if (!searchTerm || !text) return false;
@@ -265,7 +265,7 @@ export function createReleasesSection(releases, options = {}) {
         return html`<div class="paper-meta-item"><div class="paper-releases">No releases</div></div>`;
     }
 
-    const sortedReleases = sortReleasesByDate(releases);
+    const sortedReleases = releases; //sortReleasesByDate(releases);
 
     const releaseItems = sortedReleases.map(release => {
         const { date, venueName, status } = formatRelease(release);

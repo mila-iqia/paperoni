@@ -8,7 +8,6 @@ import {
     extractDomain,
     formatRelease,
     getScoreClass,
-    sortReleasesByDate
 } from './paper.js';
 
 function getAffName(aff) {
@@ -293,8 +292,10 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
     attachAuthorAffiliationHover(authorsHtml);
 
     // Releases diff - match normal view: full date, status, venue
-    const releases1 = sortReleasesByDate(paperOld?.releases || []);
-    const releases2 = sortReleasesByDate(paperNew?.releases || []);
+    const releases1 = paperOld?.releases || [];
+    const releases2 = paperNew?.releases || [];
+    // const releases1 = sortReleasesByDate(paperOld?.releases || []);
+    // const releases2 = sortReleasesByDate(paperNew?.releases || []);
     const releaseKey = (r) => `${r.venue?.name ?? ''}|${r.venue?.date ?? ''}|${r.peer_review_status ?? ''}`;
     const r1Keys = new Set(releases1.map(releaseKey));
     const r2Keys = new Set(releases2.map(releaseKey));
@@ -369,8 +370,6 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
     const links2 = (paperNew?.links || []).map(linkKey);
     const l1Set = new Set(links1);
     const l2Set = new Set(links2);
-    console.log("A", l1Set);
-    console.log("B", l2Set);
     const linkBadges = [];
     for (const link of paperOld?.links || []) {
         const key = linkKey(link);

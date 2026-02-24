@@ -50,6 +50,14 @@ def install_search(app: FastAPI) -> FastAPI:
         """Render the pending papers page."""
         return render_template("pending.html", request)
 
+    @app.get("/operate")
+    async def operate_page(
+        request: Request,
+        user: str = Depends(hascap("admin", redirect=True)),
+    ):
+        """Render the operate page."""
+        return render_template("operate.html", request)
+
     @app.get("/workset")
     async def workset_page(
         request: Request,
