@@ -4,6 +4,20 @@ import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js'
 
 const PAGE_SIZE = 50;
 
+const FILTER_OPTIONS = [
+    { value: null, label: 'All' },
+    { value: 'user', label: 'user' },
+    { value: 'scraped', label: 'scraped' },
+];
+
+let pendingFilter = null;
+
+/** Prefix with suggest: when sending to API if not already present. */
+function toApiFlag(filter) {
+    if (!filter) return null;
+    return filter.startsWith('suggest:') ? filter : `suggest:${filter}`;
+}
+
 /**
  * Create comments display from paper.info.comments. Merge messages from same user.
  * Each comment has { user, comment }. Display user even if all messages are empty.
@@ -233,6 +247,24 @@ function setResults(...elements) {
     });
 }
 
+function createFilterBar() {
+    const bar = html`
+        <div class="pending-filter-bar">
+            ${FILTER_OPTIONS.map(({ value, label }) => {
+                const btn = html`<button type="button" class="pending-filter-btn" data-filter="${value ?? ''}">${label}</button>`;
+                btn.classList.toggle('active', pendingFilter === value);
+                btn.addEventListener('click', () => {
+                    pendingFilter = value;
+                    updatePendingUrl(0);
+                    loadPending(0);
+                });
+                return btn;
+            })}
+        </div>
+    `;
+    return bar;
+}
+
 function createPagination(offset, count, total, nextOffset) {
     const start = offset + 1;
     const end = offset + count;
@@ -261,12 +293,16 @@ function createPagination(offset, count, total, nextOffset) {
     `;
 }
 
-async function fetchPending(offset = 0, limit = PAGE_SIZE) {
+async function fetchPending(offset = 0, limit = PAGE_SIZE, filter = null) {
     const queryParams = new URLSearchParams({
         offset: offset.toString(),
         limit: limit.toString(),
         expand_links: 'true',
     });
+    const apiFlag = toApiFlag(filter);
+    if (apiFlag) {
+        queryParams.append('flags', apiFlag);
+    }
 
     const url = `/api/v1/pending/list?${queryParams.toString()}`;
     const response = await fetch(url);
@@ -394,7 +430,7 @@ function renderPending(data, offset = 0) {
                 No pending papers.
             </div>
         `;
-        setResults(noResults);
+        setResults(createFilterBar(), noResults);
         return;
     }
 
@@ -409,7 +445,7 @@ function renderPending(data, offset = 0) {
     const paginationBottom = data.total > PAGE_SIZE
         ? createPagination(offset, data.count, data.total, data.next_offset)
         : null;
-    setResults(paginationTop, list, paginationBottom);
+    setResults(createFilterBar(), paginationTop, list, paginationBottom);
     selectedPendingIndex = 0;
     updatePendingSelection();
     updateButtonStates();
@@ -417,17 +453,20 @@ function renderPending(data, offset = 0) {
 }
 
 function displayLoading() {
-    setResults(html`<div class="loading">Loading...</div>`);
+    setResults(createFilterBar(), html`<div class="loading">Loading...</div>`);
 }
 
 function displayError(error) {
-    setResults(html`<div class="error-message">Error loading pending: ${error.message}</div>`);
+    setResults(createFilterBar(), html`<div class="error-message">Error loading pending: ${error.message}</div>`);
 }
 
 function updatePendingUrl(offset) {
     const urlParams = new URLSearchParams();
     if (offset > 0) {
         urlParams.set('offset', offset.toString());
+    }
+    if (pendingFilter) {
+        urlParams.set('filter', pendingFilter);
     }
     const newUrl = urlParams.toString()
         ? `${window.location.pathname}?${urlParams.toString()}`
@@ -440,7 +479,7 @@ export async function loadPending(offset = 0) {
     updatePendingUrl(offset);
 
     try {
-        const data = await fetchPending(offset, PAGE_SIZE);
+        const data = await fetchPending(offset, PAGE_SIZE, pendingFilter);
         renderPending(data, offset);
     } catch (error) {
         console.error('Failed to load pending:', error);
@@ -451,5 +490,9 @@ export async function loadPending(offset = 0) {
 export async function displayPending() {
     const urlParams = new URLSearchParams(window.location.search);
     const offset = parseInt(urlParams.get('offset') || '0', 10);
+    const filterParam = urlParams.get('filter');
+    if (filterParam) {
+        pendingFilter = filterParam;
+    }
     await loadPending(offset);
 }

@@ -1252,6 +1252,34 @@ body {
 }
 
 /* Pending page: comments */
+.pending-filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.pending-filter-btn {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f8f9fa;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pending-filter-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.pending-filter-btn.active {
+    background: #2c5aa0;
+    color: white;
+    border-color: #2c5aa0;
+}
+
 .pending-delete-paper {
     background: #ffe6e6;
     padding: 12px;

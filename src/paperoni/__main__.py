@@ -541,6 +541,8 @@ class Work:
             if self.operations:
                 selected = [self._apply_operations(p) for p in selected]
 
+            selected = [replace(p, flags=p.flags | {"suggest:scraped"}) for p in selected]
+
             try:
                 added = await self._coll(work).add_papers(selected)
             finally:
