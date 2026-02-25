@@ -186,10 +186,10 @@ function updateConfirmToast() {
 
     const parts = [];
     if (approveCount > 0) {
-        parts.push(`Approve ${approveCount} paper${approveCount !== 1 ? 's' : ''}`);
+        parts.push(`Approve ${approveCount} change${approveCount !== 1 ? 's' : ''}`);
     }
     if (rejectCount > 0) {
-        parts.push(`Reject ${rejectCount} paper${rejectCount !== 1 ? 's' : ''}`);
+        parts.push(`Reject ${rejectCount} change${rejectCount !== 1 ? 's' : ''}`);
     }
 
     const confirmBtn = document.createElement('button');
@@ -282,7 +282,8 @@ function createPendingItem(paperDiff) {
     const current = paperDiff.current;
     const paperNew = paperDiff.new;
     const score = paperDiff.score;
-    const paperId = paperNew?.id;
+    const isDelete = current && (paperNew?.flags || []).includes('mark:delete');
+    const paperId = paperNew?.id ?? current?.id;
 
     const scoreBand = (score != null)
         ? html`
@@ -293,7 +294,19 @@ function createPendingItem(paperDiff) {
         : null;
 
     let contentEl;
-    if (!current) {
+    if (isDelete) {
+        // Delete suggestion: comments and label outside, paper with light red background only
+        const paperContent = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });
+        const oldComments = current?.info?.comments;
+        const commentsEl = createCommentsDisplay(paperNew?.info?.comments, oldComments);
+        contentEl = html`
+            <div class="pending-delete-wrapper">
+                ${commentsEl}
+                <div class="pending-delete-label">Delete paper</div>
+                <div class="pending-delete-paper">${paperContent}</div>
+            </div>
+        `;
+    } else if (!current) {
         // New paper suggestion - display like search (using workset paper format)
         contentEl = createWorksetPaperElement(paperNew, { excludeFromInfo: ['comments'], editSuggest: true });
     } else {
@@ -301,18 +314,20 @@ function createPendingItem(paperDiff) {
         contentEl = createDiffViewWithTabs(current, paperNew);
     }
 
-    const oldComments = current?.info?.comments;
-    const commentsEl = createCommentsDisplay(paperNew?.info?.comments, oldComments);
-    if (commentsEl) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'pending-with-comments';
-        const tabsEl = contentEl.querySelector('.workset-tabs');
-        if (tabsEl) {
-            tabsEl.insertBefore(commentsEl, tabsEl.firstChild);
-        } else {
-            wrapper.appendChild(commentsEl);
-            wrapper.appendChild(contentEl);
-            contentEl = wrapper;
+    if (!isDelete) {
+        const oldComments = current?.info?.comments;
+        const commentsEl = createCommentsDisplay(paperNew?.info?.comments, oldComments);
+        if (commentsEl) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pending-with-comments';
+            const tabsEl = contentEl.querySelector('.workset-tabs');
+            if (tabsEl) {
+                tabsEl.insertBefore(commentsEl, tabsEl.firstChild);
+            } else {
+                wrapper.appendChild(commentsEl);
+                wrapper.appendChild(contentEl);
+                contentEl = wrapper;
+            }
         }
     }
 

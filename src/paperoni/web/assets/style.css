@@ -1133,6 +1133,42 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+.btn-save-sticky.btn-save-delete {
+    background: #dc3545;
+}
+
+.btn-save-sticky.btn-save-delete:hover:not(:disabled) {
+    background: #c82333;
+}
+
+.btn-save-sticky.btn-save-delete:active {
+    background: #bd2130;
+}
+
+/* Subdued delete toggle next to Basic Information */
+.btn-delete-toggle {
+    background: transparent;
+    color: #888;
+    border: 1px solid #ccc;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-delete-toggle:hover {
+    color: #666;
+    border-color: #999;
+    background: #f5f5f5;
+}
+
+.btn-delete-toggle.active {
+    color: #c82333;
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.08);
+}
+
 /* Toast Notifications */
 .toast {
     position: fixed;
@@ -1216,6 +1252,19 @@ body {
 }
 
 /* Pending page: comments */
+.pending-delete-paper {
+    background: #ffe6e6;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.pending-delete-label {
+    font-weight: bold;
+    color: #dc3545;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
 .pending-comments {
     margin-bottom: 12px;
     padding: 10px 12px;
