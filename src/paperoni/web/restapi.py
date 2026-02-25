@@ -555,20 +555,27 @@ def install_api(app) -> FastAPI:
             )
 
         papers_to_approve = []
+        ids_to_delete = []
         for pid in request.approve:
             paper = await config.suggestions.find_by_id(pid)
             if paper is not None:
-                papers_to_approve.append(paper)
+                if "mark:delete" in paper.flags:
+                    if paper.id is not None:
+                        ids_to_delete.append(paper.id)
+                else:
+                    papers_to_approve.append(paper)
 
         if papers_to_approve and config.collection is not None:
             await config.collection.add_papers(papers_to_approve, force=True)
+        if ids_to_delete and config.collection is not None:
+            await config.collection.delete_ids(ids_to_delete)
 
         removed = await config.suggestions.delete_ids(all_ids)
 
         return PendingDecideResponse(
             success=True,
-            message=f"Approved {len(papers_to_approve)}, removed {removed} from suggestions",
-            approved=len(papers_to_approve),
+            message=f"Approved {len(papers_to_approve)}, deleted {len(ids_to_delete)}, removed {removed} from suggestions",
+            approved=len(papers_to_approve) + len(ids_to_delete),
             removed=removed,
         )
 
