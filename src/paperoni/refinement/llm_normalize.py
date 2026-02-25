@@ -9,13 +9,13 @@ from paperazzi.platforms.utils import Message
 from paperazzi.utils import DiskStoreFunc
 
 from ..config import config
-from ..model import DatePrecision, PaperAuthor, Release
+from ..model import DatePrecision, PaperAuthor, Release, VenueType
 from ..model.classes import Institution, InstitutionCategory, Paper, Venue
 from ..prompt import ParsedResponseSerializer
 from ..prompt_utils import prompt_wrapper
 from ..utils import normalize_institution, normalize_name, normalize_venue
 from .llm_norm_author import model as norm_author_model
-from .llm_norm_venues import model as norm_venue_model
+from .llm_norm_venue import model as norm_venue_model
 from .llm_process_affiliation import model as process_affiliation_model
 
 
@@ -165,10 +165,10 @@ def norm_venue_prompt(
     )._.parsed
 
     year = {}
-    if analysis.year:
+    if analysis.year and venue.date_precision <= DatePrecision.year:
         try:
             year = {
-                "date": datetime.strptime(str(analysis.year), "%Y").date(),
+                "date": datetime.strptime(str(analysis.year).strip(), "%Y").date(),
                 "date_precision": DatePrecision.year,
             }
         except ValueError:
@@ -176,12 +176,22 @@ def norm_venue_prompt(
                 f"Failed to parse year {analysis.year} from venue llm analysis for {venue.name}"
             )
 
+    venue_name = str(analysis.name).strip() or venue.name
+    venue_short_name = str(analysis.short_name).strip() or venue.short_name
+    workshop_name = str(analysis.workshop_name).strip()
+    venue_type = venue.type
+    if workshop_name:
+        venue_name = f"{workshop_name} @ {venue_name}"
+        venue_short_name = f"{workshop_name}@{venue_short_name}"
+        venue_type = VenueType.workshop
+
     return Venue(
         **{
             **vars(venue),
-            "name": str(analysis.name),
-            "short_name": str(analysis.short_name) or venue.short_name,
-            "volume": str(analysis.numeric_marker) or venue.volume,
+            "type": venue_type,
+            "name": venue_name,
+            "short_name": venue_short_name,
+            "volume": str(analysis.numeric_marker).strip() or venue.volume,
             **year,
         }
     )

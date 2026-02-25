@@ -25,7 +25,7 @@
     display_name: Colleen J. Gillon
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -36,12 +36,12 @@
     display_name: Jérôme A. Lecoq
   - affiliations:
     - aliases:
-      - Department of Physics and Astronomy, York University, Toronto, Canada
+      - Department of Physics and Astronomy, York University, Toronto, Ontario, Canada
       category: academia
       country: Canada
       name: York University
     - aliases:
-      - Centre for Vision Research, York University, Toronto, Canada
+      - Centre for Vision Research, York University, Toronto, Ontario, Canada
       category: academia
       country: Canada
       name: York University
@@ -52,7 +52,7 @@
     display_name: Jason E. Pina
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -63,7 +63,7 @@
     display_name: Ruweida Ahmed
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -74,7 +74,7 @@
     display_name: Yazan N. Billeh
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -85,7 +85,7 @@
     display_name: Shiella Caldejon
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -96,12 +96,12 @@
     display_name: Peter Groblewski
   - affiliations:
     - aliases:
-      - Department of Physics and Astronomy, York University, Toronto, Canada
+      - Department of Physics and Astronomy, York University, Toronto, Ontario, Canada
       category: academia
       country: Canada
       name: York University
     - aliases:
-      - Centre for Vision Research, York University, Toronto, Canada
+      - Centre for Vision Research, York University, Toronto, Ontario, Canada
       category: academia
       country: Canada
       name: York University
@@ -112,7 +112,7 @@
     display_name: Timothy M. Henley
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -123,7 +123,7 @@
     display_name: India Kato
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -134,7 +134,7 @@
     display_name: Eric Lee
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -145,7 +145,7 @@
     display_name: Jennifer Luviano
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -156,7 +156,7 @@
     display_name: Kyla Mace
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -167,7 +167,7 @@
     display_name: Chelsea Nayan
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -178,7 +178,7 @@
     display_name: Thuyanh V. Nguyen
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -189,7 +189,7 @@
     display_name: Kat North
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -200,7 +200,7 @@
     display_name: Jed Perkins
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -211,7 +211,7 @@
     display_name: Sam Seid
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -222,7 +222,7 @@
     display_name: Matthew T. Valley
   - affiliations:
     - aliases:
-      - Allen Institute, MindScope Program, Seattle, USA
+      - Allen Institute, MindScope Program, Seattle, WA, USA
       category: academia
       country: USA
       name: Allen Institute
@@ -239,16 +239,16 @@
       name: Mila
     - aliases:
       - Département d’informatique et de recherche opérationnelle, Université de Montréal,
-        Montréal, Canada
+        Montréal, Québec, Canada
       category: academia
       country: Canada
       name: Université de Montréal
     - aliases:
       - Learning in Machines and Brains Program, Canadian Institute for Advanced Research,
-        Toronto, Canada
+        Toronto, Ontario, Canada
       category: academia
       country: Canada
-      name: Canadian Institute for Advanced Research
+      name: CIFAR
     author:
       aliases: []
       links: []
@@ -273,26 +273,26 @@
     display_name: Timothy P. Lillicrap
   - affiliations:
     - aliases:
-      - Department of Physics and Astronomy, York University, Toronto, Canada
+      - Department of Physics and Astronomy, York University, Toronto, Ontario, Canada
       category: academia
       country: Canada
       name: York University
     - aliases:
-      - Centre for Vision Research, York University, Toronto, Canada
+      - Centre for Vision Research, York University, Toronto, Ontario, Canada
       category: academia
       country: Canada
       name: York University
     - aliases:
       - Learning in Machines and Brains Program, Canadian Institute for Advanced Research,
-        Toronto, Canada
+        Toronto, Ontario, Canada
       category: academia
       country: Canada
-      name: Canadian Institute for Advanced Research
+      name: CIFAR
     - aliases:
-      - Vector Institute for Artificial Intelligence, Toronto, Canada
+      - Vector Institute for Artificial Intelligence, Toronto, Ontario, Canada
       category: academia
       country: Canada
-      name: Vector Institute for Artificial Intelligence
+      name: Vector Institute
     author:
       aliases: []
       links: []
@@ -306,22 +306,23 @@
       name: Mila
     - aliases:
       - Learning in Machines and Brains Program, Canadian Institute for Advanced Research,
-        Toronto, Canada
+        Toronto, Ontario, Canada
       category: academia
       country: Canada
-      name: Canadian Institute for Advanced Research
+      name: CIFAR
     - aliases:
-      - School of Computer Science, McGill University, Montréal, Canada
-      category: academia
-      country: Canada
-      name: McGill University
-    - aliases:
-      - Department of Neurology & Neurosurgery, McGill University, Montréal, Canada
+      - School of Computer Science, McGill University, Montréal, Québec, Canada
       category: academia
       country: Canada
       name: McGill University
     - aliases:
-      - Montreal Neurological Institute, McGill University, Montréal, Canada
+      - Department of Neurology & Neurosurgery, McGill University, Montréal, Québec,
+        Canada
+      category: academia
+      country: Canada
+      name: McGill University
+    - aliases:
+      - Montreal Neurological Institute, McGill University, Montréal, Québec, Canada
       category: academia
       country: Canada
       name: McGill University

@@ -48,8 +48,8 @@
     venue:
       aliases:
       - 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
-      date: '2024-01-01'
-      date_precision: 1
+      date: '2024-06-16'
+      date_precision: 3
       links: []
       name: IEEE/CVF Conference on Computer Vision and Pattern Recognition
       open: false

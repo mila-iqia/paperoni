@@ -1,0 +1,152 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Wed, 25 Feb 2026 15:19:20 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=9609",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "media_resolution": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "file_data": null,
+            "function_call": null,
+            "function_response": null,
+            "inline_data": null,
+            "text": "{\n  \"name\": {\n    \"$value\": \"International Conference on Machine Learning\",\n    \"$comment\": {\n      \"reasoning\": \"The full name of the conference is inferred from the widely recognized acronym 'ICML' provided in the input string.\",\n      \"quote\": \"ICML.cc\"\n    }\n  },\n  \"short_name\": {\n    \"$value\": \"ICML\",\n    \"$comment\": {\n      \"reasoning\": \"The acronym 'ICML' is explicitly stated at the beginning of the input string.\",\n      \"quote\": \"ICML.cc\"\n    }\n  },\n  \"workshop_name\": {\n    \"$value\": \"CODEML\",\n    \"$comment\": {\n      \"reasoning\": \"The input string is a URL-like path where 'CODEML' follows the '/Workshop/' segment, identifying it as the specific workshop name.\",\n      \"quote\": \"ICML.cc/2025/Workshop/CODEML\"\n    }\n  },\n  \"numeric_marker\": {\n    \"$value\": \"\",\n    \"$comment\": {\n      \"reasoning\": \"The provided text does not contain a numeric marker for the edition or volume of the conference, only the year.\",\n      \"quote\": \"ICML.cc/2025/Workshop/CODEML\"\n    }\n  },\n  \"year\": {\n    \"$value\": \"2025\",\n    \"$comment\": {\n      \"reasoning\": \"The year '2025' is explicitly mentioned in the URL-like structure of the input string.\",\n      \"quote\": \"2025\"\n    }\n  }\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null,
+      "url_context_metadata": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "-BKfafzJNZ3w-8YPks-gmA4",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 373,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 807,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 807
+      }
+    ],
+    "thoughts_token_count": 722,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 1902,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "name": {
+      "$value": "International Conference on Machine Learning",
+      "$comment": {
+        "reasoning": "The full name of the conference is inferred from the widely recognized acronym 'ICML' provided in the input string.",
+        "quote": "ICML.cc"
+      }
+    },
+    "short_name": {
+      "$value": "ICML",
+      "$comment": {
+        "reasoning": "The acronym 'ICML' is explicitly stated at the beginning of the input string.",
+        "quote": "ICML.cc"
+      }
+    },
+    "workshop_name": {
+      "$value": "CODEML",
+      "$comment": {
+        "reasoning": "The input string is a URL-like path where 'CODEML' follows the '/Workshop/' segment, identifying it as the specific workshop name.",
+        "quote": "ICML.cc/2025/Workshop/CODEML"
+      }
+    },
+    "numeric_marker": {
+      "$value": "",
+      "$comment": {
+        "reasoning": "The provided text does not contain a numeric marker for the edition or volume of the conference, only the year.",
+        "quote": "ICML.cc/2025/Workshop/CODEML"
+      }
+    },
+    "year": {
+      "$value": "2025",
+      "$comment": {
+        "reasoning": "The year '2025' is explicitly mentioned in the URL-like structure of the input string.",
+        "quote": "2025"
+      }
+    }
+  },
+  "$comment": {
+    "input_tokens": 807,
+    "output_tokens": 1095,
+    "total_tokens": 1902,
+    "parsed": {
+      "name": {
+        "$value": "International Conference on Machine Learning",
+        "$comment": {
+          "reasoning": "The full name of the conference is inferred from the widely recognized acronym 'ICML' provided in the input string.",
+          "quote": "ICML.cc"
+        }
+      },
+      "short_name": {
+        "$value": "ICML",
+        "$comment": {
+          "reasoning": "The acronym 'ICML' is explicitly stated at the beginning of the input string.",
+          "quote": "ICML.cc"
+        }
+      },
+      "workshop_name": {
+        "$value": "CODEML",
+        "$comment": {
+          "reasoning": "The input string is a URL-like path where 'CODEML' follows the '/Workshop/' segment, identifying it as the specific workshop name.",
+          "quote": "ICML.cc/2025/Workshop/CODEML"
+        }
+      },
+      "numeric_marker": {
+        "$value": "",
+        "$comment": {
+          "reasoning": "The provided text does not contain a numeric marker for the edition or volume of the conference, only the year.",
+          "quote": "ICML.cc/2025/Workshop/CODEML"
+        }
+      },
+      "year": {
+        "$value": "2025",
+        "$comment": {
+          "reasoning": "The year '2025' is explicitly mentioned in the URL-like structure of the input string.",
+          "quote": "2025"
+        }
+      }
+    }
+  }
+}
