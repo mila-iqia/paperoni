@@ -703,6 +703,7 @@ def install_api(app) -> FastAPI:
             if not isinstance(p.info.get("comments", None), list):
                 p.info["comments"] = []
             p.info["comments"].append({"user": user, "comment": request.comment})
+            p.flags.add("suggest:user")
 
         try:
             added_ids = await config.suggestions.add_papers(papers, force=True)
