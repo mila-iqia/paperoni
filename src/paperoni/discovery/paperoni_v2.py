@@ -50,6 +50,10 @@ def _parse_link(link: dict[str, str]) -> Link:
     return Link(type=link["type"].split(".", 1)[0], link=link["link"])
 
 
+def _parse_all_links(links):
+    return list({x for lnk in links if (x := _parse_link(lnk)).link})
+
+
 def _parse_institution(institution: dict[str, str]) -> Institution:
     return Institution(
         name=institution["name"],
@@ -63,7 +67,7 @@ def _parse_author(author: dict[str, str]) -> PaperAuthor:
         author=Author(
             name=qual(author["author"]["name"], -10.0),
             aliases=[],
-            links=list(map(_parse_link, author["author"]["links"]))
+            links=_parse_all_links(author["author"]["links"])
             + [Link(type="paperoni_v2", link=author["author"]["author_id"])],
         ),
         affiliations=qual(list(map(_parse_institution, author["affiliations"])), -10.0),
@@ -94,7 +98,7 @@ def _parse_release(release: dict[str, Any]) -> Release:
             ),
             volume=release["venue"]["volume"],
             publisher=release["venue"]["publisher"],
-            links=list(map(_parse_link, release["venue"]["links"])),
+            links=_parse_all_links(release["venue"]["links"]),
             peer_reviewed=release["peer_reviewed"],
         ),
         status=release["status"],
@@ -109,17 +113,17 @@ class PaperoniV2(Discoverer):
     # The paperoni v2 endpoint
     # [positional]
     # [metavar JSON]
-    endpoint: str = None
+    endpoint: str = field(default_factory=lambda: paperoni_v2_config.endpoint)
 
     # The paperoni v2 access token
     # [metavar TOKEN]
     token: Secret[str] = field(
-        default_factory=lambda: os.getenv("PAPERONIV2_TOKEN", paperoni_v2_config["token"])
+        default_factory=lambda: os.getenv("PAPERONIV2_TOKEN", paperoni_v2_config.token)
     )
 
     # The paperoni v2 cache file
     # [metavar JSON]
-    cache: Path = field(default_factory=lambda: paperoni_v2_config["cache"])
+    cache: Path = field(default_factory=lambda: paperoni_v2_config.cache)
 
     async def query(
         self,
@@ -127,6 +131,10 @@ class PaperoniV2(Discoverer):
         embed: bool = False,
         # Force refresh the paperoni v2 cache
         force_refresh: bool = False,
+        # Minimum date
+        min_date: datetime.date = None,
+        # Whether we only fetch validated papers
+        only_validated: bool = True,
     ) -> AsyncGenerator[Paper, None]:
         """Query the paperoni v2 database"""
         if force_refresh and self.cache.exists():
@@ -152,18 +160,20 @@ class PaperoniV2(Discoverer):
             match _is_validated(paper):
                 case True:
                     flags = ["valid"]
+                case _ if only_validated:
+                    continue
                 case False:
                     flags = ["invalid"]
                 case _:
                     flags = []
 
-            yield Paper(
+            p = Paper(
                 title=paper["title"],
                 abstract=paper["abstract"],
                 authors=list(map(_parse_author, paper["authors"])),
                 releases=list(map(_parse_release, paper["releases"])),
                 topics=list(map(_parse_topic, paper["topics"])),
-                links=list(map(_parse_link, paper["links"])),
+                links=_parse_all_links(paper["links"]),
                 flags=set(flags),
                 key=f"paperoni_v2:{paper['paper_id']}",
                 info={"discovered_by": {"paperoni_v2": paper["paper_id"]}}
@@ -173,11 +183,17 @@ class PaperoniV2(Discoverer):
                 ),
                 version=datetime.datetime.now(),
             )
+            if min_date and all(release.venue.date < min_date for release in p.releases):
+                continue
+
+            yield p
 
 
-paperoni_v2_config: dict[str, Secret[str] | Path | None] = {
-    "token": gifnoc.define(
-        "paperoni.discovery.v2.token", Secret[str] | None, defaults=None
-    ),
-    "cache": gifnoc.define("paperoni.discovery.v2.cache", Path | None, defaults=None),
-}
+@dataclass
+class Paperoniv2Config:
+    endpoint: str = "https://paperoni.mila.quebec"
+    token: Secret[str] = None
+    cache: Path = None
+
+
+paperoni_v2_config = gifnoc.define("paperoni.discovery.v2", Paperoniv2Config)

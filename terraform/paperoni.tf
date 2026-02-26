@@ -414,7 +414,8 @@ resource "google_cloud_run_v2_service" "paperoni_web" {
   location = var.google_region
 
   scaling {
-    max_instance_count = 1
+    min_instance_count = 1
+    max_instance_count = 5
   }
 
   template {
@@ -495,6 +496,12 @@ resource "google_cloud_run_v2_job" "paperoni_scrape" {
       containers {
         image   = "gcr.io/cloudrun/hello"
         command = ["scrape"]
+
+        resources {
+          limits = {
+            memory = "4Gi"
+          }
+        }
 
         env {
           name  = "GIFNOC_FILE"

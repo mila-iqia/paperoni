@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime
 from typing import AsyncGenerator, Callable, Iterable
 
@@ -75,14 +75,14 @@ class PaperCollection:
     async def find_paper(self, paper: Paper) -> Paper | None:
         raise NotImplementedError()
 
-    async def find_by_id(self, paper_id: int) -> Paper | None:
+    async def find_by_id(self, paper_id: str) -> Paper | None:
         raise NotImplementedError()
 
     async def edit_paper(self, paper: Paper) -> None:
         paper.version = datetime.now()
         await self.add_papers([paper], force=True, ignore_exclusions=True)
 
-    async def delete_ids(self, ids: list[int]) -> int:
+    async def delete_ids(self, ids: list[str]) -> int:
         """Delete papers by ID."""
         raise NotImplementedError()
 
@@ -126,6 +126,18 @@ class PaperCollection:
         exclude_flags: list[str] = None,
     ) -> AsyncGenerator[Paper, None]:
         raise NotImplementedError()
+
+    async def cached(self):
+        """Use only when staleness is acceptable; the cache is never
+        refreshed."""
+        from .memcoll import MemCollection
+
+        if not hasattr(self, "_cached"):
+            coll = MemCollection()
+            await coll.add_papers([replace(p, id=None) async for p in self.search()])
+            await coll.add_exclusions(await self.exclusions())
+            self._cached = coll
+        return self._cached
 
     def __len__(self) -> int:
         raise NotImplementedError()

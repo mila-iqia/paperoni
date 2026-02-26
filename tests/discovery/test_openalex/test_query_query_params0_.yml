@@ -157,7 +157,22 @@
   - name: Machine learning
   - name: Regularization (linguistics)
   - name: Artificial neural network
-- abstract: '6191'
+- abstract: Convolutional neural networks (CNNs) have been the consensus for medical
+    image segmentation tasks. However, they suffer from the limitation in modeling
+    long-range dependencies and spatial correlations due to the nature of convolution
+    operation. Although transformers were first developed to address this issue, they
+    fail to capture low-level features. In contrast, it is demonstrated that both
+    local and global features are crucial for dense prediction, such as segmenting
+    in challenging contexts. In this paper, we propose HiFormer, a novel method that
+    efficiently bridges a CNN and a transformer for medical image segmentation. Specifically,
+    we design two multi-scale feature representations using the seminal Swin Transformer
+    module and a CNN-based encoder. To secure a fine fusion of global and local features
+    obtained from the two aforementioned representations, we propose a Double-Level
+    Fusion (DLF) module in the skip connection of the encoder-decoder structure. Extensive
+    experiments on various medical image segmentation datasets demonstrate the effectiveness
+    of HiFormer over other CNN-based, transformer-based, and hybrid methods in terms
+    of computational complexity, quantitative and qualitative results. Our code is
+    publicly available at GitHub.
   authors:
   - affiliations:
     - aliases: []
