@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import AsyncGenerator, Callable, Iterable
 
@@ -132,7 +132,7 @@ class PaperCollection:
 
         if not hasattr(self, "_cached"):
             coll = MemCollection()
-            await coll.add_papers([replace(p, id=None) async for p in self.search()])
+            await coll.add_papers([p async for p in self.search()], force=True)
             await coll.add_exclusions(await self.exclusions())
             self._cached = coll
         return self._cached
