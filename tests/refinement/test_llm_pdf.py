@@ -13,7 +13,7 @@ from paperoni.refinement.llm_normalize import normalize_paper
 @pytest.fixture(scope="module")
 async def paper_info():
     # Prepared with:
-    # paperoni refine --link "openreview:_3FyT_W1DW" --tags pdf --norm
+    # paperoni refine --link "openreview:_3FyT_W1DW" --tags pdf --norm author --norm institution --norm venue
     with (
         gifnoc.overlay({"paperoni.data_path": str(Path(__file__).parent / "data")}),
         patch(

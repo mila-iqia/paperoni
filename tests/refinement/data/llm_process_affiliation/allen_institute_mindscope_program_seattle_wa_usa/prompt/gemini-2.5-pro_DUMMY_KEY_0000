@@ -1,0 +1,132 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Wed, 25 Feb 2026 16:01:21 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=12651",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "media_resolution": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "file_data": null,
+            "function_call": null,
+            "function_response": null,
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Allen Institute\",\n        \"$comment\": {\n          \"reasoning\": \"The original affiliation 'Allen Institute, MindScope Program, Seattle, WA, USA' was normalized by removing the specific program ('MindScope Program') and the address information ('Seattle, WA, USA') to retain only the parent institution's name.\",\n          \"quote\": \"Allen Institute, MindScope Program, Seattle, WA, USA\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"The Allen Institute is a non-profit scientific research institute, which falls under the category of 'academia' as a research institution, distinct from for-profit industry entities.\",\n          \"quote\": \"Allen Institute\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"USA\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'USA' is explicitly stated at the end of the affiliation string.\",\n          \"quote\": \"Allen Institute, MindScope Program, Seattle, WA, USA\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null,
+      "url_context_metadata": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "0RyfacniJ9Pa-8YP4KuUwQM",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 266,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 752,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 752
+      }
+    ],
+    "thoughts_token_count": 1153,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 2171,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "affiliations": [
+      {
+        "name": {
+          "$value": "Allen Institute",
+          "$comment": {
+            "reasoning": "The original affiliation 'Allen Institute, MindScope Program, Seattle, WA, USA' was normalized by removing the specific program ('MindScope Program') and the address information ('Seattle, WA, USA') to retain only the parent institution's name.",
+            "quote": "Allen Institute, MindScope Program, Seattle, WA, USA"
+          }
+        },
+        "category": {
+          "$value": "academia",
+          "$comment": {
+            "reasoning": "The Allen Institute is a non-profit scientific research institute, which falls under the category of 'academia' as a research institution, distinct from for-profit industry entities.",
+            "quote": "Allen Institute"
+          }
+        },
+        "country": {
+          "$value": "USA",
+          "$comment": {
+            "reasoning": "The country 'USA' is explicitly stated at the end of the affiliation string.",
+            "quote": "Allen Institute, MindScope Program, Seattle, WA, USA"
+          }
+        }
+      }
+    ]
+  },
+  "$comment": {
+    "input_tokens": 752,
+    "output_tokens": 1419,
+    "total_tokens": 2171,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "Allen Institute",
+            "$comment": {
+              "reasoning": "The original affiliation 'Allen Institute, MindScope Program, Seattle, WA, USA' was normalized by removing the specific program ('MindScope Program') and the address information ('Seattle, WA, USA') to retain only the parent institution's name.",
+              "quote": "Allen Institute, MindScope Program, Seattle, WA, USA"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "The Allen Institute is a non-profit scientific research institute, which falls under the category of 'academia' as a research institution, distinct from for-profit industry entities.",
+              "quote": "Allen Institute"
+            }
+          },
+          "country": {
+            "$value": "USA",
+            "$comment": {
+              "reasoning": "The country 'USA' is explicitly stated at the end of the affiliation string.",
+              "quote": "Allen Institute, MindScope Program, Seattle, WA, USA"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

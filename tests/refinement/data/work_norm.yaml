@@ -1,0 +1,67 @@
+n: 1
+entries:
+- score: 0.0
+  value:
+    current:
+      title: TITLE
+      abstract: ABSTRACT
+      authors: []
+      releases:
+      - venue:
+          type: conference
+          name: ICML.cc/2025/Workshop/CODEML
+          series: ICML
+          date: '2025-06-09'
+          date_precision: 3
+          volume: null
+          publisher: null
+          short_name: null
+          aliases: []
+          links: []
+          open: true
+          peer_reviewed: true
+        status: STATUS
+        pages: null
+        peer_review_status: peer-reviewed
+      topics: []
+      links:
+      - type: abstract
+        link: https://icml.cc/virtual/2025/workshop/39970
+      flags: []
+      key: KEY
+      info: {}
+      score: 0.0
+      id: null
+      version: null
+    collected:
+    - title: TITLE
+      abstract: ABSTRACT
+      authors: []
+      releases:
+      - venue:
+          type: conference
+          name: ICML.cc/2025/Workshop/CODEML
+          series: ICML
+          date: '2025-06-09'
+          date_precision: 3
+          volume: null
+          publisher: null
+          short_name: null
+          aliases: []
+          links: []
+          open: true
+          peer_reviewed: true
+        status: STATUS
+        pages: null
+        peer_review_status: peer-reviewed
+      topics: []
+      links:
+      - type: abstract
+        link: https://icml.cc/virtual/2025/workshop/39970
+      flags: []
+      key: KEY
+      info: {}
+      score: 0.0
+      id: null
+      version: null
+drop_zero: false

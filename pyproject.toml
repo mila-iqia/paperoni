@@ -165,8 +165,8 @@ dependency-groups = ["lint"]
 uv = 'UV_PROJECT_ENVIRONMENT="{env:VIRTUAL_ENV}" "$(which uv)" {args}'
 lint = [
     "uv sync --only-group lint",
-    "ruff check --fix",
-    "ruff format",
+    "uv run --only-group lint ruff check --fix",
+    "uv run --only-group lint ruff format",
 ]
 
 [tool.hatch.envs.pixi]

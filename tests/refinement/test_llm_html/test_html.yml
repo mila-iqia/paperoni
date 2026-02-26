@@ -24,7 +24,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -34,11 +34,12 @@
     - aliases: []
       category: unknown
       country: null
-      name: Department of Physics and Astronomy, York University, Toronto, Canada
+      name: Department of Physics and Astronomy, York University, Toronto, Ontario,
+        Canada
     - aliases: []
       category: unknown
       country: null
-      name: Centre for Vision Research, York University, Toronto, Canada
+      name: Centre for Vision Research, York University, Toronto, Ontario, Canada
     author:
       aliases: []
       links: []
@@ -48,7 +49,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -58,7 +59,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -68,7 +69,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -78,7 +79,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -88,11 +89,12 @@
     - aliases: []
       category: unknown
       country: null
-      name: Department of Physics and Astronomy, York University, Toronto, Canada
+      name: Department of Physics and Astronomy, York University, Toronto, Ontario,
+        Canada
     - aliases: []
       category: unknown
       country: null
-      name: Centre for Vision Research, York University, Toronto, Canada
+      name: Centre for Vision Research, York University, Toronto, Ontario, Canada
     author:
       aliases: []
       links: []
@@ -102,7 +104,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -112,7 +114,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -122,7 +124,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -132,7 +134,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -142,7 +144,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -152,7 +154,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -162,7 +164,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -172,7 +174,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -182,7 +184,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -192,7 +194,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -202,7 +204,7 @@
     - aliases: []
       category: unknown
       country: null
-      name: Allen Institute, MindScope Program, Seattle, USA
+      name: Allen Institute, MindScope Program, Seattle, WA, USA
     author:
       aliases: []
       links: []
@@ -217,12 +219,12 @@
       category: unknown
       country: null
       name: Département d’informatique et de recherche opérationnelle, Université
-        de Montréal, Montréal, Canada
+        de Montréal, Montréal, Québec, Canada
     - aliases: []
       category: unknown
       country: null
       name: Learning in Machines and Brains Program, Canadian Institute for Advanced
-        Research, Toronto, Canada
+        Research, Toronto, Ontario, Canada
     author:
       aliases: []
       links: []
@@ -247,20 +249,21 @@
     - aliases: []
       category: unknown
       country: null
-      name: Department of Physics and Astronomy, York University, Toronto, Canada
+      name: Department of Physics and Astronomy, York University, Toronto, Ontario,
+        Canada
     - aliases: []
       category: unknown
       country: null
-      name: Centre for Vision Research, York University, Toronto, Canada
+      name: Centre for Vision Research, York University, Toronto, Ontario, Canada
     - aliases: []
       category: unknown
       country: null
       name: Learning in Machines and Brains Program, Canadian Institute for Advanced
-        Research, Toronto, Canada
+        Research, Toronto, Ontario, Canada
     - aliases: []
       category: unknown
       country: null
-      name: Vector Institute for Artificial Intelligence, Toronto, Canada
+      name: Vector Institute for Artificial Intelligence, Toronto, Ontario, Canada
     author:
       aliases: []
       links: []
@@ -275,19 +278,21 @@
       category: unknown
       country: null
       name: Learning in Machines and Brains Program, Canadian Institute for Advanced
-        Research, Toronto, Canada
+        Research, Toronto, Ontario, Canada
     - aliases: []
       category: unknown
       country: null
-      name: School of Computer Science, McGill University, Montréal, Canada
+      name: School of Computer Science, McGill University, Montréal, Québec, Canada
     - aliases: []
       category: unknown
       country: null
-      name: Department of Neurology & Neurosurgery, McGill University, Montréal, Canada
+      name: Department of Neurology & Neurosurgery, McGill University, Montréal, Québec,
+        Canada
     - aliases: []
       category: unknown
       country: null
-      name: Montreal Neurological Institute, McGill University, Montréal, Canada
+      name: Montreal Neurological Institute, McGill University, Montréal, Québec,
+        Canada
     author:
       aliases: []
       links: []

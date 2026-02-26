@@ -1,0 +1,132 @@
+{
+  "sdk_http_response": {
+    "headers": {
+      "content-type": "application/json; charset=UTF-8",
+      "vary": "Origin, X-Origin, Referer",
+      "content-encoding": "gzip",
+      "date": "Wed, 25 Feb 2026 16:01:21 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "x-xss-protection": "0",
+      "x-frame-options": "SAMEORIGIN",
+      "x-content-type-options": "nosniff",
+      "server-timing": "gfet4t7; dur=8460",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "transfer-encoding": "chunked"
+    },
+    "body": null
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "media_resolution": null,
+            "code_execution_result": null,
+            "executable_code": null,
+            "file_data": null,
+            "function_call": null,
+            "function_response": null,
+            "inline_data": null,
+            "text": "{\n  \"affiliations\": [\n    {\n      \"name\": {\n        \"$value\": \"Université de Montréal\",\n        \"$comment\": {\n          \"reasoning\": \"The affiliation 'Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada' was normalized by removing the department-level information ('Département d’informatique et de recherche opérationnelle') and the address ('Montréal, Québec, Canada'), retaining only the parent institution. 'Université de Montréal' is the canonical name.\",\n          \"quote\": \"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada\"\n        }\n      },\n      \"category\": {\n        \"$value\": \"academia\",\n        \"$comment\": {\n          \"reasoning\": \"Université de Montréal is a public research university, which fits the 'academia' category.\",\n          \"quote\": \"Université de Montréal\"\n        }\n      },\n      \"country\": {\n        \"$value\": \"Canada\",\n        \"$comment\": {\n          \"reasoning\": \"The country 'Canada' is explicitly mentioned at the end of the affiliation string.\",\n          \"quote\": \"Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada\"\n        }\n      }\n    }\n  ]\n}",
+            "thought": null,
+            "thought_signature": null,
+            "video_metadata": null
+          }
+        ],
+        "role": "model"
+      },
+      "citation_metadata": null,
+      "finish_message": null,
+      "token_count": null,
+      "finish_reason": "STOP",
+      "avg_logprobs": null,
+      "grounding_metadata": null,
+      "index": 0,
+      "logprobs_result": null,
+      "safety_ratings": null,
+      "url_context_metadata": null
+    }
+  ],
+  "create_time": null,
+  "model_version": "gemini-2.5-pro",
+  "prompt_feedback": null,
+  "response_id": "0RyfaYrzOJ3w-8YPks-gmA4",
+  "usage_metadata": {
+    "cache_tokens_details": null,
+    "cached_content_token_count": null,
+    "candidates_token_count": 297,
+    "candidates_tokens_details": null,
+    "prompt_token_count": 762,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 762
+      }
+    ],
+    "thoughts_token_count": 591,
+    "tool_use_prompt_token_count": null,
+    "tool_use_prompt_tokens_details": null,
+    "total_token_count": 1650,
+    "traffic_type": null
+  },
+  "automatic_function_calling_history": [],
+  "parsed": {
+    "affiliations": [
+      {
+        "name": {
+          "$value": "Université de Montréal",
+          "$comment": {
+            "reasoning": "The affiliation 'Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada' was normalized by removing the department-level information ('Département d’informatique et de recherche opérationnelle') and the address ('Montréal, Québec, Canada'), retaining only the parent institution. 'Université de Montréal' is the canonical name.",
+            "quote": "Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada"
+          }
+        },
+        "category": {
+          "$value": "academia",
+          "$comment": {
+            "reasoning": "Université de Montréal is a public research university, which fits the 'academia' category.",
+            "quote": "Université de Montréal"
+          }
+        },
+        "country": {
+          "$value": "Canada",
+          "$comment": {
+            "reasoning": "The country 'Canada' is explicitly mentioned at the end of the affiliation string.",
+            "quote": "Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada"
+          }
+        }
+      }
+    ]
+  },
+  "$comment": {
+    "input_tokens": 762,
+    "output_tokens": 888,
+    "total_tokens": 1650,
+    "parsed": {
+      "affiliations": [
+        {
+          "name": {
+            "$value": "Université de Montréal",
+            "$comment": {
+              "reasoning": "The affiliation 'Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada' was normalized by removing the department-level information ('Département d’informatique et de recherche opérationnelle') and the address ('Montréal, Québec, Canada'), retaining only the parent institution. 'Université de Montréal' is the canonical name.",
+              "quote": "Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada"
+            }
+          },
+          "category": {
+            "$value": "academia",
+            "$comment": {
+              "reasoning": "Université de Montréal is a public research university, which fits the 'academia' category.",
+              "quote": "Université de Montréal"
+            }
+          },
+          "country": {
+            "$value": "Canada",
+            "$comment": {
+              "reasoning": "The country 'Canada' is explicitly mentioned at the end of the affiliation string.",
+              "quote": "Département d’informatique et de recherche opérationnelle, Université de Montréal, Montréal, Québec, Canada"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
