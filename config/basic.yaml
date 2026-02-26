@@ -6,7 +6,6 @@ paperoni:
     gemini: _
     scraperapi: _
     paperoni_v2: _
-    openreview: _
   fetch:
     $class: RulesFetcher
     simultaneous:
