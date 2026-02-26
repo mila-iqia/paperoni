@@ -27,15 +27,15 @@
     author:
       aliases: []
       links:
-      - link: ~Stefano_Massaroli1
-        type: openreview
       - link: '2273389623'
         type: semantic_scholar
-      - link: '2293395853'
-        type: semantic_scholar
+      - link: ~Stefano_Massaroli1
+        type: openreview
       - link: '2302267036'
         type: semantic_scholar
       - link: '90467999'
+        type: semantic_scholar
+      - link: '2293395853'
         type: semantic_scholar
       - link: d8858c05c1cdc71f186e2c2eb955c181
         type: paperoni_v2
@@ -49,11 +49,11 @@
     author:
       aliases: []
       links:
+      - link: '40585370'
+        type: semantic_scholar
       - link: ~Michael_Poli1
         type: openreview
       - link: '2273389620'
-        type: semantic_scholar
-      - link: '40585370'
         type: semantic_scholar
       - link: ea6d6a9e93a2f49c8bccc978d90aafd7
         type: paperoni_v2
@@ -63,16 +63,16 @@
     author:
       aliases: []
       links:
-      - link: ~Daniel_Y_Fu1
-        type: openreview
-      - link: '2259931128'
-        type: semantic_scholar
       - link: '2273413707'
         type: semantic_scholar
       - link: '2301804035'
         type: semantic_scholar
       - link: '49577833'
         type: semantic_scholar
+      - link: '2259931128'
+        type: semantic_scholar
+      - link: ~Daniel_Y_Fu1
+        type: openreview
       - link: bde01b2d815b317d27e2bb21488667f5
         type: paperoni_v2
       name: Daniel Y Fu
@@ -85,10 +85,10 @@
     author:
       aliases: []
       links:
-      - link: ~Hermann_Kumbong1
-        type: openreview
       - link: '2006456125'
         type: semantic_scholar
+      - link: ~Hermann_Kumbong1
+        type: openreview
       - link: 8b4f1ca9ffdf234a87f6b10083702019
         type: paperoni_v2
       name: Hermann Kumbong
@@ -97,10 +97,10 @@
     author:
       aliases: []
       links:
-      - link: ~Rom_Nishijima_Parnichkun1
-        type: openreview
       - link: '2046954411'
         type: semantic_scholar
+      - link: ~Rom_Nishijima_Parnichkun1
+        type: openreview
       - link: b3e71632aadc4036e18341de32c97573
         type: paperoni_v2
       name: Rom Nishijima Parnichkun
@@ -113,10 +113,10 @@
     author:
       aliases: []
       links:
-      - link: ~Aman_Timalsina1
-        type: openreview
       - link: '2173528923'
         type: semantic_scholar
+      - link: ~Aman_Timalsina1
+        type: openreview
       - link: b9fe4c1802723cbaaf944580edf703a6
         type: paperoni_v2
       name: Aman Timalsina
@@ -157,10 +157,10 @@
     author:
       aliases: []
       links:
-      - link: ~Beidi_Chen1
-        type: openreview
       - link: '2262515373'
         type: semantic_scholar
+      - link: ~Beidi_Chen1
+        type: openreview
       - link: d1cef0c74d6c1efbaf73b441cde7d631
         type: paperoni_v2
       name: Beidi Chen
@@ -173,12 +173,12 @@
     author:
       aliases: []
       links:
-      - link: ~Atri_Rudra1
-        type: openreview
-      - link: '1755572'
-        type: semantic_scholar
       - link: '2272400719'
         type: semantic_scholar
+      - link: '1755572'
+        type: semantic_scholar
+      - link: ~Atri_Rudra1
+        type: openreview
       - link: fcf8ffc0896461bd1847c171e417848f
         type: paperoni_v2
       name: Atri Rudra
@@ -191,24 +191,24 @@
     author:
       aliases: []
       links:
-      - link: ~Ce_Zhang1
-        type: openreview
       - link: '1776014'
         type: semantic_scholar
       - link: '2109269077'
         type: semantic_scholar
-      - link: '2109269181'
+      - link: '2262511796'
         type: semantic_scholar
       - link: '2124943060'
         type: semantic_scholar
       - link: '2222376090'
         type: semantic_scholar
-      - link: '2262511796'
-        type: semantic_scholar
-      - link: '2305565297'
+      - link: '2109269181'
         type: semantic_scholar
       - link: '37086011002'
         type: xplore
+      - link: '2305565297'
+        type: semantic_scholar
+      - link: ~Ce_Zhang1
+        type: openreview
       - link: f652163b6ad21f682821701ddd9ca6ff
         type: paperoni_v2
       name: Ce Zhang
@@ -221,18 +221,18 @@
     author:
       aliases: []
       links:
-      - link: ~Christopher_Re1
-        type: openreview
+      - link: '37085647844'
+        type: xplore
       - link: '1803218'
-        type: semantic_scholar
-      - link: '2114485554'
         type: semantic_scholar
       - link: '2250761261'
         type: semantic_scholar
+      - link: '2114485554'
+        type: semantic_scholar
+      - link: ~Christopher_Re1
+        type: openreview
       - link: '2313917068'
         type: semantic_scholar
-      - link: '37085647844'
-        type: xplore
       - link: c2bd09dc9e4afab08bfb5fcd684e340c
         type: paperoni_v2
       name: Christopher Re
@@ -245,13 +245,13 @@
     author:
       aliases: []
       links:
-      - link: ~Stefano_Ermon1
-        type: openreview
-      - link: '2248119118'
-        type: semantic_scholar
       - link: '2282987268'
         type: semantic_scholar
+      - link: ~Stefano_Ermon1
+        type: openreview
       - link: '2490652'
+        type: semantic_scholar
+      - link: '2248119118'
         type: semantic_scholar
       - link: d2fc8353a598fcc197580a7634447283
         type: paperoni_v2
@@ -269,40 +269,40 @@
     author:
       aliases: []
       links:
-      - link: bengio-yoshua
-        type: bio
-      - link: yoshua.bengio@mila.quebec
-        type: email
-      - link: '161269817'
+      - link: ~Yoshua_Bengio1
+        type: openreview
+      - link: '2285114502'
+        type: semantic_scholar
+      - link: '96'
+        type: wpid_fr
+      - link: '37089315098'
+        type: xplore
+      - link: '2969309771'
         type: mag
+      - link: '348'
+        type: wpid_en
       - link: '2550477701'
         type: mag
+      - link: '1751762'
+        type: semantic_scholar
+      - link: '37089048258'
+        type: xplore
+      - link: '2211024206'
+        type: semantic_scholar
+      - link: '37323338000'
+        type: xplore
+      - link: '1865800402'
+        type: semantic_scholar
+      - link: yoshua.bengio@mila.quebec
+        type: email
       - link: '2762122187'
         type: mag
-      - link: '2969309771'
+      - link: '161269817'
         type: mag
       - link: '3049675594'
         type: mag
-      - link: ~Yoshua_Bengio1
-        type: openreview
-      - link: '1751762'
-        type: semantic_scholar
-      - link: '1865800402'
-        type: semantic_scholar
-      - link: '2211024206'
-        type: semantic_scholar
-      - link: '2285114502'
-        type: semantic_scholar
-      - link: '348'
-        type: wpid_en
-      - link: '96'
-        type: wpid_fr
-      - link: '37089048258'
-        type: xplore
-      - link: '37089315098'
-        type: xplore
-      - link: '37323338000'
-        type: xplore
+      - link: bengio-yoshua
+        type: bio
       - link: fd676bfd2d2cc8ea03ecb12bb22bcd30
         type: paperoni_v2
       name: Yoshua Bengio
@@ -314,32 +314,26 @@
       paperoni_v2: 9266c713b4223e2674bf33e0cc34e9d7
   key: paperoni_v2:9266c713b4223e2674bf33e0cc34e9d7
   links:
+  - link: '264590326'
+    type: corpusid
   - link: https://proceedings.neurips.cc//paper_files/paper/2023/hash/371355cd42caaf83412c3fbef4688979-Abstract-Conference.html
     type: html
-  - link: https://proceedings.neurips.cc/paper_files/paper/2023/file/371355cd42caaf83412c3fbef4688979-Paper-Conference.pdf
-    type: pdf
+  - link: journals/corr/abs-2310-18780
+    type: dblp
+  - link: '2310.18780'
+    type: arxiv
   - link: 10.48550/arXiv.2310.18780
     type: doi
   - link: OWELckerm6
     type: openreview
-  - link: OWELckerm6
-    type: openreview
-  - link: '2310.18780'
-    type: arxiv
-  - link: '2310.18780'
-    type: arxiv
-  - link: journals/corr/abs-2310-18780
-    type: dblp
-  - link: ''
+  - link: https://proceedings.neurips.cc/paper_files/paper/2023/file/371355cd42caaf83412c3fbef4688979-Paper-Conference.pdf
     type: pdf
+  - link: '266129752'
+    type: corpusid
   - link: bd50f83024e313dc2e0d4bef5cbde23284317f8e
     type: semantic_scholar
   - link: cb0ac335adda4ceef9987cbcbca9129e71c37f0a
     type: semantic_scholar
-  - link: '264590326'
-    type: corpusid
-  - link: '266129752'
-    type: corpusid
   releases:
   - pages: null
     peer_review_status: peer-reviewed
