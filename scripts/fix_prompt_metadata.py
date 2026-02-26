@@ -28,9 +28,7 @@ from paperoni.prompt import (
 )
 from paperoni.refinement.llm_norm_author import model as norm_author_model
 from paperoni.refinement.llm_norm_venues import model as norm_venue_model
-from paperoni.refinement.llm_process_affiliation import (
-    model as process_affiliation_model,
-)
+from paperoni.refinement.llm_process_affiliation import model as process_affiliation_model
 
 
 def get_content_type_for_prompt(prompt_name: str) -> type | None:
