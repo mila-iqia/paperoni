@@ -215,7 +215,9 @@ async def test_focuses(query_params, focused_params):
         ]
     except openreview.openreview.OpenReviewException:
         # If query fails with a 403 "This action is forbidden", try again with
-        # an access token
+        # username/password or token
+        discoverer.username = os.environ.get("OPENREVIEW_USERNAME")
+        discoverer.password = os.environ.get("OPENREVIEW_PASSWORD")
         discoverer.token = os.environ.get("OPENREVIEW_TOKEN")
         focus_results = [
             p async for p in discoverer.query(**focused_params, focuses=focuses)
