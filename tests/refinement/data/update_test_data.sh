@@ -1,4 +1,7 @@
 #!/bin/bash
+# Updates refinement test data: finds gemini-2.5-pro_*_0000 files under
+# data/prompt/ and replaces each with the latest cache file from the same
+# directory (by mtime). Use this to refresh frozen test data.
 
 # Exit on error
 set -e
