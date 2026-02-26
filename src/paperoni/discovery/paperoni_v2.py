@@ -113,7 +113,7 @@ class PaperoniV2(Discoverer):
     # The paperoni v2 endpoint
     # [positional]
     # [metavar JSON]
-    endpoint: str = None
+    endpoint: str = field(default_factory=lambda: paperoni_v2_config.endpoint)
 
     # The paperoni v2 access token
     # [metavar TOKEN]
@@ -149,7 +149,7 @@ class PaperoniV2(Discoverer):
         # certificate verify failed: unable to get local issuer certificate
         # (_ssl.c:1000)')))
         papers: list[dict] = await config.fetch.read(
-            url=f"{self.endpoint or paperoni_v2_config.endpoint}/report",
+            url=f"{self.endpoint}/report",
             format="json",
             cache_into=self.cache,
             headers={"X-API-KEY": str(self.token)},
