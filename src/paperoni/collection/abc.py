@@ -128,11 +128,13 @@ class PaperCollection:
         raise NotImplementedError()
 
     async def cached(self):
+        """Use only when staleness is acceptable; the cache is never
+        refreshed."""
         from .memcoll import MemCollection
 
         if not hasattr(self, "_cached"):
             coll = MemCollection()
-            await coll.add_papers([p async for p in self.search()], force=True)
+            await coll.add_papers([replace(p, id=None) async for p in self.search()])
             await coll.add_exclusions(await self.exclusions())
             self._cached = coll
         return self._cached
