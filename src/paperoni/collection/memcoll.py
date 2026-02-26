@@ -103,6 +103,8 @@ class MemCollection(PaperCollection):
                 else:
                     if p.id is None:
                         p = replace(p, id=self._index.next_id(), version=datetime.now())
+                    elif p.version is None:
+                        p = replace(p, version=datetime.now())
                     assert not self._index.equiv("id", p)
 
                 added_ids.append(p.id)

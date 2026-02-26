@@ -227,6 +227,9 @@ def test_include_papers_endpoint(wr_app, edited_paper):
     assert response.json()["ids"] == ["3"]
 
 
+@pytest.mark.xfail(
+    reason="To facilitate the implementation of suggestions, the collections allow explicit IDs for 'new' papers."
+)
 def test_include_papers_endpoint_not_found(wr_app, edited_paper):
     """Test include papers endpoint with new ID (not found)."""
     admin = wr_app.client("admin@website.web")
