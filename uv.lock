@@ -1198,7 +1198,7 @@ wheels = [
 
 [[package]]
 name = "paperazzi"
-version = "0.0.7"
+version = "0.0.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fake-useragent" },
@@ -1210,9 +1210,9 @@ dependencies = [
     { name = "requests-cache" },
     { name = "rich" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/32/89/6f27df54881cd886eeccea67d921c7acd9f39fcab4bb60243c06e36fc660/paperazzi-0.0.7.tar.gz", hash = "sha256:76aa6eadb7d97e32985f353ae145d6295648cbb6ecebb084c67c8329189fccd5", size = 713190, upload-time = "2025-08-20T16:10:29.706Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/87/9c/5abb02fd44a3d48c03a8e4ed8cc32b3bda95d90401adb871f2af9e390ee4/paperazzi-0.0.8.tar.gz", hash = "sha256:77a770dbb4f6f98f9c86e931b8e02d5cd26964bb13a159bc9f9e75a905fd68b4", size = 713507, upload-time = "2026-02-26T22:11:28.712Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/72/7c/874ceab32c30cf8cd4bc630c1da01bf8a49980785cc457307f06e12a2aa5/paperazzi-0.0.7-py3-none-any.whl", hash = "sha256:b616709c2b12016832ddd97ddb42ae70bdd55aa8b34d0e7dc22480a1677ae1dc", size = 44869, upload-time = "2025-08-20T16:10:28.026Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/85/1ccf62ebdc224429d5896ef0411ac99398f85336f6727018a460fd8a7154/paperazzi-0.0.8-py3-none-any.whl", hash = "sha256:642e99a0a562ff188ffeaf9b9f13bb4f19ca71b161111d489ef486cfb5e70077", size = 44874, upload-time = "2026-02-26T22:11:26.447Z" },
 ]
 
 [package.optional-dependencies]
@@ -1307,6 +1307,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+cloud = []
 dev = [
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
