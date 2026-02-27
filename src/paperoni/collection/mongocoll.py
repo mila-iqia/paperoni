@@ -298,12 +298,13 @@ class MongoCollection(PaperCollection):
             ]
 
         # Date filtering: papers match if at least one release falls within the date range
+        # Use ISO date strings so BSON can encode (Python date is not BSON-encodable)
         if start_date or end_date:
             date_query = {}
             if start_date:
-                date_query["$gte"] = start_date
+                date_query["$gte"] = start_date.isoformat()
             if end_date:
-                date_query["$lte"] = end_date
+                date_query["$lte"] = end_date.isoformat()
 
             # Match papers where at least one release date is in the range
             query["releases.venue.date"] = date_query
