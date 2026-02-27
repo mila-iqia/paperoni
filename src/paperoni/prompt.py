@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import json
 import threading
@@ -8,6 +9,7 @@ from typing import Any, BinaryIO, Type
 import serieux
 from google import genai
 from google.genai import types
+from ovld import Medley
 from paperazzi.platforms.utils import Message
 from paperazzi.utils import _make_key as paperazzi_make_key, disk_cache, disk_store
 from serieux.features.comment import CommentProxy
@@ -104,6 +106,14 @@ class PromptMetadata[T]:
     parsed: T = None
 
 
+class BypassBytes(Medley):
+    def serialize(self, t: Any, obj: bytes, ctx: serieux.Context):
+        return base64.b64encode(obj).decode("utf-8")
+
+
+bypass = (serieux.Serieux + BypassBytes)()
+
+
 @dataclass
 class ParsedResponseSerializer:
     content_type: type
@@ -120,7 +130,11 @@ class ParsedResponseSerializer:
             metadata_type = PromptMetadata
 
         with SERIEUX_LOCK:
-            model_dump = serieux.serialize(
+            # The model_dump, for newer models, include a thought state blob
+            # that's a bytes type, and that's not JSON-serializable. I don't
+            # think that's consistent with the contract of model_dump(), but
+            # here we are
+            model_dump = bypass.serialize(
                 serieux.Comment[serieux.JSON, metadata_type],
                 CommentProxy(model_dump, response._),
             )
