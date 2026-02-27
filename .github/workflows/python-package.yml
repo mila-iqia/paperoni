@@ -66,7 +66,9 @@ jobs:
       uses: gacts/install-podman@v1.1.1
     - name: Install and set up Hatch
       run: |
-        uv tool install hatch
+        # Hatch is incompatible with virtualenv 21.0.0 (propose_interpreters moved).
+        # See: https://github.com/pypa/hatch/pull/2195
+        uv tool install --with 'virtualenv!=21.0.0' hatch
         echo "HATCH_UV=$(which uv)" >>$GITHUB_ENV
     - name: Pin Python version
       run: uv python pin ${{ matrix.settings.python }}
