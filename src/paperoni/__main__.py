@@ -18,7 +18,7 @@ from typing import Annotated, Any, AsyncGenerator, Literal
 import gifnoc
 import uvicorn
 import yaml
-from filelock import FileLock
+from filelock import AsyncFileLock
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from outsight.ops import merge, ticktock
@@ -660,7 +660,7 @@ class Work:
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         wf = self.work_file or config.work_file
         lf = wf.with_suffix(".lock")
-        with FileLock(lf):
+        async with AsyncFileLock(lf, timeout=5):
             return await self.command.run(self)
 
 
