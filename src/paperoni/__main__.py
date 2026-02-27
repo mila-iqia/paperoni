@@ -736,7 +736,10 @@ class Coll:
         file: Path
 
         async def run(self, coll: "Coll"):
-            await coll.collection.add_papers(deserialize(list[Paper], self.file))
+            papers = deserialize(list[Paper], self.file)
+            for p in papers:
+                p.id = None
+            await coll.collection.add_papers(papers)
 
     @dataclass
     class Export:
