@@ -311,7 +311,7 @@ def release_status_order(release):
         or "rxiv" in name
     ):
         return -1
-    elif "workshop" in name:
+    elif "workshop" in name or " @ " in name:
         return 0
     else:
         return 1
