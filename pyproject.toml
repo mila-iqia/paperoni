@@ -69,7 +69,7 @@ cloud = []
 
 [project.entry-points."paperoni.discovery"]
 semantic_scholar = "paperoni.discovery.semantic_scholar:SemanticScholar"
-openreview = "paperoni.discovery.openreview:OpenReview"
+openreview = "paperoni.discovery.openreview:OpenReviewDispatch"
 openalex = "paperoni.discovery.openalex:OpenAlex"
 miniconf = "paperoni.discovery.miniconf:MiniConf"
 pmlr = "paperoni.discovery.pmlr:PMLR"

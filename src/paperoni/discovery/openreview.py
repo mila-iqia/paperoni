@@ -572,7 +572,7 @@ class OpenReview(Discoverer):
 
 @dataclass
 class OpenReviewDispatch(Discoverer):
-    api_versions: list = dc_field(default_factory=lambda: [2, 1])
+    api_versions: list[int] = dc_field(default_factory=lambda: [2, 1])
     username: Secret[str] = field(default_factory=lambda: openreview_config.username)
     password: Secret[str] = field(default_factory=lambda: openreview_config.password)
     token: Secret[str] = field(default_factory=lambda: openreview_config.token)
@@ -593,12 +593,19 @@ class OpenReviewDispatch(Discoverer):
         block_size: int = 100,
         # Maximum number of results to return
         limit: int = 100000,
+        # Whether to discard rejected papers
+        discard_rejected: bool = False,
         # A list of focuses
         focuses: Focuses = None,
     ):
         """Query OpenReview"""
         for api_version in self.api_versions:
-            o = OpenReview(api_version=api_version, token=self.token)
+            o = OpenReview(
+                api_version=api_version,
+                username=self.username,
+                password=self.password,
+                token=self.token,
+            )
             q = o.query(
                 venue=venue,
                 paper_id=paper_id,
@@ -609,22 +616,21 @@ class OpenReviewDispatch(Discoverer):
                 limit=limit,
                 focuses=focuses,
             )
-
-            has_papers = False
-
             exception = None
             try:
                 async for paper in q:
-                    has_papers = True
-                    yield paper
+                    if not discard_rejected or not any(
+                        release.status == "rejected" for release in paper.releases
+                    ):
+                        yield paper
+                    else:
+                        breakpoint()
+                        print("REJECT", paper.title)
 
             except openreview.OpenReviewException as e:
                 # Try the next API version while holding the exception
                 exception = e
                 continue
-
-            if has_papers:
-                break
 
         else:
             if exception is not None:
@@ -645,4 +651,6 @@ class OpenReviewConfig:
     token: Secret[str] = None
 
 
-openreview_config = gifnoc.define("paperoni.discovery.openreview", OpenReviewConfig, defaults={})
+openreview_config = gifnoc.define(
+    "paperoni.discovery.openreview", OpenReviewConfig, defaults={}
+)
