@@ -22,6 +22,7 @@ from ..model import (
     VenueType,
 )
 from ..model.classes import Paper
+from ..model.focus import Focuses
 from ..model.merge import qual
 from ..utils import url_to_id
 
@@ -135,6 +136,8 @@ class PaperoniV2(Discoverer):
         min_date: datetime.date = None,
         # Whether we only fetch validated papers
         only_validated: bool = True,
+        # Focuses are not used here
+        focuses: Focuses = None,
     ) -> AsyncGenerator[Paper, None]:
         """Query the paperoni v2 database"""
         if force_refresh and self.cache.exists():
