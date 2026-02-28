@@ -157,8 +157,8 @@ mongo = [
 ]
 
 [tool.hatch.envs.lint]
-installer = "uv"
 detached = true
+installer = "uv"
 dependency-groups = ["lint"]
 
 [tool.hatch.envs.lint.scripts]

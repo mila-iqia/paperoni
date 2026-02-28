@@ -7,4 +7,4 @@ async def test_query(dreg):
 
     paper = await anext(discoverer.query())
 
-    dreg(list[Paper], [paper])
+    dreg(Paper, paper)

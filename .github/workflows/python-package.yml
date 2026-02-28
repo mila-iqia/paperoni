@@ -31,8 +31,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     environment: tests
-    env:
-      OPENREVIEW_TOKEN: ${{ secrets.OPENREVIEW_TOKEN }}
     strategy:
       matrix:
         settings:
@@ -74,6 +72,12 @@ jobs:
       run: uv python pin ${{ matrix.settings.python }}
     - name: Sync dependencies
       run: uv sync
+    - name: Set openreview token
+      env:
+        OPENREVIEW_USERNAME: ${{ secrets.OPENREVIEW_USERNAME }}
+        OPENREVIEW_PASSWORD: ${{ secrets.OPENREVIEW_PASSWORD }}
+      run: |
+        echo "OPENREVIEW_TOKEN=$(GIFNOC_FILE=config/basic.yaml uv run paperoni login --plain openreview)" >> $GITHUB_ENV
     - name: Setup mongo
       run: hatch run mongo:start
     - name: Test with pytest
