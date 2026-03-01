@@ -327,6 +327,7 @@ class Work:
                     found.value.add(paper)
                     new_score = work.focuses.score(found.value.current)
                     if new_score != found.score:
+                        found.score = new_score
                         # Might be unnecessarily expensive but we'll see
                         work.top.resort()
                     continue
@@ -873,6 +874,7 @@ class Coll:
             other_collection = FileCollection(file=Path(self.other_collection_path))
             missings = []
             extras = []
+            common = []
 
             async for paper in other_collection.search():
                 if not await coll.collection.find_paper(paper):
@@ -881,7 +883,7 @@ class Coll:
             self.out.mkdir(exist_ok=True, parents=True)
             (self.out / f"missing.{self.format}").unlink(missing_ok=True)
             await FileCollection(file=self.out / f"missing.{self.format}").add_papers(
-                missings
+                missings, force=True
             )
 
             async for paper in coll.collection.search():
@@ -890,7 +892,16 @@ class Coll:
 
             (self.out / f"extra.{self.format}").unlink(missing_ok=True)
             await FileCollection(file=self.out / f"extra.{self.format}").add_papers(
-                extras
+                extras, force=True
+            )
+
+            async for paper in coll.collection.search():
+                if await other_collection.find_paper(paper):
+                    common.append(paper)
+
+            (self.out / f"common.{self.format}").unlink(missing_ok=True)
+            await FileCollection(file=self.out / f"common.{self.format}").add_papers(
+                common, force=True
             )
 
     @dataclass
