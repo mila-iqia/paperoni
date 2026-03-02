@@ -736,11 +736,24 @@ class Coll:
         # [positional]
         file: Path
 
+        # Whether to suggest the papers
+        suggest: bool = False
+
+        # Whether to ignore exclusions
+        ignore_exclusions: bool = True
+
         async def run(self, coll: "Coll"):
             papers = deserialize(list[Paper], self.file)
             for p in papers:
                 p.id = None
-            await coll.collection.add_papers(papers)
+            if self.suggest:
+                await config.suggestions.add_papers(
+                    papers, ignore_exclusions=self.ignore_exclusions
+                )
+            else:
+                await coll.collection.add_papers(
+                    papers, ignore_exclusions=self.ignore_exclusions
+                )
 
     @dataclass
     class Export:
