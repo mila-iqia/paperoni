@@ -2,11 +2,12 @@
 FastAPI interface for paperoni collection search functionality.
 """
 
+import asyncio
 import datetime
 import itertools
 from dataclasses import dataclass, field, replace
 from types import NoneType
-from typing import Any, Generator, Iterable, Literal
+from typing import Any, AsyncGenerator, Generator, Iterable, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
@@ -560,9 +561,10 @@ def install_api(app) -> FastAPI:
         pdf = await request.run()
 
         # Return as file download
-        async def async_iter_pdf():
+        async def async_iter_pdf() -> AsyncGenerator[bytes, None]:
             with pdf.pdf_path.open("rb") as bf:
-                while b := bf.read(1024):
+                # Read 64KB at a time
+                while b := bf.read(64 * 1024):
                     yield b
 
         return StreamingResponse(
@@ -623,6 +625,53 @@ def install_api(app) -> FastAPI:
             success=True,
             message=f"Removed {removed} exclusion(s)",
             count=removed,
+        )
+
+    @app.get(
+        f"{prefix}/export/data",
+        dependencies=[Depends(hascap("dev"))],
+    )
+    async def download_data():
+        """Stream the contents of the data directory as a tar.gz archive."""
+        data_path = config.data_path
+
+        if not data_path or not data_path.exists() or not data_path.is_dir():
+            raise HTTPException(
+                status_code=404,
+                detail="The data directory does not exist or is not accessible",
+            )
+
+        data_path = data_path.resolve()
+
+        async def stream_tar_gz() -> AsyncGenerator[bytes, None]:
+            proc = await asyncio.create_subprocess_exec(
+                "tar",
+                "-czf",
+                "-",
+                "--cd",
+                str(data_path),
+                ".",
+                stdout=asyncio.subprocess.PIPE,
+            )
+            try:
+                while True:
+                    # Read 64KB at a time
+                    chunk = await proc.stdout.read(64 * 1024)
+                    if not chunk:
+                        break
+                    yield chunk
+            finally:
+                await proc.wait()
+                if proc.returncode != 0:
+                    raise HTTPException(
+                        status_code=500,
+                        detail="Archive creation failed",
+                    )
+
+        return StreamingResponse(
+            stream_tar_gz(),
+            media_type="application/gzip",
+            headers={"Content-Disposition": 'attachment; filename="data.tar.gz"'},
         )
 
     return app
