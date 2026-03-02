@@ -1311,7 +1311,7 @@ requires-dist = [
     { name = "requests", specifier = ">=2.32.3" },
     { name = "requests-cache", specifier = ">=1.2.1" },
     { name = "rich", specifier = ">=14.1.0" },
-    { name = "serieux", specifier = ">=0.3.9" },
+    { name = "serieux", specifier = ">=0.3.12" },
     { name = "tenacity", specifier = ">=9.1.2" },
     { name = "unidecode", specifier = ">=1.4.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.35.0,<0.39.0" },
@@ -1908,14 +1908,14 @@ wheels = [
 
 [[package]]
 name = "serieux"
-version = "0.3.11"
+version = "0.3.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ovld" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6f/c2/e1e89a8d616b647d071c5040029f8aeb93ae118ae6b2a50f3b26ee8b4fb5/serieux-0.3.11.tar.gz", hash = "sha256:1d35eaf58358aab003ccf7f8d3793e6e3ad9e812ade3182a2440580ac05821da", size = 179243, upload-time = "2026-02-27T18:13:28.557Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3c/15/5460e951f79db2ca26bb154ed3a5a0710635a66c99d4a92329e7c9d9292b/serieux-0.3.12.tar.gz", hash = "sha256:5d42005674343cf36a3ebc60c3da34f0d2d80d654fff636659845ae4d38041f0", size = 183408, upload-time = "2026-03-02T18:01:12.874Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2c/d9/ca10b1f8131f37e4a9c1daf74b75f71efb19cb42e270d907a7567706a4f2/serieux-0.3.11-py3-none-any.whl", hash = "sha256:7db89018baa0aa7166f148187963d43452e3354e26217a1d0e1962d460e869ee", size = 54825, upload-time = "2026-02-27T18:13:27.174Z" },
+    { url = "https://files.pythonhosted.org/packages/03/10/5d2a1539cb13905d3cf224c5c5e6535613b815e12abd8011e893a909be19/serieux-0.3.12-py3-none-any.whl", hash = "sha256:b03417f4bba617b20d0af75438cf09c46891f5ee30b622b94ef23dcefc6481e4", size = 56488, upload-time = "2026-03-02T18:01:11.288Z" },
 ]
 
 [[package]]
