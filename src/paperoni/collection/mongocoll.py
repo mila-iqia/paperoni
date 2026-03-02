@@ -181,7 +181,7 @@ class MongoCollection(PaperCollection):
                     {"_id": ObjectId(p.id)}, srx.serialize(Paper, p)
                 )
 
-            elif p.id is not None:
+            elif p.id is not None and not force:
                 raise ValueError(f"Paper with ID {p.id} not found in collection")
 
             else:

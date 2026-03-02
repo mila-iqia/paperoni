@@ -92,6 +92,7 @@ class PaperoniConfig:
     refine: Refine = None
     work_file: Path = None
     collection: TaggedSubclass[PaperCollection] = None
+    suggestions: TaggedSubclass[PaperCollection] = None
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
     server: Server = field(default_factory=Server)
     autovalidation_threshold: float = 10.0

@@ -1,8 +1,8 @@
 {% extends "main.html" %}
 
-{% block title %}Edit Paper{% endblock %}
+{% block title %}{% if suggest %}Suggest Edit{% else %}Edit Paper{% endif %}{% endblock %}
 
-{% block page_title %}Edit Paper{% endblock %}
+{% block page_title %}{% if suggest %}Suggest Edit{% else %}Edit Paper{% endif %}{% endblock %}
 
 {% block content %}
 <div class="edit-container">
@@ -19,6 +19,7 @@
 <script type="module">
     import { editPaper } from '/assets/edit.js';
     const paperId = {{ paper_id | safe }};
-    editPaper(paperId);
+    const suggestMode = {{ suggest | tojson }};
+    editPaper(paperId, suggestMode);
 </script>
 {% endblock %}

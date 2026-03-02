@@ -6,7 +6,6 @@ paperoni:
     gemini: _
     scraperapi: _
     paperoni_v2: _
-    openreview: _
   fetch:
     $class: RulesFetcher
     simultaneous:
@@ -53,7 +52,9 @@ paperoni:
     score_threshold: 10.0
   discovery:
     openreview:
-      api_key: ${paperoni.api_keys.openreview}
+      username: null
+      password: null
+      token: null
     scrape:
       urls:
         - https://dadelani.github.io/publications
