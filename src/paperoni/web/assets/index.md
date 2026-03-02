@@ -2,7 +2,7 @@
 Welcome to Paperoni.
 
 - [🔍 Search papers](/search): Find, filter and edit scientific publications by title, author, institution, venue, date, and more.
-- [✅ Validate papers](/validate): Classify papers as valid or invalid using interactive validation tools.
+- [✅ Validate papers](/pending): Accept or reject suggested papers and edits
 - [✏️ Add papers](/edit/new): Create new papers.
 - [🚫 Exclusions](/exclusions): Manage excluded paper identifiers.
 - [📰 Latest group](/latest-group): Discover recent papers and generate newsletters.

@@ -143,9 +143,9 @@ def parse_openreview_venue(venue):
 @dataclass
 class OpenReview(Discoverer):
     api_version: int = 2
-    username: Secret[str] = None
-    password: Secret[str] = None
-    token: Secret[str] = field(default_factory=lambda: openreview_api_key)
+    username: Secret[str] = field(default_factory=lambda: openreview_config.username)
+    password: Secret[str] = field(default_factory=lambda: openreview_config.password)
+    token: Secret[str] = field(default_factory=lambda: openreview_config.token)
 
     def __post_init__(self):
         self.set_client()
@@ -573,7 +573,9 @@ class OpenReview(Discoverer):
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
-    token: Secret[str] = field(default_factory=lambda: openreview_api_key)
+    username: Secret[str] = field(default_factory=lambda: openreview_config.username)
+    password: Secret[str] = field(default_factory=lambda: openreview_config.password)
+    token: Secret[str] = field(default_factory=lambda: openreview_config.token)
 
     async def query(
         self,
@@ -636,6 +638,11 @@ class OpenReviewDispatch(Discoverer):
                 continue
 
 
-openreview_api_key: Secret[str] | None = gifnoc.define(
-    "paperoni.discovery.openreview.api_key", Secret[str] | None, defaults=None
-)
+@dataclass
+class OpenReviewConfig:
+    username: Secret[str] = None
+    password: Secret[str] = None
+    token: Secret[str] = None
+
+
+openreview_config = gifnoc.define("paperoni.discovery.openreview", OpenReviewConfig, defaults={})

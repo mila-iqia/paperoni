@@ -18,8 +18,6 @@ that the most recent publications appear on top.
   and end date. For example, an article with a preprint in 2022 and a
   publication in 2023 will appear both in 2022 and in 2023.
 * **Peer-reviewed**: Check this box to only show peer-reviewed publications.
-* **Validated/Invalidated/Not processed/All**: Filter papers by their manual
-  validation status.
 
 ## Click-to-filter
 
@@ -33,14 +31,6 @@ alt="edit" style="height:1em; vertical-align:middle">) appears next to each
 paper title. Clicking it opens the edit page for that paper in a new tab, where
 you can modify its title, authors, venues, and other fields.
 
-# Validation {: #validation}
-
-The [Validation](/validate) interface allows the validation or invalidation of
-papers, in order to make the database cleaner. It provides the same search
-interface as the search page, with additional buttons on each paper to mark it
-as valid or invalid. Paper scores are also displayed to help prioritize
-validation.
-
 # Editing papers {: #edit}
 
 The edit interface lets you change all data associated to a paper, including
@@ -48,8 +38,7 @@ title, abstract, authors and affiliations, releases (venues and dates), topics,
 links, and flags. You can also create a new paper from scratch at
 [/edit/new](/edit/new), or delete a paper.
 
-From the search or validation pages, click the edit icon on a paper to open its
-edit page.
+From the search page, click the edit icon on a paper to open its edit page.
 
 # Exclusions {: #exclusions}
 

@@ -72,17 +72,19 @@ function createBadge(item, index, items, renderBadges, config) {
 }
 
 /**
- * Main function to set up the paper edit page
+ * Main function to set up the paper edit page.
+ * suggestMode: when true, submit to /suggest (pending validation); when false, submit to /include (direct edit).
  */
-export function editPaper(paperId) {
+export function editPaper(paperId, suggestMode = false) {
     const messageContainer = document.getElementById('messageContainer');
     const formContainer = document.getElementById('formContainer');
 
     // Check if creating a new paper
     if (paperId === 'new') {
-        document.title = 'Create Paper';
+        const pageTitle = suggestMode ? 'Suggest New Paper' : 'Create Paper';
+        document.title = pageTitle;
         const h1 = document.querySelector('h1');
-        if (h1) h1.textContent = 'Create Paper';
+        if (h1) h1.textContent = pageTitle;
 
         formContainer.innerHTML = '';
         const paper = {
@@ -95,7 +97,7 @@ export function editPaper(paperId) {
             links: [],
             flags: []
         };
-        const form = renderEditForm(paper);
+        const form = renderEditForm(paper, suggestMode);
         formContainer.appendChild(form);
         return;
     }
@@ -107,13 +109,13 @@ export function editPaper(paperId) {
     // Fetch the paper data
     fetchPaper(paperId)
         .then((paper) => {
-            const pageTitle = "Edit Paper";
+            const pageTitle = suggestMode ? 'Suggest Edit' : 'Edit Paper';
             document.title = pageTitle;
             const h1 = document.querySelector('h1');
             if (h1) h1.textContent = pageTitle;
 
             formContainer.innerHTML = '';
-            const form = renderEditForm(paper);
+            const form = renderEditForm(paper, suggestMode);
             formContainer.appendChild(form);
         })
         .catch((error) => {
@@ -124,9 +126,10 @@ export function editPaper(paperId) {
 
 /**
  * Fetch paper data from the API
+ * Passes latest_edit=true as a query parameter.
  */
 async function fetchPaper(paperId) {
-    const response = await fetch(`/api/v1/paper/${paperId}`, {
+    const response = await fetch(`/api/v1/paper/${paperId}?latest_edit=true`, {
         credentials: 'include',
     });
 
@@ -139,16 +142,39 @@ async function fetchPaper(paperId) {
 }
 
 /**
- * Submit updated paper data to the API
+ * Submit updated paper data to the API.
+ * suggestMode: use /suggest (pending) or /include (direct).
  */
-async function submitPaper(paper) {
-    const response = await fetch('/api/v1/include', {
+async function submitPaper(paper, comment = '', suggestMode = false) {
+    const endpoint = suggestMode ? '/api/v1/suggest' : '/api/v1/include';
+    const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ papers: [paper] }),
+        body: JSON.stringify({ papers: [paper], comment: comment || '' }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP ${response.status}`);
+    }
+
+    return await response.json();
+}
+
+/**
+ * Delete a paper via the /delete API (direct mode only).
+ */
+async function deletePaper(paperId) {
+    const response = await fetch('/api/v1/delete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ ids: [String(paperId)] }),
     });
 
     if (!response.ok) {
@@ -179,16 +205,37 @@ function showSuccess(container, message) {
     );
 }
 
+function getSubmitButtonText(paper, suggestMode, deleteMode = false) {
+    if (deleteMode && paper.id) {
+        return suggestMode ? 'Mark for deletion' : 'Delete';
+    }
+    if (suggestMode) {
+        return paper.id ? 'Submit Suggestion' : 'Suggest Paper';
+    }
+    return paper.id ? 'Save Changes' : 'Create Paper';
+}
+
 /**
- * Render the edit form for a paper
+ * Render the edit form for a paper.
+ * suggestMode: when true, wording reflects suggest/pending flow.
  */
-function renderEditForm(paper) {
+function renderEditForm(paper, suggestMode = false) {
+    const editPending = paper.info?.edit_pending === true;
+    if (editPending) {
+        delete paper.info.edit_pending;
+    }
+
+    const editPendingNote = editPending
+        ? html`<span class="edit-pending-note">(based on existing pending edit)</span>`
+        : null;
+
     const form = html`
         <form class="edit-form" id="editForm">
             <!-- Basic Information -->
             <div class="form-section">
                 <div class="section-header">
-                    <h2>Basic Information</h2>
+                    <h2>Basic Information ${editPendingNote}</h2>
+                    ${paper.id ? html`<button type="button" class="btn-delete-toggle" id="deleteToggleBtn">${suggestMode ? 'Mark for deletion' : 'Delete'}</button>` : null}
                 </div>
 
                 <div class="form-group">
@@ -259,9 +306,17 @@ function renderEditForm(paper) {
                 </div>
             </div>
 
+            <!-- Comment (suggest mode: for validator; include mode: optional note) -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="comment">Comment</label>
+                    <textarea id="comment" name="comment" class="edit-input" rows="3" placeholder="${suggestMode ? 'Comment about this edit, for the person who will validate it' : 'Optional note about this edit'}"></textarea>
+                </div>
+            </div>
+
             <!-- Form Actions -->
             <div class="form-actions sticky-bottom">
-                <button type="submit" class="btn-primary btn-save-sticky">${paper.id ? 'Save Changes' : 'Create Paper'}</button>
+                <button type="submit" class="btn-primary btn-save-sticky" id="submitBtn">${getSubmitButtonText(paper, suggestMode)}</button>
             </div>
         </form>
     `;
@@ -285,6 +340,22 @@ function renderEditForm(paper) {
     const infoContainer = form.querySelector('#infoContainer');
     renderInfo(infoContainer, paper.info || {});
 
+    // Delete toggle: when on, submit button says Delete/Mark for deletion; submit adds mark:delete
+    let deleteMode = false;
+    const deleteToggleBtn = form.querySelector('#deleteToggleBtn');
+    const submitBtn = form.querySelector('#submitBtn');
+    if (deleteToggleBtn && submitBtn) {
+        deleteToggleBtn.addEventListener('click', () => {
+            deleteMode = !deleteMode;
+            deleteToggleBtn.classList.toggle('active', deleteMode);
+            submitBtn.classList.toggle('btn-save-delete', deleteMode);
+            submitBtn.textContent = getSubmitButtonText(paper, suggestMode, deleteMode);
+            if (deleteMode && suggestMode) {
+                form.querySelector('#comment')?.focus();
+            }
+        });
+    }
+
     // Set up form submission
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -293,64 +364,89 @@ function renderEditForm(paper) {
         let originalBtnText = submitBtn.textContent;
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving...';
+        submitBtn.textContent = suggestMode ? 'Submitting...' : (deleteMode ? 'Deleting...' : 'Saving...');
 
         try {
-            const updatedPaper = collectFormData(form, paper);
+            const comment = form.querySelector('#comment')?.value?.trim() || '';
 
-            // Validation
-            if (!updatedPaper.title || !updatedPaper.title.trim()) {
-                showToast('Title cannot be empty', 'error');
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalBtnText; // Restore text
-                return;
-            }
-
-            for (const author of updatedPaper.authors) {
-                if (!author.display_name || !author.display_name.trim()) {
-                    showToast('Author name cannot be empty', 'error');
+            if (deleteMode && suggestMode) {
+                // Suggest mode: submit with mark:delete to /suggest
+                let updatedPaper = collectFormData(form, paper);
+                updatedPaper = { ...updatedPaper, flags: [...(updatedPaper.flags || []), 'mark:delete'] };
+                if (!comment) {
+                    showToast('Give a reason for deletion in the comment', 'error');
+                    form.querySelector('#comment')?.focus();
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalBtnText;
                     return;
                 }
-            }
-
-            for (const release of updatedPaper.releases) {
-                if (!release.venue || !release.venue.name || !release.venue.name.trim()) {
-                    showToast('Venue name cannot be empty', 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = originalBtnText;
-                    return;
+                const result = await submitPaper(updatedPaper, comment, true);
+                if (result.success) {
+                    showToast('Edit suggested! It will appear in the pending queue for validation.', 'success');
+                } else {
+                    showToast(result.message || 'Failed to submit suggestion', 'error');
                 }
-            }
-
-
-            const result = await submitPaper(updatedPaper);
-
-            if (result.success) {
-                const isNew = paper.id === null;
-                if (result.ids && result.ids.length > 0 && isNew) {
-                    paper.id = result.ids[0];
-                    // Update button text for subsequent saves
-                    originalBtnText = 'Save Changes';
+            } else if (deleteMode && !suggestMode) {
+                // Include mode: call /delete with paper id
+                const result = await deletePaper(paper.id);
+                if (result.success) {
+                    showToast('Paper deleted successfully!', 'success');
+                    window.location.href = '/search';
+                } else {
+                    showToast(result.message || 'Failed to delete paper', 'error');
                 }
-                if (isNew) {
-                    showToast('Paper created successfully!', 'success');
-                    // Update URL without reloading
-                    window.history.replaceState(null, '', `/edit/${paper.id}`);
-                }
-                else {
-                    showToast('Paper updated successfully!', 'success');
-                }
-                
-                // Update page title
-                const newTitle = "Edit Paper";
-                document.title = newTitle;
-                const h1 = document.querySelector('h1');
-                if (h1) h1.textContent = newTitle;
-
             } else {
-                showToast(result.message || 'Failed to update paper', 'error');
+                // Edit/add: use /include
+                const updatedPaper = collectFormData(form, paper);
+                if (!updatedPaper.title || !updatedPaper.title.trim()) {
+                    showToast('Title cannot be empty', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+                for (const author of updatedPaper.authors) {
+                    if (!author.display_name || !author.display_name.trim()) {
+                        showToast('Author name cannot be empty', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalBtnText;
+                        return;
+                    }
+                }
+                for (const release of updatedPaper.releases) {
+                    if (!release.venue || !release.venue.name || !release.venue.name.trim()) {
+                        showToast('Venue name cannot be empty', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalBtnText;
+                        return;
+                    }
+                }
+                if (paper.id && papersEqual(paper, updatedPaper)) {
+                    showToast('No changes to save', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
+                const result = await submitPaper(updatedPaper, comment, suggestMode);
+                if (result.success) {
+                    const isNew = paper.id === null;
+                    if (result.ids && result.ids.length > 0 && isNew) {
+                        paper.id = result.ids[0];
+                        originalBtnText = getSubmitButtonText(paper, suggestMode, deleteMode);
+                    }
+                    showToast(suggestMode
+                        ? (isNew ? 'Suggestion submitted! It will appear in the pending queue for validation.' : 'Edit suggested! It will appear in the pending queue for validation.')
+                        : (isNew ? 'Paper created successfully!' : 'Paper updated successfully!'),
+                    'success');
+                    if (isNew) {
+                        window.history.replaceState(null, '', `/edit/${paper.id}${suggestMode ? '?suggest=1' : ''}`);
+                    }
+                    const newTitle = suggestMode ? 'Suggest Edit' : 'Edit Paper';
+                    document.title = newTitle;
+                    const h1 = document.querySelector('h1');
+                    if (h1) h1.textContent = newTitle;
+                } else {
+                    showToast(result.message || 'Failed to update paper', 'error');
+                }
             }
         } catch (error) {
             showToast(`Error: ${error.message}`, 'error');
@@ -921,6 +1017,68 @@ function createInfoRow(item, index) {
 
 
 /**
+ * Normalize a paper for comparison (editable fields only).
+ * Order of authors, topics, flags is preserved.
+ * Links are sorted (collectFormData always sorts them).
+ * Dates are normalized to YYYY-MM-DD (form uses date inputs).
+ */
+function normalizeForComparison(p) {
+    const sortedInfo = (info) => {
+        if (!info || typeof info !== 'object') return {};
+        return Object.fromEntries(
+            Object.entries(info)
+                .filter(([k]) => k && k.trim())
+                .sort(([a], [b]) => a.localeCompare(b))
+        );
+    };
+    const toDateStr = (d) => {
+        const s = (d || '').toString().trim();
+        const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        return m ? m[0] : s;
+    };
+    const sortLinks = (links) =>
+        [...(links || [])]
+            .map((l) => ({ type: (l.type || '').trim(), link: (l.link || '').trim() }))
+            .sort((a, b) => {
+                const typeA = (a.type || '').toLowerCase();
+                const typeB = (b.type || '').toLowerCase();
+                if (!typeA && !typeB) return 0;
+                if (!typeA) return 1;
+                if (!typeB) return -1;
+                return typeA.localeCompare(typeB) || (a.link || '').localeCompare(b.link || '');
+            });
+    return {
+        title: (p.title || '').trim(),
+        abstract: (p.abstract || '').trim() || null,
+        key: ((p.key || 'n/a') + '').trim(),
+        info: sortedInfo(p.info),
+        authors: (p.authors || []).map((a) => ({
+            display_name: (a.display_name || '').trim(),
+            affiliations: (a.affiliations || []).map((x) => (x.name || '').trim()).filter(Boolean).join('; '),
+        })),
+        releases: (p.releases || []).map((r) => ({
+            venue: {
+                date: toDateStr(r.venue?.date),
+                name: (r.venue?.name || '').trim(),
+                type: r.venue?.type || 'conference',
+            },
+            peer_review_status: r.peer_review_status || 'unknown',
+            status: (r.status || 'published').trim(),
+        })),
+        topics: (p.topics || []).map((t) => (t.name || '').trim()),
+        links: sortLinks(p.links),
+        flags: (p.flags || []).map((f) => (f + '').trim()),
+    };
+}
+
+/**
+ * True if the two papers have identical editable content.
+ */
+function papersEqual(a, b) {
+    return JSON.stringify(normalizeForComparison(a)) === JSON.stringify(normalizeForComparison(b));
+}
+
+/**
  * Collect form data and build updated paper object
  */
 function collectFormData(form, originalPaper) {
@@ -992,11 +1150,20 @@ function collectFormData(form, originalPaper) {
                 // Automatically copy display_name to author.name
                 authorsMap[index].author.name = input.value;
             } else if (field === 'affiliations') {
-                authorsMap[index].affiliations = input.value
-                    .split(';')
-                    .map(s => s.trim())
-                    .filter(s => s)
-                    .map(name => ({ name, category: 'unknown', country: null, aliases: [] }));
+                const originalAuthor = originalPaper.authors?.[parseInt(index, 10)];
+                const originalAffiliations = originalAuthor?.affiliations || [];
+                const originalStr = originalAffiliations.map(a => a.name.trim()).filter(Boolean).join('; ');
+                const inputStr = input.value.split(';').map(s => s.trim()).filter(Boolean).join('; ');
+
+                if (inputStr === originalStr) {
+                    authorsMap[index].affiliations = originalAffiliations.map(a => ({ ...a }));
+                } else {
+                    authorsMap[index].affiliations = input.value
+                        .split(';')
+                        .map(s => s.trim())
+                        .filter(s => s)
+                        .map(name => ({ name, category: 'unknown', country: null, aliases: [] }));
+                }
             }
         }
     });
