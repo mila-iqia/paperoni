@@ -30,6 +30,11 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    permissions:
+      # `actions:write` permission is required to delete caches
+      #   See also: https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id
+      actions: write
+      contents: read
     environment: tests
     strategy:
       matrix:
@@ -53,7 +58,7 @@ jobs:
       id: restore-cache
       with:
         path: ./tests/cache/
-        # Reset the completely every month
+        # Reset the cache completely every month
         key: tests-cache-${{ steps.month.outputs.month }}
 
     - name: List tests cache
@@ -93,6 +98,35 @@ jobs:
       if: always()
       run: hatch run mongo:stop
     
+    # Action cache cannot be overwritten for the same branch/key: If a cache
+    # entry with the same key, version, and scope exists, saving fails with
+    #
+    # Failed to CreateCacheEntry: Received non-retryable error: Failed request:
+    # (409) Conflict: cache entry with the same key, version, and scope already
+    # exists
+    #
+    # This step ensures old cache entries are deleted so that updated
+    # caches can be used for the next run.
+    - name: Cleanup cache
+      if: always()
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
+      run: |
+        echo "Fetching list of cache key"
+        cacheKeysForPR=$(gh cache list --ref $BRANCH --limit 100 --json id --jq '.[].id')
+
+        ## Setting this to not fail the workflow while deleting cache keys.
+        set +e
+        echo "Deleting caches..."
+        for cacheKey in $cacheKeysForPR
+        do
+            echo "Deleting cache key: $cacheKey"
+            gh cache delete $cacheKey
+        done
+        echo "Done"
+
     - name: Store tests cache
       if: always()
       uses: actions/cache/save@v5
