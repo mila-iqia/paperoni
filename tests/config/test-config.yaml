@@ -25,8 +25,7 @@ paperoni:
       - "!author :: Yoshua Bengio :: 3"
       - "!author :: Aaron Courville :: 3"
   discovery:
-    openreview:
-      cache_path: ${paperoni.cache_path}/openreview-requests-cache.sql
+    openreview: {}
     scrape:
       urls:
         - https://dadelani.github.io/publications

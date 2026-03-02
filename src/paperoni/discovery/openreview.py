@@ -6,12 +6,10 @@ from dataclasses import dataclass, field, field as dc_field
 from datetime import date, datetime
 from fnmatch import fnmatch
 from functools import reduce
-from typing import Callable
 
 import openreview
 import openreview.api
 import openreview.openreview
-import requests_cache
 from serieux.features.encrypt import Secret
 from tenacity import (
     retry,
@@ -20,8 +18,6 @@ from tenacity import (
     wait_exponential,
     wait_random,
 )
-
-from paperoni.config import config
 
 from ..model import (
     Author,
@@ -176,82 +172,6 @@ def parse_openreview_venue(venue):
 
 @dataclass
 class OpenReview(Discoverer):
-    class ClientProxy:
-        _retry: Callable = retry(
-            wait=wait_exponential(multiplier=1, exp_base=2) + wait_random(0, 0.5),
-            stop=stop_after_delay(60 * 5),
-            retry=retry_if_exception_type(openreview.openreview.OpenReviewException),
-            reraise=True,
-        )
-
-        def __init__(
-            self,
-            client_cls: type[openreview.Client] | type[openreview.api.OpenReviewClient],
-            *,
-            username: str = None,
-            password: str = None,
-            token: str = None,
-            **kwargs,
-        ):
-            self.__type__ = client_cls
-            with set_env(
-                {
-                    **os.environ,
-                    "OPENREVIEW_USERNAME": None,
-                    "OPENREVIEW_PASSWORD": None,
-                    # OpenReview does not look for the token in
-                    # OPENREVIEW_TOKEN, but just in case it does one day, clear
-                    # it from the environment
-                    "OPENREVIEW_TOKEN": None,
-                }
-            ):
-                self._unauth_client = client_cls(**kwargs)
-
-            self._client = OpenReview.ClientProxy._cache_session(
-                lambda: client_cls(
-                    username=username,
-                    password=password,
-                    token=token,
-                    **{**kwargs, "tokenExpiresIn": 60 * 60 * 24 * 7},  # 1 week
-                )
-            )()
-            if not self._client.profile:
-                self._client = self._unauth_client
-
-        def __getattr__(self, name: str):
-            _attr = getattr(self._client, name)
-            if callable(_attr):
-                _unauth_attr = getattr(self._unauth_client, name)
-
-                # OpenReview is very aggressive about rate limiting on logged in
-                # users. First, attempt to use the unauthenticated client and
-                # request cache to avoid as much as possible rate limiting.
-                def wrap(*args, **kwargs):
-                    try:
-                        return _unauth_attr(*args, **kwargs)
-                    except openreview.openreview.OpenReviewException as e:
-                        if "This action is forbidden" not in str(e):
-                            raise
-                        return OpenReview.ClientProxy._cache_session(_attr)(
-                            *args, **kwargs
-                        )
-
-                return wrap
-            return _attr
-
-        @staticmethod
-        def _cache_session(func: Callable) -> Callable:
-            @OpenReview.ClientProxy._retry
-            def wrap(*args, **kwargs):
-                with requests_cache.enabled(
-                    openreview_config.cache_path
-                    or config.cache_path / "openreview-requests-cache.sql",
-                    expire_after=60 * 60 * 24 * 7,  # 1 week
-                ):
-                    return func(*args, **kwargs)
-
-            return wrap
-
     api_version: int = 2
     username: Secret[str] = field(default_factory=lambda: openreview_config.username)
     password: Secret[str] = field(default_factory=lambda: openreview_config.password)
@@ -264,21 +184,42 @@ class OpenReview(Discoverer):
 
     def set_client(self):
         if self.api_version == 1:
-            self.client: openreview.Client = OpenReview.ClientProxy(
-                openreview.Client,
-                baseurl="https://api.openreview.net",
-                username=self.username,
-                password=self.password,
-                token=self.token,
-            )
+
+            def _login():
+                return openreview.Client(
+                    baseurl="https://api.openreview.net",
+                    username=self.username,
+                    password=self.password,
+                    token=self.token,
+                )
+
         elif self.api_version == 2:
-            self.client: openreview.api.OpenReviewClient = OpenReview.ClientProxy(
-                openreview.api.OpenReviewClient,
-                baseurl="https://api2.openreview.net",
-                username=self.username,
-                password=self.password,
-                token=self.token,
-            )
+
+            def _login():
+                return openreview.api.OpenReviewClient(
+                    baseurl="https://api2.openreview.net",
+                    username=self.username,
+                    password=self.password,
+                    token=self.token,
+                )
+
+        # OpenReview is very aggressive about rate limiting in login. To avoid
+        # an error similar to the following:
+        #
+        # {'name': 'RateLimitError', 'message': 'Too many requests: You have
+        # made 4 requests, surpassing the limit of 3 requests. Please try again
+        # in 56 seconds (2026-03-02-9148075)', 'status': 429, 'details':
+        # {'limit': 3, 'remaining': 0, 'resetTime': '2026-03-02T18:54:51.125Z',
+        # 'used': 4, 'current': 4, 'reqId': '2026-03-02-9148075'}}
+        #
+        # wrap the login using a custom retry strategy that waits for the rate
+        # limit to reset.
+        self.client: openreview.Client | openreview.api.OpenReviewClient = retry(
+            wait=wait_exponential(multiplier=1, exp_base=2, max=60) + wait_random(0, 0.5),
+            stop=stop_after_delay(60 * 5),
+            retry=retry_if_exception_type(openreview.openreview.OpenReviewException),
+            reraise=True,
+        )(_login)()
 
     def get_content_field(self, note, key, default=None):
         content = note["content"] if isinstance(note, dict) else note.content
@@ -677,12 +618,22 @@ class OpenReview(Discoverer):
             yield paper
 
     def login(self, username: str = None, password: str = None) -> str:
-        return OpenReview(
-            api_version=self.api_version,
-            username=username,
-            password=password,
-            token=None,
-        ).client.token
+        # Force a new login
+        with set_env(
+            {
+                **os.environ,
+                # OpenReview does not look for the token in
+                # OPENREVIEW_TOKEN, but just in case it does one day, clear
+                # it from the environment
+                "OPENREVIEW_TOKEN": None,
+            }
+        ):
+            return OpenReview(
+                api_version=self.api_version,
+                username=username,
+                password=password,
+                token=None,
+            ).client.token
 
 
 @dataclass
