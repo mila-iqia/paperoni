@@ -11,6 +11,8 @@ from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 from serieux.features.filebacked import FileProxy
 
+from paperoni.discovery.openreview_cfg import OpenReviewConfig
+
 from .collection.abc import PaperCollection
 from .get import Fetcher, RequestsFetcher
 from .model.focus import AutoFocus, Focuses
@@ -117,6 +119,12 @@ class PaperoniConfig:
 config = gifnoc.define(
     "paperoni",
     PaperoniConfig,
+)
+
+# Define openreview_config here so that its values are encrypted using
+# `serieux patch -m "paperoni.config:gifnoc_model"`
+openreview_config: OpenReviewConfig = gifnoc.define(
+    "paperoni.discovery.openreview", OpenReviewConfig
 )
 
 gifnoc_model = gifnoc.global_registry.model()

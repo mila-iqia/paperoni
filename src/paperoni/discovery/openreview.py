@@ -19,6 +19,7 @@ from tenacity import (
     wait_random,
 )
 
+from ..config import openreview_config
 from ..model import (
     Author,
     DatePrecision,
@@ -32,7 +33,6 @@ from ..model import (
 )
 from ..model.focus import Focus, Focuses
 from .base import Discoverer
-from .openreview_cfg import openreview_config
 
 
 def extract_date(txt: str) -> dict | None:
@@ -617,23 +617,41 @@ class OpenReview(Discoverer):
         async for paper in self._query_papers_from_venues(params, venue, 0, limit):
             yield paper
 
-    def login(self, username: str = None, password: str = None) -> str:
-        # Force a new login
-        with set_env(
-            {
-                **os.environ,
-                # OpenReview does not look for the token in
-                # OPENREVIEW_TOKEN, but just in case it does one day, clear
-                # it from the environment
-                "OPENREVIEW_TOKEN": None,
-            }
-        ):
-            return OpenReview(
-                api_version=self.api_version,
-                username=username,
-                password=password,
-                token=None,
-            ).client.token
+    def login(
+        self, username: str = None, password: str = None, force: bool = False
+    ) -> str:
+        token = None
+
+        try:
+            if self.client.token and self.client.get_profile():
+                token = self.client.token
+        except openreview.OpenReviewException as e:
+            if "Token has expired" not in str(e):
+                raise
+
+        if force or not token:
+            # Force a new login
+            with set_env(
+                {
+                    **os.environ,
+                    # OpenReview does not look for the token in
+                    # OPENREVIEW_TOKEN, but just in case it does one day, clear
+                    # it from the environment
+                    "OPENREVIEW_TOKEN": None,
+                }
+            ):
+                token = OpenReview(
+                    api_version=self.api_version,
+                    username=username,
+                    password=password,
+                    token=None,
+                ).client.token
+
+        if token and openreview_config.api_key_file:
+            openreview_config.api_key_file.path.parent.mkdir(parents=True, exist_ok=True)
+            openreview_config.api_key_file.save(token)
+
+        return token
 
 
 @dataclass
@@ -696,9 +714,13 @@ class OpenReviewDispatch(Discoverer):
             if exception is not None:
                 raise exception
 
-    async def login(self, username: str = None, password: str = None):
+    async def login(
+        self, username: str = None, password: str = None, force: bool = False
+    ):
         for api_version in self.api_versions:
             try:
-                return OpenReview(api_version=api_version).login(username, password)
+                return OpenReview(api_version=api_version).login(
+                    username, password, force
+                )
             except openreview.OpenReviewException:
                 continue
