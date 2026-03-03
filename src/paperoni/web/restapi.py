@@ -323,6 +323,12 @@ class DiffResponse(PagingResponseMixin):
 
 
 @dataclass
+class OperateResponse(DiffResponse):
+    matched: int = 0
+    unmatched: int = 0
+
+
+@dataclass
 class OperateRequest:
     """Request model for operate (POST body)."""
 
@@ -337,6 +343,7 @@ class OperateRequest:
     offset: int = 0
     limit: int = 100
     expand_links: bool = True
+    mode: Literal["test", "simulate", "apply"] = "test"
 
 
 @dataclass
@@ -436,7 +443,7 @@ def install_api(app) -> FastAPI:
             total=len(all_matches),
         )
 
-    def _run_operate(operation_obj, coll, selected):
+    def _run_operate(operation_obj, selected):
         results = []
         for p in selected:
             result = operation_obj(p)
@@ -450,16 +457,11 @@ def install_api(app) -> FastAPI:
         return results
 
     def _parse_date(s: str | None):
-        if not s:
-            return None
-        try:
-            return datetime.datetime.fromisoformat(s).date()
-        except (ValueError, TypeError):
-            return None
+        return datetime.datetime.fromisoformat(s).date() if s else None
 
     @app.post(
         f"{prefix}/operate",
-        response_model=DiffResponse,
+        response_model=OperateResponse,
         dependencies=[Depends(hascap("admin"))],
     )
     async def operate_papers_post(body: OperateRequest):
@@ -479,14 +481,44 @@ def install_api(app) -> FastAPI:
                 expand_links=body.expand_links,
             )
             coll = Coll(command=None)
-            all_matches = await search_req.run(coll)
-            selected = list(search_req.slice(all_matches))
-            results = _run_operate(operation_obj, coll, selected)
-            return DiffResponse(
+
+            matched = 0
+            unmatched = 0
+            results = []
+
+            match body.mode:
+                case "test":
+                    all_matches = await search_req.run(coll)
+                    selected = list(search_req.slice(all_matches))
+                    results = _run_operate(operation_obj, selected)
+                    matched = sum(r.matched for r in results)
+                    unmatched = sum(not r.matched for r in results)
+
+                case "simulate":
+                    all_matches = await search_req.run(coll)
+                    results = _run_operate(operation_obj, all_matches)
+                    matched = sum(r.matched for r in results)
+                    unmatched = sum(not r.matched for r in results)
+                    results = list(search_req.slice(results))
+
+                case "apply":
+                    all_matches = await search_req.run(coll)
+                    diffs = _run_operate(operation_obj, all_matches)
+                    matched = sum(r.matched for r in diffs)
+                    unmatched = sum(not r.matched for r in diffs)
+                    edits = [d.new for d in diffs if d.matched and d.new]
+                    await coll.collection.add_papers(
+                        edits, force=True, ignore_exclusions=True
+                    )
+                    results = []
+
+            return OperateResponse(
                 results=results,
                 count=search_req.count,
                 next_offset=search_req.next_offset,
                 total=len(all_matches),
+                matched=matched,
+                unmatched=unmatched,
             )
         except Exception:
             raise HTTPException(

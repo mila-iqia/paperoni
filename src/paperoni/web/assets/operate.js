@@ -91,6 +91,7 @@ function loadMonacoEditor() {
                 acceptSuggestionOnCommitCharacter: false,
             });
             monacoEditor.onDidChangeModelContent(() => {
+                disableApply();
                 if (currentIndex >= 0 && currentIndex < blocks.length) {
                     blocks[currentIndex] = monacoEditor.getValue();
                     saveToStorage();
@@ -175,7 +176,7 @@ function updateDeleteButtonState() {
     if (btn) btn.disabled = blocks.length <= 1;
 }
 
-async function fetchOperateResults(operation, searchParams) {
+async function fetchOperateResults(operation, searchParams, offset = 0, mode = 'test') {
     const flags = searchParamsToFlags(searchParams);
     const body = {
         operation: operation.trim(),
@@ -186,9 +187,10 @@ async function fetchOperateResults(operation, searchParams) {
         start_date: searchParams.start_date || undefined,
         end_date: searchParams.end_date || undefined,
         flags: flags.length ? flags : undefined,
-        offset: 0,
+        offset,
         limit: PAGE_SIZE,
         expand_links: true,
+        mode,
     };
 
     const response = await fetch('/api/v1/operate', {
@@ -245,7 +247,50 @@ function createOperateItem(paperDiff) {
     `;
 }
 
-function renderResults(data) {
+function createPagination(offset, count, total, nextOffset, onPageChange) {
+    const start = offset + 1;
+    const end = offset + count;
+
+    const prevButton = html`<button disabled="${offset === 0}">Previous</button>`;
+    prevButton.onclick = () => {
+        const newOffset = Math.max(0, offset - PAGE_SIZE);
+        onPageChange(newOffset);
+    };
+
+    const nextButton = html`<button disabled="${nextOffset === null}">Next</button>`;
+    nextButton.onclick = () => {
+        if (nextOffset !== null) {
+            onPageChange(nextOffset);
+        }
+    };
+
+    return html`
+        <div class="pagination">
+            <div></div>
+            ${prevButton}
+            <div class="page-info">Showing ${start}-${end} of ${total}</div>
+            ${nextButton}
+        </div>
+    `;
+}
+
+function updateCountsInFooter(matched, unmatched, total) {
+    const el = document.getElementById('operateCounts');
+    if (!el) return;
+    if (total === undefined || total === null) {
+        el.textContent = '';
+        return;
+    }
+    el.textContent = `${matched} matched, ${unmatched} unmatched`;
+}
+
+function renderResults(data, offset = 0, onPageChange) {
+    updateCountsInFooter(
+        data.matched ?? 0,
+        data.unmatched ?? 0,
+        data.total ?? 0,
+    );
+
     if (!data.results || data.results.length === 0) {
         setResults(html`
             <div class="no-results">
@@ -273,12 +318,37 @@ function renderResults(data) {
         ? html`
             <div class="operate-results-section">
                 <h3 class="operate-section-header">Unmatched</h3>
-                <div class="workset-list">${unmatchedItems.length} unmatched</div>
+                <div class="workset-list">${unmatchedItems}</div>
             </div>
         `
         : null;
 
-    setResults(matchedSection, unmatchedSection);
+    const paginationTop = (data.total ?? 0) > PAGE_SIZE
+        ? createPagination(
+            offset,
+            data.count ?? data.results.length,
+            data.total ?? 0,
+            data.next_offset ?? null,
+            onPageChange,
+        )
+        : null;
+
+    const paginationBottom = (data.total ?? 0) > PAGE_SIZE
+        ? createPagination(
+            offset,
+            data.count ?? data.results.length,
+            data.total ?? 0,
+            data.next_offset ?? null,
+            onPageChange,
+        )
+        : null;
+
+    setResults(
+        paginationTop,
+        matchedSection,
+        unmatchedSection,
+        paginationBottom,
+    );
 }
 
 function displayLoading() {
@@ -302,16 +372,17 @@ function getOperationContent() {
     return blocks[currentIndex] ?? '';
 }
 
-async function runSearch() {
+async function runSearch(offset = 0) {
     const operation = searchBlock.trim();
     const codeLines = operation.split('\n').filter(line => {
         const t = line.trim();
         return t && !t.startsWith('#');
     });
     if (codeLines.length === 0) {
+        updateCountsInFooter(undefined, undefined, undefined);
         setResults(html`
             <div class="no-results">
-                No operation to run. Enter code and click Update, or use Check to run the current block.
+                No operation to run. Enter code and click Update to run the current block.
             </div>
         `);
         return;
@@ -320,20 +391,62 @@ async function runSearch() {
     displayLoading();
 
     try {
-        const data = await fetchOperateResults(operation, getSearchParams());
-        renderResults(data);
+        const data = await fetchOperateResults(operation, getSearchParams(), offset);
+        renderResults(data, offset, (newOffset) => runSearch(newOffset));
     } catch (error) {
         console.error('Operate failed:', error);
+        updateCountsInFooter(undefined, undefined, undefined);
         displayError(error);
     }
 }
 
 const debouncedRunSearch = debounce(runSearch, 300);
 
+function disableApply() {
+    const btn = document.getElementById('operateApplyBtn');
+    if (btn) btn.disabled = true;
+}
+
+function enableApply() {
+    const btn = document.getElementById('operateApplyBtn');
+    if (btn) btn.disabled = false;
+}
+
+async function runSimulate(offset = 0) {
+    syncEditorToBlock();
+    const operation = getOperationContent().trim();
+    const codeLines = operation.split('\n').filter(line => {
+        const t = line.trim();
+        return t && !t.startsWith('#');
+    });
+    if (codeLines.length === 0) {
+        displayError(new Error('Please enter an operation'));
+        return;
+    }
+    displayLoading();
+    const simulateBtn = document.getElementById('operateSimulateBtn');
+    if (simulateBtn) simulateBtn.disabled = true;
+    try {
+        const data = await fetchOperateResults(
+            operation,
+            getSearchParams(),
+            offset,
+            'simulate',
+        );
+        renderResults(data, offset, (newOffset) => runSimulate(newOffset));
+        enableApply();
+    } catch (error) {
+        console.error('Operate simulate failed:', error);
+        updateCountsInFooter(undefined, undefined, undefined);
+        displayError(error);
+    } finally {
+        if (simulateBtn) simulateBtn.disabled = false;
+    }
+}
+
 export async function operatePapers() {
     loadFromStorage();
 
-    const checkBtn = document.getElementById('operateCheckBtn');
     const form = document.getElementById('operateForm');
     const clearBtn = document.getElementById('clearSearch');
     const selectEl = document.getElementById('operateBlocksSelect');
@@ -361,6 +474,7 @@ export async function operatePapers() {
     });
 
     function handleSearchChange() {
+        disableApply();
         debouncedRunSearch();
     }
 
@@ -373,54 +487,75 @@ export async function operatePapers() {
     peerReviewedCheckbox?.addEventListener('change', handleSearchChange);
 
     selectEl.addEventListener('change', () => {
+        disableApply();
         selectBlock(parseInt(selectEl.value, 10));
     });
 
     updateBtn.addEventListener('click', () => {
+        disableApply();
         syncEditorToBlock();
         searchBlock = getOperationContent();
         runSearch();
     });
 
     newBtn.addEventListener('click', () => {
+        disableApply();
         addBlock('');
     });
 
     cloneBtn.addEventListener('click', () => {
+        disableApply();
         cloneBlock();
     });
 
     deleteBtn.addEventListener('click', () => {
+        disableApply();
         deleteBlock();
     });
 
-    debouncedRunSearch();
+    const simulateBtn = document.getElementById('operateSimulateBtn');
+    if (simulateBtn) {
+        simulateBtn.addEventListener('click', () => runSimulate(0));
+    }
 
-    checkBtn.addEventListener('click', async () => {
-        syncEditorToBlock();
-        const operation = getOperationContent().trim();
-        const codeLines = operation.split('\n').filter(line => {
-            const t = line.trim();
-            return t && !t.startsWith('#');
+    const applyBtn = document.getElementById('operateApplyBtn');
+    if (applyBtn) {
+        applyBtn.addEventListener('click', async () => {
+            syncEditorToBlock();
+            const operation = getOperationContent().trim();
+            const codeLines = operation.split('\n').filter(line => {
+                const t = line.trim();
+                return t && !t.startsWith('#');
+            });
+            if (codeLines.length === 0) {
+                displayError(new Error('Please enter an operation'));
+                return;
+            }
+            displayLoading();
+            applyBtn.disabled = true;
+            try {
+                const data = await fetchOperateResults(
+                    operation,
+                    getSearchParams(),
+                    0,
+                    'apply',
+                );
+                setResults(html`
+                    <div class="operate-apply-success">
+                        Applied: ${data.matched} papers updated.
+                    </div>
+                `);
+                updateCountsInFooter(data.matched, data.unmatched, data.total);
+            } catch (error) {
+                console.error('Operate apply failed:', error);
+                updateCountsInFooter(undefined, undefined, undefined);
+                displayError(error);
+                applyBtn.disabled = false;
+            }
         });
-        if (codeLines.length === 0) {
-            displayError(new Error('Please enter an operation'));
-            return;
-        }
+    }
 
-        displayLoading();
-        checkBtn.disabled = true;
-
-        try {
-            const data = await fetchOperateResults(operation, getSearchParams());
-            renderResults(data);
-        } catch (error) {
-            console.error('Operate failed:', error);
-            displayError(error);
-        } finally {
-            checkBtn.disabled = false;
-        }
-    });
+    debouncedRunSearch();
 
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
