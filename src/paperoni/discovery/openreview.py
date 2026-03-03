@@ -183,26 +183,6 @@ class OpenReview(Discoverer):
         self.set_client()
 
     def set_client(self):
-        if self.api_version == 1:
-
-            def _login():
-                return openreview.Client(
-                    baseurl="https://api.openreview.net",
-                    username=self.username,
-                    password=self.password,
-                    token=self.token,
-                )
-
-        elif self.api_version == 2:
-
-            def _login():
-                return openreview.api.OpenReviewClient(
-                    baseurl="https://api2.openreview.net",
-                    username=self.username,
-                    password=self.password,
-                    token=self.token,
-                )
-
         # OpenReview is very aggressive about rate limiting in login. To avoid
         # an error similar to the following:
         #
@@ -214,12 +194,62 @@ class OpenReview(Discoverer):
         #
         # wrap the login using a custom retry strategy that waits for the rate
         # limit to reset.
-        self.client: openreview.Client | openreview.api.OpenReviewClient = retry(
+        _retry = retry(
             wait=wait_exponential(multiplier=1, exp_base=2, max=60) + wait_random(0, 0.5),
             stop=stop_after_delay(60 * 5),
             retry=retry_if_exception_type(openreview.openreview.OpenReviewException),
             reraise=True,
-        )(_login)()
+        )
+
+        if self.api_version == 1:
+
+            @_retry
+            def _login():
+                return openreview.Client(
+                    baseurl="https://api.openreview.net",
+                    username=self.username,
+                    password=self.password,
+                    token=self.token,
+                )
+
+        elif self.api_version == 2:
+
+            @_retry
+            def _login():
+                return openreview.api.OpenReviewClient(
+                    baseurl="https://api2.openreview.net",
+                    username=self.username,
+                    password=self.password,
+                    token=self.token,
+                )
+
+        self.client: openreview.Client | openreview.api.OpenReviewClient = _login()
+
+        try:
+            if self.client.token and not self.client.get_profile():
+                self.client.token = None
+        except openreview.OpenReviewException as e:
+            if "Token has expired" not in str(e):
+                raise
+
+            self.token = None
+            # Force a new login using the username and password
+            with set_env(
+                {
+                    **os.environ,
+                    # OpenReview does not look for the token in
+                    # OPENREVIEW_TOKEN, but just in case it does one day, clear
+                    # it from the environment
+                    "OPENREVIEW_TOKEN": None,
+                }
+            ):
+                self.client = _login()
+
+        self.token = self.client.token
+
+        if self.token and openreview_config.api_key_file:
+            openreview_config.api_key_file.path.parent.mkdir(parents=True, exist_ok=True)
+            openreview_config.api_key_file.save(self.token)
 
     def get_content_field(self, note, key, default=None):
         content = note["content"] if isinstance(note, dict) else note.content
@@ -620,17 +650,10 @@ class OpenReview(Discoverer):
     def login(
         self, username: str = None, password: str = None, force: bool = False
     ) -> str:
-        token = None
-
-        try:
-            if self.client.token and self.client.get_profile():
-                token = self.client.token
-        except openreview.OpenReviewException as e:
-            if "Token has expired" not in str(e):
-                raise
+        token = self.token
 
         if force or not token:
-            # Force a new login
+            # Force a new login using the username and password
             with set_env(
                 {
                     **os.environ,
@@ -646,10 +669,6 @@ class OpenReview(Discoverer):
                     password=password,
                     token=None,
                 ).client.token
-
-        if token and openreview_config.api_key_file:
-            openreview_config.api_key_file.path.parent.mkdir(parents=True, exist_ok=True)
-            openreview_config.api_key_file.save(token)
 
         return token
 

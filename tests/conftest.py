@@ -34,17 +34,6 @@ def set_config(cfg_src: list[str | dict]):
         yield
 
 
-@fixture(scope="session", autouse=True)
-async def set_openreview_token():
-    from paperoni.discovery.openreview import OpenReviewDispatch
-
-    if "OPENREVIEW_TOKEN" not in os.environ:
-        # Avoid rate limiting from multiple openreview logins during tests by
-        # setting an openreview token using OPENREVIEW_USERNAME and
-        # OPENREVIEW_PASSWORD environment variables
-        os.environ["OPENREVIEW_TOKEN"] = await OpenReviewDispatch().login()
-
-
 OAUTH_PORT = 29313
 
 
