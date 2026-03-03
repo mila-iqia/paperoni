@@ -730,7 +730,8 @@ class OpenReviewDispatch(Discoverer):
             try:
                 async for paper in q:
                     if not discard_rejected or not any(
-                        release.status == "rejected" for release in paper.releases
+                        release.status in ("rejected", "withdrawn")
+                        for release in paper.releases
                     ):
                         yield paper
                     else:
