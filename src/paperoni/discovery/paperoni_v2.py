@@ -51,7 +51,7 @@ def _parse_link(link: dict[str, str]) -> Link:
 
 
 def _parse_all_links(links):
-    return list({x for lnk in links if (x := _parse_link(lnk)).link})
+    return sorted({x for lnk in links if (x := _parse_link(lnk)).link})
 
 
 def _parse_institution(institution: dict[str, str]) -> Institution:

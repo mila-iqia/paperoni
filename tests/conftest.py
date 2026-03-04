@@ -22,7 +22,7 @@ os.environ.pop("GIFNOC_FILE", None)
 @fixture(scope="session")
 def cfg_src():
     with TemporaryDirectory() as tmpdir:
-        return [
+        yield [
             TESTS_PATH / "config/test-config.yaml",
             {"paperoni.data_path": str(Path(tmpdir) / "data")},
         ]

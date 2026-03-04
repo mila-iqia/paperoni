@@ -30,15 +30,27 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    permissions:
+      # `actions:write` permission is required to delete caches
+      #   See also: https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id
+      actions: write
+      contents: read
     environment: tests
     env:
-      OPENREVIEW_TOKEN: ${{ secrets.OPENREVIEW_TOKEN }}
+      SERIEUX_PASSWORD: ${{ secrets.SERIEUX_PASSWORD }}
     strategy:
       matrix:
         settings:
         - python: '3.13'
           coverage: false
     steps:
+    - name: Check required secrets
+      run: |
+        if [ -z "$SERIEUX_PASSWORD" ]
+        then
+          echo "::error::SERIEUX_PASSWORD secret is not set. Please configure it in the project's tests environment."
+          exit 1
+        fi
     - name: Set month outputs
       id: month
       run: echo "month=$(date +%m)" >> $GITHUB_OUTPUT
@@ -55,7 +67,7 @@ jobs:
       id: restore-cache
       with:
         path: ./tests/cache/
-        # Reset the completely every month
+        # Reset the cache completely every month
         key: tests-cache-${{ steps.month.outputs.month }}
 
     - name: List tests cache
@@ -74,6 +86,11 @@ jobs:
       run: uv python pin ${{ matrix.settings.python }}
     - name: Sync dependencies
       run: uv sync
+    - name: Set openreview token
+      env:
+        OPENREVIEW_USERNAME: ${{ secrets.OPENREVIEW_USERNAME }}
+        OPENREVIEW_PASSWORD: ${{ secrets.OPENREVIEW_PASSWORD }}
+      run: GIFNOC_FILE=tests/config/test-config.yaml uv run paperoni login openreview >/dev/null
     - name: Setup mongo
       run: hatch run mongo:start
     - name: Test with pytest
@@ -88,7 +105,36 @@ jobs:
     - name: Stop mongo
       if: always()
       run: hatch run mongo:stop
-    
+
+    # Action cache cannot be overwritten for the same branch/key: If a cache
+    # entry with the same key, version, and scope exists, saving fails with
+    #
+    # Failed to CreateCacheEntry: Received non-retryable error: Failed request:
+    # (409) Conflict: cache entry with the same key, version, and scope already
+    # exists
+    #
+    # This step ensures old cache entries are deleted so that updated
+    # caches can be used for the next run.
+    - name: Cleanup cache
+      if: always()
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
+      run: |
+        echo "Fetching list of cache key"
+        cacheKeysForPR=$(gh cache list --ref $BRANCH --limit 100 --json id --jq '.[].id')
+
+        ## Setting this to not fail the workflow while deleting cache keys.
+        set +e
+        echo "Deleting caches..."
+        for cacheKey in $cacheKeysForPR
+        do
+            echo "Deleting cache key: $cacheKey"
+            gh cache delete $cacheKey
+        done
+        echo "Done"
+
     - name: Store tests cache
       if: always()
       uses: actions/cache/save@v5

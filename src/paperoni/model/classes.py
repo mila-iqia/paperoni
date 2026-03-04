@@ -149,7 +149,7 @@ class Base:
         allow_extras = True
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Link:
     type: str
     link: str

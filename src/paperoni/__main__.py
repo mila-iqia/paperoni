@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import functools
 import itertools
 import json
 import logging
@@ -1062,10 +1063,14 @@ class Login:
         ),
     ] = "paperoni"
 
+    # When true, print only the token value
+    plain: bool = False
+
     async def run(self):
+        _print_access_token = functools.partial(print_field, "Access token")
         match token := self.service():
             case str():
-                print_field("Access token", token)
+                (print if self.plain else _print_access_token)(token)
 
 
 PaperoniCommand = TaggedUnion[
