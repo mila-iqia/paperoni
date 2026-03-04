@@ -7,7 +7,7 @@ import itertools
 import traceback
 from dataclasses import dataclass, field, replace
 from types import NoneType, SimpleNamespace
-from typing import Any, Generator, Iterable, Literal, Optional
+from typing import Any, Generator, Iterable, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
@@ -328,21 +328,11 @@ class OperateResponse(DiffResponse):
     unmatched: int = 0
 
 
-@dataclass
-class OperateRequest:
+@dataclass(kw_only=True)
+class OperateRequest(SearchRequest):
     """Request model for operate (POST body)."""
 
     operation: str
-    title: Optional[str] = None
-    author: Optional[str] = None
-    institution: Optional[str] = None
-    venue: Optional[str] = None
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-    flags: Optional[list[str]] = None
-    offset: int = 0
-    limit: int = 100
-    expand_links: bool = True
     mode: Literal["test", "simulate", "apply"] = "test"
 
 
