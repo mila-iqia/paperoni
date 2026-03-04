@@ -74,7 +74,9 @@ paperoni:
   collection:
     $class: paperoni.collection.filecoll:FileCollection
     file: ${paperoni.data_path}/collection.json
-  server:
+  suggestions:
+    $class: paperoni.collection.filecoll:FileCollection
+    file: ${paperoni.data_path}/suggestions.json
     host: localhost
     port: 8000
     protocol: http
