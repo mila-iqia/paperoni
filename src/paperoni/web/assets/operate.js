@@ -316,7 +316,7 @@ function renderResults(data, offset = 0, onPageChange) {
     const unmatched = data.results.filter(d => d.matched === false);
 
     const matchedItems = matched.map(paperDiff => createOperateItem(paperDiff));
-    const unmatchedItems = unmatched.map(paperDiff => createOperateItem(paperDiff));
+    // const unmatchedItems = unmatched.map(paperDiff => createOperateItem(paperDiff));
 
     const matchedSection = matchedItems.length > 0
         ? html`
@@ -326,14 +326,14 @@ function renderResults(data, offset = 0, onPageChange) {
         `
         : null;
 
-    const unmatchedSection = unmatchedItems.length > 0
-        ? html`
-            <div class="operate-results-section">
-                <h3 class="operate-section-header">Unmatched</h3>
-                <div class="workset-list">${unmatchedItems}</div>
-            </div>
-        `
-        : null;
+    // const unmatchedSection = unmatchedItems.length > 0
+    //     ? html`
+    //         <div class="operate-results-section">
+    //             <h3 class="operate-section-header">Unmatched</h3>
+    //             <div class="workset-list">${unmatchedItems}</div>
+    //         </div>
+    //     `
+    //     : null;
 
     const paginationTop = (data.total ?? 0) > PAGE_SIZE
         ? createPagination(
@@ -358,7 +358,7 @@ function renderResults(data, offset = 0, onPageChange) {
     setResults(
         paginationTop,
         matchedSection,
-        unmatchedSection,
+        // unmatchedSection,
         paginationBottom,
     );
 }
