@@ -8,6 +8,11 @@ variable "project_id" {
   description = "Project ID"
 }
 
+variable "prefix" {
+  type        = string
+  description = "Prefix"
+}
+
 variable "gh_service_owner" {
   type        = string
   description = "Owner of the repository to deploy from"
@@ -84,60 +89,67 @@ data "google_project" "paperoni" {
 ###############
 
 resource "google_service_account" "paperoni_build" {
-  account_id   = "paperoni-build"
+  account_id   = "${var.prefix}-build"
   display_name = "Paperoni build account"
 }
 
 resource "google_service_account" "paperoni_user" {
-  account_id   = "paperoni-user"
+  account_id   = "${var.prefix}-user"
   display_name = "Paperoni API service account"
 }
 
-resource "google_project_iam_binding" "firestore" {
+resource "google_project_iam_member" "firestore" {
   project = data.google_project.paperoni.project_id
   role    = "roles/datastore.user"
-  members = [google_service_account.paperoni_user.member]
+  member  = google_service_account.paperoni_user.member
 }
 
-resource "google_project_iam_binding" "cloud_run_developer" {
+resource "google_project_iam_member" "cloud_run_developer" {
   project = data.google_project.paperoni.project_id
   role    = "roles/run.developer"
-  members = [
-    google_service_account.paperoni_build.member
-  ]
+  member = google_service_account.paperoni_build.member
 }
 
-resource "google_project_iam_binding" "cloud_run_admin" {
+resource "google_project_iam_member" "cloud_run_admin" {
   project = data.google_project.paperoni.project_id
   role    = "roles/run.admin"
-  members = [
-    "serviceAccount:${data.google_project.paperoni.number}-compute@developer.gserviceaccount.com"
-  ]
+  member = "serviceAccount:${data.google_project.paperoni.number}-compute@developer.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "cloud_build_sa" {
+resource "google_project_iam_member" "cloud_build_sa" {
   project = data.google_project.paperoni.project_id
   role    = "roles/cloudbuild.serviceAgent"
-  members = [
-    "serviceAccount:service-${data.google_project.paperoni.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com",
-    google_service_account.paperoni_build.member
-  ]
+  member = "serviceAccount:service-${data.google_project.paperoni.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "secretmanager_accessor" {
+resource "google_project_iam_member" "cloud_build_member" {
+  project = data.google_project.paperoni.project_id
+  role    = "roles/cloudbuild.serviceAgent"
+  member = google_service_account.paperoni_build.member
+}
+
+resource "google_project_iam_member" "secretmanager_accessor_cloudbuild" {
   project = data.google_project.paperoni.project_id
   role    = "roles/secretmanager.secretAccessor"
-  members = [
-    "serviceAccount:service-${data.google_project.paperoni.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com",
-    google_service_account.paperoni_build.member,
-    google_service_account.paperoni_user.member
-  ]
+  member  = "serviceAccount:service-${data.google_project.paperoni.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
 }
 
-resource "google_service_account_iam_binding" "paperoni_user_sa_iam" {
+resource "google_project_iam_member" "secretmanager_accessor_build" {
+  project = data.google_project.paperoni.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = google_service_account.paperoni_build.member
+}
+
+resource "google_project_iam_member" "secretmanager_accessor_user" {
+  project = data.google_project.paperoni.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = google_service_account.paperoni_user.member
+}
+
+resource "google_service_account_iam_member" "paperoni_user_sa_iam" {
   service_account_id = google_service_account.paperoni_user.name
   role               = "roles/iam.serviceAccountUser"
-  members            = [google_service_account.paperoni_build.member]
+  member            = google_service_account.paperoni_build.member
 }
 
 # Required for Cloud Build to deploy Cloud Run services
@@ -217,7 +229,7 @@ resource "google_project_service" "secretmanager" {
 ###########
 
 resource "google_secret_manager_secret" "serieux_password" {
-  secret_id = "serieux_password"
+  secret_id = "${var.prefix}-serieux_password"
 
   replication {
     auto {}
@@ -236,21 +248,21 @@ resource "google_secret_manager_secret_version" "serieux_password" {
 ##################
 
 resource "google_storage_bucket" "paperoni_config" {
-  name                        = "paperoni-config"
+  name                        = "${var.prefix}-config"
   location                    = var.google_region
   uniform_bucket_level_access = true
   depends_on                  = [google_project_service.cloud_storage]
 }
 
 resource "google_storage_bucket" "paperoni_cache" {
-  name                        = "paperoni-cache"
+  name                        = "${var.prefix}-cache"
   location                    = var.google_region
   uniform_bucket_level_access = true
   depends_on                  = [google_project_service.cloud_storage]
 }
 
 resource "google_firestore_database" "paperoni_db" {
-  name                                = "paperoni-db"
+  name                                = "${var.prefix}-db"
   location_id                         = var.google_region
   type                                = "FIRESTORE_NATIVE"
   database_edition                    = "ENTERPRISE"
@@ -265,7 +277,7 @@ resource "google_firestore_database" "paperoni_db" {
 
 resource "google_artifact_registry_repository" "paperoni_img" {
   location      = var.google_region
-  repository_id = "paperoni-img"
+  repository_id = "${var.prefix}-img"
   description   = "Repository for built paperoni image for cloud run deployment"
   format        = "DOCKER"
 
@@ -295,7 +307,7 @@ resource "google_artifact_registry_repository" "paperoni_img" {
 }
 
 resource "google_cloudbuild_trigger" "paperoni_build_trigger" {
-  name            = "paperoni-trigger"
+  name            = "${var.prefix}-trigger"
   description     = "Builds the Paperoni container"
   location        = var.google_region
   service_account = google_service_account.paperoni_build.name
@@ -333,7 +345,7 @@ resource "google_cloudbuild_trigger" "paperoni_build_trigger" {
         "run",
         "services",
         "update",
-        "paperoni-web",
+        "${var.prefix}-web",
         "--region", "${var.google_region}",
         "--image", "${google_artifact_registry_repository.paperoni_img.registry_uri}/paperoni:$COMMIT_SHA",
       ]
@@ -345,7 +357,7 @@ resource "google_cloudbuild_trigger" "paperoni_build_trigger" {
         "run",
         "jobs",
         "update",
-        "paperoni-scrape",
+        "${var.prefix}-scrape",
         "--region", "${var.google_region}",
         "--image", "${google_artifact_registry_repository.paperoni_img.registry_uri}/paperoni:$COMMIT_SHA",
       ]
@@ -357,7 +369,7 @@ resource "google_cloudbuild_trigger" "paperoni_build_trigger" {
 }
 
 resource "google_cloudbuild_trigger" "paperoni_config_trigger" {
-  name            = "paperoni-config-trigger"
+  name            = "${var.prefix}-config-trigger"
   description     = "Syncs paperoni-config/cloud to GCS on push"
   location        = var.google_region
   service_account = google_service_account.paperoni_build.name
@@ -390,7 +402,7 @@ resource "google_cloudbuild_trigger" "paperoni_config_trigger" {
         "run",
         "services",
         "update",
-        "paperoni-web",
+        "${var.prefix}-web",
         "--region", "${var.google_region}",
         "--update-env-vars", "CONFIG_REVISION=$$BUILD_ID",
       ]
@@ -410,7 +422,7 @@ locals {
 }
 
 resource "google_cloud_run_v2_service" "paperoni_web" {
-  name     = "paperoni-web"
+  name     = "${var.prefix}-web"
   location = var.google_region
 
   scaling {
@@ -485,7 +497,7 @@ resource "google_cloud_run_v2_service" "paperoni_web" {
 ##############
 
 resource "google_cloud_run_v2_job" "paperoni_scrape" {
-  name     = "paperoni-scrape"
+  name     = "${var.prefix}-scrape"
   location = var.google_region
 
   template {
@@ -561,7 +573,7 @@ resource "google_cloud_run_v2_job" "paperoni_scrape" {
 }
 
 resource "google_cloud_scheduler_job" "paperoni_scrape_regular" {
-  name             = "paperoni-scrape-regular"
+  name             = "${var.prefix}-scrape-regular"
   description      = "Execute paperoni scrape job"
   schedule         = "0 3 * * *"
   time_zone        = var.timezone
