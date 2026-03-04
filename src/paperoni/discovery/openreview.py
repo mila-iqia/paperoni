@@ -675,17 +675,10 @@ class OpenReview(Discoverer):
 
 @dataclass
 class OpenReviewDispatch(Discoverer):
-<<<<<<< HEAD
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
     token: Secret[str] = field(
         default_factory=lambda: os.getenv("OPENREVIEW_TOKEN", openreview_config.api_key)
     )
-=======
-    api_versions: list[int] = dc_field(default_factory=lambda: [2, 1])
-    username: Secret[str] = field(default_factory=lambda: openreview_config.username)
-    password: Secret[str] = field(default_factory=lambda: openreview_config.password)
-    token: Secret[str] = field(default_factory=lambda: openreview_config.token)
->>>>>>> 10d6c00 (Option to discard rejected papers in OpenReview discoverer)
 
     async def query(
         self,
