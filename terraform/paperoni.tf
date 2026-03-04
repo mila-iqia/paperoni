@@ -461,6 +461,11 @@ resource "google_cloud_run_v2_service" "paperoni_web" {
         value = local.mongo_uri
       }
 
+      env {
+        name  = "INSTANCE_PREFIX"
+        value = var.prefix
+      }
+
       volume_mounts {
         name       = "gcs_cache"
         mount_path = "/paperoni-cache"
@@ -538,6 +543,11 @@ resource "google_cloud_run_v2_job" "paperoni_scrape" {
         env {
           name  = "MONGODB_CONNECTION"
           value = local.mongo_uri
+        }
+
+        env {
+          name  = "INSTANCE_PREFIX"
+          value = var.prefix
         }
 
         volume_mounts {
