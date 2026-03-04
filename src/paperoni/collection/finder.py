@@ -31,7 +31,7 @@ class Index[T]:
         for name, fn in self.indexers.items():
             idx = self.indexes[name]
             for value in fn(entry):
-                idx.pop(value)
+                idx.pop(value, None)
 
     def replace(self, entry: T):
         old_entry = self.equiv("id", entry)

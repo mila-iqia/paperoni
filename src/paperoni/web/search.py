@@ -26,21 +26,25 @@ def install_search(app: FastAPI) -> FastAPI:
             "search.html",
             request,
             is_validator=is_validator,
-            validation_buttons=False,
             show_scores=False,
             use_dev_mode=use_dev_mode,
         )
 
-    @app.get("/validate", dependencies=[Depends(hascap("validate", redirect=True))])
-    async def validate_page(request: Request):
-        """Render the validation page."""
-        return render_template(
-            "validate.html",
-            request,
-            is_validator=True,
-            validation_buttons=True,
-            show_scores=True,
-        )
+    @app.get("/pending")
+    async def pending_page(
+        request: Request,
+        user: str = Depends(hascap("search", redirect=True)),
+    ):
+        """Render the pending papers page."""
+        return render_template("pending.html", request)
+
+    @app.get("/operate")
+    async def operate_page(
+        request: Request,
+        user: str = Depends(hascap("admin", redirect=True)),
+    ):
+        """Render the operate page."""
+        return render_template("operate.html", request)
 
     @app.get("/workset")
     async def workset_page(
@@ -54,17 +58,11 @@ def install_search(app: FastAPI) -> FastAPI:
             "workset.html",
             request,
             is_validator=is_validator,
-            validation_buttons=False,
         )
 
     @app.get("/exclusions", dependencies=[Depends(hascap("validate", redirect=True))])
     async def exclusions_page(request: Request):
         """Render the exclusions management page."""
-        return render_template(
-            "exclusions.html",
-            request,
-            is_validator=True,
-            validation_buttons=False,
-        )
+        return render_template("exclusions.html", request)
 
     return app

@@ -1,6 +1,7 @@
 import { debounce, html } from './common.js';
-import { createPaperElement, createScoreBand, createValidationButtons } from './paper.js';
+import { createPaperElement, createScoreBand } from './paper.js';
 import { createWorksetElement } from './workset.js';
+import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
 
 const PAGE_SIZE = 50;
 
@@ -8,7 +9,6 @@ let currentOffset = 0;
 let currentParams = {};
 let totalResults = 0;
 let isValidator = false;
-let showValidationButtons = false;
 let showScores = false;
 let useDevMode = false;
 
@@ -26,36 +26,7 @@ async function fetchSearchResults(params, offset = 0) {
         limit: PAGE_SIZE.toString(),
         expand_links: 'true'
     });
-
-    // Add search parameters if they have values
-    if (params.title) queryParams.append('title', params.title);
-    if (params.author) queryParams.append('author', params.author);
-    if (params.institution) queryParams.append('institution', params.institution);
-    if (params.venue) queryParams.append('venue', params.venue);
-    if (params.start_date) queryParams.append('start_date', params.start_date);
-    if (params.end_date) queryParams.append('end_date', params.end_date);
-
-    // Convert validated parameter to flags
-    switch (params.validated) {
-        case 'true':
-            // Include papers with 'valid' flag
-            queryParams.append('flags', 'valid');
-            break;
-        case 'false':
-            // Include papers with 'invalid' flag
-            queryParams.append('flags', 'invalid');
-            break;
-        case 'unset':
-            // Exclude papers with both 'valid' and 'invalid' flags (unprocessed)
-            queryParams.append('flags', '~valid');
-            queryParams.append('flags', '~invalid');
-            break;
-    }
-
-    // Add peer-reviewed flag if checked
-    if (params.peerReviewed) {
-        queryParams.append('flags', 'peer-reviewed');
-    }
+    appendSearchParamsTo(queryParams, params);
 
     const url = `/api/v1/search?${queryParams.toString()}`;
     const response = await fetch(url);
@@ -134,6 +105,46 @@ function handleYearClick(year) {
     }
 }
 
+/**
+ * Create a paper result element for display (used by search and pending).
+ * @param {Object} paper - The paper object
+ * @param {Object} options - Options: showScores, score, searchParams, onAuthorClick, etc.
+ * @returns {HTMLElement} The paper element, optionally wrapped with score band
+ */
+export function createPaperResultElement(paper, options = {}) {
+    const {
+        showScores = false,
+        score = 0,
+        searchParams = {},
+        onAuthorClick = null,
+        onInstitutionClick = null,
+        onVenueClick = null,
+        onYearClick = null,
+        bottomSection = null,
+        showEditIcon = false,
+    } = options;
+
+    const paperEl = createPaperElement(paper, {
+        searchParams,
+        onAuthorClick,
+        onInstitutionClick,
+        onVenueClick,
+        onYearClick,
+        bottomSection,
+        showEditIcon,
+    });
+
+    if (showScores) {
+        return html`
+            <li class="paper-item-with-score">
+                ${createScoreBand(score)}
+                <div class="paper-content-wrapper">${paperEl}</div>
+            </li>
+        `;
+    }
+    return paperEl;
+}
+
 function displayResults(data) {
     totalResults = data.total;
 
@@ -154,27 +165,17 @@ function displayResults(data) {
             const fakeWorkset = { score: paper.score, value: { current: paper, collected: [] } };
             return createWorksetElement(fakeWorkset);
         }
-        const paperEl = createPaperElement(paper, {
+        return createPaperResultElement(paper, {
+            showScores,
+            score: paper.score ?? 0,
             searchParams: currentParams,
             onAuthorClick: handleAuthorClick,
             onInstitutionClick: handleInstitutionClick,
             onVenueClick: handleVenueClick,
             onYearClick: handleYearClick,
-            bottomSection: showValidationButtons ? createValidationButtons(paper) : null,
-            showEditIcon: isValidator
+            bottomSection: null,
+            showEditIcon: isValidator,
         });
-
-        if (showScores) {
-            // Wrap paper in a container with score band (like workset)
-            const score = paper.score ?? 0;
-            return html`
-                <li class="paper-item-with-score">
-                    ${createScoreBand(score)}
-                    <div class="paper-content-wrapper">${paperEl}</div>
-                </li>
-            `;
-        }
-        return paperEl;
     });
     const paperList = useDevMode
         ? html`<div class="workset-list">${paperElements}</div>`
@@ -204,7 +205,6 @@ function updateUrlParams(params, offset) {
     if (params.venue) urlParams.set('venue', params.venue);
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
-    if (params.validated) urlParams.set('validated', params.validated);
     if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
     if (offset > 0) urlParams.set('offset', offset.toString());
     if (useDevMode) urlParams.set('dev', '');
@@ -236,10 +236,8 @@ const debouncedSearch = debounce((params) => {
     performSearch(params, 0);
 }, 300);
 
-export function searchPapers(hasValidateCapability = false, enableValidationButtons = false, enableScores = false, enableDevMode = false) {
-    // Store the capability flags
+export function searchPapers(hasValidateCapability = false, enableScores = false, enableDevMode = false) {
     isValidator = hasValidateCapability;
-    showValidationButtons = enableValidationButtons;
     showScores = enableScores;
     useDevMode = enableDevMode;
 
@@ -250,28 +248,10 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     const venueInput = document.getElementById('venue');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
-    const validatedRadios = document.querySelectorAll('input[name="validated"]');
     const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
-    function getValidatedValue() {
-        const checked = document.querySelector('input[name="validated"]:checked');
-        return checked ? checked.value : '';
-    }
-
     function handleInputChange() {
-        const params = {
-            title: titleInput.value.trim(),
-            author: authorInput.value.trim(),
-            institution: institutionInput.value.trim(),
-            venue: venueInput.value.trim(),
-            start_date: startDateInput.value,
-            end_date: endDateInput.value,
-            validated: getValidatedValue(),
-            peerReviewed: peerReviewedCheckbox.checked
-        };
-
-        // Always perform search, even with empty criteria
-        debouncedSearch(params);
+        debouncedSearch(getSearchParams());
     }
 
     titleInput.addEventListener('input', handleInputChange);
@@ -280,9 +260,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     venueInput.addEventListener('input', handleInputChange);
     startDateInput.addEventListener('input', handleInputChange);
     endDateInput.addEventListener('input', handleInputChange);
-    validatedRadios.forEach(radio => {
-        radio.addEventListener('change', handleInputChange);
-    });
     peerReviewedCheckbox.addEventListener('change', handleInputChange);
 
     // Prevent form submission
@@ -293,19 +270,7 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     // Clear search button
     const clearButton = document.getElementById('clearSearch');
     clearButton.addEventListener('click', () => {
-        titleInput.value = '';
-        authorInput.value = '';
-        institutionInput.value = '';
-        venueInput.value = '';
-        startDateInput.value = '';
-        endDateInput.value = '';
-        // Reset validated radio to "All"
-        const allRadio = document.querySelector('input[name="validated"][value=""]');
-        if (allRadio) {
-            allRadio.checked = true;
-        }
-        // Reset peer-reviewed checkbox
-        peerReviewedCheckbox.checked = false;
+        clearSearchForm();
         handleInputChange();
     });
 
@@ -318,7 +283,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
         venue: urlParams.get('venue') || '',
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
-        validated: urlParams.get('validated') || '',
         peerReviewed: urlParams.get('peerReviewed') === 'true'
     };
     const initialOffset = parseInt(urlParams.get('offset') || '0', 10);
@@ -330,16 +294,6 @@ export function searchPapers(hasValidateCapability = false, enableValidationButt
     venueInput.value = initialParams.venue;
     startDateInput.value = initialParams.start_date;
     endDateInput.value = initialParams.end_date;
-
-    // Set the validated radio button
-    if (initialParams.validated) {
-        const radioToCheck = document.querySelector(`input[name="validated"][value="${initialParams.validated}"]`);
-        if (radioToCheck) {
-            radioToCheck.checked = true;
-        }
-    }
-
-    // Set the peer-reviewed checkbox
     peerReviewedCheckbox.checked = initialParams.peerReviewed;
 
     // Always perform initial search, even with empty criteria

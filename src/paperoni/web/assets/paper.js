@@ -68,24 +68,24 @@ export function formatRelease(release) {
     return { date, venueName, status };
 }
 
-export function sortReleasesByDate(releases) {
-    return [...releases].sort((a, b) => {
-        // Parse dates manually to avoid timezone issues
-        const parseDate = (dateString) => {
-            if (!dateString) return new Date(0);
-            const parts = dateString.split('-');
-            if (parts.length === 3) {
-                // Create date in local timezone to avoid UTC conversion
-                return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-            }
-            return new Date(dateString); // Fallback
-        };
+// export function sortReleasesByDate(releases) {
+//     return [...releases].sort((a, b) => {
+//         // Parse dates manually to avoid timezone issues
+//         const parseDate = (dateString) => {
+//             if (!dateString) return new Date(0);
+//             const parts = dateString.split('-');
+//             if (parts.length === 3) {
+//                 // Create date in local timezone to avoid UTC conversion
+//                 return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+//             }
+//             return new Date(dateString); // Fallback
+//         };
 
-        const dateA = parseDate(a.venue?.date);
-        const dateB = parseDate(b.venue?.date);
-        return dateB - dateA; // Most recent first
-    });
-}
+//         const dateA = parseDate(a.venue?.date);
+//         const dateB = parseDate(b.venue?.date);
+//         return dateB - dateA; // Most recent first
+//     });
+// }
 
 export function matchesSearch(text, searchTerm) {
     if (!searchTerm || !text) return false;
@@ -102,6 +102,52 @@ export function extractDomain(url) {
     } catch {
         return null;
     }
+}
+
+/**
+ * Attaches hover listeners so that hovering an author highlights their affiliations
+ * and vice versa. Works on any container with .author-name (data-affiliations="1,2,3")
+ * and .institution-item (data-affiliation="1") elements.
+ * @param {HTMLElement} container - Element containing author and institution spans
+ */
+export function attachAuthorAffiliationHover(container) {
+    const authorSpans = container.querySelectorAll('.author-name');
+    const institutionSpans = container.querySelectorAll('.institution-item');
+
+    authorSpans.forEach(authorSpan => {
+        const affiliations = (authorSpan.dataset.affiliations || '').split(',').filter(n => n);
+
+        authorSpan.addEventListener('mouseenter', () => {
+            affiliations.forEach(affNum => {
+                institutionSpans.forEach(instSpan => {
+                    if (instSpan.dataset.affiliation === affNum) {
+                        instSpan.classList.add('highlight');
+                    }
+                });
+            });
+        });
+
+        authorSpan.addEventListener('mouseleave', () => {
+            institutionSpans.forEach(instSpan => instSpan.classList.remove('highlight'));
+        });
+    });
+
+    institutionSpans.forEach(instSpan => {
+        const affNum = instSpan.dataset.affiliation;
+
+        instSpan.addEventListener('mouseenter', () => {
+            authorSpans.forEach(authorSpan => {
+                const affiliations = (authorSpan.dataset.affiliations || '').split(',').filter(n => n);
+                if (affiliations.includes(affNum)) {
+                    authorSpan.classList.add('highlight');
+                }
+            });
+        });
+
+        instSpan.addEventListener('mouseleave', () => {
+            authorSpans.forEach(authorSpan => authorSpan.classList.remove('highlight'));
+        });
+    });
 }
 
 /**
@@ -179,50 +225,11 @@ export function createAuthorsSection(authors, options = {}) {
         </div>
     `;
 
-    // Add hover event listeners for highlighting
-    const authorSpans = container.querySelectorAll('.author-name');
-    const institutionSpans = container.querySelectorAll('.institution-item');
-
-    authorSpans.forEach(authorSpan => {
-        const affiliations = authorSpan.dataset.affiliations.split(',').filter(n => n);
-        
-        authorSpan.addEventListener('mouseenter', () => {
-            affiliations.forEach(affNum => {
-                institutionSpans.forEach(instSpan => {
-                    if (instSpan.dataset.affiliation === affNum) {
-                        instSpan.classList.add('highlight');
-                    }
-                });
-            });
-        });
-
-        authorSpan.addEventListener('mouseleave', () => {
-            institutionSpans.forEach(instSpan => {
-                instSpan.classList.remove('highlight');
-            });
-        });
-    });
-
-    institutionSpans.forEach(instSpan => {
-        const affNum = instSpan.dataset.affiliation;
-
-        instSpan.addEventListener('mouseenter', () => {
-            authorSpans.forEach(authorSpan => {
-                const affiliations = authorSpan.dataset.affiliations.split(',').filter(n => n);
-                if (affiliations.includes(affNum)) {
-                    authorSpan.classList.add('highlight');
-                }
-            });
-        });
-
-        instSpan.addEventListener('mouseleave', () => {
-            authorSpans.forEach(authorSpan => {
-                authorSpan.classList.remove('highlight');
-            });
-        });
-    });
+    attachAuthorAffiliationHover(container);
 
     // Add click event listeners if callbacks are provided
+    const authorSpans = container.querySelectorAll('.author-name');
+    const institutionSpans = container.querySelectorAll('.institution-item');
     if (onAuthorClick) {
         authorSpans.forEach(authorSpan => {
             authorSpan.addEventListener('click', () => {
@@ -258,7 +265,7 @@ export function createReleasesSection(releases, options = {}) {
         return html`<div class="paper-meta-item"><div class="paper-releases">No releases</div></div>`;
     }
 
-    const sortedReleases = sortReleasesByDate(releases);
+    const sortedReleases = releases; //sortReleasesByDate(releases);
 
     const releaseItems = sortedReleases.map(release => {
         const { date, venueName, status } = formatRelease(release);
@@ -422,119 +429,6 @@ export function createDetailsSection(paper) {
     `;
 }
 
-export function createValidationButtons(paper) {
-    const container = html`
-        <div class="validation-buttons">
-            <button class="btn-yes">Yes</button>
-            <button class="btn-no">No</button>
-            <button class="btn-unknown">Unknown</button>
-            <span class="status-message"></span>
-        </div>
-    `;
-
-    const buttons = container.querySelectorAll('button');
-    const statusMessage = container.querySelector('.status-message');
-    const yesBtn = buttons[0];
-    const noBtn = buttons[1];
-    const unknownBtn = buttons[2];
-
-    const paperId = paper.id;
-
-    function updateButtonStyles(isValid, isInvalid) {
-        // Reset all buttons to grey
-        yesBtn.style.backgroundColor = '#6c757d';
-        noBtn.style.backgroundColor = '#6c757d';
-        unknownBtn.style.backgroundColor = '#6c757d';
-        yesBtn.style.color = 'white';
-        noBtn.style.color = 'white';
-        unknownBtn.style.color = 'white';
-        yesBtn.style.border = 'none';
-        noBtn.style.border = 'none';
-        unknownBtn.style.border = 'none';
-
-        // Color the button that matches current state
-        if (isValid) {
-            yesBtn.style.backgroundColor = '#28a745';
-        } else if (isInvalid) {
-            noBtn.style.backgroundColor = '#dc3545';
-        } else {
-            unknownBtn.style.backgroundColor = '#fd7e14';
-        }
-    }
-
-    // Set initial button styles based on paper flags
-    const flags = paper.flags ?? [];
-    const isValid = flags.includes('valid');
-    const isInvalid = flags.includes('invalid');
-    updateButtonStyles(isValid, isInvalid);
-
-    async function setFlagOnServer(flag, value) {
-        const response = await fetch('/api/v1/set_flag', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                paper_id: paperId,
-                flag: flag,
-                value: value
-            })
-        });
-
-        const result = await response.json();
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-        return result;
-    }
-
-    async function handleValidation(action) {
-        if (paperId === null) {
-            statusMessage.textContent = 'Error: No paper ID available';
-            return;
-        }
-
-        // Disable all buttons while processing
-        buttons.forEach(btn => btn.disabled = true);
-        statusMessage.textContent = 'Processing...';
-
-        try {
-            if (action === 'yes') {
-                // Set valid, unset invalid
-                await setFlagOnServer('valid', true);
-                await setFlagOnServer('invalid', false);
-                updateButtonStyles(true, false);
-                statusMessage.textContent = 'Marked as valid';
-            } else if (action === 'no') {
-                // Set invalid, unset valid
-                await setFlagOnServer('invalid', true);
-                await setFlagOnServer('valid', false);
-                updateButtonStyles(false, true);
-                statusMessage.textContent = 'Marked as invalid';
-            } else if (action === 'unknown') {
-                // Unset both
-                await setFlagOnServer('valid', false);
-                await setFlagOnServer('invalid', false);
-                updateButtonStyles(false, false);
-                statusMessage.textContent = 'Validation cleared';
-            }
-            statusMessage.style.color = '#28a745';
-        } catch (error) {
-            statusMessage.textContent = `Error: ${error.message}`;
-            statusMessage.style.color = '#dc3545';
-        } finally {
-            // Re-enable buttons
-            buttons.forEach(btn => btn.disabled = false);
-        }
-    }
-
-    yesBtn.onclick = () => handleValidation('yes');
-    noBtn.onclick = () => handleValidation('no');
-    unknownBtn.onclick = () => handleValidation('unknown');
-
-    return container;
-}
-
 /**
  * Gets the CSS class for a score value based on thresholds.
  * @param {number} score - The score value
@@ -564,9 +458,11 @@ export function createScoreBand(score) {
     `;
 }
 
-export function createEditIcon(paper) {
+export function createEditIcon(paper, options = {}) {
+    const suggest = options.suggest ?? false;
+    const editUrl = paper.id != null ? `/edit/${paper.id}${suggest ? '?suggest=1' : ''}` : `/edit/new${suggest ? '?suggest=1' : ''}`;
     const editIcon = html`
-        <a href="/edit/${paper.id}" target="_blank" class="edit-icon" style="
+        <a href="${editUrl}" target="_blank" class="edit-icon" style="
             display: inline-flex;
             align-items: center;
             margin-left: 8px;

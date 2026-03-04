@@ -6,7 +6,6 @@ paperoni:
     gemini: _
     scraperapi: _
     paperoni_v2: _
-    openreview: _
   fetch:
     $class: RulesFetcher
     simultaneous:
@@ -75,6 +74,9 @@ paperoni:
   collection:
     $class: paperoni.collection.filecoll:FileCollection
     file: ${paperoni.data_path}/collection.json
+  suggestions:
+    $class: paperoni.collection.filecoll:FileCollection
+    file: ${paperoni.data_path}/suggestions.json
   server:
     host: localhost
     port: 8000
