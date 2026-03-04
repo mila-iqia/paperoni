@@ -10,7 +10,19 @@ const PAGE_SIZE = 100;
 const MONACO_CDN = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min';
 const STORAGE_KEY_BLOCKS = 'operate.blocks';
 const STORAGE_KEY_INDEX = 'operate.index';
-const DEFAULT_OPERATION = `# Write body of operate(paper)`;
+const DEFAULT_OPERATION = `# New operation
+
+# Write imports, definitions and preparation code above ##### (executed once)
+
+#####
+
+# Write body of operate(paper) below ##### (executed once per paper)
+# Return a new paper or a boolean
+
+# Examples:
+## return replace(paper, title=paper.title.upper())
+## return paper.title.startswith("D")
+`;
 
 let monacoEditor = null;
 let blocks = [];
@@ -500,7 +512,7 @@ export async function operatePapers() {
 
     newBtn.addEventListener('click', () => {
         disableApply();
-        addBlock('');
+        addBlock(DEFAULT_OPERATION);
     });
 
     cloneBtn.addEventListener('click', () => {

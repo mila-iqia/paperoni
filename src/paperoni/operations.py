@@ -209,7 +209,7 @@ def from_code(code):
     prelude = None
     sep = "\n#####\n"
     if sep in code:
-        prelude, code = code.split("#####")
+        prelude, code = code.split(sep)
 
     glb = dict(_builtins)
     if prelude:
