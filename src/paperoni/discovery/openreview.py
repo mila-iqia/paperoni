@@ -727,9 +727,6 @@ class OpenReviewDispatch(Discoverer):
                         for release in paper.releases
                     ):
                         yield paper
-                    else:
-                        breakpoint()
-                        print("REJECT", paper.title)
 
             except openreview.OpenReviewException as e:
                 # Try the next API version while holding the exception
