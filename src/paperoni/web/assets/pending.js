@@ -415,6 +415,14 @@ function createPendingItem(paperDiff) {
             </div>
         </div>
     `;
+
+    const isDev = new URLSearchParams(window.location.search).has('dev');
+    if (!isDev) {
+        itemEl.querySelectorAll('.info-table').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
+
     return itemEl;
 }
 
@@ -461,12 +469,16 @@ function displayError(error) {
 }
 
 function updatePendingUrl(offset) {
-    const urlParams = new URLSearchParams();
+    const urlParams = new URLSearchParams(window.location.search);
     if (offset > 0) {
         urlParams.set('offset', offset.toString());
+    } else {
+        urlParams.delete('offset');
     }
     if (pendingFilter) {
         urlParams.set('filter', pendingFilter);
+    } else {
+        urlParams.delete('filter');
     }
     const newUrl = urlParams.toString()
         ? `${window.location.pathname}?${urlParams.toString()}`
