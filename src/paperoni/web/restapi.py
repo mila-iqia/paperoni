@@ -496,10 +496,20 @@ def install_api(app) -> FastAPI:
                     diffs = _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in diffs)
                     unmatched = sum(not r.matched for r in diffs)
-                    edits = [d.new for d in diffs if d.matched and d.new]
+                    edits = [
+                        d.new
+                        for d in diffs
+                        if d.matched and d.new and "mark:delete" not in d.new.flags
+                    ]
+                    deletions = [
+                        d.current.id
+                        for d in diffs
+                        if d.matched and d.new and "mark:delete" in d.new.flags
+                    ]
                     await coll.collection.add_papers(
                         edits, force=True, ignore_exclusions=True
                     )
+                    await coll.collection.delete_ids(deletions)
                     results = []
 
             return OperateResponse(
