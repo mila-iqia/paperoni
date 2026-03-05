@@ -17,11 +17,12 @@ const DEFAULT_OPERATION = `# New operation
 #####
 
 # Write body of operate(paper) below ##### (executed once per paper)
-# Return a new paper or a boolean
+# Return a new paper, a boolean, or the DELETE keyword
 
 # Examples:
 ## return replace(paper, title=paper.title.upper())
 ## return paper.title.startswith("D")
+## return ("poop" in paper.title) and DELETE
 `;
 
 let monacoEditor = null;
@@ -234,9 +235,18 @@ async function fetchOperateResults(operation, searchParams, offset = 0, mode = '
 function createOperateItem(paperDiff) {
     const current = paperDiff.current;
     const paperNew = paperDiff.new;
+    const isDelete = current && (paperNew?.flags || []).includes('mark:delete');
 
     let contentEl;
-    if (!current) {
+    if (isDelete) {
+        const paperContent = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });
+        contentEl = html`
+            <div class="pending-delete-wrapper">
+                <div class="pending-delete-label">Delete paper</div>
+                <div class="pending-delete-paper">${paperContent}</div>
+            </div>
+        `;
+    } else if (!current) {
         contentEl = createWorksetPaperElement(paperNew, { excludeFromInfo: ['comments'] });
     } else if (!paperNew) {
         contentEl = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });

@@ -17,6 +17,8 @@ from .model import (
 )
 from .utils import release_status_order
 
+DELETE = object()
+
 
 @dataclass
 class OperationResult:
@@ -202,6 +204,7 @@ _builtins = {
     "ovld": ovld,
     "recurse": recurse,
     "call_next": call_next,
+    "DELETE": DELETE,
 }
 
 
@@ -233,6 +236,12 @@ def from_code(code):
                 changed=p != result,
                 original=p,
                 new=result,
+            )
+        elif result is DELETE:
+            return OperationResult(
+                changed=True,
+                original=p,
+                new=replace(p, flags={"mark:delete"}),
             )
         else:
             return result
