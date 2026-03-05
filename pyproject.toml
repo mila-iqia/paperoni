@@ -63,7 +63,7 @@ dev = [
     "pytest-asyncio>=1.3.0",
 ]
 lint = [
-    "ruff==0.15.0",
+    "ruff>=0.15.0",
 ]
 cloud = []
 
@@ -104,6 +104,7 @@ easy-oauth = { git = "https://github.com/mila-iqia/easy-oauth", rev = "v0.0.3" }
 line-length = 90
 
 [tool.ruff.lint]
+exclude = ["scripts/fix_prompt_metadata.py"]
 extend-select = ["I"]
 ignore = ["E241", "F722", "E501", "E203", "F811", "F821", "E741"]
 
