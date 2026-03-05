@@ -704,6 +704,8 @@ class OpenReviewDispatch(Discoverer):
         focuses: Focuses = None,
     ):
         """Query OpenReview"""
+        found_papers = False
+
         for api_version in self.api_versions:
             o = OpenReview(
                 api_version=api_version,
@@ -728,6 +730,7 @@ class OpenReviewDispatch(Discoverer):
                         release.status in ("rejected", "withdrawn")
                         for release in paper.releases
                     ):
+                        found_papers = True
                         yield paper
 
             except openreview.OpenReviewException as e:
@@ -736,7 +739,7 @@ class OpenReviewDispatch(Discoverer):
                 continue
 
         else:
-            if exception is not None:
+            if exception is not None and not found_papers:
                 raise exception
 
     async def login(
