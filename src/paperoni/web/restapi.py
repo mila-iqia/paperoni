@@ -531,6 +531,7 @@ def install_api(app) -> FastAPI:
             )
 
         all_papers = await request.run(SimpleNamespace(collection=config.suggestions))
+        papers = list(request.slice(all_papers))
 
         async def pair(sugg: _Paper):
             current = None
@@ -545,12 +546,11 @@ def install_api(app) -> FastAPI:
                 new=sugg and Paper(**vars(sugg)),
             )
 
-        diffs = [await pair(paper) for paper in all_papers]
-        total = len(diffs)
-        sliced = list(request.slice(diffs))
+        diffs = [await pair(paper) for paper in papers]
+        total = len(all_papers)
 
         return DiffResponse(
-            results=sliced,
+            results=diffs,
             count=request.count,
             next_offset=request.next_offset,
             total=total,
