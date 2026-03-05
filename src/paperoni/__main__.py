@@ -350,6 +350,7 @@ class Work:
                         )
                     ):
                         cont = True
+                        break
                 if cont:
                     continue
 
