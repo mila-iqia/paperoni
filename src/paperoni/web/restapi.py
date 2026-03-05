@@ -541,9 +541,12 @@ def install_api(app) -> FastAPI:
                     if request.expand_links:
                         equiv = expand_paper_links(equiv)
                     current = equiv
+            current = current and Paper(**vars(current))
+            sugg = sugg and Paper(**vars(sugg))
             return PaperDiff(
-                current=current and Paper(**vars(current)),
-                new=sugg and Paper(**vars(sugg)),
+                score=config.focuses.score(current or sugg) if current or sugg else 0,
+                current=current,
+                new=sugg,
             )
 
         diffs = [await pair(paper) for paper in papers]

@@ -321,7 +321,8 @@ function createPendingItem(paperDiff) {
     const isDelete = current && (paperNew?.flags || []).includes('mark:delete');
     const paperId = paperNew?.id ?? current?.id;
 
-    const scoreBand = (score != null)
+    const isUser = (paperNew?.flags || []).includes('suggest:user');
+    const scoreBand = (score != null && !isUser)
         ? html`
             <div class="score-band ${getScoreClass(score)}">
                 <div class="score-value">${Math.round(score)}</div>
