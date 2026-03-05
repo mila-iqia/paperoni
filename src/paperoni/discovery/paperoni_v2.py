@@ -190,7 +190,9 @@ class PaperoniV2(Discoverer):
             )
 
             if remove_rejected:
-                p.releases = [r for r in p.releases if r.status != "rejected"]
+                p.releases = [
+                    r for r in p.releases if r.status not in ("rejected", "withdrawn")
+                ]
                 if not p.releases:
                     continue
 
