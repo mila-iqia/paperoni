@@ -1,4 +1,5 @@
-import { html } from './common.js';
+import { debounce, html } from './common.js';
+import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
 import { getScoreClass } from './paper.js';
 import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js';
 
@@ -304,6 +305,8 @@ async function fetchPending(offset = 0, limit = PAGE_SIZE, filter = null) {
         queryParams.append('flags', apiFlag);
     }
 
+    appendSearchParamsTo(queryParams, getSearchParams());
+
     const url = `/api/v1/pending/list?${queryParams.toString()}`;
     const response = await fetch(url);
 
@@ -481,6 +484,23 @@ function updatePendingUrl(offset) {
     } else {
         urlParams.delete('filter');
     }
+
+    const params = getSearchParams();
+    if (params.title) urlParams.set('title', params.title);
+    else urlParams.delete('title');
+    if (params.author) urlParams.set('author', params.author);
+    else urlParams.delete('author');
+    if (params.institution) urlParams.set('institution', params.institution);
+    else urlParams.delete('institution');
+    if (params.venue) urlParams.set('venue', params.venue);
+    else urlParams.delete('venue');
+    if (params.start_date) urlParams.set('start_date', params.start_date);
+    else urlParams.delete('start_date');
+    if (params.end_date) urlParams.set('end_date', params.end_date);
+    else urlParams.delete('end_date');
+    if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
+    else urlParams.delete('peerReviewed');
+
     const newUrl = urlParams.toString()
         ? `${window.location.pathname}?${urlParams.toString()}`
         : window.location.pathname;
@@ -501,11 +521,59 @@ export async function loadPending(offset = 0) {
 }
 
 export async function displayPending() {
+    const form = document.getElementById('searchForm');
+    if (form) {
+        form.addEventListener('submit', (e) => e.preventDefault());
+        
+        const handleInputChange = debounce(() => {
+            loadPending(0);
+        }, 300);
+        
+        ['title', 'author', 'institution', 'venue', 'start_date', 'end_date'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', handleInputChange);
+        });
+        
+        const peerReviewedCheckbox = document.getElementById('peerReviewed');
+        if (peerReviewedCheckbox) peerReviewedCheckbox.addEventListener('change', handleInputChange);
+        
+        const clearButton = document.getElementById('clearSearch');
+        if (clearButton) {
+            clearButton.addEventListener('click', () => {
+                clearSearchForm();
+                handleInputChange();
+            });
+        }
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const offset = parseInt(urlParams.get('offset') || '0', 10);
     const filterParam = urlParams.get('filter');
     if (filterParam) {
         pendingFilter = filterParam;
     }
+
+    // Set form values from URL parameters
+    const initialParams = {
+        title: urlParams.get('title') || '',
+        author: urlParams.get('author') || '',
+        institution: urlParams.get('institution') || '',
+        venue: urlParams.get('venue') || '',
+        start_date: urlParams.get('start_date') || '',
+        end_date: urlParams.get('end_date') || '',
+        peerReviewed: urlParams.get('peerReviewed') === 'true'
+    };
+
+    const titleInput = document.getElementById('title');
+    if (titleInput) {
+        titleInput.value = initialParams.title;
+        document.getElementById('author').value = initialParams.author;
+        document.getElementById('institution').value = initialParams.institution;
+        document.getElementById('venue').value = initialParams.venue;
+        document.getElementById('start_date').value = initialParams.start_date;
+        document.getElementById('end_date').value = initialParams.end_date;
+        document.getElementById('peerReviewed').checked = initialParams.peerReviewed;
+    }
+
     await loadPending(offset);
 }

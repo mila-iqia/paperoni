@@ -5,8 +5,13 @@
 {% block page_title %}Pending Papers{% endblock %}
 
 {% block content %}
-<div class="workset-container">
-    <div id="pendingContainer"></div>
+<div class="search-container pending-search-container">
+    <form class="search-form" id="searchForm">
+        {% include "_search_form.html" %}
+    </form>
+    <div class="workset-container">
+        <div id="pendingContainer"></div>
+    </div>
 </div>
 {% endblock %}
 
