@@ -676,6 +676,8 @@ class OpenReview(Discoverer):
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
+    username: Secret[str] = field(default_factory=lambda: openreview_config.username)
+    password: Secret[str] = field(default_factory=lambda: openreview_config.password)
     token: Secret[str] = field(
         default_factory=lambda: os.getenv("OPENREVIEW_TOKEN", openreview_config.api_key)
     )
