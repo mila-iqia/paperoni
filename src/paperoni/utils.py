@@ -203,7 +203,7 @@ def normalize_venue(venue: str) -> str:
 
 
 def split_institution(name: str) -> list[str]:
-    return re.split(r" *[,;/-] *", name)
+    return re.split(r" *(?:[,;/-]|\band\b) *", name)
 
 
 def quick_author_similarity(names1, names2):
