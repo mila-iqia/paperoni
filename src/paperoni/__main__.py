@@ -339,6 +339,7 @@ class Work:
                     continue
 
                 col_paper = None
+                cont = False
                 for reference_coll in (wcoll, scoll):
                     if (
                         reference_coll is not None
@@ -348,7 +349,9 @@ class Work:
                             or not paper_has_updated(col_paper, paper)
                         )
                     ):
-                        continue
+                        cont = True
+                if cont:
+                    continue
 
                 if col_paper:
                     working_set = PaperWorkingSet.make(
