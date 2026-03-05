@@ -911,17 +911,15 @@ class Coll:
             )
 
             async for paper in coll.collection.search():
-                if not await other_collection.find_paper(paper):
+                if await other_collection.find_paper(paper):
+                    common.append(paper)
+                else:
                     extras.append(paper)
 
             (self.out / f"extra.{self.format}").unlink(missing_ok=True)
             await FileCollection(file=self.out / f"extra.{self.format}").add_papers(
                 extras, force=True
             )
-
-            async for paper in coll.collection.search():
-                if await other_collection.find_paper(paper):
-                    common.append(paper)
 
             (self.out / f"common.{self.format}").unlink(missing_ok=True)
             await FileCollection(file=self.out / f"common.{self.format}").add_papers(
