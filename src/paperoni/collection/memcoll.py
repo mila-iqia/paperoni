@@ -173,6 +173,10 @@ class MemCollection(PaperCollection):
         include_flags: list[str] = None,
         # Flags that must not be present
         exclude_flags: list[str] = None,
+        # Maximum number of results to yield
+        limit: int = 0,
+        # Number of results to skip
+        offset: int = 0,
     ) -> AsyncGenerator[Paper, None]:
         if paper_id is not None:
             yield await self.find_by_id(paper_id)
@@ -182,6 +186,8 @@ class MemCollection(PaperCollection):
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
         venue = venue and normalize_venue(venue)
+        skipped = 0
+        yielded = 0
         for p in self._index:
             if title and title not in normalize_title(p.title):
                 continue
@@ -226,7 +232,42 @@ class MemCollection(PaperCollection):
                 end_date < release.venue.date for release in matching_releases
             ):
                 continue
+
+            if offset > 0 and skipped < offset:
+                skipped += 1
+                continue
+
             yield p
+            yielded += 1
+            if limit > 0 and yielded >= limit:
+                break
+
+    async def count(
+        self,
+        paper_id: str | None = None,
+        title: str = None,
+        institution: str = None,
+        author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
+    ) -> int:
+        n = 0
+        async for _ in self.search(
+            paper_id=paper_id,
+            title=title,
+            institution=institution,
+            author=author,
+            venue=venue,
+            start_date=start_date,
+            end_date=end_date,
+            include_flags=include_flags,
+            exclude_flags=exclude_flags,
+        ):
+            n += 1
+        return n
 
     def __len__(self) -> int:
         return sum(1 for _ in self._index)

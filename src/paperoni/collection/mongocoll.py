@@ -241,7 +241,7 @@ class MongoCollection(PaperCollection):
         self._collection = None
         self._exclusions = None
 
-    async def search(
+    async def _build_query(
         self,
         paper_id: ObjectId = None,
         title: str = None,
@@ -252,10 +252,7 @@ class MongoCollection(PaperCollection):
         end_date: date = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
-    ) -> AsyncGenerator[Paper, None]:
-        """Search for papers in the collection."""
-        await self._ensure_connection()
-
+    ) -> dict:
         query = {}
         title = title and normalize_title(title)
         author = author and normalize_name(author)
@@ -332,7 +329,44 @@ class MongoCollection(PaperCollection):
                 "$options": "i",
             }
 
-        async for doc in self._collection.find(query).sort("_latest", -1):
+        return query
+
+    async def search(
+        self,
+        paper_id: ObjectId = None,
+        title: str = None,
+        institution: str = None,
+        author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
+        limit: int = 0,
+        offset: int = 0,
+    ) -> AsyncGenerator[Paper, None]:
+        """Search for papers in the collection."""
+        await self._ensure_connection()
+
+        query = await self._build_query(
+            paper_id=paper_id,
+            title=title,
+            institution=institution,
+            author=author,
+            venue=venue,
+            start_date=start_date,
+            end_date=end_date,
+            include_flags=include_flags,
+            exclude_flags=exclude_flags,
+        )
+
+        cursor = self._collection.find(query).sort("_latest", -1)
+        if offset > 0:
+            cursor = cursor.skip(offset)
+        if limit > 0:
+            cursor = cursor.limit(limit)
+
+        async for doc in cursor:
             yield srx.deserialize(Paper, doc)
 
     def __len__(self) -> int:
@@ -341,7 +375,29 @@ class MongoCollection(PaperCollection):
             "Use 'await collection.count()' instead of len() for async MongoDB collection"
         )
 
-    async def count(self) -> int:
+    async def count(
+        self,
+        paper_id: ObjectId = None,
+        title: str = None,
+        institution: str = None,
+        author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
+    ) -> int:
         """Get the number of papers in the collection."""
         await self._ensure_connection()
-        return await self._collection.count_documents({})
+        query = await self._build_query(
+            paper_id=paper_id,
+            title=title,
+            institution=institution,
+            author=author,
+            venue=venue,
+            start_date=start_date,
+            end_date=end_date,
+            include_flags=include_flags,
+            exclude_flags=exclude_flags,
+        )
+        return await self._collection.count_documents(query)
