@@ -1,4 +1,5 @@
-import { html } from './common.js';
+import { escapeHtml, html } from './common.js';
+import { getTranslation, setLanguageNode } from './translate.js';
 
 let usersData = {};
 let capabilitiesGraph = {};
@@ -135,7 +136,7 @@ function createCapabilityBadge(email, capability, isImplicit) {
 
 function createAutocompleteInput(email, existingCapabilities) {
     const container = html`<div class="capability-input-container"></div>`;
-    const input = html`<input type="text" class="edit-input capability-autocomplete" placeholder="Type to add capability..." autocomplete="off">`;
+    const input = html`<input type="text" class="edit-input capability-autocomplete" placeholder="Type to add capability..." data-loc-placeholder="Type to add capability..." autocomplete="off">`;
     const suggestions = html`<div class="autocomplete-suggestions" style="display: none;"></div>`;
     
     container.appendChild(input);
@@ -318,7 +319,7 @@ function createTableRow(email, capabilities, isNew = false) {
             return;
         }
         
-        if (!confirm(`Remove all capabilities for ${rowEmail}?`)) {
+        if (!confirm(getTranslation('Remove all capabilities for {1}?').replace('{1}', rowEmail))) {
             return;
         }
         
@@ -392,9 +393,10 @@ function addNewRow() {
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     if (!errorDiv) return;
-    
-    errorDiv.textContent = `Error: ${message}`;
+
+    errorDiv.innerHTML = `<loc>Error: <span>${escapeHtml(message)}</span></loc>`;
     errorDiv.style.display = 'block';
+    setLanguageNode(errorDiv);
     setTimeout(() => {
         errorDiv.style.display = 'none';
     }, 5000);
@@ -426,6 +428,7 @@ export async function manageCapabilities(oauthPrefix = '') {
         await fetchCapabilitiesList();
         renderTable();
         showContent();
+        setLanguageNode(document.getElementById('capabilitiesContent'));
         
         // Handle "Add User" button
         const addUserBtn = document.getElementById('addUserBtn');

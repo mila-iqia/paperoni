@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Paperoni{% endblock %}</title>
+        <title id="docTitle" data-title-key="{% block title_key %}Paperoni{% endblock %}">{% block title %}Paperoni{% endblock %}</title>
         <link rel="stylesheet" href="/assets/style.css">
+        <script type="module" src="/assets/translate.js"></script>
         {% if has_custom_css %}
         <link rel="stylesheet" href="/custom/style.css">
         {% endif %}
@@ -15,21 +16,24 @@
             <div class="header-left">
                 <h1 class="page-title">{% block page_title %}Paperoni{% endblock %}</h1>
                 {% if help_section %}
-                <a href="/help#{{ help_section }}" class="help-link" title="Help">?</a>
+                <a href="/help#{{ help_section }}" class="help-link" title="Help" aria-label="Help">?</a>
                 {% endif %}
             </div>
-            <div class="header-right">
                 {% if has_logo %}
                 <img src="/custom/logo.png" alt="Logo" class="header-logo">
                 {% endif %}
                 <nav class="header-nav">
-                    <a href="/" class="nav-link">Home</a>
+                    <a href="/" class="nav-link"><loc-text>Home</loc-text></a>
                     {% if logged_in %}
-                    <a href="/logout" class="nav-link">Logout</a>
+                    <a href="/logout" class="nav-link"><loc-text>Logout</loc-text></a>
                     {% else %}
-                    <a href="/login" class="nav-link">Login</a>
+                    <a href="/login" class="nav-link"><loc-text>Login</loc-text></a>
                     {% endif %}
                 </nav>
+                <div class="lang-vertical-container">
+                    <button id="lang-btn-fr" class="lang-stacked-btn" data-lang="fr">FR</button>
+                    <button id="lang-btn-en" class="lang-stacked-btn" data-lang="en">EN</button>
+                </div>
             </div>
         </header>
 
@@ -37,6 +41,7 @@
             {% block content %}{% endblock %}
         </main>
 
-        {% block scripts %}{% endblock %}
+        {% block scripts %}
+        {% endblock %}
     </body>
 </html>

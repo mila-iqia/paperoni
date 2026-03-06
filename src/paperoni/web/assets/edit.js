@@ -1,4 +1,5 @@
-import { html, showToast } from './common.js';
+import { escapeHtml, html, showToast } from './common.js';
+import { getTranslation, setLanguageNode } from './translate.js';
 
 /**
  * Generic badge management system for topics, flags, etc.
@@ -6,13 +7,15 @@ import { html, showToast } from './common.js';
 function renderBadgeField(container, items, config) {
     container.innerHTML = '';
 
+    const placeholder = config.placeholderKey ? getTranslation(config.placeholderKey) : (config.placeholder || '');
     const wrapper = html`
         <div class="array-field">
             <div class="${config.badgesClass}" id="${config.badgesId}"></div>
             <div class="input-container">
                 <input type="text"
                        id="${config.inputId}"
-                       placeholder="${config.placeholder}"
+                       placeholder="${placeholder}"
+                       data-loc-placeholder="${config.placeholderKey || ''}"
                        class="edit-input-large">
             </div>
         </div>
@@ -81,7 +84,7 @@ export function editPaper(paperId, suggestMode = false) {
 
     // Check if creating a new paper
     if (paperId === 'new') {
-        const pageTitle = suggestMode ? 'Suggest New Paper' : 'Create Paper';
+        const pageTitle = getTranslation(suggestMode ? 'Suggest New Paper' : 'Create Paper');
         document.title = pageTitle;
         const h1 = document.querySelector('h1');
         if (h1) h1.textContent = pageTitle;
@@ -99,17 +102,19 @@ export function editPaper(paperId, suggestMode = false) {
         };
         const form = renderEditForm(paper, suggestMode);
         formContainer.appendChild(form);
+        setLanguageNode(formContainer);
         return;
     }
 
     // Show loading state
     formContainer.innerHTML = '';
-    formContainer.appendChild(html`<div class="loading">Loading paper...</div>`);
+    formContainer.appendChild(html`<div class="loading"><loc>Loading paper...</loc></div>`);
+    setLanguageNode(formContainer);
 
     // Fetch the paper data
     fetchPaper(paperId)
         .then((paper) => {
-            const pageTitle = suggestMode ? 'Suggest Edit' : 'Edit Paper';
+            const pageTitle = getTranslation(suggestMode ? 'Suggest Edit' : 'Edit Paper');
             document.title = pageTitle;
             const h1 = document.querySelector('h1');
             if (h1) h1.textContent = pageTitle;
@@ -117,10 +122,11 @@ export function editPaper(paperId, suggestMode = false) {
             formContainer.innerHTML = '';
             const form = renderEditForm(paper, suggestMode);
             formContainer.appendChild(form);
+            setLanguageNode(formContainer);
         })
         .catch((error) => {
             formContainer.innerHTML = '';
-            showError(messageContainer, `Failed to load paper: ${error.message}`);
+            showError(messageContainer, getTranslation('Failed to load paper: {1}').replace('{1}', error.message));
         });
 }
 
@@ -191,7 +197,7 @@ async function deletePaper(paperId) {
 function showError(container, message) {
     container.innerHTML = '';
     container.appendChild(
-        html`<div class="error-message">${message}</div>`
+        html`<div class="error-message">${escapeHtml(message)}</div>`
     );
 }
 
@@ -226,7 +232,7 @@ function renderEditForm(paper, suggestMode = false) {
     }
 
     const editPendingNote = editPending
-        ? html`<span class="edit-pending-note">(based on existing pending edit)</span>`
+        ? html`<span class="edit-pending-note"><loc>(based on existing pending edit)</loc></span>`
         : null;
 
     const form = html`
@@ -234,21 +240,22 @@ function renderEditForm(paper, suggestMode = false) {
             <!-- Basic Information -->
             <div class="form-section">
                 <div class="section-header">
-                    <h2>Basic Information ${editPendingNote}</h2>
-                    ${paper.id ? html`<button type="button" class="btn-delete-toggle" id="deleteToggleBtn">${suggestMode ? 'Mark for deletion' : 'Delete'}</button>` : null}
+                    <h2><loc>Basic Information</loc> ${editPendingNote}</h2>
+                    ${paper.id ? html`<button type="button" class="btn-delete-toggle" id="deleteToggleBtn"><loc>${suggestMode ? 'Mark for deletion' : 'Delete'}</loc></button>` : null}
                 </div>
 
                 <div class="form-group">
-                    <label for="title">Title *</label>
+                    <label for="title"><loc>Title *</loc></label>
                     <input type="text" id="title" name="title" value="${paper.title || ''}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="abstract">Abstract</label>
-                    <div id="abstract" 
-                         class="editable-abstract" 
-                         contenteditable="true" 
+                    <label for="abstract"><loc>Abstract</loc></label>
+                    <div id="abstract"
+                         class="editable-abstract"
+                         contenteditable="true"
                          data-placeholder="Enter the paper abstract..."
+                         data-loc-placeholder="Enter the paper abstract..."
                          role="textbox"
                          aria-label="Abstract">${paper.abstract || ''}</div>
                 </div>
@@ -256,67 +263,67 @@ function renderEditForm(paper, suggestMode = false) {
 
             <!-- Authors -->
             <div class="form-section">
-                <h2>Authors</h2>
+                <h2><loc>Authors</loc></h2>
                 <div id="authorsContainer"></div>
             </div>
 
             <!-- Releases -->
             <div class="form-section">
-                <h2>Releases</h2>
+                <h2><loc>Releases</loc></h2>
                 <div id="releasesContainer"></div>
             </div>
 
             <!-- Topics -->
             <div class="form-section">
-                <h2>Topics</h2>
+                <h2><loc>Topics</loc></h2>
                 <div id="topicsContainer"></div>
             </div>
 
             <!-- Links -->
             <div class="form-section">
-                <h2>Links</h2>
+                <h2><loc>Links</loc></h2>
                 <div id="linksContainer"></div>
             </div>
 
             <!-- Flags -->
             <div class="form-section">
-                <h2>Flags</h2>
+                <h2><loc>Flags</loc></h2>
                 <div id="flagsContainer"></div>
             </div>
 
             <!-- Metadata -->
             <div class="form-section">
                 <div class="section-header">
-                    <h2>Metadata</h2>
+                    <h2><loc>Metadata</loc></h2>
                 </div>
 
                 <div class="form-group">
-                    <label for="key">Key</label>
-                    <input type="text" id="key" name="key" value="${paper.key || 'n/a'}" placeholder="Paper key identifier" class="edit-input">
+                    <label for="key"><loc>Key</loc></label>
+                    <input type="text" id="key" name="key" value="${paper.key || 'n/a'}" placeholder="Paper key identifier" data-loc-placeholder="Paper key identifier" class="edit-input">
                 </div>
 
                 <div class="form-group">
-                    <label for="version">Version</label>
-                    <input type="text" id="version" name="version" value="${paper.version ? new Date(paper.version).toLocaleString() : 'Not set'}" readonly class="edit-input readonly-input" title="Last modified timestamp (read-only)">
+                    <label for="version"><loc>Version</loc></label>
+                    <input type="text" id="version" name="version" value="${paper.version ? new Date(paper.version).toLocaleString() : ''}" readonly class="edit-input readonly-input" title="Last modified timestamp (read-only)" data-loc-title="Last modified timestamp (read-only)" placeholder="Not set" data-loc-placeholder="Not set">
                 </div>
 
                 <div class="form-group">
-                    <label>Info</label>
+                    <label><loc>Info</loc></label>
                     <div id="infoContainer"></div>
                 </div>
             </div>
 
-            <!-- Comment (suggest mode: for validator; include mode: optional note) -->
+            <!-- Comment -->
             <div class="form-section">
                 <div class="form-group">
-                    <label for="comment">Comment</label>
-                    <textarea id="comment" name="comment" class="edit-input" rows="3" placeholder="${suggestMode ? 'Comment about this edit, for the person who will validate it' : 'Optional note about this edit'}"></textarea>
+                    <label for="comment"><loc>Comment</loc></label>
+                    <textarea id="comment" name="comment" class="edit-input" rows="3" placeholder="${suggestMode ? 'Comment about this edit, for the person who will validate it' : 'Optional note about this edit'}" data-loc-placeholder="${suggestMode ? 'Comment about this edit, for the person who will validate it' : 'Optional note about this edit'}"></textarea>
                 </div>
             </div>
 
             <!-- Form Actions -->
             <div class="form-actions sticky-bottom">
-                <button type="submit" class="btn-primary btn-save-sticky" id="submitBtn">${getSubmitButtonText(paper, suggestMode)}</button>
+                <button type="submit" class="btn-primary btn-save-sticky" id="submitBtn"><loc>${getSubmitButtonText(paper, suggestMode)}</loc></button>
             </div>
         </form>
     `;
@@ -349,7 +356,9 @@ function renderEditForm(paper, suggestMode = false) {
             deleteMode = !deleteMode;
             deleteToggleBtn.classList.toggle('active', deleteMode);
             submitBtn.classList.toggle('btn-save-delete', deleteMode);
-            submitBtn.textContent = getSubmitButtonText(paper, suggestMode, deleteMode);
+            const btnKey = getSubmitButtonText(paper, suggestMode, deleteMode);
+            submitBtn.innerHTML = '<loc>' + btnKey + '</loc>';
+            setLanguageNode(submitBtn);
             if (deleteMode && suggestMode) {
                 form.querySelector('#comment')?.focus();
             }
@@ -361,10 +370,12 @@ function renderEditForm(paper, suggestMode = false) {
         e.preventDefault();
         const messageContainer = document.getElementById('messageContainer');
         const submitBtn = form.querySelector('button[type="submit"]');
-        let originalBtnText = submitBtn.textContent;
+        const originalBtnKey = getSubmitButtonText(paper, suggestMode, deleteMode);
 
         submitBtn.disabled = true;
-        submitBtn.textContent = suggestMode ? 'Submitting...' : (deleteMode ? 'Deleting...' : 'Saving...');
+        const loadingKey = suggestMode ? 'Submitting...' : (deleteMode ? 'Deleting...' : 'Saving...');
+        submitBtn.innerHTML = '<loc>' + loadingKey + '</loc>';
+        setLanguageNode(submitBtn);
 
         try {
             const comment = form.querySelector('#comment')?.value?.trim() || '';
@@ -374,56 +385,59 @@ function renderEditForm(paper, suggestMode = false) {
                 let updatedPaper = collectFormData(form, paper);
                 updatedPaper = { ...updatedPaper, flags: [...(updatedPaper.flags || []), 'mark:delete'] };
                 if (!comment) {
-                    showToast('Give a reason for deletion in the comment', 'error');
+                    showToast(getTranslation('Give a reason for deletion in the comment'), 'error');
                     form.querySelector('#comment')?.focus();
                     submitBtn.disabled = false;
-                    submitBtn.textContent = originalBtnText;
+                    submitBtn.innerHTML = '<loc>' + originalBtnKey + '</loc>';
+                    setLanguageNode(submitBtn);
                     return;
                 }
                 const result = await submitPaper(updatedPaper, comment, true);
                 if (result.success) {
-                    showToast('Edit suggested! It will appear in the pending queue for validation.', 'success');
+                    showToast(getTranslation('Edit suggested! It will appear in the pending queue for validation.'), 'success');
                 } else {
-                    showToast(result.message || 'Failed to submit suggestion', 'error');
+                    showToast(result.message || getTranslation('Failed to submit suggestion'), 'error');
                 }
             } else if (deleteMode && !suggestMode) {
-                // Include mode: call /delete with paper id
                 const result = await deletePaper(paper.id);
                 if (result.success) {
-                    showToast('Paper deleted successfully!', 'success');
+                    showToast(getTranslation('Paper deleted successfully!'), 'success');
                     window.location.href = '/search';
                 } else {
-                    showToast(result.message || 'Failed to delete paper', 'error');
+                    showToast(result.message || getTranslation('Failed to delete paper'), 'error');
                 }
             } else {
-                // Edit/add: use /include
                 const updatedPaper = collectFormData(form, paper);
                 if (!updatedPaper.title || !updatedPaper.title.trim()) {
-                    showToast('Title cannot be empty', 'error');
+                    showToast(getTranslation('Title cannot be empty'), 'error');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = originalBtnText;
+                    submitBtn.innerHTML = '<loc>' + originalBtnKey + '</loc>';
+                    setLanguageNode(submitBtn);
                     return;
                 }
                 for (const author of updatedPaper.authors) {
                     if (!author.display_name || !author.display_name.trim()) {
-                        showToast('Author name cannot be empty', 'error');
+                        showToast(getTranslation('Author name cannot be empty'), 'error');
                         submitBtn.disabled = false;
-                        submitBtn.textContent = originalBtnText;
+                        submitBtn.innerHTML = '<loc>' + originalBtnKey + '</loc>';
+                        setLanguageNode(submitBtn);
                         return;
                     }
                 }
                 for (const release of updatedPaper.releases) {
                     if (!release.venue || !release.venue.name || !release.venue.name.trim()) {
-                        showToast('Venue name cannot be empty', 'error');
+                        showToast(getTranslation('Venue name cannot be empty'), 'error');
                         submitBtn.disabled = false;
-                        submitBtn.textContent = originalBtnText;
+                        submitBtn.innerHTML = '<loc>' + originalBtnKey + '</loc>';
+                        setLanguageNode(submitBtn);
                         return;
                     }
                 }
                 if (paper.id && papersEqual(paper, updatedPaper)) {
-                    showToast('No changes to save', 'error');
+                    showToast(getTranslation('No changes to save'), 'error');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = originalBtnText;
+                    submitBtn.innerHTML = '<loc>' + originalBtnKey + '</loc>';
+                    setLanguageNode(submitBtn);
                     return;
                 }
                 const result = await submitPaper(updatedPaper, comment, suggestMode);
@@ -431,28 +445,27 @@ function renderEditForm(paper, suggestMode = false) {
                     const isNew = paper.id === null;
                     if (result.ids && result.ids.length > 0 && isNew) {
                         paper.id = result.ids[0];
-                        originalBtnText = getSubmitButtonText(paper, suggestMode, deleteMode);
                     }
-                    showToast(suggestMode
+                    const successKey = suggestMode
                         ? (isNew ? 'Suggestion submitted! It will appear in the pending queue for validation.' : 'Edit suggested! It will appear in the pending queue for validation.')
-                        : (isNew ? 'Paper created successfully!' : 'Paper updated successfully!'),
-                    'success');
+                        : (isNew ? 'Paper created successfully!' : 'Paper updated successfully!');
+                    showToast(getTranslation(successKey), 'success');
                     if (isNew) {
                         window.history.replaceState(null, '', `/edit/${paper.id}${suggestMode ? '?suggest=1' : ''}`);
                     }
-                    const newTitle = suggestMode ? 'Suggest Edit' : 'Edit Paper';
-                    document.title = newTitle;
+                    document.title = getTranslation(suggestMode ? 'Suggest Edit' : 'Edit Paper');
                     const h1 = document.querySelector('h1');
-                    if (h1) h1.textContent = newTitle;
+                    if (h1) h1.textContent = getTranslation(suggestMode ? 'Suggest Edit' : 'Edit Paper');
                 } else {
-                    showToast(result.message || 'Failed to update paper', 'error');
+                    showToast(result.message || getTranslation('Failed to update paper'), 'error');
                 }
             }
         } catch (error) {
-            showToast(`Error: ${error.message}`, 'error');
+            showToast(getTranslation('Error: {1}').replace('{1}', error.message), 'error');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = originalBtnText;
+            submitBtn.innerHTML = '<loc>' + getSubmitButtonText(paper, suggestMode, deleteMode) + '</loc>';
+            setLanguageNode(submitBtn);
         }
     });
 
@@ -472,8 +485,8 @@ function renderAuthors(container, authors) {
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Name</th>
-                        <th>Affiliations</th>
+                        <th><loc>Name</loc></th>
+                        <th><loc>Affiliations</loc></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -492,7 +505,7 @@ function renderAuthors(container, authors) {
     // Initialize button states
     updateRowIndices(tbody);
 
-    const addBtn = html`<button type="button" class="btn-add input-container">+ Add Author</button>`;
+    const addBtn = html`<button type="button" class="btn-add input-container"><loc>+ Add Author</loc></button>`;
     addBtn.addEventListener('click', () => {
         const newAuthor = {
             display_name: '',
@@ -519,13 +532,14 @@ function createAuthorRow(author, index) {
     const row = html`
         <tr>
             <td class="cell-center-padded">
-                <div class="drag-handle" title="Drag to reorder">⋮⋮</div>
+                <div class="drag-handle" title="Drag to reorder" data-loc-title="Drag to reorder">⋮⋮</div>
             </td>
             <td>
                 <input type="text"
                        name="authors[${index}].display_name"
                        value="${author.display_name || ''}"
                        placeholder="Enter author's name"
+                       data-loc-placeholder="Enter author's name"
                        required
                        class="edit-input">
             </td>
@@ -534,6 +548,7 @@ function createAuthorRow(author, index) {
                        name="authors[${index}].affiliations"
                        value="${(author.affiliations || []).map(a => a.name).join('; ')}"
                        placeholder="Enter affiliations, semicolon-separated"
+                       data-loc-placeholder="Enter affiliations, semicolon-separated"
                        class="edit-input">
             </td>
             <td class="cell-center">
@@ -695,11 +710,11 @@ function renderReleases(container, releases) {
             <table class="releases-table edit-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Venue Name</th>
-                        <th>Type</th>
-                        <th>Peer review</th>
-                        <th>Raw status</th>
+                        <th><loc>Date</loc></th>
+                        <th><loc>Venue Name</loc></th>
+                        <th><loc>Type</loc></th>
+                        <th><loc>Peer review</loc></th>
+                        <th><loc>Raw status</loc></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -715,7 +730,7 @@ function renderReleases(container, releases) {
         tbody.appendChild(row);
     });
 
-    const addBtn = html`<button type="button" class="btn-add input-container">+ Add Release</button>`;
+    const addBtn = html`<button type="button" class="btn-add input-container"><loc>+ Add Release</loc></button>`;
     addBtn.addEventListener('click', () => {
         const newRelease = {
             venue: {
@@ -763,20 +778,20 @@ function createReleaseRow(release, index) {
             <td>
                 <select name="releases[${index}].venue.type" required
                         class="edit-input">
-                    <option value="conference">Conference</option>
-                    <option value="journal">Journal</option>
-                    <option value="workshop">Workshop</option>
-                    <option value="preprint">Preprint</option>
+                    <option value="conference"><loc>Conference</loc></option>
+                    <option value="journal"><loc>Journal</loc></option>
+                    <option value="workshop"><loc>Workshop</loc></option>
+                    <option value="preprint"><loc>Preprint</loc></option>
                 </select>
             </td>
             <td>
                 <select name="releases[${index}].peer_review_status" required
                         class="edit-input">
-                    <option value="peer-reviewed">Peer-reviewed</option>
-                    <option value="preprint">Preprint</option>
-                    <option value="workshop">Workshop</option>
-                    <option value="other">Other</option>
-                    <option value="unknown">Unknown</option>
+                    <option value="peer-reviewed"><loc>Peer-reviewed</loc></option>
+                    <option value="preprint"><loc>Preprint</loc></option>
+                    <option value="workshop"><loc>Workshop</loc></option>
+                    <option value="other"><loc>Other</loc></option>
+                    <option value="unknown"><loc>Unknown</loc></option>
                 </select>
             </td>
             <td>
@@ -813,7 +828,7 @@ function renderTopics(container, topics) {
         badgesClass: 'topics-badges',
         badgesId: 'topicsBadges',
         inputId: 'newTopicInput',
-        placeholder: 'Type a topic and press Enter to add...',
+        placeholderKey: 'Type a topic and press Enter to add...',
         badgeClass: 'topic-badge',
         createItem: (value) => ({ name: value }),
         getDisplayValue: (item) => item.name || '',
@@ -838,8 +853,8 @@ function renderLinks(container, links) {
             <table class="links-table edit-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Link</th>
+                        <th><loc>Type</loc></th>
+                        <th><loc>Link</loc></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -868,7 +883,7 @@ function renderLinks(container, links) {
         tbody.appendChild(row);
     });
 
-    const addBtn = html`<button type="button" class="btn-add input-container">+ Add Link</button>`;
+    const addBtn = html`<button type="button" class="btn-add input-container"><loc>+ Add Link</loc></button>`;
     addBtn.addEventListener('click', () => {
         const newLink = {
             type: '',
@@ -891,6 +906,7 @@ function createLinkRow(link, index) {
                        name="links[${index}].type"
                        value="${link.type || ''}"
                        placeholder="e.g., doi, url, arxiv, pdf"
+                       data-loc-placeholder="e.g., doi, url, arxiv, pdf"
                        class="edit-input">
             </td>
             <td>
@@ -898,6 +914,7 @@ function createLinkRow(link, index) {
                        name="links[${index}].link"
                        value="${link.link || ''}"
                        placeholder="Enter the link or identifier"
+                       data-loc-placeholder="Enter the link or identifier"
                        class="edit-input">
             </td>
             <td class="cell-center">
@@ -921,7 +938,7 @@ function renderFlags(container, flags) {
         badgesClass: 'flags-badges',
         badgesId: 'flagsBadges',
         inputId: 'newFlagInput',
-        placeholder: 'Type a flag name and press Enter to add...',
+        placeholderKey: 'Type a flag name and press Enter to add...',
         badgeClass: 'flag-badge',
         createItem: (value) => value,
         getDisplayValue: (item) => item || '',
@@ -951,8 +968,8 @@ function renderInfo(container, info) {
             <table class="info-table edit-table">
                 <thead>
                     <tr>
-                        <th>Key</th>
-                        <th>Value (JSON or string)</th>
+                        <th><loc>Key</loc></th>
+                        <th><loc>Value (JSON or string)</loc></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -968,7 +985,7 @@ function renderInfo(container, info) {
         tbody.appendChild(row);
     });
 
-    const addBtn = html`<button type="button" class="btn-add input-container">+ Add Info</button>`;
+    const addBtn = html`<button type="button" class="btn-add input-container"><loc>+ Add Info</loc></button>`;
     addBtn.addEventListener('click', () => {
         const newItem = { key: '', value: '' };
         const row = createInfoRow(newItem, tbody.children.length);
@@ -993,6 +1010,7 @@ function createInfoRow(item, index) {
                        name="info[${index}].key"
                        value="${item.key || ''}"
                        placeholder="Key name"
+                       data-loc-placeholder="Key name"
                        class="edit-input">
             </td>
             <td>
@@ -1000,6 +1018,7 @@ function createInfoRow(item, index) {
                        name="info[${index}].value"
                        value="${item.value || ''}"
                        placeholder="Value (JSON or plain text)"
+                       data-loc-placeholder="Value (JSON or plain text)"
                        class="edit-input">
             </td>
             <td class="cell-center">

@@ -1,4 +1,5 @@
 import { html } from './common.js';
+import { setLanguageNode } from './translate.js';
 import { createPaperElement } from './paper.js';
 
 let isValidator = false;
@@ -16,6 +17,7 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 function formatDate(date) {
@@ -83,7 +85,7 @@ function createPaperList(papers) {
     if (papers.length === 0) {
         return html`
             <div class="no-results">
-                No papers found in this category.
+                <loc>No papers found in this category.</loc>
             </div>
         `;
     }
@@ -108,10 +110,10 @@ function displayResults(data) {
         <div class="latest-tabs-container">
             <div class="latest-tabs">
                 <button class="latest-tab-button ${activeTab === 'peer-reviewed' ? 'active' : ''}" data-tab="peer-reviewed">
-                    Peer-Reviewed <span class="latest-tab-count">(${peerReviewed.length})</span>
+                    <loc>Peer-Reviewed</loc> <span class="latest-tab-count">(${peerReviewed.length})</span>
                 </button>
                 <button class="latest-tab-button ${activeTab === 'preprints' ? 'active' : ''}" data-tab="preprints">
-                    Preprints <span class="latest-tab-count">(${preprints.length})</span>
+                    <loc>Preprints</loc> <span class="latest-tab-count">(${preprints.length})</span>
                 </button>
             </div>
             <div class="latest-tab-content"></div>
@@ -145,11 +147,11 @@ function displayResults(data) {
 }
 
 function displayLoading() {
-    setResults(html`<div class="loading">Loading...</div>`);
+    setResults(html`<div class="loading"><loc>Loading...</loc></div>`);
 }
 
 function displayError(error) {
-    setResults(html`<div class="error-message">Error: ${error.message}</div>`);
+    setResults(html`<div class="error-message"><loc>Error: <span>${error.message}</span></loc></div>`);
 }
 
 function displayGeneratedLinks(links) {
@@ -157,20 +159,21 @@ function displayGeneratedLinks(links) {
     container.innerHTML = '';
 
     if (!links || Object.keys(links).length === 0) {
-        container.appendChild(html`<div class="no-results">No links generated.</div>`);
+        container.appendChild(html`<div class="no-results"><loc>No links generated.</loc></div>`);
+        setLanguageNode(container);
         return;
     }
 
     const linksList = html`
         <div class="generated-links">
-            <h3>Generated Newsletter Links</h3>
+            <h3><loc>Generated Newsletter Links</loc></h3>
             <ul class="links-list">
                 ${Object.entries(links).map(([title, urls]) => html`
                     <li class="link-item">
                         <span class="link-title">${title}</span>
                         <div class="link-urls">
-                            <a href="${urls.url}" target="_blank" rel="noopener noreferrer" class="link-main">View</a>
-                            ${urls.archive ? html`<a href="${urls.archive}" target="_blank" rel="noopener noreferrer" class="link-archive">Archive</a>` : ''}
+                            <a href="${urls.url}" target="_blank" rel="noopener noreferrer" class="link-main"><loc>View</loc></a>
+                            ${urls.archive ? html`<a href="${urls.archive}" target="_blank" rel="noopener noreferrer" class="link-archive"><loc>Archive</loc></a>` : ''}
                         </div>
                     </li>
                 `)}
@@ -179,6 +182,7 @@ function displayGeneratedLinks(links) {
     `;
 
     container.appendChild(linksList);
+    setLanguageNode(container);
 }
 
 function updateUrlParams(params) {
@@ -264,7 +268,8 @@ export function latestGroup(hasValidateCapability = false, options = {}) {
     generateBtn.addEventListener('click', async () => {
         const params = getFormParams();
         generateBtn.disabled = true;
-        generateBtn.textContent = 'Generating...';
+        generateBtn.innerHTML = '<loc>Generating...</loc>';
+        setLanguageNode(generateBtn);
         linksContainer.innerHTML = '';
         try {
             const result = await generateNewsletter(params);
@@ -279,7 +284,8 @@ export function latestGroup(hasValidateCapability = false, options = {}) {
             displayError(error);
         } finally {
             generateBtn.disabled = false;
-            generateBtn.textContent = 'Generate';
+            generateBtn.innerHTML = '<loc>Generate</loc>';
+            setLanguageNode(generateBtn);
         }
     });
 

@@ -1,11 +1,14 @@
 {% extends "main.html" %}
 
+{% block title_key %}{{ page_title|default('Paperoni') }}{% endblock %}
 {% block title %}{{ page_title|default('Paperoni') }}{% endblock %}
-
 {% block page_title %}{{ page_title|default('Paperoni') }}{% endblock %}
 
 {% block content %}
 <div class="markdown-container">
-    {{ content|safe }}
+    <div class="markdown-content" data-lang="en">{{ content_en|safe }}</div>
+    {% if content_fr %}
+    <div class="markdown-content" data-lang="fr">{{ content_fr|safe }}</div>
+    {% endif %}
 </div>
 {% endblock %}
