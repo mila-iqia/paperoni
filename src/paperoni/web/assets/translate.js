@@ -1,9 +1,13 @@
 let dictionary = [];
 let currentLang = "en";
 
+function getLangFromCookie() {
+  const m = document.cookie.match(/\bpaperoni-lang=([^;]+)/);
+  return m ? decodeURIComponent(m[1].trim()) : null;
+}
+
 export async function initTranslation() {
-  // Determine initial language first so components know what to target right away
-  currentLang = localStorage.getItem("paperoni-lang");
+  currentLang = getLangFromCookie();
   if (!currentLang) {
     const browserLang = navigator.language || navigator.userLanguage || "en";
     currentLang = browserLang.startsWith("fr") ? "fr" : "en";
@@ -70,7 +74,6 @@ function updateMarkdownVisibility(lang) {
 }
 
 export function setLanguage(lang) {
-  localStorage.setItem("paperoni-lang", lang);
   currentLang = lang;
   document.cookie = `paperoni-lang=${encodeURIComponent(lang)}; path=/; max-age=31536000; samesite=lax`;
 
