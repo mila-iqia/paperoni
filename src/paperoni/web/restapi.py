@@ -90,18 +90,24 @@ class PagingMixin:
             self._next_offset = None
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PagingResponseMixin:
     """Mixin for paging response."""
 
     results: list
-    count: int
-    next_offset: int | None
+    count: int = None
+    next_offset: int | None = None
     total: int
+
+    def __post_init__(self):
+        if self.count is None:
+            self.count = len(self.results)
+        if self.next_offset is not None and self.next_offset >= self.total:
+            self.next_offset = None
 
 
 @dataclass
-class SearchRequest(PagingMixin, Coll.Search):
+class SearchRequest(Coll.Search):
     """Request model for paper search."""
 
     # TODO: hide the format field from the api endpoint schema
@@ -116,6 +122,11 @@ class SearchRequest(PagingMixin, Coll.Search):
     def __post_init__(self):
         # Type hinting for format
         self.format: VoidFormatter = self.format
+
+        # Force bound for limit
+        if not self.limit:
+            self.limit = config.server.max_results
+        self.limit = min(self.limit, config.server.max_results)
 
 
 @dataclass
@@ -423,14 +434,12 @@ def install_api(app) -> FastAPI:
         coll = Coll(command=None)
 
         # Perform search using the collection's search method
-        all_matches = await request.run(coll)
-        results = list(request.slice(all_matches))
+        results = await request.run(coll)
 
         return SearchResponse(
             results=results,
-            count=request.count,
-            next_offset=request.next_offset,
-            total=len(all_matches),
+            next_offset=request.offset + len(results),
+            total=await request.count(coll),
         )
 
     def _run_operate(operation_obj, selected):
@@ -454,45 +463,47 @@ def install_api(app) -> FastAPI:
         response_model=OperateResponse,
         dependencies=[Depends(hascap("admin"))],
     )
-    async def operate_papers_post(body: OperateRequest):
+    async def operate_papers_post(request: OperateRequest):
         try:
-            operation_obj = from_code(body.operation)
-            flags = set(body.flags) if body.flags else set()
-            search_req = SearchRequest(
-                title=body.title,
-                author=body.author,
-                institution=body.institution,
-                venue=body.venue,
-                start_date=_parse_date(body.start_date),
-                end_date=_parse_date(body.end_date),
-                flags=flags,
-                offset=body.offset,
-                limit=body.limit,
-                expand_links=body.expand_links,
-            )
+            operation_obj = from_code(request.operation)
+            # flags = set(body.flags) if body.flags else set()
+            # search_req = SearchRequest(
+            #     title=body.title,
+            #     author=body.author,
+            #     institution=body.institution,
+            #     venue=body.venue,
+            #     start_date=_parse_date(body.start_date),
+            #     end_date=_parse_date(body.end_date),
+            #     flags=flags,
+            #     offset=body.offset,
+            #     limit=body.limit,
+            #     expand_links=body.expand_links,
+            # )
             coll = Coll(command=None)
 
             matched = 0
             unmatched = 0
             results = []
 
-            match body.mode:
+            match request.mode:
                 case "test":
-                    all_matches = await search_req.run(coll)
-                    selected = list(search_req.slice(all_matches))
+                    selected = await request.run(coll)
                     results = _run_operate(operation_obj, selected)
                     matched = sum(r.matched for r in results)
                     unmatched = sum(not r.matched for r in results)
 
                 case "simulate":
-                    all_matches = await search_req.run(coll)
+                    limit = request.limit
+                    offset = request.offset
+                    request.limit = request.offset = 0
+                    all_matches = await request.run(coll)
                     results = _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in results)
                     unmatched = sum(not r.matched for r in results)
-                    results = list(search_req.slice(results))
+                    results = results[offset : offset + limit]
 
                 case "apply":
-                    all_matches = await search_req.run(coll)
+                    all_matches = await request.run(coll)
                     diffs = _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in diffs)
                     unmatched = sum(not r.matched for r in diffs)
@@ -514,9 +525,8 @@ def install_api(app) -> FastAPI:
 
             return OperateResponse(
                 results=results,
-                count=search_req.count,
-                next_offset=search_req.next_offset,
-                total=len(all_matches),
+                next_offset=request.offset + len(results),
+                total=await request.count(coll),
                 matched=matched,
                 unmatched=unmatched,
             )
@@ -535,13 +545,12 @@ def install_api(app) -> FastAPI:
         if config.suggestions is None:
             return DiffResponse(
                 results=[],
-                count=0,
                 next_offset=None,
                 total=0,
             )
 
-        all_papers = await request.run(SimpleNamespace(collection=config.suggestions))
-        papers = list(request.slice(all_papers))
+        coll = SimpleNamespace(collection=config.suggestions)
+        papers = await request.run(coll)
 
         async def pair(sugg: _Paper):
             current = None
@@ -560,13 +569,11 @@ def install_api(app) -> FastAPI:
             )
 
         diffs = [await pair(paper) for paper in papers]
-        total = len(all_papers)
 
         return DiffResponse(
             results=diffs,
-            count=request.count,
-            next_offset=request.next_offset,
-            total=total,
+            next_offset=request.offset + len(diffs),
+            total=await request.count(coll),
         )
 
     @app.post(

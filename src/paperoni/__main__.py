@@ -720,6 +720,12 @@ class Coll:
         # Output format
         format: Formatter = TerminalFormatter
 
+        # Limit
+        limit: int = 0
+
+        # Offset
+        offset: int = 0
+
         async def run(self, coll: "Coll") -> list[Paper]:
             flags = set() if self.flags is None else self.flags
             papers = [
@@ -734,10 +740,26 @@ class Coll:
                     end_date=self.end_date,
                     include_flags={f for f in flags if not f.startswith("~")},
                     exclude_flags={f[1:] for f in flags if f.startswith("~")},
+                    limit=self.limit,
+                    offset=self.offset,
                 )
             ]
             self.format(papers)
             return papers
+
+        async def count(self, coll: "Coll") -> int:
+            flags = set() if self.flags is None else self.flags
+            return await coll.collection.count(
+                paper_id=self.paper_id,
+                title=self.title,
+                author=self.author,
+                institution=self.institution,
+                venue=self.venue,
+                start_date=self.start_date,
+                end_date=self.end_date,
+                include_flags={f for f in flags if not f.startswith("~")},
+                exclude_flags={f[1:] for f in flags if f.startswith("~")},
+            )
 
     @dataclass
     class Import:
