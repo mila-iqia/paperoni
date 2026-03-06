@@ -32,6 +32,7 @@ from ..model import (
     VenueType,
 )
 from ..model.focus import Focus, Focuses
+from ..utils import soft_fail
 from .base import Discoverer
 
 
@@ -271,6 +272,8 @@ class OpenReview(Discoverer):
         return vid
 
     def refine_decision(self, text):
+        if not text:
+            return "unknown"
         text = text.lower()
         patterns = {
             "notable": "notable",
@@ -358,101 +361,103 @@ class OpenReview(Discoverer):
         else:
             return VenueType.unknown
 
+    def _process_note(self, note):
+        vid = self.get_venue_id(note)
+        if not vid:
+            return None
+        if "authors" not in note.content:
+            return None
+
+        authors = []
+        note_authors = self.get_content_field(note, "authors", [])
+        note_authorids = self.get_content_field(note, "authorids", [])
+
+        if len(note_authors) == len(note_authorids) and all(
+            (aid is None or aid.startswith("~") for aid in note_authorids)
+        ):
+            authors_ids = note_authorids
+        else:
+            authors_ids = (None for _ in range(len(note_authors)))
+        for name, author_id in zip(note_authors, authors_ids):
+            _links = []
+            if author_id:
+                _links.append(Link(type="openreview", link=author_id or f"/{name}"))
+            authors.append(
+                PaperAuthor(
+                    display_name=name,
+                    affiliations=[],
+                    author=Author(
+                        name=name,
+                        aliases=[],
+                        links=_links,
+                    ),
+                )
+            )
+        _links = [Link(type="openreview", link=note.id)]
+        if "code" in note.content:
+            Link(type="git", link=self.get_content_field(note, "code"))
+
+        venue = self.get_content_field(note, "venue") or get_invitation(note)
+        venue_data = parse_openreview_venue(venue)
+        decision = self.figure_out_the_fking_decision(note) or "unknown"
+
+        if "status" not in venue_data and note.pdate:
+            venue_data["status"] = "published"
+
+        tstamp = note.pdate or note.odate or note.tcdate or note.tmdate
+        the_date = date.fromtimestamp(tstamp // 1000)
+        precision = DatePrecision.day
+        if "year" in venue_data:
+            # Make sure that the year is correct
+            year = int(venue_data["year"])
+            if the_date.year != year:
+                the_date = date(year, 1, 1)
+                precision = DatePrecision.year
+            venue_data["venue"] += f" {year}"
+
+        return Paper(
+            key=f"openreview:{note.id}",
+            version=datetime.now(),
+            title=self.get_content_field(note, "title"),
+            abstract=self.get_content_field(note, "abstract"),
+            authors=authors,
+            releases=[
+                Release(
+                    venue=Venue(
+                        type=type(self)._map_venue_type(vid),
+                        name=vid,
+                        series=venue_to_series(vid),
+                        volume=venue_data["venue"],
+                        date=the_date,
+                        date_precision=precision,
+                        links=[
+                            Link(
+                                type="openreview-venue",
+                                link=vid,
+                            )
+                        ],
+                        aliases=[],
+                    ),
+                    status=decision,
+                    pages=None,
+                )
+            ],
+            topics=[
+                Topic(name=kw) for kw in self.get_content_field(note, "keywords", [])
+            ],
+            links=_links,
+            info={"discovered_by": {"openreview": note.id}},
+        )
+
     async def _query(self, params, total=0, limit=1000000):
         next_offset = 0
         while total < limit:
             params["offset"] = next_offset
             notes = self.client.get_notes(**params, details="replies")
             for note in notes:
-                vid = self.get_venue_id(note)
-                if not vid:
-                    continue
-                if "authors" not in note.content:
-                    continue
-
-                authors = []
-                note_authors = self.get_content_field(note, "authors", [])
-                note_authorids = self.get_content_field(note, "authorids", [])
-
-                if len(note_authors) == len(note_authorids) and all(
-                    (aid is None or aid.startswith("~") for aid in note_authorids)
-                ):
-                    authors_ids = note_authorids
-                else:
-                    authors_ids = (None for _ in range(len(note_authors)))
-                for name, author_id in zip(note_authors, authors_ids):
-                    _links = []
-                    if author_id:
-                        _links.append(
-                            Link(type="openreview", link=author_id or f"/{name}")
-                        )
-                    authors.append(
-                        PaperAuthor(
-                            display_name=name,
-                            affiliations=[],
-                            author=Author(
-                                name=name,
-                                aliases=[],
-                                links=_links,
-                            ),
-                        )
-                    )
-                _links = [Link(type="openreview", link=note.id)]
-                if "code" in note.content:
-                    Link(type="git", link=self.get_content_field(note, "code"))
-
-                venue = self.get_content_field(note, "venue") or get_invitation(note)
-                venue_data = parse_openreview_venue(venue)
-                decision = self.figure_out_the_fking_decision(note) or "unknown"
-
-                if "status" not in venue_data and note.pdate:
-                    venue_data["status"] = "published"
-
-                tstamp = note.pdate or note.odate or note.tcdate or note.tmdate
-                the_date = date.fromtimestamp(tstamp // 1000)
-                precision = DatePrecision.day
-                if "year" in venue_data:
-                    # Make sure that the year is correct
-                    year = int(venue_data["year"])
-                    if the_date.year != year:
-                        the_date = date(year, 1, 1)
-                        precision = DatePrecision.year
-                    venue_data["venue"] += f" {year}"
-
-                yield Paper(
-                    key=f"openreview:{note.id}",
-                    version=datetime.now(),
-                    title=self.get_content_field(note, "title"),
-                    abstract=self.get_content_field(note, "abstract"),
-                    authors=authors,
-                    releases=[
-                        Release(
-                            venue=Venue(
-                                type=type(self)._map_venue_type(vid),
-                                name=vid,
-                                series=venue_to_series(vid),
-                                volume=venue_data["venue"],
-                                date=the_date,
-                                date_precision=precision,
-                                links=[
-                                    Link(
-                                        type="openreview-venue",
-                                        link=vid,
-                                    )
-                                ],
-                                aliases=[],
-                            ),
-                            status=decision,
-                            pages=None,
-                        )
-                    ],
-                    topics=[
-                        Topic(name=kw)
-                        for kw in self.get_content_field(note, "keywords", [])
-                    ],
-                    links=_links,
-                    info={"discovered_by": {"openreview": note.id}},
-                )
+                with soft_fail("openreview paper"):
+                    if paper := self._process_note(note):
+                        yield paper
             next_offset += len(notes)
             if not notes or "id" in params:
                 break
