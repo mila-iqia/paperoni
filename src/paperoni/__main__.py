@@ -537,6 +537,9 @@ class Work:
         # Operations to run on each included paper
         operations: list[Referenced[object]] = field(default_factory=list)
 
+        # Flag to set on all papers
+        flag: str = None
+
         def _apply_operations(self, p: Paper):
             for o in self.operations:
                 p = o(p).new
@@ -554,7 +557,8 @@ class Work:
             if self.operations:
                 selected = [self._apply_operations(p) for p in selected]
 
-            selected = [replace(p, flags=p.flags | {"suggest:scraped"}) for p in selected]
+            if self.flag:
+                selected = [replace(p, flags=p.flags | {self.flag}) for p in selected]
 
             try:
                 added = await self._coll(work).add_papers(selected)
