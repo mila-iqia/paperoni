@@ -14,7 +14,7 @@
     <body>
         <header class="main-header">
             <div class="header-left">
-                <h1 class="page-title">{% block page_title %}Paperoni{% endblock %}</h1>
+                <h1 class="page-title"><loc>{% block page_title %}Paperoni{% endblock %}</loc></h1>
                 {% if help_section %}
                 <a href="/help#{{ help_section }}" class="help-link" title="Help" aria-label="Help">?</a>
                 {% endif %}
@@ -23,11 +23,11 @@
                 <img src="/custom/logo.png" alt="Logo" class="header-logo">
                 {% endif %}
                 <nav class="header-nav">
-                    <a href="/" class="nav-link"><loc-text>Home</loc-text></a>
+                    <a href="/" class="nav-link"><loc>Home</loc></a>
                     {% if logged_in %}
-                    <a href="/logout" class="nav-link"><loc-text>Logout</loc-text></a>
+                    <a href="/logout" class="nav-link"><loc>Logout</loc></a>
                     {% else %}
-                    <a href="/login" class="nav-link"><loc-text>Login</loc-text></a>
+                    <a href="/login" class="nav-link"><loc>Login</loc></a>
                     {% endif %}
                 </nav>
                 <div class="lang-vertical-container">

@@ -1,7 +1,5 @@
 let dictionary = [];
 let currentLang = "en";
-let dictionaryLoaded = false;
-let pendingTranslations = [];
 
 export async function initTranslation() {
   // Determine initial language first so components know what to target right away
@@ -22,7 +20,6 @@ export async function initTranslation() {
   } catch (e) {
     console.error("Failed to load translation dictionary", e);
   }
-  dictionaryLoaded = true;
 
   const langBtns = document.querySelectorAll(".lang-stacked-btn");
   if (langBtns.length > 0) {
@@ -39,9 +36,6 @@ export async function initTranslation() {
   // Initial translation for standard <loc> tags and page title
   setLanguage(currentLang);
 
-  // Process any <loc-text> elements that connected before dictionary loaded
-  pendingTranslations.forEach(locNode => translateNode(locNode, currentLang, dictionary));
-  pendingTranslations = [];
 }
 
 function updateLabels(lang) {
@@ -94,7 +88,7 @@ export function getTranslation(key) {
 
 export function setLanguageNode(rootNode, lang) {
   const targetLang = lang || currentLang;
-  const locTags = rootNode.querySelectorAll("loc, loc-text");
+  const locTags = rootNode.querySelectorAll("loc");
   locTags.forEach((loc) => translateNode(loc, targetLang, dictionary));
   rootNode.querySelectorAll("[data-loc-placeholder]").forEach((el) => {
     const key = el.getAttribute("data-loc-placeholder");
@@ -119,7 +113,6 @@ export function setLanguageNode(rootNode, lang) {
 function translateNode(loc, targetLang, dictionary) {
   const nodeLang = loc.getAttribute("lang") || "en";
   if (nodeLang === targetLang) {
-      loc.style.visibility = 'visible'; // Ensure visible if it was hidden
       return; 
   }
 
@@ -151,7 +144,6 @@ function translateNode(loc, targetLang, dictionary) {
   let patternString = patternParts.join("").trim().replace(/\s+/g, " ");
 
   if (!patternString) {
-      loc.style.visibility = 'visible';
       return; 
   }
 
@@ -187,24 +179,7 @@ function translateNode(loc, targetLang, dictionary) {
      sourceNodes.forEach(n => loc.appendChild(n.cloneNode(true)));
      loc.setAttribute("lang", targetLang);
   }
-  
-  loc.style.visibility = 'visible';
 }
-
-class LocText extends HTMLElement {
-    connectedCallback() {
-        // Hide immediately to prevent flicker
-        this.style.visibility = 'hidden';
-        
-        if (dictionaryLoaded) {
-            translateNode(this, currentLang, dictionary);
-        } else {
-            // Queue for translation once dictionary loads
-            pendingTranslations.push(this);
-        }
-    }
-}
-customElements.define('loc-text', LocText);
 
 initTranslation();
 document.addEventListener("DOMContentLoaded", () => {
