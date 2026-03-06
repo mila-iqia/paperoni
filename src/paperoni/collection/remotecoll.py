@@ -70,6 +70,39 @@ class RemoteCollection(PaperCollection):
     async def drop(self) -> None:
         raise NotImplementedError()
 
+    def _build_params(
+        self,
+        paper_id: int = None,
+        title: str = None,
+        institution: str = None,
+        author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
+    ) -> dict:
+        params = {}
+        if paper_id:
+            params["paper_id"] = paper_id
+        if title:
+            params["title"] = title
+        if institution:
+            params["institution"] = institution
+        if author:
+            params["author"] = author
+        if venue:
+            params["venue"] = venue
+        if start_date:
+            params["start_date"] = start_date.isoformat()
+        if end_date:
+            params["end_date"] = end_date.isoformat()
+        if include_flags:
+            params.setdefault("flags", []).extend(include_flags)
+        if exclude_flags:
+            params.setdefault("flags", []).extend([f"~{f}" for f in exclude_flags])
+        return params
+
     async def search(
         self,
         # Paper ID
@@ -90,31 +123,30 @@ class RemoteCollection(PaperCollection):
         include_flags: list[str] = None,
         # Flags that must be False
         exclude_flags: list[str] = None,
+        # Maximum number of results to yield
+        limit: int = 0,
+        # Number of results to skip
+        offset: int = 0,
     ) -> AsyncGenerator[Paper, None]:
-        params = {}
-        if paper_id:
-            params["paper_id"] = paper_id
-        if title:
-            params["title"] = title
-        if institution:
-            params["institution"] = institution
-        if author:
-            params["author"] = author
-        if venue:
-            params["venue"] = venue
-        if start_date:
-            params["start_date"] = start_date.isoformat()
-        if end_date:
-            params["end_date"] = end_date.isoformat()
-        if include_flags:
-            params.setdefault("flags", []).extend(include_flags)
-        if exclude_flags:
-            params.setdefault("flags", []).extend([f"~{f}" for f in exclude_flags])
+        params = self._build_params(
+            paper_id=paper_id,
+            title=title,
+            institution=institution,
+            author=author,
+            venue=venue,
+            start_date=start_date,
+            end_date=end_date,
+            include_flags=include_flags,
+            exclude_flags=exclude_flags,
+        )
         url = f"{self.endpoint}/search"
-        offset = 0
+        current_offset = offset
+        yielded = 0
         while True:
             query_params = params.copy()
-            query_params["offset"] = offset
+            query_params["offset"] = current_offset
+            if limit > 0:
+                query_params["limit"] = limit - yielded
             resp: dict = await self.fetch.read(
                 url,
                 format="json",
@@ -125,10 +157,47 @@ class RemoteCollection(PaperCollection):
             papers = resp.get("results", [])
             for paper in papers:
                 yield deserialize(Paper, paper)
+                yielded += 1
+                if limit > 0 and yielded >= limit:
+                    break
+
             next_offset = resp.get("next_offset")
             if next_offset is None or not papers:
                 break
-            offset = next_offset
+            current_offset = next_offset
+
+    async def count(
+        self,
+        paper_id: int = None,
+        title: str = None,
+        institution: str = None,
+        author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
+    ) -> int:
+        params = self._build_params(
+            paper_id=paper_id,
+            title=title,
+            institution=institution,
+            author=author,
+            venue=venue,
+            start_date=start_date,
+            end_date=end_date,
+            include_flags=include_flags,
+            exclude_flags=exclude_flags,
+        )
+        url = f"{self.endpoint}/count"
+        resp: dict = await self.fetch.read(
+            url,
+            format="json",
+            cache_into=None,
+            headers=self.headers,
+            params=params,
+        )
+        return resp.get("count", 0)
 
     def __len__(self) -> int:
         raise NotImplementedError()

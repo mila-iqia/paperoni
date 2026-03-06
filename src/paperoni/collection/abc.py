@@ -124,7 +124,25 @@ class PaperCollection:
         include_flags: list[str] = None,
         # Flags that must be False
         exclude_flags: list[str] = None,
+        # Maximum number of results to yield
+        limit: int = 0,
+        # Number of results to skip
+        offset: int = 0,
     ) -> AsyncGenerator[Paper, None]:
+        raise NotImplementedError()
+
+    async def count(
+        self,
+        paper_id: str = None,
+        title: str = None,
+        institution: str = None,
+        author: str = None,
+        venue: str = None,
+        start_date: date = None,
+        end_date: date = None,
+        include_flags: list[str] = None,
+        exclude_flags: list[str] = None,
+    ) -> int:
         raise NotImplementedError()
 
     async def cached(self):
