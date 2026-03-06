@@ -43,10 +43,9 @@ def merge(x: object, y: object):
 
 @ovld(priority=10)
 def merge(x: object, y: object, qx: Number, qy: Number):
-    if qx <= -10:
-        return y
-    elif qy <= -10:
-        return x
+    if qx <= -10 or qy <= -10 or qx >= 10 or qy >= 10:
+        # We only do piecewise merging if both q are between -10 and 10 exclusive
+        return x if qx > qy else y
     else:
         return call_next(x, y, qx, qy)
 
