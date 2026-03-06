@@ -54,7 +54,7 @@ from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .heuristics import simplify_paper
 from .model import Link, Paper
 from .model.focus import Focuses, Scored, Top
-from .model.merge import PaperWorkingSet, merge_all
+from .model.merge import PaperWorkingSet, merge_all, qual
 from .model.utils import paper_has_updated
 from .refinement import fetch_all
 from .refinement.llm_normalize import normalize_paper
@@ -311,6 +311,12 @@ class Work:
         # [alias: -U]
         check_paper_updates: bool = False
 
+        only_paper_updates: bool = False
+
+        def __post_init__(self):
+            if self.only_paper_updates:
+                self.check_paper_updates = True
+
         async def run(self, work: "Work"):
             wcoll = (
                 (await work.collection.cached()) if work.collection is not None else None
@@ -339,27 +345,26 @@ class Work:
                     continue
 
                 col_paper = None
-                cont = False
                 for reference_coll in (wcoll, scoll):
-                    if (
-                        reference_coll is not None
-                        and (col_paper := await reference_coll.find_paper(paper))
-                        and (
-                            not self.check_paper_updates
-                            or not paper_has_updated(col_paper, paper)
-                        )
+                    if reference_coll is not None:
+                        col_paper = await reference_coll.find_paper(paper)
+                        if col_paper:
+                            break
+
+                if col_paper:
+                    if not self.check_paper_updates or not paper_has_updated(
+                        col_paper, paper
                     ):
-                        cont = True
-                        break
-                if cont:
+                        continue
+                elif self.only_paper_updates:
                     continue
 
                 if col_paper:
                     working_set = PaperWorkingSet.make(
                         replace(
                             col_paper,
-                            key=paper.key,
-                            info=paper.info,
+                            authors=qual(col_paper.authors, 10.0),
+                            key=f"orig:{col_paper.id}",
                             score=work.focuses.score(col_paper),
                         )
                     )
