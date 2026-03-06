@@ -211,7 +211,8 @@ class Top[T]:
         heapify(self.entries)
 
     def resort(self):
-        self.entries = [e for e in self.entries if e]
+        if self.drop_zero:
+            self.entries = [e for e in self.entries if e]
         heapify(self.entries)
 
     def __len__(self):

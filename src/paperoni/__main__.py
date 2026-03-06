@@ -18,7 +18,7 @@ from typing import Annotated, Any, AsyncGenerator, Literal
 import gifnoc
 import uvicorn
 import yaml
-from filelock import FileLock
+from filelock import AsyncFileLock
 from gifnoc import add_overlay, cli
 from outsight import outsight, send
 from outsight.ops import merge, ticktock
@@ -315,7 +315,13 @@ class Work:
             wcoll = (
                 (await work.collection.cached()) if work.collection is not None else None
             )
+            scoll = (
+                (await work.suggestions.cached())
+                if work.suggestions is not None
+                else None
+            )
             ex = (await wcoll.exclusions()) if wcoll is not None else None
+            # Normally, suggestions db exclusions are not populated
             index = paper_index()
             index.index_all(list(work.top))
 
@@ -327,19 +333,25 @@ class Work:
                     found.value.add(paper)
                     new_score = work.focuses.score(found.value.current)
                     if new_score != found.score:
+                        found.score = new_score
                         # Might be unnecessarily expensive but we'll see
                         work.top.resort()
                     continue
 
                 col_paper = None
-                if (
-                    wcoll is not None
-                    and (col_paper := await wcoll.find_paper(paper))
-                    and (
-                        not self.check_paper_updates
-                        or not paper_has_updated(col_paper, paper)
-                    )
-                ):
+                cont = False
+                for reference_coll in (wcoll, scoll):
+                    if (
+                        reference_coll is not None
+                        and (col_paper := await reference_coll.find_paper(paper))
+                        and (
+                            not self.check_paper_updates
+                            or not paper_has_updated(col_paper, paper)
+                        )
+                    ):
+                        cont = True
+                        break
+                if cont:
                     continue
 
                 if col_paper:
@@ -660,7 +672,7 @@ class Work:
         __trace__ = f"command:{type(self.command).__name__}"  # noqa: F841
         wf = self.work_file or config.work_file
         lf = wf.with_suffix(".lock")
-        with FileLock(lf):
+        async with AsyncFileLock(lf, timeout=5):
             return await self.command.run(self)
 
 
@@ -735,8 +747,24 @@ class Coll:
         # [positional]
         file: Path
 
+        # Whether to suggest the papers
+        suggest: bool = False
+
+        # Whether to ignore exclusions
+        ignore_exclusions: bool = True
+
         async def run(self, coll: "Coll"):
-            await coll.collection.add_papers(deserialize(list[Paper], self.file))
+            papers = deserialize(list[Paper], self.file)
+            for p in papers:
+                p.id = None
+            if self.suggest:
+                await config.suggestions.add_papers(
+                    papers, ignore_exclusions=self.ignore_exclusions
+                )
+            else:
+                await coll.collection.add_papers(
+                    papers, ignore_exclusions=self.ignore_exclusions
+                )
 
     @dataclass
     class Export:
@@ -870,6 +898,7 @@ class Coll:
             other_collection = FileCollection(file=Path(self.other_collection_path))
             missings = []
             extras = []
+            common = []
 
             async for paper in other_collection.search():
                 if not await coll.collection.find_paper(paper):
@@ -878,16 +907,23 @@ class Coll:
             self.out.mkdir(exist_ok=True, parents=True)
             (self.out / f"missing.{self.format}").unlink(missing_ok=True)
             await FileCollection(file=self.out / f"missing.{self.format}").add_papers(
-                missings
+                missings, force=True
             )
 
             async for paper in coll.collection.search():
-                if not await other_collection.find_paper(paper):
+                if await other_collection.find_paper(paper):
+                    common.append(paper)
+                else:
                     extras.append(paper)
 
             (self.out / f"extra.{self.format}").unlink(missing_ok=True)
             await FileCollection(file=self.out / f"extra.{self.format}").add_papers(
-                extras
+                extras, force=True
+            )
+
+            (self.out / f"common.{self.format}").unlink(missing_ok=True)
+            await FileCollection(file=self.out / f"common.{self.format}").add_papers(
+                common, force=True
             )
 
     @dataclass

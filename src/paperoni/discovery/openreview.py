@@ -676,6 +676,8 @@ class OpenReview(Discoverer):
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
+    username: Secret[str] = field(default_factory=lambda: openreview_config.username)
+    password: Secret[str] = field(default_factory=lambda: openreview_config.password)
     token: Secret[str] = field(
         default_factory=lambda: os.getenv("OPENREVIEW_TOKEN", openreview_config.api_key)
     )
@@ -696,12 +698,21 @@ class OpenReviewDispatch(Discoverer):
         block_size: int = 100,
         # Maximum number of results to return
         limit: int = 100000,
+        # Whether to discard rejected papers
+        discard_rejected: bool = False,
         # A list of focuses
         focuses: Focuses = None,
     ):
         """Query OpenReview"""
+        found_papers = False
+
         for api_version in self.api_versions:
-            o = OpenReview(api_version=api_version, token=self.token)
+            o = OpenReview(
+                api_version=api_version,
+                username=self.username,
+                password=self.password,
+                token=self.token,
+            )
             q = o.query(
                 venue=venue,
                 paper_id=paper_id,
@@ -712,25 +723,23 @@ class OpenReviewDispatch(Discoverer):
                 limit=limit,
                 focuses=focuses,
             )
-
-            has_papers = False
-
             exception = None
             try:
                 async for paper in q:
-                    has_papers = True
-                    yield paper
+                    if not discard_rejected or not any(
+                        release.status in ("rejected", "withdrawn")
+                        for release in paper.releases
+                    ):
+                        found_papers = True
+                        yield paper
 
             except openreview.OpenReviewException as e:
                 # Try the next API version while holding the exception
                 exception = e
                 continue
 
-            if has_papers:
-                break
-
         else:
-            if exception is not None:
+            if exception is not None and not found_papers:
                 raise exception
 
     async def login(

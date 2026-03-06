@@ -48,10 +48,10 @@ export function formatDate(dateString, precision) {
     const month = parts[1].padStart(2, '0');
     const day = parts[2].padStart(2, '0');
 
-    // DatePrecision: 0=day, 1=month, 2=year
-    if (precision === 2 || precision === '2') {
+    // DatePrecision: 3=day, 2=month, 1=year
+    if (precision === 1 || precision === '1') {
         return `${year}`;
-    } else if (precision === 1 || precision === '1') {
+    } else if (precision === 2 || precision === '2') {
         return `${year}-${month}`;
     } else {
         return `${year}-${month}-${day}`;
@@ -63,7 +63,12 @@ export function formatRelease(release) {
         ? formatDate(release.venue.date, release.venue.date_precision)
         : null;
     const venueName = release.venue?.name ?? null;
-    const status = release.peer_review_status ?? null;
+    const prStatus = release.peer_review_status ?? null;
+    // For "other" or "unknown", show the status field content when available
+    const status =
+        (prStatus === "other" || prStatus === "unknown") && release.status
+            ? release.status
+            : prStatus;
 
     return { date, venueName, status };
 }

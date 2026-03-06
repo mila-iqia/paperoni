@@ -22,6 +22,7 @@ from ..model import (
     VenueType,
 )
 from ..model.classes import Paper
+from ..model.focus import Focuses
 from ..model.merge import qual
 from ..utils import url_to_id
 
@@ -135,6 +136,10 @@ class PaperoniV2(Discoverer):
         min_date: datetime.date = None,
         # Whether we only fetch validated papers
         only_validated: bool = True,
+        # Whether to remove rejected paper statuses
+        remove_rejected: bool = True,
+        # Focuses are not used here
+        focuses: Focuses = None,
     ) -> AsyncGenerator[Paper, None]:
         """Query the paperoni v2 database"""
         if force_refresh and self.cache.exists():
@@ -183,6 +188,14 @@ class PaperoniV2(Discoverer):
                 ),
                 version=datetime.datetime.now(),
             )
+
+            if remove_rejected:
+                p.releases = [
+                    r for r in p.releases if r.status not in ("rejected", "withdrawn")
+                ]
+                if not p.releases:
+                    continue
+
             if min_date and all(release.venue.date < min_date for release in p.releases):
                 continue
 

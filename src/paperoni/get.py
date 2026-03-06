@@ -121,6 +121,15 @@ class Fetcher:
                     send(progress=(Path(url).name, sofar, total))
         print(f"Saved {filename}")
 
+    @retry(
+        wait=wait_exponential(multiplier=1, exp_base=2) + wait_random(0, 0.5),
+        stop=stop_after_delay(30),
+        retry=lambda retry_state: not _giveup(retry_state.outcome.exception()),
+        reraise=True,
+    )
+    async def download_retry(self, *args, **kwargs):
+        return await self.download(*args, **kwargs)
+
     async def read(
         self, url, format=None, cache_into=None, cache_expiry: timedelta = None, **kwargs
     ):

@@ -203,7 +203,7 @@ def normalize_venue(venue: str) -> str:
 
 
 def split_institution(name: str) -> list[str]:
-    return re.split(r" *[,;/-] *", name)
+    return re.split(r" *(?:[,;/-]|\band\b) *", name)
 
 
 def quick_author_similarity(names1, names2):
@@ -311,7 +311,7 @@ def release_status_order(release):
         or "rxiv" in name
     ):
         return -1
-    elif "workshop" in name:
+    elif "workshop" in name or " @ " in name:
         return 0
     else:
         return 1
