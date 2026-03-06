@@ -9,28 +9,28 @@
     <form class="search-form" id="latestGroupForm">
         <div class="form-row">
             <div class="form-group">
-                <label for="date"><loc-text>Anchor Date</loc-text></label>
+                <label for="date"><loc>Anchor Date</loc></label>
                 <input type="date" id="date" name="date">
             </div>
             <div class="form-group">
-                <label for="ndays"><loc-text>Days Back</loc-text></label>
+                <label for="ndays"><loc>Days Back</loc></label>
                 <input type="number" id="ndays" name="ndays" value="{{ default_ndays }}" min="0" placeholder="Number of days" data-loc-placeholder="Number of days">
             </div>
             <div class="form-group">
-                <label for="fwd"><loc-text>Days Forward</loc-text></label>
+                <label for="fwd"><loc>Days Forward</loc></label>
                 <input type="number" id="fwd" name="fwd" value="{{ default_fwd }}" min="0" placeholder="Number of days" data-loc-placeholder="Number of days">
             </div>
             <div class="form-group">
-                <label for="serial"><loc-text>Previous Anchor</loc-text></label>
+                <label for="serial"><loc>Previous Anchor</loc></label>
                 <input type="datetime-local" id="serial" name="serial">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group" style="flex: 0; align-self: flex-end;">
-                <button type="submit" class="btn-primary"><loc-text>Search</loc-text></button>
+                <button type="submit" class="btn-primary"><loc>Search</loc></button>
             </div>
             <div class="form-group" style="flex: 0; align-self: flex-end;">
-                <button type="button" id="generateBtn" class="btn-primary"><loc-text>Generate</loc-text></button>
+                <button type="button" id="generateBtn" class="btn-primary"><loc>Generate</loc></button>
             </div>
         </div>
     </form>
