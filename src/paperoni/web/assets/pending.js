@@ -1,4 +1,5 @@
 import { debounce, html } from './common.js';
+import { setLanguageNode } from './translate.js';
 import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
 import { getScoreClass } from './paper.js';
 import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js';
@@ -169,7 +170,8 @@ function updateButtonStates() {
         const isRejected = rejectedIds.has(id);
         btn.classList.toggle('selected', isApproved);
         btn.classList.toggle('faded', isRejected);
-        btn.textContent = isApproved ? '✓ Approve' : 'Approve';
+        btn.innerHTML = isApproved ? '<loc>✓ Approve</loc>' : '<loc>Approve</loc>';
+        setLanguageNode(btn);
     });
     document.querySelectorAll('.btn-reject-pending[data-paper-id]').forEach(btn => {
         const id = btn.dataset.paperId;
@@ -177,7 +179,8 @@ function updateButtonStates() {
         const isRejected = rejectedIds.has(id);
         btn.classList.toggle('selected', isRejected);
         btn.classList.toggle('faded', isApproved);
-        btn.textContent = isRejected ? '✓ Reject' : 'Reject';
+        btn.innerHTML = isRejected ? '<loc>✓ Reject</loc>' : '<loc>Reject</loc>';
+        setLanguageNode(btn);
     });
 }
 
@@ -199,21 +202,20 @@ function updateConfirmToast() {
         document.body.appendChild(toast);
     }
 
-    const parts = [];
+    toast.innerHTML = '';
     if (approveCount > 0) {
-        parts.push(`Approve ${approveCount} change${approveCount !== 1 ? 's' : ''}`);
+        toast.appendChild(html`<loc>Approve <span>${approveCount}</span> change(s)</loc>`);
     }
     if (rejectCount > 0) {
-        parts.push(`Reject ${rejectCount} change${rejectCount !== 1 ? 's' : ''}`);
+        if (approveCount > 0) toast.appendChild(document.createTextNode(', '));
+        toast.appendChild(html`<loc>Reject <span>${rejectCount}</span> change(s)</loc>`);
     }
-
+    toast.appendChild(document.createTextNode('. '));
     const confirmBtn = document.createElement('button');
     confirmBtn.className = 'btn-confirm-pending';
-    confirmBtn.textContent = 'Confirm changes';
-
-    toast.innerHTML = '';
-    toast.appendChild(document.createTextNode(parts.join(', ') + '. '));
+    confirmBtn.innerHTML = '<loc>Confirm changes</loc>';
     toast.appendChild(confirmBtn);
+    setLanguageNode(toast);
 
     updateButtonStates();
 
@@ -246,13 +248,14 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 function createFilterBar() {
     const bar = html`
         <div class="pending-filter-bar">
             ${FILTER_OPTIONS.map(({ value, label }) => {
-                const btn = html`<button type="button" class="pending-filter-btn" data-filter="${value ?? ''}">${label}</button>`;
+                const btn = html`<button type="button" class="pending-filter-btn" data-filter="${value ?? ''}"><loc>${label}</loc></button>`;
                 btn.classList.toggle('active', pendingFilter === value);
                 btn.addEventListener('click', () => {
                     pendingFilter = value;
@@ -271,13 +274,13 @@ function createPagination(offset, count, total, nextOffset) {
     const end = offset + count;
     const paperWord = total !== 1 ? 'papers' : 'paper';
 
-    const prevButton = html`<button disabled="${offset === 0}">Previous</button>`;
+    const prevButton = html`<button disabled="${offset === 0}"><loc>Previous</loc></button>`;
     prevButton.onclick = () => {
         const newOffset = Math.max(0, offset - PAGE_SIZE);
         loadPending(newOffset);
     };
 
-    const nextButton = html`<button disabled="${nextOffset === null}">Next</button>`;
+    const nextButton = html`<button disabled="${nextOffset === null}"><loc>Next</loc></button>`;
     nextButton.onclick = () => {
         if (nextOffset !== null) {
             loadPending(nextOffset);
@@ -286,9 +289,9 @@ function createPagination(offset, count, total, nextOffset) {
 
     return html`
         <div class="pagination">
-            <div class="results-info"><span class="count">${total}</span> ${paperWord} found</div>
+            <div class="results-info"><loc><span class="count">${total}</span> ${paperWord} found</loc></div>
             ${prevButton}
-            <div class="page-info">Showing ${start}-${end} of ${total}</div>
+            <div class="page-info"><loc>Showing <span>${start}-${end}</span> of <span>${total}</span></loc></div>
             ${nextButton}
         </div>
     `;
@@ -342,7 +345,7 @@ function createPendingItem(paperDiff) {
         contentEl = html`
             <div class="pending-delete-wrapper">
                 ${commentsEl}
-                <div class="pending-delete-label">Delete paper</div>
+                <div class="pending-delete-label"><loc>Delete paper</loc></div>
                 <div class="pending-delete-paper">${paperContent}</div>
             </div>
         `;
@@ -371,8 +374,8 @@ function createPendingItem(paperDiff) {
         }
     }
 
-    const approveBtn = html`<button class="btn-approve-pending">Approve</button>`;
-    const rejectBtn = html`<button class="btn-reject-pending">Reject</button>`;
+    const approveBtn = html`<button class="btn-approve-pending"><loc>Approve</loc></button>`;
+    const rejectBtn = html`<button class="btn-reject-pending"><loc>Reject</loc></button>`;
 
     if (paperId) {
         approveBtn.dataset.paperId = paperId;
@@ -439,7 +442,7 @@ function renderPending(data, offset = 0) {
     if (data.results.length === 0) {
         const noResults = html`
             <div class="no-results">
-                No pending papers.
+                <loc>No pending papers.</loc>
             </div>
         `;
         setResults(createFilterBar(), noResults);
@@ -465,11 +468,11 @@ function renderPending(data, offset = 0) {
 }
 
 function displayLoading() {
-    setResults(createFilterBar(), html`<div class="loading">Loading...</div>`);
+    setResults(createFilterBar(), html`<div class="loading"><loc>Loading...</loc></div>`);
 }
 
 function displayError(error) {
-    setResults(createFilterBar(), html`<div class="error-message">Error loading pending: ${error.message}</div>`);
+    setResults(createFilterBar(), html`<div class="error-message"><loc>Error loading pending: <span>${error.message}</span></loc></div>`);
 }
 
 function updatePendingUrl(offset) {

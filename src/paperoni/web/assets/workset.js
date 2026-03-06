@@ -1,4 +1,5 @@
 import { html, join } from './common.js';
+import { setLanguageNode } from './translate.js';
 import {
     attachAuthorAffiliationHover,
     createAuthorsSection,
@@ -284,7 +285,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                 ${instElements.length ? html`<div class="paper-institutions">${join('; ', instElements)}</div>` : null}
             </div>
         `
-        : html`<div class="paper-authors-container"><div class="paper-authors">No authors</div></div>`;
+        : html`<div class="paper-authors-container"><div class="paper-authors"><loc>No authors</loc></div></div>`;
 
     attachAuthorAffiliationHover(authorsHtml);
 
@@ -338,7 +339,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
             </div>
         `);
     }
-    const releasesHtml = html`<div class="paper-meta-item"><div class="paper-releases">${releaseItems.length ? releaseItems : html`<div class="release-item">No releases</div>`}</div></div>`;
+    const releasesHtml = html`<div class="paper-meta-item"><div class="paper-releases">${releaseItems.length ? releaseItems : html`<div class="release-item"><loc>No releases</loc></div>`}</div></div>`;
 
     // Abstract diff
     const abs1 = paperOld?.abstract ?? '';
@@ -467,9 +468,9 @@ export function createDiffViewWithTabs(paperOld, paperNew) {
 
     const tabButtons = html`
         <div class="diff-tab-buttons">
-            <button class="diff-tab diff-tab-diff active" data-diff-tab="diff">Diff</button>
-            <button class="diff-tab diff-tab-old" data-diff-tab="old">Old</button>
-            <button class="diff-tab diff-tab-new" data-diff-tab="new">New</button>
+            <button class="diff-tab diff-tab-diff active" data-diff-tab="diff"><loc>Diff</loc></button>
+            <button class="diff-tab diff-tab-old" data-diff-tab="old"><loc>Old</loc></button>
+            <button class="diff-tab diff-tab-new" data-diff-tab="new"><loc>New</loc></button>
         </div>
     `;
 
@@ -512,6 +513,7 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 async function fetchWorksets(offset = 0, size = 100) {
@@ -637,7 +639,7 @@ export function createWorksetElement(scoredWorkset) {
     
     // If no papers at all, return empty
     if (allPapers.length === 0) {
-        return html`<div class="workset-item"><div class="workset-content">No papers in this workset.</div></div>`;
+        return html`<div class="workset-item"><div class="workset-content"><loc>No papers in this workset.</loc></div></div>`;
     }
     
     const tabButtons = allPapers.map(({ paper, tabKey }, tabIndex) => {
@@ -887,7 +889,7 @@ function renderWorksets(data) {
     if (data.results.length === 0) {
         const noResults = html`
             <div class="no-results">
-                No worksets found.
+                <loc>No worksets found.</loc>
             </div>
         `;
         setResults(noResults);
@@ -903,11 +905,11 @@ function renderWorksets(data) {
 }
 
 function displayLoading() {
-    setResults(html`<div class="loading">Loading...</div>`);
+    setResults(html`<div class="loading"><loc>Loading...</loc></div>`);
 }
 
 function displayError(error) {
-    setResults(html`<div class="error-message">Error loading worksets: ${error.message}</div>`);
+    setResults(html`<div class="error-message"><loc>Error loading worksets: <span>${error.message}</span></loc></div>`);
 }
 
 export async function displayWorksets() {

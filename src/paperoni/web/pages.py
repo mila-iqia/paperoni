@@ -13,7 +13,7 @@ from .helpers import render_template
 here = Path(__file__).parent
 
 
-def get_markdown_content(filename: str) -> str:
+def get_markdown_content(filename: str) -> str | None:
     """Get markdown content from custom assets or package assets."""
     # Try custom assets first
     if config.server.assets:
@@ -29,13 +29,25 @@ def get_markdown_content(filename: str) -> str:
     return None
 
 
-def _render_markdown_page(filename, page_title, request):
+def _localized_markdown_filename(base_filename: str) -> str:
+    """Return the -fr variant filename for a base filename (e.g. index.md -> index-fr.md)."""
+    stem = Path(base_filename).stem
+    suffix = Path(base_filename).suffix
+    return f"{stem}-fr{suffix}"
+
+
+def _render_markdown_page(filename: str, page_title: str, request):
     md_content = get_markdown_content(filename)
     if md_content is None:
         raise HTTPException(status_code=404, detail=f"{page_title} page not found")
 
-    html_content = markdown.markdown(
-        md_content, extensions=["extra", "codehilite", "toc", "attr_list"]
+    extensions = ["extra", "codehilite", "toc", "attr_list"]
+    content_en = markdown.markdown(md_content, extensions=extensions)
+
+    localized_filename = _localized_markdown_filename(filename)
+    md_content_fr = get_markdown_content(localized_filename)
+    content_fr = (
+        markdown.markdown(md_content_fr, extensions=extensions) if md_content_fr else None
     )
 
     return render_template(
@@ -43,7 +55,8 @@ def _render_markdown_page(filename, page_title, request):
         request,
         help_section=False,
         page_title=page_title,
-        content=html_content,
+        content_en=content_en,
+        content_fr=content_fr,
     )
 
 

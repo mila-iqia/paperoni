@@ -1,14 +1,14 @@
 {% extends "main.html" %}
 
+{% block title_key %}Edit Focuses{% endblock %}
 {% block title %}Edit Focuses{% endblock %}
-
 {% block page_title %}Edit Focuses{% endblock %}
 
 {% block content %}
 <div class="edit-container focuses-page">
     <div class="focuses-tabs">
-        <button class="focuses-tab active" data-tab="main">Main</button>
-        <button class="focuses-tab" data-tab="auto">Auto</button>
+        <button class="focuses-tab active" data-tab="main"><loc-text>Main</loc-text></button>
+        <button class="focuses-tab" data-tab="auto"><loc-text>Auto</loc-text></button>
     </div>
 
     <div class="focuses-tab-content active" id="main-tab">
@@ -16,10 +16,10 @@
             <table id="mainFocusesTable" class="edit-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                        <th>Drive Discovery</th>
+                        <th><loc-text>Type</loc-text></th>
+                        <th><loc-text>Name</loc-text></th>
+                        <th><loc-text>Score</loc-text></th>
+                        <th><loc-text>Drive Discovery</loc-text></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -27,8 +27,8 @@
             </table>
         </div>
         <div class="focuses-actions">
-            <button id="addMainFocusBtn" class="btn-primary">+ Add Focus</button>
-            <button id="saveMainFocusesBtn" class="btn-save-sticky">Save Main</button>
+            <button id="addMainFocusBtn" class="btn-primary"><loc-text>+ Add Focus</loc-text></button>
+            <button id="saveMainFocusesBtn" class="btn-save-sticky"><loc-text>Save Main</loc-text></button>
         </div>
     </div>
 
@@ -37,10 +37,10 @@
             <table id="autoFocusesTable" class="edit-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                        <th>Drive Discovery</th>
+                        <th><loc-text>Type</loc-text></th>
+                        <th><loc-text>Name</loc-text></th>
+                        <th><loc-text>Score</loc-text></th>
+                        <th><loc-text>Drive Discovery</loc-text></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -48,10 +48,10 @@
             </table>
         </div>
         <div class="focuses-actions">
-            <button id="addAutoFocusBtn" class="btn-primary">+ Add Focus</button>
+            <button id="addAutoFocusBtn" class="btn-primary"><loc-text>+ Add Focus</loc-text></button>
             <div class="focuses-actions-right">
-                <button id="autogenerateFocusesBtn" class="btn-secondary">⚡ Autogenerate</button>
-                <button id="saveAutoFocusesBtn" class="btn-save-sticky">Save Auto</button>
+                <button id="autogenerateFocusesBtn" class="btn-secondary"><loc-text>⚡ Autogenerate</loc-text></button>
+                <button id="saveAutoFocusesBtn" class="btn-save-sticky"><loc-text>Save Auto</loc-text></button>
             </div>
         </div>
     </div>
