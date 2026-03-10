@@ -1076,6 +1076,9 @@ class Serve:
     # Whether to enable auth
     auth: bool = True
 
+    # Whether to enable /operate
+    enable_operate: bool = None
+
     # Collection file
     # [alias: -c]
     collection_file: Path = None
@@ -1099,6 +1102,8 @@ class Serve:
                     "file": str(self.collection_file.resolve()),
                 }
             )
+        if self.enable_operate is not None:
+            overrides["paperoni.server.enable_operate"] = self.enable_operate
         with gifnoc.overlay(overrides):
             app = create_app()
             ssl_config = config.server.ssl
