@@ -156,6 +156,3 @@ class PaperCollection:
             await coll.add_exclusions(await self.exclusions())
             self._cached = coll
         return self._cached
-
-    def __len__(self) -> int:
-        raise NotImplementedError()

@@ -268,6 +268,3 @@ class MemCollection(PaperCollection):
         ):
             n += 1
         return n
-
-    def __len__(self) -> int:
-        return sum(1 for _ in self._index)

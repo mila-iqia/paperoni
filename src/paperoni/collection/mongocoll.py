@@ -369,12 +369,6 @@ class MongoCollection(PaperCollection):
         async for doc in cursor:
             yield srx.deserialize(Paper, doc)
 
-    def __len__(self) -> int:
-        """Get the number of papers in the collection."""
-        raise NotImplementedError(
-            "Use 'await collection.count()' instead of len() for async MongoDB collection"
-        )
-
     async def count(
         self,
         paper_id: ObjectId = None,

@@ -198,6 +198,3 @@ class RemoteCollection(PaperCollection):
             params=params,
         )
         return resp.get("count", 0)
-
-    def __len__(self) -> int:
-        raise NotImplementedError()
