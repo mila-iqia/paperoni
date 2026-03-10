@@ -80,6 +80,7 @@ v2 = "paperoni.discovery.paperoni_v2:PaperoniV2"
 
 [project.entry-points."paperoni.web"]
 restapi = "paperoni.web.restapi:install_api"
+operate = "paperoni.web.operate:install_operate"
 reports = "paperoni.web.reports:install_reports"
 search = "paperoni.web.search:install_search"
 edit = "paperoni.web.edit:install_edit"
