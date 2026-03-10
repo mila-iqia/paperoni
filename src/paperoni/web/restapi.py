@@ -503,6 +503,7 @@ def install_api(app) -> FastAPI:
                     results = results[offset : offset + limit]
 
                 case "apply":
+                    request.limit = request.offset = 0
                     all_matches = await request.run(coll)
                     diffs = _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in diffs)
