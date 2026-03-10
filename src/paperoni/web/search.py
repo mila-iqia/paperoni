@@ -19,13 +19,13 @@ def install_search(app: FastAPI) -> FastAPI:
         user: str = Depends(hascap("search", redirect=True)),
     ):
         """Render the search page. Use ?dev for visualize-style rendering with scores."""
-        validate = deserialize(app.auth.capabilities.captype, "validate")
-        is_validator = app.auth.capabilities.check(user, validate)
+        # validate = deserialize(app.auth.capabilities.captype, "validate")
+        # is_validator = app.auth.capabilities.check(user, validate)
         use_dev_mode = "dev" in request.query_params
         return render_template(
             "search.html",
             request,
-            is_validator=is_validator,
+            can_edit=True,
             show_scores=False,
             use_dev_mode=use_dev_mode,
         )
