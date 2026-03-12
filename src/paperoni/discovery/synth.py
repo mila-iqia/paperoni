@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from typing import Annotated, Any
 
-from serieux import Auto, Field, Model
+from serieux import Auto
 from serieux.features.tagset import FromEntryPoint
 
 from ..model.focus import Focuses
+from ..utils import soft_fail
 from .base import Discoverer
 
 DiscoT = Annotated[
@@ -17,27 +18,15 @@ DiscoT = Annotated[
 
 
 @dataclass
-class DiscoBag:
-    discoverers: list[DiscoT]
-
-    @classmethod
-    def serieux_model(cls, call_next):
-        return Model(
-            original_type=cls,
-            element_field=Field(name="_", type=DiscoT),
-            from_list=cls,
-        )
-
-
-@dataclass
 class Synth(Discoverer):
     """Query multiple discoverers."""
 
-    # List of discoverers
-    discoverers: DiscoBag
+    # Dictionary of discoverers
+    discoverers: dict[str, DiscoT]
 
-    async def query(self, focuses: Focuses):
+    async def query(self, focuses: Focuses = None):
         """Query multiple discoverers."""
-        for disco in self.discoverers.discoverers:
-            async for paper in disco(focuses=focuses):
-                yield paper
+        for name, disco in self.discoverers.items():
+            with soft_fail(f"discovery: {name}"):
+                async for paper in disco(focuses=focuses):
+                    yield paper
