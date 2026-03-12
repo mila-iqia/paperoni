@@ -64,6 +64,7 @@ class Server:
     port: int = 8000
     protocol: Literal["http", "https"] = "http"
     max_results: int = 10000
+    enable_operate: bool = False
     auth: OAuthManager = None
     assets: Path = None
     ssl: SSLConfig = None

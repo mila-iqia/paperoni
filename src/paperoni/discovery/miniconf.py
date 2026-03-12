@@ -3,9 +3,8 @@ import re
 from datetime import date, datetime, timedelta
 from enum import Enum
 
-import requests
-
 from ..config import config
+from ..get import ERRORS
 from ..model.classes import (
     Author,
     DatePrecision,
@@ -249,7 +248,7 @@ class MiniConf(Discoverer):
                     ):
                         yield paper
                     consecutive_failures = 0
-                except requests.HTTPError:
+                except ERRORS:
                     consecutive_failures += 1
                 current -= 1
             return

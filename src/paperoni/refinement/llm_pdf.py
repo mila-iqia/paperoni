@@ -67,6 +67,7 @@ def prompt(pdf: PDF, force: bool = False) -> Paper:
             ],
             100,
         ),
+        flags=["refined:pdf"],
     )
 
 

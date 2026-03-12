@@ -308,10 +308,15 @@ class Work:
     class Get(Productor):
         """Get articles from various sources."""
 
+        # Check for updates to existing papers
         # [alias: -U]
         check_paper_updates: bool = False
 
+        # Only gather paper updates
         only_paper_updates: bool = False
+
+        # Skip papers older than this many days
+        skip_older_than: timedelta = None
 
         def __post_init__(self):
             if self.only_paper_updates:
@@ -331,8 +336,19 @@ class Work:
             index = paper_index()
             index.index_all(list(work.top))
 
+            min_date = (
+                None
+                if not self.skip_older_than
+                else datetime.now().date() - self.skip_older_than
+            )
+
             async for paper in self.iterate(focuses=work.focuses):
                 if ex and paper.key in ex:
+                    continue
+
+                if min_date and all(
+                    release.venue.date < min_date for release in paper.releases
+                ):
                     continue
 
                 if found := find_equivalent(paper, index):
@@ -1076,6 +1092,9 @@ class Serve:
     # Whether to enable auth
     auth: bool = True
 
+    # Whether to enable /operate
+    enable_operate: bool = None
+
     # Collection file
     # [alias: -c]
     collection_file: Path = None
@@ -1099,6 +1118,8 @@ class Serve:
                     "file": str(self.collection_file.resolve()),
                 }
             )
+        if self.enable_operate is not None:
+            overrides["paperoni.server.enable_operate"] = self.enable_operate
         with gifnoc.overlay(overrides):
             app = create_app()
             ssl_config = config.server.ssl

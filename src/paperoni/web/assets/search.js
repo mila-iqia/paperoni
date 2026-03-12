@@ -8,8 +8,7 @@ const PAGE_SIZE = 50;
 
 let currentOffset = 0;
 let currentParams = {};
-let totalResults = 0;
-let isValidator = false;
+let showEditIcon = false;
 let showScores = false;
 let useDevMode = false;
 
@@ -148,8 +147,6 @@ export function createPaperResultElement(paper, options = {}) {
 }
 
 function displayResults(data) {
-    totalResults = data.total;
-
     if (data.results.length === 0) {
         const noResults = html`
             <div class="no-results">
@@ -176,7 +173,7 @@ function displayResults(data) {
             onVenueClick: handleVenueClick,
             onYearClick: handleYearClick,
             bottomSection: null,
-            showEditIcon: isValidator,
+            showEditIcon: showEditIcon,
         });
     });
     const paperList = useDevMode
@@ -238,8 +235,8 @@ const debouncedSearch = debounce((params) => {
     performSearch(params, 0);
 }, 300);
 
-export function searchPapers(hasValidateCapability = false, enableScores = false, enableDevMode = false) {
-    isValidator = hasValidateCapability;
+export function searchPapers(editButton = true, enableScores = false, enableDevMode = false) {
+    showEditIcon = editButton;
     showScores = enableScores;
     useDevMode = enableDevMode;
 
