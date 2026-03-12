@@ -76,6 +76,7 @@ pmlr = "paperoni.discovery.pmlr:PMLR"
 jmlr = "paperoni.discovery.jmlr:JMLR"
 synth = "paperoni.discovery.synth:Synth"
 scrape = "paperoni.discovery.scrape:Scrape"
+file = "paperoni.discovery.file:File"
 v2 = "paperoni.discovery.paperoni_v2:PaperoniV2"
 
 [project.entry-points."paperoni.web"]
