@@ -95,6 +95,11 @@ def merge(x: Dataclass, y: Dataclass, qx: Number, qy: Number):
 
 
 @ovld
+def merge(x: set, y: set, qx: Number, qy: Number):
+    return x | y
+
+
+@ovld
 def merge(x: list, y: list, qx: Number, qy: Number):
     main, other, qx, qy = (x, y, qx, qy) if qx >= qy else (y, x, qy, qx)
     if not main:

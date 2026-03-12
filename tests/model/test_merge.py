@@ -77,6 +77,12 @@ def test_merge_lists():
     assert merge(l1, l2) == [p3, p1, p2]
 
 
+def test_merge_sets():
+    s1 = {1, 2, 3}
+    s2 = {3, 4, 5}
+    assert merge(s1, s2) == s1 | s2
+
+
 def test_merge_lists_empty():
     l1 = [1, 2]
     l2 = []
