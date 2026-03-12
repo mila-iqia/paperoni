@@ -533,7 +533,7 @@
     },
     {
         "en": "Flags",
-        "fr": "Drapeaux"
+        "fr": "Étiquettes"
     },
     {
         "en": "Metadata",
@@ -745,7 +745,7 @@
     },
     {
         "en": "Type a flag name and press Enter to add...",
-        "fr": "Saisir un nom de drapeau et appuyer sur Entrée pour ajouter..."
+        "fr": "Saisir un nom d'étiquette et appuyer sur Entrée pour ajouter..."
     },
     {
         "en": "Value (JSON or string)",
