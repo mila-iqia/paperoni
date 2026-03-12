@@ -1,0 +1,766 @@
+[
+    {
+        "en": "Login",
+        "fr": "Connexion"
+    },
+    {
+        "en": "Logout",
+        "fr": "Déconnexion"
+    },
+    {
+        "en": "Home",
+        "fr": "Accueil"
+    },
+    {
+        "en": "Help",
+        "fr": "Aide"
+    },
+    {
+        "en": "Search Papers",
+        "fr": "Recherche d'articles"
+    },
+    {
+        "en": "Pending Papers",
+        "fr": "Articles en attente"
+    },
+    {
+        "en": "Workset",
+        "fr": "Jeu de travail"
+    },
+    {
+        "en": "Operate",
+        "fr": "Opérer"
+    },
+    {
+        "en": "Exclusions",
+        "fr": "Exclusions"
+    },
+    {
+        "en": "Manage Capabilities",
+        "fr": "Gérer les capacités"
+    },
+    {
+        "en": "Edit Focuses",
+        "fr": "Modifier les focus"
+    },
+    {
+        "en": "Available Reports",
+        "fr": "Rapports disponibles"
+    },
+    {
+        "en": "Report",
+        "fr": "Rapport"
+    },
+    {
+        "en": "Latest Group",
+        "fr": "Groupe récent"
+    },
+    {
+        "en": "Previous",
+        "fr": "Précédent"
+    },
+    {
+        "en": "Next",
+        "fr": "Suivant"
+    },
+    {
+        "en": "Showing {1} of {2}",
+        "fr": "Résultats {1} sur {2}"
+    },
+    {
+        "en": "{1} paper found",
+        "fr": "{1} article trouvé"
+    },
+    {
+        "en": "{1} papers found",
+        "fr": "{1} articles trouvés"
+    },
+    {
+        "en": "No papers found. Try adjusting your search criteria.",
+        "fr": "Aucun article trouvé. Essayez d'ajuster vos critères de recherche."
+    },
+    {
+        "en": "Loading...",
+        "fr": "Chargement..."
+    },
+    {
+        "en": "Error loading results: {1}",
+        "fr": "Erreur lors du chargement des résultats : {1}"
+    },
+    {
+        "en": "Title",
+        "fr": "Titre"
+    },
+    {
+        "en": "Author",
+        "fr": "Auteur"
+    },
+    {
+        "en": "Institution",
+        "fr": "Institution"
+    },
+    {
+        "en": "Venue",
+        "fr": "Conférence"
+    },
+    {
+        "en": "Start Date",
+        "fr": "Date de début"
+    },
+    {
+        "en": "End Date",
+        "fr": "Date de fin"
+    },
+    {
+        "en": "Peer reviewed",
+        "fr": "Évalué par les pairs"
+    },
+    {
+        "en": "Clear",
+        "fr": "Effacer"
+    },
+    {
+        "en": "Search by title...",
+        "fr": "Rechercher par titre..."
+    },
+    {
+        "en": "Search by author...",
+        "fr": "Rechercher par auteur..."
+    },
+    {
+        "en": "Search by institution...",
+        "fr": "Rechercher par institution..."
+    },
+    {
+        "en": "Search by venue...",
+        "fr": "Rechercher par conférence..."
+    },
+    {
+        "en": "Manage Exclusions",
+        "fr": "Gérer les exclusions"
+    },
+    {
+        "en": "Enter exclusion (e.g., arxiv:1234.5678)",
+        "fr": "Saisir une exclusion (ex. arxiv:1234.5678)"
+    },
+    {
+        "en": "Add Exclusion",
+        "fr": "Ajouter une exclusion"
+    },
+    {
+        "en": "Enter multiple exclusions, one per line",
+        "fr": "Saisir plusieurs exclusions, une par ligne"
+    },
+    {
+        "en": "Add Multiple",
+        "fr": "Ajouter plusieurs"
+    },
+    {
+        "en": "Loading capabilities...",
+        "fr": "Chargement des capacités..."
+    },
+    {
+        "en": "Capabilities",
+        "fr": "Capacités"
+    },
+    {
+        "en": "Users",
+        "fr": "Utilisateurs"
+    },
+    {
+        "en": "Main",
+        "fr": "Principal"
+    },
+    {
+        "en": "Auto",
+        "fr": "Auto"
+    },
+    {
+        "en": "Type",
+        "fr": "Type"
+    },
+    {
+        "en": "Name",
+        "fr": "Nom"
+    },
+    {
+        "en": "Score",
+        "fr": "Score"
+    },
+    {
+        "en": "Drive Discovery",
+        "fr": "Piloter la découverte"
+    },
+    {
+        "en": "+ Add Focus",
+        "fr": "+ Ajouter un focus"
+    },
+    {
+        "en": "Save Main",
+        "fr": "Enregistrer Principal"
+    },
+    {
+        "en": "⚡ Autogenerate",
+        "fr": "⚡ Autogénérer"
+    },
+    {
+        "en": "Save Auto",
+        "fr": "Enregistrer Auto"
+    },
+    {
+        "en": "← Back to Search",
+        "fr": "← Retour à la recherche"
+    },
+    {
+        "en": "No reports available.",
+        "fr": "Aucun rapport disponible."
+    },
+    {
+        "en": "Anchor Date",
+        "fr": "Date d'ancrage"
+    },
+    {
+        "en": "Days Back",
+        "fr": "Jours en arrière"
+    },
+    {
+        "en": "Days Forward",
+        "fr": "Jours en avant"
+    },
+    {
+        "en": "Previous Anchor",
+        "fr": "Ancre précédente"
+    },
+    {
+        "en": "Number of days",
+        "fr": "Nombre de jours"
+    },
+    {
+        "en": "Search",
+        "fr": "Rechercher"
+    },
+    {
+        "en": "Generate",
+        "fr": "Générer"
+    },
+    {
+        "en": "Update",
+        "fr": "Mettre à jour"
+    },
+    {
+        "en": "New",
+        "fr": "Nouveau"
+    },
+    {
+        "en": "Clone",
+        "fr": "Cloner"
+    },
+    {
+        "en": "Delete",
+        "fr": "Supprimer"
+    },
+    {
+        "en": "Simulate",
+        "fr": "Simuler"
+    },
+    {
+        "en": "Apply",
+        "fr": "Appliquer"
+    },
+    {
+        "en": "All",
+        "fr": "Tous"
+    },
+    {
+        "en": "user",
+        "fr": "utilisateur"
+    },
+    {
+        "en": "scraped",
+        "fr": "scrapé"
+    },
+    {
+        "en": "No pending papers.",
+        "fr": "Aucun article en attente."
+    },
+    {
+        "en": "Delete paper",
+        "fr": "Supprimer l'article"
+    },
+    {
+        "en": "Approve",
+        "fr": "Approuver"
+    },
+    {
+        "en": "Reject",
+        "fr": "Rejeter"
+    },
+    {
+        "en": "✓ Approve",
+        "fr": "✓ Approuver"
+    },
+    {
+        "en": "✓ Reject",
+        "fr": "✓ Rejeter"
+    },
+    {
+        "en": "Confirm changes",
+        "fr": "Confirmer les modifications"
+    },
+    {
+        "en": "Approve {1} change(s)",
+        "fr": "Approuver {1} modification(s)"
+    },
+    {
+        "en": "Reject {1} change(s)",
+        "fr": "Rejeter {1} modification(s)"
+    },
+    {
+        "en": "Error loading pending: {1}",
+        "fr": "Erreur lors du chargement des en attente : {1}"
+    },
+    {
+        "en": "No authors",
+        "fr": "Aucun auteur"
+    },
+    {
+        "en": "No releases",
+        "fr": "Aucune parution"
+    },
+    {
+        "en": "Diff",
+        "fr": "Diff"
+    },
+    {
+        "en": "Old",
+        "fr": "Ancien"
+    },
+    {
+        "en": "No papers in this workset.",
+        "fr": "Aucun article dans ce jeu de travail."
+    },
+    {
+        "en": "No worksets found.",
+        "fr": "Aucun jeu de travail trouvé."
+    },
+    {
+        "en": "Error loading worksets: {1}",
+        "fr": "Erreur lors du chargement des jeux de travail : {1}"
+    },
+    {
+        "en": "Remove",
+        "fr": "Retirer"
+    },
+    {
+        "en": "Page {1} of {2} ({3} total)",
+        "fr": "Page {1} sur {2} ({3} au total)"
+    },
+    {
+        "en": "No exclusions found.",
+        "fr": "Aucune exclusion trouvée."
+    },
+    {
+        "en": "Error loading exclusions: {1}",
+        "fr": "Erreur lors du chargement des exclusions : {1}"
+    },
+    {
+        "en": "Exclusion removed successfully",
+        "fr": "Exclusion retirée avec succès"
+    },
+    {
+        "en": "Failed to remove exclusion: {1}",
+        "fr": "Échec de la suppression de l'exclusion : {1}"
+    },
+    {
+        "en": "Please enter an exclusion",
+        "fr": "Veuillez saisir une exclusion"
+    },
+    {
+        "en": "Exclusion added successfully",
+        "fr": "Exclusion ajoutée avec succès"
+    },
+    {
+        "en": "Failed to add exclusion: {1}",
+        "fr": "Échec de l'ajout de l'exclusion : {1}"
+    },
+    {
+        "en": "Please enter exclusions",
+        "fr": "Veuillez saisir des exclusions"
+    },
+    {
+        "en": "Please enter at least one exclusion",
+        "fr": "Veuillez saisir au moins une exclusion"
+    },
+    {
+        "en": "Added {1} exclusion(s)",
+        "fr": "{1} exclusion(s) ajoutée(s)"
+    },
+    {
+        "en": "Failed to add exclusions: {1}",
+        "fr": "Échec de l'ajout des exclusions : {1}"
+    },
+    {
+        "en": "Type to add capability...",
+        "fr": "Saisir pour ajouter une capacité..."
+    },
+    {
+        "en": "Remove all capabilities for {1}?",
+        "fr": "Retirer toutes les capacités pour {1} ?"
+    },
+    {
+        "en": "Error: {1}",
+        "fr": "Erreur : {1}"
+    },
+    {
+        "en": "Failed to load capabilities",
+        "fr": "Échec du chargement des capacités"
+    },
+    {
+        "en": "No papers found in this category.",
+        "fr": "Aucun article trouvé dans cette catégorie."
+    },
+    {
+        "en": "Peer-Reviewed",
+        "fr": "Évalués par les pairs"
+    },
+    {
+        "en": "Preprints",
+        "fr": "Prépublications"
+    },
+    {
+        "en": "No links generated.",
+        "fr": "Aucun lien généré."
+    },
+    {
+        "en": "Generated Newsletter Links",
+        "fr": "Liens de la newsletter générée"
+    },
+    {
+        "en": "View",
+        "fr": "Voir"
+    },
+    {
+        "en": "Archive",
+        "fr": "Archiver"
+    },
+    {
+        "en": "Generating...",
+        "fr": "Génération..."
+    },
+    {
+        "en": "No papers to display. Run an operation to see results.",
+        "fr": "Aucun article à afficher. Exécutez une opération pour voir les résultats."
+    },
+    {
+        "en": "No operation to run. Enter code and click Update to run the current block.",
+        "fr": "Aucune opération à exécuter. Saisissez du code et cliquez sur Mettre à jour pour exécuter le bloc actuel."
+    },
+    {
+        "en": "Please enter an operation",
+        "fr": "Veuillez saisir une opération"
+    },
+    {
+        "en": "{1} matched, {2} unmatched",
+        "fr": "{1} correspondant(s), {2} non correspondant(s)"
+    },
+    {
+        "en": "Error",
+        "fr": "Erreur"
+    },
+    {
+        "en": "Suggest New Paper",
+        "fr": "Suggérer un nouvel article"
+    },
+    {
+        "en": "Create Paper",
+        "fr": "Créer un article"
+    },
+    {
+        "en": "Loading paper...",
+        "fr": "Chargement de l'article..."
+    },
+    {
+        "en": "Suggest Edit",
+        "fr": "Suggérer une modification"
+    },
+    {
+        "en": "Edit Paper",
+        "fr": "Modifier l'article"
+    },
+    {
+        "en": "Failed to load paper: {1}",
+        "fr": "Échec du chargement de l'article : {1}"
+    },
+    {
+        "en": "Basic Information",
+        "fr": "Informations de base"
+    },
+    {
+        "en": "(based on existing pending edit)",
+        "fr": "(basé sur une modification en attente existante)"
+    },
+    {
+        "en": "Mark for deletion",
+        "fr": "Marquer pour suppression"
+    },
+    {
+        "en": "Title *",
+        "fr": "Titre *"
+    },
+    {
+        "en": "Abstract",
+        "fr": "Résumé"
+    },
+    {
+        "en": "Enter the paper abstract...",
+        "fr": "Saisir le résumé de l'article..."
+    },
+    {
+        "en": "Authors",
+        "fr": "Auteurs"
+    },
+    {
+        "en": "Releases",
+        "fr": "Parutions"
+    },
+    {
+        "en": "Topics",
+        "fr": "Sujets"
+    },
+    {
+        "en": "Links",
+        "fr": "Liens"
+    },
+    {
+        "en": "Flags",
+        "fr": "Drapeaux"
+    },
+    {
+        "en": "Metadata",
+        "fr": "Métadonnées"
+    },
+    {
+        "en": "Key",
+        "fr": "Clé"
+    },
+    {
+        "en": "Paper key identifier",
+        "fr": "Identifiant clé de l'article"
+    },
+    {
+        "en": "Version",
+        "fr": "Version"
+    },
+    {
+        "en": "Not set",
+        "fr": "Non défini"
+    },
+    {
+        "en": "Last modified timestamp (read-only)",
+        "fr": "Date de dernière modification (lecture seule)"
+    },
+    {
+        "en": "Info",
+        "fr": "Info"
+    },
+    {
+        "en": "Comment",
+        "fr": "Commentaire"
+    },
+    {
+        "en": "Comment about this edit, for the person who will validate it",
+        "fr": "Commentaire sur cette modification, pour la personne qui validera"
+    },
+    {
+        "en": "Optional note about this edit",
+        "fr": "Note optionnelle sur cette modification"
+    },
+    {
+        "en": "Submit Suggestion",
+        "fr": "Soumettre la suggestion"
+    },
+    {
+        "en": "Suggest Paper",
+        "fr": "Suggérer un article"
+    },
+    {
+        "en": "Save Changes",
+        "fr": "Enregistrer les modifications"
+    },
+    {
+        "en": "Submitting...",
+        "fr": "Soumission..."
+    },
+    {
+        "en": "Deleting...",
+        "fr": "Suppression..."
+    },
+    {
+        "en": "Saving...",
+        "fr": "Enregistrement..."
+    },
+    {
+        "en": "Give a reason for deletion in the comment",
+        "fr": "Indiquez une raison de suppression dans le commentaire"
+    },
+    {
+        "en": "Edit suggested! It will appear in the pending queue for validation.",
+        "fr": "Modification suggérée ! Elle apparaîtra dans la file d'attente pour validation."
+    },
+    {
+        "en": "Failed to submit suggestion",
+        "fr": "Échec de la soumission de la suggestion"
+    },
+    {
+        "en": "Paper deleted successfully!",
+        "fr": "Article supprimé avec succès !"
+    },
+    {
+        "en": "Failed to delete paper",
+        "fr": "Échec de la suppression de l'article"
+    },
+    {
+        "en": "Title cannot be empty",
+        "fr": "Le titre ne peut pas être vide"
+    },
+    {
+        "en": "Author name cannot be empty",
+        "fr": "Le nom de l'auteur ne peut pas être vide"
+    },
+    {
+        "en": "Venue name cannot be empty",
+        "fr": "Le nom de la conférence ne peut pas être vide"
+    },
+    {
+        "en": "No changes to save",
+        "fr": "Aucune modification à enregistrer"
+    },
+    {
+        "en": "Suggestion submitted! It will appear in the pending queue for validation.",
+        "fr": "Suggestion soumise ! Elle apparaîtra dans la file d'attente pour validation."
+    },
+    {
+        "en": "Paper created successfully!",
+        "fr": "Article créé avec succès !"
+    },
+    {
+        "en": "Paper updated successfully!",
+        "fr": "Article mis à jour avec succès !"
+    },
+    {
+        "en": "Failed to update paper",
+        "fr": "Échec de la mise à jour de l'article"
+    },
+    {
+        "en": "Error: {1}",
+        "fr": "Erreur : {1}"
+    },
+    {
+        "en": "Affiliations",
+        "fr": "Affiliations"
+    },
+    {
+        "en": "+ Add Author",
+        "fr": "+ Ajouter un auteur"
+    },
+    {
+        "en": "Enter author's name",
+        "fr": "Saisir le nom de l'auteur"
+    },
+    {
+        "en": "Enter affiliations, semicolon-separated",
+        "fr": "Saisir les affiliations, séparées par des point-virgules"
+    },
+    {
+        "en": "Drag to reorder",
+        "fr": "Glisser pour réordonner"
+    },
+    {
+        "en": "Date",
+        "fr": "Date"
+    },
+    {
+        "en": "Venue Name",
+        "fr": "Nom de la revue/conférence"
+    },
+    {
+        "en": "Peer review",
+        "fr": "Évaluation par les pairs"
+    },
+    {
+        "en": "Raw status",
+        "fr": "Statut brut"
+    },
+    {
+        "en": "+ Add Release",
+        "fr": "+ Ajouter une parution"
+    },
+    {
+        "en": "Conference",
+        "fr": "Conférence"
+    },
+    {
+        "en": "Journal",
+        "fr": "Journal"
+    },
+    {
+        "en": "Workshop",
+        "fr": "Atelier"
+    },
+    {
+        "en": "Preprint",
+        "fr": "Prépublication"
+    },
+    {
+        "en": "Peer-reviewed",
+        "fr": "Évalué par les pairs"
+    },
+    {
+        "en": "Other",
+        "fr": "Autre"
+    },
+    {
+        "en": "Unknown",
+        "fr": "Inconnu"
+    },
+    {
+        "en": "Type a topic and press Enter to add...",
+        "fr": "Saisir un sujet et appuyer sur Entrée pour ajouter..."
+    },
+    {
+        "en": "Link",
+        "fr": "Lien"
+    },
+    {
+        "en": "+ Add Link",
+        "fr": "+ Ajouter un lien"
+    },
+    {
+        "en": "e.g., doi, url, arxiv, pdf",
+        "fr": "ex. doi, url, arxiv, pdf"
+    },
+    {
+        "en": "Enter the link or identifier",
+        "fr": "Saisir le lien ou l'identifiant"
+    },
+    {
+        "en": "Type a flag name and press Enter to add...",
+        "fr": "Saisir un nom de drapeau et appuyer sur Entrée pour ajouter..."
+    },
+    {
+        "en": "Value (JSON or string)",
+        "fr": "Valeur (JSON ou chaîne)"
+    },
+    {
+        "en": "+ Add Info",
+        "fr": "+ Ajouter une info"
+    },
+    {
+        "en": "Key name",
+        "fr": "Nom de la clé"
+    },
+    {
+        "en": "Value (JSON or plain text)",
+        "fr": "Valeur (JSON ou texte brut)"
+    }
+]

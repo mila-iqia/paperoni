@@ -1,21 +1,21 @@
 {% extends "main.html" %}
 
+{% block title_key %}Exclusions{% endblock %}
 {% block title %}Exclusions{% endblock %}
-
 {% block page_title %}Exclusions{% endblock %}
 
 {% block content %}
 <div class="exclusions-container">
     <div class="exclusions-header">
-        <h2>Manage Exclusions</h2>
+        <h2><loc>Manage Exclusions</loc></h2>
         <div class="exclusions-actions">
             <div class="add-exclusion-form">
-                <input type="text" id="newExclusionInput" placeholder="Enter exclusion (e.g., arxiv:1234.5678)" class="exclusion-input">
-                <button id="addExclusionBtn" class="btn btn-primary">Add Exclusion</button>
+                <input type="text" id="newExclusionInput" placeholder="Enter exclusion (e.g., arxiv:1234.5678)" data-loc-placeholder="Enter exclusion (e.g., arxiv:1234.5678)" class="exclusion-input">
+                <button id="addExclusionBtn" class="btn btn-primary"><loc>Add Exclusion</loc></button>
             </div>
             <div class="bulk-add-form">
-                <textarea id="bulkExclusionsInput" placeholder="Enter multiple exclusions, one per line" class="bulk-exclusion-input"></textarea>
-                <button id="bulkAddExclusionsBtn" class="btn btn-primary">Add Multiple</button>
+                <textarea id="bulkExclusionsInput" placeholder="Enter multiple exclusions, one per line" data-loc-placeholder="Enter multiple exclusions, one per line" class="bulk-exclusion-input"></textarea>
+                <button id="bulkAddExclusionsBtn" class="btn btn-primary"><loc>Add Multiple</loc></button>
             </div>
         </div>
     </div>

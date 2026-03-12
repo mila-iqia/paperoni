@@ -2,15 +2,37 @@
 Helper functions for web routes.
 """
 
+import re
 from functools import cache
 from pathlib import Path
 
 from fastapi import Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from serieux import deserialize
 
 from ..config import config
 
 here = Path(__file__).parent
+
+
+_translations = deserialize(list[dict[str, str]], here / "assets" / "translate.json")
+to_fr = {tr["en"]: tr["fr"] for tr in _translations}
+
+# Replace <loc>...</loc> inner content with to_fr when cookie is fr
+_LOC_PATTERN = re.compile(
+    r"(<loc(?:\s[^>]*)?>)(.*?)(</loc>)",
+    re.DOTALL,
+)
+
+
+def _replace_loc_with_fr(html: str) -> str:
+    def replace_match(m: re.Match) -> str:
+        opening, inner, closing = m.group(1), m.group(2), m.group(3)
+        key = " ".join(inner.split()).strip()
+        return opening + (to_fr.get(key, inner)) + closing
+
+    return _LOC_PATTERN.sub(replace_match, html)
 
 
 @cache
@@ -26,6 +48,9 @@ def render_template(
 ):
     """
     Render a template with standard context variables.
+
+    If cookie paperoni-lang is "fr", replace <loc>...</loc> inner text with
+    French from to_fr.
 
     Args:
         template_name: Name of the template file
@@ -57,4 +82,10 @@ def render_template(
         **kwargs,
     }
 
-    return templates().TemplateResponse(template_name, context)
+    tmpl = templates().env.get_template(template_name)
+    body = tmpl.render(**context)
+
+    if request.cookies.get("paperoni-lang") == "fr":
+        body = _replace_loc_with_fr(body)
+
+    return HTMLResponse(content=body)

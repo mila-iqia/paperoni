@@ -1,4 +1,5 @@
 import { debounce, html } from './common.js';
+import { setLanguageNode } from './translate.js';
 import {
     clearSearchForm,
     getSearchParams,
@@ -67,6 +68,7 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 function loadMonacoEditor() {
@@ -242,7 +244,7 @@ function createOperateItem(paperDiff) {
         const paperContent = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });
         contentEl = html`
             <div class="pending-delete-wrapper">
-                <div class="pending-delete-label">Delete paper</div>
+                <div class="pending-delete-label"><loc>Delete paper</loc></div>
                 <div class="pending-delete-paper">${paperContent}</div>
             </div>
         `;
@@ -273,13 +275,13 @@ function createPagination(offset, count, total, nextOffset, onPageChange) {
     const start = offset + 1;
     const end = offset + count;
 
-    const prevButton = html`<button disabled="${offset === 0}">Previous</button>`;
+    const prevButton = html`<button disabled="${offset === 0}"><loc>Previous</loc></button>`;
     prevButton.onclick = () => {
         const newOffset = Math.max(0, offset - PAGE_SIZE);
         onPageChange(newOffset);
     };
 
-    const nextButton = html`<button disabled="${nextOffset === null}">Next</button>`;
+    const nextButton = html`<button disabled="${nextOffset === null}"><loc>Next</loc></button>`;
     nextButton.onclick = () => {
         if (nextOffset !== null) {
             onPageChange(nextOffset);
@@ -290,7 +292,7 @@ function createPagination(offset, count, total, nextOffset, onPageChange) {
         <div class="pagination">
             <div></div>
             ${prevButton}
-            <div class="page-info">Showing ${start}-${end} of ${total}</div>
+            <div class="page-info"><loc>Showing <span>${start}-${end}</span> of <span>${total}</span></loc></div>
             ${nextButton}
         </div>
     `;
@@ -300,10 +302,13 @@ function updateCountsInFooter(matched, unmatched, total) {
     const el = document.getElementById('operateCounts');
     if (!el) return;
     if (total === undefined || total === null) {
-        el.textContent = '';
+        el.innerHTML = '';
         return;
     }
-    el.textContent = `${matched} matched, ${unmatched} unmatched`;
+    el.innerHTML = '';
+    const loc = html`<loc><span>${matched}</span> matched, <span>${unmatched}</span> unmatched</loc>`;
+    el.appendChild(loc);
+    setLanguageNode(el);
 }
 
 function renderResults(data, offset = 0, onPageChange) {
@@ -316,7 +321,7 @@ function renderResults(data, offset = 0, onPageChange) {
     if (!data.results || data.results.length === 0) {
         setResults(html`
             <div class="no-results">
-                No papers to display. Run an operation to see results.
+                <loc>No papers to display. Run an operation to see results.</loc>
             </div>
         `);
         return;
@@ -374,14 +379,14 @@ function renderResults(data, offset = 0, onPageChange) {
 }
 
 function displayLoading() {
-    setResults(html`<div class="loading">Loading...</div>`);
+    setResults(html`<div class="loading"><loc>Loading...</loc></div>`);
 }
 
 function displayError(error) {
     const detail = error.detail ?? error.message;
     setResults(html`
         <div class="error-message">
-            <strong>Error</strong>
+            <strong><loc>Error</loc></strong>
             <pre class="operate-traceback">${detail}</pre>
         </div>
     `);
@@ -404,7 +409,7 @@ async function runSearch(offset = 0) {
         updateCountsInFooter(undefined, undefined, undefined);
         setResults(html`
             <div class="no-results">
-                No operation to run. Enter code and click Update to run the current block.
+                <loc>No operation to run. Enter code and click Update to run the current block.</loc>
             </div>
         `);
         return;

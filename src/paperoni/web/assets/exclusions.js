@@ -1,4 +1,5 @@
 import { html } from './common.js';
+import { getTranslation, setLanguageNode } from './translate.js';
 
 /**
  * Show a toast notification in the bottom right
@@ -144,6 +145,7 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 function setPagination(...elements) {
@@ -152,6 +154,7 @@ function setPagination(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 async function fetchExclusions(offset = 0, limit = 100) {
@@ -227,7 +230,7 @@ function createExclusionElement(exclusion, index) {
         <div class="exclusion-item" data-exclusion="${exclusion}">
             ${exclusionDisplay}
             <button class="btn btn-danger btn-small remove-exclusion-btn" data-exclusion="${exclusion}">
-                Remove
+                <loc>Remove</loc>
             </button>
         </div>
     `;
@@ -236,11 +239,11 @@ function createExclusionElement(exclusion, index) {
     removeBtn.addEventListener('click', async () => {
         try {
             await removeExclusions([exclusion]);
-            showToast('Exclusion removed successfully', 'success');
+            showToast(getTranslation('Exclusion removed successfully'), 'success');
             // Reload the current page
             await displayExclusions(currentOffset, currentLimit);
         } catch (error) {
-            showToast(`Failed to remove exclusion: ${error.message}`, 'error');
+            showToast(getTranslation('Failed to remove exclusion: {1}').replace('{1}', error.message), 'error');
         }
     });
 
@@ -260,7 +263,7 @@ function createPaginationControls(data, offset, limit) {
     const prevDisabled = offset === 0;
     const prevBtn = html`
         <button class="btn btn-secondary pagination-btn" disabled="${prevDisabled}" data-offset="${Math.max(0, offset - limit)}">
-            Previous
+            <loc>Previous</loc>
         </button>
     `;
     if (!prevDisabled) {
@@ -273,7 +276,7 @@ function createPaginationControls(data, offset, limit) {
     // Page info
     const pageInfo = html`
         <span class="pagination-info">
-            Page ${currentPage} of ${totalPages} (${total} total)
+            <loc>Page <span>${currentPage}</span> of <span>${totalPages}</span> (<span>${total}</span> total)</loc>
         </span>
     `;
     controls.push(pageInfo);
@@ -282,7 +285,7 @@ function createPaginationControls(data, offset, limit) {
     const nextDisabled = nextOffset === null;
     const nextBtn = html`
         <button class="btn btn-secondary pagination-btn" disabled="${nextDisabled}" data-offset="${nextOffset || offset}">
-            Next
+            <loc>Next</loc>
         </button>
     `;
     if (!nextDisabled) {
@@ -303,7 +306,7 @@ function renderExclusions(data, offset, limit) {
     if (data.results.length === 0) {
         const noResults = html`
             <div class="no-results">
-                No exclusions found.
+                <loc>No exclusions found.</loc>
             </div>
         `;
         setResults(noResults);
@@ -323,12 +326,12 @@ function renderExclusions(data, offset, limit) {
 }
 
 function displayLoading() {
-    setResults(html`<div class="loading">Loading...</div>`);
+    setResults(html`<div class="loading"><loc>Loading...</loc></div>`);
     setPagination();
 }
 
 function displayError(error) {
-    setResults(html`<div class="error-message">Error loading exclusions: ${error.message}</div>`);
+    setResults(html`<div class="error-message"><loc>Error loading exclusions: <span>${error.message}</span></loc></div>`);
     setPagination();
 }
 
@@ -359,18 +362,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const handleAdd = async () => {
             const exclusion = newExclusionInput.value.trim();
             if (!exclusion) {
-                showToast('Please enter an exclusion', 'error');
+                showToast(getTranslation('Please enter an exclusion'), 'error');
                 return;
             }
 
             try {
                 await addExclusions([exclusion]);
                 newExclusionInput.value = '';
-                showToast('Exclusion added successfully', 'success');
+                showToast(getTranslation('Exclusion added successfully'), 'success');
                 // Reload the current page
                 await displayExclusions(currentOffset, currentLimit);
             } catch (error) {
-                showToast(`Failed to add exclusion: ${error.message}`, 'error');
+                showToast(getTranslation('Failed to add exclusion: {1}').replace('{1}', error.message), 'error');
             }
         };
 
@@ -386,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bulkAddBtn.addEventListener('click', async () => {
             const text = bulkExclusionsInput.value.trim();
             if (!text) {
-                showToast('Please enter exclusions', 'error');
+                showToast(getTranslation('Please enter exclusions'), 'error');
                 return;
             }
 
@@ -395,18 +398,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 .filter(line => line.length > 0);
 
             if (exclusions.length === 0) {
-                showToast('Please enter at least one exclusion', 'error');
+                showToast(getTranslation('Please enter at least one exclusion'), 'error');
                 return;
             }
 
             try {
                 const result = await addExclusions(exclusions);
                 bulkExclusionsInput.value = '';
-                showToast(`Added ${result.added} exclusion(s)`, 'success');
+                showToast(getTranslation('Added {1} exclusion(s)').replace('{1}', result.added), 'success');
                 // Reload the current page
                 await displayExclusions(currentOffset, currentLimit);
             } catch (error) {
-                showToast(`Failed to add exclusions: ${error.message}`, 'error');
+                showToast(getTranslation('Failed to add exclusions: {1}').replace('{1}', error.message), 'error');
             }
         });
     }

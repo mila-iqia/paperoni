@@ -1,4 +1,13 @@
 /**
+ * Escape a string for safe insertion into HTML (e.g. textContent that will not be interpreted as HTML).
+ */
+export function escapeHtml(s) {
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+}
+
+/**
  * Join an array of nodes with a separator.
  *
  * @param {string|Node} separator - The separator to insert between items

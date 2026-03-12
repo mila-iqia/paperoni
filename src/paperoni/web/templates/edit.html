@@ -1,13 +1,13 @@
 {% extends "main.html" %}
 
+{% block title_key %}{% if suggest %}Suggest Edit{% else %}Edit Paper{% endif %}{% endblock %}
 {% block title %}{% if suggest %}Suggest Edit{% else %}Edit Paper{% endif %}{% endblock %}
-
 {% block page_title %}{% if suggest %}Suggest Edit{% else %}Edit Paper{% endif %}{% endblock %}
 
 {% block content %}
 <div class="edit-container">
     <div class="edit-header">
-        <a href="/search" class="back-link">← Back to Search</a>
+        <a href="/search" class="back-link"><loc>← Back to Search</loc></a>
     </div>
 
     <div id="messageContainer"></div>

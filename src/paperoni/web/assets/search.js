@@ -1,4 +1,5 @@
 import { debounce, html } from './common.js';
+import { setLanguageNode } from './translate.js';
 import { createPaperElement, createScoreBand } from './paper.js';
 import { createWorksetElement } from './workset.js';
 import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
@@ -18,6 +19,7 @@ function setResults(...elements) {
     elements.forEach(el => {
         if (el) container.appendChild(el);
     });
+    setLanguageNode(container);
 }
 
 async function fetchSearchResults(params, offset = 0) {
@@ -43,13 +45,13 @@ function createPagination(offset, count, total, nextOffset, showTotalFound = fal
     const end = offset + count;
     const paperWord = total !== 1 ? 'papers' : 'paper';
 
-    const prevButton = html`<button disabled="${offset === 0}">Previous</button>`;
+    const prevButton = html`<button disabled="${offset === 0}"><loc>Previous</loc></button>`;
     prevButton.onclick = () => {
         const newOffset = Math.max(0, offset - PAGE_SIZE);
         performSearch(currentParams, newOffset);
     };
 
-    const nextButton = html`<button disabled="${nextOffset === null}">Next</button>`;
+    const nextButton = html`<button disabled="${nextOffset === null}"><loc>Next</loc></button>`;
     nextButton.onclick = () => {
         if (nextOffset !== null) {
             performSearch(currentParams, nextOffset);
@@ -57,14 +59,14 @@ function createPagination(offset, count, total, nextOffset, showTotalFound = fal
     };
 
     const totalFoundInfo = showTotalFound
-        ? html`<div class="results-info"><span class="count">${total}</span> ${paperWord} found</div>`
+        ? html`<div class="results-info"><loc><span class="count">${total}</span> ${paperWord} found</loc></div>`
         : html`<div></div>`;
 
     return html`
         <div class="pagination">
             ${totalFoundInfo}
             ${prevButton}
-            <div class="page-info">Showing ${start}-${end} of ${total}</div>
+            <div class="page-info"><loc>Showing <span>${start}-${end}</span> of <span>${total}</span></loc></div>
             ${nextButton}
         </div>
     `;
@@ -151,7 +153,7 @@ function displayResults(data) {
     if (data.results.length === 0) {
         const noResults = html`
             <div class="no-results">
-                No papers found. Try adjusting your search criteria.
+                <loc>No papers found. Try adjusting your search criteria.</loc>
             </div>
         `;
         setResults(noResults);
@@ -189,11 +191,11 @@ function displayResults(data) {
 }
 
 function displayLoading() {
-    setResults(html`<div class="loading">Loading...</div>`);
+    setResults(html`<div class="loading"><loc>Loading...</loc></div>`);
 }
 
 function displayError(error) {
-    setResults(html`<div class="error-message">Error loading results: ${error.message}</div>`);
+    setResults(html`<div class="error-message"><loc>Error loading results: <span>${error.message}</span></loc></div>`);
 }
 
 function updateUrlParams(params, offset) {

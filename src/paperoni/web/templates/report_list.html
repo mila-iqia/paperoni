@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 
+{% block title_key %}Available Reports{% endblock %}
 {% block title %}Available Reports{% endblock %}
-
 {% block page_title %}Available Reports{% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p class="no-reports">No reports available.</p>
+        <p class="no-reports"><loc>No reports available.</loc></p>
     {% endif %}
 </div>
 {% endblock %}
