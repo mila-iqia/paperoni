@@ -134,6 +134,14 @@ class SemanticScholar(Discoverer):
     api_key: str = field(default_factory=lambda: config.api_keys.semantic_scholar)
 
     async def _evaluate(self, path: str, **params) -> dict:
+        # TODO: semantic scholar has an agressive rate limiting for
+        # unauthenticated requests (1000 requests per seconds shared among all
+        # unauthenticated requests at time of writing):
+        # https://www.semanticscholar.org/product/api#api-key
+        # In practice, it means we some times get rate limited for more than 5
+        # min and never get to 10000 results with the current timeout.
+        # We should consider using an API key in the future:
+        # https://www.semanticscholar.org/product/api#api-key-form
         jdata = await config.fetch.read_retry(
             f"https://api.semanticscholar.org/graph/v1/{path}",
             params=params,
@@ -312,6 +320,8 @@ class SemanticScholar(Discoverer):
 
     async def query(
         self,
+        # Paper ID
+        paper_id: str = None,
         # Author of the article
         author: str = None,
         # Title of the article
@@ -324,6 +334,10 @@ class SemanticScholar(Discoverer):
         focuses: Focuses = None,
     ):
         """Query semantic scholar"""
+        if paper_id:
+            # If paper_id is provided, ignore the focuses
+            focuses = None
+
         if focuses:
             if limit is not None:
                 print(
@@ -349,10 +363,13 @@ class SemanticScholar(Discoverer):
         if isinstance(title, list):
             title = " ".join(title)
 
-        if author and title:
-            raise QueryError("Cannot query both author and title")
+        if sum(bool(x) for x in (paper_id, author, title)) > 1:
+            raise QueryError("Cannot query more than one of paper_id, author and title")
 
-        if title:
+        if paper_id:
+            yield (await self.paper(paper_id))
+
+        elif title:
             async for paper in self.search(title, block_size=block_size, limit=limit):
                 yield paper
 
