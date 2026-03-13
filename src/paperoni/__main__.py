@@ -527,10 +527,12 @@ class Work:
                 it = iter(work.top)
             selected = [sws for sws in it if filter(sws)]
             work.top.discard_all(selected)
+            # TODO: we should return the working set or include the `collected`
+            # papers in the paper's `info` field.
             return [s.value.current for s in selected]
 
     @dataclass
-    class Suggest(Extractor):
+    class Include(Extractor):
         """Include top articles to collection."""
 
         # Maximum number of papers to include
@@ -551,7 +553,7 @@ class Work:
             return p
 
         def _coll(self, work: "Work"):
-            return work.suggestions
+            return work.collection
 
         async def run(self, work: "Work"):
             selected = self.extract(
@@ -581,11 +583,11 @@ class Work:
             return added
 
     @dataclass
-    class Include(Suggest):
+    class Suggest(Include):
         """Suggest top articles to collection."""
 
         def _coll(self, work: "Work"):
-            return work.collection
+            return work.suggestions
 
     @dataclass
     class Exclude(Extractor):
@@ -730,7 +732,7 @@ class Coll:
         format: Formatter = TerminalFormatter
 
         # Limit
-        limit: int = 0
+        limit: int = 100
 
         # Offset
         offset: int = 0

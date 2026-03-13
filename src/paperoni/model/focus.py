@@ -174,9 +174,6 @@ class Scored[T]:
     score: float
     value: T = field(compare=False)
 
-    def __bool__(self):
-        return self.score != 0
-
 
 @dataclass
 class Top[T]:
@@ -189,7 +186,7 @@ class Top[T]:
         self.add_all(xs)
 
     def add(self, x):
-        if self.drop_zero and not x:
+        if self.drop_zero and self._is_zero(x):
             return False
         if len(self.entries) >= self.n:
             replaced = heappushpop(self.entries, x)
@@ -212,7 +209,7 @@ class Top[T]:
 
     def resort(self):
         if self.drop_zero:
-            self.entries = [e for e in self.entries if e]
+            self.entries = [e for e in self.entries if not self._is_zero(e)]
         heapify(self.entries)
 
     def __len__(self):
@@ -220,3 +217,12 @@ class Top[T]:
 
     def __iter__(self):
         yield from sorted(self.entries, reverse=True)
+
+    @staticmethod
+    def _is_zero(x):
+        score = getattr(x, "score", None)
+        match score:
+            case None:
+                return not bool(x)
+            case _:
+                return score == 0
