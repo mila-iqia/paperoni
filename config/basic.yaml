@@ -6,6 +6,13 @@ paperoni:
     gemini: _
     scraperapi: _
     paperoni_v2: _
+    # Semantic Scholar has an agressive rate limiting for unauthenticated
+    # requests (1000 requests per seconds shared among all unauthenticated
+    # requests at time of writing):
+    # https://www.semanticscholar.org/product/api#api-key
+    # If rate limiting occurs too often, consider using an API key:
+    # https://www.semanticscholar.org/product/api#api-key-form
+    # semantic_scholar: _
   fetch:
     $class: RulesFetcher
     simultaneous:

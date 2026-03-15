@@ -136,7 +136,7 @@ PAPERONI_SECRETS = "{env:PAPERONI_SECRETS:{home:real}/secrets/paperoni/config.ya
 uv = 'UV_PROJECT_ENVIRONMENT="{env:VIRTUAL_ENV}" "$(which uv)" {args}'
 make-secrets = [
     "uv sync",
-    'serieux patch -m "paperoni.config:gifnoc_model" -f "{env:PAPERONI_SECRETS}" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" {args}',
+    'serieux patch -m "paperoni.config:gifnoc_model" -o "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)" "{env:PAPERONI_SECRETS}" {args}',
     'cp $(dirname "{env:PAPERONI_SECRETS}")/*focuses*.yaml "$(dirname "$(echo "{env:GIFNOC_FILE}" | cut -d"," -f1)")"',
 ]
 

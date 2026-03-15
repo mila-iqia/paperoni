@@ -312,6 +312,8 @@ class SemanticScholar(Discoverer):
 
     async def query(
         self,
+        # Paper ID
+        paper_id: str = None,
         # Author of the article
         author: str = None,
         # Title of the article
@@ -324,6 +326,10 @@ class SemanticScholar(Discoverer):
         focuses: Focuses = None,
     ):
         """Query semantic scholar"""
+        if paper_id:
+            # If paper_id is provided, ignore the focuses
+            focuses = None
+
         if focuses:
             if limit is not None:
                 print(
@@ -349,10 +355,13 @@ class SemanticScholar(Discoverer):
         if isinstance(title, list):
             title = " ".join(title)
 
-        if author and title:
-            raise QueryError("Cannot query both author and title")
+        if sum(bool(x) for x in (paper_id, author, title)) > 1:
+            raise QueryError("Cannot query more than one of paper_id, author and title")
 
-        if title:
+        if paper_id:
+            yield (await self.paper(paper_id))
+
+        elif title:
             async for paper in self.search(title, block_size=block_size, limit=limit):
                 yield paper
 

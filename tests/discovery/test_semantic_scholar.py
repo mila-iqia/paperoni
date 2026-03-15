@@ -105,7 +105,6 @@ async def test_query_limit_ignored_when_focuses_provided(capsys: pytest.CaptureF
     results = [
         p
         async for p in discoverer.query(
-            author="Yoshua Bengio",
             focuses=Focuses(
                 [
                     Focus(
