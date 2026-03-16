@@ -45,7 +45,7 @@ def merge(x: object, y: object):
 def merge(x: object, y: object, qx: Number, qy: Number):
     if qx <= -10 or qy <= -10 or qx >= 10 or qy >= 10:
         # We only do piecewise merging if both q are between -10 and 10 exclusive
-        return x if qx > qy else y
+        return x if qx >= qy else y
     else:
         return call_next(x, y, qx, qy)
 
@@ -62,7 +62,8 @@ def merge(x: object, y: None, qx: Number, qy: Number):
 
 @ovld
 def merge(x: object, y: object, qx: Number, qy: Number):
-    return x if qx > qy else y
+    # Preserve the first item if the quality is the same
+    return x if qx >= qy else y
 
 
 @ovld(priority=1)
@@ -113,10 +114,15 @@ def merge(
 ):
     results = []
     ass = associate(x, y, key=similarity, threshold=0.5)
+    extra = y[:]
     for x1, x2 in ass:
         merged = recurse(x1, x2, qx, qy) if x2 is not None else x1
         results.append(merged)
-    return results
+        try:
+            extra.remove(x2)
+        except ValueError:
+            pass
+    return results + extra
 
 
 @ovld

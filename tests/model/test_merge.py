@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
+import pytest
 from serieux import deserialize, serialize
 from serieux.features.comment import CommentRec
 
+from paperoni.model import Paper
 from paperoni.model.classes import (
     Author,
     Institution,
@@ -165,3 +167,106 @@ def test_merge_all():
     assert merge_all([]) is None
     assert merge_all([ab]) == ab
     assert merge_all([c, ab, d]) == ab | c | d
+
+
+@pytest.mark.parametrize(
+    ["other_paper"],
+    [
+        (
+            # Different order
+            Paper(
+                title="A paper",
+                authors=[
+                    PaperAuthor(
+                        display_name="Jane Smith", author=Author(name="Jane Smith")
+                    ),
+                    PaperAuthor(
+                        display_name="John Smith", author=Author(name="John Smith")
+                    ),
+                    PaperAuthor(
+                        display_name="James Smith", author=Author(name="James Smith")
+                    ),
+                ],
+            ),
+        ),
+        (
+            # First letter first name
+            Paper(
+                title="A paper",
+                authors=[
+                    PaperAuthor(display_name="J. Smith", author=Author(name="J. Smith")),
+                    PaperAuthor(
+                        display_name="Jane Smith", author=Author(name="Jane Smith")
+                    ),
+                    PaperAuthor(
+                        display_name="John Smith", author=Author(name="John Smith")
+                    ),
+                ],
+            ),
+        ),
+        (
+            # Extra duplicated author
+            Paper(
+                title="A paper",
+                authors=[
+                    PaperAuthor(
+                        display_name="James Smith", author=Author(name="James Smith")
+                    ),
+                    PaperAuthor(
+                        display_name="Jane Smith", author=Author(name="Jane Smith")
+                    ),
+                    PaperAuthor(
+                        display_name="John Smith", author=Author(name="John Smith")
+                    ),
+                    PaperAuthor(display_name="J. Smith", author=Author(name="J. Smith")),
+                ],
+            ),
+        ),
+    ],
+)
+def test_merge_authors(other_paper: Paper):
+    paper = Paper(
+        title="A paper",
+        authors=[
+            PaperAuthor(display_name="James Smith", author=Author(name="James Smith")),
+            PaperAuthor(display_name="Jane Smith", author=Author(name="Jane Smith")),
+            PaperAuthor(display_name="John Smith", author=Author(name="John Smith")),
+        ],
+    )
+    merged: Paper = merge(paper, other_paper)
+    # Make sure there are no duplicate authors
+    assert len(merged.authors) == len({author.display_name for author in merged.authors})
+    # Make sure the first object is preferred if the quality is the same
+    assert merged.authors[: len(paper.authors)] == paper.authors
+    # Merged authors should be a subset of the original authors
+    assert {author.display_name for author in merged.authors} <= (
+        {author.display_name for author in paper.authors}
+        | {author.display_name for author in other_paper.authors}
+    )
+
+    merged: Paper = merge(
+        paper,
+        Paper(
+            title="A paper",
+            authors=[qual(author, -10) for author in other_paper.authors],
+        ),
+    )
+    assert len(merged.authors) == len({author.display_name for author in merged.authors})
+    assert merged.authors[: len(paper.authors)] == paper.authors
+    assert {author.display_name for author in merged.authors} <= (
+        {author.display_name for author in paper.authors}
+        | {author.display_name for author in other_paper.authors}
+    )
+
+    merged: Paper = merge(
+        Paper(
+            title="A paper",
+            authors=[qual(author, -10) for author in paper.authors],
+        ),
+        other_paper,
+    )
+    assert len(merged.authors) == len({author.display_name for author in merged.authors})
+    assert {author.display_name for author in merged.authors} <= (
+        {author.display_name for author in paper.authors}
+        | {author.display_name for author in other_paper.authors}
+    )

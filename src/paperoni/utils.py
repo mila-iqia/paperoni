@@ -178,9 +178,12 @@ def associate(l1, l2, key, threshold=0):
     sims.sort(key=lambda tup: -tup[0])
     mapping = {}
     n = len(l1)
+    # Avoid matching the same element twice
+    matched = set()
     for _, i1, i2 in sims:
-        if i1 not in mapping:
+        if i1 not in mapping and i2 not in matched:
             mapping[i1] = l2[i2]
+            matched.add(i2)
         if len(mapping) == n:
             break
     return [(x1, mapping.get(i1, None)) for i1, x1 in el1]
