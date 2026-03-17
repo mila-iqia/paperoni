@@ -530,7 +530,27 @@ async function fetchWorksets(offset = 0, size = 100) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return transformComments(data);
+}
+
+function transformComments(obj) {
+    if (Array.isArray(obj)) {
+        return obj.map(transformComments);
+    } else if (obj !== null && typeof obj === 'object') {
+        if ('$value' in obj && '$comment' in obj) {
+            const value = obj.$value;
+            const comment = obj.$comment;
+            if (value !== null && typeof value === 'object') {
+                let tvalue = transformComments(value);
+                tvalue.$comment = comment;
+                return tvalue;
+            }
+            return value;
+        }
+        return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, transformComments(v)]));
+    }
+    return obj;
 }
 
 function createInfoValue(value) {
