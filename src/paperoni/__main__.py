@@ -584,7 +584,7 @@ class Work:
                 selected = [replace(p, flags=p.flags | {self.flag}) for p in selected]
 
             try:
-                added = await self._coll(work).add_papers(selected)
+                added = await self._coll(work).add_papers(selected, force=True)
             finally:
                 # As some papers could be added to the collection before an
                 # error is raised, causing a new paper to exists in the
