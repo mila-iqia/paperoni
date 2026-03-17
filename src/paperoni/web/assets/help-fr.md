@@ -98,3 +98,28 @@ La page [Rapports](/report) liste les rapports d'erreur disponibles générés
 à partir des journaux de traitement. Chaque rapport affiche les erreurs groupées
 par type, avec tracebacks et nombre d'occurrences. Utile principalement aux
 développeurs et administrateurs pour le débogage du traitement des données.
+
+# Jeton API {: #api-token}
+
+Pour appeler l'API Paperoni (recherche, export, etc.), vous avez besoin d'un
+jeton (token) porteur.
+
+1. **Obtenir un jeton** : Ouvrez la page [Jeton](/token). Connectez-vous avec
+   Google lorsque demandé. À la fin du processus, la page affichera votre jeton
+   — copiez-le et conservez-le de manière sécurisée.
+
+2. **Utiliser le jeton** : Envoyez-le dans l'en-tête `Authorization` sous la
+   forme `Bearer VOTRE_JETON`.
+
+Exemple — recherche (10 premiers résultats) :
+
+```
+curl -H 'Authorization: Bearer VOTRE_JETON' \
+  'https://paperoni.mila.quebec/api/v1/search?limit=10&offset=0'
+```
+
+Remplacez `VOTRE_JETON` par le jeton copié et adaptez l'URL de base si vous
+utilisez une autre instance Paperoni.
+
+Pour la référence complète de l'API REST (endpoints, paramètres, schémas),
+consultez la [documentation API](/docs).
