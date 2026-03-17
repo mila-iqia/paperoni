@@ -92,3 +92,27 @@ The [Reports](/report) page lists available error reports generated from
 processing logs. Each report shows errors grouped by type, with tracebacks and
 occurrence counts. This is primarily useful for developers and administrators
 debugging data processing issues.
+
+# API token {: #api-token}
+
+To call the Paperoni API (e.g. search, export), you need a bearer token. 
+
+1. **Get a token**: Navigate to [Token](/token). Sign in with Google when
+   prompted. When the flow finishes, the page will show your token — copy it and
+   store it securely.
+
+2. **Use the token**: Send it in the `Authorization` header as
+   `Bearer YOUR_TOKEN`.
+
+Example — search (first 10 results):
+
+```
+curl -H 'Authorization: Bearer YOUR_TOKEN' \
+  'https://paperoni.mila.quebec/api/v1/search?limit=10&offset=0'
+```
+
+Replace `YOUR_TOKEN` with the token you copied and adjust the base URL if you
+use a different Paperoni instance.
+
+For full REST API reference (endpoints, parameters, schemas), see the [API
+documentation](/docs).
