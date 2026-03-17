@@ -73,7 +73,9 @@ def _generate_metadata(
     usage = response.usage_metadata
     if usage is not None:
         input_tokens = usage.prompt_token_count
-        output_tokens = usage.candidates_token_count + usage.thoughts_token_count
+        tk = usage.candidates_token_count or 0
+        ttk = usage.thoughts_token_count or 0
+        output_tokens = tk + ttk
         total_tokens = usage.total_token_count
     else:
         input_tokens = output_tokens = total_tokens = None
