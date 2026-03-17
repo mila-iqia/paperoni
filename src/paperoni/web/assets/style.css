@@ -1839,6 +1839,14 @@ body {
     margin-bottom: 10px;
 }
 
+.authors-comment {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 11px;
+    color: #999;
+}
+
 .paper-authors {
     color: #555;
     margin-bottom: 5px;

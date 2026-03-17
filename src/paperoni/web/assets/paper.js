@@ -167,6 +167,8 @@ export function attachAuthorAffiliationHover(container) {
 export function createAuthorsSection(authors, options = {}) {
     const { searchParams = {}, onAuthorClick = null, onInstitutionClick = null } = options;
 
+    const comment = authors?.$comment ?? null;
+
     if (!authors || authors.length === 0) {
         return html`<div class="paper-authors-container"><div class="paper-authors">No authors</div></div>`;
     }
@@ -223,8 +225,13 @@ export function createAuthorsSection(authors, options = {}) {
         ? html`<div class="paper-institutions">${join('; ', institutionElements)}</div>`
         : null;
 
+    const commentBadge = comment !== null
+        ? html`<span class="authors-comment">${comment}</span>`
+        : null;
+
     const container = html`
-        <div class="paper-authors-container">
+        <div class="paper-authors-container" style="position: relative">
+            ${commentBadge}
             <div class="paper-authors">${authorNodes}</div>
             ${institutionsHtml}
         </div>

@@ -10,7 +10,7 @@ from typing import Any, Generator, Iterable, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
-from serieux import auto_singleton, deserialize, serialize
+from serieux import CommentRec, auto_singleton, deserialize, serialize
 
 from ..__main__ import Coll, Focus, Formatter, Fulltext, Work, expand_paper_links
 from ..config import config
@@ -546,10 +546,12 @@ def install_api(app) -> FastAPI:
         request: ViewRequest = Depends(), user: str = Depends(hascap("admin"))
     ):
         work = Work(command=request, work_file=config.work_file)
-        worksets: list[Scored[PaperWorkingSet]] = list(request.slice(await work.run()))
+        worksets: list[Scored[CommentRec[PaperWorkingSet, float]]] = list(
+            request.slice(await work.run())
+        )
 
         return ViewResponse(
-            results=serialize(list[Scored[PaperWorkingSet]], worksets),
+            results=serialize(list[Scored[CommentRec[PaperWorkingSet, float]]], worksets),
             count=request.count,
             next_offset=request.next_offset,
             total=len(work.top),
