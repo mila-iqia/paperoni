@@ -66,6 +66,13 @@ def merge(x: object, y: object, qx: Number, qy: Number):
     return x if qx >= qy else y
 
 
+@ovld(priority=2)
+def merge(x: CommentProxy, y: CommentProxy, qx: Number, qy: Number):
+    qx = x._
+    qy = y._
+    return qual(recurse(x._obj, y._obj, qx, qy), max(qx, qy))
+
+
 @ovld(priority=1)
 def merge(x: CommentProxy, y: object, qx: Number, qy: Number):
     qx = x._
