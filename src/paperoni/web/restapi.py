@@ -557,13 +557,13 @@ def install_api(app) -> FastAPI:
             total=len(work.top),
         )
 
-    @app.get(
+    @app.post(
         f"{prefix}/work/include",
         response_model=IncludeResponse,
         dependencies=[Depends(hascap("admin"))],
     )
     async def work_include_papers(request: IncludeRequest):
-        """Search for papers in the collection."""
+        """Include papers from the workset."""
         work = Work(command=request, work_file=config.work_file)
 
         added = await work.run()
