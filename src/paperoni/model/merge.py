@@ -41,15 +41,6 @@ def merge(x: object, y: object):
     return recurse(x, y, 0.0, 0.0)
 
 
-@ovld(priority=10)
-def merge(x: object, y: object, qx: Number, qy: Number):
-    if qx <= -10 or qy <= -10 or qx >= 10 or qy >= 10:
-        # We only do piecewise merging if both q are between -10 and 10 exclusive
-        return x if qx >= qy else y
-    else:
-        return call_next(x, y, qx, qy)
-
-
 @ovld
 def merge(x: None, y: object, qx: Number, qy: Number):
     return y
@@ -66,23 +57,25 @@ def merge(x: object, y: object, qx: Number, qy: Number):
     return x if qx >= qy else y
 
 
-@ovld(priority=2)
-def merge(x: CommentProxy, y: CommentProxy, qx: Number, qy: Number):
-    qx = x._
-    qy = y._
-    return qual(recurse(x._obj, y._obj, qx, qy), max(qx, qy))
-
-
-@ovld(priority=1)
+@ovld(priority=3)
 def merge(x: CommentProxy, y: object, qx: Number, qy: Number):
     qx = x._
     return qual(recurse(x._obj, y, qx, qy), max(qx, qy))
 
 
-@ovld
+@ovld(priority=2)
 def merge(x: object, y: CommentProxy, qx: Number, qy: Number):
     qy = y._
     return qual(recurse(x, y._obj, qx, qy), max(qx, qy))
+
+
+@ovld(priority=1)
+def merge(x: object, y: object, qx: Number, qy: Number):
+    if qx <= -10 or qy <= -10 or qx >= 10 or qy >= 10:
+        # We only do piecewise merging if both q are between -10 and 10 exclusive
+        return x if qx >= qy else y
+    else:
+        return call_next(x, y, qx, qy)
 
 
 @ovld

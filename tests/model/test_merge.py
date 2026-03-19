@@ -120,6 +120,26 @@ def test_merge_author_lists():
     ]
 
 
+def test_merge_author_lists_override():
+    p1 = PaperAuthor(
+        display_name="John",
+        author=Author(name="John", links=[Link(type="job", link="baker")]),
+    )
+    p2 = PaperAuthor(
+        display_name="John",
+        author=Author(name="John", links=[Link(type="hair", link="yes")]),
+    )
+    p3 = PaperAuthor(display_name="Gunther", author=Author(name="Gunther", links=[]))
+
+    l1 = [p3, p1]
+    l2 = [p2]
+
+    assert merge(qual(l1, 10), l2) == l1
+    assert merge(l1, qual(l2, 10)) == l2
+    assert merge(qual(l1, 100), qual(l2, 10)) == l1
+    assert merge(qual(l1, 10), qual(l2, 100)) == l2
+
+
 def test_merge_author_lists_similarity():
     p1 = PaperAuthor(
         display_name="J. Smith",
