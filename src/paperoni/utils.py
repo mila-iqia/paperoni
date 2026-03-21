@@ -210,8 +210,8 @@ def split_institution(name: str) -> list[str]:
 
 
 def quick_author_similarity(names1, names2):
-    lasts1 = {normalize_name(n.split()[-1]) for n in names1}
-    lasts2 = {normalize_name(n.split()[-1]) for n in names2}
+    lasts1 = {normalize_name(n.split()[-1]) for n in names1 if n}
+    lasts2 = {normalize_name(n.split()[-1]) for n in names2 if n}
     floor = 0.0
     if (len(lasts2 - lasts1)) <= 1 and (len(lasts1 - lasts2)) <= 1:
         # Affordance for adding, removing or misspelling an author regardless
