@@ -351,6 +351,9 @@ class Work:
                 ):
                     continue
 
+                if any(not au.display_name for au in paper.authors):
+                    continue
+
                 if found := find_equivalent(paper, index):
                     found.value.add(paper)
                     new_score = work.focuses.score(found.value.current)
