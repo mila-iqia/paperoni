@@ -1,7 +1,6 @@
 import asyncio
 import hashlib
 import json
-import time
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 
@@ -126,18 +125,26 @@ class UploadSerieux(Medley):
 srx = (Serieux + UploadSerieux)()
 
 
+async def to_async_list(li):
+    for x in li:
+        yield x
+
+
 async def main():
     if not upload_options.url and not upload_options.only_dump:
         exit("No URL to upload to.")
 
-    async for i, block in enumerate(
-        buffer(
-            config.collection.search(start_date=upload_options.start_date),
-            count=upload_options.block_size,
-        )
-    ):
-        if i > 0 and upload_options.block_pause:
-            time.sleep(upload_options.block_pause)
+    # Drain all papers, otherwise the cursor may become invalid
+    all_papers = [
+        paper
+        async for paper in config.collection.search(start_date=upload_options.start_date)
+    ]
+    all_papers = to_async_list(all_papers)
+
+    total = 0
+    async for i, block in enumerate(buffer(all_papers, count=upload_options.block_size)):
+        total += len(block)
+        print(total)
 
         exports = [srx.serialize(Paper, paper) for paper in block]
         if upload_options.only_dump:
