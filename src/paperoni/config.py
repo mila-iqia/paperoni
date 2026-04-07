@@ -63,7 +63,7 @@ class Server:
     external_host: str = None
     port: int = 8000
     protocol: Literal["http", "https"] = "http"
-    max_results: int = 10000
+    max_results: int = 200
     enable_operate: bool = False
     auth: OAuthManager = None
     assets: Path = None
