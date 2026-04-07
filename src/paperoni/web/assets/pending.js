@@ -10,6 +10,7 @@ const FILTER_OPTIONS = [
     { value: null, label: 'All' },
     { value: 'user', label: 'user' },
     { value: 'scraped', label: 'scraped' },
+    { value: 'updated', label: 'updated' },
 ];
 
 let pendingFilter = null;
