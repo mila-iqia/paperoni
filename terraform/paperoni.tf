@@ -262,6 +262,18 @@ resource "google_firestore_database" "paperoni_db" {
   mongodb_compatible_data_access_mode = "DATA_ACCESS_MODE_ENABLED"
   delete_protection_state             = "DELETE_PROTECTION_DISABLED"
   deletion_policy                     = "DELETE"
+  point_in_time_recovery_enablement   = "POINT_IN_TIME_RECOVERY_ENABLED"
+}
+
+resource "google_firestore_backup_schedule" "paperoni_db_weekly_backup" {
+  project  = var.project_id
+  database = google_firestore_database.paperoni_db.name
+
+  retention = "4838400s" # 8 weeks
+
+  weekly_recurrence {
+    day = "SUNDAY"
+  }
 }
 
 #########

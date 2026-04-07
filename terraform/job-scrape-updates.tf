@@ -94,7 +94,7 @@ resource "google_cloud_run_v2_job" "paperoni_scrape_updates" {
 resource "google_cloud_scheduler_job" "paperoni_scrape_updates_regular" {
   name             = "${var.prefix}-scrape-updates-regular"
   description      = "Execute paperoni scrape-updates job"
-  schedule         = "0 3 * * 1"
+  schedule         = "0 3 * * 3"
   time_zone        = var.timezone
   region           = var.google_region
   attempt_deadline = "60s"
