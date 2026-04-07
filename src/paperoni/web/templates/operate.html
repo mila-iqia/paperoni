@@ -5,7 +5,7 @@
 {% block page_title %}Operate{% endblock %}
 
 {% block extra_head %}
-<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js" integrity="sha384-SF/kPhqG3NMxqsYAbQqHkdF53WQx8yTkY0Ys+M+ayeC20QNujPyyxIuUEdEf0eG/" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block content %}
@@ -41,7 +41,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module">
+<script type="module" nonce="{{ csp_nonce }}">
     import { operatePapers } from '/assets/operate.js';
     operatePapers();
 </script>

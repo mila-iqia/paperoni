@@ -3,6 +3,7 @@ Helper functions for web routes.
 """
 
 import re
+import secrets
 from functools import cache
 from pathlib import Path
 
@@ -82,10 +83,28 @@ def render_template(
         **kwargs,
     }
 
+    nonce = secrets.token_urlsafe(16)
+    context["csp_nonce"] = nonce
+
     tmpl = templates().env.get_template(template_name)
     body = tmpl.render(**context)
 
     if request.cookies.get("paperoni-lang") == "fr":
         body = _replace_loc_with_fr(body)
 
-    return HTMLResponse(content=body)
+    delivr = " https://cdn.jsdelivr.net" if config.server.enable_operate else ""
+
+    csp = (
+        f"default-src 'self'; "
+        f"script-src 'self' 'nonce-{nonce}'{delivr}; "
+        f"style-src 'self' 'unsafe-inline'{delivr}; "
+        f"worker-src 'self' blob:; "
+        f"img-src 'self'; "
+        f"connect-src 'self'{delivr}; "
+        f"font-src 'self'{delivr}; "
+        f"frame-ancestors 'none'; "
+        f"form-action 'self'"
+    )
+    response = HTMLResponse(content=body)
+    response.headers["Content-Security-Policy"] = csp
+    return response

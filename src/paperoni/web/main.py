@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
+from starlette.middleware.base import BaseHTTPMiddleware
 
 import paperoni
 
@@ -15,6 +16,23 @@ from ..config import config
 app_logger = logging.getLogger(__name__)
 
 here = Path(__file__).parent
+
+
+_SECURITY_HEADERS = {
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=(), accelerometer=(), magnetometer=(), payment=(), usb=(), gyroscope=()",
+}
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        for header, value in _SECURITY_HEADERS.items():
+            response.headers[header] = value
+        return response
 
 
 def create_app():
@@ -32,6 +50,8 @@ def create_app():
             exc = HTTPException(status_code=500, detail="Internal Server Error")
 
         return await http_exception_handler(request, exc)
+
+    app.add_middleware(SecurityHeadersMiddleware)
 
     auth = config.server.auth or OAuthManager(server_metadata_url="n/a")
     auth.install(app)

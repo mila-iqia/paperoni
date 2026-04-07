@@ -31,7 +31,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module">
+<script type="module" nonce="{{ csp_nonce }}">
     import { manageCapabilities } from '/assets/capabilities.js';
     const oauthPrefix = {{ oauth_prefix|tojson }};
     manageCapabilities(oauthPrefix);

@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module">
+<script type="module" nonce="{{ csp_nonce }}">
     import { displayExclusions } from '/assets/exclusions.js';
     displayExclusions();
 </script>

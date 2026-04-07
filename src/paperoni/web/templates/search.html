@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module">
+<script type="module" nonce="{{ csp_nonce }}">
     import { searchPapers } from '/assets/search.js';
     searchPapers({{ can_edit|tojson }}, {{ show_scores|default(false)|tojson }}, {{ use_dev_mode|default(false)|tojson }});
 </script>
