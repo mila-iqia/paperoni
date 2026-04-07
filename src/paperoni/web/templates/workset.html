@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module">
+<script type="module" nonce="{{ csp_nonce }}">
     import { displayWorksets } from '/assets/workset.js';
     displayWorksets();
 </script>

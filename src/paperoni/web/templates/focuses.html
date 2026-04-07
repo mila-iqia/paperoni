@@ -59,7 +59,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="module">
+<script type="module" nonce="{{ csp_nonce }}">
     import { init } from '/assets/focuses.js';
     init();
 </script>
