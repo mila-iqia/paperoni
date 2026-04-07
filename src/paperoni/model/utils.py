@@ -16,3 +16,11 @@ def paper_has_updated(paper: Paper, new_paper: Paper) -> bool:
     #     # There are new links in the new paper
     #     or bool({link for link in new_paper.links} - {link for link in paper.links})
     # )
+
+
+def should_rerun(paper: Paper) -> bool:
+    return "rerun" in paper.flags
+
+
+def should_reprocess(paper: Paper, new_paper: Paper) -> bool:
+    return paper_has_updated(paper, new_paper) or should_rerun(paper)

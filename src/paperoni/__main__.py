@@ -55,7 +55,7 @@ from .heuristics import simplify_paper
 from .model import Link, Paper
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all, qual
-from .model.utils import paper_has_updated
+from .model.utils import should_reprocess, should_rerun
 from .refinement import fetch_all
 from .refinement.llm_normalize import normalize_paper
 from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statistic
@@ -371,7 +371,7 @@ class Work:
                             break
 
                 if col_paper:
-                    if not self.check_paper_updates or not paper_has_updated(
+                    if not self.check_paper_updates or not should_reprocess(
                         col_paper, paper
                     ):
                         continue
@@ -379,14 +379,16 @@ class Work:
                     continue
 
                 if col_paper:
-                    working_set = PaperWorkingSet.make(
-                        replace(
-                            col_paper,
-                            authors=qual(col_paper.authors, 10.0),
-                            key=f"orig:{col_paper.id}",
-                            score=work.focuses.score(col_paper),
-                        )
+                    sf = should_rerun(col_paper)
+                    qual_col_paper = replace(
+                        col_paper,
+                        authors=qual(col_paper.authors, -10.0 if sf else 10.0),
+                        key=f"orig:{col_paper.id}",
+                        score=work.focuses.score(col_paper),
                     )
+                    if sf:
+                        qual_col_paper = qual(col_paper, -1)
+                    working_set = PaperWorkingSet.make(qual_col_paper)
                     working_set.add(paper)
                     scored = Scored(work.focuses.score(working_set.current), working_set)
 
@@ -584,7 +586,12 @@ class Work:
                 selected = [self._apply_operations(p) for p in selected]
 
             if self.flag:
-                selected = [replace(p, flags=p.flags | {self.flag}) for p in selected]
+                selected = [
+                    replace(p, flags=(p.flags | {self.flag}) - {"rerun"})
+                    for p in selected
+                ]
+            else:
+                selected = [replace(p, flags=p.flags - {"rerun"}) for p in selected]
 
             try:
                 added = await self._coll(work).add_papers(selected, force=True)
