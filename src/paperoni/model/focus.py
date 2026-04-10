@@ -6,6 +6,7 @@ from typing import Counter, Iterable, Literal
 
 from outsight import send
 from ovld import ovld
+from serieux.features.comment import CommentProxy
 
 from ..utils import (
     mostly_latin,
@@ -106,6 +107,10 @@ class Focuses:
         if p.affiliations and not recognized_institution:
             return 0.0
         return name_score + iscores
+
+    @ovld
+    def score(self, p: CommentProxy):
+        return self.score(p._obj)
 
     def top(self, papers, n, drop_zero=True):
         t = Top(n, drop_zero=drop_zero)

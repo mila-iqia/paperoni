@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Iterable
 
 from ovld import ovld, recurse
+from serieux.features.comment import CommentProxy
 
 from ..model import PaperWorkingSet, Scored
 from ..model.classes import Paper
@@ -75,6 +76,11 @@ def to_paper(p: PaperWorkingSet):
 @ovld
 def to_paper(p: Scored):
     yield from recurse(p.value)
+
+
+@ovld
+def to_paper(p: CommentProxy):
+    yield from recurse(p._obj)
 
 
 @to_paper.variant
