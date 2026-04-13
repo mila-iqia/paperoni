@@ -35,6 +35,7 @@ from serieux import (
     dump,
     serialize,
 )
+from serieux.features.comment import CommentProxy
 from serieux.features.filebacked import FileProxy
 from serieux.features.partial import Override
 from serieux.features.registered import Referenced
@@ -584,6 +585,8 @@ class Work:
             )
             if self.operations:
                 selected = [self._apply_operations(p) for p in selected]
+
+            selected = [p._obj if isinstance(p, CommentProxy) else p for p in selected]
 
             if self.flag:
                 selected = [

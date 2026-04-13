@@ -1,6 +1,9 @@
 from collections import deque
 from dataclasses import replace
 
+from ovld import ovld, recurse
+from serieux.features.comment import CommentProxy
+
 from .model import Institution, Paper, Release
 
 
@@ -38,6 +41,7 @@ def simplify_institutions(institutions: list[Institution]):
     return list({i: i for i in institutions}.values())
 
 
+@ovld
 def simplify_paper(paper: Paper):
     return replace(
         paper,
@@ -50,3 +54,8 @@ def simplify_paper(paper: Paper):
         ],
         releases=simplify_releases(paper.releases),
     )
+
+
+@ovld
+def simplify_paper(paper: CommentProxy):
+    return recurse(paper._obj)
