@@ -18,6 +18,7 @@ resource "google_cloud_run_v2_job" "paperoni_scrape_updates" {
     template {
       service_account = google_service_account.paperoni_user.email
       timeout         = "36000s" # 10 hours
+      max_retries     = 0
 
       containers {
         image   = "gcr.io/cloudrun/hello"
@@ -106,6 +107,10 @@ resource "google_cloud_scheduler_job" "paperoni_scrape_updates_regular" {
     oauth_token {
       service_account_email = "${data.google_project.paperoni.number}-compute@developer.gserviceaccount.com"
     }
+  }
+
+  retry_config {
+    retry_count = 0
   }
 
   depends_on = [
