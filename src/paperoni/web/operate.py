@@ -48,10 +48,10 @@ def install_operate(app: FastAPI) -> FastAPI:
         """Render the operate page."""
         return render_template("operate.html", request)
 
-    def _run_operate(operation_obj, selected):
+    async def _run_operate(operation_obj, selected):
         results = []
         for p in selected:
-            result = operation_obj(p)
+            result = await operation_obj(p)
             results.append(
                 PaperDiff(
                     matched=result.changed,
@@ -78,7 +78,7 @@ def install_operate(app: FastAPI) -> FastAPI:
             match request.mode:
                 case "test":
                     selected = await request.run(coll)
-                    results = _run_operate(operation_obj, selected)
+                    results = await _run_operate(operation_obj, selected)
                     matched = sum(r.matched for r in results)
                     unmatched = sum(not r.matched for r in results)
 
@@ -87,7 +87,7 @@ def install_operate(app: FastAPI) -> FastAPI:
                     offset = request.offset
                     request.limit = request.offset = 0
                     all_matches = await request.run(coll)
-                    results = _run_operate(operation_obj, all_matches)
+                    results = await _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in results)
                     unmatched = sum(not r.matched for r in results)
                     results = results[offset : offset + limit]
@@ -95,7 +95,7 @@ def install_operate(app: FastAPI) -> FastAPI:
                 case "apply":
                     request.limit = request.offset = 0
                     all_matches = await request.run(coll)
-                    diffs = _run_operate(operation_obj, all_matches)
+                    diffs = await _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in diffs)
                     unmatched = sum(not r.matched for r in diffs)
                     edits = [
