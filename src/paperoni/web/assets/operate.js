@@ -432,11 +432,15 @@ const debouncedRunSearch = debounce(runSearch, 300);
 function disableApply() {
     const btn = document.getElementById('operateApplyBtn');
     if (btn) btn.disabled = true;
+    const suggestBtn = document.getElementById('operateSuggestBtn');
+    if (suggestBtn) suggestBtn.disabled = true;
 }
 
 function enableApply() {
     const btn = document.getElementById('operateApplyBtn');
     if (btn) btn.disabled = false;
+    const suggestBtn = document.getElementById('operateSuggestBtn');
+    if (suggestBtn) suggestBtn.disabled = false;
 }
 
 async function runSimulate(offset = 0) {
@@ -578,6 +582,43 @@ export async function operatePapers() {
                 updateCountsInFooter(undefined, undefined, undefined);
                 displayError(error);
                 applyBtn.disabled = false;
+            }
+        });
+    }
+
+    const suggestBtn = document.getElementById('operateSuggestBtn');
+    if (suggestBtn) {
+        suggestBtn.addEventListener('click', async () => {
+            syncEditorToBlock();
+            const operation = getOperationContent().trim();
+            const codeLines = operation.split('\n').filter(line => {
+                const t = line.trim();
+                return t && !t.startsWith('#');
+            });
+            if (codeLines.length === 0) {
+                displayError(new Error('Please enter an operation'));
+                return;
+            }
+            displayLoading();
+            suggestBtn.disabled = true;
+            try {
+                const data = await fetchOperateResults(
+                    operation,
+                    getSearchParams(),
+                    0,
+                    'suggest',
+                );
+                setResults(html`
+                    <div class="operate-apply-success">
+                        Suggested: ${data.matched} papers queued for review.
+                    </div>
+                `);
+                updateCountsInFooter(data.matched, data.unmatched, data.total);
+            } catch (error) {
+                console.error('Operate suggest failed:', error);
+                updateCountsInFooter(undefined, undefined, undefined);
+                displayError(error);
+                suggestBtn.disabled = false;
             }
         });
     }
