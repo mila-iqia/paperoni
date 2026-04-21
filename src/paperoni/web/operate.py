@@ -28,7 +28,7 @@ class OperateRequest(SearchRequest):
     """Request model for operate (POST body)."""
 
     operation: str
-    mode: Literal["test", "simulate", "apply"] = "test"
+    mode: Literal["test", "simulate", "apply", "suggest"] = "test"
 
 
 def install_operate(app: FastAPI) -> FastAPI:
@@ -92,26 +92,32 @@ def install_operate(app: FastAPI) -> FastAPI:
                     unmatched = sum(not r.matched for r in results)
                     results = results[offset : offset + limit]
 
-                case "apply":
+                case "apply" | "suggest":
                     request.limit = request.offset = 0
                     all_matches = await request.run(coll)
                     diffs = await _run_operate(operation_obj, all_matches)
                     matched = sum(r.matched for r in diffs)
                     unmatched = sum(not r.matched for r in diffs)
-                    edits = [
-                        d.new
-                        for d in diffs
-                        if d.matched and d.new and "mark:delete" not in d.new.flags
-                    ]
-                    deletions = [
-                        d.current.id
-                        for d in diffs
-                        if d.matched and d.new and "mark:delete" in d.new.flags
-                    ]
-                    await coll.collection.add_papers(
-                        edits, force=True, ignore_exclusions=True
-                    )
-                    await coll.collection.delete_ids(deletions)
+                    if request.mode == "apply":
+                        edits = [
+                            d.new
+                            for d in diffs
+                            if d.matched and d.new and "mark:delete" not in d.new.flags
+                        ]
+                        deletions = [
+                            d.current.id
+                            for d in diffs
+                            if d.matched and d.new and "mark:delete" in d.new.flags
+                        ]
+                        await coll.collection.add_papers(
+                            edits, force=True, ignore_exclusions=True
+                        )
+                        await coll.collection.delete_ids(deletions)
+                    else:
+                        edits = [d.new for d in diffs if d.matched]
+                        await config.suggestions.add_papers(
+                            edits, force=True, ignore_exclusions=True
+                        )
                     results = []
 
             return OperateResponse(
