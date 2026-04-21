@@ -1,6 +1,7 @@
 import textwrap
 from dataclasses import dataclass, replace
 from datetime import date, datetime
+from types import SimpleNamespace
 from typing import Callable
 
 from ovld import call_next, ovld, recurse
@@ -205,6 +206,7 @@ _builtins = {
     "recurse": recurse,
     "call_next": call_next,
     "DELETE": DELETE,
+    "cache": SimpleNamespace(),
 }
 
 
@@ -219,12 +221,12 @@ def from_code(code):
         exec(prelude, glb, glb)
 
     indented_code = textwrap.indent(code, "    ")
-    opcode = f"def __operate(paper):\n{indented_code}"
+    opcode = f"async def __operate(paper):\n{indented_code}"
     exec(opcode, glb, glb)
     func = glb["__operate"]
 
-    def deco(p: Paper):
-        result = func(p)
+    async def deco(p: Paper):
+        result = await func(p)
         if result is None:
             raise Exception(
                 "The code block should not return None; return False to signify no change"
