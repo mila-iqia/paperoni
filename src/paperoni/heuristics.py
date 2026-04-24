@@ -14,7 +14,7 @@ def simplify_releases(releases: list[Release]):
         # (see DatePrecision Enum: unknown=0, year=1, month=2, day=3)
         precision = getattr(rel.venue, "date_precision", 0)
         date_val = rel.venue.date
-        return (is_not_published, -precision, -date_val.toordinal())
+        return (is_not_published, precision, date_val.toordinal())
 
     def simplify(r1, r2):
         if r1.venue.name.lower() == r2.venue.name.lower():
