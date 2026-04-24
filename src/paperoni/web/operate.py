@@ -75,6 +75,9 @@ def install_operate(app: FastAPI) -> FastAPI:
             unmatched = 0
             results = []
 
+            # This option being true would mess up updates
+            request.expand_links = False
+
             match request.mode:
                 case "test":
                     selected = await request.run(coll)

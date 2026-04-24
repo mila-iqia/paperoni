@@ -204,7 +204,7 @@ async function fetchOperateResults(operation, searchParams, offset = 0, mode = '
         flags: flags.length ? flags : undefined,
         offset,
         limit: PAGE_SIZE,
-        expand_links: true,
+        expand_links: false,
         mode,
     };
 
