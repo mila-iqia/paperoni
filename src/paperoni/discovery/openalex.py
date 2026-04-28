@@ -125,8 +125,9 @@ def _links(**data):
 
 
 class OpenAlexQueryManager:
-    def __init__(self, *, mailto=None, work_types=DEFAULT_WORK_TYPES):
+    def __init__(self, *, mailto=None, api_key=None, work_types=DEFAULT_WORK_TYPES):
         self.mailto = mailto
+        self.api_key = api_key
         self.work_types = work_types
 
     async def find_author_id(self, author: str) -> Optional[str]:
@@ -188,6 +189,8 @@ class OpenAlexQueryManager:
     async def _evaluate(self, path: str, **params):
         if self.mailto:
             params["mailto"] = self.mailto
+        if self.api_key:
+            params["api_key"] = self.api_key
         jdata = await config.fetch.read_retry(
             f"https://api.openalex.org/{path}", params=params, format="json"
         )
@@ -386,6 +389,9 @@ class OpenAlex(Discoverer):
     # Email associated with the query, for politeness
     mailto: str = field(default_factory=lambda: config.mailto)
 
+    # API key
+    api_key: str = field(default_factory=lambda: config.api_keys.openalex)
+
     async def query(
         self,
         # Name of author to query (mutually exclusive with "author-id")
@@ -475,7 +481,11 @@ class OpenAlex(Discoverer):
 
         if verbose and self.mailto:
             print("[openalex: using polite pool]")
-        qm = OpenAlexQueryManager(mailto=self.mailto, work_types=work_types)
+        qm = OpenAlexQueryManager(
+            mailto=self.mailto,
+            api_key=self.api_key,
+            work_types=work_types,
+        )
         filters = []
 
         if author and author_id:
