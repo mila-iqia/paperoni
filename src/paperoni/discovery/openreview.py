@@ -229,9 +229,9 @@ class OpenReview(Discoverer):
         try:
             if self.client.token and not self.client.get_profile():
                 self.client.token = None
-        except openreview.OpenReviewException as e:
-            if "Token has expired" not in str(e):
-                raise
+        except openreview.openreview.OpenReviewException:
+            # if "Token has expired" not in str(e):
+            #     raise
 
             self.token = None
             # Force a new login using the username and password
