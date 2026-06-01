@@ -382,6 +382,10 @@ class OpenReview(Discoverer):
             _links = []
             if author_id:
                 _links.append(Link(type="openreview", link=author_id or f"/{name}"))
+            if isinstance(name, dict):
+                name = name.get("fullname", None)
+            if not isinstance(name, str):
+                return None
             authors.append(
                 PaperAuthor(
                     display_name=name,
