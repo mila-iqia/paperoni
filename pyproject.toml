@@ -36,7 +36,7 @@ dependencies = [
     "motor>=3.7.1",
     "filelock>=3.20.0",
     "jinja2>=3.1.6",
-    "easy-oauth",
+    "easy-oauth>=0.0.6",
     "markdown>=3.10",
     "httpx>=0.28.1",
     "hishel[httpx]>=1.1.8",
@@ -98,9 +98,6 @@ exc = "paperoni.srx:ExceptionSerialization"
 
 [tool.uv]
 default-groups = ["dev", "lint"]
-
-[tool.uv.sources]
-easy-oauth = { git = "https://github.com/mila-iqia/easy-oauth", rev = "v0.0.3" }
 
 [tool.ruff]
 line-length = 90
