@@ -333,13 +333,43 @@ function createTableRow(email, capabilities, isNew = false) {
     });
     removeCell.appendChild(removeBtn);
     
+    // Create token cell (only for service accounts)
+    const tokenCell = html`<td class="cell-center"></td>`;
+    if (email && email.endsWith('@service')) {
+        const copyBtn = html`<button type="button" class="btn-secondary">Copy Token</button>`;
+        copyBtn.addEventListener('click', async () => {
+            const originalText = copyBtn.textContent;
+            try {
+                const token = await fetchServiceToken(email);
+                await navigator.clipboard.writeText(token);
+                copyBtn.textContent = 'Copied!';
+            } catch (error) {
+                showError(error.message);
+                copyBtn.textContent = 'Error';
+            }
+            setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+        });
+        tokenCell.appendChild(copyBtn);
+    }
+
     // Create the row
     const row = html`<tr data-email="${email || ''}"></tr>`;
     row.appendChild(emailCell);
     row.appendChild(capabilitiesCell);
+    row.appendChild(tokenCell);
     row.appendChild(removeCell);
-    
+
     return row;
+}
+
+async function fetchServiceToken(email) {
+    const response = await fetch(`${prefix}/token?user=${encodeURIComponent(email)}`);
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `Failed to fetch token: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.service_token;
 }
 
 async function setCapabilities(email, capabilities) {
