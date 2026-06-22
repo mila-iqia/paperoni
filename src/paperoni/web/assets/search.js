@@ -1,6 +1,6 @@
-import { debounce, html } from './common.js';
+import { debounce, html, showToast } from './common.js';
 import { setLanguageNode } from './translate.js';
-import { createPaperElement, createScoreBand } from './paper.js';
+import { createPaperElement, createScoreBand, formatRelease, matchesSearch } from './paper.js';
 import { createWorksetElement } from './workset.js';
 import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
 
@@ -21,22 +21,201 @@ function setResults(...elements) {
     setLanguageNode(container);
 }
 
-async function fetchSearchResults(params, offset = 0) {
+async function fetchSearchResults(params, offset = 0, limit = PAGE_SIZE, signal = null) {
     const queryParams = new URLSearchParams({
         offset: offset.toString(),
-        limit: PAGE_SIZE.toString(),
+        limit: limit.toString(),
         expand_links: 'true'
     });
     appendSearchParamsTo(queryParams, params);
 
     const url = `/api/v1/search?${queryParams.toString()}`;
-    const response = await fetch(url);
+    const response = await fetch(url, signal ? { signal } : undefined);
 
     if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     return await response.json();
+}
+
+const EXPORT_PAGE_SIZE = 100;
+const EXPORT_DELAY_MS = 50;
+
+// Abortable sleep: rejects with an AbortError if the signal fires while waiting.
+function sleep(ms, signal = null) {
+    return new Promise((resolve, reject) => {
+        if (signal?.aborted) {
+            reject(new DOMException('Aborted', 'AbortError'));
+            return;
+        }
+        const timer = setTimeout(resolve, ms);
+        signal?.addEventListener('abort', () => {
+            clearTimeout(timer);
+            reject(new DOMException('Aborted', 'AbortError'));
+        }, { once: true });
+    });
+}
+
+// The export currently in flight (if any), so its button can cancel it.
+let activeExport = null;
+
+/**
+ * Iterate over every page of the current search via the API and collect all
+ * results. Requests are throttled to one per EXPORT_DELAY_MS, but if a request
+ * itself takes longer than that we don't add any extra wait. Cancellable via
+ * the AbortSignal.
+ */
+async function fetchAllResults(params, signal, onProgress) {
+    const results = [];
+    let offset = 0;
+
+    while (true) {
+        const start = performance.now();
+        const data = await fetchSearchResults(params, offset, EXPORT_PAGE_SIZE, signal);
+        results.push(...data.results);
+
+        if (onProgress) onProgress(results.length, data.total);
+
+        if (data.next_offset === null || data.next_offset === undefined) {
+            break;
+        }
+        offset = data.next_offset;
+
+        // Only wait if the request was faster than the throttle interval.
+        const elapsed = performance.now() - start;
+        if (elapsed < EXPORT_DELAY_MS) {
+            await sleep(EXPORT_DELAY_MS - elapsed, signal);
+        }
+    }
+    return results;
+}
+
+function downloadFile(content, filename, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = html`<a href="${url}" download="${filename}"></a>`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
+
+function csvEscape(value) {
+    const s = value == null ? '' : String(value);
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+// Mirror the backend venue search: match against the venue name, short name,
+// and aliases (case-insensitive substring).
+function releaseMatchesVenue(release, venueSearch) {
+    const v = release.venue;
+    if (!v) return false;
+    return matchesSearch(v.name, venueSearch)
+        || matchesSearch(v.short_name, venueSearch)
+        || (v.aliases ?? []).some(a => matchesSearch(a, venueSearch));
+}
+
+/**
+ * Build a CSV from search results. For each paper, status/venue/date come from
+ * the first release matching the searched venue (or release 0 when no venue was
+ * searched). Papers with no releases are skipped.
+ */
+function resultsToCsv(results, params) {
+    const venueSearch = (params.venue ?? '').trim();
+    const headers = ['title', 'authors', 'status', 'venue', 'date', 'abstract_link', 'pdf_link'];
+    const rows = [headers];
+
+    for (const paper of results) {
+        const releases = paper.releases ?? [];
+        if (releases.length === 0) continue;
+
+        const release = venueSearch
+            ? (releases.find(r => releaseMatchesVenue(r, venueSearch)) ?? releases[0])
+            : releases[0];
+        const { date, venueName, status } = formatRelease(release);
+
+        const authors = (paper.authors ?? [])
+            .map(a => a.display_name ?? '')
+            .filter(Boolean)
+            .join(', ');
+
+        const links = paper.links ?? [];
+        const abstractLink = links.find(l => {
+            const t = l.type?.toLowerCase() ?? '';
+            return t.includes('abstract') || t.includes('html.official');
+        })?.link ?? '';
+        const pdfLink = links.find(l => l.type?.toLowerCase().includes('pdf'))?.link ?? '';
+
+        rows.push([paper.title ?? '', authors, status ?? '', venueName ?? '', date ?? '', abstractLink, pdfLink]);
+    }
+
+    return rows.map(row => row.map(csvEscape).join(',')).join('\r\n');
+}
+
+/**
+ * Run an export ("json" or "csv"). While running, the button shows live
+ * progress (it has a fixed width so it doesn't jump around) and a little "x"
+ * cancel control appears to its right (its space is always reserved so nothing
+ * shifts). The other export button is disabled meanwhile.
+ */
+async function runExport(exp, others, params) {
+    if (activeExport) return;
+
+    const controller = new AbortController();
+    activeExport = { controller, exp };
+
+    const originalText = exp.button.textContent;
+    exp.cancel?.classList.add('visible');
+    others.forEach(o => { if (o.button) o.button.disabled = true; });
+
+    const setProgress = (n, total) => {
+        exp.button.textContent = `${n}/${total}`;
+    };
+    setProgress(0, '…');
+
+    try {
+        const results = await fetchAllResults(params, controller.signal, setProgress);
+
+        if (exp.kind === 'csv') {
+            const BOM = String.fromCharCode(0xFEFF); // helps Excel detect UTF-8
+            downloadFile(BOM + resultsToCsv(results, params), 'papers.csv', 'text/csv;charset=utf-8');
+        } else {
+            downloadFile(JSON.stringify(results, null, 2), 'papers.json', 'application/json');
+        }
+        showToast(`Exported ${results.length} papers`, 'success');
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            showToast('Export cancelled', 'error');
+        } else {
+            console.error('Export failed:', error);
+            showToast(`Export failed: ${error.message}`, 'error');
+        }
+    } finally {
+        activeExport = null;
+        exp.cancel?.classList.remove('visible');
+        exp.button.textContent = originalText;
+        others.forEach(o => { if (o.button) o.button.disabled = false; });
+    }
+}
+
+// Wire up the export buttons (and their "x" cancel controls).
+function wireExportButtons(getParams) {
+    const exports = [
+        { kind: 'json', button: document.getElementById('exportJson'), cancel: document.getElementById('exportJsonCancel') },
+        { kind: 'csv', button: document.getElementById('exportCsv'), cancel: document.getElementById('exportCsvCancel') },
+    ];
+
+    exports.forEach(exp => {
+        if (!exp.button) return;
+        exp.button.addEventListener('click', () => {
+            if (activeExport) return;
+            runExport(exp, exports.filter(o => o !== exp), getParams());
+        });
+        exp.cancel?.addEventListener('click', () => {
+            if (activeExport && activeExport.exp === exp) activeExport.controller.abort();
+        });
+    });
 }
 
 function createPagination(offset, count, total, nextOffset, showTotalFound = false) {
@@ -272,6 +451,9 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
         clearSearchForm();
         handleInputChange();
     });
+
+    // Export buttons: iterate the whole result set via the API and download it.
+    wireExportButtons(getSearchParams);
 
     // Perform initial search if URL has parameters
     const urlParams = new URLSearchParams(window.location.search);

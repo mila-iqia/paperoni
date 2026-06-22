@@ -2238,6 +2238,59 @@ body {
     background: #5a6268;
 }
 
+.btn-json {
+    padding: 4px 10px;
+    box-sizing: border-box;
+    min-width: 80px;
+    text-align: center;
+    background: transparent;
+    color: #6c757d;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-json:hover {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.btn-json:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.btn-json-wrap {
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-json-x {
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    padding: 0;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: #c0392b;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    /* Always laid out so toggling it never shifts surrounding controls. */
+    visibility: hidden;
+}
+
+.btn-json-x.visible {
+    visibility: visible;
+}
+
+.btn-json-x:hover {
+    background: #f8d7da;
+}
+
 /* Operate page */
 .operate-container {
     display: flex;

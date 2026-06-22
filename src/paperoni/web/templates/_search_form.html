@@ -32,7 +32,15 @@
             <loc>Peer reviewed</loc> <input type="checkbox" id="peerReviewed" name="peerReviewed" style="width: auto;">
         </label>
     </div>
-    <div class="form-group" style="flex: 0; align-self: flex-end;">
+    <div class="form-group" style="flex: 0; align-self: flex-end; display: flex; gap: 8px; align-items: center;">
+        {% if show_json_export %}<span class="btn-json-wrap">
+            <button type="button" id="exportJson" class="btn-json"><loc>JSON</loc></button>
+            <button type="button" id="exportJsonCancel" class="btn-json-x" tabindex="-1" aria-label="Cancel export" title="Cancel export">&times;</button>
+        </span>
+        <span class="btn-json-wrap">
+            <button type="button" id="exportCsv" class="btn-json"><loc>CSV</loc></button>
+            <button type="button" id="exportCsvCancel" class="btn-json-x" tabindex="-1" aria-label="Cancel export" title="Cancel export">&times;</button>
+        </span>{% endif %}
         <button type="button" id="clearSearch" class="btn-clear"><loc>Clear</loc></button>
     </div>
 </div>

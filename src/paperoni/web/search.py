@@ -28,6 +28,7 @@ def install_search(app: FastAPI) -> FastAPI:
             can_edit=True,
             show_scores=False,
             use_dev_mode=use_dev_mode,
+            show_json_export=True,
         )
 
     @app.get("/pending")
