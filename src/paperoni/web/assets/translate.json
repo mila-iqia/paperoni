@@ -728,6 +728,70 @@
         "fr": "Prépublication"
     },
     {
+        "en": "Symposium",
+        "fr": "Symposium"
+    },
+    {
+        "en": "Book",
+        "fr": "Livre"
+    },
+    {
+        "en": "Review",
+        "fr": "Revue"
+    },
+    {
+        "en": "News",
+        "fr": "Actualités"
+    },
+    {
+        "en": "Study",
+        "fr": "Étude"
+    },
+    {
+        "en": "Meta-analysis",
+        "fr": "Méta-analyse"
+    },
+    {
+        "en": "Editorial",
+        "fr": "Éditorial"
+    },
+    {
+        "en": "Letters and comments",
+        "fr": "Lettres et commentaires"
+    },
+    {
+        "en": "Case report",
+        "fr": "Étude de cas"
+    },
+    {
+        "en": "Clinical trial",
+        "fr": "Essai clinique"
+    },
+    {
+        "en": "Challenge",
+        "fr": "Défi"
+    },
+    {
+        "en": "Forum",
+        "fr": "Forum"
+    },
+    {
+        "en": "Track",
+        "fr": "Session"
+    },
+    {
+        "en": "Tutorials",
+        "fr": "Tutoriels"
+    },
+    {
+        "en": "Seminar",
+        "fr": "Séminaire"
+    },
+    {
+        "en": "Dataset",
+        "fr": "Jeu de données"
+    },
+    {
         "en": "Peer-reviewed",
         "fr": "Évalué par les pairs"
     },

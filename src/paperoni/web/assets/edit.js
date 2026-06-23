@@ -823,10 +823,27 @@ function createReleaseRow(release, index) {
             <td>
                 <select name="releases[${index}].venue.type" required
                         class="edit-input">
-                    <option value="conference"><loc>Conference</loc></option>
                     <option value="journal"><loc>Journal</loc></option>
+                    <option value="conference"><loc>Conference</loc></option>
                     <option value="workshop"><loc>Workshop</loc></option>
+                    <option value="symposium"><loc>Symposium</loc></option>
+                    <option value="book"><loc>Book</loc></option>
+                    <option value="review"><loc>Review</loc></option>
+                    <option value="news"><loc>News</loc></option>
+                    <option value="study"><loc>Study</loc></option>
+                    <option value="meta_analysis"><loc>Meta-analysis</loc></option>
+                    <option value="editorial"><loc>Editorial</loc></option>
+                    <option value="letters_and_comments"><loc>Letters and comments</loc></option>
+                    <option value="case_report"><loc>Case report</loc></option>
+                    <option value="clinical_trial"><loc>Clinical trial</loc></option>
+                    <option value="unknown"><loc>Unknown</loc></option>
+                    <option value="challenge"><loc>Challenge</loc></option>
+                    <option value="forum"><loc>Forum</loc></option>
+                    <option value="track"><loc>Track</loc></option>
+                    <option value="tutorials"><loc>Tutorials</loc></option>
+                    <option value="seminar"><loc>Seminar</loc></option>
                     <option value="preprint"><loc>Preprint</loc></option>
+                    <option value="dataset"><loc>Dataset</loc></option>
                 </select>
             </td>
             <td>
