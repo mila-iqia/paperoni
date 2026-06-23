@@ -1,6 +1,47 @@
 import { escapeHtml, html, showToast } from './common.js';
 import { getTranslation, setLanguageNode } from './translate.js';
 
+// These fields hold paper metadata, not credentials. Password managers
+// (LastPass, 1Password, Dashlane, Bitwarden, ...) and browser autofill
+// otherwise mistake some of them for login fields and inject icons/suggestions.
+// Each attribute below opts a field out of one of those tools.
+const NO_AUTOFILL_ATTRS = {
+    autocomplete: 'off',
+    'data-lpignore': 'true',
+    'data-1p-ignore': '',
+    'data-form-type': 'other',
+    'data-bwignore': 'true',
+};
+
+const FIELD_SELECTOR = 'input, textarea, select';
+
+function markNoAutofill(el) {
+    for (const [name, value] of Object.entries(NO_AUTOFILL_ATTRS)) {
+        if (!el.hasAttribute(name)) el.setAttribute(name, value);
+    }
+}
+
+/**
+ * Opt every field in `root` out of password-manager / autofill heuristics,
+ * including rows (releases, links, authors, ...) added dynamically later.
+ */
+function suppressAutofill(root) {
+    root.setAttribute('autocomplete', 'off');
+    if (root.matches?.(FIELD_SELECTOR)) markNoAutofill(root);
+    root.querySelectorAll(FIELD_SELECTOR).forEach(markNoAutofill);
+
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+                if (node.nodeType !== Node.ELEMENT_NODE) continue;
+                if (node.matches(FIELD_SELECTOR)) markNoAutofill(node);
+                node.querySelectorAll?.(FIELD_SELECTOR).forEach(markNoAutofill);
+            }
+        }
+    });
+    observer.observe(root, { childList: true, subtree: true });
+}
+
 /**
  * Generic badge management system for topics, flags, etc.
  */
@@ -469,6 +510,7 @@ function renderEditForm(paper, suggestMode = false) {
         }
     });
 
+    suppressAutofill(form);
 
     return form;
 }
