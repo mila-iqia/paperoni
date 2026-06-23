@@ -750,6 +750,10 @@ class Coll:
         # [alias --end]
         end_date: date = None
 
+        # Release status to match exactly; entries of the form "-xyz" exclude
+        # [alias: -s]
+        status: list[str] = None
+
         # Flag search
         # [alias: -f]
         flags: set[str] = None
@@ -778,6 +782,7 @@ class Coll:
                     venue=self.venue,
                     start_date=self.start_date,
                     end_date=self.end_date,
+                    status=self.status,
                     include_flags={f for f in flags if not f.startswith("~")},
                     exclude_flags={f[1:] for f in flags if f.startswith("~")},
                     limit=self.limit,
@@ -797,6 +802,7 @@ class Coll:
                 venue=self.venue,
                 start_date=self.start_date,
                 end_date=self.end_date,
+                status=self.status,
                 include_flags={f for f in flags if not f.startswith("~")},
                 exclude_flags={f[1:] for f in flags if f.startswith("~")},
             )

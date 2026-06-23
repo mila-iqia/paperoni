@@ -112,6 +112,14 @@
         "fr": "Date de fin"
     },
     {
+        "en": "Type",
+        "fr": "Type"
+    },
+    {
+        "en": "e.g. peer-reviewed, preprint, workshop",
+        "fr": "ex. peer-reviewed, preprint, workshop"
+    },
+    {
         "en": "Peer reviewed",
         "fr": "Évalué par les pairs"
     },

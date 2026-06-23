@@ -250,6 +250,7 @@ class MongoCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
     ) -> dict:
@@ -271,43 +272,44 @@ class MongoCollection(PaperCollection):
                 "$options": "i",
             }
 
-        # Venue conditions, expressed relative to a single release element so they
-        # can be reused both standalone and inside an $elemMatch.
-        venue_or = None
+        # Venue, date and status all restrict a single release. They are
+        # collected into one $elemMatch so that they must be satisfied by the
+        # *same* release rather than by different releases of the paper.
+        release_match = {}
+
         if venue:
             venue_rx = {"$regex": f".*{escape(venue)}.*", "$options": "i"}
-            venue_or = [
+            release_match["$or"] = [
                 {"venue.name": venue_rx},
                 {"venue.short_name": venue_rx},
                 {"venue.aliases": venue_rx},
             ]
 
-        # Date filtering: papers match if at least one release falls within the date range
+        # Date filtering: the release date must fall within the range.
         # Use ISO date strings so BSON can encode (Python date is not BSON-encodable)
-        date_query = None
         if start_date or end_date:
             date_query = {}
             if start_date:
                 date_query["$gte"] = start_date.isoformat()
             if end_date:
                 date_query["$lte"] = end_date.isoformat()
+            release_match["venue.date"] = date_query
 
-        if venue_or is not None and date_query is not None:
-            # Both venue and date restrictions must be satisfied by the *same*
-            # release; $elemMatch keeps them tied to a single array element.
-            query["releases"] = {
-                "$elemMatch": {"$or": venue_or, "venue.date": date_query}
-            }
-        elif venue_or is not None:
-            # Match papers where any release has a venue name, short_name, or alias matching the search
-            query["$or"] = [
-                {f"releases.{field}": cond}
-                for clause in venue_or
-                for field, cond in clause.items()
-            ]
-        elif date_query is not None:
-            # Match papers where at least one release date is in the range
-            query["releases.venue.date"] = date_query
+        # Status filtering: plain entries match the release peer-review status
+        # exactly (any of them), entries of the form "-xyz" require it to differ.
+        if status:
+            include_status = [s for s in status if not s.startswith("-")]
+            exclude_status = [s[1:] for s in status if s.startswith("-")]
+            status_cond = {}
+            if include_status:
+                status_cond["$in"] = include_status
+            if exclude_status:
+                status_cond["$nin"] = exclude_status
+            if status_cond:
+                release_match["peer_review_status"] = status_cond
+
+        if release_match:
+            query["releases"] = {"$elemMatch": release_match}
 
         # Flag filtering
         if include_flags:
@@ -343,6 +345,7 @@ class MongoCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
         limit: int = 0,
@@ -359,6 +362,7 @@ class MongoCollection(PaperCollection):
             venue=venue,
             start_date=start_date,
             end_date=end_date,
+            status=status,
             include_flags=include_flags,
             exclude_flags=exclude_flags,
         )
@@ -381,6 +385,7 @@ class MongoCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
     ) -> int:
@@ -394,6 +399,7 @@ class MongoCollection(PaperCollection):
             venue=venue,
             start_date=start_date,
             end_date=end_date,
+            status=status,
             include_flags=include_flags,
             exclude_flags=exclude_flags,
         )
