@@ -1652,10 +1652,22 @@ body {
     flex: 1;
 }
 
-/* Date pickers only need room for the control itself, so let the flexible
-   fields (venue, type, ...) take the remaining width. */
-.form-row .form-group.form-date {
-    flex: 0 0 auto;
+/* Start/End date share a single column (same width as one other field),
+   splitting it evenly between the two date pickers. */
+.form-row .form-group.form-date-pair {
+    display: flex;
+    gap: 15px;
+}
+
+.form-date-pair .form-group {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.form-date-pair input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .topics-badges {
