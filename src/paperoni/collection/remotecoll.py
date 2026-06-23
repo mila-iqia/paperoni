@@ -79,6 +79,7 @@ class RemoteCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
     ) -> dict:
@@ -97,6 +98,8 @@ class RemoteCollection(PaperCollection):
             params["start_date"] = start_date.isoformat()
         if end_date:
             params["end_date"] = end_date.isoformat()
+        if status:
+            params["status"] = list(status)
         if include_flags:
             params.setdefault("flags", []).extend(include_flags)
         if exclude_flags:
@@ -119,6 +122,8 @@ class RemoteCollection(PaperCollection):
         start_date: date = None,
         # End date to consider
         end_date: date = None,
+        # Release statuses to match exactly; entries of the form "-xyz" exclude
+        status: list[str] = None,
         # Flags that must be True
         include_flags: list[str] = None,
         # Flags that must be False
@@ -136,6 +141,7 @@ class RemoteCollection(PaperCollection):
             venue=venue,
             start_date=start_date,
             end_date=end_date,
+            status=status,
             include_flags=include_flags,
             exclude_flags=exclude_flags,
         )
@@ -175,6 +181,7 @@ class RemoteCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
     ) -> int:
@@ -186,6 +193,7 @@ class RemoteCollection(PaperCollection):
             venue=venue,
             start_date=start_date,
             end_date=end_date,
+            status=status,
             include_flags=include_flags,
             exclude_flags=exclude_flags,
         )

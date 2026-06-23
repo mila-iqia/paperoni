@@ -120,6 +120,8 @@ class PaperCollection:
         start_date: date = None,
         # End date to consider
         end_date: date = None,
+        # Release statuses to match exactly; entries of the form "-xyz" exclude
+        status: list[str] = None,
         # Flags that must be True
         include_flags: list[str] = None,
         # Flags that must be False
@@ -140,6 +142,7 @@ class PaperCollection:
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
     ) -> int:

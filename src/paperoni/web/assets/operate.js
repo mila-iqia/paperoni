@@ -4,6 +4,7 @@ import {
     clearSearchForm,
     getSearchParams,
     searchParamsToFlags,
+    setupPeerReviewedShortcut,
 } from './search-form.js';
 import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js';
 
@@ -199,6 +200,7 @@ async function fetchOperateResults(operation, searchParams, offset = 0, mode = '
         author: searchParams.author || undefined,
         institution: searchParams.institution || undefined,
         venue: searchParams.venue || undefined,
+        status: searchParams.status?.length ? searchParams.status : undefined,
         start_date: searchParams.start_date || undefined,
         end_date: searchParams.end_date || undefined,
         flags: flags.length ? flags : undefined,
@@ -490,9 +492,9 @@ export async function operatePapers() {
     const authorInput = document.getElementById('author');
     const institutionInput = document.getElementById('institution');
     const venueInput = document.getElementById('venue');
+    const statusInput = document.getElementById('status');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
-    const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
     await loadMonacoEditor();
 
@@ -513,9 +515,11 @@ export async function operatePapers() {
     authorInput?.addEventListener('input', handleSearchChange);
     institutionInput?.addEventListener('input', handleSearchChange);
     venueInput?.addEventListener('input', handleSearchChange);
+    statusInput?.addEventListener('input', handleSearchChange);
     startDateInput?.addEventListener('input', handleSearchChange);
     endDateInput?.addEventListener('input', handleSearchChange);
-    peerReviewedCheckbox?.addEventListener('change', handleSearchChange);
+    // "Peer reviewed" checkbox toggles "peer-reviewed" in the Type field.
+    setupPeerReviewedShortcut(handleSearchChange);
 
     selectEl.addEventListener('change', () => {
         disableApply();

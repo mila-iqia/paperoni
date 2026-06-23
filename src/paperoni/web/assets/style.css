@@ -1652,6 +1652,12 @@ body {
     flex: 1;
 }
 
+/* Date pickers only need room for the control itself, so let the flexible
+   fields (venue, type, ...) take the remaining width. */
+.form-row .form-group.form-date {
+    flex: 0 0 auto;
+}
+
 .topics-badges {
     display: flex;
     flex-wrap: wrap;

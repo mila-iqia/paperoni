@@ -1,6 +1,6 @@
 import { debounce, html } from './common.js';
 import { setLanguageNode } from './translate.js';
-import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
+import { appendSearchParamsTo, clearSearchForm, getSearchParams, setupPeerReviewedShortcut, syncPeerReviewedCheckbox } from './search-form.js';
 import { getScoreClass } from './paper.js';
 import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js';
 
@@ -498,12 +498,12 @@ function updatePendingUrl(offset) {
     else urlParams.delete('institution');
     if (params.venue) urlParams.set('venue', params.venue);
     else urlParams.delete('venue');
+    if (params.status && params.status.length) urlParams.set('status', params.status.join(', '));
+    else urlParams.delete('status');
     if (params.start_date) urlParams.set('start_date', params.start_date);
     else urlParams.delete('start_date');
     if (params.end_date) urlParams.set('end_date', params.end_date);
     else urlParams.delete('end_date');
-    if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
-    else urlParams.delete('peerReviewed');
 
     const newUrl = urlParams.toString()
         ? `${window.location.pathname}?${urlParams.toString()}`
@@ -533,13 +533,13 @@ export async function displayPending() {
             loadPending(0);
         }, 300);
         
-        ['title', 'author', 'institution', 'venue', 'start_date', 'end_date'].forEach(id => {
+        ['title', 'author', 'institution', 'venue', 'status', 'start_date', 'end_date'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.addEventListener('input', handleInputChange);
         });
-        
-        const peerReviewedCheckbox = document.getElementById('peerReviewed');
-        if (peerReviewedCheckbox) peerReviewedCheckbox.addEventListener('change', handleInputChange);
+
+        // "Peer reviewed" checkbox toggles "peer-reviewed" in the Type field.
+        setupPeerReviewedShortcut(handleInputChange);
         
         const clearButton = document.getElementById('clearSearch');
         if (clearButton) {
@@ -563,9 +563,9 @@ export async function displayPending() {
         author: urlParams.get('author') || '',
         institution: urlParams.get('institution') || '',
         venue: urlParams.get('venue') || '',
+        status: urlParams.get('status') || '',
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
-        peerReviewed: urlParams.get('peerReviewed') === 'true'
     };
 
     const titleInput = document.getElementById('title');
@@ -574,9 +574,10 @@ export async function displayPending() {
         document.getElementById('author').value = initialParams.author;
         document.getElementById('institution').value = initialParams.institution;
         document.getElementById('venue').value = initialParams.venue;
+        document.getElementById('status').value = initialParams.status;
         document.getElementById('start_date').value = initialParams.start_date;
         document.getElementById('end_date').value = initialParams.end_date;
-        document.getElementById('peerReviewed').checked = initialParams.peerReviewed;
+        syncPeerReviewedCheckbox();
     }
 
     await loadPending(offset);

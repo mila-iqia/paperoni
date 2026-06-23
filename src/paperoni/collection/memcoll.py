@@ -169,6 +169,8 @@ class MemCollection(PaperCollection):
         start_date: date = None,
         # End date to consider
         end_date: date = None,
+        # Release statuses to match exactly; entries of the form "-xyz" exclude
+        status: list[str] = None,
         # Flags that must be present
         include_flags: list[str] = None,
         # Flags that must not be present
@@ -186,6 +188,8 @@ class MemCollection(PaperCollection):
         author = author and normalize_name(author)
         institution = institution and normalize_institution(institution)
         venue = venue and normalize_venue(venue)
+        include_status = [s for s in status or [] if not s.startswith("-")]
+        exclude_status = [s[1:] for s in status or [] if s.startswith("-")]
         skipped = 0
         yielded = 0
         for p in self._index:
@@ -205,9 +209,9 @@ class MemCollection(PaperCollection):
                 continue
             if exclude_flags and (set(exclude_flags) & p.flags):
                 continue
-            if venue or start_date or end_date:
-                # A single release must satisfy the venue and date constraints
-                # together (mirrors $elemMatch in the mongo backend).
+            if venue or start_date or end_date or include_status or exclude_status:
+                # A single release must satisfy the venue, date and status
+                # constraints together (mirrors $elemMatch in the mongo backend).
                 def release_matches(release):
                     if venue and not (
                         venue in normalize_venue(release.venue.name)
@@ -224,6 +228,13 @@ class MemCollection(PaperCollection):
                     if start_date and release.venue.date < start_date:
                         return False
                     if end_date and end_date < release.venue.date:
+                        return False
+                    if (
+                        include_status
+                        and release.peer_review_status not in include_status
+                    ):
+                        return False
+                    if exclude_status and release.peer_review_status in exclude_status:
                         return False
                     return True
 
@@ -248,6 +259,7 @@ class MemCollection(PaperCollection):
         venue: str = None,
         start_date: date = None,
         end_date: date = None,
+        status: list[str] = None,
         include_flags: list[str] = None,
         exclude_flags: list[str] = None,
     ) -> int:
@@ -260,6 +272,7 @@ class MemCollection(PaperCollection):
             venue=venue,
             start_date=start_date,
             end_date=end_date,
+            status=status,
             include_flags=include_flags,
             exclude_flags=exclude_flags,
         ):

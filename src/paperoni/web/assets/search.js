@@ -2,7 +2,7 @@ import { debounce, html, showToast } from './common.js';
 import { setLanguageNode } from './translate.js';
 import { createPaperElement, createScoreBand, formatRelease, matchesSearch } from './paper.js';
 import { createWorksetElement } from './workset.js';
-import { appendSearchParamsTo, clearSearchForm, getSearchParams } from './search-form.js';
+import { appendSearchParamsTo, clearSearchForm, getSearchParams, setupPeerReviewedShortcut, syncPeerReviewedCheckbox } from './search-form.js';
 
 const PAGE_SIZE = 50;
 
@@ -381,9 +381,9 @@ function updateUrlParams(params, offset) {
     if (params.author) urlParams.set('author', params.author);
     if (params.institution) urlParams.set('institution', params.institution);
     if (params.venue) urlParams.set('venue', params.venue);
+    if (params.status && params.status.length) urlParams.set('status', params.status.join(', '));
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
-    if (params.peerReviewed) urlParams.set('peerReviewed', 'true');
     if (offset > 0) urlParams.set('offset', offset.toString());
     if (useDevMode) urlParams.set('dev', '');
 
@@ -424,9 +424,9 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     const authorInput = document.getElementById('author');
     const institutionInput = document.getElementById('institution');
     const venueInput = document.getElementById('venue');
+    const statusInput = document.getElementById('status');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
-    const peerReviewedCheckbox = document.getElementById('peerReviewed');
 
     function handleInputChange() {
         debouncedSearch(getSearchParams());
@@ -436,9 +436,12 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     authorInput.addEventListener('input', handleInputChange);
     institutionInput.addEventListener('input', handleInputChange);
     venueInput.addEventListener('input', handleInputChange);
+    statusInput.addEventListener('input', handleInputChange);
     startDateInput.addEventListener('input', handleInputChange);
     endDateInput.addEventListener('input', handleInputChange);
-    peerReviewedCheckbox.addEventListener('change', handleInputChange);
+    // The "Peer reviewed" checkbox is a shortcut that toggles "peer-reviewed"
+    // in the Type field rather than a separate filter.
+    setupPeerReviewedShortcut(handleInputChange);
 
     // Prevent form submission
     form.addEventListener('submit', (e) => {
@@ -457,14 +460,15 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
 
     // Perform initial search if URL has parameters
     const urlParams = new URLSearchParams(window.location.search);
+    const initialStatusStr = urlParams.get('status') || '';
     const initialParams = {
         title: urlParams.get('title') || '',
         author: urlParams.get('author') || '',
         institution: urlParams.get('institution') || '',
         venue: urlParams.get('venue') || '',
+        status: initialStatusStr.split(',').map((s) => s.trim()).filter((s) => s),
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
-        peerReviewed: urlParams.get('peerReviewed') === 'true'
     };
     const initialOffset = parseInt(urlParams.get('offset') || '0', 10);
 
@@ -473,9 +477,10 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     authorInput.value = initialParams.author;
     institutionInput.value = initialParams.institution;
     venueInput.value = initialParams.venue;
+    statusInput.value = initialStatusStr;
     startDateInput.value = initialParams.start_date;
     endDateInput.value = initialParams.end_date;
-    peerReviewedCheckbox.checked = initialParams.peerReviewed;
+    syncPeerReviewedCheckbox();
 
     // Always perform initial search, even with empty criteria
     performSearch(initialParams, initialOffset);
