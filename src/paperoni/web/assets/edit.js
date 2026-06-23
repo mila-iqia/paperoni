@@ -397,6 +397,9 @@ function renderEditForm(paper, suggestMode = false) {
             deleteMode = !deleteMode;
             deleteToggleBtn.classList.toggle('active', deleteMode);
             submitBtn.classList.toggle('btn-save-delete', deleteMode);
+            // Deleting must not be blocked by the current (possibly invalid) form
+            // data, so skip native field validation while in delete mode.
+            form.noValidate = deleteMode;
             const btnKey = getSubmitButtonText(paper, suggestMode, deleteMode);
             submitBtn.innerHTML = '<loc>' + btnKey + '</loc>';
             setLanguageNode(submitBtn);
