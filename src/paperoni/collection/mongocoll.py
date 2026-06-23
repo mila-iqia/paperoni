@@ -271,31 +271,20 @@ class MongoCollection(PaperCollection):
                 "$options": "i",
             }
 
+        # Venue conditions, expressed relative to a single release element so they
+        # can be reused both standalone and inside an $elemMatch.
+        venue_or = None
         if venue:
-            # Match papers where any release has a venue name, short_name, or alias matching the search
-            query["$or"] = [
-                {
-                    "releases.venue.name": {
-                        "$regex": f".*{escape(venue)}.*",
-                        "$options": "i",
-                    }
-                },
-                {
-                    "releases.venue.short_name": {
-                        "$regex": f".*{escape(venue)}.*",
-                        "$options": "i",
-                    }
-                },
-                {
-                    "releases.venue.aliases": {
-                        "$regex": f".*{escape(venue)}.*",
-                        "$options": "i",
-                    }
-                },
+            venue_rx = {"$regex": f".*{escape(venue)}.*", "$options": "i"}
+            venue_or = [
+                {"venue.name": venue_rx},
+                {"venue.short_name": venue_rx},
+                {"venue.aliases": venue_rx},
             ]
 
         # Date filtering: papers match if at least one release falls within the date range
         # Use ISO date strings so BSON can encode (Python date is not BSON-encodable)
+        date_query = None
         if start_date or end_date:
             date_query = {}
             if start_date:
@@ -303,6 +292,20 @@ class MongoCollection(PaperCollection):
             if end_date:
                 date_query["$lte"] = end_date.isoformat()
 
+        if venue_or is not None and date_query is not None:
+            # Both venue and date restrictions must be satisfied by the *same*
+            # release; $elemMatch keeps them tied to a single array element.
+            query["releases"] = {
+                "$elemMatch": {"$or": venue_or, "venue.date": date_query}
+            }
+        elif venue_or is not None:
+            # Match papers where any release has a venue name, short_name, or alias matching the search
+            query["$or"] = [
+                {f"releases.{field}": cond}
+                for clause in venue_or
+                for field, cond in clause.items()
+            ]
+        elif date_query is not None:
             # Match papers where at least one release date is in the range
             query["releases.venue.date"] = date_query
 

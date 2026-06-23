@@ -205,12 +205,11 @@ class MemCollection(PaperCollection):
                 continue
             if exclude_flags and (set(exclude_flags) & p.flags):
                 continue
-            matching_releases = p.releases
-            if venue:
-                matching_releases = [
-                    release
-                    for release in p.releases
-                    if (
+            if venue or start_date or end_date:
+                # A single release must satisfy the venue and date constraints
+                # together (mirrors $elemMatch in the mongo backend).
+                def release_matches(release):
+                    if venue and not (
                         venue in normalize_venue(release.venue.name)
                         or (
                             release.venue.short_name
@@ -220,18 +219,16 @@ class MemCollection(PaperCollection):
                             venue in normalize_venue(alias)
                             for alias in release.venue.aliases
                         )
-                    )
-                ]
-                if not matching_releases:
+                    ):
+                        return False
+                    if start_date and release.venue.date < start_date:
+                        return False
+                    if end_date and end_date < release.venue.date:
+                        return False
+                    return True
+
+                if not any(release_matches(release) for release in p.releases):
                     continue
-            if start_date and all(
-                release.venue.date < start_date for release in matching_releases
-            ):
-                continue
-            if end_date and all(
-                end_date < release.venue.date for release in matching_releases
-            ):
-                continue
 
             if offset > 0 and skipped < offset:
                 skipped += 1
