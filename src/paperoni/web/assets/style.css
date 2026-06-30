@@ -697,7 +697,7 @@ body {
 .focuses-page {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 75px);
     box-sizing: border-box;
     overflow: hidden; /* Prevent outer scroll */
 }
@@ -3292,6 +3292,165 @@ body {
     background: #e8e8e8;
     color: #555;
     border: 1px solid #ccc;
+}
+
+/* ── Normalization page ────────────────────────────────────────────────────── */
+
+.norm-toolbar {
+    flex-shrink: 0;
+    margin-bottom: 8px;
+}
+
+.norm-search {
+    width: 100%;
+    max-width: 420px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.norm-search:focus {
+    outline: none;
+    border-color: #2c5aa0;
+    box-shadow: 0 0 0 2px rgba(44,90,160,.15);
+}
+
+/* Wrapper fills remaining height in .focuses-page flex column */
+.norm-table-wrapper {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+}
+
+/* Add button floats in the edit-container's left margin */
+.norm-add-col {
+    position: absolute;
+    left: -36px;
+    top: 30px;
+}
+
+.norm-add-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: #2c5aa0;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.norm-add-btn:hover {
+    background: #1e3a6f;
+}
+
+/* Container fills wrapper height; overflow-y: auto (inherited) scrolls the tbody */
+.norm-table-wrapper .focuses-table-container {
+    height: 100%;
+    flex: none;
+}
+
+/* Fixed Save button – bottom-right of viewport */
+.norm-save-fixed {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+}
+
+/* Column widths for venue norm table */
+#venueNormTable .col-norm-original  { width: 24%; }
+#venueNormTable .col-norm-name      { width: 38%; }
+#venueNormTable .col-norm-type      { width: 9%; }
+#venueNormTable .col-norm-shortname { width: 14%; }
+#venueNormTable .col-norm-date      { width: 70px; }
+#venueNormTable .col-norm-action    { width: 32px; }
+
+#institutionNormTable .col-norm-original { width: 30%; }
+#institutionNormTable .col-norm-name     { width: 42%; }
+#institutionNormTable .col-norm-category { width: 12%; }
+#institutionNormTable .col-norm-country  { width: 12%; }
+#institutionNormTable .col-norm-action   { width: 32px; }
+
+/* New (unsaved) rows */
+#venueNewTbody tr.norm-new-row,
+#instNewTbody tr.norm-new-row {
+    background: #fffde7;
+}
+#venueNewTbody tr.norm-new-row:hover,
+#instNewTbody tr.norm-new-row:hover {
+    background: #fff9c4;
+}
+.norm-new-label {
+    background: #fff8e1;
+    color: #7b5800;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-bottom: 1px solid #ffe082;
+}
+
+/* Pagination bar */
+.norm-pagination {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+    min-height: 34px;
+}
+
+.norm-count {
+    color: #777;
+}
+
+.norm-page-controls {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.norm-page-btn {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border: 1px solid #d0d0d0;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.norm-page-btn:hover:not(:disabled) {
+    background: #f0f0f0;
+    border-color: #bbb;
+}
+
+.norm-page-btn.active {
+    background: #2c5aa0;
+    color: #fff;
+    border-color: #2c5aa0;
+    font-weight: 600;
+}
+
+.norm-page-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.norm-page-gap {
+    color: #aaa;
+    padding: 0 2px;
+    line-height: 28px;
 }
 
 .link-archive:hover {
