@@ -26,7 +26,7 @@ class PaperNormalizer:
     venue_norm: dict[str, NormalizationEntry[Partial[Venue]]] @ FileProxy(
         refresh=True
     ) = field(default_factory=dict)
-    institution_norm: dict[str, NormalizationEntry[Partial[Institution]]] @ FileProxy(
+    institution_norm: dict[str, NormalizationEntry[list[Partial[Institution]]]] @ FileProxy(
         refresh=True
     ) = field(default_factory=dict)
 
@@ -54,12 +54,14 @@ class PaperNormalizer:
     @ovld
     def __call__(self, x: Institution):
         if entry := self.institution_norm.get(x.name, None):
-            inst = instantiate(merge(x, entry.data))
-            if isinstance(inst, Exception):
-                raise inst
-            return inst
-        else:
-            return x
+            results = []
+            for partial in entry.data:
+                inst = instantiate(merge(x, partial))
+                if isinstance(inst, Exception):
+                    raise inst
+                results.append(inst)
+            return results if results else x
+        return x
 
     @ovld
     def __call__(self, x: Venue):
@@ -86,10 +88,17 @@ class PaperNormalizer:
 
     @ovld
     def __call__(self, x: PaperAuthor):
+        affiliations = []
+        for aff in x.affiliations:
+            result = recurse(aff)
+            if isinstance(result, list):
+                affiliations.extend(result)
+            else:
+                affiliations.append(result)
         return PaperAuthor(
             author=x.author,
             display_name=x.display_name,
-            affiliations=recurse(x.affiliations),
+            affiliations=affiliations,
         )
 
     @ovld

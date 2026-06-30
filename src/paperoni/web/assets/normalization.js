@@ -1,5 +1,71 @@
 import { showToast } from './common.js';
 
+// ── Remap modal ───────────────────────────────────────────────────────────────
+
+let _remapCallback = null;
+
+function _initRemapModal() {
+    const el = document.createElement('div');
+    el.id = 'norm-remap-modal';
+    el.hidden = true;
+    el.innerHTML = `
+        <div class="norm-modal-overlay">
+            <div class="norm-modal-dialog">
+                <h3 class="norm-modal-title">Rename actual name</h3>
+                <p class="norm-modal-desc">The old name will also be added as an original (<code id="norm-modal-normalized"></code>) that maps to the new name.</p>
+                <input type="text" id="norm-modal-input" class="edit-input norm-modal-input" autocomplete="off">
+                <div class="norm-modal-actions">
+                    <button id="norm-modal-cancel" class="norm-modal-btn">Cancel</button>
+                    <button id="norm-modal-confirm" class="norm-modal-btn norm-modal-confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(el);
+    el.querySelector('.norm-modal-overlay').addEventListener('click', e => {
+        if (e.target === e.currentTarget) _closeRemapModal(false);
+    });
+    document.getElementById('norm-modal-cancel').addEventListener('click', () => _closeRemapModal(false));
+    document.getElementById('norm-modal-confirm').addEventListener('click', () => _closeRemapModal(true));
+    document.getElementById('norm-modal-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') _closeRemapModal(true);
+        if (e.key === 'Escape') _closeRemapModal(false);
+    });
+}
+
+function _closeRemapModal(confirmed) {
+    const el = document.getElementById('norm-remap-modal');
+    if (!el) return;
+    el.hidden = true;
+    if (confirmed && _remapCallback) {
+        const newName = document.getElementById('norm-modal-input').value.trim();
+        if (newName) _remapCallback(newName);
+    }
+    _remapCallback = null;
+}
+
+async function openRemapModal(oldName, normType, callback) {
+    if (!document.getElementById('norm-remap-modal')) _initRemapModal();
+    let normalized;
+    try {
+        const resp = await fetch(`/api/v1/norm/normalize?${new URLSearchParams({name: oldName, type: normType})}`);
+        if (resp.ok) ({ normalized } = await resp.json());
+    } catch (e) { /* ignore — fallback below */ }
+    if (!normalized) {
+        showToast('Could not reach normalize endpoint', 'error');
+        return;
+    }
+    document.getElementById('norm-modal-normalized').textContent = normalized;
+    const input = document.getElementById('norm-modal-input');
+    input.value = oldName;
+    document.getElementById('norm-remap-modal').hidden = false;
+    input.select();
+    input.focus();
+    _remapCallback = (newName) => callback(newName, normalized);
+}
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+
 const VENUE_TYPES = [
     '', 'journal', 'conference', 'workshop', 'symposium', 'book', 'review',
     'news', 'study', 'meta_analysis', 'editorial', 'letters_and_comments',
@@ -10,6 +76,8 @@ const VENUE_TYPES = [
 const INSTITUTION_CATEGORIES = ['', 'industry', 'academia', 'unknown'];
 
 const PAGE_SIZE = 100;
+
+const hasDirty = id => !!document.querySelector(`#${id} .norm-dirty-row`);
 
 // ── Venue state ───────────────────────────────────────────────────────────────
 
@@ -22,6 +90,11 @@ export function initVenues() {
     document.getElementById('addVenueNormBtn').addEventListener('click', addNewVenueRow);
     document.getElementById('saveVenueNormsBtn').addEventListener('click', saveVenueNorms);
     document.getElementById('venueSearch').addEventListener('input', debounce(() => {
+        if (hasDirty('venueNormTbody')) {
+            showToast('Save or revert changes before searching', 'error');
+            document.getElementById('venueSearch').value = _venueCurrentQ;
+            return;
+        }
         _venueCurrentQ = document.getElementById('venueSearch').value.trim();
         _venueCurrentPage = 1;
         loadVenueNorms();
@@ -73,6 +146,10 @@ function renderVenuePagination(total, totalPages) {
 
     el.querySelectorAll('.norm-page-btn[data-page]').forEach(btn => {
         btn.addEventListener('click', () => {
+            if (hasDirty('venueNormTbody')) {
+                showToast('Save or revert changes before changing pages', 'error');
+                return;
+            }
             _venueCurrentPage = parseInt(btn.dataset.page);
             loadVenueNorms();
         });
@@ -117,34 +194,112 @@ function syncVenueNewHeader(tbody) {
     }
 }
 
-function makeVenueRow(entry, isNew) {
+function makeVenueRow(entry, isNew, savedEntry = null) {
     const row = document.createElement('tr');
-    if (isNew) row.classList.add('norm-new-row');
-    else row.dataset.original = entry.original;
+    if (isNew) {
+        row.classList.add('norm-new-row');
+        if (savedEntry) {
+            row.classList.add('norm-edit-row');
+            row.dataset.savedVals = JSON.stringify([
+                savedEntry.original || '', savedEntry.name || '',
+                savedEntry.type || '', savedEntry.short_name || '', savedEntry.date || '',
+            ]);
+        }
+    } else {
+        row.dataset.original = entry.original;
+        row.dataset.savedVals = JSON.stringify([
+            entry.original || '', entry.name || '',
+            entry.type || '', entry.short_name || '', entry.date || '',
+        ]);
+    }
     row.innerHTML = `
         <td><input type="text" class="norm-original edit-input" value="${esc(entry.original || '')}" placeholder="Original name"></td>
-        <td><input type="text" class="norm-name edit-input" value="${esc(entry.name || '')}" placeholder="Actual name"></td>
+        <td class="norm-name-cell"><div class="norm-name-inner"><input type="text" class="norm-name edit-input" value="${esc(entry.name || '')}" placeholder="Actual name"><button class="norm-remap-btn" title="Remap this name">&#9654;</button></div></td>
         <td><select class="norm-type edit-input">${venueTypeOptions(entry.type || '')}</select></td>
         <td><input type="text" class="norm-short-name edit-input" value="${esc(entry.short_name || '')}" placeholder="Short"></td>
         <td><input type="text" class="norm-date edit-input" value="${esc(entry.date || '')}" placeholder="YYYY[-MM[-DD]]"></td>
         <td class="cell-center"><button class="btn-remove-x">&times;</button></td>
     `;
-    row.querySelector('.btn-remove-x').addEventListener('click', () => {
-        if (isNew) {
+    if (!isNew || savedEntry) {
+        const inputs = [
+            row.querySelector('.norm-original'), row.querySelector('.norm-name'),
+            row.querySelector('.norm-type'),     row.querySelector('.norm-short-name'),
+            row.querySelector('.norm-date'),
+        ];
+        const actionBtn = row.querySelector('.btn-remove-x');
+        const onDelete = isNew
+            ? () => { const tbody = row.closest('tbody'); row.remove(); syncVenueNewHeader(tbody); }
+            : () => { _venueDeletedOriginals.add(row.dataset.original); row.remove(); };
+        const checkDirty = () => {
+            const saved = JSON.parse(row.dataset.savedVals);
+            const dirty = inputs.some((el, i) => el.value !== saved[i]);
+            row.classList.toggle('norm-dirty-row', dirty);
+            actionBtn.innerHTML = dirty ? '&#x21BA;' : '&times;';
+            actionBtn.className = dirty ? 'btn-revert' : 'btn-remove-x';
+            actionBtn.title = dirty ? 'Revert changes' : '';
+        };
+        inputs.forEach(el => { el.addEventListener('input', checkDirty); el.addEventListener('change', checkDirty); });
+        actionBtn.addEventListener('click', () => {
+            if (row.classList.contains('norm-dirty-row')) {
+                const saved = JSON.parse(row.dataset.savedVals);
+                inputs.forEach((el, i) => { el.value = saved[i]; });
+                checkDirty();
+            } else {
+                onDelete();
+            }
+        });
+        if (savedEntry) checkDirty(); // initialize dirty state immediately
+    } else {
+        row.querySelector('.btn-remove-x').addEventListener('click', () => {
             const tbody = row.closest('tbody');
             row.remove();
             syncVenueNewHeader(tbody);
-        } else {
-            _venueDeletedOriginals.add(row.dataset.original);
-            row.remove();
-        }
+        });
+    }
+    row.querySelector('.norm-remap-btn').addEventListener('click', () => {
+        const oldName = row.querySelector('.norm-name').value.trim();
+        if (!oldName) return;
+        openRemapModal(oldName, 'venue', async (newName, normalized) => {
+            if (newName === oldName) return;
+            // Update current row in place
+            row.querySelector('.norm-name').value = newName;
+            if (!isNew) row.querySelector('.norm-name').dispatchEvent(new Event('input'));
+            // Fetch all other entries with old name, show them with new name
+            const tbody = document.getElementById('venueNewTbody');
+            try {
+                const resp = await fetch(`/api/v1/norm/venues/by-name?${new URLSearchParams({name: oldName})}`);
+                if (resp.ok) {
+                    for (const entry of await resp.json()) {
+                        if (entry.original === row.dataset.original) continue;
+                        // Hide the page row for this entry so it isn't double-sent on save
+                        for (const pr of document.querySelectorAll('#venueNormTbody tr')) {
+                            if (pr.querySelector('.norm-original')?.value === entry.original) {
+                                pr.dataset.superseded = '1';
+                                pr.style.display = 'none';
+                            }
+                        }
+                        tbody.appendChild(makeVenueRow({...entry, name: newName}, true, entry));
+                    }
+                }
+            } catch (e) { /* ignore */ }
+            // Remap row: maps normalize(oldName) → newName (truly new, no savedEntry)
+            tbody.appendChild(makeVenueRow({
+                original: normalized,
+                name: newName,
+                type: row.querySelector('.norm-type').value,
+                short_name: row.querySelector('.norm-short-name').value,
+                date: row.querySelector('.norm-date').value,
+            }, true));
+            syncVenueNewHeader(tbody);
+        });
     });
     return row;
 }
 
 function collectVenueRows() {
     const newRows = [...document.querySelectorAll('#venueNewTbody tr.norm-new-row')];
-    const pageRows = [...document.querySelectorAll('#venueNormTbody tr')];
+    const pageRows = [...document.querySelectorAll('#venueNormTbody tr')]
+        .filter(r => !r.dataset.superseded);
     return [...newRows, ...pageRows].map(row => ({
         original:   row.querySelector('.norm-original').value.trim(),
         name:       row.querySelector('.norm-name').value.trim(),
@@ -205,6 +360,11 @@ export function initInstitutions() {
     document.getElementById('addInstNormBtn').addEventListener('click', addNewInstRow);
     document.getElementById('saveInstNormsBtn').addEventListener('click', saveInstNorms);
     document.getElementById('instSearch').addEventListener('input', debounce(() => {
+        if (hasDirty('instNormTbody')) {
+            showToast('Save or revert changes before searching', 'error');
+            document.getElementById('instSearch').value = _instCurrentQ;
+            return;
+        }
         _instCurrentQ = document.getElementById('instSearch').value.trim();
         _instCurrentPage = 1;
         loadInstNorms();
@@ -256,6 +416,10 @@ function renderInstPagination(total, totalPages) {
 
     el.querySelectorAll('.norm-page-btn[data-page]').forEach(btn => {
         btn.addEventListener('click', () => {
+            if (hasDirty('instNormTbody')) {
+                showToast('Save or revert changes before changing pages', 'error');
+                return;
+            }
             _instCurrentPage = parseInt(btn.dataset.page);
             loadInstNorms();
         });
@@ -284,33 +448,110 @@ function syncInstNewHeader(tbody) {
     }
 }
 
-function makeInstRow(entry, isNew) {
+function makeInstRow(entry, isNew, savedEntry = null) {
     const row = document.createElement('tr');
-    if (isNew) row.classList.add('norm-new-row');
-    else row.dataset.original = entry.original;
+    if (isNew) {
+        row.classList.add('norm-new-row');
+        if (savedEntry) {
+            row.classList.add('norm-edit-row');
+            row.dataset.savedVals = JSON.stringify([
+                savedEntry.original || '', savedEntry.name || '',
+                savedEntry.category || '', savedEntry.country || '',
+            ]);
+        }
+    } else {
+        row.dataset.original = entry.original;
+        row.dataset.savedVals = JSON.stringify([
+            entry.original || '', entry.name || '',
+            entry.category || '', entry.country || '',
+        ]);
+    }
     row.innerHTML = `
         <td><input type="text" class="norm-original edit-input" value="${esc(entry.original || '')}" placeholder="Original name"></td>
-        <td><input type="text" class="norm-name edit-input" value="${esc(entry.name || '')}" placeholder="Actual name"></td>
+        <td class="norm-name-cell"><div class="norm-name-inner"><input type="text" class="norm-name edit-input" value="${esc(entry.name || '')}" placeholder="Actual name"><button class="norm-remap-btn" title="Remap this name">&#9654;</button></div></td>
         <td><select class="norm-category edit-input">${categoryOptions(entry.category || '')}</select></td>
         <td><input type="text" class="norm-country edit-input" value="${esc(entry.country || '')}" placeholder="Country"></td>
         <td class="cell-center"><button class="btn-remove-x">&times;</button></td>
     `;
-    row.querySelector('.btn-remove-x').addEventListener('click', () => {
-        if (isNew) {
+    if (!isNew || savedEntry) {
+        const inputs = [
+            row.querySelector('.norm-original'), row.querySelector('.norm-name'),
+            row.querySelector('.norm-category'), row.querySelector('.norm-country'),
+        ];
+        const actionBtn = row.querySelector('.btn-remove-x');
+        const onDelete = isNew
+            ? () => { const tbody = row.closest('tbody'); row.remove(); syncInstNewHeader(tbody); }
+            : () => { _instDeletedOriginals.add(row.dataset.original); row.remove(); };
+        const checkDirty = () => {
+            const saved = JSON.parse(row.dataset.savedVals);
+            const dirty = inputs.some((el, i) => el.value !== saved[i]);
+            row.classList.toggle('norm-dirty-row', dirty);
+            actionBtn.innerHTML = dirty ? '&#x21BA;' : '&times;';
+            actionBtn.className = dirty ? 'btn-revert' : 'btn-remove-x';
+            actionBtn.title = dirty ? 'Revert changes' : '';
+        };
+        inputs.forEach(el => { el.addEventListener('input', checkDirty); el.addEventListener('change', checkDirty); });
+        actionBtn.addEventListener('click', () => {
+            if (row.classList.contains('norm-dirty-row')) {
+                const saved = JSON.parse(row.dataset.savedVals);
+                inputs.forEach((el, i) => { el.value = saved[i]; });
+                checkDirty();
+            } else {
+                onDelete();
+            }
+        });
+        if (savedEntry) checkDirty(); // initialize dirty state immediately
+    } else {
+        row.querySelector('.btn-remove-x').addEventListener('click', () => {
             const tbody = row.closest('tbody');
             row.remove();
             syncInstNewHeader(tbody);
-        } else {
-            _instDeletedOriginals.add(row.dataset.original);
-            row.remove();
-        }
+        });
+    }
+    row.querySelector('.norm-remap-btn').addEventListener('click', () => {
+        const oldName = row.querySelector('.norm-name').value.trim();
+        if (!oldName) return;
+        openRemapModal(oldName, 'institution', async (newName, normalized) => {
+            if (newName === oldName) return;
+            // Update current row in place
+            row.querySelector('.norm-name').value = newName;
+            if (!isNew) row.querySelector('.norm-name').dispatchEvent(new Event('input'));
+            // Fetch all other entries with old name, show them with new name
+            const tbody = document.getElementById('instNewTbody');
+            try {
+                const resp = await fetch(`/api/v1/norm/institutions/by-name?${new URLSearchParams({name: oldName})}`);
+                if (resp.ok) {
+                    for (const entry of await resp.json()) {
+                        if (entry.original === row.dataset.original && entry.name === oldName) continue;
+                        // Hide the matching page row so it isn't double-sent on save
+                        for (const pr of document.querySelectorAll('#instNormTbody tr')) {
+                            if (pr.querySelector('.norm-original')?.value === entry.original &&
+                                pr.querySelector('.norm-name')?.value === oldName) {
+                                pr.dataset.superseded = '1';
+                                pr.style.display = 'none';
+                            }
+                        }
+                        tbody.appendChild(makeInstRow({...entry, name: newName}, true, entry));
+                    }
+                }
+            } catch (e) { /* ignore */ }
+            // Remap row: maps normalize(oldName) → newName (truly new, no savedEntry)
+            tbody.appendChild(makeInstRow({
+                original: normalized,
+                name: newName,
+                category: row.querySelector('.norm-category').value,
+                country: row.querySelector('.norm-country').value,
+            }, true));
+            syncInstNewHeader(tbody);
+        });
     });
     return row;
 }
 
 function collectInstRows() {
     const newRows = [...document.querySelectorAll('#instNewTbody tr.norm-new-row')];
-    const pageRows = [...document.querySelectorAll('#instNormTbody tr')];
+    const pageRows = [...document.querySelectorAll('#instNormTbody tr')]
+        .filter(r => !r.dataset.superseded);
     return [...newRows, ...pageRows].map(row => ({
         original: row.querySelector('.norm-original').value.trim(),
         name:     row.querySelector('.norm-name').value.trim(),

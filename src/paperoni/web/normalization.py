@@ -1,6 +1,7 @@
 """FastAPI routes for editing normalization data."""
 
 import math
+from collections import defaultdict
 
 from fastapi import Body, Depends, FastAPI, HTTPException, Request
 from serieux import Partial, deserialize, serialize
@@ -8,6 +9,7 @@ from serieux import Partial, deserialize, serialize
 from ..config import config
 from ..model.classes import DatePrecision, Institution, Venue
 from ..norm import NormalizationEntry
+from ..utils import normalize_institution, normalize_venue
 from .helpers import render_template
 
 
@@ -21,6 +23,51 @@ def install_normalization(app: FastAPI) -> FastAPI:
     @app.get("/norm/institutions", dependencies=[Depends(hascap("admin"))])
     async def norm_institutions_page(request: Request):
         return render_template("norm_institutions.html", request)
+
+    @app.get("/api/v1/norm/normalize", dependencies=[Depends(hascap("admin"))])
+    async def norm_normalize(name: str, type: str = "venue"):
+        fn = normalize_institution if type == "institution" else normalize_venue
+        return {"normalized": fn(name)}
+
+    @app.get("/api/v1/norm/venues/by-name", dependencies=[Depends(hascap("admin"))])
+    async def get_venues_by_name(name: str):
+        if config.normalizer is None:
+            return []
+        name_lower = name.lower()
+        result = []
+        for original, entry in config.normalizer.venue_norm.items():
+            s = serialize(Partial[Venue], entry.data)
+            if s.get("name", "").lower() == name_lower:
+                result.append({
+                    "original": original,
+                    "name": s.get("name", ""),
+                    "type": s.get("type", ""),
+                    "short_name": s.get("short_name", ""),
+                    "date": (
+                        DatePrecision.format(s["date"], s["date_precision"])
+                        if "date" in s and "date_precision" in s
+                        else ""
+                    ),
+                })
+        return result
+
+    @app.get("/api/v1/norm/institutions/by-name", dependencies=[Depends(hascap("admin"))])
+    async def get_institutions_by_name(name: str):
+        if config.normalizer is None:
+            return []
+        name_lower = name.lower()
+        result = []
+        for original, entry in config.normalizer.institution_norm.items():
+            for partial in entry.data:
+                s = serialize(Partial[Institution], partial)
+                if s.get("name", "").lower() == name_lower:
+                    result.append({
+                        "original": original,
+                        "name": s.get("name", ""),
+                        "category": s.get("category", ""),
+                        "country": s.get("country", ""),
+                    })
+        return result
 
     @app.get("/api/v1/norm/venues", dependencies=[Depends(hascap("admin"))])
     async def get_venue_norms(q: str = "", page: int = 1, page_size: int = 100):
@@ -124,32 +171,39 @@ def install_normalization(app: FastAPI) -> FastAPI:
     async def get_institution_norms(q: str = "", page: int = 1, page_size: int = 100):
         if config.normalizer is None:
             return {"items": [], "total": 0, "page": 1, "pages": 1}
+
+        # Groups paginated by original key; each page may have multiple rows per key
+        groups = list(config.normalizer.institution_norm.items())
+        if q:
+            ql = q.lower()
+            filtered = []
+            for original, entry in groups:
+                if ql in original.lower():
+                    filtered.append((original, entry))
+                    continue
+                for partial in entry.data:
+                    s = serialize(Partial[Institution], partial)
+                    if ql in s.get("name", "").lower():
+                        filtered.append((original, entry))
+                        break
+            groups = filtered
+
+        total = len(groups)
+        pages = max(1, math.ceil(total / page_size))
+        page = max(1, min(page, pages))
+        start = (page - 1) * page_size
+
         items = []
-        for original, entry in config.normalizer.institution_norm.items():
-            s = serialize(Partial[Institution], entry.data)
-            items.append(
-                {
+        for original, entry in groups[start : start + page_size]:
+            for partial in entry.data:
+                s = serialize(Partial[Institution], partial)
+                items.append({
                     "original": original,
                     "name": s.get("name", ""),
                     "category": s.get("category", ""),
                     "country": s.get("country", ""),
-                }
-            )
-        if q:
-            ql = q.lower()
-            items = [
-                i for i in items if ql in i["original"].lower() or ql in i["name"].lower()
-            ]
-        total = len(items)
-        pages = max(1, math.ceil(total / page_size))
-        page = max(1, min(page, pages))
-        start = (page - 1) * page_size
-        return {
-            "items": items[start : start + page_size],
-            "total": total,
-            "page": page,
-            "pages": pages,
-        }
+                })
+        return {"items": items, "total": total, "page": page, "pages": pages}
 
     @app.post("/api/v1/norm/institutions")
     async def save_institution_norms(
@@ -158,12 +212,12 @@ def install_normalization(app: FastAPI) -> FastAPI:
         if config.normalizer is None:
             raise HTTPException(status_code=501, detail="No normalizer configured")
 
-        new_entries = {}
+        # Group flat rows by original; each group becomes a list[Partial[Institution]]
+        groups: dict = defaultdict(list)
         for entry in entries:
             original = entry.get("original", "").strip()
             if not original:
                 continue
-
             data_dict = {}
             if name := entry.get("name", "").strip():
                 data_dict["name"] = name
@@ -171,15 +225,13 @@ def install_normalization(app: FastAPI) -> FastAPI:
                 data_dict["category"] = category
             if country := entry.get("country", "").strip():
                 data_dict["country"] = country
+            if data_dict:
+                groups[original].append(deserialize(Partial[Institution], data_dict))
 
-            if not data_dict:
-                continue
-
-            new_entries[original] = NormalizationEntry(
-                origin=user,
-                data=deserialize(Partial[Institution], data_dict),
-            )
-
+        new_entries = {
+            original: NormalizationEntry(origin=user, data=partials)
+            for original, partials in groups.items()
+        }
         current = dict(config.normalizer.institution_norm)
         current.update(new_entries)
         config.normalizer.institution_norm.save(current)
