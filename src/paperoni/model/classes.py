@@ -251,3 +251,11 @@ class Paper(Base):
         # To delete later
         if isinstance(self.id, int):
             self.id = str(self.id)
+
+
+@dataclass(kw_only=True)
+class PaperDiff(Base):
+    score: int | None = None
+    matched: bool = True
+    current: Paper | None = None
+    new: Paper | None = None
