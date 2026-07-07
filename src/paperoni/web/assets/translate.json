@@ -104,6 +104,10 @@
         "fr": "Conférence"
     },
     {
+        "en": "Topic",
+        "fr": "Sujet"
+    },
+    {
         "en": "Start Date",
         "fr": "Date de début"
     },
@@ -142,6 +146,10 @@
     {
         "en": "Search by venue...",
         "fr": "Rechercher par conférence..."
+    },
+    {
+        "en": "Search by topic...",
+        "fr": "Rechercher par sujet..."
     },
     {
         "en": "Manage Exclusions",

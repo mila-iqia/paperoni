@@ -77,6 +77,7 @@ class RemoteCollection(PaperCollection):
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
@@ -94,6 +95,8 @@ class RemoteCollection(PaperCollection):
             params["author"] = author
         if venue:
             params["venue"] = venue
+        if topic:
+            params["topic"] = list(topic)
         if start_date:
             params["start_date"] = start_date.isoformat()
         if end_date:
@@ -118,6 +121,8 @@ class RemoteCollection(PaperCollection):
         author: str = None,
         # Venue name (long or short)
         venue: str = None,
+        # Topics the paper must have (all of them must match)
+        topic: list[str] = None,
         # Start date to consider
         start_date: date = None,
         # End date to consider
@@ -139,6 +144,7 @@ class RemoteCollection(PaperCollection):
             institution=institution,
             author=author,
             venue=venue,
+            topic=topic,
             start_date=start_date,
             end_date=end_date,
             status=status,
@@ -179,6 +185,7 @@ class RemoteCollection(PaperCollection):
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
@@ -191,6 +198,7 @@ class RemoteCollection(PaperCollection):
             institution=institution,
             author=author,
             venue=venue,
+            topic=topic,
             start_date=start_date,
             end_date=end_date,
             status=status,

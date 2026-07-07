@@ -782,6 +782,10 @@ class Coll:
         # [alias: -v]
         venue: str = None
 
+        # Topic search; may be given multiple times, all must match
+        # [alias: -t]
+        topic: list[str] = None
+
         # Start date (YYYY-MM-DD)
         # [alias --start]
         start_date: date = None
@@ -820,6 +824,7 @@ class Coll:
                     author=self.author,
                     institution=self.institution,
                     venue=self.venue,
+                    topic=self.topic,
                     start_date=self.start_date,
                     end_date=self.end_date,
                     status=self.status,
@@ -840,6 +845,7 @@ class Coll:
                 author=self.author,
                 institution=self.institution,
                 venue=self.venue,
+                topic=self.topic,
                 start_date=self.start_date,
                 end_date=self.end_date,
                 status=self.status,

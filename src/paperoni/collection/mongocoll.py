@@ -121,6 +121,9 @@ class MongoCollection(PaperCollection):
         # Index on institution names for fast institution searches
         await self._collection.create_index("authors.affiliations._norm_name")
 
+        # Index on topic names for fast topic searches
+        await self._collection.create_index("topics.name")
+
         # Index on venue names for fast venue searches
         await self._collection.create_index("releases.venue.name")
         await self._collection.create_index("releases.venue.short_name")
@@ -262,6 +265,7 @@ class MongoCollection(PaperCollection):
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
@@ -340,6 +344,13 @@ class MongoCollection(PaperCollection):
                 normalize_institution(institution)
             )
 
+        # Topic filtering: every provided topic must match one of the paper's
+        # topics. Each is combined into $and so they must all be satisfied.
+        if topic:
+            query.setdefault("$and", []).extend(
+                {"topics.name": _match_str(t, normalized=False)} for t in topic
+            )
+
         return query
 
     async def search(
@@ -349,6 +360,7 @@ class MongoCollection(PaperCollection):
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
@@ -366,6 +378,7 @@ class MongoCollection(PaperCollection):
             institution=institution,
             author=author,
             venue=venue,
+            topic=topic,
             start_date=start_date,
             end_date=end_date,
             status=status,
@@ -389,6 +402,7 @@ class MongoCollection(PaperCollection):
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
@@ -403,6 +417,7 @@ class MongoCollection(PaperCollection):
             institution=institution,
             author=author,
             venue=venue,
+            topic=topic,
             start_date=start_date,
             end_date=end_date,
             status=status,

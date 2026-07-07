@@ -200,6 +200,7 @@ async function fetchOperateResults(operation, searchParams, offset = 0, mode = '
         author: searchParams.author || undefined,
         institution: searchParams.institution || undefined,
         venue: searchParams.venue || undefined,
+        topic: searchParams.topic?.length ? searchParams.topic : undefined,
         status: searchParams.status?.length ? searchParams.status : undefined,
         start_date: searchParams.start_date || undefined,
         end_date: searchParams.end_date || undefined,
@@ -492,6 +493,7 @@ export async function operatePapers() {
     const authorInput = document.getElementById('author');
     const institutionInput = document.getElementById('institution');
     const venueInput = document.getElementById('venue');
+    const topicInput = document.getElementById('topic');
     const statusInput = document.getElementById('status');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
@@ -515,6 +517,7 @@ export async function operatePapers() {
     authorInput?.addEventListener('input', handleSearchChange);
     institutionInput?.addEventListener('input', handleSearchChange);
     venueInput?.addEventListener('input', handleSearchChange);
+    topicInput?.addEventListener('input', handleSearchChange);
     statusInput?.addEventListener('input', handleSearchChange);
     startDateInput?.addEventListener('input', handleSearchChange);
     endDateInput?.addEventListener('input', handleSearchChange);

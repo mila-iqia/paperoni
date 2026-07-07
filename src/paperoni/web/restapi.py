@@ -405,6 +405,7 @@ def install_api(app) -> FastAPI:
         request: SearchRequest = Depends(),
         flags: set[str] = Query(default=None),
         status: list[str] = Query(default=None),
+        topic: list[str] = Query(default=None),
     ) -> SearchRequest:
         """Parse search request with proper handling of list/set parameters."""
         # Add flags if provided (FastAPI's Query() handles set parsing)
@@ -412,6 +413,8 @@ def install_api(app) -> FastAPI:
             request.flags = flags
         if status:
             request.status = status
+        if topic:
+            request.topic = topic
 
         return request
 

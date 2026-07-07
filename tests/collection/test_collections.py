@@ -22,6 +22,7 @@ from paperoni.model.classes import (
     InstitutionCategory,
     Link,
     Paper,
+    Topic,
 )
 from paperoni.operations import operation
 
@@ -77,6 +78,10 @@ async def sample_papers() -> Generator[list[Paper], None, None]:
     papers[2].flags = {"valid", "invalid"}
     papers[3].flags = {"reviewed"}
     papers[4].flags = {"valid", "reviewed"}
+
+    papers[0].topics = [Topic(name="Deep Learning"), Topic(name="Optimization")]
+    papers[1].topics = [Topic(name="Deep Learning")]
+    papers[2].topics = [Topic(name="Reinforcement Learning")]
 
     yield sort_title(papers)
 
@@ -470,6 +475,42 @@ async def test_search_exact_match(
     assert not results
     results = [p async for p in collection.search(institution="=MILA")]
     assert len(results) == 4
+
+
+async def test_search_by_topic(
+    collection_r: PaperCollection, sample_papers: list[Paper]
+):
+    """Test searching by one or more topics."""
+    collection = collection_r
+
+    await collection.add_papers(sample_papers)
+
+    # Single topic: substring, case-insensitive, matches any of the paper's topics
+    results = [p async for p in collection.search(topic=["Deep Learning"])]
+    assert len(results) == 2
+    results = [p async for p in collection.search(topic=["deep"])]
+    assert len(results) == 2
+    results = [p async for p in collection.search(topic=["Reinforcement"])]
+    assert len(results) == 1
+    results = [p async for p in collection.search(topic=["nonexistent"])]
+    assert not results
+
+    # Multiple topics: a paper must match ALL of them
+    results = [
+        p async for p in collection.search(topic=["Deep Learning", "Optimization"])
+    ]
+    assert len(results) == 1
+    results = [
+        p
+        async for p in collection.search(topic=["Deep Learning", "Reinforcement"])
+    ]
+    assert not results
+
+    # Exact match with the '=' prefix
+    results = [p async for p in collection.search(topic=["=Deep Learning"])]
+    assert len(results) == 2
+    results = [p async for p in collection.search(topic=["=Deep"])]
+    assert not results
 
 
 async def test_search_by_flags(collection_r: PaperCollection, sample_papers: list[Paper]):

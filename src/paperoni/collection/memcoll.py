@@ -10,6 +10,7 @@ from ..utils import (
     normalize_institution,
     normalize_name,
     normalize_title,
+    normalize_topic,
     normalize_venue,
     to_sync,
 )
@@ -183,6 +184,8 @@ class MemCollection(PaperCollection):
         author: str = None,
         # Venue name (long or short)
         venue: str = None,
+        # Topics the paper must have (all of them must match)
+        topic: list[str] = None,
         # Start date to consider
         start_date: date = None,
         # End date to consider
@@ -208,6 +211,7 @@ class MemCollection(PaperCollection):
             institution, normalize_institution
         )
         venue_match = venue and _make_matcher(venue, normalize_venue)
+        topic_matchers = [_make_matcher(t, normalize_topic) for t in topic or []]
         include_status = [s for s in status or [] if not s.startswith("-")]
         exclude_status = [s[1:] for s in status or [] if s.startswith("-")]
         skipped = 0
@@ -219,6 +223,10 @@ class MemCollection(PaperCollection):
                 continue
             if institution_match and not any(
                 institution_match(aff.name) for a in p.authors for aff in a.affiliations
+            ):
+                continue
+            if topic_matchers and not all(
+                any(m(t.name) for t in p.topics) for m in topic_matchers
             ):
                 continue
             if include_flags and (set(include_flags) - p.flags):
@@ -270,6 +278,7 @@ class MemCollection(PaperCollection):
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
@@ -283,6 +292,7 @@ class MemCollection(PaperCollection):
             institution=institution,
             author=author,
             venue=venue,
+            topic=topic,
             start_date=start_date,
             end_date=end_date,
             status=status,
