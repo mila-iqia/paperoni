@@ -101,6 +101,7 @@ url_extractors = {
     r"https?://dblp.uni-trier.de/db/([^/]+)/([^/]+)/[^/]+\.html#(.*)": "dblp",
     r"https?://dblp.uni-trier.de/rec/(.*).html": "dblp",
     r"https?://ror.org/(.*)": "ror",
+    r"https?://www.semanticscholar.org/paper/(?:.*/)?([0-9a-fA-F]{40})$": "semantic_scholar",
 }
 
 
