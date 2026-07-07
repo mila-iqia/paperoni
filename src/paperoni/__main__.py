@@ -262,15 +262,9 @@ class Refine:
     format: Formatter = AutoFormatter
 
     async def run(self):
-        results = []
-        links = []
-        for link in self.link:
-            if link.startswith("http"):
-                links.append(url_to_id(link))
-            else:
-                links.append(link.split(":", 1))
-
-        results = [p async for p in fetch_all(links, tags=self.tags, force=self.force)]
+        results = [
+            p async for p in fetch_all(self.link, tags=self.tags, force=self.force)
+        ]
 
         if self.norm:
             results = [

@@ -5,7 +5,7 @@ from typing import Callable
 
 from ovld import ovld
 
-from ..utils import soft_fail
+from ..utils import soft_fail, url_to_id
 
 
 @ovld
@@ -59,6 +59,19 @@ async def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
 async def fetch_all(links, group="composite", statuses=None, tags=None, force=False):
     statuses = statuses or {}
     tags = tags or {"normal"}
+
+    _links, links = links, []
+    for link in _links:
+        if isinstance(link, str):
+            if link.startswith("http"):
+                _id = url_to_id(link)
+                if _id is None:
+                    raise Exception(f"Cannot understand URL: {link}")
+                links.append(_id)
+            else:
+                links.append(link.split(":", 1))
+        else:
+            links.append(link)
 
     funcs = [(group, (links,), fetch.resolve_all(links))]
     for type, link in links:
