@@ -1,5 +1,5 @@
 
-Panneau d'administration de Paperoni.
+### Panneau d'administration de Paperoni.
 
 - [🎯 Focus](/focuses) : Configurer les focus de recherche qui pilotent la découverte et le scoring des articles.
 - [📋 Jeu de travail](/workset) : Consulter les articles scorés du jeu de travail actuel.

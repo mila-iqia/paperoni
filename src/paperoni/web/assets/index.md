@@ -1,13 +1,18 @@
 
-Welcome to Paperoni.
+
+### Welcome to Paperoni ([documentation](/help))
 
 - [🔍 Search papers](/search): Find, filter and edit scientific publications by title, author, institution, venue, date, and more.
-- [✅ Validate papers](/pending): Accept or reject suggested papers and edits
-- [✏️ Add papers](/edit/new): Create new papers.
-- [🚫 Exclusions](/exclusions): Manage excluded paper identifiers.
-- [📰 Latest group](/latest-group): Discover recent papers and generate newsletters.
-- [🔧 Admin](/admin): Focuses, workset, capabilities, reports, and more.
+- [✏️ Add papers](/edit/new): Add/suggest papers to the database.
 - [❓ Read the help](/help): Consult full documentation and best practices.
 - [📝 API documentation](/docs): For how to work with Paperoni programmatically.
 
-These features are available to authorized users according to your account permissions. If you need help or want to learn more, visit the [help page](/help).
+### For validators
+
+- [✅ Validate papers](/pending): Accept or reject suggested papers and edits
+- [🚫 Exclusions](/exclusions): Manage excluded paper identifiers.
+- [📰 Latest group](/latest-group): Discover recent papers and generate newsletters.
+
+### For administrators
+
+- [🔧 Admin](/admin): Focuses, workset, capabilities, reports, and more.
