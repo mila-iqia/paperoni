@@ -212,6 +212,29 @@ async function submitPaper(paper, comment = '', suggestMode = false) {
 }
 
 /**
+ * Populate a paper by refining the given links and merging them into the current
+ * paper. Returns { success, message, paper } where paper is the merged result.
+ * Modifies nothing in the database.
+ */
+async function populatePaper(paper, links) {
+    const response = await fetch('/api/v1/populate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ paper, links }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP ${response.status}`);
+    }
+
+    return await response.json();
+}
+
+/**
  * Delete a paper via the /delete API (direct mode only).
  */
 async function deletePaper(paperId) {
@@ -276,8 +299,31 @@ function renderEditForm(paper, suggestMode = false) {
         ? html`<span class="edit-pending-note"><loc>(based on existing pending edit)</loc></span>`
         : null;
 
+    // Populate is only offered when creating a new paper: merging refined links
+    // into an already-populated paper is error-prone, so it is not shown on edits.
+    const isNewPaper = paper.id === null || paper.id === undefined;
+    const populateSection = isNewPaper
+        ? html`
+            <!-- Populate -->
+            <div class="form-section">
+                <h2><loc>Populate</loc></h2>
+                <div class="form-group">
+                    <label for="populateLinks"><loc>Paste link or paper ID (specifically arxiv, DOI or Semantic Scholar) to pre-populate the form.</loc></label>
+                    <textarea id="populateLinks"
+                              class="edit-input"
+                              rows="1"
+                              placeholder="e.g. arxiv:2411.00001, https://arxiv.org/pdf/1405.1548v2, doi:10.1234/abcd"
+                              data-loc-placeholder="e.g. arxiv:2411.00001, https://arxiv.org/pdf/1405.1548v2, doi:10.1234/abcd"></textarea>
+                </div>
+                <button type="button" class="btn-primary" id="populateBtn"><loc>Populate</loc></button>
+            </div>
+        `
+        : null;
+
     const form = html`
         <form class="edit-form" id="editForm">
+            ${populateSection}
+
             <!-- Basic Information -->
             <div class="form-section">
                 <div class="section-header">
@@ -387,6 +433,49 @@ function renderEditForm(paper, suggestMode = false) {
 
     const infoContainer = form.querySelector('#infoContainer');
     renderInfo(infoContainer, paper.info || {});
+
+    // Populate: refine the pasted links and merge them into the current form data,
+    // then re-render the form with the merged paper. Nothing is saved to the database.
+    const populateBtn = form.querySelector('#populateBtn');
+    const populateLinksInput = form.querySelector('#populateLinks');
+    if (populateBtn && populateLinksInput) {
+        populateBtn.addEventListener('click', async () => {
+            const raw = populateLinksInput.value || '';
+            const links = raw.split(',').map((s) => s.trim()).filter(Boolean);
+            if (links.length === 0) {
+                showToast(getTranslation('Enter at least one link to populate'), 'error');
+                return;
+            }
+
+            populateBtn.disabled = true;
+            populateBtn.innerHTML = '<loc>Populating...</loc>';
+            setLanguageNode(populateBtn);
+
+            try {
+                const currentData = collectFormData(form, paper);
+                const result = await populatePaper(currentData, links);
+                if (result.success && result.paper) {
+                    const newForm = renderEditForm(result.paper, suggestMode);
+                    // Keep the pasted links visible in the re-rendered form.
+                    const newLinksInput = newForm.querySelector('#populateLinks');
+                    if (newLinksInput) newLinksInput.value = raw;
+                    form.replaceWith(newForm);
+                    setLanguageNode(newForm);
+                    showToast(getTranslation('Form populated from links'), 'success');
+                } else {
+                    showToast(result.message || getTranslation('Failed to populate'), 'error');
+                    populateBtn.disabled = false;
+                    populateBtn.innerHTML = '<loc>Populate</loc>';
+                    setLanguageNode(populateBtn);
+                }
+            } catch (error) {
+                showToast(getTranslation('Error: {1}').replace('{1}', error.message), 'error');
+                populateBtn.disabled = false;
+                populateBtn.innerHTML = '<loc>Populate</loc>';
+                setLanguageNode(populateBtn);
+            }
+        });
+    }
 
     // Delete toggle: when on, submit button says Delete/Mark for deletion; submit adds mark:delete
     let deleteMode = false;
