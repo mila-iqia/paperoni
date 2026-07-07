@@ -1,4 +1,4 @@
-import { html, join } from './common.js';
+import { html, join, toggle } from './common.js';
 import { setLanguageNode } from './translate.js';
 import {
     attachAuthorAffiliationHover,
@@ -15,16 +15,35 @@ function getAffName(aff) {
     return aff?.display_name || aff?.name || '';
 }
 
-/**
- * Simple word-level diff. Returns array of { type: 'equal'|'added'|'removed', value: string }.
- * Old = removed (red), new = added (green).
- */
-function diffWords(text1, text2) {
-    const words1 = (text1 || '').split(/\s+/).filter(Boolean);
-    const words2 = (text2 || '').split(/\s+/).filter(Boolean);
-    const result = [];
-    let i = 0, j = 0;
+function getAuthorEmail(author) {
+    return author?.author?.email ?? null;
+}
 
+/**
+ * Superscript "@" mailto marker(s) for an author, diffed between old/new.
+ * Unchanged (including both null) = plain marker. Changed = red (old) + green (new).
+ */
+function createEmailMarkers(emailOld, emailNew) {
+    if (emailOld === emailNew) {
+        return emailNew
+            ? html`<sup class="author-email" data-tooltip="${emailNew}"><a href="mailto:${emailNew}">@</a></sup>`
+            : null;
+    }
+    const marks = [];
+    if (emailOld) {
+        marks.push(html`<sup class="author-email diff-removed" data-tooltip="${emailOld}"><a href="mailto:${emailOld}">@</a></sup>`);
+    }
+    if (emailNew) {
+        marks.push(html`<sup class="author-email diff-added" data-tooltip="${emailNew}"><a href="mailto:${emailNew}">@</a></sup>`);
+    }
+    return marks.length ? marks : null;
+}
+
+/**
+ * Generic LCS-based diff of two arrays of comparable items.
+ * Returns array of { type: 'equal'|'added'|'removed', value: item }.
+ */
+function diffArrayLCS(a, b) {
     function lcsLength(a, b) {
         const m = a.length, n = b.length;
         const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
@@ -51,8 +70,28 @@ function diffWords(text1, text2) {
         return backtrack(a, b, dp, i, j - 1).concat({ type: 'added', value: b[j - 1] });
     }
 
-    const dp = lcsLength(words1, words2);
-    return backtrack(words1, words2, dp, words1.length, words2.length);
+    const dp = lcsLength(a, b);
+    return backtrack(a, b, dp, a.length, b.length);
+}
+
+/**
+ * Simple word-level diff. Returns array of { type: 'equal'|'added'|'removed', value: string }.
+ * Old = removed (red), new = added (green).
+ */
+function diffWords(text1, text2) {
+    const words1 = (text1 || '').split(/\s+/).filter(Boolean);
+    const words2 = (text2 || '').split(/\s+/).filter(Boolean);
+    return diffArrayLCS(words1, words2);
+}
+
+/**
+ * Line-level diff, used for the raw JSON diff view. Returns array of
+ * { type: 'equal'|'added'|'removed', value: string } where value is a single line.
+ */
+function diffLines(text1, text2) {
+    const lines1 = (text1 ?? '').split('\n');
+    const lines2 = (text2 ?? '').split('\n');
+    return diffArrayLCS(lines1, lines2);
 }
 
 /**
@@ -103,6 +142,21 @@ function valueKey(val) {
     if (val == null) return 'null';
     if (typeof val === 'object') return JSON.stringify(val);
     return String(val);
+}
+
+/**
+ * Render a compact line-level diff between the raw JSON of paperOld and paperNew.
+ */
+function createJsonDiffElement(paperOld, paperNew) {
+    const json1 = JSON.stringify(paperOld ?? null, null, 2);
+    const json2 = JSON.stringify(paperNew ?? null, null, 2);
+    const lineSegments = diffLines(json1, json2);
+    const rows = lineSegments.map(seg => {
+        if (seg.type === 'added') return html`<div class="json-diff-line diff-added">+ ${seg.value}</div>`;
+        if (seg.type === 'removed') return html`<div class="json-diff-line diff-removed">- ${seg.value}</div>`;
+        return html`<div class="json-diff-line">&nbsp;&nbsp;${seg.value}</div>`;
+    });
+    return html`<pre class="json-diff-compact">${rows}</pre>`;
 }
 
 /**
@@ -237,8 +291,9 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                     return [i > 0 ? ',' : null, html`<span class="${cls}">${n}</span>`];
                 })
                 .filter(Boolean);
+            const emailMarkers = createEmailMarkers(getAuthorEmail(author1), getAuthorEmail(author2));
             authorItems.push(
-                html`<span class="author-name" data-affiliations="${allNums.join(',')}">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
+                html`<span class="author-name" data-affiliations="${allNums.join(',')}">${name}${emailMarkers}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
             );
         } else if (seg.type === 'added') {
             const author = seg.value;
@@ -251,8 +306,9 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                     return [i > 0 ? ',' : null, html`<span class="${cls}">${n}</span>`];
                 })
                 .filter(Boolean);
+            const emailMarkers = createEmailMarkers(null, getAuthorEmail(author));
             authorItems.push(
-                html`<span class="author-name diff-added" data-affiliations="${affNums.join(',')}">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
+                html`<span class="author-name diff-added" data-affiliations="${affNums.join(',')}">${name}${emailMarkers}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
             );
         } else {
             const author = seg.value;
@@ -265,8 +321,9 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
                     return [i > 0 ? ',' : null, html`<span class="${cls}">${n}</span>`];
                 })
                 .filter(Boolean);
+            const emailMarkers = createEmailMarkers(getAuthorEmail(author), null);
             authorItems.push(
-                html`<span class="author-name diff-removed" data-affiliations="${affNums.join(',')}">${name}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
+                html`<span class="author-name diff-removed" data-affiliations="${affNums.join(',')}">${name}${emailMarkers}${supParts.length ? html`<sup>${supParts}</sup>` : ''}</span>`
             );
         }
     }
@@ -445,6 +502,15 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
     //     <span class="diff-legend-hint">Shift+click tab to exit</span>
     // </div>
 
+    const jsonDiffSection = toggle`
+        <div class="json-diff-toggle-row">
+            <button class="json-diff-toggle-btn" toggler title="Show raw JSON diff">
+                <loc>JSON diff</loc> <span class="item-toggle">▶</span>
+            </button>
+        </div>
+        <div class="json-diff-container" toggled>${createJsonDiffElement(paperOld, paperNew)}</div>
+    `;
+
     return html`
         <div class="paper-content diff-view">
             ${titleWithEdit}
@@ -452,6 +518,7 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
             ${releasesHtml}
             ${detailsSection}
             ${infoTable}
+            ${jsonDiffSection}
         </div>
     `;
 }
