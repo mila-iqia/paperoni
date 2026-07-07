@@ -120,6 +120,20 @@ wheels = [
 ]
 
 [[package]]
+name = "buchelib"
+version = "0.0.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "hypetext", marker = "python_full_version >= '3.14'" },
+    { name = "ovld", marker = "python_full_version >= '3.14'" },
+    { name = "serieux", marker = "python_full_version >= '3.14'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/00/71/182890ace44b238ac2c8029941bdbba0c92d13f40f9a578c4c9272a350cd/buchelib-0.0.7.tar.gz", hash = "sha256:a6fafe849982b200a4cd06ef198faec1913c2dd2dd72ab841cba9383caa5fcb0", size = 6745, upload-time = "2026-07-03T18:39:05.79Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e3/2d/2db9c067b0615084547a599b8cf23c88b5dd4e1faa428519c78ae1afd704/buchelib-0.0.7-py3-none-any.whl", hash = "sha256:bbc58f43032d734822b3621c14942d344c39a94808817ffa0fad89995b43055b", size = 9627, upload-time = "2026-07-03T18:39:04.566Z" },
+]
+
+[[package]]
 name = "cattrs"
 version = "26.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -708,6 +722,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b1/df/48c586a5fe32a0f01324ee087459e112ebb7224f646c0b5023f5e79e9956/httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc", size = 141406, upload-time = "2024-12-06T15:37:23.222Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad", size = 73517, upload-time = "2024-12-06T15:37:21.509Z" },
+]
+
+[[package]]
+name = "hypetext"
+version = "0.0.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ovld", marker = "python_full_version >= '3.14'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1a/fd/d3563e93f4fc8b516a92b1964e5b5bc3da3bafdf4b91c8d0809e58ea5d49/hypetext-0.0.4.tar.gz", hash = "sha256:ab407e2d4bb6b3b1f1244dacdecfc981c5242ecc4566794f1969160e92293a76", size = 14333, upload-time = "2026-05-16T18:55:18.72Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8e/d5/471b5aa04bb860d8c4cb4a1f8848228c8f47859fb1f61069f5cdacdc9022/hypetext-0.0.4-py3-none-any.whl", hash = "sha256:d837aab5e6291ba16fab14d215d940857e4e74211ef76909a9941bb87e7a5cf2", size = 4780, upload-time = "2026-05-16T18:55:17.086Z" },
 ]
 
 [[package]]
@@ -1308,6 +1334,11 @@ dependencies = [
     { name = "uvicorn", extra = ["standard"] },
 ]
 
+[package.optional-dependencies]
+buche = [
+    { name = "buchelib", marker = "python_full_version >= '3.14'" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
@@ -1326,6 +1357,7 @@ requires-dist = [
     { name = "authlib", specifier = ">=1.6.4" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "blessed", specifier = ">=1.21.0" },
+    { name = "buchelib", marker = "python_full_version >= '3.14' and extra == 'buche'", specifier = ">=0.0.7" },
     { name = "chardet", specifier = ">=5.2.0,<6.0.0" },
     { name = "cloudscraper", specifier = ">=1.2.71" },
     { name = "easy-oauth", specifier = ">=0.0.7" },
@@ -1355,6 +1387,7 @@ requires-dist = [
     { name = "unidecode", specifier = ">=1.4.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.35.0,<0.39.0" },
 ]
+provides-extras = ["buche"]
 
 [package.metadata.requires-dev]
 cloud = []

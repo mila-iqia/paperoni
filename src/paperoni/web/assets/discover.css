@@ -1,0 +1,472 @@
+/*
+ * Dark-mode stylesheet for `paperoni discover` output in buche.
+ *
+ * The paper-card markup is produced by the same code as the web backend
+ * (assets/paper.js + common.js), so the class names below mirror the paper
+ * rules in style.css. This file is loaded *after* style.css and overrides its
+ * light colors with a dark palette while keeping the same layout.
+ */
+
+:root {
+    --d-bg: #1e1e1e;
+    --d-card: #252526;
+    --d-card-hover: #2a2d2e;
+    --d-border: #3c3c3c;
+    --d-text: #d4d4d4;
+    --d-text-muted: #9aa0a6;
+    --d-text-dim: #7a7f85;
+    --d-accent: #6ca0e0;
+    --d-accent-strong: #9ec5ff;
+    --d-highlight: #2b4564;
+    --d-green: #5dbd6e;
+}
+
+html, body {
+    background: var(--d-bg);
+    color: var(--d-text);
+    margin: 0;
+}
+
+#discover-root {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--d-bg);
+    color: var(--d-text);
+    box-sizing: border-box;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+#discover-root * {
+    box-sizing: border-box;
+}
+
+.discover-header {
+    font-size: 14px;
+    color: var(--d-text-muted);
+    margin: 0 0 14px 2px;
+}
+
+.discover-empty {
+    color: var(--d-text-muted);
+    font-style: italic;
+    padding: 20px 2px;
+}
+
+/* ---- Paper cards ---- */
+
+.paper-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.paper-item {
+    background: var(--d-card);
+    border: 1px solid var(--d-border);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.2s, background 0.2s;
+}
+
+.paper-item:hover {
+    background: var(--d-card-hover);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.paper-item:focus-visible,
+.paper-list:focus-visible {
+    outline: 2px solid var(--d-accent);
+    outline-offset: 2px;
+}
+
+.paper-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--d-accent);
+    margin: 0 0 10px 0;
+}
+
+.paper-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.paper-title-link:hover {
+    text-decoration: underline;
+}
+
+.authors-comment {
+    color: var(--d-text-dim);
+}
+
+.paper-authors {
+    color: var(--d-text);
+    margin-bottom: 5px;
+}
+
+.paper-institutions {
+    color: var(--d-text-muted);
+    font-size: 12px;
+    line-height: 1.4;
+    margin-left: 20px;
+}
+
+.author-name,
+.institution-item {
+    cursor: pointer;
+    padding: 1px 3px;
+    border-radius: 3px;
+    transition: background-color 0.15s;
+}
+
+.author-name:hover,
+.institution-item:hover {
+    background-color: var(--d-highlight);
+}
+
+.author-name.highlight,
+.institution-item.highlight {
+    background-color: var(--d-highlight);
+}
+
+/* ---- Abstract ---- */
+
+.paper-abstract {
+    color: var(--d-text-muted);
+}
+
+.paper-abstract:hover {
+    color: var(--d-text);
+}
+
+/* Fade-out gradient at the end of a collapsed abstract must match the card bg */
+.paper-abstract.collapsed::after {
+    background: linear-gradient(to right, transparent, var(--d-card));
+}
+
+.paper-item:hover .paper-abstract.collapsed::after {
+    background: linear-gradient(to right, transparent, var(--d-card-hover));
+}
+
+/* ---- Releases ---- */
+
+.release-status {
+    color: var(--d-green);
+}
+
+.release-venue {
+    color: var(--d-text-muted);
+}
+
+.clickable-venue:hover,
+.clickable-year:hover {
+    background-color: var(--d-highlight);
+}
+
+/* ---- Topics / badges ---- */
+
+.topics-more-link {
+    color: var(--d-accent);
+}
+
+.badge {
+    background: #3a3a3a;
+    color: var(--d-text);
+}
+
+.badge.topic {
+    background: #1e3a5f;
+    color: var(--d-accent-strong);
+}
+
+.badge.link {
+    background: #3a3d40;
+    color: #cdd1d4;
+}
+
+.badge.link:hover {
+    background: #4a4d50;
+}
+
+.badge.pdf {
+    background: #c0392b;
+    color: #fff;
+}
+
+.badge.pdf:hover {
+    background: #a93226;
+}
+
+/* ---- Score band (when --top is used) ---- */
+
+.paper-item-with-score {
+    display: flex;
+    background: var(--d-card);
+    border: 1px solid var(--d-border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.paper-item-with-score .paper-item {
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.score-band {
+    color: #fff;
+    padding: 20px 15px;
+    min-width: 64px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #2c5aa0 0%, #1e3a6f 100%);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* ---- Modal backdrop ---- */
+
+#modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 100;
+}
+
+#modal-backdrop[hidden] {
+    display: none;
+}
+
+/* ---- Shared modal chrome ---- */
+
+.discover-search-bar,
+.discover-ai-bar,
+.discover-filter-panel {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75);
+}
+
+/* hidden attribute must win over display:flex set below */
+.discover-search-bar[hidden],
+.discover-ai-bar[hidden],
+.discover-filter-panel[hidden] {
+    display: none !important;
+}
+
+/* ---- Search bar ---- */
+
+.discover-search-bar {
+    top: 18%;
+    width: min(560px, 90vw);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--d-card);
+    border: 1px solid var(--d-accent);
+}
+
+.search-icon {
+    font-size: 13px;
+    color: var(--d-text-muted);
+    flex-shrink: 0;
+}
+
+#search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--d-text);
+    font-size: 15px;
+    min-width: 0;
+}
+
+#search-input::placeholder {
+    color: var(--d-text-dim);
+}
+
+.search-count {
+    font-size: 12px;
+    color: var(--d-text-muted);
+    white-space: nowrap;
+}
+
+.search-close {
+    background: none;
+    border: none;
+    color: var(--d-text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 4px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.search-close:hover {
+    color: var(--d-text);
+}
+
+/* ---- AI prompt bar ---- */
+
+.discover-ai-bar {
+    top: 18%;
+    width: min(560px, 90vw);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--d-card);
+    border: 1px solid #7a5aaa;
+}
+
+.ai-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+#ai-prompt-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--d-text);
+    font-size: 15px;
+    min-width: 0;
+}
+
+#ai-prompt-input::placeholder {
+    color: var(--d-text-dim);
+}
+
+#ai-prompt-input:disabled {
+    opacity: 0.6;
+}
+
+.ai-prompt-status {
+    font-size: 12px;
+    color: var(--d-text-muted);
+    white-space: nowrap;
+}
+
+/* ---- Code filter panel ---- */
+
+.discover-filter-panel {
+    top: 10%;
+    width: min(720px, 95vw);
+    display: block;
+    background: var(--d-card);
+    border: 1px solid var(--d-accent);
+    overflow: hidden;
+}
+
+.filter-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #1a2a3a;
+    border-bottom: 1px solid var(--d-border);
+    gap: 12px;
+}
+
+.filter-panel-title {
+    font-size: 13px;
+    color: var(--d-text-muted);
+}
+
+.filter-panel-title code {
+    color: var(--d-accent);
+    font-size: 12px;
+}
+
+.filter-panel-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.filter-btn {
+    background: var(--d-accent);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 3px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    background: var(--d-accent-strong);
+    color: #000;
+}
+
+.filter-btn-secondary {
+    background: #3a3a3a;
+    color: var(--d-text-muted);
+}
+
+.filter-btn-secondary:hover {
+    background: #4a4a4a;
+    color: var(--d-text);
+}
+
+.filter-btn kbd {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-left: 4px;
+}
+
+#filter-editor-host .cm-editor {
+    height: 240px;
+    font-size: 13px;
+}
+
+#filter-editor-host .cm-scroller {
+    overflow: auto;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.filter-status {
+    padding: 5px 10px;
+    font-size: 12px;
+    min-height: 24px;
+    color: var(--d-text-muted);
+    border-top: 1px solid var(--d-border);
+}
+
+.filter-running { color: var(--d-accent); }
+.filter-ok      { color: var(--d-green); }
+.filter-error   { color: #e57373; white-space: pre-wrap; word-break: break-all; }
+
+/* ---- Search highlights ---- */
+
+mark.search-highlight {
+    background: #7a5c00;
+    color: #ffd966;
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+/* ---- Help footer ---- */
+
+.discover-help {
+    position: sticky;
+    bottom: 0;
+    margin-top: 4px;
+    padding: 6px 2px;
+    font-size: 12px;
+    color: var(--d-text-dim);
+    background: var(--d-bg);
+}
