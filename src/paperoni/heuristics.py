@@ -48,7 +48,9 @@ def simplify_paper(paper: Paper):
         authors=[
             replace(
                 author,
-                affiliations=list({aff: aff for aff in author.affiliations}.values()),
+                affiliations=list(
+                    {aff.name: aff for aff in author.affiliations}.values()
+                ),
             )
             for author in paper.authors
         ],
