@@ -24,8 +24,10 @@ from ..utils import url_to_id
 
 @auto_singleton("void")
 class VoidFormatter(Formatter):
-    def __call__(self, things):
-        pass
+    async def __call__(self, things, typ=None):
+        # Consume and discard: callers already hold the results they need.
+        async for _ in things:
+            pass
 
 
 @dataclass
@@ -139,7 +141,8 @@ class LocateFulltextRequest(PagingMixin, Fulltext.Locate):
     """Request model for fulltext locate."""
 
     def format(self, urls: list[URL]):
-        return VoidFormatter(urls)
+        # Output is discarded server-side; the results are returned directly.
+        pass
 
 
 @dataclass
@@ -159,7 +162,8 @@ class DownloadFulltextRequest(Fulltext.Download):
     )
 
     def format(self, pdf: PDF):
-        VoidFormatter([pdf])
+        # Output is discarded server-side; the result is returned directly.
+        pass
 
     def __post_init__(self):
         if isinstance(self.ref, str):
