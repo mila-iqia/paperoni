@@ -1,3 +1,4 @@
+<!-- capability: admin -->
 
 Admin panel for Paperoni.
 
