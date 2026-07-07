@@ -349,7 +349,7 @@ async def test_search_by_author_email(
     assert len(results) == 3
 
     results = [
-        p async for p in collection.search(author="pascal@fake-email.umontreal.ca")
+        p async for p in collection.search(author="Pascal@fake-email.umontreal.ca")
     ]
     assert len(results) == 1
 

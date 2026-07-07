@@ -209,7 +209,7 @@ class MemCollection(PaperCollection):
         # An "@" in the author query switches the search to the email field.
         author_by_email = author and "@" in author
         if author_by_email:
-            author_match = _make_matcher(author, str.lower)
+            author_match = lambda x: x == author.lower().lstrip("=").strip()
         else:
             author_match = author and _make_matcher(author, normalize_name)
         institution_match = institution and _make_matcher(

@@ -1228,7 +1228,7 @@ function normalizeForComparison(p) {
         info: sortedInfo(p.info),
         authors: (p.authors || []).map((a) => ({
             display_name: (a.display_name || '').trim(),
-            email: ((a.author && a.author.email) || '').trim() || null,
+            email: ((a.author && a.author.email) || '').trim().toLowerCase() || null,
             affiliations: (a.affiliations || []).map((x) => (x.name || '').trim()).filter(Boolean).join('; '),
         })),
         releases: (p.releases || []).map((r) => ({
@@ -1325,7 +1325,7 @@ function collectFormData(form, originalPaper) {
                 // Automatically copy display_name to author.name
                 authorsMap[index].author.name = input.value;
             } else if (field === 'author.email') {
-                authorsMap[index].author.email = input.value.trim() || null;
+                authorsMap[index].author.email = input.value.trim().toLowerCase() || null;
             } else if (field === 'affiliations') {
                 const originalAuthor = originalPaper.authors?.[parseInt(index, 10)];
                 const originalAffiliations = originalAuthor?.affiliations || [];

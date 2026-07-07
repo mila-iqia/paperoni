@@ -286,7 +286,7 @@ class MongoCollection(PaperCollection):
         if author:
             # An "@" in the author query switches the search to the email field.
             if "@" in author:
-                query["authors.author.email"] = author
+                query["authors.author.email"] = author.lower().lstrip("=").strip()
             else:
                 query["authors._norm_display_name"] = _match_str(normalize_name(author))
 
