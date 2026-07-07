@@ -620,7 +620,7 @@ function renderAuthors(container, authors) {
                     <tr>
                         <th></th>
                         <th><loc>Name</loc></th>
-                        <th><loc>ID</loc></th>
+                        <th><loc>Email</loc></th>
                         <th><loc>Affiliations</loc></th>
                         <th></th>
                     </tr>
@@ -682,8 +682,8 @@ function createAuthorRow(author, index) {
                 <input type="text"
                        name="authors[${index}].author.email"
                        value="${(author.author && author.author.email) || ''}"
-                       placeholder="Enter identifier"
-                       data-loc-placeholder="Enter identifier"
+                       placeholder="Enter institutional email"
+                       data-loc-placeholder="Enter institutional email"
                        class="edit-input">
             </td>
             <td>
