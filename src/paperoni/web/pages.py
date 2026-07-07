@@ -137,7 +137,11 @@ def install_pages(app: FastAPI) -> FastAPI:
             return handler
 
         app.add_api_route(
-            mount, make_handler(), methods=["GET"], dependencies=dependencies
+            mount,
+            make_handler(),
+            methods=["GET"],
+            dependencies=dependencies,
+            include_in_schema=False,
         )
 
     return app

@@ -13,7 +13,7 @@ def install_edit(app: FastAPI) -> FastAPI:
 
     hascap = app.auth.get_email_capability
 
-    @app.get("/edit/{paper_id}")
+    @app.get("/edit/{paper_id}", include_in_schema=False)
     async def edit_page(
         request: Request,
         paper_id: int | str,

@@ -764,7 +764,7 @@ class Coll:
         # Title of the paper
         title: str = None
 
-        # Author of the paper
+        # Author of the paper; use "=Author Name" for exact match (faster)
         # [alias: -a]
         author: str = None
 
@@ -788,24 +788,24 @@ class Coll:
         # [alias --end]
         end_date: date = None
 
-        # Release status to match exactly; entries of the form "-xyz" exclude
+        # Release status to match exactly; entries of the form "-preprint" are exclusions
         # [alias: -s]
         status: list[str] = None
 
-        # Flag search
+        # Filter by flag; exclude a flag with "~flagname"
         # [alias: -f]
         flags: set[str] = None
 
-        # Whether to expand links
+        # Whether to resolve the plain type:id metadata links into actual urls
         expand_links: bool = False
 
         # Output format
         format: Formatter = AutoFormatter
 
-        # Limit
+        # Maximum number of papers to output
         limit: int = 100
 
-        # Offset
+        # Number of papers to skip from the first one
         offset: int = 0
 
         async def run(self, coll: "Coll") -> list[Paper]:

@@ -5,6 +5,7 @@ from pathlib import Path
 from easy_oauth import OAuthManager
 from fastapi import FastAPI, HTTPException
 from fastapi.exception_handlers import http_exception_handler
+from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -12,6 +13,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import paperoni
 
 from ..config import config
+from .openapi_schemas import apply_serieux_schemas
 
 app_logger = logging.getLogger(__name__)
 
@@ -40,6 +42,16 @@ def create_app():
         title="Paperoni API",
         description="API for searching scientific papers",
         version=importlib.metadata.version(paperoni.__name__),
+        openapi_tags=[
+            {
+                "name": "Main API",
+                "description": "Standard endpoints: searching and suggesting",
+            },
+            {
+                "name": "Advanced",
+                "description": "Curation, admin and internal processes.",
+            },
+        ],
     )
 
     @app.exception_handler(Exception)
@@ -66,5 +78,22 @@ def create_app():
     for entry_point in importlib.metadata.entry_points(group="paperoni.web"):
         func = entry_point.load()
         func(app)
+
+    def custom_openapi():
+        if app.openapi_schema:
+            return app.openapi_schema
+        openapi_schema = get_openapi(
+            title=app.title,
+            version=app.version,
+            description=app.description,
+            routes=app.routes,
+            tags=app.openapi_tags,
+        )
+        # Swap serieux-derived schemas in for endpoints that registered one.
+        apply_serieux_schemas(openapi_schema)
+        app.openapi_schema = openapi_schema
+        return openapi_schema
+
+    app.openapi = custom_openapi
 
     return app

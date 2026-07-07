@@ -14,7 +14,11 @@ def install_reports(app: FastAPI) -> FastAPI:
 
     hascap = app.auth.get_email_capability
 
-    @app.get("/logs/{path:path}", dependencies=[Depends(hascap("dev"))])
+    @app.get(
+        "/logs/{path:path}",
+        dependencies=[Depends(hascap("dev"))],
+        include_in_schema=False,
+    )
     async def route_logs(path: str):
         logs_dir = (config.data_path / "logs").resolve()
         report_path = (logs_dir / path).resolve()
@@ -30,7 +34,11 @@ def install_reports(app: FastAPI) -> FastAPI:
 
         return FileResponse(report_path)
 
-    @app.get("/report/{path:path}", dependencies=[Depends(hascap("dev"))])
+    @app.get(
+        "/report/{path:path}",
+        dependencies=[Depends(hascap("dev"))],
+        include_in_schema=False,
+    )
     async def route_report(request: Request, path: str):
         if not path:
             logs_dir = (config.data_path / "logs").resolve()

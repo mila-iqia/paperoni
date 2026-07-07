@@ -12,7 +12,11 @@ def install_focuses(app: FastAPI) -> FastAPI:
 
     hascap = app.auth.get_email_capability
 
-    @app.get("/focuses", dependencies=[Depends(hascap("admin"))])
+    @app.get(
+        "/focuses",
+        dependencies=[Depends(hascap("admin"))],
+        include_in_schema=False,
+    )
     async def focuses_page(request: Request):
         """Render the focuses edit page."""
         return render_template(

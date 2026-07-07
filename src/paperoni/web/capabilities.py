@@ -18,7 +18,7 @@ def install_capabilities(app: FastAPI) -> FastAPI:
     # Use user_management capability if available, otherwise fall back to admin
     required_cap = user_management_cap if user_management_cap else "admin"
 
-    @app.get("/capabilities")
+    @app.get("/capabilities", include_in_schema=False)
     async def capabilities_page(
         request: Request, user: str = Depends(hascap(required_cap, redirect=True))
     ):

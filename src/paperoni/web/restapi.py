@@ -22,6 +22,7 @@ from ..model.merge import PaperWorkingSet, merge_all
 from ..refinement import fetch_all
 from ..refinement.fetch import AnyOf
 from ..utils import url_to_id
+from .openapi_schemas import use_body_schema, use_query_schema
 
 # Tracks which users (by email) currently have a form-populate request running,
 # so that each user can only run one populate at a time.
@@ -284,6 +285,14 @@ class PaperIncludeRequest:
 
 
 @dataclass
+class _SerieuxPaperIncludeRequest:
+    """Request model for including new papers."""
+
+    papers: list[_Paper]
+    comment: str = ""
+
+
+@dataclass
 class PaperIncludeResponse:
     """Response model for including new papers."""
 
@@ -419,7 +428,7 @@ def install_api(app) -> FastAPI:
 
     hascap = app.auth.get_email_capability
 
-    @app.get(f"{prefix}")
+    @app.get(f"{prefix}", tags=["Main API"])
     async def root():
         """Root endpoint with API information."""
         return {
@@ -448,6 +457,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/search",
         response_model=SearchResponse,
         dependencies=[Depends(hascap("search"))],
+        tags=["Main API"],
     )
     async def search_papers(request: SearchRequest = Depends(parse_search_request)):
         """Search for papers in the collection."""
@@ -466,6 +476,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/pending/list",
         response_model=DiffResponse,
         dependencies=[Depends(hascap("search"))],
+        tags=["Main API"],
     )
     async def pending_papers(request: SearchRequest = Depends(parse_search_request)):
         if config.suggestions is None:
@@ -506,9 +517,15 @@ def install_api(app) -> FastAPI:
         f"{prefix}/pending/decide",
         response_model=PendingDecideResponse,
         dependencies=[Depends(hascap("search"))],
+        tags=["Advanced"],
     )
     async def pending_decide(request: PendingDecideRequest):
-        """Approve papers (add to collection) or reject them. Both are removed from suggestions."""
+        """Approve papers (add to collection) or reject them. Both are removed from
+        suggestions.
+
+        Both `approve` and `reject` are lists of paper IDs. Note that multiple edits
+        to the same paper operate on the same suggestion in the suggestions database.
+        """
         if config.suggestions is None:
             return PendingDecideResponse(
                 success=False,
@@ -551,6 +568,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/paper/{{paper_id}}",
         response_model=Paper,
         dependencies=[Depends(hascap("search"))],
+        tags=["Main API"],
     )
     async def get_paper(paper_id: str, latest_edit: bool = False):
         """Get a single paper by ID."""
@@ -568,7 +586,7 @@ def install_api(app) -> FastAPI:
         # FastAPI requires this conversion, it'll be serialized so it's fine
         return Paper(**vars(paper))
 
-    @app.post(f"{prefix}/work/add", response_model=AddResponse)
+    @app.post(f"{prefix}/work/add", response_model=AddResponse, tags=["Advanced"])
     async def work_add_papers(request: AddRequest, user: str = Depends(hascap("admin"))):
         request.user = user
 
@@ -577,7 +595,7 @@ def install_api(app) -> FastAPI:
 
         return AddResponse(total=len(work.top))
 
-    @app.get(f"{prefix}/work/view", response_model=ViewResponse)
+    @app.get(f"{prefix}/work/view", response_model=ViewResponse, tags=["Advanced"])
     async def work_view_papers(
         request: ViewRequest = Depends(), user: str = Depends(hascap("admin"))
     ):
@@ -597,6 +615,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/work/include",
         response_model=IncludeResponse,
         dependencies=[Depends(hascap("admin"))],
+        tags=["Advanced"],
     )
     async def work_include_papers(request: IncludeRequest):
         """Include papers from the workset."""
@@ -610,6 +629,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/set_flag",
         response_model=SetFlagResponse,
         dependencies=[Depends(hascap("admin"))],
+        tags=["Advanced"],
     )
     async def set_flag(request: SetFlagRequest):
         """Set a flag on a paper in the collection."""
@@ -637,6 +657,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/include",
         response_model=PaperIncludeResponse,
         dependencies=[Depends(hascap("validate"))],
+        tags=["Advanced"],
     )
     async def include_papers(request: PaperIncludeRequest):
         """Include papers in the collection."""
@@ -662,11 +683,17 @@ def install_api(app) -> FastAPI:
                 count=0,
             )
 
-    @app.post(f"{prefix}/suggest", response_model=PaperIncludeResponse)
+    @app.post(f"{prefix}/suggest", response_model=PaperIncludeResponse, tags=["Main API"])
     async def suggest_papers(
         request: PaperIncludeRequest, user: str = Depends(hascap("search"))
     ):
-        """Suggest papers to add/edit in the collection."""
+        """Suggest papers to add/edit in the collection.
+
+        Leave out a paper's `id` field to signal an addition.
+
+        To suggest a deletion, set the paper's ID, and include the "mark:delete" flag, e.g.
+        `{"papers": [{"id": PAPER_ID, "flags": ["mark:delete"]}]}`
+        """
         # Deserialize the papers from the request
         papers = deserialize(list[_Paper], request.papers)
         for p in papers:
@@ -690,7 +717,7 @@ def install_api(app) -> FastAPI:
                 count=0,
             )
 
-    @app.post(f"{prefix}/populate", response_model=PopulateResponse)
+    @app.post(f"{prefix}/populate", response_model=PopulateResponse, tags=["Main API"])
     async def populate_paper(
         request: PopulateRequest, user: str = Depends(hascap("search"))
     ):
@@ -728,12 +755,18 @@ def install_api(app) -> FastAPI:
         finally:
             _populate_in_progress.discard(user)
 
-    @app.get(f"{prefix}/focuses")
+    @app.get(
+        f"{prefix}/focuses",
+        dependencies=[Depends(hascap("search"))],
+        tags=["Advanced"],
+    )
     async def get_focuses():
         """Get the current configuration focuses with main and auto sublists."""
         return serialize(Focuses, config.focuses._obj)
 
-    @app.post(f"{prefix}/focuses", dependencies=[Depends(hascap("admin"))])
+    @app.post(
+        f"{prefix}/focuses", dependencies=[Depends(hascap("admin"))], tags=["Advanced"]
+    )
     async def set_focuses(new_focuses: dict):
         """Update the configuration focuses (main and auto sublists)."""
         if not hasattr(config.focuses, "save"):
@@ -750,6 +783,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/delete",
         response_model=DeletePapersResponse,
         dependencies=[Depends(hascap("validate"))],
+        tags=["Advanced"],
     )
     async def delete_papers(request: DeletePapersRequest):
         """Delete papers from the collection."""
@@ -765,6 +799,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/focus/auto",
         response_model=Focuses,
         dependencies=[Depends(hascap("admin"))],
+        tags=["Advanced"],
     )
     async def autofocus(request: AutoFocusRequest = Depends()):
         """Autofocus the collection."""
@@ -775,7 +810,8 @@ def install_api(app) -> FastAPI:
     @app.get(
         f"{prefix}/fulltext/locate",
         response_model=LocateFulltextResponse,
-        dependencies=[Depends(hascap("user"))],
+        dependencies=[Depends(hascap("search"))],
+        tags=["Advanced"],
     )
     async def locate_fulltext(request: LocateFulltextRequest):
         """Locate fulltext urls for a paper."""
@@ -790,7 +826,8 @@ def install_api(app) -> FastAPI:
 
     @app.get(
         f"{prefix}/fulltext/download",
-        dependencies=[Depends(hascap("user"))],
+        dependencies=[Depends(hascap("search"))],
+        tags=["Advanced"],
     )
     async def download_fulltext(request: DownloadFulltextRequest):
         """Download fulltext for a paper."""
@@ -814,6 +851,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/exclusions",
         response_model=ExclusionsListResponse,
         dependencies=[Depends(hascap("validate"))],
+        tags=["Advanced"],
     )
     async def list_exclusions(request: ExclusionsListRequest = Depends()):
         """List exclusions with pagination."""
@@ -834,6 +872,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/exclusions",
         response_model=AddExclusionsResponse,
         dependencies=[Depends(hascap("validate"))],
+        tags=["Advanced"],
     )
     async def add_exclusions(request: AddExclusionsRequest):
         """Add exclusions to the collection."""
@@ -850,6 +889,7 @@ def install_api(app) -> FastAPI:
         f"{prefix}/exclusions",
         response_model=RemoveExclusionsResponse,
         dependencies=[Depends(hascap("validate"))],
+        tags=["Advanced"],
     )
     async def remove_exclusions(request: RemoveExclusionsRequest):
         """Remove exclusions from the collection."""
@@ -861,5 +901,25 @@ def install_api(app) -> FastAPI:
             message=f"Removed {removed} exclusion(s)",
             count=removed,
         )
+
+    # Document requests from their serieux schemas (which carry the field
+    # descriptions from the inline comments) instead of the pydantic inference.
+    use_query_schema(f"{prefix}/search", "get", SearchRequest)
+    use_query_schema(f"{prefix}/pending/list", "get", SearchRequest)
+    use_query_schema(f"{prefix}/work/view", "get", ViewRequest)
+    use_query_schema(f"{prefix}/focus/auto", "post", AutoFocusRequest)
+
+    use_body_schema(f"{prefix}/suggest", "post", _SerieuxPaperIncludeRequest)
+    use_body_schema(f"{prefix}/populate", "post", _SerieuxPaperIncludeRequest)
+    use_body_schema(f"{prefix}/pending/decide", "post", PendingDecideRequest)
+    use_body_schema(f"{prefix}/work/include", "post", IncludeRequest)
+    use_body_schema(f"{prefix}/set_flag", "post", SetFlagRequest)
+    use_body_schema(f"{prefix}/focuses", "post", Focuses)
+    use_body_schema(f"{prefix}/delete", "post", DeletePapersRequest)
+    use_body_schema(f"{prefix}/exclusions", "post", AddExclusionsRequest)
+    use_body_schema(f"{prefix}/exclusions", "delete", RemoveExclusionsRequest)
+    # Not registered: /work/add, /include, /suggest, /populate — their bodies
+    # have untyped `dict`/`list[dict]` fields that serieux cannot schema (and
+    # which FastAPI already renders as a generic object).
 
     return app

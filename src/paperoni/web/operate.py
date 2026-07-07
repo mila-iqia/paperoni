@@ -14,6 +14,7 @@ from ..__main__ import Coll
 from ..config import config
 from ..operations import from_code
 from .helpers import render_template
+from .openapi_schemas import use_body_schema
 from .restapi import DiffResponse, PaperDiff, SearchRequest
 
 
@@ -40,7 +41,7 @@ def install_operate(app: FastAPI) -> FastAPI:
     hascap = app.auth.get_email_capability
     prefix = "/api/v1"
 
-    @app.get("/operate")
+    @app.get("/operate", include_in_schema=False)
     async def operate_page(
         request: Request,
         user: str = Depends(hascap("admin", redirect=True)),
@@ -65,6 +66,7 @@ def install_operate(app: FastAPI) -> FastAPI:
         f"{prefix}/operate",
         response_model=OperateResponse,
         dependencies=[Depends(hascap("admin"))],
+        tags=["Advanced"],
     )
     async def operate_papers_post(request: OperateRequest):
         try:
@@ -135,5 +137,7 @@ def install_operate(app: FastAPI) -> FastAPI:
                 status_code=500,
                 detail=traceback.format_exc(),
             )
+
+    use_body_schema(f"{prefix}/operate", "post", OperateRequest)
 
     return app
