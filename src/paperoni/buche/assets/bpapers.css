@@ -230,6 +230,99 @@ html, body {
     font-weight: bold;
 }
 
+/* ---- Paper diffs (dark mode) ----
+ *
+ * Diff cards are produced by workset.js's `createWorksetPaperDiffElement`,
+ * whose root is `.paper-content.diff-view` (not `.paper-item`), so we give it
+ * the same card chrome and focus outline as a paper card here, and re-tint the
+ * added/removed highlights + info table for a dark background. The add/remove
+ * rules in style.css use `!important`, so we win with a `#discover-root` prefix
+ * (higher specificity) plus `!important`.
+ */
+
+.paper-list > .diff-view {
+    background: var(--d-card);
+    border: 1px solid var(--d-border);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.2s, background 0.2s;
+}
+
+.paper-list > .diff-view:hover {
+    background: var(--d-card-hover);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Diff card sitting inside a score band wrapper. */
+.paper-item-with-score .diff-view {
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 20px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Focus outline for diff cards and score-band rows (neither is `.paper-item`). */
+.paper-list > .diff-view:focus-visible,
+.paper-item-with-score:focus-visible {
+    outline: 2px solid var(--d-accent);
+    outline-offset: 2px;
+}
+
+#discover-root .diff-view .diff-added,
+#discover-root .diff-view .badge.diff-added,
+#discover-root .diff-view .author-name.diff-added,
+#discover-root .diff-view .institution-item.diff-added,
+#discover-root .diff-view .release-item.diff-added,
+#discover-root .diff-view span.diff-added,
+#discover-root .diff-view td.diff-added,
+#discover-root .diff-view tr.diff-added {
+    background-color: rgba(93, 189, 110, 0.28) !important;
+    color: #b6f0c0 !important;
+}
+
+#discover-root .diff-view .diff-removed,
+#discover-root .diff-view .badge.diff-removed,
+#discover-root .diff-view .author-name.diff-removed,
+#discover-root .diff-view .institution-item.diff-removed,
+#discover-root .diff-view .release-item.diff-removed,
+#discover-root .diff-view span.diff-removed,
+#discover-root .diff-view td.diff-removed,
+#discover-root .diff-view tr.diff-removed {
+    background-color: rgba(224, 108, 108, 0.28) !important;
+    color: #f2b8b8 !important;
+}
+
+.diff-view .diff-legend {
+    background: var(--d-card-hover);
+    color: var(--d-text-muted);
+}
+
+.diff-swatch {
+    border-color: var(--d-border);
+}
+
+/* ---- Info table (used by diff cards) ---- */
+
+.info-table thead {
+    background: var(--d-card-hover);
+    border-bottom: 2px solid var(--d-border);
+}
+
+.info-table .info-key {
+    color: var(--d-accent);
+}
+
+.info-table .info-value {
+    color: var(--d-text-muted);
+}
+
+.info-table tbody tr:hover {
+    background: var(--d-card-hover);
+}
+
 /* ---- Modal backdrop ---- */
 
 #modal-backdrop {

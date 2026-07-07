@@ -7,13 +7,27 @@ DOM nodes by ``createPaperElement``. A dark-mode stylesheet (``bpapers.css``)
 is layered on top of the web stylesheet (``style.css``).
 """
 
+from dataclasses import dataclass
 from pathlib import Path
 
 from hypetext.h import html
-from serieux import JSON
+from serieux import JSON, serialize
 
 ASSETS = Path(__file__).parent.parent / "web" / "assets"
 B_ASSETS = Path(__file__).parent / "assets"
+
+
+@dataclass
+class PaperEntry:
+    """A single serialized paper (or ``Scored`` wrapper) streamed to the browser.
+
+    ``index`` is the paper's position in the stream, which matches its index in
+    the Python-side ``paper_objects`` list used by the code filter. ``entry`` is
+    the already-serialized JSON shape consumed by ``paper.js``.
+    """
+
+    index: int
+    entry: JSON
 
 _FILTER_SYSTEM_PROMPT = """\
 You generate Python filter code for the paperoni paper browser.
@@ -50,14 +64,20 @@ Example — NeurIPS papers since 2020:
 """
 
 
-async def render_papers(papers, paper_objects, scored=False):
-    """Render a list of serialized papers into the buche main cell.
+async def render_papers(things, typ=None, scored=False):
+    """Stream papers into the buche main cell, rendering them live.
 
-    `papers` is the JSON-serializable form of the papers (or of `Scored`
-    wrappers when `scored` is True), matching the shape consumed by paper.js.
-    `paper_objects` is the corresponding list of original Paper instances used
-    by the Python code-filter callback (avoids re-deserializing the JSON).
-    Runs an async event loop so Python callbacks (code filter, quit) work.
+    `things` is any iterable of items to display (`Paper` or `Scored` wrappers);
+    it is consumed lazily and each item is serialized and pushed to the browser
+    on the fly through `cell.data()`, so the list grows in place instead of being
+    dumped in one shot. `typ` is the serieux type used to serialize each item
+    (inferred from the first item when None). `scored` indicates the items are
+    `Scored` wrappers whose `.value` is the underlying paper.
+
+    The original paper objects are accumulated as they stream so the Python
+    code-filter callback can operate on them directly (by index) without
+    re-deserializing the JSON. Runs an async event loop so Python callbacks
+    (code filter, quit) work.
     """
     import os
 
@@ -72,10 +92,15 @@ async def render_papers(papers, paper_objects, scored=False):
     paper_js = ASSETS / "paper.js"
     common_js = ASSETS / "common.js"
 
-    # Serve both modules under a single nonce so paper.js's relative
-    # `import './common.js'` resolves correctly.
+    # Serve the modules under a single nonce so their relative imports (e.g.
+    # paper.js's `import './common.js'`, workset.js's diff renderer) resolve.
     bridge.avail(
-        paper_js, common_js, B_ASSETS / "bpapers.js", B_ASSETS / "filter-editor.js"
+        paper_js,
+        common_js,
+        ASSETS / "workset.js",
+        ASSETS / "translate.js",
+        B_ASSETS / "bpapers.js",
+        B_ASSETS / "filter-editor.js",
     )
     bpaper_js_url = bridge.url(B_ASSETS / "bpapers.js")
 
@@ -83,9 +108,12 @@ async def render_papers(papers, paper_objects, scored=False):
     body.print(t'<link rel="stylesheet" href={B_ASSETS / "bpapers.css"}>')
     body.print(t"{(B_ASSETS / 'template.html').read_text():raw}")
 
-    count = len(papers)
-    header = f"Discovered {count} paper{'' if count == 1 else 's'}"
-    body["#discover-header"].set(header)
+    body["#discover-header"].set("Discovering…")
+
+    # Populated incrementally as papers stream in; the code filter indexes into
+    # this list, and by the time a filter can run (a user keypress) the stream
+    # has already completed.
+    paper_objects = []
 
     # --- Python callbacks ---
 
@@ -136,9 +164,24 @@ async def render_papers(papers, paper_objects, scored=False):
     async def quit():
         os._exit(0)
 
-    # Expose the data and module URL, then run the render/navigation script.
-    body.exec(t"window.DISCOVER_PAPERS = {papers};")
-    body.exec(t"window.DISCOVER_SCORED = {scored};")
+    # Register the handler that renders each streamed paper. bpapers.js may not
+    # have finished loading when the first entries arrive, so buffer them until
+    # the module signals readiness and flushes the queue itself.
+    cell.register_data_handlers(
+        {
+            PaperEntry: """(msg) => {
+                if (window._DISCOVER_READY) {
+                    window.DISCOVER_ADD(msg.entry, msg.index);
+                } else {
+                    (window._paperQueue = window._paperQueue || []).push([msg.entry, msg.index]);
+                }
+            }""",
+        }
+    )
+
+    # Expose callbacks, then run the render/navigation script. The kind of each
+    # streamed entry (plain paper, `Scored` wrapper, or diff) is inferred from
+    # its shape in the browser, so no rendering mode needs to be sent here.
     body.exec(t"window._runFilterFn = {run_filter:js};")
     body.exec(t"window._generateFilterFn = {generate_filter:js};")
     body.exec(t"window._quitFn = {quit:js};")
@@ -146,6 +189,24 @@ async def render_papers(papers, paper_objects, scored=False):
 
     s = str(html(t'<script type="module" src="{bpaper_js_url}"></script>'))
     body.print(t"{s:raw}")
+
+    # Stream the papers one by one, updating the list live. The items are pulled
+    # lazily from `things`; each is serialized on its own and both accumulated
+    # (for the code filter) and pushed to the browser.
+    element_typ = typ
+    for i, thing in enumerate(things):
+        if element_typ is None:
+            element_typ = type(thing)
+        # Keep the underlying paper for the code filter: unwrap `Scored` and,
+        # for diffs, prefer the incoming (`new`) paper over the existing one.
+        if scored:
+            obj = thing.value
+        elif hasattr(thing, "new") or hasattr(thing, "current"):
+            obj = getattr(thing, "new", None) or getattr(thing, "current", None)
+        else:
+            obj = thing
+        paper_objects.append(obj)
+        cell.data(PaperEntry(index=i, entry=serialize(element_typ, thing)))
 
     # Keep the cell focused and visible after the process exits.
     cell.configure(sticky=True)

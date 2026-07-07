@@ -139,20 +139,16 @@ class BucheFormatter(Formatter):
 
         from .buche.bdisplay import render_papers
 
-        things = list(things)
         scored = getattr(typ, "__origin__", typ) is Scored
 
-        ser = self.serialize(things, typ=typ)
-        # Extract original Paper objects so run_filter can use them directly
-        # without re-deserializing the JSON (which trips on serieux tags).
-        paper_objects = [t.value for t in things] if scored else list(things)
-
-        # render_papers is async (runs a callback event loop). Run it in a
-        # dedicated thread so we don't conflict with the outer asyncio loop.
+        # render_papers consumes `things` lazily, serializing and streaming each
+        # item to the browser as it goes — no whole-list materialization here.
+        # It is async (runs a callback event loop), so run it in a dedicated
+        # thread to avoid conflicting with the outer asyncio loop.
         done = threading.Event()
 
         def _run():
-            asyncio.run(render_papers(ser, paper_objects, scored=scored))
+            asyncio.run(render_papers(things, typ=typ, scored=scored))
             done.set()
 
         t = threading.Thread(target=_run, daemon=True)

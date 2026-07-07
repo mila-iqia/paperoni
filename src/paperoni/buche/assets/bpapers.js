@@ -1,4 +1,5 @@
 import { createPaperElement } from '../../web/assets/paper.js';
+import { createWorksetPaperDiffElement } from '../../web/assets/workset.js';
 
 export function run() {
 
@@ -82,56 +83,172 @@ export function run() {
         }
     };
 
-    // --- ES module: renders cards via createPaperElement, exposes window.DISCOVER_RENDER ---
+    // --- ES module: renders cards streamed live, one entry at a time ---
+    //
+    // Entries are pushed one at a time from Python through cell.data(); each
+    // call lands in window.DISCOVER_ADD. `items` grows as they arrive (indexed
+    // by the entry's position in the Python-side paper_objects list, so the
+    // code filter stays in sync). renderCards() rebuilds the list from scratch
+    // (used by search); addPaper() appends a single card without touching the
+    // rest.
+    //
+    // The kind of each entry is inferred from its shape:
+    //   - `Scored` wrapper .......... has a `value` field (+ a `score`)
+    //   - paper diff ................ has a `current` and/or `new` field
+    //   - plain paper ............... anything else
+    // A bare Paper carries its own `score` field, so the score band is shown
+    // only for wrappers and diffs, never for a plain paper.
 
-    (function() {
-        const items = window.DISCOVER_PAPERS || [];
-        const scored = !!window.DISCOVER_SCORED;
-    
-        function renderCards(term) {
-            list.innerHTML = '';
-            let count = 0;
-            for (let i = 0; i < items.length; i++) {
-                const entry = items[i];
-                const paper = (scored && entry && entry.value) ? entry.value : entry;
-                if (term && !window._paperMatchesSearch(paper, term)) continue;
-                const card = createPaperElement(paper);
-                let item;
-                if (scored && entry && typeof entry.score === 'number') {
-                    item = document.createElement('li');
-                    item.className = 'paper-item-with-score';
-                    item.tabIndex = -1;
-                    const band = document.createElement('div');
-                    band.className = 'score-band';
-                    band.textContent = Math.round(entry.score);
-                    item.appendChild(band);
-                    item.appendChild(card);
-                } else {
-                    item = card;
-                    item.tabIndex = -1;
-                }
-                item.dataset.paperIndex = String(i);
-                if (term) window._highlightInElement(item, term);
-                list.appendChild(item);
-                count++;
-            }
-            if (count === 0) {
-                const empty = document.createElement('li');
-                empty.className = 'discover-empty';
-                empty.textContent = term ? ('No papers match "' + term + '"') : 'No papers discovered.';
-                list.appendChild(empty);
-            }
-            return count;
+    const items = [];        // items[index] = serialized entry (may be sparse)
+    const headerEl = document.querySelector('.discover-header');
+
+    function isDiff(o) { return !!o && ('current' in o || 'new' in o); }
+
+    // Unwrap a `Scored` wrapper to the thing it scores.
+    function payloadOf(entry) {
+        return (entry && 'value' in entry) ? entry.value : entry;
+    }
+
+    // The representative paper used for search / highlight (new side of a diff).
+    function paperOf(entry) {
+        const p = payloadOf(entry);
+        return isDiff(p) ? (p.new || p.current || {}) : p;
+    }
+
+    // Score to show on the band, or null for a bare paper (which is not a
+    // wrapper/diff even though it may have its own `score` field).
+    function scoreOf(entry) {
+        const isWrapperOrDiff = entry && ('value' in entry || isDiff(entry));
+        return (isWrapperOrDiff && typeof entry.score === 'number') ? entry.score : null;
+    }
+
+    // Build the card element for an entry's payload (paper or diff).
+    function cardOf(entry) {
+        const p = payloadOf(entry);
+        return isDiff(p)
+            ? createWorksetPaperDiffElement(p.current, p.new)
+            : createPaperElement(p);
+    }
+
+    function totalCount() {
+        let n = 0;
+        for (let i = 0; i < items.length; i++) if (items[i] !== undefined) n++;
+        return n;
+    }
+
+    function visibleCount() {
+        return list.querySelectorAll(':scope > [tabindex="-1"]').length;
+    }
+
+    function anyPanelOpen() {
+        // Queried lazily (not via the consts below) because addPaper may run
+        // during the init flush, before those declarations are reached.
+        const sb = document.getElementById('search-bar');
+        const ab = document.getElementById('ai-prompt-bar');
+        const fp = document.getElementById('filter-panel');
+        return (sb && !sb.hasAttribute('hidden'))
+            || (ab && !ab.hasAttribute('hidden'))
+            || (fp && !fp.hasAttribute('hidden'));
+    }
+
+    function updateHeader(term) {
+        if (!headerEl) return;
+        const total = totalCount();
+        const plural = total === 1 ? '' : 's';
+        headerEl.textContent = term
+            ? (visibleCount() + ' / ' + total + ' paper' + plural)
+            : ('Discovered ' + total + ' paper' + plural);
+    }
+
+    function clearEmpty() {
+        const empty = list.querySelector('.discover-empty');
+        if (empty) empty.remove();
+    }
+
+    function showEmpty(term) {
+        clearEmpty();
+        const empty = document.createElement('li');
+        empty.className = 'discover-empty';
+        empty.textContent = term ? ('No papers match "' + term + '"') : 'No papers discovered.';
+        list.appendChild(empty);
+    }
+
+    function makeItemElement(entry, index) {
+        const card = cardOf(entry);
+        const score = scoreOf(entry);
+        let item;
+        if (score !== null) {
+            item = document.createElement('li');
+            item.className = 'paper-item-with-score';
+            item.tabIndex = -1;
+            const band = document.createElement('div');
+            band.className = 'score-band';
+            band.textContent = Math.round(score);
+            item.appendChild(band);
+            item.appendChild(card);
+        } else {
+            item = card;
+            item.tabIndex = -1;
         }
-    
-        window.DISCOVER_RENDER = renderCards;
-        renderCards('');
-    })()
+        item.dataset.paperIndex = String(index);
+        return item;
+    }
 
-    // Focus the first card so arrow navigation works immediately.
-    const first = list.querySelector('[tabindex="-1"]');
-    if (first) first.focus();
-    
+    // Append one entry's card to the list if it matches `term`; returns whether
+    // it was shown.
+    function appendCard(entry, index, term) {
+        if (term && !window._paperMatchesSearch(paperOf(entry), term)) return false;
+        const item = makeItemElement(entry, index);
+        if (term) window._highlightInElement(item, term);
+        list.appendChild(item);
+        return true;
+    }
+
+    // Full rebuild from `items` — used by search / filter reset.
+    function renderCards(term) {
+        list.innerHTML = '';
+        let count = 0;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i] === undefined) continue;
+            if (appendCard(items[i], i, term)) count++;
+        }
+        if (count === 0) showEmpty(term);
+        return count;
+    }
+
+    // Live append of a single streamed paper.
+    function addPaper(entry, index) {
+        items[index] = entry;
+        clearEmpty();
+        const term = window._currentSearchTerm || '';
+        const shown = appendCard(entry, index, term);
+        updateHeader(term);
+        const countEl = document.getElementById('search-count');
+        if (countEl && term) countEl.textContent = visibleCount() + ' / ' + totalCount();
+        // Focus the first card once one exists, unless the user is elsewhere.
+        if (shown && !anyPanelOpen() && !list.contains(document.activeElement)) {
+            const first = list.querySelector('[tabindex="-1"]');
+            if (first && (document.activeElement === document.body
+                          || document.activeElement === list
+                          || document.activeElement === null)) {
+                first.focus();
+            }
+        }
+        return shown;
+    }
+
+    window.DISCOVER_RENDER = renderCards;
+    window.DISCOVER_ADD = addPaper;
+
+    // Drain anything that streamed in before this module finished loading, then
+    // mark ready so later entries render immediately.
+    const queued = window._paperQueue || [];
+    window._paperQueue = [];
+    window._DISCOVER_READY = true;
+    for (const [entry, index] of queued) addPaper(entry, index);
+    if (totalCount() === 0) showEmpty('');
+    updateHeader(window._currentSearchTerm || '');
+
     // --- Modal backdrop ---
     const backdrop = document.getElementById('modal-backdrop');
     backdrop.addEventListener('click', function() {
@@ -146,24 +263,21 @@ export function run() {
     // --- Search bar open / close ---
     const searchBar = document.getElementById('search-bar');
     const searchInput = document.getElementById('search-input');
-    const headerEl = document.querySelector('.discover-header');
-    const originalHeader = headerEl ? headerEl.textContent : '';
-    const totalCount = (window.DISCOVER_PAPERS || []).length;
-    
+
     function openSearch() {
         showBackdrop();
         searchBar.removeAttribute('hidden');
         searchInput.value = '';
         searchInput.focus();
     }
-    
+
     function closeSearch() {
         hideBackdrop();
         searchBar.setAttribute('hidden', '');
         searchInput.value = '';
         window._currentSearchTerm = '';
-        if (window.DISCOVER_RENDER) window.DISCOVER_RENDER('');
-        if (headerEl) headerEl.textContent = originalHeader;
+        renderCards('');
+        updateHeader('');
         const first = list.querySelector('[tabindex="-1"]');
         (first || list).focus();
     }
@@ -180,15 +294,10 @@ export function run() {
     searchInput.addEventListener('input', function() {
         const term = searchInput.value;
         window._currentSearchTerm = term;
-        if (!window.DISCOVER_RENDER) return;
-        const count = window.DISCOVER_RENDER(term);
-        if (headerEl) {
-            headerEl.textContent = term
-                ? (count + ' / ' + totalCount + ' paper' + (totalCount === 1 ? '' : 's'))
-                : originalHeader;
-        }
+        const count = renderCards(term);
+        updateHeader(term);
         const countEl = document.getElementById('search-count');
-        if (countEl) countEl.textContent = term ? (count + ' / ' + totalCount) : '';
+        if (countEl) countEl.textContent = term ? (count + ' / ' + totalCount()) : '';
     });
 
     searchInput.addEventListener('keydown', function(e) {
@@ -228,12 +337,8 @@ export function run() {
         hideBackdrop();
         filterPanel.setAttribute('hidden', '');
         const term = window._currentSearchTerm || '';
-        if (window.DISCOVER_RENDER) {
-            const c = window.DISCOVER_RENDER(term);
-            if (headerEl) headerEl.textContent = term
-                ? (c + ' / ' + totalCount + ' paper' + (totalCount === 1 ? '' : 's'))
-                : originalHeader;
-        }
+        renderCards(term);
+        updateHeader(term);
         const first = list.querySelector('[tabindex="-1"]');
         (first || list).focus();
     }
@@ -324,15 +429,16 @@ export function run() {
                 return false;
             } else {
                 const indexSet = new Set(result.indices);
-                if (window.DISCOVER_RENDER) window.DISCOVER_RENDER(window._currentSearchTerm || '');
-                const items = [...list.querySelectorAll(':scope > [tabindex="-1"]')];
-                items.forEach(item => {
+                renderCards(window._currentSearchTerm || '');
+                const cardEls = [...list.querySelectorAll(':scope > [tabindex="-1"]')];
+                cardEls.forEach(item => {
                     const idx = parseInt(item.dataset.paperIndex, 10);
                     item.style.display = (isNaN(idx) || indexSet.has(idx)) ? '' : 'none';
                 });
+                const total = totalCount();
                 const vis = result.indices.length;
-                if (statusEl) { statusEl.textContent = vis + ' / ' + totalCount + ' papers match'; statusEl.className = 'filter-status filter-ok'; }
-                if (headerEl) headerEl.textContent = vis + ' / ' + totalCount + ' papers (code filter)';
+                if (statusEl) { statusEl.textContent = vis + ' / ' + total + ' papers match'; statusEl.className = 'filter-status filter-ok'; }
+                if (headerEl) headerEl.textContent = vis + ' / ' + total + ' papers (code filter)';
                 return true;
             }
         } catch(err) {
