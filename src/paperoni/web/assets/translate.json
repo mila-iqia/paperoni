@@ -716,12 +716,12 @@
         "fr": "Saisir le nom de l'auteur"
     },
     {
-        "en": "ID",
-        "fr": "ID"
+        "en": "Email",
+        "fr": "Courriel"
     },
     {
-        "en": "Enter identifier",
-        "fr": "Saisir l'identifiant"
+        "en": "Enter institutional email",
+        "fr": "Saisir le courriel institutionnel"
     },
     {
         "en": "Enter affiliations, semicolon-separated",
