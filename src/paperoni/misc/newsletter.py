@@ -276,7 +276,7 @@ def latest_html(peers, preprints, lang):
 def install_latest(app):
     hascap = app.auth.get_email_capability
 
-    @app.get("/latest-group")
+    @app.get("/latest-group", include_in_schema=False)
     async def latest_group_page(
         request: Request,
         user: str = Depends(hascap("validate", redirect=True)),
@@ -294,14 +294,20 @@ def install_latest(app):
             help_section="/help/validation#latest-group",
         )
 
-    @app.get("/api/v1/latest", dependencies=[Depends(hascap("validate"))])
+    @app.get(
+        "/api/v1/latest", dependencies=[Depends(hascap("validate"))], tags=["Advanced"]
+    )
     async def get_latest(generator: LatestGenerator = Depends()):
         """Get latest papers using LatestGenerator."""
         coll = Coll(command=None)
         result = await generator(coll.collection)
         return serialize(dict[str, list[Paper]], result)
 
-    @app.post("/latest-group/generate", dependencies=[Depends(hascap("validate"))])
+    @app.post(
+        "/latest-group/generate",
+        dependencies=[Depends(hascap("validate"))],
+        include_in_schema=False,
+    )
     async def generate_latest(generator: LatestGenerator = Depends()):
         """Generate newsletter content from latest papers."""
         coll = Coll(command=None)

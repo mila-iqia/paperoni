@@ -13,7 +13,7 @@ def install_search(app: FastAPI) -> FastAPI:
 
     hascap = app.auth.get_email_capability
 
-    @app.get("/search")
+    @app.get("/search", include_in_schema=False)
     async def search_page(
         request: Request,
         user: str = Depends(hascap("search", redirect=True)),
@@ -32,7 +32,7 @@ def install_search(app: FastAPI) -> FastAPI:
             help_section="/help#search",
         )
 
-    @app.get("/pending")
+    @app.get("/pending", include_in_schema=False)
     async def pending_page(
         request: Request,
         user: str = Depends(hascap("search", redirect=True)),
@@ -42,7 +42,7 @@ def install_search(app: FastAPI) -> FastAPI:
             "pending.html", request, help_section="/help/validation#pending"
         )
 
-    @app.get("/workset")
+    @app.get("/workset", include_in_schema=False)
     async def workset_page(
         request: Request,
         user: str = Depends(hascap("admin", redirect=True)),
@@ -57,7 +57,11 @@ def install_search(app: FastAPI) -> FastAPI:
             help_section="/help/admin#workset",
         )
 
-    @app.get("/exclusions", dependencies=[Depends(hascap("validate", redirect=True))])
+    @app.get(
+        "/exclusions",
+        dependencies=[Depends(hascap("validate", redirect=True))],
+        include_in_schema=False,
+    )
     async def exclusions_page(request: Request):
         """Render the exclusions management page."""
         return render_template(
