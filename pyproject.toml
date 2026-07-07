@@ -46,6 +46,11 @@ dependencies = [
     "mailchimp-marketing>=3.0.80",
 ]
 
+[project.optional-dependencies]
+# buchelib requires Python >=3.14; keep it optional so it does not constrain
+# the project's supported Python range. Needed for `--format buche`.
+buche = ["buchelib>=0.0.7; python_version >= '3.14'"]
+
 [project.urls]
 Homepage = "https://github.com/mila-iqia/paperoni"
 Repository = "https://github.com/mila-iqia/paperoni"

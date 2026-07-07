@@ -107,6 +107,53 @@ class TerminalFormatter(Formatter):
             term_display(thing, i)
 
 
+@auto_singleton("buche")
+class BucheFormatter(Formatter):
+    """Render papers as HTML inside a buche cell.
+
+    Reuses the web backend's paper rendering (paper.js/common.js + style.css)
+    with a dark-mode stylesheet. Falls back to terminal output when not running
+    inside buche.
+    """
+
+    def __call__(self, things, typ=None):
+        things = list(things)
+        scored = getattr(typ, "__origin__", typ) is Scored
+
+        try:
+            from buchelib import is_available
+        except ImportError:
+            is_available = lambda: False  # noqa: E731
+
+        if not is_available():
+            # Not inside buche (or buchelib unavailable): plain terminal output.
+            for i, thing in enumerate(things):
+                term_display(thing, i)
+            return
+
+        import asyncio
+        import threading
+
+        from .web.buche import render_papers
+
+        ser = self.serialize(things, typ=typ)
+        # Extract original Paper objects so run_filter can use them directly
+        # without re-deserializing the JSON (which trips on serieux tags).
+        paper_objects = [t.value for t in things] if scored else list(things)
+
+        # render_papers is async (runs a callback event loop). Run it in a
+        # dedicated thread so we don't conflict with the outer asyncio loop.
+        done = threading.Event()
+
+        def _run():
+            asyncio.run(render_papers(ser, paper_objects, scored=scored))
+            done.set()
+
+        t = threading.Thread(target=_run, daemon=True)
+        t.start()
+        done.wait()
+
+
 def norm_args(norm):
     return {which: (which in norm) for which in ("author", "venue", "institution")}
 
