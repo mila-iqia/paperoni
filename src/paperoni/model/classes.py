@@ -163,6 +163,7 @@ class Topic:
 @dataclass
 class Author(Base):
     name: str
+    email: str = None
     aliases: list[str] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
 

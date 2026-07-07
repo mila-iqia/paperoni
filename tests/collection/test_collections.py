@@ -32,6 +32,12 @@ from ..utils import eq, sort_title
 # There's no overlap between the papers of Guillaume Alain and the other two
 AUTHORS_WITH_FAKE_INSTITUTION = ["Hugo Larochelle", "Pascal Vincent", "Guillaume Alain"]
 
+AUTHOR_EMAILS = {
+    "Hugo Larochelle": "hugo@fake-email.mila.quebec",
+    "Pascal Vincent": "pascal@fake-email.umontreal.ca",
+    "Guillaume Alain": "guillaume@fake-email.mila.quebec",
+}
+
 
 async def _get_sample_papers():
     discoverer = JMLR()
@@ -72,6 +78,7 @@ async def sample_papers() -> Generator[list[Paper], None, None]:
                         ),
                     ]
                 )
+                a.author.email = AUTHOR_EMAILS[a.display_name]
 
     papers[0].flags = {"valid"}
     papers[1].flags = {"invalid"}
@@ -330,6 +337,27 @@ async def test_search_by_author(
     assert len(results) == 1
 
 
+async def test_search_by_author_email(
+    collection_r: PaperCollection, sample_papers: list[Paper]
+):
+    """An '@' in the author query searches the email field instead."""
+    collection = collection_r
+    await collection.add_papers(sample_papers)
+
+    # Full email matches that author's papers
+    results = [p async for p in collection.search(author="hugo@fake-email.mila.quebec")]
+    assert len(results) == 3
+
+    results = [
+        p async for p in collection.search(author="pascal@fake-email.umontreal.ca")
+    ]
+    assert len(results) == 1
+
+    # No author has this email
+    results = [p async for p in collection.search(author="nobody@example.com")]
+    assert not results
+
+
 async def test_search_by_institution(
     collection_r: PaperCollection, sample_papers: list[Paper]
 ):
@@ -477,9 +505,7 @@ async def test_search_exact_match(
     assert len(results) == 4
 
 
-async def test_search_by_topic(
-    collection_r: PaperCollection, sample_papers: list[Paper]
-):
+async def test_search_by_topic(collection_r: PaperCollection, sample_papers: list[Paper]):
     """Test searching by one or more topics."""
     collection = collection_r
 
@@ -501,8 +527,7 @@ async def test_search_by_topic(
     ]
     assert len(results) == 1
     results = [
-        p
-        async for p in collection.search(topic=["Deep Learning", "Reinforcement"])
+        p async for p in collection.search(topic=["Deep Learning", "Reinforcement"])
     ]
     assert not results
 

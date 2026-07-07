@@ -605,9 +605,10 @@ body {
 
 /* Table Column Widths */
 .authors-table th:nth-child(1) { width: 60px; text-align: center; }
-.authors-table th:nth-child(2) { width: 40%; }
-.authors-table th:nth-child(3) { width: 55%; }
-.authors-table th:nth-child(4) { width: 40px; text-align: center; }
+.authors-table th:nth-child(2) { width: 30%; }
+.authors-table th:nth-child(3) { width: 30%; }
+.authors-table th:nth-child(4) { width: 40%; }
+.authors-table th:nth-child(5) { width: 40px; text-align: center; }
 
 .releases-table th:nth-child(1) { width: 120px; }
 .releases-table th:nth-child(2) { width: 25%; }

@@ -298,7 +298,7 @@ class MiniConf(Discoverer):
                     )
                     if conference_date is None or paper_starttime < conference_date:
                         conference_date = paper_starttime
-                except (ValueError, TypeError):
+                except ValueError, TypeError:
                     # Skip papers with invalid starttime format
                     continue
         if conference_date:
