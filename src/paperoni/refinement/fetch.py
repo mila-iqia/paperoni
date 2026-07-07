@@ -1,6 +1,6 @@
 import asyncio
 import inspect
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from typing import Callable
 
 from ovld import ovld
@@ -28,8 +28,41 @@ def register_fetch(f=None, *, tags=None):
         return decorator(f)
 
 
+@dataclass
+class AllOf:
+    exprs: list
+
+    def test(self, tags):
+        for e in self.exprs:
+            if isinstance(e, str):
+                if e not in tags:
+                    return False
+            elif not e.test(tags):
+                return False
+        return True
+
+
+@dataclass
+class AnyOf:
+    exprs: list
+
+    def test(self, tags):
+        for e in self.exprs:
+            if isinstance(e, str):
+                if e in tags:
+                    return True
+            elif e.test(tags):
+                return True
+        return False
+
+
 def _test_tags(f_tags: set, tags: set) -> bool:
-    return "all" in tags or not (tags - f_tags)
+    if isinstance(tags, set):
+        if "all" in tags:
+            return True
+        else:
+            tags = AllOf([AllOf([]) if t == "all" else t for t in tags])
+    return tags.test(f_tags)
 
 
 async def _call(f: Callable, *args, force: bool = False, **kwargs) -> tuple:
