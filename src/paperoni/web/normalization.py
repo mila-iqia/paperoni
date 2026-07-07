@@ -13,6 +13,17 @@ from ..utils import normalize_institution, normalize_venue
 from .helpers import render_template
 
 
+def checker(q):
+    if not q:
+        return None
+    elif q.startswith("="):
+        q = q[1:]
+        return lambda x: x == q
+    else:
+        q = q.lower()
+        return lambda x: q in x.lower()
+
+
 def install_normalization(app: FastAPI) -> FastAPI:
     hascap = app.auth.get_email_capability
 
@@ -94,13 +105,11 @@ def install_normalization(app: FastAPI) -> FastAPI:
                 }
             )
         if q:
-            ql = q.lower()
+            chk = checker(q)
             items = [
                 i
                 for i in items
-                if ql in i["original"].lower()
-                or ql in i["name"].lower()
-                or ql in i["short_name"].lower()
+                if chk(i["original"]) or chk(i["name"]) or chk(i["short_name"])
             ]
         total = len(items)
         pages = max(1, math.ceil(total / page_size))
@@ -179,15 +188,15 @@ def install_normalization(app: FastAPI) -> FastAPI:
         # Groups paginated by original key; each page may have multiple rows per key
         groups = list(config.normalizer.institution_norm.items())
         if q:
-            ql = q.lower()
+            chk = checker(q)
             filtered = []
             for original, entry in groups:
-                if ql in original.lower():
+                if chk(original):
                     filtered.append((original, entry))
                     continue
                 for partial in entry.data:
                     s = serialize(Partial[Institution], partial)
-                    if ql in s.get("name", "").lower():
+                    if chk(s.get("name", "")):
                         filtered.append((original, entry))
                         break
             groups = filtered
