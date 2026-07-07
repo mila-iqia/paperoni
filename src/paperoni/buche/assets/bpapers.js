@@ -1,4 +1,7 @@
-(function () {
+import { createPaperElement } from '../../web/assets/paper.js';
+
+export function run() {
+
     const root = document.getElementById('discover-root');
     const list = document.getElementById('paper-list');
 
@@ -80,15 +83,11 @@
     };
 
     // --- ES module: renders cards via createPaperElement, exposes window.DISCOVER_RENDER ---
-    const mod = document.createElement('script');
-    mod.type = 'module';
-    mod.textContent = `
-        import { createPaperElement } from '${window.DISCOVER_PAPER_JS}';
 
-        const list = document.getElementById('paper-list');
+    (function() {
         const items = window.DISCOVER_PAPERS || [];
         const scored = !!window.DISCOVER_SCORED;
-
+    
         function renderCards(term) {
             list.innerHTML = '';
             let count = 0;
@@ -124,16 +123,15 @@
             }
             return count;
         }
-
+    
         window.DISCOVER_RENDER = renderCards;
         renderCards('');
+    })()
 
-        // Focus the first card so arrow navigation works immediately.
-        const first = list.querySelector('[tabindex="-1"]');
-        if (first) first.focus();
-    `;
-    document.head.appendChild(mod);
-
+    // Focus the first card so arrow navigation works immediately.
+    const first = list.querySelector('[tabindex="-1"]');
+    if (first) first.focus();
+    
     // --- Modal backdrop ---
     const backdrop = document.getElementById('modal-backdrop');
     backdrop.addEventListener('click', function() {
@@ -141,24 +139,24 @@
         else if (!aiBar.hasAttribute('hidden')) closeAiPrompt();
         else if (!filterPanel.hasAttribute('hidden')) closeFilterEditor();
     });
-
+    
     function showBackdrop() { backdrop.removeAttribute('hidden'); }
     function hideBackdrop() { backdrop.setAttribute('hidden', ''); }
-
+    
     // --- Search bar open / close ---
     const searchBar = document.getElementById('search-bar');
     const searchInput = document.getElementById('search-input');
     const headerEl = document.querySelector('.discover-header');
     const originalHeader = headerEl ? headerEl.textContent : '';
     const totalCount = (window.DISCOVER_PAPERS || []).length;
-
+    
     function openSearch() {
         showBackdrop();
         searchBar.removeAttribute('hidden');
         searchInput.value = '';
         searchInput.focus();
     }
-
+    
     function closeSearch() {
         hideBackdrop();
         searchBar.setAttribute('hidden', '');
@@ -220,39 +218,7 @@
         filterPanel.removeAttribute('hidden');
         if (!filterEditorLoaded) {
             filterEditorLoaded = true;
-            const fmod = document.createElement('script');
-            fmod.type = 'module';
-            fmod.textContent = `
-                import { basicSetup, EditorView } from 'https://esm.sh/codemirror';
-                import { EditorState, Prec } from 'https://esm.sh/@codemirror/state';
-                import { keymap } from 'https://esm.sh/@codemirror/view';
-                import { indentWithTab } from 'https://esm.sh/@codemirror/commands';
-                import { python } from 'https://esm.sh/@codemirror/lang-python';
-                import { oneDark } from 'https://esm.sh/@codemirror/theme-one-dark';
-
-                const runKeymap = Prec.highest(keymap.of([
-                    { key: 'Ctrl-Enter', run: () => { window.runFilter().then(ok => ok && window.commitFilterEditor()); return true; } },
-                    { key: 'Mod-Enter', run: () => { window.runFilter().then(ok => ok && window.commitFilterEditor()); return true; } },
-                    { key: 'Escape', run: () => { window.closeFilterEditor(); return true; } },
-                ]));
-
-                const view = new EditorView({
-                    state: EditorState.create({
-                        doc: 'return True',
-                        extensions: [basicSetup, oneDark, keymap.of([indentWithTab]), runKeymap, python()],
-                    }),
-                    parent: document.getElementById('filter-editor-host'),
-                });
-
-                window.FILTER_EDITOR = view;
-                if (window._pendingFilterCode != null) {
-                    const pending = window._pendingFilterCode;
-                    window._pendingFilterCode = null;
-                    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: pending } });
-                }
-                view.focus();
-            `;
-            document.head.appendChild(fmod);
+            import("./filter-editor.js").then(mod => mod.install());
         } else if (window.FILTER_EDITOR) {
             window.FILTER_EDITOR.focus();
         }
@@ -440,4 +406,6 @@
             : list.querySelector('[tabindex="-1"]') || list
         ).focus();
     };
-})();
+}
+
+run();
