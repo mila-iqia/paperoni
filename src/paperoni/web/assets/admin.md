@@ -1,6 +1,6 @@
 <!-- capability: admin -->
 
-Admin panel for Paperoni.
+### Admin panel for Paperoni.
 
 - [🎯 Focuses](/focuses): Configure research focuses that drive paper discovery and scoring.
 - [📋 Workset](/workset): Review scored papers in the current working set.
