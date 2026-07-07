@@ -60,7 +60,7 @@ from .model.utils import should_reprocess, should_rerun
 from .refinement import fetch_all
 from .refinement.llm_normalize import normalize_paper
 from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statistic
-from .utils import deprox, expand_links_dict, prog, soft_fail, url_to_id
+from .utils import as_aiter, deprox, expand_links_dict, prog, soft_fail, url_to_id
 
 
 def buche_available():
@@ -72,26 +72,26 @@ def buche_available():
 
 
 class Formatter(AutoRegistered):
-    def serialize(self, things, typ=None):
-        things = list(things)
+    async def serialize(self, things, typ=None):
+        things = [x async for x in things]
         if not things:
             return []
         else:
             typ = typ or type(things[0])
-            return serialize(list[typ], list(things))
+            return serialize(list[typ], things)
 
 
 @auto_singleton("json")
 class JSONFormatter(Formatter):
-    def __call__(self, things, typ=None):
-        ser = self.serialize(things, typ=typ)
+    async def __call__(self, things, typ=None):
+        ser = await self.serialize(things, typ=typ)
         print(json.dumps(ser, indent=4))
 
 
 @auto_singleton("yaml")
 class YAMLFormatter(Formatter):
-    def __call__(self, things, typ=None):
-        ser = self.serialize(things, typ=typ)
+    async def __call__(self, things, typ=None):
+        ser = await self.serialize(things, typ=typ)
         print(yaml.safe_dump(ser, sort_keys=False))
 
 
@@ -110,18 +110,20 @@ def term_display(x: str, i: int):
 
 @auto_singleton("auto")
 class AutoFormatter(Formatter):
-    def __call__(self, things, typ=None):
+    async def __call__(self, things, typ=None):
         if buche_available():
-            return BucheFormatter(things, typ=typ)
+            return await BucheFormatter(things, typ=typ)
         else:
-            return TerminalFormatter(things, typ=typ)
+            return await TerminalFormatter(things, typ=typ)
 
 
 @auto_singleton("terminal")
 class TerminalFormatter(Formatter):
-    def __call__(self, things, typ=None):
-        for i, thing in enumerate(things):
+    async def __call__(self, things, typ=None):
+        i = 0
+        async for thing in things:
             term_display(thing, i)
+            i += 1
 
 
 @auto_singleton("buche")
@@ -133,27 +135,15 @@ class BucheFormatter(Formatter):
     inside buche.
     """
 
-    def __call__(self, things, typ=None):
-        import asyncio
-        import threading
-
+    async def __call__(self, things, typ=None):
         from .buche.bdisplay import render_papers
 
         scored = getattr(typ, "__origin__", typ) is Scored
 
         # render_papers consumes `things` lazily, serializing and streaming each
-        # item to the browser as it goes — no whole-list materialization here.
-        # It is async (runs a callback event loop), so run it in a dedicated
-        # thread to avoid conflicting with the outer asyncio loop.
-        done = threading.Event()
-
-        def _run():
-            asyncio.run(render_papers(things, typ=typ, scored=scored))
-            done.set()
-
-        t = threading.Thread(target=_run, daemon=True)
-        t.start()
-        done.wait()
+        # item to the browser as it arrives. It shares the outer event loop, so
+        # the live UI updates as the async source yields papers.
+        await render_papers(things, typ=typ, scored=scored)
 
 
 def norm_args(norm):
@@ -183,12 +173,13 @@ class Discover(Productor):
     top: int = 0
 
     async def run(self):
-        typ = Paper
-        papers = [p async for p in self.iterate()]
         if self.top:
+            # `top` needs the whole set to rank it, so materialize then re-adapt.
+            papers = [p async for p in self.iterate()]
             papers = config.focuses.top(n=self.top, papers=papers)
-            typ = Scored[Paper]
-        self.format(papers, typ=typ)
+            await self.format(as_aiter(papers), typ=Scored[Paper])
+        else:
+            await self.format(self.iterate(), typ=Paper)
 
 
 @dataclass
@@ -290,7 +281,7 @@ class Refine:
         if self.merge:
             results = [merge_all(results)]
 
-        self.format(results)
+        await self.format(as_aiter(results))
 
 
 @ovld
@@ -476,9 +467,9 @@ class Work:
             )
             match self.what:
                 case "title":
-                    self.format(ws.value.current.title for ws in worksets)
+                    await self.format(as_aiter(ws.value.current.title for ws in worksets))
                 case "paper":
-                    self.format(worksets)
+                    await self.format(as_aiter(worksets))
                 case "has_pdf":
                     n = total = 0
 
@@ -497,7 +488,7 @@ class Work:
                                 print(exc)
                             yield {"has_pdf": pdf is not None, "title": paper.title}
 
-                    self.format(gen(), dict[str, JSON])
+                    await self.format(gen(), dict[str, JSON])
                     print(f"{n}/{total} papers have PDFs")
 
             return worksets
@@ -838,7 +829,7 @@ class Coll:
                     offset=self.offset,
                 )
             ]
-            self.format(papers)
+            await self.format(as_aiter(papers))
             return papers
 
         async def count(self, coll: "Coll") -> int:

@@ -67,10 +67,11 @@ Example — NeurIPS papers since 2020:
 async def render_papers(things, typ=None, scored=False):
     """Stream papers into the buche main cell, rendering them live.
 
-    `things` is any iterable of items to display (`Paper` or `Scored` wrappers);
-    it is consumed lazily and each item is serialized and pushed to the browser
-    on the fly through `cell.data()`, so the list grows in place instead of being
-    dumped in one shot. `typ` is the serieux type used to serialize each item
+    `things` is an async iterable of items to display (`Paper`, `Scored`
+    wrappers, or `PaperDiff`); it is consumed lazily and each item is serialized
+    and pushed to the browser on the fly through `cell.data()` as its source
+    yields it, so the list grows in place instead of being dumped in one shot.
+    `typ` is the serieux type used to serialize each item
     (inferred from the first item when None). `scored` indicates the items are
     `Scored` wrappers whose `.value` is the underlying paper.
 
@@ -191,10 +192,12 @@ async def render_papers(things, typ=None, scored=False):
     body.print(t"{s:raw}")
 
     # Stream the papers one by one, updating the list live. The items are pulled
-    # lazily from `things`; each is serialized on its own and both accumulated
-    # (for the code filter) and pushed to the browser.
+    # lazily from the `things` async generator as its source yields them; each is
+    # serialized on its own and both accumulated (for the code filter) and pushed
+    # to the browser.
     element_typ = typ
-    for i, thing in enumerate(things):
+    i = 0
+    async for thing in things:
         if element_typ is None:
             element_typ = type(thing)
         # Keep the underlying paper for the code filter: unwrap `Scored` and,
@@ -207,6 +210,7 @@ async def render_papers(things, typ=None, scored=False):
             obj = thing
         paper_objects.append(obj)
         cell.data(PaperEntry(index=i, entry=serialize(element_typ, thing)))
+        i += 1
 
     # Keep the cell focused and visible after the process exits.
     cell.configure(sticky=True)

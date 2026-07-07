@@ -298,6 +298,12 @@ async def to_sync(async_iter):
     return values
 
 
+async def as_aiter(iterable):
+    """Adapt a synchronous iterable into an async generator."""
+    for x in iterable:
+        yield x
+
+
 #######################
 # Peer review helpers #
 #######################
