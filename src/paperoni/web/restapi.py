@@ -18,8 +18,14 @@ from ..fulltext.locate import URL
 from ..fulltext.pdf import PDF
 from ..model.classes import Base, Paper as _Paper
 from ..model.focus import Focuses, Scored
-from ..model.merge import PaperWorkingSet
+from ..model.merge import PaperWorkingSet, merge_all
+from ..refinement import fetch_all
+from ..refinement.fetch import AnyOf
 from ..utils import url_to_id
+
+# Tracks which users (by email) currently have a form-populate request running,
+# so that each user can only run one populate at a time.
+_populate_in_progress: set[str] = set()
 
 
 @auto_singleton("void")
@@ -285,6 +291,26 @@ class PaperIncludeResponse:
     message: str
     count: int = 0
     ids: list[str] = field(default_factory=list)
+
+
+@dataclass
+class PopulateRequest:
+    """Request model for populating a paper form from links."""
+
+    # The current state of the paper being edited.
+    paper: dict
+    # Links or IDs to refine and merge into the paper (e.g. "arxiv:1234.5678").
+    links: list[str] = field(default_factory=list)
+
+
+@dataclass
+class PopulateResponse:
+    """Response model for populating a paper form from links."""
+
+    success: bool
+    message: str
+    # The merged paper, serialized. None when the request failed.
+    paper: dict | None = None
 
 
 @dataclass
@@ -663,6 +689,44 @@ def install_api(app) -> FastAPI:
                 message=f"Error processing papers: {e}",
                 count=0,
             )
+
+    @app.post(f"{prefix}/populate", response_model=PopulateResponse)
+    async def populate_paper(
+        request: PopulateRequest, user: str = Depends(hascap("search"))
+    ):
+        """Refine the provided links and merge them into the current paper.
+
+        This modifies nothing in the database: it only computes a merged paper
+        and returns it so the edit form can be updated. Each user (identified by
+        email) may only run one populate request at a time.
+        """
+        if user in _populate_in_progress:
+            raise HTTPException(
+                status_code=429,
+                detail="A populate request is already running for your account. "
+                "Please wait for it to finish.",
+            )
+        _populate_in_progress.add(user)
+        try:
+            links = [lnk.strip() for lnk in request.links if lnk and lnk.strip()]
+            if not links:
+                return PopulateResponse(success=False, message="No links provided")
+
+            refined = [
+                paper async for paper in fetch_all(links, tags=AnyOf(["normal", "extra"]))
+            ]
+
+            merged = merge_all([*refined])
+
+            return PopulateResponse(
+                success=True,
+                message=f"Merged {len(refined)} refinement(s) from {len(links)} link(s)",
+                paper=serialize(_Paper, merged),
+            )
+        except Exception as e:
+            return PopulateResponse(success=False, message=f"Error: {e}")
+        finally:
+            _populate_in_progress.discard(user)
 
     @app.get(f"{prefix}/focuses")
     async def get_focuses():

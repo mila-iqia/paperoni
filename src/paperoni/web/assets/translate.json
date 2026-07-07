@@ -624,6 +624,30 @@
         "fr": "Enregistrement..."
     },
     {
+        "en": "Populate",
+        "fr": "Peupler"
+    },
+    {
+        "en": "Populating...",
+        "fr": "Remplissage..."
+    },
+    {
+        "en": "Paste link or paper ID (specifically arxiv, DOI or Semantic Scholar) to pre-populate the form.",
+        "fr": "Collez un lien ou identifiant (spécifiquement arxiv, DOI ou Semantic Scholar) pour pré-peupler le formulaire."
+    },
+    {
+        "en": "Enter at least one link to populate",
+        "fr": "Entrez au moins un lien pour remplir"
+    },
+    {
+        "en": "Form populated from links",
+        "fr": "Formulaire rempli à partir des liens"
+    },
+    {
+        "en": "Failed to populate",
+        "fr": "Échec du remplissage"
+    },
+    {
         "en": "Give a reason for deletion in the comment",
         "fr": "Indiquez une raison de suppression dans le commentaire"
     },
