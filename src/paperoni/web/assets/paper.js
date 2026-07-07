@@ -27,8 +27,9 @@ export function formatAuthorsWithAffiliations(authors) {
             })
             .filter(num => num !== undefined)
             .sort((a, b) => a - b);
+        const email = author.author?.email ?? null;
 
-        return { name, affNumbers };
+        return { name, affNumbers, email };
     });
 
     return {
@@ -196,16 +197,19 @@ export function createAuthorsSection(authors, options = {}) {
     }
 
     // Create author elements with data attributes for affiliations
-    const authorElements = authorData.map(({ name, affNumbers }) => {
+    const authorElements = authorData.map(({ name, affNumbers, email }) => {
         const superscriptsWithCommas = affNumbers.length > 0
             ? html`<sup>${join(',', affNumbers)}</sup>`
+            : null;
+        const emailSup = email
+            ? html`<sup class="author-email" data-tooltip="${email}"><a href="mailto:${email}">@</a></sup>`
             : null;
 
         // Highlight if author name matches OR if any of their affiliations match institution search
         const authorNameMatches = matchesSearch(name, searchParams.author);
         const hasMatchingInstitution = affNumbers.some(num => matchingInstNumbers.has(num));
         const isMatch = authorNameMatches || hasMatchingInstitution;
-        const authorSpan = html`<span class="author-name${isMatch ? ' search-match' : ''}" data-affiliations="${affNumbers.join(',')}" data-name="${name}">${name}${superscriptsWithCommas}</span>`;
+        const authorSpan = html`<span class="author-name${isMatch ? ' search-match' : ''}" data-affiliations="${affNumbers.join(',')}" data-name="${name}">${name}${emailSup}${superscriptsWithCommas}</span>`;
         return authorSpan;
     });
 
@@ -238,6 +242,11 @@ export function createAuthorsSection(authors, options = {}) {
     `;
 
     attachAuthorAffiliationHover(container);
+
+    // Prevent the mailto link from also triggering the author-name click handler below
+    container.querySelectorAll('.author-email a').forEach(a => {
+        a.addEventListener('click', (e) => e.stopPropagation());
+    });
 
     // Add click event listeners if callbacks are provided
     const authorSpans = container.querySelectorAll('.author-name');

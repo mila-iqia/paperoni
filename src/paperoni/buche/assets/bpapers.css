@@ -147,6 +147,16 @@ html, body {
     background-color: var(--d-highlight);
 }
 
+.author-email a {
+    color: var(--d-accent);
+}
+
+.author-email:hover::after {
+    background: var(--d-card-hover);
+    color: var(--d-text);
+    border: 1px solid var(--d-border);
+}
+
 /* ---- Abstract ---- */
 
 .paper-abstract {
@@ -319,6 +329,31 @@ html, body {
 
 .diff-swatch {
     border-color: var(--d-border);
+}
+
+.json-diff-toggle-btn {
+    background: var(--d-card-hover);
+    color: var(--d-text-muted);
+}
+
+.json-diff-toggle-btn:hover {
+    background: var(--d-border);
+}
+
+.json-diff-compact {
+    background: var(--d-card);
+    border-color: var(--d-border);
+    color: var(--d-text-muted);
+}
+
+#discover-root .json-diff-compact .diff-added {
+    background-color: rgba(93, 189, 110, 0.28) !important;
+    color: #b6f0c0 !important;
+}
+
+#discover-root .json-diff-compact .diff-removed {
+    background-color: rgba(224, 108, 108, 0.28) !important;
+    color: #f2b8b8 !important;
 }
 
 /* ---- Info table (used by diff cards) ---- */

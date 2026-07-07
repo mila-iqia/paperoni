@@ -1886,6 +1886,39 @@ body {
     margin-right: 2px;
 }
 
+.author-email {
+    position: relative;
+    margin-right: 1px;
+}
+
+.author-email a {
+    color: #2c5aa0;
+    text-decoration: none;
+}
+
+.author-email a:hover {
+    text-decoration: underline;
+}
+
+.author-email:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 4px;
+    padding: 3px 6px;
+    background: #333;
+    color: #fff;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.2;
+    white-space: nowrap;
+    border-radius: 4px;
+    z-index: 30;
+    pointer-events: none;
+}
+
 .author-name,
 .institution-item {
     cursor: pointer;
@@ -2804,6 +2837,65 @@ body {
 
 .paper-content {
     padding: 0;
+}
+
+/* JSON diff expand button - bottom right of a paper diff */
+.json-diff-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.json-diff-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border: none;
+    background: #f0f0f0;
+    color: #666;
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 3px;
+    transition: background 0.15s;
+}
+
+.json-diff-toggle-btn:hover {
+    background: #e2e2e2;
+}
+
+.json-diff-container {
+    display: none;
+    margin-top: 6px;
+}
+
+.json-diff-container.expanded {
+    display: block;
+}
+
+.json-diff-compact {
+    margin: 0;
+    padding: 8px 10px;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 10.5px;
+    line-height: 1.35;
+    max-height: 420px;
+    overflow: auto;
+}
+
+.json-diff-line {
+    white-space: pre;
+}
+
+.json-diff-compact .diff-added {
+    background-color: rgba(182, 255, 182, 0.6);
+}
+
+.json-diff-compact .diff-removed {
+    background-color: rgba(255, 182, 182, 0.6);
 }
 
 .info-table {
