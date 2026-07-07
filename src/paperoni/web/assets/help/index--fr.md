@@ -1,108 +1,78 @@
 
-Bienvenue sur Paperoni ! Paperoni est un outil de gestion d'articles.
+Bienvenue sur Paperoni ! Paperoni est un outil de gestion d'articles développé à Mila.
 
-# Recherche {: #search}
+## Table des matières
+
+1. **[Rechercher des articles](#search)**
+1. **[Ajouter des articles](#new)**
+1. **[Modifier des articles](#edit)**
+
+Voir également [l'aide de l'interface de validation](/help/validation) et de [l'interface d'administration](/help/admin).
+
+## Rechercher des articles {: #search}
 
 L'interface [Recherche](/search) permet de chercher dans la base d'articles de
 Paperoni. La recherche se fait au fil de la frappe (avec un court délai). Les
 résultats sont triés pour afficher les publications les plus récentes en premier.
 
 * **Titre** : Recherche par titre d'article.
-* **Auteur** : Recherche par auteur. Il n'est pas encore possible de chercher
-  plusieurs auteurs. Cette fonctionnalité sera probablement ajoutée à l'avenir.
+* **Auteur** : Recherche par nom ou courriel d'auteur (un seul auteur peut être précisé).
 * **Institution** : Recherche par affiliation ou institution de l'auteur.
-* **Conférence** : Recherche par lieu de publication (conférence ou revue scientifique).
-  Les alias ne sont pas
-  toujours pris en compte ; vous devrez peut-être chercher « Neural Information
-  Processing Systems » au lieu de « NeurIPS » ou l'inverse.
+* **Conférence** : Recherche par lieu de publication. Nous faisons de notre mieux pour normaliser les noms de lieux, mais il arrive qu'un même lieu soit répertorié sous plusieurs orthographes.
+* **Sujet** : Recherche par sujet. Ceux-ci ne sont pas nécessairement cohérents ni complets sur l'ensemble de la collection.
 * **Date de début/fin** : Recherche d'articles ayant au moins une parution entre
   ces dates. Par exemple, un article avec une prépublication en 2022 et une
   publication en 2023 apparaîtra pour 2022 et 2023.
+* **Type** : Filtre les articles évalués par les pairs, les prépublications ou les articles d'atelier.
 * **Évalué par les pairs** : Cochez cette case pour n'afficher que les
   publications évaluées par les pairs.
 
-## Filtrage par clic
+Par défaut, Paperoni effectue une recherche par sous-chaîne. Vous pouvez préfixer une recherche par « = » pour effectuer une recherche exacte.
+
+### Filtrage par clic
 
 Dans les résultats, vous pouvez cliquer sur un nom d'auteur, une institution,
 un lieu ou une année pour filtrer immédiatement les résultats par cette valeur.
 
-## Bouton Modifier
+### Bouton Modifier
 
-Si vous avez les droits de validation, une icône de modification (<img src="/assets/pen.svg"
-alt="modifier" style="height:1em; vertical-align:middle">) apparaît à côté de
-chaque titre. Un clic ouvre la page d'édition de l'article dans un nouvel
-onglet, où vous pouvez modifier le titre, les auteurs, les lieux et autres champs.
+Une icône de modification (<img src="/assets/pen.svg" alt="modifier" style="height:1em; vertical-align:middle">) apparaît à côté de chaque titre d'article. Un clic ouvre la [page d'édition](#edit) de l'article dans un nouvel onglet, où vous pouvez suggérer des modifications à son titre, ses auteurs, ses lieux et autres champs.
 
-# Modification des articles {: #edit}
 
-L'interface d'édition permet de modifier toutes les données d'un article :
+## Ajouter des articles {: #new}
+
+[L'interface d'ajout d'articles](/edit/new) permet de suggérer de nouveaux articles. À moins que vous n'ayez le rôle de *validateur*, ces suggestions n'apparaîtront pas immédiatement dans la base de données, mais iront plutôt dans une file d'attente en attente d'approbation. L'article peut mettre quelques jours à apparaître.
+
+**Avant de suggérer un article,** veuillez vérifier s'il ne se trouve pas déjà dans la base de données au moyen de l'interface de [recherche](/search).
+
+### Remplir
+
+En haut de l'interface, vous verrez une section Remplir où vous pouvez coller un lien vers l'article (vous pouvez en coller plusieurs, séparés par des virgules). Paperoni lira les métadonnées et remplira le formulaire pour vous. Les liens autorisés sont :
+
+* **[arxiv](https://arxiv.org)** : ex. `https://arxiv.org/abs/1810.11530` ou `arxiv:1810.11530`
+* **DOI** : ex. `doi:10.1109/comst.2024.3450292`
+* **[Semantic Scholar](https://www.semanticscholar.org/)** : ex. `https://www.semanticscholar.org/paper/9f1ce3ff55eb559e00df33fa40ee6ecd6a2a54f1` ou `semantic_scholar:9f1ce3ff55eb559e00df33fa40ee6ecd6a2a54f1`
+
+Cela ne fait que remplir le formulaire, rien n'est soumis. Vous pouvez vérifier ce qui a été rempli, corriger les erreurs, ajouter les lieux manquants, etc.
+
+### Soumettre
+
+Une fois terminé, cliquez simplement sur le bouton `Suggérer l'article`, en bas à droite. Cela placera l'article dans une file d'attente en vue de sa révision ; il est donc normal que vous ne le voyiez pas pendant un moment lorsque vous cherchez des articles juste après l'avoir suggéré.
+
+
+## Modification des articles {: #edit}
+
+L'interface d'édition permet de suggérer des changements à toutes les données associées à un article :
 titre, résumé, auteurs et affiliations, parutions (lieux et dates), sujets,
 liens et drapeaux. Vous pouvez aussi créer un nouvel article depuis
 [/edit/new](/edit/new), ou supprimer un article.
 
-Depuis la page de recherche, cliquez sur l'icône d'édition d'un article pour
-ouvrir sa page de modification.
+Depuis la page de recherche, cliquez sur l'icône d'édition (<img src="/assets/pen.svg" alt="modifier" style="height:1em; vertical-align:middle">) à côté du titre d'un article pour ouvrir sa page de modification.
 
-# Exclusions {: #exclusions}
 
-La page [Exclusions](/exclusions) permet de gérer une liste d'identifiants
-d'articles exclus. Les identifiants exclus (ex. `arxiv:1234.5678`,
-`doi:10.1234/...`) sont filtrés lors de la découverte d'articles. Vous pouvez
-ajouter des exclusions une par une ou en lot (une par ligne), et les retirer
-au besoin.
+## API {: #api-token}
 
-# Focus {: #focuses}
-
-La page [Focus](/focuses) permet aux administrateurs de configurer les focus
-de recherche qui pilotent la découverte et le scoring des articles. Deux onglets :
-
-* **Principal** : Focus principaux qui définissent les centres d'intérêt (auteurs,
-  lieux, sujets, etc.) et leurs scores associés.
-* **Auto** : Focus générés automatiquement. Utilisez le bouton « Autogénérer »
-  pour les régénérer à partir de la collection actuelle.
-
-Chaque focus a un type, un nom, un score et une option pour indiquer s'il
-pilote la découverte de nouveaux articles.
-
-# Jeu de travail {: #workset}
-
-La page [Jeu de travail](/workset) affiche les articles du jeu de travail
-actuel, scorés et classés selon les focus configurés. Les articles sont
-affichés avec leurs scores et métadonnées ; les liens PDF sont disponibles
-lorsque le texte intégral a été localisé.
-
-# Groupe récent {: #latest-group}
-
-La page [Groupe récent](/latest-group) permet de découvrir les articles
-récemment publiés. Vous pouvez définir une date d'ancrage et une fenêtre
-(jours en arrière/avant) pour trouver de nouveaux articles. La date d'ancrage
-est le centre de la fenêtre : Paperoni cherche entre `date d'ancrage - jours
-en arrière` et `date d'ancrage + jours en avant` (inclus). Par exemple, si la
-date d'ancrage est `2026-02-19`, avec `jours en arrière = 30` et `jours en
-avant = 0`, l'intervalle est `2026-01-20` à `2026-02-19`. Avec `jours en avant
-= 7`, l'intervalle devient `2026-01-20` à `2026-02-26`. Les résultats sont
-séparés en publications évaluées par les pairs et prépublications. Une
-newsletter peut être générée à partir de ces résultats.
-
-# Capacités {: #capabilities}
-
-La page [Capacités](/capabilities) permet aux administrateurs de gérer les
-comptes utilisateurs et leurs permissions. Vous pouvez ajouter des
-utilisateurs et attribuer ou révoquer des capacités comme `search`, `validate`,
-`admin`, etc. Les capacités implicites (dérivées de la hiérarchie) sont
-affichées avec les capacités attribuées directement.
-
-# Rapports {: #reports}
-
-La page [Rapports](/report) liste les rapports d'erreur disponibles générés
-à partir des journaux de traitement. Chaque rapport affiche les erreurs groupées
-par type, avec tracebacks et nombre d'occurrences. Utile principalement aux
-développeurs et administrateurs pour le débogage du traitement des données.
-
-# Jeton API {: #api-token}
-
-Pour appeler l'API Paperoni (recherche, export, etc.), vous avez besoin d'un
-jeton (token) porteur.
+Paperoni dispose d'une API que vous pouvez utiliser pour obtenir des données par programmation. Pour l'utiliser, vous avez besoin d'un jeton (token) porteur.
 
 1. **Obtenir un jeton** : Ouvrez la page [Jeton](/token). Connectez-vous avec
    Google lorsque demandé. À la fin du processus, la page affichera votre jeton
