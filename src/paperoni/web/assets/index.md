@@ -1,6 +1,5 @@
 
-
-### Welcome to Paperoni ([documentation](/help))
+### Welcome to Paperoni ([about](/help/about))
 
 - [🔍 Search papers](/search): Find, filter and edit scientific publications by title, author, institution, venue, date, and more.
 - [✏️ Add papers](/edit/new): Add/suggest papers to the database.
