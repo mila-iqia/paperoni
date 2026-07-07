@@ -63,6 +63,14 @@ from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statisti
 from .utils import deprox, expand_links_dict, prog, soft_fail, url_to_id
 
 
+def buche_available():
+    try:
+        from buchelib import is_available
+    except ImportError:
+        return False
+    return is_available()
+
+
 class Formatter(AutoRegistered):
     def serialize(self, things, typ=None):
         things = list(things)
@@ -100,6 +108,15 @@ def term_display(x: str, i: int):
     print(x)
 
 
+@auto_singleton("auto")
+class AutoFormatter(Formatter):
+    def __call__(self, things, typ=None):
+        if buche_available():
+            return BucheFormatter(things, typ=typ)
+        else:
+            return TerminalFormatter(things, typ=typ)
+
+
 @auto_singleton("terminal")
 class TerminalFormatter(Formatter):
     def __call__(self, things, typ=None):
@@ -117,24 +134,12 @@ class BucheFormatter(Formatter):
     """
 
     def __call__(self, things, typ=None):
-        things = list(things)
-        scored = getattr(typ, "__origin__", typ) is Scored
-
-        try:
-            from buchelib import is_available
-        except ImportError:
-            is_available = lambda: False  # noqa: E731
-
-        if not is_available():
-            # Not inside buche (or buchelib unavailable): plain terminal output.
-            for i, thing in enumerate(things):
-                term_display(thing, i)
-            return
-
         import asyncio
         import threading
-
         from .web.buche import render_papers
+
+        things = list(things)
+        scored = getattr(typ, "__origin__", typ) is Scored
 
         ser = self.serialize(things, typ=typ)
         # Extract original Paper objects so run_filter can use them directly
@@ -175,7 +180,7 @@ class Discover(Productor):
     """Discover papers from various sources."""
 
     # Output format
-    format: Formatter = TerminalFormatter
+    format: Formatter = AutoFormatter
 
     # Top n entries
     top: int = 0
@@ -266,7 +271,7 @@ class Refine:
     force: bool = False
 
     # Output format
-    format: Formatter = TerminalFormatter
+    format: Formatter = AutoFormatter
 
     async def run(self):
         results = []
@@ -459,7 +464,7 @@ class Work:
         what: Literal["paper", "has_pdf", "title"] = "paper"
 
         # Output format
-        format: Formatter = TerminalFormatter
+        format: Formatter = AutoFormatter
 
         # Number of papers to view
         n: int = None
@@ -809,7 +814,7 @@ class Coll:
         expand_links: bool = False
 
         # Output format
-        format: Formatter = TerminalFormatter
+        format: Formatter = AutoFormatter
 
         # Limit
         limit: int = 100
