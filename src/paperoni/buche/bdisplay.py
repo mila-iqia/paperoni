@@ -9,6 +9,7 @@ is layered on top of the web stylesheet (``style.css``).
 
 from pathlib import Path
 
+from hypetext.h import html
 from serieux import JSON
 
 ASSETS = Path(__file__).parent.parent / "web" / "assets"
@@ -49,14 +50,6 @@ Example — NeurIPS papers since 2020:
 """
 
 
-# JS that, once the paper.js module URL / data are on `window`, dynamically
-# loads the module and builds one card per paper. It runs as a real module
-# script (created via the DOM) so that `import` works inside buche's eval
-# context. It also wires up arrow-key navigation, `q`/`Escape` to quit,
-# `/` for live text search, and `%` to open a Python code-filter editor.
-_RENDER_JS = (B_ASSETS / "bpapers.js").read_text()
-
-
 async def render_papers(papers, paper_objects, scored=False):
     """Render a list of serialized papers into the buche main cell.
 
@@ -81,8 +74,10 @@ async def render_papers(papers, paper_objects, scored=False):
 
     # Serve both modules under a single nonce so paper.js's relative
     # `import './common.js'` resolves correctly.
-    bridge.avail(paper_js, common_js)
-    paper_js_url = bridge.url(paper_js)
+    bridge.avail(
+        paper_js, common_js, B_ASSETS / "bpapers.js", B_ASSETS / "filter-editor.js"
+    )
+    bpaper_js_url = bridge.url(B_ASSETS / "bpapers.js")
 
     body.print(t'<link rel="stylesheet" href={ASSETS / "style.css"}>')
     body.print(t'<link rel="stylesheet" href={B_ASSETS / "bpapers.css"}>')
@@ -144,12 +139,13 @@ async def render_papers(papers, paper_objects, scored=False):
     # Expose the data and module URL, then run the render/navigation script.
     body.exec(t"window.DISCOVER_PAPERS = {papers};")
     body.exec(t"window.DISCOVER_SCORED = {scored};")
-    body.exec(t"window.DISCOVER_PAPER_JS = {paper_js_url};")
     body.exec(t"window._runFilterFn = {run_filter:js};")
     body.exec(t"window._generateFilterFn = {generate_filter:js};")
     body.exec(t"window._quitFn = {quit:js};")
     body.exec(t"window._currentSearchTerm = '';")
-    body.exec(_RENDER_JS)
+
+    s = str(html(t'<script type="module" src="{bpaper_js_url}"></script>'))
+    body.print(t"{s:raw}")
 
     # Keep the cell focused and visible after the process exits.
     cell.configure(sticky=True)
