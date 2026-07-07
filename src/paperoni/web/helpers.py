@@ -73,6 +73,8 @@ def render_template(
     logged_in = request.session.get("user", None) is not None
     if help_section is True:
         help_section = template_name.split(".")[0]
+    if help_section and not help_section.startswith("/"):
+        help_section = f"/help#{help_section}"
 
     context = {
         "request": request,
