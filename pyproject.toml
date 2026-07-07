@@ -11,11 +11,12 @@ authors = [
 ]
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "ovld>=0.5.13",
-    "serieux>=0.3.12",
+    "serieux>=0.3.14",
     "gifnoc>=0.6.2",
+    "buchelib>=0.0.7",
     "beautifulsoup4>=4.13.4",
     "blessed>=1.21.0",
     "requests>=2.32.3",
@@ -45,11 +46,6 @@ dependencies = [
     "hrepr>=0.9.1",
     "mailchimp-marketing>=3.0.80",
 ]
-
-[project.optional-dependencies]
-# buchelib requires Python >=3.14; keep it optional so it does not constrain
-# the project's supported Python range. Needed for `--format buche`.
-buche = ["buchelib>=0.0.7; python_version >= '3.14'"]
 
 [project.urls]
 Homepage = "https://github.com/mila-iqia/paperoni"
