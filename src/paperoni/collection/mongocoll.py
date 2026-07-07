@@ -25,11 +25,25 @@ from ..utils import (
     normalize_institution,
     normalize_name,
     normalize_title,
-    normalize_venue,
     to_sync,
 )
 from .abc import PaperCollection
 from .finder import extract_latest
+
+
+def _match_str(query, normalized: bool = True):
+    """Build a Mongo condition matching ``query`` against a field.
+
+    A leading '=' in the query requests an exact match; otherwise it matches
+    values that contain the query as a substring (which requires a regex).
+    """
+    if query.startswith("="):
+        return query[1:]
+    else:
+        rval = {"$regex": f".*{escape(query)}.*"}
+        if not normalized:
+            rval["$options"] = "i"
+        return rval
 
 
 class MongoSerieux(Medley):
@@ -255,22 +269,15 @@ class MongoCollection(PaperCollection):
         exclude_flags: list[str] = None,
     ) -> dict:
         query = {}
-        title = title and normalize_title(title)
-        author = author and normalize_name(author)
-        institution = institution and normalize_institution(institution)
-        venue = venue and normalize_venue(venue)
 
         if paper_id is not None:
             query["_id"] = ObjectId(paper_id)
 
         if title:
-            query["_norm_title"] = {"$regex": f".*{escape(title)}.*", "$options": "i"}
+            query["_norm_title"] = _match_str(normalize_title(title))
 
         if author:
-            query["authors._norm_display_name"] = {
-                "$regex": f".*{escape(author)}.*",
-                "$options": "i",
-            }
+            query["authors._norm_display_name"] = _match_str(normalize_name(author))
 
         # Venue, date and status all restrict a single release. They are
         # collected into one $elemMatch so that they must be satisfied by the
@@ -278,7 +285,7 @@ class MongoCollection(PaperCollection):
         release_match = {}
 
         if venue:
-            venue_rx = {"$regex": f".*{escape(venue)}.*", "$options": "i"}
+            venue_rx = _match_str(venue, normalized=False)
             release_match["$or"] = [
                 {"venue.name": venue_rx},
                 {"venue.short_name": venue_rx},
@@ -329,10 +336,9 @@ class MongoCollection(PaperCollection):
                 query["flags"] = {"$nin": list(exclude_flags)}
 
         if institution:
-            query["authors.affiliations._norm_name"] = {
-                "$regex": f".*{escape(institution)}.*",
-                "$options": "i",
-            }
+            query["authors.affiliations._norm_name"] = _match_str(
+                normalize_institution(institution)
+            )
 
         return query
 

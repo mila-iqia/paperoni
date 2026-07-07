@@ -17,6 +17,24 @@ from .abc import PaperCollection
 from .finder import Index, find_equivalent, paper_indexers
 
 
+def _make_matcher(query, normalize):
+    """Build a predicate that matches a raw value against ``query``.
+
+    A leading '=' in the query requests an exact match; otherwise the value
+    matches if it contains the query as a substring. Both sides are compared
+    after normalization.
+    """
+    exact = False
+    if query.startswith("="):
+        query = query[1:]
+        exact = True
+    needle = normalize(query)
+    if exact:
+        return lambda value: needle == normalize(value)
+    else:
+        return lambda value: needle in normalize(value)
+
+
 @dataclass
 class PaperIndex(Index[Paper]):
     last_id: int = -1
@@ -184,45 +202,40 @@ class MemCollection(PaperCollection):
             yield await self.find_by_id(paper_id)
             return
 
-        title = title and normalize_title(title)
-        author = author and normalize_name(author)
-        institution = institution and normalize_institution(institution)
-        venue = venue and normalize_venue(venue)
+        title_match = title and _make_matcher(title, normalize_title)
+        author_match = author and _make_matcher(author, normalize_name)
+        institution_match = institution and _make_matcher(
+            institution, normalize_institution
+        )
+        venue_match = venue and _make_matcher(venue, normalize_venue)
         include_status = [s for s in status or [] if not s.startswith("-")]
         exclude_status = [s[1:] for s in status or [] if s.startswith("-")]
         skipped = 0
         yielded = 0
         for p in self._index:
-            if title and title not in normalize_title(p.title):
+            if title_match and not title_match(p.title):
                 continue
-            if author and not any(
-                author in normalize_name(a.display_name) for a in p.authors
-            ):
+            if author_match and not any(author_match(a.display_name) for a in p.authors):
                 continue
-            if institution and not any(
-                institution in normalize_institution(aff.name)
-                for a in p.authors
-                for aff in a.affiliations
+            if institution_match and not any(
+                institution_match(aff.name) for a in p.authors for aff in a.affiliations
             ):
                 continue
             if include_flags and (set(include_flags) - p.flags):
                 continue
             if exclude_flags and (set(exclude_flags) & p.flags):
                 continue
-            if venue or start_date or end_date or include_status or exclude_status:
+            if venue_match or start_date or end_date or include_status or exclude_status:
                 # A single release must satisfy the venue, date and status
                 # constraints together (mirrors $elemMatch in the mongo backend).
                 def release_matches(release):
-                    if venue and not (
-                        venue in normalize_venue(release.venue.name)
+                    if venue_match and not (
+                        venue_match(release.venue.name)
                         or (
                             release.venue.short_name
-                            and venue in normalize_venue(release.venue.short_name)
+                            and venue_match(release.venue.short_name)
                         )
-                        or any(
-                            venue in normalize_venue(alias)
-                            for alias in release.venue.aliases
-                        )
+                        or any(venue_match(alias) for alias in release.venue.aliases)
                     ):
                         return False
                     if start_date and release.venue.date < start_date:

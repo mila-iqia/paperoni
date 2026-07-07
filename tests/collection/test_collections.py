@@ -443,6 +443,35 @@ async def test_search_partial_matches(
     assert len(results) == 4
 
 
+async def test_search_exact_match(
+    collection_r: PaperCollection, sample_papers: list[Paper]
+):
+    """Test that a leading '=' performs an exact match instead of substring."""
+    collection = collection_r
+
+    await collection.add_papers(sample_papers)
+
+    # Substring "Bengio" matches every paper (Yoshua Bengio is a coauthor of all)
+    results = [p async for p in collection.search(author="Bengio")]
+    assert eq(sort_title(results), sample_papers)
+
+    # Exact "=Bengio" matches nothing (no author is named exactly "Bengio")
+    results = [p async for p in collection.search(author="=Bengio")]
+    assert not results
+
+    # Exact "=Yoshua Bengio" matches every paper (case insensitive)
+    results = [p async for p in collection.search(author="=yoshua bengio")]
+    assert eq(sort_title(results), sample_papers)
+
+    # Exact match on institution
+    results = [p async for p in collection.search(institution="Uni")]
+    assert len(results) == 4
+    results = [p async for p in collection.search(institution="=Uni")]
+    assert not results
+    results = [p async for p in collection.search(institution="=MILA")]
+    assert len(results) == 4
+
+
 async def test_search_by_flags(collection_r: PaperCollection, sample_papers: list[Paper]):
     """Test searching by flag inclusion and exclusion."""
     collection = collection_r
