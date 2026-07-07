@@ -381,6 +381,7 @@ function updateUrlParams(params, offset) {
     if (params.author) urlParams.set('author', params.author);
     if (params.institution) urlParams.set('institution', params.institution);
     if (params.venue) urlParams.set('venue', params.venue);
+    if (params.topic && params.topic.length) urlParams.set('topic', params.topic.join(', '));
     if (params.status && params.status.length) urlParams.set('status', params.status.join(', '));
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
@@ -424,6 +425,7 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     const authorInput = document.getElementById('author');
     const institutionInput = document.getElementById('institution');
     const venueInput = document.getElementById('venue');
+    const topicInput = document.getElementById('topic');
     const statusInput = document.getElementById('status');
     const startDateInput = document.getElementById('start_date');
     const endDateInput = document.getElementById('end_date');
@@ -436,6 +438,7 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     authorInput.addEventListener('input', handleInputChange);
     institutionInput.addEventListener('input', handleInputChange);
     venueInput.addEventListener('input', handleInputChange);
+    topicInput.addEventListener('input', handleInputChange);
     statusInput.addEventListener('input', handleInputChange);
     startDateInput.addEventListener('input', handleInputChange);
     endDateInput.addEventListener('input', handleInputChange);
@@ -461,11 +464,13 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     // Perform initial search if URL has parameters
     const urlParams = new URLSearchParams(window.location.search);
     const initialStatusStr = urlParams.get('status') || '';
+    const initialTopicStr = urlParams.get('topic') || '';
     const initialParams = {
         title: urlParams.get('title') || '',
         author: urlParams.get('author') || '',
         institution: urlParams.get('institution') || '',
         venue: urlParams.get('venue') || '',
+        topic: initialTopicStr.split(',').map((s) => s.trim()).filter((s) => s),
         status: initialStatusStr.split(',').map((s) => s.trim()).filter((s) => s),
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
@@ -477,6 +482,7 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     authorInput.value = initialParams.author;
     institutionInput.value = initialParams.institution;
     venueInput.value = initialParams.venue;
+    topicInput.value = initialTopicStr;
     statusInput.value = initialStatusStr;
     startDateInput.value = initialParams.start_date;
     endDateInput.value = initialParams.end_date;

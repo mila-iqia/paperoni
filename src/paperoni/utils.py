@@ -205,6 +205,10 @@ def normalize_venue(venue: str) -> str:
     return unidecode(venue).lower()
 
 
+def normalize_topic(topic: str) -> str:
+    return unidecode(topic).lower()
+
+
 def split_institution(name: str) -> list[str]:
     return re.split(r" *(?:[,;/-]|\band\b) *", name)
 

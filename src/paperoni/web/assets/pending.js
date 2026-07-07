@@ -498,6 +498,8 @@ function updatePendingUrl(offset) {
     else urlParams.delete('institution');
     if (params.venue) urlParams.set('venue', params.venue);
     else urlParams.delete('venue');
+    if (params.topic && params.topic.length) urlParams.set('topic', params.topic.join(', '));
+    else urlParams.delete('topic');
     if (params.status && params.status.length) urlParams.set('status', params.status.join(', '));
     else urlParams.delete('status');
     if (params.start_date) urlParams.set('start_date', params.start_date);
@@ -533,7 +535,7 @@ export async function displayPending() {
             loadPending(0);
         }, 300);
         
-        ['title', 'author', 'institution', 'venue', 'status', 'start_date', 'end_date'].forEach(id => {
+        ['title', 'author', 'institution', 'venue', 'topic', 'status', 'start_date', 'end_date'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.addEventListener('input', handleInputChange);
         });
@@ -563,6 +565,7 @@ export async function displayPending() {
         author: urlParams.get('author') || '',
         institution: urlParams.get('institution') || '',
         venue: urlParams.get('venue') || '',
+        topic: urlParams.get('topic') || '',
         status: urlParams.get('status') || '',
         start_date: urlParams.get('start_date') || '',
         end_date: urlParams.get('end_date') || '',
@@ -574,6 +577,7 @@ export async function displayPending() {
         document.getElementById('author').value = initialParams.author;
         document.getElementById('institution').value = initialParams.institution;
         document.getElementById('venue').value = initialParams.venue;
+        document.getElementById('topic').value = initialParams.topic;
         document.getElementById('status').value = initialParams.status;
         document.getElementById('start_date').value = initialParams.start_date;
         document.getElementById('end_date').value = initialParams.end_date;

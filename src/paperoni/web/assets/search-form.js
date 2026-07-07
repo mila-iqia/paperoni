@@ -11,6 +11,7 @@ export function getSearchParams() {
     const authorEl = document.getElementById('author');
     const institutionEl = document.getElementById('institution');
     const venueEl = document.getElementById('venue');
+    const topicEl = document.getElementById('topic');
     const statusEl = document.getElementById('status');
     const startDateEl = document.getElementById('start_date');
     const endDateEl = document.getElementById('end_date');
@@ -20,6 +21,11 @@ export function getSearchParams() {
         author: authorEl?.value?.trim() ?? '',
         institution: institutionEl?.value?.trim() ?? '',
         venue: venueEl?.value?.trim() ?? '',
+        // Comma-separated topics; a paper must match all of them.
+        topic: (topicEl?.value ?? '')
+            .split(',')
+            .map((s) => s.trim())
+            .filter((s) => s),
         // Comma-separated release types; "-xyz" entries exclude that status.
         status: (statusEl?.value ?? '')
             .split(',')
@@ -40,6 +46,9 @@ export function appendSearchParamsTo(queryParams, params) {
     if (params.author) queryParams.append('author', params.author);
     if (params.institution) queryParams.append('institution', params.institution);
     if (params.venue) queryParams.append('venue', params.venue);
+    if (params.topic) {
+        for (const t of params.topic) queryParams.append('topic', t);
+    }
     if (params.status) {
         for (const s of params.status) queryParams.append('status', s);
     }
@@ -111,6 +120,7 @@ export function clearSearchForm() {
     const authorEl = document.getElementById('author');
     const institutionEl = document.getElementById('institution');
     const venueEl = document.getElementById('venue');
+    const topicEl = document.getElementById('topic');
     const statusEl = document.getElementById('status');
     const startDateEl = document.getElementById('start_date');
     const endDateEl = document.getElementById('end_date');
@@ -120,6 +130,7 @@ export function clearSearchForm() {
     if (authorEl) authorEl.value = '';
     if (institutionEl) institutionEl.value = '';
     if (venueEl) venueEl.value = '';
+    if (topicEl) topicEl.value = '';
     if (statusEl) statusEl.value = '';
     if (startDateEl) startDateEl.value = '';
     if (endDateEl) endDateEl.value = '';

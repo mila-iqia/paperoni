@@ -116,6 +116,8 @@ class PaperCollection:
         author: str = None,
         # Venue name (long or short)
         venue: str = None,
+        # Topics the paper must have (all of them must match)
+        topic: list[str] = None,
         # Start date to consider
         start_date: date = None,
         # End date to consider
@@ -140,6 +142,7 @@ class PaperCollection:
         institution: str = None,
         author: str = None,
         venue: str = None,
+        topic: list[str] = None,
         start_date: date = None,
         end_date: date = None,
         status: list[str] = None,
