@@ -32,6 +32,7 @@ def install_edit(app: FastAPI) -> FastAPI:
         return render_template(
             "edit.html",
             request,
+            help_section="new" if paper_id == "new" else "edit",
             paper_id=repr(paper_id),
             suggest=suggest,
             has_validate=has_validate,
