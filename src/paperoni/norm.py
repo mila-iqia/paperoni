@@ -32,6 +32,22 @@ class PaperNormalizer:
         str, NormalizationEntry[list[Partial[Institution]]]
     ] @ FileProxy(refresh=True) = field(default_factory=dict)
 
+    # Collection of venues for which we have no normalizations
+    # [serieux: ignore]
+    unknown_venues: defaultdict[str, list] = field(
+        default_factory=lambda: defaultdict(list)
+    )
+
+    # Collection of institutions for which we have no normalizations
+    # [serieux: ignore]
+    unknown_institutions: defaultdict[str, list] = field(
+        default_factory=lambda: defaultdict(list)
+    )
+
+    def reset_unknowns(self):
+        self.unknown_venues.clear()
+        self.unknown_institutions.clear()
+
     @ovld
     def __call__(self, x: str | int | float | bool | type(None) | date | datetime):
         return x
@@ -59,12 +75,16 @@ class PaperNormalizer:
         if entry := self.institution_norm.get(flat, None):
             results = []
             for partial in entry.data:
+                if not partial.name:
+                    continue
                 inst = instantiate(merge(x, partial))
                 if isinstance(inst, Exception):
                     raise inst
                 results.append(inst)
             return results if results else x
-        return x
+        else:
+            self.unknown_institutions[flat].append(x)
+            return x
 
     @ovld
     def __call__(self, x: Venue):
@@ -79,6 +99,7 @@ class PaperNormalizer:
                 rval.date_precision = x.date_precision
             return rval
         else:
+            self.unknown_venues[flat].append(x)
             return x
 
     @ovld
