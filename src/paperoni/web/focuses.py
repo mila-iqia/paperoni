@@ -15,6 +15,8 @@ def install_focuses(app: FastAPI) -> FastAPI:
     @app.get("/focuses", dependencies=[Depends(hascap("admin"))])
     async def focuses_page(request: Request):
         """Render the focuses edit page."""
-        return render_template("focuses.html", request)
+        return render_template(
+            "focuses.html", request, help_section="/help/validation#focuses"
+        )
 
     return app

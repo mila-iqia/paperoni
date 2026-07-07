@@ -16,7 +16,7 @@
             <div class="header-left">
                 <h1 class="page-title"><loc>{% block page_title %}Paperoni{% endblock %}</loc></h1>
                 {% if help_section %}
-                <a href="/help#{{ help_section }}" class="help-link" title="Help" aria-label="Help">?</a>
+                <a href="{{ help_section }}" class="help-link" title="Help" aria-label="Help">?</a>
                 {% endif %}
             </div>
                 {% if has_logo %}

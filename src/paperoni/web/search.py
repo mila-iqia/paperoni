@@ -29,6 +29,7 @@ def install_search(app: FastAPI) -> FastAPI:
             show_scores=False,
             use_dev_mode=use_dev_mode,
             show_json_export=True,
+            help_section="/help#search",
         )
 
     @app.get("/pending")
@@ -37,7 +38,9 @@ def install_search(app: FastAPI) -> FastAPI:
         user: str = Depends(hascap("search", redirect=True)),
     ):
         """Render the pending papers page."""
-        return render_template("pending.html", request)
+        return render_template(
+            "pending.html", request, help_section="/help/validation#pending"
+        )
 
     @app.get("/workset")
     async def workset_page(
@@ -51,11 +54,16 @@ def install_search(app: FastAPI) -> FastAPI:
             "workset.html",
             request,
             is_validator=is_validator,
+            help_section="/help/admin#workset",
         )
 
     @app.get("/exclusions", dependencies=[Depends(hascap("validate", redirect=True))])
     async def exclusions_page(request: Request):
         """Render the exclusions management page."""
-        return render_template("exclusions.html", request)
+        return render_template(
+            "exclusions.html",
+            request,
+            help_section="/help/admin#exclusions",
+        )
 
     return app

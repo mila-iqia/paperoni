@@ -291,6 +291,7 @@ def install_latest(app):
             default_ndays=config.latest.back,
             default_fwd=config.latest.forward,
             default_serial=int(time.time()),
+            help_section="/help/validation#latest-group",
         )
 
     @app.get("/api/v1/latest", dependencies=[Depends(hascap("validate"))])
