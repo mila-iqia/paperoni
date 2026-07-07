@@ -210,6 +210,10 @@ def normalize_topic(topic: str) -> str:
     return unidecode(topic).lower()
 
 
+def flatten_text(t: str, fchr: str = "_") -> str:
+    return re.sub(r"[^a-zA-Z0-9]+", fchr, t)
+
+
 def split_institution(name: str) -> list[str]:
     return re.split(r" *(?:[,;/-]|\band\b) *", name)
 

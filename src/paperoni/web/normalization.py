@@ -38,17 +38,19 @@ def install_normalization(app: FastAPI) -> FastAPI:
         for original, entry in config.normalizer.venue_norm.items():
             s = serialize(Partial[Venue], entry.data)
             if s.get("name", "").lower() == name_lower:
-                result.append({
-                    "original": original,
-                    "name": s.get("name", ""),
-                    "type": s.get("type", ""),
-                    "short_name": s.get("short_name", ""),
-                    "date": (
-                        DatePrecision.format(s["date"], s["date_precision"])
-                        if "date" in s and "date_precision" in s
-                        else ""
-                    ),
-                })
+                result.append(
+                    {
+                        "original": original,
+                        "name": s.get("name", ""),
+                        "type": s.get("type", ""),
+                        "short_name": s.get("short_name", ""),
+                        "date": (
+                            DatePrecision.format(s["date"], s["date_precision"])
+                            if "date" in s and "date_precision" in s
+                            else ""
+                        ),
+                    }
+                )
         return result
 
     @app.get("/api/v1/norm/institutions/by-name", dependencies=[Depends(hascap("admin"))])
@@ -61,12 +63,14 @@ def install_normalization(app: FastAPI) -> FastAPI:
             for partial in entry.data:
                 s = serialize(Partial[Institution], partial)
                 if s.get("name", "").lower() == name_lower:
-                    result.append({
-                        "original": original,
-                        "name": s.get("name", ""),
-                        "category": s.get("category", ""),
-                        "country": s.get("country", ""),
-                    })
+                    result.append(
+                        {
+                            "original": original,
+                            "name": s.get("name", ""),
+                            "category": s.get("category", ""),
+                            "country": s.get("country", ""),
+                        }
+                    )
         return result
 
     @app.get("/api/v1/norm/venues", dependencies=[Depends(hascap("admin"))])
@@ -197,12 +201,14 @@ def install_normalization(app: FastAPI) -> FastAPI:
         for original, entry in groups[start : start + page_size]:
             for partial in entry.data:
                 s = serialize(Partial[Institution], partial)
-                items.append({
-                    "original": original,
-                    "name": s.get("name", ""),
-                    "category": s.get("category", ""),
-                    "country": s.get("country", ""),
-                })
+                items.append(
+                    {
+                        "original": original,
+                        "name": s.get("name", ""),
+                        "category": s.get("category", ""),
+                        "country": s.get("country", ""),
+                    }
+                )
         return {"items": items, "total": total, "page": page, "pages": pages}
 
     @app.post("/api/v1/norm/institutions")

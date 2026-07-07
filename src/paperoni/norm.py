@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime
 
@@ -13,6 +14,7 @@ from .model.classes import (
     Release,
     Venue,
 )
+from .utils import flatten_text, normalize_institution, normalize_venue
 
 
 @dataclass
@@ -26,9 +28,9 @@ class PaperNormalizer:
     venue_norm: dict[str, NormalizationEntry[Partial[Venue]]] @ FileProxy(
         refresh=True
     ) = field(default_factory=dict)
-    institution_norm: dict[str, NormalizationEntry[list[Partial[Institution]]]] @ FileProxy(
-        refresh=True
-    ) = field(default_factory=dict)
+    institution_norm: dict[
+        str, NormalizationEntry[list[Partial[Institution]]]
+    ] @ FileProxy(refresh=True) = field(default_factory=dict)
 
     @ovld
     def __call__(self, x: str | int | float | bool | type(None) | date | datetime):
@@ -53,7 +55,8 @@ class PaperNormalizer:
 
     @ovld
     def __call__(self, x: Institution):
-        if entry := self.institution_norm.get(x.name, None):
+        flat = flatten_text(normalize_institution(x.name))
+        if entry := self.institution_norm.get(flat, None):
             results = []
             for partial in entry.data:
                 inst = instantiate(merge(x, partial))
@@ -65,7 +68,8 @@ class PaperNormalizer:
 
     @ovld
     def __call__(self, x: Venue):
-        if entry := self.venue_norm.get(x.name, None):
+        flat = flatten_text(normalize_venue(x.name))
+        if entry := self.venue_norm.get(flat, None):
             rval = instantiate(merge(x, entry.data))
             if (
                 ep := entry.data.date_precision
