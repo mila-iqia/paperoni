@@ -136,7 +136,8 @@ class BucheFormatter(Formatter):
     def __call__(self, things, typ=None):
         import asyncio
         import threading
-        from .web.buche import render_papers
+
+        from .buche.bdisplay import render_papers
 
         things = list(things)
         scored = getattr(typ, "__origin__", typ) is Scored

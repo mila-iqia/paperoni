@@ -1,0 +1,29 @@
+<div id="modal-backdrop" hidden></div>
+<div id="discover-root">
+    <div class="discover-header" id="discover-header">PLACEHOLDER</div>
+    <div id="search-bar" class="discover-search-bar" hidden>
+        <span class="search-icon">&#128269;</span>
+        <input id="search-input" type="text" placeholder="Filter papers…" autocomplete="off" spellcheck="false" />
+        <span id="search-count" class="search-count"></span>
+        <button class="search-close" onclick="window.closeSearch()">&#10005;</button>
+    </div>
+    <div id="ai-prompt-bar" class="discover-ai-bar" hidden>
+        <span class="ai-icon">&#10024;</span>
+        <input id="ai-prompt-input" type="text" placeholder="Describe a filter (AI-generated)…" autocomplete="off" spellcheck="false" />
+        <span id="ai-prompt-status" class="ai-prompt-status"></span>
+        <button class="search-close" onclick="window.closeAiPrompt()">&#10005;</button>
+    </div>
+    <div id="filter-panel" class="discover-filter-panel" hidden>
+        <div class="filter-panel-header">
+            <span class="filter-panel-title">Python filter &nbsp;<code>async def f(paper):</code></span>
+            <div class="filter-panel-actions">
+                <button id="filter-run" class="filter-btn">&#9654; Run <kbd>Ctrl+Enter</kbd></button>
+                <button class="filter-btn filter-btn-secondary" onclick="window.closeFilterEditor()">&#10005; Clear</button>
+            </div>
+        </div>
+        <div id="filter-editor-host"></div>
+        <div id="filter-status" class="filter-status"></div>
+    </div>
+    <ul id="paper-list" class="paper-list" tabindex="0"></ul>
+    <div class="discover-help" hidden>↑↓/jk navigate · / text search · % code filter · ! AI filter · Esc close panel · ? toggle help · q quit</div>
+</div>
