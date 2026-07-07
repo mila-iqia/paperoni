@@ -20,7 +20,9 @@ requests-cache.sqlite
 .cursorignore
 /cache
 /data
+/oneoffs
 /tests/cache
 /terraform/.terraform*
 /terraform/terraform*state*
 /terraform/*.tfvars
+config/custom.yaml
