@@ -206,7 +206,12 @@ class MemCollection(PaperCollection):
             return
 
         title_match = title and _make_matcher(title, normalize_title)
-        author_match = author and _make_matcher(author, normalize_name)
+        # An "@" in the author query switches the search to the email field.
+        author_by_email = author and "@" in author
+        if author_by_email:
+            author_match = _make_matcher(author, str.lower)
+        else:
+            author_match = author and _make_matcher(author, normalize_name)
         institution_match = institution and _make_matcher(
             institution, normalize_institution
         )
@@ -219,7 +224,14 @@ class MemCollection(PaperCollection):
         for p in self._index:
             if title_match and not title_match(p.title):
                 continue
-            if author_match and not any(author_match(a.display_name) for a in p.authors):
+            if author_by_email:
+                if not any(
+                    a.author.email and author_match(a.author.email) for a in p.authors
+                ):
+                    continue
+            elif author_match and not any(
+                author_match(a.display_name) for a in p.authors
+            ):
                 continue
             if institution_match and not any(
                 institution_match(aff.name) for a in p.authors for aff in a.affiliations

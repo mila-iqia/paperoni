@@ -531,6 +531,7 @@ function renderAuthors(container, authors) {
                     <tr>
                         <th></th>
                         <th><loc>Name</loc></th>
+                        <th><loc>ID</loc></th>
                         <th><loc>Affiliations</loc></th>
                         <th></th>
                     </tr>
@@ -590,6 +591,14 @@ function createAuthorRow(author, index) {
             </td>
             <td>
                 <input type="text"
+                       name="authors[${index}].author.email"
+                       value="${(author.author && author.author.email) || ''}"
+                       placeholder="Enter identifier"
+                       data-loc-placeholder="Enter identifier"
+                       class="edit-input">
+            </td>
+            <td>
+                <input type="text"
                        name="authors[${index}].affiliations"
                        value="${(author.affiliations || []).map(a => a.name).join('; ')}"
                        placeholder="Enter affiliations, semicolon-separated"
@@ -625,17 +634,12 @@ function createAuthorRow(author, index) {
 }
 
 function updateRowIndices(tbody) {
-    // Update the name attributes of all inputs to reflect new positions
+    // Update the name attributes of all inputs to reflect new positions,
+    // preserving each input's field suffix (display_name, author.email, ...).
     Array.from(tbody.querySelectorAll('tr')).forEach((row, newIndex) => {
-        const displayNameInput = row.querySelector('input[name^="authors["]');
-        const affiliationsInput = row.querySelectorAll('input[name^="authors["]')[1];
-
-        if (displayNameInput) {
-            displayNameInput.name = `authors[${newIndex}].display_name`;
-        }
-        if (affiliationsInput) {
-            affiliationsInput.name = `authors[${newIndex}].affiliations`;
-        }
+        row.querySelectorAll('input[name^="authors["]').forEach((input) => {
+            input.name = input.name.replace(/authors\[\d+\]/, `authors[${newIndex}]`);
+        });
     });
 }
 
@@ -1135,6 +1139,7 @@ function normalizeForComparison(p) {
         info: sortedInfo(p.info),
         authors: (p.authors || []).map((a) => ({
             display_name: (a.display_name || '').trim(),
+            email: ((a.author && a.author.email) || '').trim() || null,
             affiliations: (a.affiliations || []).map((x) => (x.name || '').trim()).filter(Boolean).join('; '),
         })),
         releases: (p.releases || []).map((r) => ({
@@ -1230,6 +1235,8 @@ function collectFormData(form, originalPaper) {
                 authorsMap[index].display_name = input.value;
                 // Automatically copy display_name to author.name
                 authorsMap[index].author.name = input.value;
+            } else if (field === 'author.email') {
+                authorsMap[index].author.email = input.value.trim() || null;
             } else if (field === 'affiliations') {
                 const originalAuthor = originalPaper.authors?.[parseInt(index, 10)];
                 const originalAffiliations = originalAuthor?.affiliations || [];

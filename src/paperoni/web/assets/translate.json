@@ -692,6 +692,14 @@
         "fr": "Saisir le nom de l'auteur"
     },
     {
+        "en": "ID",
+        "fr": "ID"
+    },
+    {
+        "en": "Enter identifier",
+        "fr": "Saisir l'identifiant"
+    },
+    {
         "en": "Enter affiliations, semicolon-separated",
         "fr": "Saisir les affiliations, séparées par des point-virgules"
     },

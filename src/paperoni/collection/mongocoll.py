@@ -118,6 +118,9 @@ class MongoCollection(PaperCollection):
         # Index on author names for fast author searches
         await self._collection.create_index("authors._norm_display_name")
 
+        # Index on author emails for fast email-based author searches
+        await self._collection.create_index("authors.author.email")
+
         # Index on institution names for fast institution searches
         await self._collection.create_index("authors.affiliations._norm_name")
 
@@ -281,7 +284,11 @@ class MongoCollection(PaperCollection):
             query["_norm_title"] = _match_str(normalize_title(title))
 
         if author:
-            query["authors._norm_display_name"] = _match_str(normalize_name(author))
+            # An "@" in the author query switches the search to the email field.
+            if "@" in author:
+                query["authors.author.email"] = author
+            else:
+                query["authors._norm_display_name"] = _match_str(normalize_name(author))
 
         # Venue, date and status all restrict a single release. They are
         # collected into one $elemMatch so that they must be satisfied by the
