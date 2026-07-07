@@ -101,6 +101,7 @@ export function run() {
 
     const items = [];        // items[index] = serialized entry (may be sparse)
     const headerEl = document.querySelector('.discover-header');
+    let streamDone = false;  // set once the Python source is exhausted
 
     function isDiff(o) { return !!o && ('current' in o || 'new' in o); }
 
@@ -155,10 +156,28 @@ export function run() {
         if (!headerEl) return;
         const total = totalCount();
         const plural = total === 1 ? '' : 's';
-        headerEl.textContent = term
+        headerEl.textContent = '';
+        // While the source is still streaming (and no search is active), show a
+        // spinner alongside the live count instead of a final "Discovered" tally.
+        if (!term && !streamDone) {
+            const spinner = document.createElement('span');
+            spinner.className = 'discover-spinner';
+            headerEl.appendChild(spinner);
+        }
+        const label = document.createElement('span');
+        label.textContent = term
             ? (visibleCount() + ' / ' + total + ' paper' + plural)
-            : ('Discovered ' + total + ' paper' + plural);
+            : (total + ' paper' + plural);
+        headerEl.appendChild(label);
     }
+
+    // Called (via the StreamComplete data handler) when the source iterator is
+    // exhausted: stop the spinner and settle on the final count.
+    window.DISCOVER_DONE = function() {
+        streamDone = true;
+        if (totalCount() === 0) showEmpty(window._currentSearchTerm || '');
+        updateHeader(window._currentSearchTerm || '');
+    };
 
     function clearEmpty() {
         const empty = list.querySelector('.discover-empty');
@@ -246,7 +265,9 @@ export function run() {
     window._paperQueue = [];
     window._DISCOVER_READY = true;
     for (const [entry, index] of queued) addPaper(entry, index);
-    if (totalCount() === 0) showEmpty('');
+    // The stream may have already completed before the module loaded.
+    if (window._streamDonePending) streamDone = true;
+    if (totalCount() === 0 && streamDone) showEmpty('');
     updateHeader(window._currentSearchTerm || '');
 
     // --- Modal backdrop ---

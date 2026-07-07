@@ -46,6 +46,23 @@ html, body {
     margin: 0 0 14px 2px;
 }
 
+/* Processing spinner shown in the header while papers are still streaming. */
+.discover-spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    vertical-align: -1px;
+    border: 2px solid var(--d-border);
+    border-top-color: var(--d-accent);
+    border-radius: 50%;
+    animation: discover-spin 0.7s linear infinite;
+}
+
+@keyframes discover-spin {
+    to { transform: rotate(360deg); }
+}
+
 .discover-empty {
     color: var(--d-text-muted);
     font-style: italic;

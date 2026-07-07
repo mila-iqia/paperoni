@@ -394,7 +394,7 @@ def paper_from_arxiv(entry):
             dt = datetime.fromisoformat(published.text.replace("Z", "+00:00"))
             date_obj = dt.date()
             date_precision = DatePrecision.day
-        except (ValueError, AttributeError):
+        except ValueError, AttributeError:
             pass
 
     if not date_obj:

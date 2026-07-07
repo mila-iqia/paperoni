@@ -29,6 +29,17 @@ class PaperEntry:
     index: int
     entry: JSON
 
+
+@dataclass
+class StreamComplete:
+    """Sent once the source iterator is exhausted, to stop the spinner.
+
+    ``total`` is the number of papers that were streamed.
+    """
+
+    total: int
+
+
 _FILTER_SYSTEM_PROMPT = """\
 You generate Python filter code for the paperoni paper browser.
 
@@ -109,7 +120,8 @@ async def render_papers(things, typ=None, scored=False):
     body.print(t'<link rel="stylesheet" href={B_ASSETS / "bpapers.css"}>')
     body.print(t"{(B_ASSETS / 'template.html').read_text():raw}")
 
-    body["#discover-header"].set("Discovering…")
+    # Show the processing spinner right away, before the module even loads.
+    body["#discover-header"].set(t'<span class="discover-spinner"></span>')
 
     # Populated incrementally as papers stream in; the code filter indexes into
     # this list, and by the time a filter can run (a user keypress) the stream
@@ -177,6 +189,13 @@ async def render_papers(things, typ=None, scored=False):
                     (window._paperQueue = window._paperQueue || []).push([msg.entry, msg.index]);
                 }
             }""",
+            StreamComplete: """(msg) => {
+                if (window._DISCOVER_READY) {
+                    window.DISCOVER_DONE();
+                } else {
+                    window._streamDonePending = true;
+                }
+            }""",
         }
     )
 
@@ -211,6 +230,9 @@ async def render_papers(things, typ=None, scored=False):
         paper_objects.append(obj)
         cell.data(PaperEntry(index=i, entry=serialize(element_typ, thing)))
         i += 1
+
+    # The source is exhausted: stop the spinner and freeze the final count.
+    cell.data(StreamComplete(total=i))
 
     # Keep the cell focused and visible after the process exits.
     cell.configure(sticky=True)
