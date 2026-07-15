@@ -33,6 +33,7 @@
       name: TUDelft - Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/53796?format=json
         type: profile
@@ -45,6 +46,7 @@
       name: School of Informatics, University of Edinburgh
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/100268?format=json
         type: profile
@@ -57,6 +59,7 @@
       name: MILA, University of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/3239?format=json
         type: profile
@@ -69,6 +72,7 @@
       name: Delft University of Technology
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/69054?format=json
         type: profile
@@ -126,6 +130,7 @@
       name: Université Paris-Saclay CNRS CentraleSupélec
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/84601?format=json
         type: profile
@@ -138,6 +143,7 @@
       name: New York University
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/84582?format=json
         type: profile
@@ -150,6 +156,7 @@
       name: TU Wien Vienna University of Technology
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/46177?format=json
         type: profile
@@ -162,6 +169,7 @@
       name: 'MILA - Quebec AI Institute '
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/84583?format=json
         type: profile
@@ -221,6 +229,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/49551?format=json
         type: profile
@@ -233,6 +242,7 @@
       name: Mila, Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/19397?format=json
         type: profile
@@ -245,6 +255,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/32612?format=json
         type: profile
@@ -257,6 +268,7 @@
       name: University of Oxford
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/86716?format=json
         type: profile
@@ -269,6 +281,7 @@
       name: Mila, Quebec AI institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/43856?format=json
         type: profile
@@ -281,6 +294,7 @@
       name: Mila, University of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/6784?format=json
         type: profile
@@ -293,6 +307,7 @@
       name: Mila / Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/6671?format=json
         type: profile
@@ -356,6 +371,7 @@
       name: MILA
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/19670?format=json
         type: profile
@@ -368,6 +384,7 @@
       name: Mila &amp;amp;amp;amp; U. of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/86131?format=json
         type: profile
@@ -380,6 +397,7 @@
       name: Mila - University dé Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/31872?format=json
         type: profile
@@ -392,6 +410,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/86123?format=json
         type: profile
@@ -404,6 +423,7 @@
       name: Mila, Université de Montréal & Samsung SAIL Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/1241?format=json
         type: profile
@@ -416,6 +436,7 @@
       name: Mila, University of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/33293?format=json
         type: profile
@@ -477,6 +498,7 @@
       name: Mila -- Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/51945?format=json
         type: profile
@@ -489,6 +511,7 @@
       name: Carnegie Mellon University
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/5191?format=json
         type: profile
@@ -497,6 +520,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/19539?format=json
         type: profile
@@ -509,6 +533,7 @@
       name: Mila, University of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/85025?format=json
         type: profile
@@ -521,6 +546,7 @@
       name: Massachusetts Institute of Technology
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/52158?format=json
         type: profile
@@ -533,6 +559,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/50499?format=json
         type: profile
@@ -545,6 +572,7 @@
       name: Université de Montréal, Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://iclr.cc/api/miniconf/users/99678?format=json
         type: profile

@@ -3,6 +3,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Sébastien Lachapelle
       type: dblp
@@ -11,6 +12,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Tristan Deleu
       type: dblp
@@ -19,6 +21,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Divyat Mahajan
       type: dblp
@@ -27,6 +30,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Ioannis Mitliagkas
       type: dblp
@@ -35,6 +39,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Yoshua Bengio
       type: dblp
@@ -43,6 +48,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Simon Lacoste-Julien
       type: dblp
@@ -51,6 +57,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Quentin Bertrand
       type: dblp

@@ -30,6 +30,7 @@ authors:
     name: McGill University
   author:
     aliases: []
+    email: null
     links: []
     name: Felix Proulx-Giraldeau
   display_name: Felix Proulx-Giraldeau
@@ -48,6 +49,7 @@ authors:
     name: Chan Zuckerberg Biohub, San Francisco
   author:
     aliases: []
+    email: null
     links: []
     name: Jan M Skotheim
   display_name: Jan M Skotheim
@@ -60,6 +62,7 @@ authors:
     name: McGill University
   author:
     aliases: []
+    email: null
     links: []
     name: Paul François
   display_name: Paul François

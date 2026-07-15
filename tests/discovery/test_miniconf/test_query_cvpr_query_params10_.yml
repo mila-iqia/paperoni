@@ -20,6 +20,7 @@
       name: Mila-Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/127449?format=json
         type: profile
@@ -28,6 +29,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/94650?format=json
         type: profile
@@ -36,6 +38,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/92323?format=json
         type: profile
@@ -96,6 +99,7 @@
       name: King Abdullah University of Science and Technology
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/131776?format=json
         type: profile
@@ -108,6 +112,7 @@
       name: Concordia University/ MILA
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/131766?format=json
         type: profile
@@ -120,6 +125,7 @@
       name: Toyota Motor Europe
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/75692?format=json
         type: profile
@@ -132,6 +138,7 @@
       name: KAUST
     author:
       aliases: []
+      email: null
       links:
       - link: http://cvpr.thecvf.com/api/miniconf/users/85585?format=json
         type: profile

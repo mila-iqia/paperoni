@@ -3,6 +3,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Sahand Rezaei-Shoshtari
       type: dblp
@@ -11,6 +12,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Charlotte Morissette
       type: dblp
@@ -19,6 +21,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: François Robert Hogan
       type: dblp
@@ -27,6 +30,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Gregory Dudek
       type: dblp
@@ -35,6 +39,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: David Meger
       type: dblp

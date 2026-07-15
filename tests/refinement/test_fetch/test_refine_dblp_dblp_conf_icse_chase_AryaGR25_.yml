@@ -3,6 +3,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Deeksha M. Arya
       type: dblp
@@ -11,6 +12,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Jin L. C. Guo
       type: dblp
@@ -19,6 +21,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Martin P. Robillard
       type: dblp

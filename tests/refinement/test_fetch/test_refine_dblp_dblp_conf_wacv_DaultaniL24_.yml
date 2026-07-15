@@ -3,6 +3,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Dinesh Daultani
       type: dblp
@@ -13,6 +14,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Hugo Larochelle
       type: dblp

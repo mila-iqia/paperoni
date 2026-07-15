@@ -16,6 +16,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5034688833
         type: openalex
@@ -24,6 +25,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: A5108137151
         type: openalex
@@ -36,6 +38,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: A5004295653
         type: openalex
@@ -48,6 +51,7 @@
       name: HEC Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5103126568
         type: openalex
@@ -62,6 +66,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: A5080591144
         type: openalex
@@ -76,6 +81,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5112608251
         type: openalex
@@ -90,6 +96,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5086198262
         type: openalex

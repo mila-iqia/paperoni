@@ -7,6 +7,7 @@ authors:
     name: Universit&#x00E9; de Sherbrooke,Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Cem Subakan
   display_name: Cem Subakan
@@ -17,6 +18,7 @@ authors:
     name: Mila-Quebec AI Institute,Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Mirco Ravanelli
   display_name: Mirco Ravanelli
@@ -27,6 +29,7 @@ authors:
     name: Universit&#x00E0; Politecnica delle Marche,Italy
   author:
     aliases: []
+    email: null
     links: []
     name: Samuele Cornell
   display_name: Samuele Cornell
@@ -37,6 +40,7 @@ authors:
     name: Universit&#x00E9; de Sherbrooke,Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Francois Grondin
   display_name: Francois Grondin

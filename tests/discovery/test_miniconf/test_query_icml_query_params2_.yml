@@ -20,6 +20,7 @@
       name: Université de Montréal, Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/8271?format=json
         type: profile
@@ -32,6 +33,7 @@
       name: Vector Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/88580?format=json
         type: profile
@@ -44,6 +46,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/92402?format=json
         type: profile
@@ -56,6 +59,7 @@
       name: University of Toronto Vector Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/97996?format=json
         type: profile
@@ -68,6 +72,7 @@
       name: University of Texas, Austin
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/92899?format=json
         type: profile
@@ -80,6 +85,7 @@
       name: University of Toronto
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/37429?format=json
         type: profile
@@ -138,6 +144,7 @@
       name: McGill University, Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/72783?format=json
         type: profile
@@ -150,6 +157,7 @@
       name: Mila / McGill
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/121983?format=json
         type: profile
@@ -162,6 +170,7 @@
       name: Gatsby Unit and Google Deepmind
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/8312?format=json
         type: profile
@@ -174,6 +183,7 @@
       name: Google DeepMind
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/15946?format=json
         type: profile
@@ -186,6 +196,7 @@
       name: DeepMind
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/8841?format=json
         type: profile
@@ -198,6 +209,7 @@
       name: Google DeepMind
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/8541?format=json
         type: profile
@@ -210,6 +222,7 @@
       name: Google DeepMind
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/7528?format=json
         type: profile
@@ -222,6 +235,7 @@
       name: Google DeepMind
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/23745?format=json
         type: profile
@@ -280,6 +294,7 @@
       name: Harvard University
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/124592?format=json
         type: profile
@@ -293,6 +308,7 @@
         of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/124566?format=json
         type: profile
@@ -305,6 +321,7 @@
       name: Harvard University
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/19475?format=json
         type: profile
@@ -317,6 +334,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/73156?format=json
         type: profile
@@ -378,6 +396,7 @@
       name: University of Amsterdam
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/125181?format=json
         type: profile
@@ -390,6 +409,7 @@
       name: ISTA
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/128685?format=json
         type: profile
@@ -402,6 +422,7 @@
       name: Université de Montréal, Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/62189?format=json
         type: profile
@@ -414,6 +435,7 @@
       name: Service Now
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/62187?format=json
         type: profile
@@ -426,6 +448,7 @@
       name: MPI for Intelligent Systems, Tübingen & University of Cambridge
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/58738?format=json
         type: profile
@@ -438,6 +461,7 @@
       name: ISTA
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/103725?format=json
         type: profile
@@ -450,6 +474,7 @@
       name: University of Amsterdam, MIT-IBM Watson AI Lab
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/73085?format=json
         type: profile
@@ -509,6 +534,7 @@
       name: Mila - Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/125764?format=json
         type: profile
@@ -521,6 +547,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/125766?format=json
         type: profile
@@ -529,6 +556,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/106509?format=json
         type: profile
@@ -542,6 +570,7 @@
         of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/99756?format=json
         type: profile
