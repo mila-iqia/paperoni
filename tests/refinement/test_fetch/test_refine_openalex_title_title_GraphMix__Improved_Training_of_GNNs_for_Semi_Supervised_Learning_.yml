@@ -126,6 +126,10 @@ links:
   type: openalex
 - link: https://ojs.aaai.org/index.php/AAAI/article/download/17203/17010
   type: pdf
+- link: https://hal.science/hal-03247184
+  type: url
+- link: https://ojs.aaai.org/index.php/AAAI/article/view/17203
+  type: url
 releases:
 - pages: null
   peer_review_status: peer-reviewed

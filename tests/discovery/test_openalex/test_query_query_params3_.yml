@@ -111,12 +111,8 @@
     type: doi
   - link: '2399880602'
     type: mag
-  - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-    type: open-access
   - link: W2399880602
     type: openalex
-  - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-    type: pdf
   releases:
   - pages: null
     peer_review_status: peer-reviewed
@@ -128,8 +124,6 @@
       links:
       - link: 10.1609/aaai.v31i1.10983
         type: doi
-      - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-        type: pdf
       name: Proceedings of the AAAI Conference on Artificial Intelligence
       open: true
       peer_reviewed: true

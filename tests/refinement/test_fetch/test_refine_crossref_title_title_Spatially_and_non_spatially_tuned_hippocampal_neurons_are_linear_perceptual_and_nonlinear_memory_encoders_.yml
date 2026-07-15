@@ -18,37 +18,75 @@ abstract: "\n                The hippocampus has long been regarded as a neural 
   \ perception and memory, informing on its role in episodic memory, spatial navigation,\
   \ and associative learning."
 authors:
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Physiology, McGill University, Montréal, Canada
+  - aliases: []
+    category: unknown
+    country: null
+    name: Mila, Université de Montréal, Montréal, Canada
   author:
     aliases: []
     links: []
     name: Maxime Daigle
   display_name: Maxime Daigle
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Physiology, McGill University, Montréal, Canada
   author:
     aliases: []
     links: []
     name: Kaicheng Yan
   display_name: Kaicheng Yan
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Biology, York University, Toronto, Canada
   author:
     aliases: []
     links: []
     name: Benjamin Corrigan
   display_name: Benjamin Corrigan
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Neuroscience, Icahn School of Medicine at Mount Sinai, New
+      York, USA
   author:
     aliases: []
     links: []
     name: Roberto Gulli
   display_name: Roberto Gulli
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Physiology and Pharmacology, University of Western Ontario,
+      London, Canada
   author:
     aliases: []
     links: []
     name: Julio Martinez-Trujillo
   display_name: Julio Martinez-Trujillo
-- affiliations: []
+- affiliations:
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Physiology, McGill University, Montréal, Canada
+  - aliases: []
+    category: unknown
+    country: null
+    name: Mila, Université de Montréal, Montréal, Canada
+  - aliases: []
+    category: unknown
+    country: null
+    name: Department of Computer Science, McGill University, Montréal, Canada
   author:
     aliases: []
     links: []

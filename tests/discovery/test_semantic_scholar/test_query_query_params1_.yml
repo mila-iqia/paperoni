@@ -141,7 +141,7 @@
     type: doi
   - link: '220483187'
     type: corpusid
-  - link: https://doi.org/10.24963/ijcai.2020/548
+  - link: https://www.ijcai.org/proceedings/2020/0548.pdf
     type: pdf
   releases:
   - pages: null
