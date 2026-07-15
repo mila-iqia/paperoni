@@ -111,12 +111,8 @@
     type: doi
   - link: '2399880602'
     type: mag
-  - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-    type: open-access
   - link: W2399880602
     type: openalex
-  - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-    type: pdf
   releases:
   - pages: null
     peer_review_status: peer-reviewed
@@ -128,8 +124,6 @@
       links:
       - link: 10.1609/aaai.v31i1.10983
         type: doi
-      - link: https://ojs.aaai.org/index.php/AAAI/article/download/10983/10842
-        type: pdf
       name: Proceedings of the AAAI Conference on Artificial Intelligence
       open: true
       peer_reviewed: true
@@ -323,11 +317,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -339,11 +333,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -357,11 +351,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -369,8 +363,8 @@
         type: openalex
       - link: 0009-0003-4124-1687
         type: orcid
-      name: Çaǧlar Gülçehre
-    display_name: Çaǧlar Gülçehre
+      name: Çağlar Gülçehre
+    display_name: Çağlar Gülçehre
   - affiliations:
     - aliases: []
       category: academia
@@ -399,11 +393,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -415,11 +409,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Polytechnique Montréal
     - aliases: []
       category: academia
       country: null
-      name: Polytechnique Montréal
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -431,11 +425,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -447,11 +441,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -479,11 +473,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:
@@ -497,11 +491,11 @@
     - aliases: []
       category: academia
       country: null
-      name: Université de Montréal
+      name: Concordia University
     - aliases: []
       category: academia
       country: null
-      name: Concordia University
+      name: Université de Montréal
     author:
       aliases: []
       links:

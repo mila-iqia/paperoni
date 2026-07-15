@@ -41,13 +41,13 @@ authors:
   display_name: Noam Shazeer
 - affiliations:
   - aliases: []
-    category: industry
-    country: null
-    name: Google (United States)
-  - aliases: []
     category: academia
     country: null
     name: University of Southern California
+  - aliases: []
+    category: industry
+    country: null
+    name: Google (United States)
   author:
     aliases: []
     links:
@@ -83,13 +83,13 @@ authors:
   display_name: Llion Jones
 - affiliations:
   - aliases: []
-    category: academia
-    country: null
-    name: University of Toronto
-  - aliases: []
     category: industry
     country: null
     name: Google (United States)
+  - aliases: []
+    category: academia
+    country: null
+    name: University of Toronto
   author:
     aliases: []
     links:
