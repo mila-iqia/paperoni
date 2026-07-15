@@ -20,6 +20,7 @@
       name: Mila; Universite de Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12727?format=json
         type: profile
@@ -32,6 +33,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12728?format=json
         type: profile
@@ -44,6 +46,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12715?format=json
         type: profile
@@ -56,6 +59,7 @@
       name: University of Toronto &amp; Vector Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12729?format=json
         type: profile
@@ -68,6 +72,7 @@
       name: 'Mila '
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12730?format=json
         type: profile
@@ -80,6 +85,7 @@
       name: Université de Montréal; Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12731?format=json
         type: profile
@@ -92,6 +98,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/12732?format=json
         type: profile
@@ -104,6 +111,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://virtual.aistats.org/api/miniconf/users/532?format=json
         type: profile

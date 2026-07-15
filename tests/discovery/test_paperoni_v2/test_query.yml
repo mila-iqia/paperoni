@@ -26,6 +26,7 @@ authors:
     name: Mila
   author:
     aliases: []
+    email: null
     links:
     - link: ~Stefano_Massaroli1
       type: openreview
@@ -48,6 +49,7 @@ authors:
     name: Stanford University.
   author:
     aliases: []
+    email: null
     links:
     - link: ~Michael_Poli1
       type: openreview
@@ -62,6 +64,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: ~Daniel_Y_Fu1
       type: openreview
@@ -84,6 +87,7 @@ authors:
     name: Stanford University.
   author:
     aliases: []
+    email: null
     links:
     - link: ~Hermann_Kumbong1
       type: openreview
@@ -96,6 +100,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: ~Rom_Nishijima_Parnichkun1
       type: openreview
@@ -112,6 +117,7 @@ authors:
     name: Purdue University.
   author:
     aliases: []
+    email: null
     links:
     - link: ~Aman_Timalsina1
       type: openreview
@@ -124,6 +130,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: ~David_W._Romero1
       type: openreview
@@ -140,6 +147,7 @@ authors:
     name: Stanford University.
   author:
     aliases: []
+    email: null
     links:
     - link: ~Quinn_McIntyre1
       type: openreview
@@ -156,6 +164,7 @@ authors:
     name: Carnegie Mellon University
   author:
     aliases: []
+    email: null
     links:
     - link: ~Beidi_Chen1
       type: openreview
@@ -172,6 +181,7 @@ authors:
     name: University
   author:
     aliases: []
+    email: null
     links:
     - link: ~Atri_Rudra1
       type: openreview
@@ -190,6 +200,7 @@ authors:
     name: University of Chicago
   author:
     aliases: []
+    email: null
     links:
     - link: ~Ce_Zhang1
       type: openreview
@@ -220,6 +231,7 @@ authors:
     name: Stanford University.
   author:
     aliases: []
+    email: null
     links:
     - link: ~Christopher_Re1
       type: openreview
@@ -244,6 +256,7 @@ authors:
     name: Stanford University.
   author:
     aliases: []
+    email: null
     links:
     - link: ~Stefano_Ermon1
       type: openreview
@@ -268,6 +281,7 @@ authors:
     name: Mila
   author:
     aliases: []
+    email: null
     links:
     - link: bengio-yoshua
       type: bio

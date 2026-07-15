@@ -20,6 +20,7 @@
       name: Google
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/162526?format=json
         type: profile
@@ -32,6 +33,7 @@
       name: Purdue University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/255556?format=json
         type: profile
@@ -44,6 +46,7 @@
       name: Purdue
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/33745?format=json
         type: profile
@@ -56,6 +59,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/52954?format=json
         type: profile
@@ -68,6 +72,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/146580?format=json
         type: profile
@@ -134,6 +139,7 @@
       name: Mila, McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/206505?format=json
         type: profile
@@ -146,6 +152,7 @@
       name: Google Brain
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/14085?format=json
         type: profile
@@ -158,6 +165,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/56258?format=json
         type: profile
@@ -170,6 +178,7 @@
       name: Rutgers, DARPA
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/21367?format=json
         type: profile
@@ -182,6 +191,7 @@
       name: Rutgers University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/233075?format=json
         type: profile
@@ -249,6 +259,7 @@
       name: Mila/ McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/52666?format=json
         type: profile
@@ -261,6 +272,7 @@
       name: University of Wisconsin -- Madison
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/159161?format=json
         type: profile
@@ -273,6 +285,7 @@
       name: McGill University / Mila / DeepMind Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/664?format=json
         type: profile
@@ -342,6 +355,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/249763?format=json
         type: profile
@@ -354,6 +368,7 @@
       name: Mila, Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/126135?format=json
         type: profile
@@ -366,6 +381,7 @@
       name: Mila AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/243220?format=json
         type: profile
@@ -378,6 +394,7 @@
       name: KAIST / Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/98221?format=json
         type: profile
@@ -390,6 +407,7 @@
       name: Mila, Université de Montréal, Jagiellonian University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/106224?format=json
         type: profile
@@ -402,6 +420,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/378105?format=json
         type: profile
@@ -414,6 +433,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/413753?format=json
         type: profile
@@ -426,6 +446,7 @@
       name: Universite de Montreal / MILA
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/60090?format=json
         type: profile
@@ -439,6 +460,7 @@
         de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/376508?format=json
         type: profile
@@ -451,6 +473,7 @@
       name: Valence Labs
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/17163?format=json
         type: profile
@@ -463,6 +486,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/90745?format=json
         type: profile
@@ -476,6 +500,7 @@
         of Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/146114?format=json
         type: profile
@@ -488,6 +513,7 @@
       name: Mila/U. Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/68983?format=json
         type: profile
@@ -500,6 +526,7 @@
       name: Mila - Québec AI Institute &amp; Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/229844?format=json
         type: profile
@@ -512,6 +539,7 @@
       name: University of Edinburgh
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/183841?format=json
         type: profile
@@ -582,6 +610,7 @@
       name: IBM Research
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/40901?format=json
         type: profile
@@ -594,6 +623,7 @@
       name: Google Deepmind, Mila Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/50564?format=json
         type: profile
@@ -606,6 +636,7 @@
       name: Dalhousie University
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/379352?format=json
         type: profile
@@ -618,6 +649,7 @@
       name: Mila / École Polytechnique de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://neurips.cc/api/miniconf/users/111364?format=json
         type: profile

@@ -7,6 +7,7 @@ authors:
     name: Department of Physics, McGill University
   author:
     aliases: []
+    email: null
     links: []
     name: Felix Proulx-Giraldeau
   display_name: Felix Proulx-Giraldeau
@@ -21,6 +22,7 @@ authors:
     name: Department of Biology, Stanford University
   author:
     aliases: []
+    email: null
     links: []
     name: Jan M Skotheim
   display_name: Jan M Skotheim
@@ -31,6 +33,7 @@ authors:
     name: Department of Physics, McGill University
   author:
     aliases: []
+    email: null
     links: []
     name: Paul François
   display_name: Paul François

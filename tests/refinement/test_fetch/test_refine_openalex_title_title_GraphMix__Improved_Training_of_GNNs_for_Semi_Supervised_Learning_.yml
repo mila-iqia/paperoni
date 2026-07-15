@@ -19,6 +19,7 @@ authors:
     name: Mila - Quebec Artificial Intelligence Institute
   author:
     aliases: []
+    email: null
     links:
     - link: A5083701330
       type: openalex
@@ -33,6 +34,7 @@ authors:
     name: Mila - Quebec Artificial Intelligence Institute
   author:
     aliases: []
+    email: null
     links:
     - link: A5101458727
       type: openalex
@@ -47,6 +49,7 @@ authors:
     name: Massachusetts Institute of Technology
   author:
     aliases: []
+    email: null
     links:
     - link: A5003184366
       type: openalex
@@ -61,6 +64,7 @@ authors:
     name: Université de Montréal
   author:
     aliases: []
+    email: null
     links:
     - link: A5030891292
       type: openalex
@@ -73,6 +77,7 @@ authors:
     name: Mila - Quebec Artificial Intelligence Institute
   author:
     aliases: []
+    email: null
     links:
     - link: A5086198262
       type: openalex
@@ -87,6 +92,7 @@ authors:
     name: Aalto University
   author:
     aliases: []
+    email: null
     links:
     - link: A5057931031
       type: openalex
@@ -101,6 +107,7 @@ authors:
     name: Mila - Quebec Artificial Intelligence Institute
   author:
     aliases: []
+    email: null
     links:
     - link: A5077231313
       type: openalex

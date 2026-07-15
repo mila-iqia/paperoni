@@ -16,6 +16,7 @@
         de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/123588?format=json
         type: profile
@@ -28,6 +29,7 @@
       name: Mila / Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/69704?format=json
         type: profile
@@ -40,6 +42,7 @@
       name: University of Cambridge
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/125397?format=json
         type: profile
@@ -52,6 +55,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/24659?format=json
         type: profile
@@ -64,6 +68,7 @@
       name: Mila / Ciela
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/94403?format=json
         type: profile
@@ -76,6 +81,7 @@
       name: Université de Montréal and Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/76078?format=json
         type: profile
@@ -138,6 +144,7 @@
       name: McGill-Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/56442?format=json
         type: profile
@@ -150,6 +157,7 @@
       name: Mila, Universite de Montreal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/72991?format=json
         type: profile
@@ -162,6 +170,7 @@
       name: University of Oxford Department of Computer Science
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/27183?format=json
         type: profile
@@ -174,6 +183,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/40190?format=json
         type: profile
@@ -187,6 +197,7 @@
         de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/123588?format=json
         type: profile
@@ -199,6 +210,7 @@
       name: Mila - Quebec AI Institute; DreamFold
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/96459?format=json
         type: profile
@@ -211,6 +223,7 @@
       name: Mila - Quebec AI Institute, UdeM, Jagiellonian University
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/42889?format=json
         type: profile
@@ -223,6 +236,7 @@
       name: McGill - Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/8224?format=json
         type: profile
@@ -235,6 +249,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/73156?format=json
         type: profile
@@ -247,6 +262,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/24659?format=json
         type: profile
@@ -259,6 +275,7 @@
       name: Mila / Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/69704?format=json
         type: profile
@@ -271,6 +288,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/92402?format=json
         type: profile
@@ -329,6 +347,7 @@
       name: KAIST / Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/51858?format=json
         type: profile
@@ -341,6 +360,7 @@
       name: Korea Advanced Institute of Science & Technology (KAIST)
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/83555?format=json
         type: profile
@@ -353,6 +373,7 @@
       name: KAIST
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/80934?format=json
         type: profile
@@ -365,6 +386,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/53479?format=json
         type: profile
@@ -377,6 +399,7 @@
       name: Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/78783?format=json
         type: profile
@@ -389,6 +412,7 @@
       name: KAIST
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/88493?format=json
         type: profile
@@ -401,6 +425,7 @@
       name: KAIST
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/73862?format=json
         type: profile
@@ -413,6 +438,7 @@
       name: Valence Labs
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/18582?format=json
         type: profile
@@ -425,6 +451,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/24659?format=json
         type: profile
@@ -484,6 +511,7 @@
       name: Borealis AI & Mila
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/55140?format=json
         type: profile
@@ -496,6 +524,7 @@
       name: Borealis AI
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/72356?format=json
         type: profile
@@ -508,6 +537,7 @@
       name: Oracle Labs
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/8111?format=json
         type: profile
@@ -520,6 +550,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/24659?format=json
         type: profile
@@ -532,6 +563,7 @@
       name: Borealis AI
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/25292?format=json
         type: profile
@@ -594,6 +626,7 @@
       name: Entalpic
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/131172?format=json
         type: profile
@@ -606,6 +639,7 @@
       name: Mila / Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/92292?format=json
         type: profile
@@ -618,6 +652,7 @@
       name: Intel Labs
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/22053?format=json
         type: profile
@@ -630,6 +665,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/24659?format=json
         type: profile
@@ -642,6 +678,7 @@
       name: Mila - Quebec AI Institute
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/72990?format=json
         type: profile
@@ -650,6 +687,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: http://icml.cc/api/miniconf/users/131173?format=json
         type: profile

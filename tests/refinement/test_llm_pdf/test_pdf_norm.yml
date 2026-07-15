@@ -17,6 +17,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links: []
       name: Leo Feng
     display_name: Leo Feng
@@ -27,6 +28,7 @@
       name: Borealis AI
     author:
       aliases: []
+      email: null
       links: []
       name: Hossein Hajimirsadeghi
     display_name: Hossein Hajimirsadeghi
@@ -43,6 +45,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links: []
       name: Yoshua Bengio
     display_name: Yoshua Bengio
@@ -59,10 +62,12 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links: []
       name: Mohamed Osama Ahmed
     display_name: Mohamed Osama Ahmed
-  flags: []
+  flags:
+  - refined:pdf
   info:
     refined_by:
       pdf: composite

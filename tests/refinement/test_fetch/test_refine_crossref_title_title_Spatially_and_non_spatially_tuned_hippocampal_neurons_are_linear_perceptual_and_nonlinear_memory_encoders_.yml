@@ -29,6 +29,7 @@ authors:
     name: Mila, Université de Montréal, Montréal, Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Maxime Daigle
   display_name: Maxime Daigle
@@ -39,6 +40,7 @@ authors:
     name: Department of Physiology, McGill University, Montréal, Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Kaicheng Yan
   display_name: Kaicheng Yan
@@ -49,6 +51,7 @@ authors:
     name: Department of Biology, York University, Toronto, Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Benjamin Corrigan
   display_name: Benjamin Corrigan
@@ -60,6 +63,7 @@ authors:
       York, USA
   author:
     aliases: []
+    email: null
     links: []
     name: Roberto Gulli
   display_name: Roberto Gulli
@@ -71,6 +75,7 @@ authors:
       London, Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Julio Martinez-Trujillo
   display_name: Julio Martinez-Trujillo
@@ -89,6 +94,7 @@ authors:
     name: Department of Computer Science, McGill University, Montréal, Canada
   author:
     aliases: []
+    email: null
     links: []
     name: Pouya Bashivan
   display_name: Pouya Bashivan

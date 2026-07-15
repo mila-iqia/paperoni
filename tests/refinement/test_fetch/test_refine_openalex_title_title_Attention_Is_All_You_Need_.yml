@@ -20,6 +20,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5103024730
       type: openalex
@@ -34,6 +35,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5021878400
       type: openalex
@@ -50,6 +52,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5005777963
       type: openalex
@@ -62,6 +65,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5022416424
       type: openalex
@@ -76,6 +80,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5023448834
       type: openalex
@@ -92,6 +97,7 @@ authors:
     name: University of Toronto
   author:
     aliases: []
+    email: null
     links:
     - link: A5079288315
       type: openalex
@@ -106,6 +112,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5031789995
       type: openalex
@@ -120,6 +127,7 @@ authors:
     name: Google (United States)
   author:
     aliases: []
+    email: null
     links:
     - link: A5045719436
       type: openalex

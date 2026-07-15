@@ -3,6 +3,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Alexandre Lacoste
       type: dblp
@@ -11,6 +12,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Nils Lehmann
       type: dblp
@@ -19,6 +21,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Pau Rodríguez
       type: dblp
@@ -27,6 +30,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Evan D. Sherwin
       type: dblp
@@ -35,6 +39,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Hannah Kerner
       type: dblp
@@ -43,6 +48,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Björn Lütjens
       type: dblp
@@ -51,6 +57,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Jeremy Irvin
       type: dblp
@@ -59,6 +66,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: David Dao
       type: dblp
@@ -67,6 +75,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Hamed Alemohammad
       type: dblp
@@ -75,6 +84,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Alexandre Drouin
       type: dblp
@@ -83,6 +93,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Mehmet Gunturkun
       type: dblp
@@ -91,6 +102,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Gabriel Huang
       type: dblp
@@ -99,6 +111,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: David Vázquez 0001
       type: dblp
@@ -107,6 +120,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Dava J. Newman
       type: dblp
@@ -115,6 +129,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Yoshua Bengio
       type: dblp
@@ -123,6 +138,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Stefano Ermon
       type: dblp
@@ -131,6 +147,7 @@ authors:
 - affiliations: []
   author:
     aliases: []
+    email: null
     links:
     - link: Xiaoxiang Zhu 0001
       type: dblp

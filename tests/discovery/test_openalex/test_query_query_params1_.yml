@@ -16,6 +16,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5034688833
         type: openalex
@@ -24,6 +25,7 @@
   - affiliations: []
     author:
       aliases: []
+      email: null
       links:
       - link: A5108137151
         type: openalex
@@ -36,6 +38,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: A5004295653
         type: openalex
@@ -48,6 +51,7 @@
       name: HEC Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5103126568
         type: openalex
@@ -62,6 +66,7 @@
       name: McGill University
     author:
       aliases: []
+      email: null
       links:
       - link: A5080591144
         type: openalex
@@ -76,6 +81,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5112608251
         type: openalex
@@ -90,6 +96,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5086198262
         type: openalex
@@ -178,6 +185,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5049800316
         type: openalex
@@ -190,6 +198,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5103958886
         type: openalex
@@ -202,6 +211,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5077403633
         type: openalex
@@ -214,6 +224,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5067483843
         type: openalex
@@ -228,6 +239,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5086198262
         type: openalex
@@ -308,6 +320,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5032466547
         type: openalex
@@ -324,6 +337,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5016899919
         type: openalex
@@ -340,6 +354,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5033938098
         type: openalex
@@ -358,6 +373,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5041145688
         type: openalex
@@ -372,6 +388,7 @@
       name: Goethe University Frankfurt
     author:
       aliases: []
+      email: null
       links:
       - link: A5019905286
         type: openalex
@@ -384,6 +401,7 @@
       name: Goethe University Frankfurt
     author:
       aliases: []
+      email: null
       links:
       - link: A5060492651
         type: openalex
@@ -400,6 +418,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5051608757
         type: openalex
@@ -416,6 +435,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5078468259
         type: openalex
@@ -432,6 +452,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5020785659
         type: openalex
@@ -448,6 +469,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5037330846
         type: openalex
@@ -464,6 +486,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5017871627
         type: openalex
@@ -480,6 +503,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5035471281
         type: openalex
@@ -498,6 +522,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5085746798
         type: openalex
@@ -514,6 +539,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5112608251
         type: openalex
@@ -532,6 +558,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5103958886
         type: openalex
@@ -548,6 +575,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5030440955
         type: openalex
@@ -564,6 +592,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5075885606
         type: openalex
@@ -582,6 +611,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5086198262
         type: openalex
@@ -656,6 +686,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5072002276
         type: openalex
@@ -668,6 +699,7 @@
       name: University of Illinois Urbana-Champaign
     author:
       aliases: []
+      email: null
       links:
       - link: A5090783855
         type: openalex
@@ -680,6 +712,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5086198262
         type: openalex
@@ -758,6 +791,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5019862529
         type: openalex
@@ -770,6 +804,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5084125668
         type: openalex
@@ -784,6 +819,7 @@
       name: Université de Montréal
     author:
       aliases: []
+      email: null
       links:
       - link: A5086198262
         type: openalex

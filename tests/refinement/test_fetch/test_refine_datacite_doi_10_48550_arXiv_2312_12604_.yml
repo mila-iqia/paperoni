@@ -30,6 +30,7 @@ authors:
     name: Jack
   author:
     aliases: []
+    email: null
     links: []
     name: Moses Openja
   display_name: Moses Openja
@@ -40,6 +41,7 @@ authors:
     name: Jack
   author:
     aliases: []
+    email: null
     links: []
     name: Foutse Khomh
   display_name: Foutse Khomh
@@ -50,6 +52,7 @@ authors:
     name: Jack
   author:
     aliases: []
+    email: null
     links: []
     name: Armstrong Foundjem
   display_name: Armstrong Foundjem
@@ -60,18 +63,21 @@ authors:
     name: Jack
   author:
     aliases: []
+    email: null
     links: []
     name: Zhen Ming
   display_name: Zhen Ming
 - affiliations: []
   author:
     aliases: []
+    email: null
     links: []
     name: Mouna Abidi
   display_name: Mouna Abidi
 - affiliations: []
   author:
     aliases: []
+    email: null
     links: []
     name: Ahmed E. Hassan
   display_name: Ahmed E. Hassan
