@@ -11,11 +11,11 @@ from serieux import TaggedSubclass
 from serieux.features.encrypt import Secret
 from serieux.features.filebacked import FileProxy
 
-from paperoni.discovery.openreview_cfg import OpenReviewConfig
-
 from .collection.abc import PaperCollection
+from .discovery.openreview_cfg import OpenReviewConfig
 from .get import Fetcher, RequestsFetcher
 from .model.focus import AutoFocus, Focuses
+from .norm import PaperNormalizer
 from .prompt import GenAIPrompt, Prompt
 
 
@@ -99,6 +99,7 @@ class PaperoniConfig:
     reporters: list[TaggedSubclass[Reporter]] = field(default_factory=list)
     server: Server = field(default_factory=Server)
     autovalidation_threshold: float = 10.0
+    normalizer: PaperNormalizer = None
 
     # TODO: Why does this seams to disable future gifnoc.define like
     # `paperoni.semantic_scholar`?

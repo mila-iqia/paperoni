@@ -1,0 +1,49 @@
+{% extends "main.html" %}
+
+{% block title_key %}Institution Normalizations{% endblock %}
+{% block title %}Institution Normalizations{% endblock %}
+{% block page_title %}Institution Normalizations{% endblock %}
+
+{% block content %}
+<div class="edit-container focuses-page">
+    <div class="norm-toolbar">
+        <input type="search" id="instSearch" class="norm-search" placeholder="Filter by original or actual name…">
+    </div>
+    <div class="norm-table-wrapper">
+        <div class="norm-add-col">
+            <button id="addInstNormBtn" class="norm-add-btn" title="Add entry"><loc>+</loc></button>
+        </div>
+        <div class="focuses-table-container">
+            <table id="institutionNormTable" class="edit-table">
+                <colgroup>
+                    <col class="col-norm-original">
+                    <col class="col-norm-name">
+                    <col class="col-norm-category">
+                    <col class="col-norm-country">
+                    <col class="col-norm-action">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th><loc>Original</loc></th>
+                        <th><loc>Actual Name</loc></th>
+                        <th><loc>Category</loc></th>
+                        <th><loc>Country</loc></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="instNewTbody"></tbody>
+                <tbody id="instNormTbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="instPagination" class="norm-pagination"></div>
+</div>
+<button id="saveInstNormsBtn" class="btn-save-sticky norm-save-fixed"><loc>Save</loc></button>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" nonce="{{ csp_nonce }}">
+    import { initInstitutions } from '/assets/normalization.js';
+    initInstitutions();
+</script>
+{% endblock %}

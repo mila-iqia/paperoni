@@ -9,6 +9,7 @@ import shlex
 import sys
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from functools import cached_property
@@ -29,6 +30,7 @@ from serieux import (
     Auto,
     AutoRegistered,
     CommentRec,
+    Partial,
     TaggedUnion,
     auto_singleton,
     deserialize,
@@ -53,12 +55,18 @@ from .display import display, print_field, terminal_width
 from .fulltext.locate import URL, locate_all
 from .fulltext.pdf import PDF, CachePolicies, get_pdf
 from .heuristics import simplify_paper
-from .model import Link, Paper
+from .model import Institution, Link, Paper, Venue
+from .model.classes import PaperDiff
 from .model.focus import Focuses, Scored, Top
 from .model.merge import PaperWorkingSet, merge_all, qual
 from .model.utils import should_reprocess, should_rerun
+from .norm import NormalizationEntry
 from .refinement import fetch_all
-from .refinement.llm_normalize import normalize_paper
+from .refinement.llm_normalize import (
+    norm_venue_prompt,
+    normalize_paper,
+    process_affiliations_prompt,
+)
 from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statistic
 from .utils import as_aiter, deprox, expand_links_dict, prog, soft_fail, url_to_id
 
@@ -156,8 +164,12 @@ class Productor:
         Any, FromEntryPoint("paperoni.discovery", wrap=lambda cls: Auto[cls.query])
     ]
 
+    normalize: bool = True
+
     async def iterate(self, **kwargs) -> AsyncGenerator[Paper, None]:
         async for p in self.command(**kwargs):
+            if self.normalize:
+                p = config.normalizer(p)
             send(discover=p)
             yield p
 
@@ -1047,8 +1059,157 @@ class Coll:
             print(f"Modified {len(results)} papers")
             return results
 
+    @dataclass
+    class Normalize:
+        """Normalize venues and institutions."""
+
+        # How many times to use the LLM to normalize unknown venues
+        llm_norm: bool = True
+
+        # Maximum number of unknown venues to normalize using the LLM
+        venues: int = 1000
+
+        # Maximum number of unknown institutions to normalize using the LLM
+        institutions: int = 1000
+
+        # Number of LLM requests to make in parallel
+        threads: int = 4
+
+        # Limit the number of papers to look at
+        limit: int = None
+
+        # Avoid modifying the database
+        dry_run: bool = False
+
+        # Show the differences
+        show: bool = False
+
+        def __post_init__(self):
+            if self.show:
+                # For now, for simplicity
+                self.dry_run = True
+
+        def _normalize_all(self, normalizer, papers):
+            """Run the normalizer over every paper, refreshing unknowns."""
+            normalizer.reset_unknowns()
+            return [(paper, normalizer(paper)) for paper in papers]
+
+        def _venue_entry(self, venue: Venue) -> NormalizationEntry:
+            result = norm_venue_prompt(venue)
+            data = {"type": result.type.value, "name": result.name}
+            if result.short_name:
+                data["short_name"] = result.short_name
+            if result.volume:
+                data["volume"] = result.volume
+            return NormalizationEntry(
+                origin="llm", data=deserialize(Partial[Venue], data)
+            )
+
+        def _institution_entry(self, institution: Institution) -> NormalizationEntry:
+            partials = []
+            for inst in process_affiliations_prompt(institution):
+                data = {"name": inst.name, "category": inst.category.value}
+                if inst.country:
+                    data["country"] = inst.country
+                partials.append(deserialize(Partial[Institution], data))
+            return NormalizationEntry(origin="llm", data=partials)
+
+        def _llm_normalize(self, normalizer):
+            """Query the LLM for the most common unknown venues/institutions.
+
+            Returns two dicts (venue norms, institution norms) keyed by the
+            same flattened text the normalizer uses for lookups.
+            """
+            venue_items = sorted(
+                normalizer.unknown_venues.items(),
+                key=lambda kv: len(kv[1]),
+                reverse=True,
+            )[: self.venues]
+            institution_items = sorted(
+                normalizer.unknown_institutions.items(),
+                key=lambda kv: len(kv[1]),
+                reverse=True,
+            )[: self.institutions]
+
+            found_venues = {}
+            found_institutions = {}
+
+            with ThreadPoolExecutor(max_workers=self.threads) as executor:
+                futures = {}
+                for flat, venues in venue_items:
+                    fut = executor.submit(self._venue_entry, venues[0])
+                    futures[fut] = ("venue", flat)
+                for flat, institutions in institution_items:
+                    fut = executor.submit(self._institution_entry, institutions[0])
+                    futures[fut] = ("institution", flat)
+
+                for fut in as_completed(futures):
+                    kind, flat = futures[fut]
+                    try:
+                        entry = fut.result()
+                    except Exception as exc:
+                        logging.warning(
+                            f"LLM normalization failed for {kind} {flat!r}: {exc}"
+                        )
+                        continue
+                    if kind == "venue":
+                        found_venues[flat] = entry
+                    else:
+                        found_institutions[flat] = entry
+
+            return found_venues, found_institutions
+
+        async def generate(self, coll: "Coll"):
+            normalizer = config.normalizer
+            if normalizer is None:
+                logging.error("No normalizer is configured.")
+                return
+            normalizer.reset_unknowns()
+
+            async for paper in coll.collection.search(limit=self.limit):
+                normed = normalizer(paper)
+                if normed != paper:
+                    yield PaperDiff(
+                        matched=True,
+                        current=paper,
+                        new=normed,
+                    )
+
+        async def run(self, coll: "Coll"):
+            normalizer = config.normalizer
+            diffs = self.generate(coll)
+
+            if self.show:
+                await BucheFormatter(diffs, typ=PaperDiff)
+                return
+
+            diffs = [d async for d in diffs]
+
+            if self.llm_norm:
+                found_venues, found_institutions = self._llm_normalize(normalizer)
+                if found_venues or found_institutions:
+                    normalizer.venue_norm.update(found_venues)
+                    normalizer.institution_norm.update(found_institutions)
+                    if not self.dry_run:
+                        normalizer.venue_norm.save()
+                        normalizer.institution_norm.save()
+                    # Re-run to apply the freshly found normalizations.
+                    diffs = [d async for d in self.generate(coll)]
+
+            if diffs and not self.dry_run:
+                await coll.collection.add_papers(
+                    [d.new for d in diffs], force=True, ignore_exclusions=True
+                )
+
+            print(f"Changed {len(diffs)} paper(s)")
+            print(
+                f"{len(normalizer.unknown_venues)} unknown venue(s) and "
+                f"{len(normalizer.unknown_institutions)} unknown institution(s) remain."
+            )
+            return diffs
+
     # Command to execute
-    command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff, Operate]
+    command: TaggedUnion[Search, Import, Export, Drop, Validate, Diff, Operate, Normalize]
 
     # Collection string. Can be a remote collection URL or a path.
     # [alias: -c]
