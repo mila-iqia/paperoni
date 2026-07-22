@@ -12,6 +12,7 @@ from ..utils import (
     normalize_title,
     normalize_topic,
     normalize_venue,
+    split_include_exclude,
     to_sync,
 )
 from .abc import PaperCollection
@@ -217,8 +218,7 @@ class MemCollection(PaperCollection):
         )
         venue_match = venue and _make_matcher(venue, normalize_venue)
         topic_matchers = [_make_matcher(t, normalize_topic) for t in topic or []]
-        include_status = [s for s in status or [] if not s.startswith("-")]
-        exclude_status = [s[1:] for s in status or [] if s.startswith("-")]
+        include_status, exclude_status = split_include_exclude(status)
         skipped = 0
         yielded = 0
         for p in self._index:

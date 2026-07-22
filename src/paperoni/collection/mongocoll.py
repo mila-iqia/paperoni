@@ -25,6 +25,7 @@ from ..utils import (
     normalize_institution,
     normalize_name,
     normalize_title,
+    split_include_exclude,
     to_sync,
 )
 from .abc import PaperCollection
@@ -314,10 +315,9 @@ class MongoCollection(PaperCollection):
             release_match["venue.date"] = date_query
 
         # Status filtering: plain entries match the release peer-review status
-        # exactly (any of them), entries of the form "-xyz" require it to differ.
+        # exactly (any of them), entries of the form "-xyz"/"~xyz" require it to differ.
         if status:
-            include_status = [s for s in status if not s.startswith("-")]
-            exclude_status = [s[1:] for s in status if s.startswith("-")]
+            include_status, exclude_status = split_include_exclude(status)
             status_cond = {}
             if include_status:
                 status_cond["$in"] = include_status

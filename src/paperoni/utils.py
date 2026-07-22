@@ -10,6 +10,28 @@ from ovld import ovld, recurse
 from serieux.proxy import ProxyBase
 from unidecode import unidecode
 
+# Prefixes that mark a search token (status, flag, ...) as an exclusion.
+# "-" is convenient in the web UI; "~" is convenient on the CLI (where "-"
+# would be parsed as an option). Both are accepted everywhere.
+EXCLUDE_PREFIXES = "-~"
+
+
+def split_include_exclude(values, prefixes=EXCLUDE_PREFIXES):
+    """Split search tokens into (include, exclude) lists.
+
+    A token starting with any character in ``prefixes`` is an exclusion, with
+    that leading character stripped; every other token is an inclusion.
+    """
+    include = []
+    exclude = []
+    for value in values or []:
+        if value and value[0] in prefixes:
+            exclude.append(value[1:])
+        else:
+            include.append(value)
+    return include, exclude
+
+
 link_generators = {
     "arxiv": {
         "abstract": "https://arxiv.org/abs/{}",
