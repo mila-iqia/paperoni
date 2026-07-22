@@ -37,10 +37,33 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 
+_DESCRIPTION = """
+API for searching scientific papers and operate on Paperoni's database.
+
+To use this API:
+
+1. **Get a token**: [Click here](/token). Sign in with Google when
+   prompted. When the flow finishes, the page will show your token — copy it and
+   store it securely.
+
+2. **Use the token**: Send it in the `Authorization` header as
+   `Bearer YOUR_TOKEN`.
+
+Example — search (first 10 results):
+
+```
+curl -H 'Authorization: Bearer YOUR_TOKEN' 'https://paperoni.mila.quebec/api/v1/search?limit=10&offset=0'
+```
+
+Replace `YOUR_TOKEN` with the token you copied and adjust the base URL if you
+use a different Paperoni instance.
+"""
+
+
 def create_app():
     app = FastAPI(
         title="Paperoni API",
-        description="API for searching scientific papers",
+        description=_DESCRIPTION,
         version=importlib.metadata.version(paperoni.__name__),
         openapi_tags=[
             {
