@@ -60,7 +60,15 @@ from .model.utils import should_reprocess, should_rerun
 from .refinement import fetch_all
 from .refinement.llm_normalize import normalize_paper
 from .richlog import ErrorOccurred, LogEvent, Logger, ProgressiveCount, Statistic
-from .utils import as_aiter, deprox, expand_links_dict, prog, soft_fail, url_to_id
+from .utils import (
+    as_aiter,
+    deprox,
+    expand_links_dict,
+    prog,
+    soft_fail,
+    split_include_exclude,
+    url_to_id,
+)
 
 
 def buche_available():
@@ -788,11 +796,11 @@ class Coll:
         # [alias --end]
         end_date: date = None
 
-        # Release status to match exactly; entries of the form "-preprint" are exclusions
+        # Release status to match exactly; prefix with "-" or "~" to exclude (e.g. "-preprint")
         # [alias: -s]
         status: list[str] = None
 
-        # Filter by flag; exclude a flag with "~flagname"
+        # Filter by flag; prefix with "-" or "~" to exclude (e.g. "~flagname")
         # [alias: -f]
         flags: set[str] = None
 
@@ -809,7 +817,7 @@ class Coll:
         offset: int = 0
 
         async def run(self, coll: "Coll") -> list[Paper]:
-            flags = set() if self.flags is None else self.flags
+            include_flags, exclude_flags = split_include_exclude(self.flags)
             papers = [
                 expand_paper_links(p) if self.expand_links else p
                 async for p in coll.collection.search(
@@ -822,8 +830,8 @@ class Coll:
                     start_date=self.start_date,
                     end_date=self.end_date,
                     status=self.status,
-                    include_flags={f for f in flags if not f.startswith("~")},
-                    exclude_flags={f[1:] for f in flags if f.startswith("~")},
+                    include_flags=set(include_flags),
+                    exclude_flags=set(exclude_flags),
                     limit=self.limit,
                     offset=self.offset,
                 )
@@ -832,7 +840,7 @@ class Coll:
             return papers
 
         async def count(self, coll: "Coll") -> int:
-            flags = set() if self.flags is None else self.flags
+            include_flags, exclude_flags = split_include_exclude(self.flags)
             return await coll.collection.count(
                 paper_id=self.paper_id,
                 title=self.title,
@@ -843,8 +851,8 @@ class Coll:
                 start_date=self.start_date,
                 end_date=self.end_date,
                 status=self.status,
-                include_flags={f for f in flags if not f.startswith("~")},
-                exclude_flags={f[1:] for f in flags if f.startswith("~")},
+                include_flags=set(include_flags),
+                exclude_flags=set(exclude_flags),
             )
 
     @dataclass
