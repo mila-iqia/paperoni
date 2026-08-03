@@ -37,6 +37,10 @@ year to instantly filter results by that value.
 
 An edit icon (<img src="/assets/pen.svg" alt="edit" style="height:1em; vertical-align:middle">) appears next to each paper title. Clicking it opens the [edit page](#edit) for that paper in a new tab, where you can suggest modifications to its title, authors, venues, and other fields.
 
+### Pending papers and edits
+
+Click the "Pending" checkbox to also see papers and edits corresponding to the current search and for which validation is pending.
+
 
 ## Adding papers {: #new}
 
