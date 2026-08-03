@@ -3,7 +3,7 @@ import { setLanguageNode } from './translate.js';
 import { createPaperElement, createScoreBand, formatRelease, matchesSearch } from './paper.js';
 import { createWorksetElement } from './workset.js';
 import { createPendingItem } from './pending.js';
-import { appendSearchParamsTo, clearSearchForm, getListFilters, getSearchParams, setupListFilters, setupPeerReviewedShortcut, syncPeerReviewedCheckbox } from './search-form.js';
+import { appendSearchParamsTo, clearSearchForm, getListFilters, getSearchParams, restoreFilterCheckboxes, saveFilterCheckboxes, setupListFilters, setupPeerReviewedShortcut } from './search-form.js';
 
 const PAGE_SIZE = 50;
 
@@ -480,10 +480,12 @@ function updateUrlParams(params, offset) {
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
     if (offset > 0) urlParams.set('offset', offset.toString());
-    // Both list checkboxes are on by default, so only record the exceptions.
+    // Record the list checkboxes whenever they differ from the built-in defaults
+    // (validated on, pending off), so that a copied URL is unambiguous even for
+    // someone whose remembered defaults differ.
     const { validated, pending } = getListFilters();
     if (document.getElementById('showValidated') && !validated) urlParams.set('validated', '0');
-    if (document.getElementById('showPending') && !pending) urlParams.set('pending', '0');
+    if (document.getElementById('showPending') && pending) urlParams.set('pending', '1');
     if (useDevMode) urlParams.set('dev', '');
 
     const newUrl = urlParams.toString() 
@@ -498,6 +500,10 @@ async function performSearch(params, offset = 0) {
     currentOffset = offset;
 
     updateUrlParams(params, offset);
+    // Whatever the checkboxes are set to when a search runs becomes their
+    // default next time. This also covers "peer-reviewed" being typed straight
+    // into the Type field, and being wiped by Clear.
+    saveFilterCheckboxes();
     displayLoading();
 
     try {
@@ -561,38 +567,23 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     // Export buttons: iterate the whole result set via the API and download it.
     wireExportButtons(getSearchParams);
 
-    // Perform initial search if URL has parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialStatusStr = urlParams.get('status') || '';
-    const initialTopicStr = urlParams.get('topic') || '';
-    const initialParams = {
-        title: urlParams.get('title') || '',
-        author: urlParams.get('author') || '',
-        institution: urlParams.get('institution') || '',
-        venue: urlParams.get('venue') || '',
-        topic: initialTopicStr.split(',').map((s) => s.trim()).filter((s) => s),
-        status: initialStatusStr.split(',').map((s) => s.trim()).filter((s) => s),
-        start_date: urlParams.get('start_date') || '',
-        end_date: urlParams.get('end_date') || '',
-    };
-    const initialOffset = parseInt(urlParams.get('offset') || '0', 10);
-
     // Set form values from URL parameters
-    titleInput.value = initialParams.title;
-    authorInput.value = initialParams.author;
-    institutionInput.value = initialParams.institution;
-    venueInput.value = initialParams.venue;
-    topicInput.value = initialTopicStr;
-    statusInput.value = initialStatusStr;
-    startDateInput.value = initialParams.start_date;
-    endDateInput.value = initialParams.end_date;
-    syncPeerReviewedCheckbox();
+    const urlParams = new URLSearchParams(window.location.search);
+    titleInput.value = urlParams.get('title') || '';
+    authorInput.value = urlParams.get('author') || '';
+    institutionInput.value = urlParams.get('institution') || '';
+    venueInput.value = urlParams.get('venue') || '';
+    topicInput.value = urlParams.get('topic') || '';
+    statusInput.value = urlParams.get('status') || '';
+    startDateInput.value = urlParams.get('start_date') || '';
+    endDateInput.value = urlParams.get('end_date') || '';
 
-    const validatedCheckbox = document.getElementById('showValidated');
-    const pendingCheckbox = document.getElementById('showPending');
-    if (validatedCheckbox) validatedCheckbox.checked = urlParams.get('validated') !== '0';
-    if (pendingCheckbox) pendingCheckbox.checked = urlParams.get('pending') !== '0';
+    // The remembered checkbox states fill in wherever the URL is silent. This
+    // can seed the Type field with "peer-reviewed", so the criteria for the
+    // initial search are read back off the form rather than from the URL.
+    restoreFilterCheckboxes(urlParams);
 
     // Always perform initial search, even with empty criteria
-    performSearch(initialParams, initialOffset);
+    const initialOffset = parseInt(urlParams.get('offset') || '0', 10);
+    performSearch(getSearchParams(), initialOffset);
 }
