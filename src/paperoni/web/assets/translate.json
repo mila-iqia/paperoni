@@ -128,6 +128,22 @@
         "fr": "Évalué par les pairs"
     },
     {
+        "en": "Validated",
+        "fr": "Validés"
+    },
+    {
+        "en": "Pending",
+        "fr": "En attente"
+    },
+    {
+        "en": "Pending papers",
+        "fr": "Articles en attente"
+    },
+    {
+        "en": "{1} pending",
+        "fr": "{1} en attente"
+    },
+    {
         "en": "Clear",
         "fr": "Effacer"
     },

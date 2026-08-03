@@ -321,7 +321,15 @@ async function fetchPending(offset = 0, limit = PAGE_SIZE, filter = null) {
     return await response.json();
 }
 
-function createPendingItem(paperDiff) {
+/**
+ * Render one pending suggestion.
+ *
+ * @param {Object} paperDiff - { score, current, new }
+ * @param {Object} [options] - showScore/showActions can be turned off to embed
+ *   the view read-only elsewhere (e.g. the pending tail of the search page).
+ */
+export function createPendingItem(paperDiff, options = {}) {
+    const { showScore = true, showActions = true } = options;
     const current = paperDiff.current;
     const paperNew = paperDiff.new;
     const score = paperDiff.score;
@@ -329,7 +337,7 @@ function createPendingItem(paperDiff) {
     const paperId = paperNew?.id ?? current?.id;
 
     const isUser = (paperNew?.flags || []).includes('suggest:user');
-    const scoreBand = (score != null && !isUser)
+    const scoreBand = (showScore && score != null && !isUser)
         ? html`
             <div class="score-band ${getScoreClass(score)}">
                 <div class="score-value">${Math.round(score)}</div>
@@ -375,38 +383,41 @@ function createPendingItem(paperDiff) {
         }
     }
 
-    const approveBtn = html`<button class="btn-approve-pending"><loc>Approve</loc></button>`;
-    const rejectBtn = html`<button class="btn-reject-pending"><loc>Reject</loc></button>`;
+    let actionBar = null;
+    if (showActions) {
+        const approveBtn = html`<button class="btn-approve-pending"><loc>Approve</loc></button>`;
+        const rejectBtn = html`<button class="btn-reject-pending"><loc>Reject</loc></button>`;
 
-    if (paperId) {
-        approveBtn.dataset.paperId = paperId;
-        rejectBtn.dataset.paperId = paperId;
-        approveBtn.addEventListener('click', () => {
-            rejectedIds.delete(paperId);
-            if (approvedIds.has(paperId)) {
-                approvedIds.delete(paperId);
-            } else {
-                approvedIds.add(paperId);
-            }
-            updateConfirmToast();
-        });
-        rejectBtn.addEventListener('click', () => {
-            approvedIds.delete(paperId);
-            if (rejectedIds.has(paperId)) {
+        if (paperId) {
+            approveBtn.dataset.paperId = paperId;
+            rejectBtn.dataset.paperId = paperId;
+            approveBtn.addEventListener('click', () => {
                 rejectedIds.delete(paperId);
-            } else {
-                rejectedIds.add(paperId);
-            }
-            updateConfirmToast();
-        });
-    }
+                if (approvedIds.has(paperId)) {
+                    approvedIds.delete(paperId);
+                } else {
+                    approvedIds.add(paperId);
+                }
+                updateConfirmToast();
+            });
+            rejectBtn.addEventListener('click', () => {
+                approvedIds.delete(paperId);
+                if (rejectedIds.has(paperId)) {
+                    rejectedIds.delete(paperId);
+                } else {
+                    rejectedIds.add(paperId);
+                }
+                updateConfirmToast();
+            });
+        }
 
-    const actionBar = html`
-        <div class="pending-actions">
-            ${approveBtn}
-            ${rejectBtn}
-        </div>
-    `;
+        actionBar = html`
+            <div class="pending-actions">
+                ${approveBtn}
+                ${rejectBtn}
+            </div>
+        `;
+    }
 
     const itemEl = html`
         <div class="workset-item" data-paper-id="${paperId ?? ''}">

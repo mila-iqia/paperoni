@@ -29,6 +29,7 @@ def install_search(app: FastAPI) -> FastAPI:
             show_scores=False,
             use_dev_mode=use_dev_mode,
             show_json_export=True,
+            show_validation_filters=True,
             help_section="/help#search",
         )
 

@@ -99,6 +99,32 @@ export function setupPeerReviewedShortcut(triggerSearch) {
 }
 
 /**
+ * Read the "Validated"/"Pending" checkboxes, which select which lists the search
+ * draws from. Pages that don't show them (they are opt-in via the
+ * show_validation_filters template flag) behave as validated-only.
+ * @returns {{validated: boolean, pending: boolean}}
+ */
+export function getListFilters() {
+    const validatedEl = document.getElementById('showValidated');
+    const pendingEl = document.getElementById('showPending');
+    return {
+        validated: validatedEl ? validatedEl.checked : true,
+        pending: pendingEl ? pendingEl.checked : false,
+    };
+}
+
+/**
+ * Wire the "Validated"/"Pending" checkboxes to re-run the search.
+ * @param {Function} [triggerSearch]
+ */
+export function setupListFilters(triggerSearch) {
+    for (const id of ['showValidated', 'showPending']) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => triggerSearch?.());
+    }
+}
+
+/**
  * Set the "Peer reviewed" checkbox to reflect the current Type field contents.
  * Use after programmatically populating the form (e.g. restoring from the URL).
  */
@@ -125,6 +151,8 @@ export function clearSearchForm() {
     const startDateEl = document.getElementById('start_date');
     const endDateEl = document.getElementById('end_date');
     const peerReviewedEl = document.getElementById('peerReviewed');
+    const validatedEl = document.getElementById('showValidated');
+    const pendingEl = document.getElementById('showPending');
 
     if (titleEl) titleEl.value = '';
     if (authorEl) authorEl.value = '';
@@ -135,4 +163,7 @@ export function clearSearchForm() {
     if (startDateEl) startDateEl.value = '';
     if (endDateEl) endDateEl.value = '';
     if (peerReviewedEl) peerReviewedEl.checked = false;
+    // These two default to on, so clearing restores them rather than unsetting them.
+    if (validatedEl) validatedEl.checked = true;
+    if (pendingEl) pendingEl.checked = true;
 }

@@ -2,7 +2,8 @@ import { debounce, html, showToast } from './common.js';
 import { setLanguageNode } from './translate.js';
 import { createPaperElement, createScoreBand, formatRelease, matchesSearch } from './paper.js';
 import { createWorksetElement } from './workset.js';
-import { appendSearchParamsTo, clearSearchForm, getSearchParams, setupPeerReviewedShortcut, syncPeerReviewedCheckbox } from './search-form.js';
+import { createPendingItem } from './pending.js';
+import { appendSearchParamsTo, clearSearchForm, getListFilters, getSearchParams, setupListFilters, setupPeerReviewedShortcut, syncPeerReviewedCheckbox } from './search-form.js';
 
 const PAGE_SIZE = 50;
 
@@ -37,6 +38,77 @@ async function fetchSearchResults(params, offset = 0, limit = PAGE_SIZE, signal 
     }
 
     return await response.json();
+}
+
+async function fetchPendingResults(params, offset = 0, limit = PAGE_SIZE, signal = null) {
+    const queryParams = new URLSearchParams({
+        offset: offset.toString(),
+        limit: limit.toString(),
+        expand_links: 'true'
+    });
+    appendSearchParamsTo(queryParams, params);
+
+    const url = `/api/v1/pending/list?${queryParams.toString()}`;
+    const response = await fetch(url, signal ? { signal } : undefined);
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+}
+
+/**
+ * Fetch one page, drawing from the validated list first and then, if "Pending"
+ * is checked, from the pending list for whatever is left of the page.
+ *
+ * `offset` indexes into the two lists concatenated: the first `validatedTotal`
+ * positions are validated papers and the rest are pending ones.
+ */
+async function fetchPage(params, offset) {
+    const { validated: wantValidated, pending: wantPending } = getListFilters();
+
+    const empty = { results: [], total: 0, next_offset: null };
+    const validated = wantValidated
+        ? await fetchSearchResults(params, offset, PAGE_SIZE)
+        : empty;
+    const validatedTotal = validated.total ?? 0;
+    const validatedResults = validated.results ?? [];
+    const remainder = PAGE_SIZE - validatedResults.length;
+    const validatedNext = validated.next_offset ?? null;
+
+    let pendingResults = [];
+    let pendingTotal = null;
+    let nextOffset = validatedNext;
+
+    // Once the validated list runs out we top the page up with pending papers.
+    // We also query when the page happens to end exactly at the end of the
+    // validated list (remainder === 0): there is no room left to show them, but
+    // we still need to know whether "Next" has anything to go to.
+    if (wantPending && validatedNext === null) {
+        const pendingOffset = Math.max(0, offset - validatedTotal);
+        const pending = await fetchPendingResults(
+            params, pendingOffset, Math.max(1, remainder)
+        );
+        pendingTotal = pending.total ?? 0;
+        pendingResults = (pending.results ?? []).slice(0, remainder);
+        if (pendingOffset + pendingResults.length < pendingTotal) {
+            nextOffset = offset + validatedResults.length + pendingResults.length;
+        }
+    }
+
+    return {
+        offset,
+        validatedResults,
+        pendingResults,
+        count: validatedResults.length + pendingResults.length,
+        // The "N papers found" count stays the validated one; the pending count
+        // is reported separately, and only when we actually queried that list.
+        total: validatedTotal + (pendingTotal ?? 0),
+        validatedTotal,
+        pendingTotal,
+        next_offset: nextOffset,
+    };
 }
 
 const EXPORT_PAGE_SIZE = 100;
@@ -218,10 +290,11 @@ function wireExportButtons(getParams) {
     });
 }
 
-function createPagination(offset, count, total, nextOffset, showTotalFound = false) {
+function createPagination(data, showTotalFound = false) {
+    const { offset, count, total, validatedTotal, pendingTotal, next_offset: nextOffset } = data;
     const start = offset + 1;
     const end = offset + count;
-    const paperWord = total !== 1 ? 'papers' : 'paper';
+    const paperWord = validatedTotal !== 1 ? 'papers' : 'paper';
 
     const prevButton = html`<button disabled="${offset === 0}"><loc>Previous</loc></button>`;
     prevButton.onclick = () => {
@@ -236,8 +309,11 @@ function createPagination(offset, count, total, nextOffset, showTotalFound = fal
         }
     };
 
+    const pendingCount = pendingTotal
+        ? html`<span class="pending-extra-count"> + <loc><span class="count">${pendingTotal}</span> pending</loc></span>`
+        : null;
     const totalFoundInfo = showTotalFound
-        ? html`<div class="results-info"><loc><span class="count">${total}</span> ${paperWord} found</loc></div>`
+        ? html`<div class="results-info"><loc><span class="count">${validatedTotal}</span> ${paperWord} found</loc>${pendingCount}</div>`
         : html`<div></div>`;
 
     return html`
@@ -326,7 +402,7 @@ export function createPaperResultElement(paper, options = {}) {
 }
 
 function displayResults(data) {
-    if (data.results.length === 0) {
+    if (data.count === 0) {
         const noResults = html`
             <div class="no-results">
                 <loc>No papers found. Try adjusting your search criteria.</loc>
@@ -336,9 +412,9 @@ function displayResults(data) {
         return;
     }
 
-    const paginationTop = createPagination(data.offset ?? currentOffset, data.count, data.total, data.next_offset, true);
+    const paginationTop = createPagination(data, true);
 
-    const paperElements = data.results.map(paper => {
+    const paperElements = data.validatedResults.map(paper => {
         if (useDevMode) {
             const fakeWorkset = { score: paper.score, value: { current: paper, collected: [] } };
             return createWorksetElement(fakeWorkset);
@@ -355,15 +431,33 @@ function displayResults(data) {
             showEditIcon: showEditIcon,
         });
     });
-    const paperList = useDevMode
-        ? html`<div class="workset-list">${paperElements}</div>`
-        : html`<ul class="paper-list">${paperElements}</ul>`;
+    const paperList = paperElements.length === 0
+        ? null
+        : (useDevMode
+            ? html`<div class="workset-list">${paperElements}</div>`
+            : html`<ul class="paper-list">${paperElements}</ul>`);
+
+    // Tail of the page, drawn from the pending list: same view as the pending
+    // page, but read-only (no scores, no approve/reject).
+    let pendingHeader = null;
+    let pendingList = null;
+    if (data.pendingResults.length > 0) {
+        pendingHeader = html`<h2 class="pending-results-header"><loc>Pending papers</loc></h2>`;
+        pendingList = html`
+            <div class="workset-list pending-results-list">
+                ${data.pendingResults.map(diff => createPendingItem(diff, {
+                    showScore: false,
+                    showActions: false,
+                }))}
+            </div>
+        `;
+    }
 
     const paginationBottom = data.total > PAGE_SIZE
-        ? createPagination(data.offset ?? currentOffset, data.count, data.total, data.next_offset)
+        ? createPagination(data)
         : null;
 
-    setResults(paginationTop, paperList, paginationBottom);
+    setResults(paginationTop, paperList, pendingHeader, pendingList, paginationBottom);
 }
 
 function displayLoading() {
@@ -386,6 +480,10 @@ function updateUrlParams(params, offset) {
     if (params.start_date) urlParams.set('start_date', params.start_date);
     if (params.end_date) urlParams.set('end_date', params.end_date);
     if (offset > 0) urlParams.set('offset', offset.toString());
+    // Both list checkboxes are on by default, so only record the exceptions.
+    const { validated, pending } = getListFilters();
+    if (document.getElementById('showValidated') && !validated) urlParams.set('validated', '0');
+    if (document.getElementById('showPending') && !pending) urlParams.set('pending', '0');
     if (useDevMode) urlParams.set('dev', '');
 
     const newUrl = urlParams.toString() 
@@ -403,7 +501,7 @@ async function performSearch(params, offset = 0) {
     displayLoading();
 
     try {
-        const data = await fetchSearchResults(params, offset);
+        const data = await fetchPage(params, offset);
         displayResults(data);
     } catch (error) {
         console.error('Search failed:', error);
@@ -445,6 +543,8 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     // The "Peer reviewed" checkbox is a shortcut that toggles "peer-reviewed"
     // in the Type field rather than a separate filter.
     setupPeerReviewedShortcut(handleInputChange);
+    // "Validated"/"Pending" pick which lists the results are drawn from.
+    setupListFilters(handleInputChange);
 
     // Prevent form submission
     form.addEventListener('submit', (e) => {
@@ -487,6 +587,11 @@ export function searchPapers(editButton = true, enableScores = false, enableDevM
     startDateInput.value = initialParams.start_date;
     endDateInput.value = initialParams.end_date;
     syncPeerReviewedCheckbox();
+
+    const validatedCheckbox = document.getElementById('showValidated');
+    const pendingCheckbox = document.getElementById('showPending');
+    if (validatedCheckbox) validatedCheckbox.checked = urlParams.get('validated') !== '0';
+    if (pendingCheckbox) pendingCheckbox.checked = urlParams.get('pending') !== '0';
 
     // Always perform initial search, even with empty criteria
     performSearch(initialParams, initialOffset);
