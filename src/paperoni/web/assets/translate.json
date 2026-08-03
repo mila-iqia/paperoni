@@ -136,8 +136,16 @@
         "fr": "En attente"
     },
     {
-        "en": "Pending papers",
-        "fr": "Articles en attente"
+        "en": "Pending papers and edits",
+        "fr": "Articles et modifications en attente"
+    },
+    {
+        "en": "Suggested edit",
+        "fr": "Modification suggérée"
+    },
+    {
+        "en": "New paper",
+        "fr": "Nouvel article"
     },
     {
         "en": "{1} pending",

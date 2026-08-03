@@ -442,7 +442,7 @@ function displayResults(data) {
     let pendingHeader = null;
     let pendingList = null;
     if (data.pendingResults.length > 0) {
-        pendingHeader = html`<h2 class="pending-results-header"><loc>Pending papers</loc></h2>`;
+        pendingHeader = html`<h2 class="pending-results-header"><loc>Pending papers and edits</loc></h2>`;
         pendingList = html`
             <div class="workset-list pending-results-list">
                 ${data.pendingResults.map(diff => createPendingItem(diff, {
