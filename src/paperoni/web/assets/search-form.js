@@ -99,6 +99,99 @@ export function setupPeerReviewedShortcut(triggerSearch) {
 }
 
 /**
+ * Read the "Validated"/"Pending" checkboxes, which select which lists the search
+ * draws from. Pages that don't show them (they are opt-in via the
+ * show_validation_filters template flag) behave as validated-only.
+ * @returns {{validated: boolean, pending: boolean}}
+ */
+export function getListFilters() {
+    const validatedEl = document.getElementById('showValidated');
+    const pendingEl = document.getElementById('showPending');
+    return {
+        validated: validatedEl ? validatedEl.checked : true,
+        pending: pendingEl ? pendingEl.checked : false,
+    };
+}
+
+/**
+ * Wire the "Validated"/"Pending" checkboxes to re-run the search.
+ * @param {Function} [triggerSearch]
+ */
+export function setupListFilters(triggerSearch) {
+    for (const id of ['showValidated', 'showPending']) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => triggerSearch?.());
+    }
+}
+
+// The three filter checkboxes are sticky: whatever they were set to last time
+// becomes their default on the next visit. Defaults when nothing is stored:
+// "Peer reviewed" off, "Validated" on, "Pending" off.
+const FILTER_STORAGE_KEY = 'paperoni-search-filters';
+
+function readSavedFilters() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(FILTER_STORAGE_KEY));
+        return saved && typeof saved === 'object' ? saved : {};
+    } catch {
+        // Storage unavailable (private mode) or a stale/corrupt value.
+        return {};
+    }
+}
+
+/**
+ * Remember the current state of the filter checkboxes. Boxes that aren't on the
+ * page keep whatever was stored for them.
+ */
+export function saveFilterCheckboxes() {
+    const saved = readSavedFilters();
+    const peerReviewedEl = document.getElementById('peerReviewed');
+    const validatedEl = document.getElementById('showValidated');
+    const pendingEl = document.getElementById('showPending');
+    if (peerReviewedEl) saved.peerReviewed = peerReviewedEl.checked;
+    if (validatedEl) saved.validated = validatedEl.checked;
+    if (pendingEl) saved.pending = pendingEl.checked;
+    try {
+        localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(saved));
+    } catch {
+        // Storage unavailable: the checkboxes just won't be sticky.
+    }
+}
+
+/**
+ * Apply the remembered checkbox states to the form. The URL wins wherever it
+ * says something: `validated`/`pending` for the two list boxes, and any `status`
+ * at all for "Peer reviewed", which is only a shortcut into that field.
+ *
+ * Call after populating the form from the URL, and read the search parameters
+ * back off the form afterwards (the Type field may have been seeded here).
+ *
+ * @param {URLSearchParams} urlParams
+ */
+export function restoreFilterCheckboxes(urlParams) {
+    const saved = readSavedFilters();
+    const statusEl = document.getElementById('status');
+
+    if (statusEl && saved.peerReviewed && !urlParams.has('status')) {
+        statusEl.value = 'peer-reviewed';
+    }
+    syncPeerReviewedCheckbox();
+
+    const validatedEl = document.getElementById('showValidated');
+    if (validatedEl) {
+        validatedEl.checked = urlParams.has('validated')
+            ? urlParams.get('validated') !== '0'
+            : (saved.validated ?? true);
+    }
+    const pendingEl = document.getElementById('showPending');
+    if (pendingEl) {
+        pendingEl.checked = urlParams.has('pending')
+            ? urlParams.get('pending') !== '0'
+            : (saved.pending ?? false);
+    }
+}
+
+/**
  * Set the "Peer reviewed" checkbox to reflect the current Type field contents.
  * Use after programmatically populating the form (e.g. restoring from the URL).
  */

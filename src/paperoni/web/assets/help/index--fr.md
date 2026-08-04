@@ -38,6 +38,10 @@ un lieu ou une année pour filtrer immédiatement les résultats par cette valeu
 
 Une icône de modification (<img src="/assets/pen.svg" alt="modifier" style="height:1em; vertical-align:middle">) apparaît à côté de chaque titre d'article. Un clic ouvre la [page d'édition](#edit) de l'article dans un nouvel onglet, où vous pouvez suggérer des modifications à son titre, ses auteurs, ses lieux et autres champs.
 
+### Articles et modifications en attente
+
+Cochez la case "En attente" pour voir les articles et les modifications qui correspondent à la recherche courante et sont en attente de validation.
+
 
 ## Ajouter des articles {: #new}
 

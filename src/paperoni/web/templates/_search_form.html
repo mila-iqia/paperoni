@@ -37,10 +37,18 @@
         <label for="status"><loc>Type</loc></label>
         <input type="text" id="status" name="status" placeholder="e.g. peer-reviewed, preprint, workshop" data-loc-placeholder="e.g. peer-reviewed, preprint, workshop">
     </div>
-    <div class="form-group" style="display: flex; align-items: center;">
+    <div class="form-group" style="display: flex; align-items: center; gap: 16px;">
         <label style="display: flex; align-items: center; gap: 5px; margin-bottom: 0;">
             <loc>Peer reviewed</loc> <input type="checkbox" id="peerReviewed" name="peerReviewed" style="width: auto;">
         </label>
+        {% if show_validation_filters %}
+        <label style="display: flex; align-items: center; gap: 5px; margin-bottom: 0;">
+            <loc>Validated</loc> <input type="checkbox" id="showValidated" name="showValidated" style="width: auto;" checked>
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; margin-bottom: 0;">
+            <loc>Pending</loc> <input type="checkbox" id="showPending" name="showPending" style="width: auto;">
+        </label>
+        {% endif %}
     </div>
     <div class="form-group" style="flex: 0; align-self: flex-end; display: flex; gap: 8px; align-items: center;">
         {% if show_json_export %}<span class="btn-json-wrap">

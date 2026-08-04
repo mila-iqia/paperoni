@@ -39,39 +39,60 @@ function createEmailMarkers(emailOld, emailNew) {
     return marks.length ? marks : null;
 }
 
+// Above this many LCS table cells we skip the fine-grained diff: the table
+// alone would cost hundreds of megabytes and take seconds to fill.
+const LCS_MAX_CELLS = 2_000_000;
+
 /**
  * Generic LCS-based diff of two arrays of comparable items.
  * Returns array of { type: 'equal'|'added'|'removed', value: item }.
  */
 function diffArrayLCS(a, b) {
-    function lcsLength(a, b) {
-        const m = a.length, n = b.length;
-        const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
-        for (let i = 1; i <= m; i++) {
-            for (let j = 1; j <= n; j++) {
-                dp[i][j] = a[i - 1] === b[j - 1]
-                    ? dp[i - 1][j - 1] + 1
-                    : Math.max(dp[i - 1][j], dp[i][j - 1]);
-            }
-        }
-        return dp;
+    const m = a.length, n = b.length;
+
+    if ((m + 1) * (n + 1) > LCS_MAX_CELLS) {
+        // Too big to align: report it as a wholesale replacement.
+        return [
+            ...a.map((value) => ({ type: 'removed', value })),
+            ...b.map((value) => ({ type: 'added', value })),
+        ];
     }
 
-    function backtrack(a, b, dp, i, j) {
-        if (i === 0 && j === 0) return [];
-        if (i === 0) return backtrack(a, b, dp, 0, j - 1).concat({ type: 'added', value: b[j - 1] });
-        if (j === 0) return backtrack(a, b, dp, i - 1, 0).concat({ type: 'removed', value: a[i - 1] });
-        if (a[i - 1] === b[j - 1]) {
-            return backtrack(a, b, dp, i - 1, j - 1).concat({ type: 'equal', value: a[i - 1] });
+    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            dp[i][j] = a[i - 1] === b[j - 1]
+                ? dp[i - 1][j - 1] + 1
+                : Math.max(dp[i - 1][j], dp[i][j - 1]);
         }
-        if (dp[i - 1][j] >= dp[i][j - 1]) {
-            return backtrack(a, b, dp, i - 1, j).concat({ type: 'removed', value: a[i - 1] });
-        }
-        return backtrack(a, b, dp, i, j - 1).concat({ type: 'added', value: b[j - 1] });
     }
 
-    const dp = lcsLength(a, b);
-    return backtrack(a, b, dp, a.length, b.length);
+    // Walk the table backwards and reverse at the end. This has to stay
+    // iterative: recursing once per diff element blows the stack on long
+    // inputs (abstracts, raw JSON).
+    const result = [];
+    let i = m, j = n;
+    while (i > 0 || j > 0) {
+        if (i === 0) {
+            result.push({ type: 'added', value: b[j - 1] });
+            j--;
+        } else if (j === 0) {
+            result.push({ type: 'removed', value: a[i - 1] });
+            i--;
+        } else if (a[i - 1] === b[j - 1]) {
+            result.push({ type: 'equal', value: a[i - 1] });
+            i--;
+            j--;
+        } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+            result.push({ type: 'removed', value: a[i - 1] });
+            i--;
+        } else {
+            result.push({ type: 'added', value: b[j - 1] });
+            j--;
+        }
+    }
+    result.reverse();
+    return result;
 }
 
 /**

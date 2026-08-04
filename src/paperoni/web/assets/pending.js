@@ -1,7 +1,7 @@
 import { debounce, html } from './common.js';
 import { setLanguageNode } from './translate.js';
 import { appendSearchParamsTo, clearSearchForm, getSearchParams, setupPeerReviewedShortcut, syncPeerReviewedCheckbox } from './search-form.js';
-import { getScoreClass } from './paper.js';
+import { createEditIcon, getScoreClass } from './paper.js';
 import { createWorksetPaperElement, createDiffViewWithTabs } from './workset.js';
 
 const PAGE_SIZE = 50;
@@ -14,6 +14,12 @@ const FILTER_OPTIONS = [
 ];
 
 let pendingFilter = null;
+
+const KIND_LABELS = {
+    edit: 'Suggested edit',
+    new: 'New paper',
+    delete: 'Delete paper',
+};
 
 /** Prefix with suggest: when sending to API if not already present. */
 function toApiFlag(filter) {
@@ -321,7 +327,15 @@ async function fetchPending(offset = 0, limit = PAGE_SIZE, filter = null) {
     return await response.json();
 }
 
-function createPendingItem(paperDiff) {
+/**
+ * Render one pending suggestion.
+ *
+ * @param {Object} paperDiff - { score, current, new }
+ * @param {Object} [options] - showScore/showActions can be turned off to embed
+ *   the view read-only elsewhere (e.g. the pending tail of the search page).
+ */
+export function createPendingItem(paperDiff, options = {}) {
+    const { showScore = true, showActions = true } = options;
     const current = paperDiff.current;
     const paperNew = paperDiff.new;
     const score = paperDiff.score;
@@ -329,7 +343,7 @@ function createPendingItem(paperDiff) {
     const paperId = paperNew?.id ?? current?.id;
 
     const isUser = (paperNew?.flags || []).includes('suggest:user');
-    const scoreBand = (score != null && !isUser)
+    const scoreBand = (showScore && score != null && !isUser)
         ? html`
             <div class="score-band ${getScoreClass(score)}">
                 <div class="score-value">${Math.round(score)}</div>
@@ -338,25 +352,38 @@ function createPendingItem(paperDiff) {
         : null;
 
     let contentEl;
+    let kind;
     if (isDelete) {
-        // Delete suggestion: comments and label outside, paper with light red background only
+        // Delete suggestion: comments outside, paper with light red background only
+        kind = 'delete';
         const paperContent = createWorksetPaperElement(current, { excludeFromInfo: ['comments'] });
         const oldComments = current?.info?.comments;
         const commentsEl = createCommentsDisplay(paperNew?.info?.comments, oldComments);
         contentEl = html`
             <div class="pending-delete-wrapper">
                 ${commentsEl}
-                <div class="pending-delete-label"><loc>Delete paper</loc></div>
                 <div class="pending-delete-paper">${paperContent}</div>
             </div>
         `;
     } else if (!current) {
         // New paper suggestion - display like search (using workset paper format)
-        contentEl = createWorksetPaperElement(paperNew, { excludeFromInfo: ['comments'], editSuggest: true });
+        kind = 'new';
+        contentEl = createWorksetPaperElement(paperNew, { excludeFromInfo: ['comments'] });
     } else {
         // Diff between current (old) and new (suggestion)
+        kind = 'edit';
         contentEl = createDiffViewWithTabs(current, paperNew);
     }
+
+    // Badges straddling the item's top border: what kind of suggestion this is,
+    // and a pencil to go edit it. They hang off the item rather than the content
+    // they label, because the tab content around that clips overflow.
+    const badges = html`
+        <div class="pending-item-badges">
+            <div class="pending-kind-label pending-kind-${kind}"><loc>${KIND_LABELS[kind]}</loc></div>
+            ${createEditIcon(paperNew ?? current ?? {}, { suggest: true })}
+        </div>
+    `;
 
     if (!isDelete) {
         const oldComments = current?.info?.comments;
@@ -375,41 +402,45 @@ function createPendingItem(paperDiff) {
         }
     }
 
-    const approveBtn = html`<button class="btn-approve-pending"><loc>Approve</loc></button>`;
-    const rejectBtn = html`<button class="btn-reject-pending"><loc>Reject</loc></button>`;
+    let actionBar = null;
+    if (showActions) {
+        const approveBtn = html`<button class="btn-approve-pending"><loc>Approve</loc></button>`;
+        const rejectBtn = html`<button class="btn-reject-pending"><loc>Reject</loc></button>`;
 
-    if (paperId) {
-        approveBtn.dataset.paperId = paperId;
-        rejectBtn.dataset.paperId = paperId;
-        approveBtn.addEventListener('click', () => {
-            rejectedIds.delete(paperId);
-            if (approvedIds.has(paperId)) {
-                approvedIds.delete(paperId);
-            } else {
-                approvedIds.add(paperId);
-            }
-            updateConfirmToast();
-        });
-        rejectBtn.addEventListener('click', () => {
-            approvedIds.delete(paperId);
-            if (rejectedIds.has(paperId)) {
+        if (paperId) {
+            approveBtn.dataset.paperId = paperId;
+            rejectBtn.dataset.paperId = paperId;
+            approveBtn.addEventListener('click', () => {
                 rejectedIds.delete(paperId);
-            } else {
-                rejectedIds.add(paperId);
-            }
-            updateConfirmToast();
-        });
+                if (approvedIds.has(paperId)) {
+                    approvedIds.delete(paperId);
+                } else {
+                    approvedIds.add(paperId);
+                }
+                updateConfirmToast();
+            });
+            rejectBtn.addEventListener('click', () => {
+                approvedIds.delete(paperId);
+                if (rejectedIds.has(paperId)) {
+                    rejectedIds.delete(paperId);
+                } else {
+                    rejectedIds.add(paperId);
+                }
+                updateConfirmToast();
+            });
+        }
+
+        actionBar = html`
+            <div class="pending-actions">
+                ${approveBtn}
+                ${rejectBtn}
+            </div>
+        `;
     }
 
-    const actionBar = html`
-        <div class="pending-actions">
-            ${approveBtn}
-            ${rejectBtn}
-        </div>
-    `;
-
     const itemEl = html`
-        <div class="workset-item" data-paper-id="${paperId ?? ''}">
+        <div class="workset-item pending-item" data-paper-id="${paperId ?? ''}">
+            ${badges}
             <div class="workset-content">
                 ${scoreBand}
                 <div class="workset-tabs">
