@@ -1,5 +1,4 @@
 import logging
-import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
@@ -13,7 +12,7 @@ from ..model import DatePrecision, PaperAuthor, Release, VenueType
 from ..model.classes import Institution, InstitutionCategory, Paper, Venue
 from ..prompt import ParsedResponseSerializer
 from ..prompt_utils import prompt_wrapper
-from ..utils import normalize_institution, normalize_name, normalize_venue
+from ..utils import flatten_text, normalize_institution, normalize_name, normalize_venue
 from .llm_norm_author import model as norm_author_model
 from .llm_norm_venue import model as norm_venue_model
 from .llm_process_affiliation import model as process_affiliation_model
@@ -31,7 +30,7 @@ def process_affiliations_prompt(
     cache_dir = (
         (data_path or config.data_path)
         / process_affiliation_model.__package__.split(".")[-1]
-        / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_institution(affiliation.name))
+        / flatten_text(normalize_institution(affiliation.name), "_")
     )
 
     prompt: DiskStoreFunc = (prompt or config.refine.prompt.prompt).update(
@@ -91,7 +90,7 @@ def norm_author_display_name_prompt(
     cache_dir = (
         (data_path or config.data_path)
         / norm_author_model.__package__.split(".")[-1]
-        / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_name(display_name))
+        / flatten_text(normalize_name(display_name), "_")
     )
 
     prompt: DiskStoreFunc = (prompt or config.refine.prompt.prompt).update(
@@ -135,7 +134,7 @@ def norm_venue_prompt(
     cache_dir = (
         (data_path or config.data_path)
         / norm_venue_model.__package__.split(".")[-1]
-        / re.sub(r"[^a-zA-Z0-9]+", "_", normalize_venue(venue.name))
+        / flatten_text(normalize_venue(venue.name), "_")
     )
 
     prompt: DiskStoreFunc = (prompt or config.refine.prompt.prompt).update(
