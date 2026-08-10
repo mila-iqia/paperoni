@@ -1,6 +1,7 @@
 import pytest
 import requests
 
+from paperoni.refinement.aggregators import openreview
 from paperoni.refinement.dblp import dblp
 from paperoni.refinement.doi import crossref, datacite, unpaywall
 from paperoni.refinement.fetch import _test_tags
@@ -73,6 +74,10 @@ links = [
     (dblp, "dblp:conf/nips/LacosteLRSKLIDA23"),
     (dblp, "dblp:conf/icse-chase/AryaGR25"),
     (dblp, "dblp:conf/aaai/Rezaei-Shoshtari23"),
+    # OpenReview
+    (openreview, "openreview:gVTkMsaaGI"),
+    # API version 1
+    (openreview, "openreview:rJXMpikCZ"),
     # # Pubmed Central
     # TODO: fix timeout
     # (pubmed, "pmc:8900797"),
@@ -139,6 +144,8 @@ async def test_refine(func, link, dreg):
         (crossref_title, "title:Attention is All You Need"),
         # We need the title to match exactly
         (openalex_title, "title:Pre-training of Deep Bidirectional"),
+        # Nonexistent OpenReview note
+        (openreview, "openreview:thisiddoesnotexist"),
     ],
 )
 async def test_ignored_links(func, link):

@@ -55,6 +55,9 @@ At the top of the interface, you will see a Populate section where you can paste
 * **[arxiv](https://arxiv.org)**: e.g. `https://arxiv.org/abs/1810.11530` or `arxiv:1810.11530`
 * **DOI**: e.g. `doi:10.1109/comst.2024.3450292`
 * **[Semantic Scholar](https://www.semanticscholar.org/)**: e.g. `https://www.semanticscholar.org/paper/9f1ce3ff55eb559e00df33fa40ee6ecd6a2a54f1` or `semantic_scholar:9f1ce3ff55eb559e00df33fa40ee6ecd6a2a54f1`
+* **[OpenReview](https://openreview.net)**: e.g. `https://openreview.net/forum?id=gVTkMsaaGI` or `openreview:gVTkMsaaGI` (the metadata is taken from OpenReview itself, the PDF is not read)
+
+Fetching the metadata can sometimes take a while (up to a minute or two), so be patient after clicking `Populate`.
 
 This only fills the form, it does not submit anything. You may review what was filled in, fix mistakes, add missing venues, and so on.
 

@@ -56,6 +56,9 @@ En haut de l'interface, vous verrez une section Remplir où vous pouvez coller u
 * **[arxiv](https://arxiv.org)** : ex. `https://arxiv.org/abs/1810.11530` ou `arxiv:1810.11530`
 * **DOI** : ex. `doi:10.1109/comst.2024.3450292`
 * **[Semantic Scholar](https://www.semanticscholar.org/)** : ex. `https://www.semanticscholar.org/paper/9f1ce3ff55eb559e00df33fa40ee6ecd6a2a54f1` ou `semantic_scholar:9f1ce3ff55eb559e00df33fa40ee6ecd6a2a54f1`
+* **[OpenReview](https://openreview.net)** : ex. `https://openreview.net/forum?id=gVTkMsaaGI` ou `openreview:gVTkMsaaGI` (les métadonnées proviennent d'OpenReview même, le PDF n'est pas lu)
+
+La récupération des métadonnées peut parfois prendre un certain temps (jusqu'à une ou deux minutes), soyez donc patient après avoir cliqué sur `Peupler`.
 
 Cela ne fait que remplir le formulaire, rien n'est soumis. Vous pouvez vérifier ce qui a été rempli, corriger les erreurs, ajouter les lieux manquants, etc.
 

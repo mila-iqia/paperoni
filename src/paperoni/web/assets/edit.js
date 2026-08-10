@@ -308,7 +308,7 @@ function renderEditForm(paper, suggestMode = false) {
             <div class="form-section">
                 <h2><loc>Populate</loc></h2>
                 <div class="form-group">
-                    <label for="populateLinks"><loc>Paste link or paper ID (specifically arxiv, DOI or Semantic Scholar) to pre-populate the form.</loc></label>
+                    <label for="populateLinks"><loc>Paste link or paper ID (specifically arxiv, DOI, OpenReview or Semantic Scholar) to pre-populate the form.</loc></label>
                     <textarea id="populateLinks"
                               class="edit-input"
                               rows="1"
@@ -316,6 +316,7 @@ function renderEditForm(paper, suggestMode = false) {
                               data-loc-placeholder="e.g. arxiv:2411.00001, https://arxiv.org/pdf/1405.1548v2, doi:10.1234/abcd"></textarea>
                 </div>
                 <button type="button" class="btn-primary" id="populateBtn"><loc>Populate</loc></button>
+                <span class="field-hint" id="populateWarning" style="display: none"><loc>Fetching the information can sometimes take a while (up to a minute or two), please be patient.</loc></span>
             </div>
         `
         : null;
@@ -438,7 +439,17 @@ function renderEditForm(paper, suggestMode = false) {
     // then re-render the form with the merged paper. Nothing is saved to the database.
     const populateBtn = form.querySelector('#populateBtn');
     const populateLinksInput = form.querySelector('#populateLinks');
+    const populateWarning = form.querySelector('#populateWarning');
     if (populateBtn && populateLinksInput) {
+        // Restore the button and hide the "this may take a while" warning; only
+        // needed when populating failed, since a success re-renders the form.
+        const resetPopulateBtn = () => {
+            populateBtn.disabled = false;
+            populateBtn.innerHTML = '<loc>Populate</loc>';
+            setLanguageNode(populateBtn);
+            if (populateWarning) populateWarning.style.display = 'none';
+        };
+
         populateBtn.addEventListener('click', async () => {
             const raw = populateLinksInput.value || '';
             const links = raw.split(',').map((s) => s.trim()).filter(Boolean);
@@ -450,6 +461,8 @@ function renderEditForm(paper, suggestMode = false) {
             populateBtn.disabled = true;
             populateBtn.innerHTML = '<loc>Populating...</loc>';
             setLanguageNode(populateBtn);
+            // Refinement queries several external services, which can be slow.
+            if (populateWarning) populateWarning.style.display = '';
 
             try {
                 const currentData = collectFormData(form, paper);
@@ -464,15 +477,11 @@ function renderEditForm(paper, suggestMode = false) {
                     showToast(getTranslation('Form populated from links'), 'success');
                 } else {
                     showToast(result.message || getTranslation('Failed to populate'), 'error');
-                    populateBtn.disabled = false;
-                    populateBtn.innerHTML = '<loc>Populate</loc>';
-                    setLanguageNode(populateBtn);
+                    resetPopulateBtn();
                 }
             } catch (error) {
                 showToast(getTranslation('Error: {1}').replace('{1}', error.message), 'error');
-                populateBtn.disabled = false;
-                populateBtn.innerHTML = '<loc>Populate</loc>';
-                setLanguageNode(populateBtn);
+                resetPopulateBtn();
             }
         });
     }

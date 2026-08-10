@@ -110,7 +110,7 @@ Output formats: `--format terminal` (default), `--format json`, `--format yaml`.
 Fetch and enrich paper metadata (DOIs, venues, affiliations, etc.):
 
 ```bash
-# Refine by link (arxiv:id, semantic_scholar:id, doi:10.1234/..., or URL)
+# Refine by link (arxiv:id, semantic_scholar:id, openreview:id, doi:10.1234/..., or URL)
 paperoni refine arxiv:2301.12345
 paperoni refine https://arxiv.org/abs/2301.12345
 

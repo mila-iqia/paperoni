@@ -656,8 +656,12 @@
         "fr": "Remplissage..."
     },
     {
-        "en": "Paste link or paper ID (specifically arxiv, DOI or Semantic Scholar) to pre-populate the form.",
-        "fr": "Collez un lien ou identifiant (spécifiquement arxiv, DOI ou Semantic Scholar) pour pré-peupler le formulaire."
+        "en": "Paste link or paper ID (specifically arxiv, DOI, OpenReview or Semantic Scholar) to pre-populate the form.",
+        "fr": "Collez un lien ou identifiant (spécifiquement arxiv, DOI, OpenReview ou Semantic Scholar) pour pré-peupler le formulaire."
+    },
+    {
+        "en": "Fetching the information can sometimes take a while (up to a minute or two), please be patient.",
+        "fr": "La récupération de l'information peut parfois prendre un certain temps (jusqu'à une ou deux minutes), veuillez patienter."
     },
     {
         "en": "Enter at least one link to populate",
