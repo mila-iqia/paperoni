@@ -263,9 +263,12 @@ def peer_reviewed(p: Paper):
 
 @operation
 def sort_releases(p: Paper):
-    releases = [(release, release_status_order(release)) for release in p.releases]
-    releases.sort(key=lambda entry: -entry[1])
-    return replace(p, releases=[r for r, _ in releases])
+    releases = [
+        (release, release_status_order(release), release.venue.date)
+        for release in p.releases
+    ]
+    releases.sort(key=lambda entry: (entry[1], entry[2]), reverse=True)
+    return replace(p, releases=[r for r, _, _ in releases])
 
 
 @operation
