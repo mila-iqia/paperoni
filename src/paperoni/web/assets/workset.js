@@ -157,6 +157,84 @@ function diffSequence(arr1, arr2, keyFn = (x) => x) {
 }
 
 /**
+ * Match the releases of two versions of a paper and classify each one as
+ * 'equal', 'moved', 'added' or 'removed'. Whether a release moved is decided
+ * from its position among the releases the two versions have in common, so
+ * adding or dropping a release does not flag every release after it as moved.
+ *
+ * Returns [{ release, type, oldPos, newPos, movedUp }] in display order: the
+ * new order, with the removed releases left where they used to be.
+ */
+function diffReleases(releases1, releases2, keyFn) {
+    const segments = diffSequence(releases1, releases2, keyFn);
+
+    // A release that is both removed and added is the same release in a new
+    // spot. Pair up those instances by key (which handles duplicate venues) so
+    // that they become one entry instead of a deletion plus an insertion.
+    const removedIdx = new Map();
+    const addedCount = new Map();
+    for (const seg of segments) {
+        if (seg.type === 'removed') {
+            const k = keyFn(seg.value);
+            if (!removedIdx.has(k)) removedIdx.set(k, []);
+            removedIdx.get(k).push(seg.idx1);
+        } else if (seg.type === 'added') {
+            const k = keyFn(seg.value);
+            addedCount.set(k, (addedCount.get(k) || 0) + 1);
+        }
+    }
+    // key -> old positions still available to pair with an added instance
+    const movedFrom = new Map();
+    for (const [k, indices] of removedIdx) {
+        const n = Math.min(indices.length, addedCount.get(k) || 0);
+        if (n > 0) movedFrom.set(k, indices.slice(0, n));
+    }
+    // How many removed instances to drop, since they are shown at their new
+    // position instead. Counted separately from movedFrom because a removed
+    // segment can come after the added segment it pairs with.
+    const movedToSkip = new Map([...movedFrom].map(([k, idx]) => [k, idx.length]));
+
+    // The equal and added segments walk releases2 in order, so dropping the
+    // removed instance of a moved release leaves the new order intact.
+    const entries = [];
+    for (const seg of segments) {
+        if (seg.type === 'equal') {
+            entries.push({ release: seg.value2, oldPos: seg.idx1, newPos: seg.idx2 });
+            continue;
+        }
+        const key = keyFn(seg.value);
+        if (seg.type === 'removed') {
+            const toSkip = movedToSkip.get(key) || 0;
+            if (toSkip > 0) {
+                movedToSkip.set(key, toSkip - 1);
+            } else {
+                entries.push({ release: seg.value, type: 'removed', oldPos: seg.idx1 });
+            }
+            continue;
+        }
+        const from = movedFrom.get(key);
+        if (from && from.length > 0) {
+            entries.push({ release: seg.value, oldPos: from.shift(), newPos: seg.idx2 });
+        } else {
+            entries.push({ release: seg.value, type: 'added', newPos: seg.idx2 });
+        }
+    }
+
+    // Rank the matched releases by their position in each version; the ones
+    // whose rank changed are the ones that genuinely changed place. `matched`
+    // is already in new-version order, so its index is the new rank.
+    const matched = entries.filter((e) => !e.type);
+    const oldRank = new Map(
+        [...matched].sort((a, b) => a.oldPos - b.oldPos).map((e, i) => [e, i])
+    );
+    matched.forEach((e, newRank) => {
+        e.type = oldRank.get(e) === newRank ? 'equal' : 'moved';
+        e.movedUp = newRank < oldRank.get(e);
+    });
+    return entries;
+}
+
+/**
  * Compare two values for equality (shallow, for list items).
  */
 function valueKey(val) {
@@ -367,56 +445,35 @@ export function createWorksetPaperDiffElement(paperOld, paperNew) {
 
     attachAuthorAffiliationHover(authorsHtml);
 
-    // Releases diff - match by key with consumption (handles duplicate venues)
-    const releases1 = paperOld?.releases || [];
-    const releases2 = paperNew?.releases || [];
+    // Releases diff - a reordering shows up as a move, so that a change that
+    // only permutes the releases is still visible.
     const releaseKey = (r) => `${r.venue?.name ?? ''}|${r.venue?.date ?? ''}|${r.peer_review_status ?? ''}`;
-    const r2Counts = new Map();
-    for (const r of releases2) {
-        const k = releaseKey(r);
-        r2Counts.set(k, (r2Counts.get(k) || 0) + 1);
-    }
-    const r1Counts = new Map();
-    for (const r of releases1) {
-        const k = releaseKey(r);
-        r1Counts.set(k, (r1Counts.get(k) || 0) + 1);
-    }
-    const releaseItems = [];
-    for (const r of releases1) {
-        const key = releaseKey(r);
-        const count = r2Counts.get(key) || 0;
-        const in2 = count > 0;
-        if (in2) r2Counts.set(key, count - 1);
-        const cls = in2 ? '' : 'diff-removed';
-        const { date, venueName, status } = formatRelease(r);
-        const dateEl = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
-        const statusSpan = status ? html`<span class="release-status">${status}</span>` : null;
-        releaseItems.push(html`
-            <div class="release-item ${cls}">
-                ${dateEl}
-                ${statusSpan}
-                <span class="release-venue">${venueName ?? 'Unknown'}</span>
-            </div>
-        `);
-    }
-    for (const r of releases2) {
-        const key = releaseKey(r);
-        const count = r1Counts.get(key) || 0;
-        if (count > 0) {
-            r1Counts.set(key, count - 1);
-            continue;
+    const releaseEntries = diffReleases(
+        paperOld?.releases || [],
+        paperNew?.releases || [],
+        releaseKey
+    );
+    const releaseItems = releaseEntries.map((entry) => {
+        const { date, venueName, status } = formatRelease(entry.release);
+        let marker = null;
+        if (entry.type === 'moved') {
+            const oldPos = entry.oldPos + 1;
+            const newPos = entry.newPos + 1;
+            const arrow = entry.movedUp ? '↑' : '↓';
+            // The absolute positions can coincide even though the release moved
+            // relative to the others, and "2→2" would just be confusing.
+            const sameSpot = oldPos === newPos;
+            marker = html`<span class="release-move" title="${sameSpot ? 'reordered' : `moved from position ${oldPos} to position ${newPos}`}">${sameSpot ? arrow : `${arrow} ${oldPos}→${newPos}`}</span>`;
         }
-        const { date, venueName, status } = formatRelease(r);
-        const dateEl = html`<strong class="release-date">${date ?? '????-??-??'}</strong>`;
-        const statusSpan = status ? html`<span class="release-status">${status}</span>` : null;
-        releaseItems.push(html`
-            <div class="release-item diff-added">
-                ${dateEl}
-                ${statusSpan}
+        return html`
+            <div class="release-item ${entry.type === 'equal' ? '' : `diff-${entry.type}`}">
+                <strong class="release-date">${date ?? '????-??-??'}</strong>
+                ${status ? html`<span class="release-status">${status}</span>` : null}
                 <span class="release-venue">${venueName ?? 'Unknown'}</span>
+                ${marker}
             </div>
-        `);
-    }
+        `;
+    });
     const releasesHtml = html`<div class="paper-meta-item"><div class="paper-releases">${releaseItems.length ? releaseItems : html`<div class="release-item"><loc>No releases</loc></div>`}</div></div>`;
 
     // Abstract diff

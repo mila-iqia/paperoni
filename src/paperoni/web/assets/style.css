@@ -2872,6 +2872,19 @@ body {
     background-color: rgba(255, 182, 182, 0.6) !important;
 }
 
+/* Moved = amber: the item itself is unchanged, only its position is */
+.diff-view .diff-moved,
+.diff-view .release-item.diff-moved {
+    background-color: rgba(255, 226, 150, 0.7) !important;
+}
+
+.diff-view .release-move {
+    color: #8a6100;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
 .diff-view .diff-legend {
     display: flex;
     gap: 16px;
