@@ -1,4 +1,4 @@
-import { escapeHtml, html, showToast } from './common.js';
+import { escapeHtml, html, showToast, toggle } from './common.js';
 import { getTranslation, setLanguageNode } from './translate.js';
 
 // These fields hold paper metadata, not credentials. Password managers
@@ -14,6 +14,34 @@ const NO_AUTOFILL_ATTRS = {
 };
 
 const FIELD_SELECTOR = 'input, textarea, select';
+
+// Defaults for a release that has no counterpart in the paper being edited:
+// either freshly added, or one whose venue name or date was just changed.
+const NEW_RELEASE = {
+    venue: {
+        type: 'conference',
+        name: '',
+        series: '',
+        date: '',
+        date_precision: 3,
+        volume: null,
+        publisher: null,
+        short_name: null,
+        aliases: [],
+        links: [],
+        open: false,
+        peer_reviewed: false,
+    },
+    status: 'published',
+    peer_review_status: 'unknown',
+    pages: null,
+};
+
+// Identifies a release across an edit: the two fields of it that the form shows
+// and that together pick out one release of a paper.
+function releaseVenueKey(release) {
+    return `${release.venue?.name ?? ''}|${release.venue?.date ?? ''}`;
+}
 
 function markNoAutofill(el) {
     for (const [name, value] of Object.entries(NO_AUTOFILL_ATTRS)) {
@@ -321,6 +349,56 @@ function renderEditForm(paper, suggestMode = false) {
         `
         : null;
 
+    // Links, flags and metadata are rarely what someone came to the page to
+    // edit, so they sit behind a toggle, collapsed by default. Everything in
+    // there is still part of the form: display: none does not take a field out
+    // of it.
+    const advancedSection = toggle`
+        <div class="form-section">
+            <button type="button" class="section-toggle" toggler>
+                <span><loc>Advanced</loc></span>
+                <span class="item-toggle">▶</span>
+            </button>
+
+            <div class="collapsible-content" toggled>
+                <!-- Links -->
+                <div class="form-section">
+                    <h2><loc>Links</loc></h2>
+                    <span class="field-hint"><loc>Tip: add links to the paper's PDF with type 'pdf', and other links with type 'html'. arxiv/openreview links should be the direct identifiers (e.g. 2202.12345), not urls.</loc></span>
+                    <div id="linksContainer"></div>
+                </div>
+
+                <!-- Flags -->
+                <div class="form-section">
+                    <h2><loc>Flags</loc></h2>
+                    <div id="flagsContainer"></div>
+                </div>
+
+                <!-- Metadata -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2><loc>Metadata</loc></h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="key"><loc>Key</loc></label>
+                        <input type="text" id="key" name="key" value="${paper.key || 'n/a'}" placeholder="Paper key identifier" data-loc-placeholder="Paper key identifier" class="edit-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="version"><loc>Version</loc></label>
+                        <input type="text" id="version" name="version" value="${paper.version ? new Date(paper.version).toLocaleString() : ''}" readonly class="edit-input readonly-input" title="Last modified timestamp (read-only)" data-loc-title="Last modified timestamp (read-only)" placeholder="Not set" data-loc-placeholder="Not set">
+                    </div>
+
+                    <div class="form-group">
+                        <label><loc>Info</loc></label>
+                        <div id="infoContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
     const form = html`
         <form class="edit-form" id="editForm">
             ${populateSection}
@@ -358,6 +436,7 @@ function renderEditForm(paper, suggestMode = false) {
             <!-- Releases -->
             <div class="form-section">
                 <h2><loc>Releases</loc></h2>
+                <span class="field-hint"><loc>The main release for this paper should be on top.</loc></span>
                 <div id="releasesContainer"></div>
             </div>
 
@@ -367,39 +446,8 @@ function renderEditForm(paper, suggestMode = false) {
                 <div id="topicsContainer"></div>
             </div>
 
-            <!-- Links -->
-            <div class="form-section">
-                <h2><loc>Links</loc></h2>
-                <div id="linksContainer"></div>
-            </div>
-
-            <!-- Flags -->
-            <div class="form-section">
-                <h2><loc>Flags</loc></h2>
-                <div id="flagsContainer"></div>
-            </div>
-
-            <!-- Metadata -->
-            <div class="form-section">
-                <div class="section-header">
-                    <h2><loc>Metadata</loc></h2>
-                </div>
-
-                <div class="form-group">
-                    <label for="key"><loc>Key</loc></label>
-                    <input type="text" id="key" name="key" value="${paper.key || 'n/a'}" placeholder="Paper key identifier" data-loc-placeholder="Paper key identifier" class="edit-input">
-                </div>
-
-                <div class="form-group">
-                    <label for="version"><loc>Version</loc></label>
-                    <input type="text" id="version" name="version" value="${paper.version ? new Date(paper.version).toLocaleString() : ''}" readonly class="edit-input readonly-input" title="Last modified timestamp (read-only)" data-loc-title="Last modified timestamp (read-only)" placeholder="Not set" data-loc-placeholder="Not set">
-                </div>
-
-                <div class="form-group">
-                    <label><loc>Info</loc></label>
-                    <div id="infoContainer"></div>
-                </div>
-            </div>
+            <!-- Advanced: links, flags and metadata -->
+            ${advancedSection}
 
             <!-- Comment -->
             <div class="form-section">
@@ -709,19 +757,7 @@ function createAuthorRow(author, index) {
         </tr>
     `;
 
-    // Make only the drag handle draggable
-    const dragHandle = row.querySelector('.drag-handle');
-    dragHandle.draggable = true;
-    
-    // Add drag event listeners to the handle
-    dragHandle.addEventListener('dragstart', handleDragStart);
-    
-    // Add drop-related event listeners to the row
-    row.addEventListener('dragover', handleDragOver);
-    row.addEventListener('dragenter', handleDragEnter);
-    row.addEventListener('dragleave', handleDragLeave);
-    row.addEventListener('drop', handleDrop);
-    row.addEventListener('dragend', handleDragEnd);
+    makeRowReorderable(row);
 
     row.querySelector('.btn-remove-x').addEventListener('click', () => {
         row.remove();
@@ -731,12 +767,31 @@ function createAuthorRow(author, index) {
     return row;
 }
 
+/**
+ * Wire up drag-to-reorder on a table row that has a .drag-handle cell. Only the
+ * handle is draggable; the row itself is the drop target.
+ */
+function makeRowReorderable(row) {
+    const dragHandle = row.querySelector('.drag-handle');
+    dragHandle.draggable = true;
+    dragHandle.addEventListener('dragstart', handleDragStart);
+
+    row.addEventListener('dragover', handleDragOver);
+    row.addEventListener('dragenter', handleDragEnter);
+    row.addEventListener('dragleave', handleDragLeave);
+    row.addEventListener('drop', handleDrop);
+    row.addEventListener('dragend', handleDragEnd);
+}
+
 function updateRowIndices(tbody) {
-    // Update the name attributes of all inputs to reflect new positions,
-    // preserving each input's field suffix (display_name, author.email, ...).
+    // Update the name attributes of all the row's controls to reflect the new
+    // positions, preserving the field suffix of each one (display_name,
+    // author.email, venue.date, ...). collectFormData reads the array order
+    // from those indices, not from the DOM, so this has to run after every
+    // reorder or removal.
     Array.from(tbody.querySelectorAll('tr')).forEach((row, newIndex) => {
-        row.querySelectorAll('input[name^="authors["]').forEach((input) => {
-            input.name = input.name.replace(/authors\[\d+\]/, `authors[${newIndex}]`);
+        row.querySelectorAll('[name]').forEach((field) => {
+            field.name = field.name.replace(/^(\w+)\[\d+\]/, `$1[${newIndex}]`);
         });
     });
 }
@@ -758,6 +813,13 @@ function handleDragStart(e) {
 }
 
 function handleDragOver(e) {
+    // Rows are only ever reordered within their own table: a row from another
+    // table (an author dragged onto a release, say) is not a drop target, so
+    // don't preventDefault, which is what allows the drop in the first place.
+    if (!draggedRow || this.parentNode !== draggedRow.parentNode) {
+        return;
+    }
+
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -811,7 +873,7 @@ function handleDrop(e) {
         e.stopPropagation();
     }
     
-    if (this !== draggedRow) {
+    if (draggedRow && this !== draggedRow && this.parentNode === draggedRow.parentNode) {
         const tbody = this.parentNode;
         
         // Check if we're dropping after the last row
@@ -857,6 +919,7 @@ function renderReleases(container, releases) {
             <table class="releases-table edit-table">
                 <thead>
                     <tr>
+                        <th></th>
                         <th><loc>Date</loc></th>
                         <th><loc>Venue Name</loc></th>
                         <th><loc>Type</loc></th>
@@ -877,22 +940,21 @@ function renderReleases(container, releases) {
         tbody.appendChild(row);
     });
 
+    updateRowIndices(tbody);
+
     const addBtn = html`<button type="button" class="btn-add input-container"><loc>+ Add Release</loc></button>`;
     addBtn.addEventListener('click', () => {
         const newRelease = {
+            ...NEW_RELEASE,
             venue: {
-                type: 'conference',
-                name: '',
-                series: '',
+                ...NEW_RELEASE.venue,
                 date: new Date().toISOString().split('T')[0],
-                date_precision: 3
             },
-            status: 'published',
-            peer_review_status: 'unknown'
         };
         const row = createReleaseRow(newRelease, tbody.children.length);
         tbody.appendChild(row);
         releases.push(newRelease);
+        updateRowIndices(tbody);
         
         // Focus on the date field of the newly added row
         const dateInput = row.querySelector('input[type="date"]');
@@ -908,6 +970,9 @@ function renderReleases(container, releases) {
 function createReleaseRow(release, index) {
     const row = html`
         <tr>
+            <td class="cell-center-padded">
+                <div class="drag-handle" title="Drag to reorder" data-loc-title="Drag to reorder">⋮⋮</div>
+            </td>
             <td>
                 <input type="date"
                        name="releases[${index}].venue.date"
@@ -977,8 +1042,12 @@ function createReleaseRow(release, index) {
     if (typeSelect) typeSelect.value = release.venue?.type || 'conference';
     if (peerReviewSelect) peerReviewSelect.value = release.peer_review_status || 'unknown';
 
+    makeRowReorderable(row);
+
     row.querySelector('.btn-remove-x').addEventListener('click', () => {
+        const tbody = row.parentNode;
         row.remove();
+        updateRowIndices(tbody);
     });
 
     return row;
@@ -1336,7 +1405,16 @@ function collectFormData(form, originalPaper) {
             } else if (field === 'author.email') {
                 authorsMap[index].author.email = input.value.trim().toLowerCase() || null;
             } else if (field === 'affiliations') {
-                const originalAuthor = originalPaper.authors?.[parseInt(index, 10)];
+                // Find the author this row started out as by name, not by
+                // position, so that reordering the authors does not compare a
+                // row against a different author's affiliations (and rebuild
+                // them, losing their category and country). display_name is
+                // set above, since it comes first in the row.
+                const rowName = authorsMap[index].display_name;
+                const originalAuthor =
+                    (originalPaper.authors || []).find(
+                        (a) => a.display_name === rowName
+                    ) || originalPaper.authors?.[parseInt(index, 10)];
                 const originalAffiliations = originalAuthor?.affiliations || [];
                 const originalStr = originalAffiliations.map(a => a.name.trim()).filter(Boolean).join('; ');
                 const inputStr = input.value.split(';').map(s => s.trim()).filter(Boolean).join('; ');
@@ -1364,25 +1442,7 @@ function collectFormData(form, originalPaper) {
         if (match) {
             const [, index, field] = match;
             if (!releasesMap[index]) {
-                releasesMap[index] = {
-                    venue: {
-                        type: 'conference',
-                        name: '',
-                        series: '',
-                        date: '',
-                        date_precision: 3,
-                        volume: null,
-                        publisher: null,
-                        short_name: null,
-                        aliases: [],
-                        links: [],
-                        open: false,
-                        peer_reviewed: false
-                    },
-                    status: 'published',
-                    peer_review_status: 'unknown',
-                    pages: null
-                };
+                releasesMap[index] = { venue: {} };
             }
 
             const parts = field.split('.');
@@ -1393,7 +1453,23 @@ function collectFormData(form, originalPaper) {
             }
         }
     });
-    paper.releases = Object.values(releasesMap);
+
+    // The form only exposes a few of a release's fields, so overlay what it
+    // does expose on top of the release being edited instead of resetting the
+    // rest (series, volume, publisher, pages, ...) to the defaults. The
+    // original is looked up by venue name and date rather than by position, so
+    // this survives a reordering of the releases.
+    const originalReleases = new Map(
+        (originalPaper.releases || []).map((r) => [releaseVenueKey(r), r])
+    );
+    paper.releases = Object.values(releasesMap).map((edited) => {
+        const original = originalReleases.get(releaseVenueKey(edited)) || NEW_RELEASE;
+        return {
+            ...original,
+            ...edited,
+            venue: { ...original.venue, ...edited.venue },
+        };
+    });
 
     // Collect topics
     const topicElements = form.querySelectorAll('[name^="topics["]');

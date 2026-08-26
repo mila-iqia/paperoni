@@ -572,12 +572,24 @@
         "fr": "Parutions"
     },
     {
+        "en": "The main release for this paper should be on top.",
+        "fr": "La parution principale de cet article devrait être en premier."
+    },
+    {
         "en": "Topics",
         "fr": "Sujets"
     },
     {
         "en": "Links",
         "fr": "Liens"
+    },
+    {
+        "en": "Tip: add links to the paper's PDF with type 'pdf', and other links with type 'html'. arxiv/openreview links should be the direct identifiers (e.g. 2202.12345), not urls.",
+        "fr": "Astuce : ajoutez les liens vers le PDF de l'article avec le type 'pdf', et les autres liens avec le type 'html'. Les liens arxiv/openreview doivent être les identifiants directs (ex. 2202.12345), et non des URL."
+    },
+    {
+        "en": "Advanced",
+        "fr": "Avancé"
     },
     {
         "en": "Flags",

@@ -604,18 +604,19 @@ body {
 }
 
 /* Table Column Widths */
-.authors-table th:nth-child(1) { width: 60px; text-align: center; }
+.authors-table th:nth-child(1) { width: auto; text-align: center; }
 .authors-table th:nth-child(2) { width: 30%; }
 .authors-table th:nth-child(3) { width: 30%; }
 .authors-table th:nth-child(4) { width: 40%; }
 .authors-table th:nth-child(5) { width: 40px; text-align: center; }
 
-.releases-table th:nth-child(1) { width: 120px; }
-.releases-table th:nth-child(2) { width: 25%; }
-.releases-table th:nth-child(3) { width: 120px; }
-.releases-table th:nth-child(4) { width: 20%; }
-.releases-table th:nth-child(5) { width: 120px; }
-.releases-table th:nth-child(6) { width: 40px; text-align: center; }
+.releases-table th:nth-child(1) { width: auto; text-align: center; }
+.releases-table th:nth-child(2) { width: 120px; }
+.releases-table th:nth-child(3) { width: 25%; }
+.releases-table th:nth-child(4) { width: 120px; }
+.releases-table th:nth-child(5) { width: 20%; }
+.releases-table th:nth-child(6) { width: 120px; }
+.releases-table th:nth-child(7) { width: 40px; text-align: center; }
 
 .links-table th:nth-child(1) { width: 20%; }
 .links-table th:nth-child(2) { width: 75%; }
@@ -1093,6 +1094,42 @@ body {
     margin: 0 0 15px 0;
     padding-bottom: 10px;
     border-bottom: 2px solid #2c5aa0;
+}
+
+/* Collapsible Form Section */
+.section-toggle {
+    /* Looks like a .form-section h2, but is a button so it can be tabbed to */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    border-bottom: 2px solid #2c5aa0;
+    color: #333;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    padding: 0 0 10px 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.section-toggle:hover {
+    color: #2c5aa0;
+}
+
+.section-toggle.expanded {
+    margin-bottom: 15px;
+}
+
+.collapsible-content {
+    display: none;
+}
+
+.collapsible-content.expanded {
+    display: block;
 }
 
 /* Section Header with Button */
