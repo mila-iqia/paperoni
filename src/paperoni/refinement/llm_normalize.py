@@ -11,6 +11,7 @@ from paperazzi.utils import DiskStoreFunc
 from ..config import config
 from ..model import DatePrecision, PaperAuthor, Release, VenueType
 from ..model.classes import Institution, InstitutionCategory, Paper, Venue
+from ..operations import sort_releases
 from ..prompt import ParsedResponseSerializer
 from ..prompt_utils import prompt_wrapper
 from ..utils import normalize_institution, normalize_name, normalize_venue
@@ -288,4 +289,4 @@ def normalize_paper(
     for fut in as_completed(futures):
         fut.result()
 
-    return paper
+    return sort_releases(paper)
