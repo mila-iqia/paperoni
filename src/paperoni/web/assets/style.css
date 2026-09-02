@@ -1541,6 +1541,161 @@ body {
     opacity: 0.7;
 }
 
+/* My Papers page: claim/unclaim actions and section headers */
+.my-papers-section-header {
+    margin: 30px 0 15px 0;
+    padding-top: 15px;
+    border-top: 2px solid #eee;
+    font-size: 20px;
+    color: #333;
+}
+
+.my-papers-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.claim-prompt {
+    font-size: 13px;
+    color: #666;
+}
+
+.claim-author-select {
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.btn-claim, .btn-claim-confirm {
+    padding: 6px 14px;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-claim:hover, .btn-claim-confirm:hover {
+    background: #c3e6cb;
+}
+
+.btn-unclaim, .btn-claim-cancel {
+    padding: 6px 14px;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-unclaim:hover, .btn-claim-cancel:hover {
+    background: #f5c6cb;
+}
+
+.claim-for-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+}
+
+.claim-for-email {
+    cursor: pointer;
+    color: #2c5aa0;
+    font-weight: 600;
+    border-bottom: 1px dashed #2c5aa0;
+}
+
+.claim-for-email:hover {
+    background: #eef4fb;
+}
+
+.claim-for-input {
+    padding: 3px 6px;
+    border: 1px solid #2c5aa0;
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: inherit;
+    min-width: 220px;
+}
+
+.search-form .form-group.my-papers-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-form .form-group.my-papers-title-group label {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.search-form .form-group.my-papers-title-group input {
+    flex: 1;
+}
+
+.search-form .form-group.my-papers-author-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 240px;
+}
+
+.search-form .form-group.my-papers-author-group label {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.search-form .form-group.my-papers-author-group input {
+    flex: 1;
+    min-width: 0;
+}
+
+.add-paper-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.btn-add-paper {
+    padding: 8px 18px;
+    background: #2c5aa0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-add-paper:hover:not(:disabled) {
+    background: #1e3a6f;
+}
+
+.btn-add-paper:disabled {
+    background: #ccc;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.add-paper-hint {
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+}
+
 .pending-confirm-toast {
     border-left-color: #2c5aa0;
 }

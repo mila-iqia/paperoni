@@ -1,6 +1,7 @@
 
 ### Welcome to Paperoni ([about](/help/about))
 
+- [📄 My papers](/my-papers): Find your own papers, claim/unclaim authorship, and add missing ones.
 - [🔍 Search papers](/search): Find, filter and edit scientific publications by title, author, institution, venue, date, and more.
 - [✏️ Add papers](/edit/new): Add/suggest papers to the database.
 - [❓ Read the help](/help): Consult full documentation and best practices.

@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+
+{% block title_key %}My Papers{% endblock %}
+{% block title %}My Papers{% endblock %}
+{% block page_title %}My Papers{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <div class="claim-for-bar">
+        <loc>Claiming for</loc>
+        <span id="claimForEmail" class="claim-for-email" tabindex="0" data-loc-title="Click to edit"></span>
+    </div>
+    <form class="search-form" id="myPapersForm">
+        <div class="form-row">
+            <div class="form-group my-papers-title-group">
+                <label for="title"><loc>Title</loc></label>
+                <input type="text" id="title" name="title" placeholder="Search by title..." data-loc-placeholder="Search by title...">
+            </div>
+            <div class="form-group my-papers-author-group">
+                <label for="author"><loc>Author</loc></label>
+                <input type="text" id="author" name="author" placeholder="Search by author..." data-loc-placeholder="Search by author...">
+            </div>
+            <div class="form-group" style="flex: 0; align-self: flex-end;">
+                <button type="button" id="clearSearch" class="btn-clear"><loc>Clear</loc></button>
+            </div>
+        </div>
+    </form>
+
+    <div id="resultsContainer"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" nonce="{{ csp_nonce }}">
+    import { displayMyPapers } from '/assets/my_papers.js';
+    displayMyPapers({{ user_email|tojson }}, {{ suggest|tojson }});
+</script>
+{% endblock %}

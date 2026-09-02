@@ -1,6 +1,7 @@
 
 ### Bienvenue sur Paperoni ([à propos](/help/about))
 
+- [📄 Mes articles](/my-papers) : retrouver ses propres articles, revendiquer un article, et en ajouter des manquants.
 - [🔍 Recherche d'articles](/search) : trouver, filtrer et modifier des publications scientifiques par titre, auteur, institution, conférence, date, etc.
 - [✏️ Ajouter des articles](/edit/new) : ajouter/suggérer des articles à la base de données.
 - [❓ Aide](/help) : consulter la documentation complète et les bonnes pratiques.

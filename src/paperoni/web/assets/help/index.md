@@ -4,6 +4,7 @@ Welcome to Paperoni! Paperoni is a tool for paper management developed at Mila.
 ## Table of contents
 
 1. **[Searching for papers](#search)**
+1. **[My papers](#my-papers)**
 1. **[Adding papers](#new)**
 1. **[Editing papers](#edit)**
 
@@ -40,6 +41,29 @@ An edit icon (<img src="/assets/pen.svg" alt="edit" style="height:1em; vertical-
 ### Pending papers and edits
 
 Click the "Pending" checkbox to also see papers and edits corresponding to the current search and for which validation is pending.
+
+
+## My papers {: #my-papers}
+
+The [My Papers](/my-papers) page helps you keep your own author record accurate: it shows papers already credited to your email, lets you unclaim ones that aren't yours, and helps you find and claim ones that are.
+
+**Claiming for:** By default the page uses your own email, shown top-right as "Claiming for `<email>`". Click it to edit, and search/claim on behalf of a different email (e.g. if you are a researcher's assistant, or for an associate who cannot use the interface).
+
+* **Title** / **Author**: Narrow down the search, similarly to the [Search](#search) interface.
+
+### Your papers
+
+Papers (validated, then pending) with an author whose email matches. Each one has a **Not mine** button: click it to clear your email from the matching author.
+
+### Unclaimed papers
+
+Once you search by title or author, this section lists other matching papers not already shown above. Each has a **Claim** button: click it to pick which author entry is you from a dropdown (the closest name match is listed first), then confirm.
+
+Note: changes on this interface go to the suggestion queue and may not operate immediately.
+
+### Add Paper
+
+This button is enabled once you've searched by title, and opens the [paper addition interface](#new) in a new tab, so you can add a paper that isn't in the database at all (the search requirement exists to force checking whether the paper is already there).
 
 
 ## Adding papers {: #new}

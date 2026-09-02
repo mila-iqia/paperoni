@@ -922,5 +922,89 @@
     {
         "en": "Value (JSON or plain text)",
         "fr": "Valeur (JSON ou texte brut)"
+    },
+    {
+        "en": "My Papers",
+        "fr": "Mes articles"
+    },
+    {
+        "en": "Claiming for",
+        "fr": "Revendication pour"
+    },
+    {
+        "en": "Click to edit",
+        "fr": "Cliquer pour modifier"
+    },
+    {
+        "en": "Claim",
+        "fr": "Revendiquer"
+    },
+    {
+        "en": "Not mine",
+        "fr": "Pas moi"
+    },
+    {
+        "en": "Confirm",
+        "fr": "Confirmer"
+    },
+    {
+        "en": "Cancel",
+        "fr": "Annuler"
+    },
+    {
+        "en": "Which author are you?",
+        "fr": "Quel auteur êtes-vous ?"
+    },
+    {
+        "en": "Unclaimed papers",
+        "fr": "Articles non revendiqués"
+    },
+    {
+        "en": "No papers found for your account.",
+        "fr": "Aucun article trouvé pour votre compte."
+    },
+    {
+        "en": "No unclaimed papers found.",
+        "fr": "Aucun article non revendiqué trouvé."
+    },
+    {
+        "en": "Nothing to unclaim",
+        "fr": "Rien à annuler"
+    },
+    {
+        "en": "Paper unclaimed",
+        "fr": "Revendication annulée"
+    },
+    {
+        "en": "Failed to unclaim: {1}",
+        "fr": "Échec de l'annulation de la revendication : {1}"
+    },
+    {
+        "en": "This paper has no authors to claim",
+        "fr": "Cet article n'a aucun auteur à revendiquer"
+    },
+    {
+        "en": "Paper claimed",
+        "fr": "Article revendiqué"
+    },
+    {
+        "en": "Failed to claim: {1}",
+        "fr": "Échec de la revendication : {1}"
+    },
+    {
+        "en": "Unclaimed via My Papers",
+        "fr": "Revendication annulée via Mes articles"
+    },
+    {
+        "en": "Claimed via My Papers",
+        "fr": "Revendiqué via Mes articles"
+    },
+    {
+        "en": "Add Paper",
+        "fr": "Ajouter un article"
+    },
+    {
+        "en": "Search by title first",
+        "fr": "Cherchez d'abord par titre"
     }
 ]

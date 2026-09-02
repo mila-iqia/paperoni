@@ -4,6 +4,7 @@ Bienvenue sur Paperoni ! Paperoni est un outil de gestion d'articles développé
 ## Table des matières
 
 1. **[Rechercher des articles](#search)**
+1. **[Mes articles](#my-papers)**
 1. **[Ajouter des articles](#new)**
 1. **[Modifier des articles](#edit)**
 
@@ -41,6 +42,29 @@ Une icône de modification (<img src="/assets/pen.svg" alt="modifier" style="hei
 ### Articles et modifications en attente
 
 Cochez la case "En attente" pour voir les articles et les modifications qui correspondent à la recherche courante et sont en attente de validation.
+
+
+## Mes articles {: #my-papers}
+
+La page [Mes articles](/my-papers) vous aide à tenir votre propre fiche d'auteur à jour : elle affiche les articles déjà associés à votre courriel, vous permet de vous désassocier de ceux qui ne sont pas les vôtres, et vous aide à trouver et revendiquer ceux qui le sont.
+
+**Revendication pour :** Par défaut, la page utilise votre propre courriel, affiché en haut à droite sous la forme « Revendication pour `<courriel>` ». Cliquez dessus pour le modifier et rechercher/revendiquer au nom d'un autre courriel (p. ex. si vous êtes l'assistant·e d'un·e chercheur·se, ou pour un·e collègue qui ne peut pas utiliser l'interface).
+
+* **Titre** / **Auteur** : Affinez la recherche, comme dans l'interface de [recherche](#search).
+
+### Vos articles
+
+Les articles (validés, puis en attente) dont un auteur a un courriel correspondant. Chacun possède un bouton **Pas moi** : cliquez dessus pour retirer votre courriel de l'auteur correspondant.
+
+### Articles non revendiqués
+
+Dès que vous effectuez une recherche par titre ou par auteur, cette section liste les autres articles correspondants qui ne sont pas déjà affichés ci-dessus. Chacun possède un bouton **Revendiquer** : cliquez dessus pour choisir, dans une liste déroulante, quel auteur vous êtes (le nom le plus proche du vôtre apparaît en premier), puis confirmez.
+
+Note : les modifications apportées dans cette interface sont envoyées dans la file de suggestions et peuvent ne pas prendre effet immédiatement.
+
+### Ajouter un article
+
+Ce bouton s'active une fois qu'une recherche par titre a été effectuée, et ouvre [l'interface d'ajout d'articles](#new) dans un nouvel onglet, pour ajouter un article absent de la base de données (l'exigence de recherche vise à forcer la vérification que l'article n'y figure pas déjà).
 
 
 ## Ajouter des articles {: #new}
