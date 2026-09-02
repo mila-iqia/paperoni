@@ -75,7 +75,9 @@ def test_my_papers_suggest_param_override(app):
     """?suggest=1/0 overrides the default, e.g. so a validator can test the
     suggestion flow without giving up their validate capability."""
     validator = app.client("validator@website.web")
-    assert _suggest_flag(validator.get("/my-papers", suggest="1", expect=200).text) is True
+    assert (
+        _suggest_flag(validator.get("/my-papers", suggest="1", expect=200).text) is True
+    )
     assert _suggest_flag(validator.get("/my-papers", expect=200).text) is False
 
     seeker = app.client("seeker@website.web")
@@ -152,9 +154,7 @@ def test_my_papers_claim_unclaim_flow(wr_app):
     ).json()
     assert result["success"]
 
-    claimed = validator.get(
-        "/api/v1/search", author=email, expect=200
-    ).json()
+    claimed = validator.get("/api/v1/search", author=email, expect=200).json()
     assert claimed["total"] >= 1
     assert any(p["id"] == paper["id"] for p in claimed["results"])
 
@@ -172,9 +172,7 @@ def test_my_papers_claim_unclaim_flow(wr_app):
     ).json()
     assert result["success"]
 
-    unclaimed = validator.get(
-        "/api/v1/search", author=email, expect=200
-    ).json()
+    unclaimed = validator.get("/api/v1/search", author=email, expect=200).json()
     assert unclaimed["total"] == 0
 
     final = validator.get(f"/api/v1/paper/{paper['id']}", expect=200).json()
@@ -201,9 +199,7 @@ def test_my_papers_claim_via_suggest(wr_app_with_suggestions):
     ).json()
     assert result["success"]
 
-    pending = seeker.get(
-        "/api/v1/pending/list", author=email, expect=200
-    ).json()
+    pending = seeker.get("/api/v1/pending/list", author=email, expect=200).json()
     assert pending["total"] >= 1
 
 
@@ -244,5 +240,7 @@ def test_my_papers_unclaim_via_suggest_leaves_main_db_stale(wr_app_with_suggesti
 
     # The fix's data source: ?latest_edit=true surfaces the pending
     # suggestion instead, which really does show it as unclaimed.
-    latest = validator.get(f"/api/v1/paper/{paper['id']}", latest_edit="true", expect=200).json()
+    latest = validator.get(
+        f"/api/v1/paper/{paper['id']}", latest_edit="true", expect=200
+    ).json()
     assert all(a["author"]["email"] != email for a in latest["authors"])

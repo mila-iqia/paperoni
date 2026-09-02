@@ -37,6 +37,22 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 
+class StaticNoCacheMiddleware(BaseHTTPMiddleware):
+    """StaticFiles sets an ETag/Last-Modified but no Cache-Control, so without
+    this, browsers apply heuristic freshness and can keep serving a stale
+    CSS/JS file for a while after a deploy without even asking the server --
+    only a hard refresh (which forces revalidation) picks up the change.
+    "no-cache" doesn't disable caching, it just makes the browser always
+    revalidate first, so unchanged files still come back as a cheap 304.
+    """
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith(("/assets/", "/custom/")):
+            response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
 _DESCRIPTION = """
 API for searching scientific papers and operate on Paperoni's database.
 
@@ -87,6 +103,7 @@ def create_app():
         return await http_exception_handler(request, exc)
 
     app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(StaticNoCacheMiddleware)
 
     auth = config.server.auth or OAuthManager(server_metadata_url="n/a")
     auth.install(app)
