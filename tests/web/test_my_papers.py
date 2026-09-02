@@ -111,7 +111,7 @@ def test_my_papers_smoke(app):
         "Cancel",
         "Which author are you?",
         "Unclaimed papers",
-        "No papers found for your account.",
+        "No papers claimed.",
         "No unclaimed papers found.",
         "Nothing to unclaim",
         "Paper unclaimed",

@@ -500,7 +500,7 @@ function renderClaimedSection(data) {
         validatedResults: data.validatedResults.filter(p => paperMatchesAuthor(p, currentAuthor)),
         pendingResults: data.pendingResults.filter(d => pendingMatchesAuthor(d, currentAuthor)),
         bottomSectionFor: (paper) => createClaimToggle(paper, true),
-        noResultsKey: 'No papers found for your account.',
+        noResultsKey: 'No papers claimed.',
         onPageChange: loadClaimed,
     });
 }
