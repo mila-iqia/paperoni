@@ -289,4 +289,4 @@ def normalize_paper(
     for fut in as_completed(futures):
         fut.result()
 
-    return sort_releases(paper)
+    return sort_releases(paper).new
