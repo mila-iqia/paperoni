@@ -148,6 +148,10 @@ class QueryError(Exception):
     pass
 
 
+class AuthError(Exception):
+    pass
+
+
 def asciiify(s: str) -> str:
     """Translate a string to pure ASCII, removing accents and the like.
 
