@@ -59,7 +59,7 @@ function updateToastPositions() {
 const linkGenerators = {
     "arxiv": {
         "abstract": "https://arxiv.org/abs/{}",
-        "pdf": "https://arxiv.org/pdf/{}.pdf",
+        "pdf": "https://arxiv.org/pdf/{}",
     },
     "pubmed": {
         "abstract": "https://pubmed.ncbi.nlm.nih.gov/{}",

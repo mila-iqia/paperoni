@@ -35,7 +35,7 @@ def split_include_exclude(values, prefixes=EXCLUDE_PREFIXES):
 link_generators = {
     "arxiv": {
         "abstract": "https://arxiv.org/abs/{}",
-        "pdf": "https://arxiv.org/pdf/{}.pdf",
+        "pdf": "https://arxiv.org/pdf/{}",
     },
     "pubmed": {
         "abstract": "https://pubmed.ncbi.nlm.nih.gov/{}",

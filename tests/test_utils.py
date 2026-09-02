@@ -29,7 +29,7 @@ from paperoni.utils import asciiify, expand_links_dict, mostly_latin, soft_fail
                 {
                     "type": "arxiv.pdf",
                     "link": "1234.5678",
-                    "url": "https://arxiv.org/pdf/1234.5678.pdf",
+                    "url": "https://arxiv.org/pdf/1234.5678",
                 },
                 {"type": "unknown", "link": "foo"},
             ],

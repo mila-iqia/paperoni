@@ -32,7 +32,7 @@ class URL:
 @ovld
 async def find_download_links(typ: Literal["arxiv"], link: str):
     """Return ArXiv PDF download link."""
-    yield URL(url=f"https://export.arxiv.org/pdf/{link}.pdf", info=typ)
+    yield URL(url=f"https://export.arxiv.org/pdf/{link}", info=typ)
 
 
 @ovld
