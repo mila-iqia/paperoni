@@ -393,7 +393,7 @@ wheels = [
 
 [[package]]
 name = "easy-oauth"
-version = "0.0.7"
+version = "0.0.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "authlib" },
@@ -403,9 +403,9 @@ dependencies = [
     { name = "serieux" },
     { name = "starlette" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/18/9d/d8ba53a9a7750334ca708b5339615cedccba51be0ef0888935bd290eaa8b/easy_oauth-0.0.7.tar.gz", hash = "sha256:e892fc4fbc0109faeb775ca4e7e1c55c7e6c641af1c141f3ff1aa7a52fee0d63", size = 13591, upload-time = "2026-06-02T20:30:27.707Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f7/9f/53c10a7aa21c347c414d6fd86ef27d047ea53456db9723ab5593e32e81fd/easy_oauth-0.0.8.tar.gz", hash = "sha256:5f444d9c7e9f1e42d30cc714880af860393b1bf10b9a8d00546c3ce46b3edb2e", size = 15403, upload-time = "2026-09-16T18:26:41.829Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/4d/f7b27c208519fc25c50d873f645717dc6f560baa05118861f464c9277a8c/easy_oauth-0.0.7-py3-none-any.whl", hash = "sha256:c7e273a9b317438db06737b6fa74d123c9d8993c175505473027aa196a468f48", size = 16267, upload-time = "2026-06-02T20:30:26.247Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/0f/34821dfaaf840616ba5cb5077675a554a21ef1e5449b38b6a4dff2b1d55b/easy_oauth-0.0.8-py3-none-any.whl", hash = "sha256:ba4eae9c6ed71875386ec8d1fa0b46185e796b57d52cea99e04978889c167f35", size = 18342, upload-time = "2026-09-16T18:26:40.723Z" },
 ]
 
 [[package]]
@@ -1062,7 +1062,7 @@ requires-dist = [
     { name = "buchelib", specifier = ">=0.0.7" },
     { name = "chardet", specifier = ">=5.2.0,<6.0.0" },
     { name = "cloudscraper", specifier = ">=1.2.71" },
-    { name = "easy-oauth", specifier = ">=0.0.7" },
+    { name = "easy-oauth", specifier = ">=0.0.8" },
     { name = "fake-useragent", specifier = ">=2.2.0" },
     { name = "fastapi", specifier = ">=0.116.1" },
     { name = "filelock", specifier = ">=3.20.0" },
