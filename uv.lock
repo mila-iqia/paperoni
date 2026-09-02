@@ -1031,6 +1031,7 @@ dependencies = [
     { name = "ovld" },
     { name = "paperazzi", extra = ["vertexai"] },
     { name = "pymongo" },
+    { name = "python-multipart" },
     { name = "rapporteur" },
     { name = "requests" },
     { name = "requests-cache" },
@@ -1048,7 +1049,6 @@ dev = [
     { name = "pytest-cov" },
     { name = "pytest-regressions" },
     { name = "pytest-timeout" },
-    { name = "python-multipart" },
 ]
 lint = [
     { name = "ruff" },
@@ -1080,6 +1080,7 @@ requires-dist = [
     { name = "ovld", specifier = ">=0.5.13" },
     { name = "paperazzi", extras = ["vertexai"], specifier = ">=0.0.7" },
     { name = "pymongo", specifier = ">=4.15.0" },
+    { name = "python-multipart", specifier = ">=0.0.20" },
     { name = "rapporteur", specifier = ">=0.1.4,<0.2.0" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "requests-cache", specifier = ">=1.2.1" },
@@ -1098,7 +1099,6 @@ dev = [
     { name = "pytest-cov", specifier = ">=6.1.0" },
     { name = "pytest-regressions", specifier = ">=2.7.0" },
     { name = "pytest-timeout", specifier = ">=2.4.0" },
-    { name = "python-multipart", specifier = ">=0.0.20" },
 ]
 lint = [{ name = "ruff", specifier = ">=0.15.0" }]
 
