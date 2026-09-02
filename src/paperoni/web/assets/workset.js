@@ -1,4 +1,4 @@
-import { html, join, toggle } from './common.js';
+import { html, join, normEmail, toggle } from './common.js';
 import { setLanguageNode } from './translate.js';
 import {
     attachAuthorAffiliationHover,
@@ -16,7 +16,7 @@ function getAffName(aff) {
 }
 
 function getAuthorEmail(author) {
-    return author?.author?.email ?? null;
+    return normEmail(author?.author?.email);
 }
 
 /**

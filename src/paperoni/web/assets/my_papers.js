@@ -1,4 +1,4 @@
-import { debounce, html, showToast } from './common.js';
+import { debounce, html, normEmail, showToast } from './common.js';
 import { getTranslation, setLanguageNode } from './translate.js';
 import { createPaperResultElement } from './search.js';
 import { createPendingItem } from './pending.js';
@@ -195,7 +195,7 @@ async function submitPaper(paper, comment, suggest) {
 }
 
 function isMe(author) {
-    const email = author?.author?.email;
+    const email = normEmail(author?.author?.email);
     return !!email && email.trim().toLowerCase() === userEmail.trim().toLowerCase();
 }
 

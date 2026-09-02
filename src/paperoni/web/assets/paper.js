@@ -1,4 +1,4 @@
-import { html, join } from './common.js';
+import { html, join, normEmail } from './common.js';
 
 export function formatAuthorsWithAffiliations(authors) {
     // Map institutions to unique numbers
@@ -27,7 +27,7 @@ export function formatAuthorsWithAffiliations(authors) {
             })
             .filter(num => num !== undefined)
             .sort((a, b) => a - b);
-        const email = author.author?.email ?? null;
+        const email = normEmail(author.author?.email);
 
         return { name, affNumbers, email };
     });

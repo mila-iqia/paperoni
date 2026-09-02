@@ -195,6 +195,15 @@ export function toggle(strings, ...values) {
     return fragment;
 }
 
+/**
+ * Normalize a raw author email: empty or the "n/a" unclaim tombstone are
+ * both interpreted as "no email", exactly like a null field.
+ */
+export function normEmail(email) {
+    if (!email) return null;
+    return email.trim().toLowerCase() === 'n/a' ? null : email;
+}
+
 export function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
