@@ -277,6 +277,11 @@ class OpenAlexQueryManager:
         links = list(links)
         links.sort(key=lambda l: (l.type, l.link))
 
+        # TODO: Should be configurable
+        exclusions = ["Zenodo (CERN European Organization for Nuclear Research)"]
+        if all(venue_name(loc) in exclusions for loc in release_locations):
+            return None
+
         paper = Paper(
             title=data["display_name"] or "Untitled",
             abstract=self._reconstruct_abstract(data["abstract_inverted_index"] or {}),
