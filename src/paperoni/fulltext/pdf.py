@@ -1,6 +1,6 @@
 import hashlib
 import shutil
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from serieux import dump, load
 
@@ -46,7 +46,10 @@ class PDF:
 
     def __post_init__(self):
         if self.hash is None:
-            self.hash = hashlib.sha256(str(self.source).encode()).hexdigest()
+            # Headers may contain tokens that change between logins, so they
+            # must not take part in the cache key
+            key = replace(self.source, headers={})
+            self.hash = hashlib.sha256(str(key).encode()).hexdigest()
         self.directory = (config.data_path / "pdf" / self.hash).resolve()
         self.meta_path = self.directory / "meta.yaml"
         self.pdf_path = self.directory / "fulltext.pdf"
@@ -56,7 +59,11 @@ class PDF:
 
     def load(self):
         if self.meta_path.exists():
-            return load(PDF, self.meta_path)
+            stored = load(PDF, self.meta_path)
+            # Headers (e.g. authentication) are not persisted, take them from
+            # the source that was passed in
+            stored.source.headers = self.source.headers
+            return stored
         else:
             return self
 
@@ -74,6 +81,7 @@ class PDF:
             await config.fetch.download_retry(
                 url=self.source.url,
                 filename=self.pdf_path,
+                headers=self.source.headers,
             )
             if not self.pdf_path.exists() or not self.pdf_path.is_file():
                 raise Exception(f"Downloaded file does not exist: {self.pdf_path}")

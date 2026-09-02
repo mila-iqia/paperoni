@@ -1,9 +1,8 @@
 source:
-  url: https://openreview.net/pdf?id=vieIamY2Gi
+  url: https://api2.openreview.net/pdf?id=vieIamY2Gi
   info: openreview
-  headers: {}
 ref: openreview:vieIamY2Gi
-hash: 8c6c234e236e9054fa3ca8832ab77bed3c5816f64a403f4bbae55721ed2aceb8
+hash: 9497159cea5a14707a748e1a660655406d827bbdad5c893c5b1249447602ae95
 info: null
 success: true
 error: null

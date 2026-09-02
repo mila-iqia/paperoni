@@ -4,6 +4,7 @@ from typing import Literal
 from ovld import call_next, ovld
 
 from ..config import config
+from ..discovery.openreview import auth_headers
 from ..get import ERRORS
 
 
@@ -11,7 +12,13 @@ from ..get import ERRORS
 class URL:
     url: str
     info: str
+    # [serieux: ignore]
     headers: dict[str, str] = field(default_factory=dict)
+
+    class SerieuxConfig:
+        # Older cached PDFs may have headers (possibly containing tokens)
+        # saved in their meta.yaml; ignore them when loading
+        allow_extras = True
 
     async def readable(self):
         hd = await config.fetch.head(self.url, headers=self.headers)
@@ -30,7 +37,19 @@ async def find_download_links(typ: Literal["arxiv"], link: str):
 
 @ovld
 async def find_download_links(typ: Literal["openreview"], link: str):
-    """Return OpenReview PDF download link."""
+    """Return OpenReview PDF download links.
+
+    The openreview.net website is behind a Cloudflare challenge, so use the
+    API endpoints with credentials instead (v2 first, then v1 for venues that
+    have not migrated); the plain website URL comes last as a fallback.
+    """
+    for base, api_version in (
+        ("https://api2.openreview.net", 2),
+        ("https://api.openreview.net", 1),
+    ):
+        yield URL(
+            url=f"{base}/pdf?id={link}", info=typ, headers=auth_headers(api_version)
+        )
     yield URL(url=f"https://openreview.net/pdf?id={link}", info=typ)
 
 

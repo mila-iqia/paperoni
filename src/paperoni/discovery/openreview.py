@@ -682,6 +682,25 @@ class OpenReview(Discoverer):
         return token
 
 
+_tokens: dict[int, str] = {}
+
+
+def auth_headers(api_version: int = 2) -> dict[str, str]:
+    """Return Authorization headers for the OpenReview API of the given version.
+
+    Reuses the login logic of the OpenReview discoverer (token file, refresh,
+    login rate limiting). The openreview.net website is behind a Cloudflare
+    challenge that rejects unauthenticated clients, so downloads must go
+    through the API with a token. Returns no headers if we cannot log in.
+    """
+    if api_version not in _tokens:
+        with soft_fail(f"openreview v{api_version} login"):
+            _tokens[api_version] = OpenReview(api_version=api_version).token
+
+    token = _tokens.get(api_version, None)
+    return {"Authorization": f"Bearer {token}"} if token else {}
+
+
 @dataclass
 class OpenReviewDispatch(Discoverer):
     api_versions: list = dc_field(default_factory=lambda: [2, 1])
