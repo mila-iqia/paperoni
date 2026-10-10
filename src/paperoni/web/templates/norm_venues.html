@@ -1,0 +1,51 @@
+{% extends "main.html" %}
+
+{% block title_key %}Venue Normalizations{% endblock %}
+{% block title %}Venue Normalizations{% endblock %}
+{% block page_title %}Venue Normalizations{% endblock %}
+
+{% block content %}
+<div class="edit-container focuses-page">
+    <div class="norm-toolbar">
+        <input type="search" id="venueSearch" class="norm-search" placeholder="Filter by original, actual name or short name…">
+    </div>
+    <div class="norm-table-wrapper">
+        <div class="norm-add-col">
+            <button id="addVenueNormBtn" class="norm-add-btn" title="Add entry"><loc>+</loc></button>
+        </div>
+        <div class="focuses-table-container">
+            <table id="venueNormTable" class="edit-table">
+                <colgroup>
+                    <col class="col-norm-original">
+                    <col class="col-norm-name">
+                    <col class="col-norm-type">
+                    <col class="col-norm-shortname">
+                    <col class="col-norm-date">
+                    <col class="col-norm-action">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th><loc>Original</loc></th>
+                        <th><loc>Actual Name</loc></th>
+                        <th><loc>Type</loc></th>
+                        <th><loc>Short Name</loc></th>
+                        <th><loc>Date</loc></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="venueNewTbody"></tbody>
+                <tbody id="venueNormTbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="venuePagination" class="norm-pagination"></div>
+</div>
+<button id="saveVenueNormsBtn" class="btn-save-sticky norm-save-fixed"><loc>Save</loc></button>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" nonce="{{ csp_nonce }}">
+    import { initVenues } from '/assets/normalization.js';
+    initVenues();
+</script>
+{% endblock %}
