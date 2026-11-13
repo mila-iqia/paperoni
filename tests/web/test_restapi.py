@@ -308,3 +308,28 @@ def test_delete_papers_endpoint(wr_app):
     assert response.status_code == 200
     data = response.json()
     assert data["count"] == 0
+
+
+def test_me_endpoint_requires_authentication(app):
+    """Test that the me endpoint requires authentication."""
+    unlogged = app.client()
+    response = unlogged.get("/api/v1/me", expect=401)
+    assert "Authentication required" in response.json()["detail"]
+
+
+def test_me_endpoint(app):
+    """Test the me endpoint returns the user's email and capabilities."""
+    seeker = app.client("seeker@website.web")
+
+    me = seeker.get("/api/v1/me", expect=200).json()
+    # seeker has [search], which implies [user].
+    assert me == {
+        "email": "seeker@website.web",
+        "name": None,
+        "capabilities": ["search", "user"],
+    }
+
+    # admin gets everything, including the auto-generated admin capability.
+    admin = app.client("admin@website.web")
+    me = admin.get("/api/v1/me", expect=200).json()
+    assert me["capabilities"] == ["admin", "dev", "search", "user", "validate"]

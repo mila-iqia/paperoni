@@ -8,7 +8,7 @@ from dataclasses import dataclass, field, replace
 from types import NoneType, SimpleNamespace
 from typing import Any, Generator, Iterable, Literal
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import StreamingResponse
 from serieux import CommentRec, auto_singleton, deserialize, serialize
 
@@ -423,6 +423,21 @@ class RemoveExclusionsResponse:
     count: int
 
 
+@dataclass
+class MeResponse:
+    """Response model for the current user."""
+
+    # Email address of the authenticated user
+    email: str
+
+    # Full name of the user, when the OAuth provider supplies it
+    name: str | None = None
+
+    # Names of the capabilities granted to the user (including the ones
+    # implied by them)
+    capabilities: list[str] = field(default_factory=list)
+
+
 def install_api(app) -> FastAPI:
     prefix = "/api/v1"
 
@@ -435,6 +450,36 @@ def install_api(app) -> FastAPI:
             "message": app.title,
             "version": app.version,
         }
+
+    @app.get(f"{prefix}/me", response_model=MeResponse, tags=["Main API"])
+    async def me(request: Request, user: dict | None = Depends(app.auth.get_user)):
+        """Get the identity of the logged-in user.
+
+        Requires only that the user be authenticated (no capability needed).
+        """
+        if user is None:
+            raise HTTPException(status_code=401, detail="Authentication required")
+
+        # easy_oauth keeps only email/sub in the session today, but look for
+        # a name claim in case the provider supplies one.
+        name = user.get("name")
+
+        # The capabilities the user actually has, i.e. the ones that would
+        # grant access to an endpoint (for service tokens, this excludes the
+        # capabilities the token itself does not carry).
+        caps = app.auth.capabilities
+        service_caps = getattr(request.state, "service_caps", None)
+        capabilities = sorted(
+            cap
+            for cap in caps.registry.registry
+            if (
+                caps.check_service(user["email"], service_caps, caps[cap])
+                if service_caps is not None
+                else caps.check(user["email"], caps[cap])
+            )
+        )
+
+        return MeResponse(email=user["email"], name=name, capabilities=capabilities)
 
     def parse_search_request(
         request: SearchRequest = Depends(),
