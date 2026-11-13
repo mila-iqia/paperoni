@@ -561,7 +561,7 @@ def install_api(app) -> FastAPI:
     @app.post(
         f"{prefix}/pending/decide",
         response_model=PendingDecideResponse,
-        dependencies=[Depends(hascap("search"))],
+        dependencies=[Depends(hascap("validate"))],
         tags=["Advanced"],
     )
     async def pending_decide(request: PendingDecideRequest):
