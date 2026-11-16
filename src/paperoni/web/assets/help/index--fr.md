@@ -7,6 +7,7 @@ Bienvenue sur Paperoni ! Paperoni est un outil de gestion d'articles développé
 1. **[Mes articles](#my-papers)**
 1. **[Ajouter des articles](#new)**
 1. **[Modifier des articles](#edit)**
+1. **[Utiliser des agents](#agents)**
 
 Voir également [l'aide de l'interface de validation](/help/validation) et de [l'interface d'administration](/help/admin).
 
@@ -124,3 +125,44 @@ utilisez une autre instance Paperoni.
 
 Pour la référence complète de l'API REST (endpoints, paramètres, schémas),
 consultez la [documentation API](/docs).
+
+
+## Utiliser des agents {: #agents}
+
+Si vous utilisez un agent de programmation tel que Claude Code, Codex, OpenCode, Pi, etc., vous pouvez utiliser [la compétence Paperoni](https://raw.githubusercontent.com/mila-iqia/skills/refs/heads/master/mila-tools/skills/mila-paperoni/SKILL.md) pour interagir avec Paperoni. Voici des prompts que vous pouvez utiliser :
+
+**Installation**
+
+La compétence exige qu'une clé API soit conservée dans une variable d'environnement ou un fichier. L'agent peut vous guider :
+
+```
+Installe la compétence située à https://raw.githubusercontent.com/mila-iqia/skills/refs/heads/master/mila-tools/skills/mila-paperoni/SKILL.md et aide-moi à configurer mon jeton API.
+```
+
+**Gestion des articles**
+
+Au lieu d'utiliser [l'interface](/my-papers) pour gérer vos publications, vous pouvez laisser un agent le faire pour vous. Notez qu'à moins d'avoir des capacités de validation, votre clé API ne vous permet que de fournir des suggestions, qui seront validées ultérieurement.
+
+```
+Ajoute cet article à Paperoni : <LIEN VERS L'ARTICLE>
+```
+
+```
+Revendique mes articles sur Paperoni.
+```
+
+```
+Synchronise mes publications sur Paperoni avec <LIEN VERS MA LISTE DE PUBLICATIONS SUR MON SITE WEB>.
+```
+
+**Requêtes avancées**
+
+Vous pouvez aussi formuler des requêtes plus avancées qui ne peuvent pas être faites directement dans Paperoni, par exemple :
+
+```
+Quels sont les intérêts de recherche de <CHERCHEUR> ?
+```
+
+```
+Liste les contributions de <CHERCHEUR> avec <ENTREPRISE>
+```

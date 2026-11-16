@@ -7,6 +7,7 @@ Welcome to Paperoni! Paperoni is a tool for paper management developed at Mila.
 1. **[My papers](#my-papers)**
 1. **[Adding papers](#new)**
 1. **[Editing papers](#edit)**
+1. **[Using agents](#agents)**
 
 Also see the [validator interface help](/help/validation) and [admin interface help](/help/admin)
 
@@ -123,3 +124,44 @@ use a different Paperoni instance.
 
 For full REST API reference (endpoints, parameters, schemas), see the [API
 documentation](/docs).
+
+
+## Using agents {: #agents}
+
+If you are using a coding agent such as Claude Code, Codex, OpenCode, Pi, etc. -- you can use [the Paperoni skill](https://raw.githubusercontent.com/mila-iqia/skills/refs/heads/master/mila-tools/skills/mila-paperoni/SKILL.md) to interact with Paperoni. Here are prompts you can use:
+
+**Installing**
+
+The skill requires an API key to be stored in an environment variable or a file. The agent can walk you through it:
+
+```
+Install the skill at https://raw.githubusercontent.com/mila-iqia/skills/refs/heads/master/mila-tools/skills/mila-paperoni/SKILL.md and help me set up my API token.
+```
+
+**Paper management**
+
+Instead of using [the interface](/my-papers) to manage your publications, you can have an agent do it for you. Note that unless you have validation capabilities, your API key only lets you provide suggestions, to be validated later.
+
+```
+Add this paper to Paperoni: <LINK TO PAPER>
+```
+
+```
+Claim my papers on Paperoni.
+```
+
+```
+Synchronize my publications on Paperoni with <LINK TO MY PUBLICATION LIST ON MY WEBSITE>.
+```
+
+**Advanced queries**
+
+You can also make more advanced queries that cannot be made directly in Paperoni, for example:
+
+```
+What are <RESEARCHER>'s research interests?
+```
+
+```
+List <RESEARCHER>'s contributions with <COMPANY>
+```
