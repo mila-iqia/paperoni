@@ -992,6 +992,10 @@
         "fr": "Échec de la revendication : {1}"
     },
     {
+        "en": "The paper changed, please reload and try again",
+        "fr": "L'article a changé, veuillez recharger et réessayer"
+    },
+    {
         "en": "Unclaimed via My Papers",
         "fr": "Revendication annulée via Mes articles"
     },

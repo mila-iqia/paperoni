@@ -194,6 +194,28 @@ async function submitPaper(paper, comment, suggest) {
     return await response.json();
 }
 
+/**
+ * Fetch the unexpanded, server-side copy of a paper to use as the base for a
+ * claim / unclaim submission.
+ *
+ * The displayed papers come from search endpoints with expand_links=true,
+ * which rewrite `links` for display: identifier links (arxiv, doi, ...) are
+ * replaced by the URLs they generate, and links without a generated URL are
+ * dropped entirely. Since /include and /suggest *replace* the whole paper,
+ * submitting a displayed paper back would persist that display-only links
+ * list (cf. operate.py's "expand_links would mess up updates" note).
+ * `latest_edit=true` folds in the paper's pending suggestion, if any, so a
+ * claim builds on the latest known state instead of clobbering it.
+ */
+async function fetchCanonicalPaper(paperId) {
+    const response = await fetch(`/api/v1/paper/${paperId}?latest_edit=true`);
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP ${response.status}`);
+    }
+    return await response.json();
+}
+
 function isMe(author) {
     const email = normEmail(author?.author?.email);
     return !!email && email.trim().toLowerCase() === userEmail.trim().toLowerCase();
@@ -329,7 +351,7 @@ function createClaimToggle(paper, claimed) {
         const btn = container.querySelector('button');
         if (btn) btn.disabled = true;
         try {
-            const updated = JSON.parse(JSON.stringify(currentPaper));
+            const updated = await fetchCanonicalPaper(currentPaper.id);
             const matches = (updated.authors ?? []).filter(isMe);
             if (matches.length === 0) {
                 showToast(getTranslation('Nothing to unclaim'), 'error');
@@ -373,10 +395,24 @@ function createClaimToggle(paper, claimed) {
 
         confirmBtn.addEventListener('click', async () => {
             const index = parseInt(select.value, 10);
+            const chosen = currentPaper.authors[index];
             confirmBtn.disabled = true;
             try {
-                const updated = JSON.parse(JSON.stringify(currentPaper));
-                updated.authors[index].author.email = userEmail;
+                const updated = await fetchCanonicalPaper(currentPaper.id);
+                // Link expansion never touches authors, so the picked author
+                // is found by display name in the unexpanded copy (at the
+                // same position among authors sharing that display name, if a
+                // pending edit lists several).
+                const sameName = authors =>
+                    (authors ?? []).filter(
+                        a => (a.display_name ?? null) === (chosen.display_name ?? null)
+                    );
+                const pos = sameName(currentPaper.authors).indexOf(chosen);
+                const matches = sameName(updated.authors);
+                if (matches.length === 0) {
+                    throw new Error(getTranslation('The paper changed, please reload and try again'));
+                }
+                (matches[pos] ?? matches[0]).author.email = userEmail;
                 await submitPaper(updated, getTranslation('Claimed via My Papers'), suggestMode);
                 currentPaper = updated;
                 setLocallyUnclaimed(userEmail, currentPaper.id, false);

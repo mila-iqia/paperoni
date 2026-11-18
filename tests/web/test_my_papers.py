@@ -9,8 +9,10 @@ import gifnoc
 import httpx
 import pytest
 from easy_oauth.testing.utils import AppTester
+from serieux import serialize
 from serieux.features.partial import Override
 
+from paperoni.model.classes import Author, Link, Paper, PaperAuthor
 from tests.web.conftest import here
 
 
@@ -244,3 +246,136 @@ def test_my_papers_unclaim_via_suggest_leaves_main_db_stale(wr_app_with_suggesti
         f"/api/v1/paper/{paper['id']}", latest_edit="true", expect=200
     ).json()
     assert all(a["author"]["email"] != email for a in latest["authors"])
+
+
+# ---------------------------------------------------------------------------
+# Claim / unclaim submissions must not clobber the paper's links
+# ---------------------------------------------------------------------------
+
+SEEDED_LINKS = [
+    ("arxiv", "2106.09685"),
+    ("doi", "10.1234/abcdef"),
+    ("pdf.official", "https://example.org/paper.pdf"),
+    ("url", "https://example.org/project-page"),
+]
+
+TITLE_WITH_LINKS = "Link Preservation Under Claim Submission"
+
+
+def _link_pairs(paper_json):
+    return {(l["type"], l["link"]) for l in paper_json.get("links", [])}
+
+
+def _seed_linked_paper(client):
+    """Add a paper whose canonical links include both identifier links
+    (arxiv/doi, which expand into generated URLs) and plain links (pdf.official
+    / url, which have no generated URL at all)."""
+    paper = Paper(
+        title=TITLE_WITH_LINKS,
+        authors=[
+            PaperAuthor(
+                display_name="Ada Lovelace",
+                author=Author(name="Ada Lovelace"),
+            )
+        ],
+        links=[Link(type=t, link=l) for t, l in SEEDED_LINKS],
+    )
+    response = client.post(
+        "/api/v1/include", papers=[serialize(Paper, paper)], expect=200
+    )
+    return response.json()["ids"][0]
+
+
+def test_claim_preserves_links(wr_app_with_suggestions):
+    """Regression test: claiming from My Papers submits the whole paper, and
+    /include replaces the stored document wholesale. The claim flow therefore
+    bases its submission on the unexpanded copy from /api/v1/paper/{id} (see
+    fetchCanonicalPaper in my_papers.js), not on the search result it displays,
+    which carries display-expanded links."""
+    validator = wr_app_with_suggestions.client("validator@website.web")
+    pid = _seed_linked_paper(validator)
+
+    canonical = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
+    assert _link_pairs(canonical) == set(SEEDED_LINKS)
+
+    # The My Papers display form (expand_links=true) swaps identifier links for
+    # generated URLs and drops links without one -- it must never be submitted
+    # back (see the hazard documented in the test below).
+    search = validator.get(
+        "/api/v1/search", title=TITLE_WITH_LINKS, expand_links="true", expect=200
+    ).json()
+    (displayed,) = search["results"]
+    assert str(displayed["id"]) == str(pid)
+    view = _link_pairs(displayed)
+    assert ("arxiv", "2106.09685") not in view
+    assert ("url", "https://example.org/project-page") not in view
+
+    # The claim itself, as fixed: base on the canonical copy, set the email,
+    # submit.
+    claim = canonical
+    claim["authors"][0]["author"]["email"] = "validator@website.web"
+    result = validator.post(
+        "/api/v1/include",
+        papers=[claim],
+        comment="Claimed via My Papers",
+        expect=200,
+    ).json()
+    assert result["success"] is True
+
+    after = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
+    assert _link_pairs(after) == set(SEEDED_LINKS)
+    assert after["authors"][0]["author"]["email"] == "validator@website.web"
+
+
+def test_suggested_claim_preserves_links(wr_app_with_suggestions):
+    """Same regression for the non-validator flow: the suggestion is built from
+    the canonical copy, and approving it into the collection (a wholesale
+    replace) must leave the links intact."""
+    validator = wr_app_with_suggestions.client("validator@website.web")
+    seeker = wr_app_with_suggestions.client("seeker@website.web")
+    pid = _seed_linked_paper(validator)
+
+    canonical = seeker.get(f"/api/v1/paper/{pid}", expect=200).json()
+    canonical["authors"][0]["author"]["email"] = "seeker@website.web"
+    result = seeker.post(
+        "/api/v1/suggest",
+        papers=[canonical],
+        comment="Claimed via My Papers",
+        expect=200,
+    ).json()
+    assert result["success"] is True
+
+    decision = validator.post(
+        "/api/v1/pending/decide", approve=[str(pid)], reject=[], expect=200
+    ).json()
+    assert decision["success"] is True
+
+    after = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
+    assert _link_pairs(after) == set(SEEDED_LINKS)
+    assert after["authors"][0]["author"]["email"] == "seeker@website.web"
+
+
+def test_expanded_paper_roundtrip_is_lossy(wr_app_with_suggestions):
+    """Documents the hazard the claim flow avoids: submitting a display-expanded
+    paper wipes links because /include replaces the whole document. If expansion
+    ever becomes round-trip safe, this test failing is the cue to drop the
+    client-side refetch in fetchCanonicalPaper (my_papers.js)."""
+    validator = wr_app_with_suggestions.client("validator@website.web")
+    pid = _seed_linked_paper(validator)
+
+    displayed = validator.get(
+        "/api/v1/search", title=TITLE_WITH_LINKS, expand_links="true", expect=200
+    ).json()["results"][0]
+    displayed["authors"][0]["author"]["email"] = "validator@website.web"
+    validator.post(
+        "/api/v1/include",
+        papers=[displayed],
+        comment="The old buggy claim",
+        expect=200,
+    )
+
+    after = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
+    # The claim went through, but the canonical links are gone.
+    assert after["authors"][0]["author"]["email"] == "validator@website.web"
+    assert ("arxiv", "2106.09685") not in _link_pairs(after)
+    assert ("url", "https://example.org/project-page") not in _link_pairs(after)
