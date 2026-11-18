@@ -744,7 +744,13 @@ def install_api(app) -> FastAPI:
         for p in papers:
             if not isinstance(p.info.get("comments", None), list):
                 p.info["comments"] = []
-            p.info["comments"].append({"user": user, "comment": request.comment})
+            p.info["comments"].append(
+                {
+                    "user": user,
+                    "comment": request.comment,
+                    "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                }
+            )
             p.flags.add("suggest:user")
 
         try:

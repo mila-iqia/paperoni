@@ -1,3 +1,4 @@
+import datetime
 import re
 import shutil
 import tempfile
@@ -353,6 +354,95 @@ def test_suggested_claim_preserves_links(wr_app_with_suggestions):
     after = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
     assert _link_pairs(after) == set(SEEDED_LINKS)
     assert after["authors"][0]["author"]["email"] == "seeker@website.web"
+
+
+def test_suggested_comment_is_stamped(wr_app_with_suggestions):
+    """Comments recorded in the DB alongside a suggestion carry the user, the
+    description, and a UTC timestamp."""
+    validator = wr_app_with_suggestions.client("validator@website.web")
+    seeker = wr_app_with_suggestions.client("seeker@website.web")
+    pid = _seed_linked_paper(validator)
+
+    result = seeker.post(
+        "/api/v1/suggest",
+        papers=[seeker.get(f"/api/v1/paper/{pid}", expect=200).json()],
+        comment="Please add the conference version",
+        expect=200,
+    ).json()
+    assert result["success"] is True
+
+    suggestion = seeker.get(f"/api/v1/paper/{pid}", latest_edit="true", expect=200).json()
+    (comment,) = suggestion["info"]["comments"]
+    assert comment["user"] == "seeker@website.web"
+    assert comment["comment"] == "Please add the conference version"
+    stamp = datetime.datetime.fromisoformat(comment["timestamp"])
+    assert stamp.tzinfo == datetime.timezone.utc
+    now = datetime.datetime.now(datetime.timezone.utc)
+    assert abs(now - stamp) < datetime.timedelta(minutes=5)
+
+
+def test_approval_preserves_comments(wr_app_with_suggestions):
+    """Approval copies the suggestion document into the collection verbatim,
+    so the comment history (user / comment / timestamp) survives the approval
+    and keeps accumulating across subsequent suggest/approve cycles."""
+    validator = wr_app_with_suggestions.client("validator@website.web")
+    seeker = wr_app_with_suggestions.client("seeker@website.web")
+    pid = _seed_linked_paper(validator)
+
+    canonical = seeker.get(f"/api/v1/paper/{pid}", expect=200).json()
+    assert (
+        seeker.post(
+            "/api/v1/suggest",
+            papers=[canonical],
+            comment="Adding the arxiv release",
+            expect=200,
+        ).json()["success"]
+        is True
+    )
+    assert (
+        validator.post(
+            "/api/v1/pending/decide", approve=[str(pid)], reject=[], expect=200
+        ).json()["success"]
+        is True
+    )
+
+    # The approved paper in the collection carries the comment.
+    approved = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
+    (first,) = approved["info"]["comments"]
+    assert first["user"] == "seeker@website.web"
+    assert first["comment"] == "Adding the arxiv release"
+    datetime.datetime.fromisoformat(first["timestamp"])
+
+    # The suggestion was consumed.
+    pending = validator.get("/api/v1/pending/list", expect=200).json()
+    assert all(
+        not (d["new"] and str(d["new"]["id"]) == str(pid)) for d in pending["results"]
+    )
+
+    # A later suggestion built on the approved copy carries the history
+    # forward and appends to it.
+    approved["authors"][0]["author"]["email"] = "seeker@website.web"
+    assert (
+        seeker.post(
+            "/api/v1/suggest",
+            papers=[approved],
+            comment="Claimed via My Papers",
+            expect=200,
+        ).json()["success"]
+        is True
+    )
+    assert (
+        validator.post(
+            "/api/v1/pending/decide", approve=[str(pid)], reject=[], expect=200
+        ).json()["success"]
+        is True
+    )
+
+    final = validator.get(f"/api/v1/paper/{pid}", expect=200).json()
+    assert [c["comment"] for c in final["info"]["comments"]] == [
+        "Adding the arxiv release",
+        "Claimed via My Papers",
+    ]
 
 
 def test_expanded_paper_roundtrip_is_lossy(wr_app_with_suggestions):
