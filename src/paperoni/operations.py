@@ -120,6 +120,7 @@ def paper_map(x: Topic):
 def paper_map(x: Author):
     return Author(
         name=recurse(x.name),
+        email=recurse(x.email),
         aliases=recurse(x.aliases),
         links=recurse(x.links),
     )
